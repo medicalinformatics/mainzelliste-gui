@@ -34,7 +34,7 @@
 
     input[type=submit] {
       width: 100%;
-      background-color: #ffffff;
+      background: none;
       color: black;
       padding: 5px 5px;
       margin: 0px 0;
@@ -124,20 +124,20 @@
       display: table;
     }
 
-
-
     .example-button-row .mat-button-base {
       margin: 8px 8px 8px 0;
     }
 
-
-
     #addpatientbutton{
-      margin-left: 50px;
+      margin-left: 55px;
       position: center;
       padding: 0;
-      border: none;
-      background:none;
+      border-radius: 50px;
+      background-color: white;
+      font-size: 40px;
+      color: grey;
+      width: 60px;
+      height: 55px;
     }
 
 
@@ -167,6 +167,10 @@
 
   }
 
+    #searchicon{
+      font-size: 18px;
+    }
+
   .filterbutton{
     margin-top: 10px;
     float: right;
@@ -181,6 +185,19 @@
       padding-bottom: 20px;
     }
 
+    .toolbutton__icon{
+      margin-right: 20px;
+      background: none;
+      font-size: 28px;
+
+    }
+
+    .toolbutton{
+      background: none;
+      width: 40px;
+      height: 40px;
+    }
+
   </style>
 
 
@@ -192,7 +209,7 @@
   <button type="submit" class="PatientenansichtButton">Zusammenfuehren</button>
   <button type="submit" class="PatientenansichtButton">Loeschen</button>
   <input id="suchleiste" type="text"  placeholder="Suche...">
- <button id="suchbutton" type="submit" class="PatientenansichtButton"><ion-icon name="search-outline"></ion-icon></button>
+ <button id="suchbutton" type="submit" class="PatientenansichtButton"><ion-icon id="searchicon" name="search-outline"></ion-icon></button>
 
   </div>
 <br><br>
@@ -201,13 +218,13 @@
   <tr id="addPatientzeile">
     <!--<form action="/action_page.php">-->
     <th colspan="2">neuer Patient:</th>
-    <th><input type="text" name="nachname" placeholder="Nachname"><ion-icon name="caret-down-circle-outline"></ion-icon></th>
-    <th><input type="text" name="gebutsname" placeholder="Gebutsname"> <button class="filterbutton" type="button"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
-    <th><input type="text" id="vorname" name="vorname" placeholder="Vorname"> <button class="filterbutton" type="button"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
-    <th><input type="text" id="geburtsdatum" name="geburtsdatum" placeholder="Geburtsdatum"> <button class="filterbutton" type="button"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
-    <th><input type="text" id="wohnort" name="wohnort" placeholder="Wohnort"> <button type="button" class="filterbutton"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
-    <th><input type="text" id="plz" name="plz" placeholder="PLZ"> <button class="filterbutton" type="button"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
-    <th><button type="submit" id="addpatientbutton"><img src="https://img.icons8.com/cotton/64/000000/add-male-user--v2.png"/></button></th>
+    <th><input type="text" name="nachname" placeholder="Nachname"> <ion-icon name="caret-down-circle-outline"></ion-icon></th>
+    <th><input type="text" name="gebutsname" placeholder="Gebutsname"> <ion-icon name="caret-down-circle-outline"></ion-icon></th>
+    <th><input type="text" id="vorname" name="vorname" placeholder="Vorname"> <ion-icon name="caret-down-circle-outline"></ion-icon></th>
+    <th><input type="text" id="geburtsdatum" name="geburtsdatum" placeholder="Geburtsdatum"> <ion-icon name="caret-down-circle-outline"></ion-icon></th>
+    <th><input type="text" id="wohnort" name="wohnort" placeholder="Wohnort"> <ion-icon name="caret-down-circle-outline"></ion-icon></th>
+    <th><input type="text" id="plz" name="plz" placeholder="PLZ"> <ion-icon name="caret-down-circle-outline"></ion-icon></th>
+    <th><button type="submit" id="addpatientbutton"><ion-icon name="person-add"></ion-icon></button></th>
   <!--</form>-->
   </tr>
 
@@ -229,12 +246,12 @@
   </tr>
 
   <tr>
-    <td><form action="/action_page.php">
+    <td> <form action="/action_page.php">
       <label class="container">
         <input type="checkbox" checked="checked">
         <span class="checkmark"></span>
       </label>
-    </form></td>
+    </form> </td>
     <td>ERWN5C0R</td>
     <td>Misicher</td>
     <td> </td>
@@ -242,23 +259,18 @@
     <td>17.02.1978</td>
     <td>Aglasterhausen</td>
     <td>74858</td>
-
-    <td>
-      <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-      <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <td><button type="submit" class="toolbutton">
+      <span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span>
+    </button>
       <button type="submit" class="toolbutton">
-        <span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span>
-      </button>
-      <button type="submit" class="toolbutton">
-       <span class="toolbutton__icon"><ion-icon name="people"></ion-icon></span>
+        <span class="toolbutton__icon"><ion-icon name="people"></ion-icon></span>
       </button>
       <button type="submit" class="toolbutton">
         <span class="toolbutton__icon"><ion-icon name="create"></ion-icon></span>
       </button>
       <button type="submit" class="toolbutton">
         <span class="toolbutton__icon"><ion-icon name="trash"></ion-icon></span>
-      </button>
-    </td>
+      </button></td>
   </tr>
 
   <tr>

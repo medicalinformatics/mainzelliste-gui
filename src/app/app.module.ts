@@ -16,6 +16,7 @@ import {AddPatientFormularComponent} from "./add-patient-formular/add-patient-fo
 import {PatientenlisteComponent} from "./patientenliste/patientenliste.component";
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,7 +35,9 @@ import {PatientenlisteComponent} from "./patientenliste/patientenliste.component
   imports: [
     BrowserModule,
     AppRoutingModule,
-    IonicModule.forRoot()
+    IonicModule.forRoot(),
+
+
 
   ],
   providers: [],
