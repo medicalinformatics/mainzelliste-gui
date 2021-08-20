@@ -1,12 +1,20 @@
 <style>
-  #navigationsleiste{
-    background-color: lightgray;
+  nav{
+    background-color: #f2f2f2;
     float: left;
     height: 100%;
-    width: 15%;
+    width: 10%;
+    padding-left: 35px;
+
+  }
+  a{
+    color: black;
 
   }
 
+  ion-icon{
+    padding-right: 15px;
+  }
   .navbutton{
     width: 80%;
     margin: 30px;
@@ -24,10 +32,11 @@
 
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-<div id="navigationsleiste">
 
-  <button type="button" id="homebutton" class="navbutton"><ion-icon name="home-sharp"></ion-icon>  Home</button>
-  <button type="button" class="navbutton"> <ion-icon name="person-add-sharp"></ion-icon> PID anfordern</button>
-  <button type="button" class="navbutton"><ion-icon name="list-sharp"></ion-icon> Patientenliste</button>
-  <button type="button" class="navbutton"><ion-icon name="document-text-sharp"></ion-icon>  Audit-Trail</button>
-</div>
+<nav>
+  <br><br>
+  <ion-icon name="home-sharp"></ion-icon>           <a routerLink="/home" >Home</a> <br><br><br><br>
+  <ion-icon name="person-add-sharp"></ion-icon>     <a routerLink="/add-patient-formular" >PID anfordern</a> <br><br><br><br>
+  <ion-icon name="list-sharp"></ion-icon>           <a routerLink="/patientenliste" >Patientenliste</a> <br><br><br><br>
+  <ion-icon name="document-text-sharp"></ion-icon>  <a routerLink="/audittrail" >Audit-Trail</a> <br><br><br><br>
+</nav>
