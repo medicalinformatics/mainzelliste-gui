@@ -1,0 +1,33 @@
+<style>
+  #navigationsleiste{
+    background-color: lightgray;
+    float: left;
+    height: 100%;
+    width: 15%;
+
+  }
+
+  .navbutton{
+    width: 80%;
+    margin: 30px;
+    padding:10px;
+    border: none;
+    background: none;
+    float: left;
+    text-align: left;
+  }
+
+  #homebutton{
+    margin-top: 150px;
+  }
+</style>
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<div id="navigationsleiste">
+
+  <button type="button" id="homebutton" class="navbutton"><ion-icon name="home-sharp"></ion-icon>  Home</button>
+  <button type="button" class="navbutton"> <ion-icon name="person-add-sharp"></ion-icon> PID anfordern</button>
+  <button type="button" class="navbutton"><ion-icon name="list-sharp"></ion-icon> Patientenliste</button>
+  <button type="button" class="navbutton"><ion-icon name="document-text-sharp"></ion-icon>  Audit-Trail</button>
+</div>

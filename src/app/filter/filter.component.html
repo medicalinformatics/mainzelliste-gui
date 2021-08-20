@@ -1,0 +1,119 @@
+<style>
+  h2{
+    order-width: thick;
+    font-family: Arial;
+  }
+
+  /* Style The Dropdown Button */
+  .dropbtn {
+    /*background-color: #ccb00e;
+    color: white;
+    padding: 10px;
+    font-size: 10px;
+    border: 1px;
+    cursor: pointer;*/
+  }
+
+  /* The container <div> - needed to position the dropdown content */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    font-family: Arial;
+  }
+
+  /* Links inside the dropdown */
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+
+  /* Change color of dropdown links on hover */
+  .dropdown-content a:hover {background-color: #f1f1f1}
+
+  /* Show the dropdown menu on hover */
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+  /* Change the background color of the dropdown button when the dropdown content is shown */
+  .dropdown:hover .dropbtn {
+   /* background-color: #ccb00e;*/
+  }
+
+  h1{
+    border-width: thick;
+    font-family: Arial;
+    color: white;
+  }
+  .header{
+    padding: 5px;
+    background-color: lightgrey;
+    border-width: thick;
+    font-family: Arial;
+    font-size: larger;
+    color: white;
+  }
+  close-circle{
+    color:white;
+    float:right;
+
+  }
+  ion-icon{
+    float:right;
+
+  }
+</style>
+
+
+<div>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+  <div class="header"> <ion-icon name="close-circle"></ion-icon> </div>
+
+  <h2>Sortieren</h2>
+  <button><ion-icon name="swap-vertical-outline"></ion-icon>Aufsteigend</button>
+  <button><ion-icon name="swap-vertical-outline"></ion-icon>Absteigend</button>
+  <br><br>
+  <h2>Filter</h2>
+  <div class="dropdown">
+    <button class="dropbtn">eine Option auswaehlen</button>
+    <div class="dropdown-content">
+      <a href="#">gleich</a>
+      <a href="#">nicht gleich</a>
+      <a href="#">Beginnt mit</a>
+      <a href="#">Endet mit</a>
+      <a href="#">Enthaelt</a>
+      <a href="#">Enthaelt nicht</a>
+
+    </div>
+  </div>
+  <input type="text"> <ion-icon name="calendar-outline"></ion-icon>
+  <br>
+  <br>
+  <input id="suchleiste" type="text"  placeholder="Suche...">
+  <br><br>
+  <div>
+    <input type="checkbox" name="name">    <br>
+
+    <input type="checkbox" name="name">  <br>
+
+    <input type="checkbox" name="name">
+
+  </div>
+
+</div>
+
+

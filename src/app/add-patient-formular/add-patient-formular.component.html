@@ -1,0 +1,80 @@
+<style>
+  input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 20px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  input[type=submit] {
+    width: 20%;
+    background-color: #3895D3;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+  }
+
+  input[type=submit]:hover {
+    background-color: #45a049;
+  }
+
+  div {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding-top: 80px;
+    padding-bottom: 80px;
+    padding-left: 200px;
+    padding-right: 200px;
+  }
+
+  label{
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  p{
+    background-color: #f2f2f2;
+    font-size: 35px;
+    padding-left: 200px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+</style>
+
+<body>
+
+<p>Personenidentifikator anfordern</p>
+
+<div>
+  <form action="/action_page.php">
+    <label for="vorname">*Vorname</label>
+    <input type="text" id="vorname" name="vorname" placeholder=" ">
+
+    <label for="nachname">*Nachname</label>
+    <input type="text" id="nachname" name="Nachname" placeholder=" ">
+
+    <label for="geburtsname">Geburtsname (falls abweichend)</label>
+    <input type="text" id="geburtsname" name="geburtsname" placeholder=" ">
+
+    <label for="geburtsdatum">*Geburtsdatum</label>
+    <input type="text" id="geburtsdatum" name="geburtsdatum" placeholder=" ">
+
+    <label for="wohnort">*Wohnort</label>
+    <input type="text" id=wohnort name="wohnort" placeholder=" ">
+
+    <label for="plz">*PLZ</label>
+    <input type="text" id="plz" name="plz" placeholder=" ">
+
+
+    <input type="submit" value="Anfordern">
+  </form>
+</div>
+
+</body>

@@ -1,0 +1,400 @@
+ <style>
+    #patientlist {
+      font-family: Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 82%;
+    }
+
+    #patientlist td, #patientlist th {
+      border: 1px solid #ddd;
+      padding: 10px;
+    }
+
+    #patientlist tr:nth-child(even){background-color: #f2f2f2;}
+
+    #patientlist tr:hover {background-color: #ddd;}
+
+    #patientlist th {
+      padding-top: 13px;
+      padding-bottom: 13px;
+      text-align: left;
+      background-color: #888888;
+      color: white;
+    }
+
+    input[type=text] {
+      width: 100%;
+      padding: 8px 8px;
+      margin: 0px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    input[type=submit] {
+      width: 100%;
+      background-color: #ffffff;
+      color: black;
+      padding: 5px 5px;
+      margin: 0px 0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    input[type=submit]:hover {
+      background-color: #45a049;
+    }
+
+   tr:nth-child{
+   background-color: #45a049;
+}
+
+
+    .container {
+      display: block;
+      position: relative;
+      padding-left: 10px;
+      padding-right: 10px;
+      padding-bottom: 10px ;
+      cursor: pointer;
+      font-size: 22px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Hide the browser's default checkbox */
+    .container input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+
+    /* Create a custom checkbox */
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 25px;
+      width: 25px;
+      background-color: #eee;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .container:hover input ~ .checkmark {
+      background-color: #ccc;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .container input:checked ~ .checkmark {
+      background-color: #2196F3;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .container input:checked ~ .checkmark:after {
+      display: block;
+    }
+
+    /* Style the checkmark/indicator */
+    .container .checkmark:after {
+      left: 9px;
+      top: 5px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 3px 3px 0;
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      transform: rotate(45deg);
+    }
+
+    section {
+      display: table;
+    }
+
+
+
+    .example-button-row .mat-button-base {
+      margin: 8px 8px 8px 0;
+    }
+
+
+
+    #addpatientbutton{
+      margin-left: 50px;
+      position: center;
+      padding: 0;
+      border: none;
+      background:none;
+    }
+
+
+    .PatientenansichtButton {
+      background-color: #3895D3; /* Green */
+      border: none;
+      color: white;
+      padding: 10px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin-left: 10px;
+    }
+
+    #suchleiste{
+      float: right;
+      width: 400px;
+    }
+
+  #suchbutton{
+    float: right;
+  }
+
+  .filterbutton{
+    margin-top: 10px;
+    float: right;
+    border:none;
+
+  }
+    p{
+      background-color: #f2f2f2;
+      font-size: 35px;
+      padding-left: 200px;
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
+
+  </style>
+
+
+<div id="patientenlisteAnsicht">
+  <br>
+  <p>{{title}}</p>
+  <div>
+  <button type="submit" class="PatientenansichtButton" name="Projektpseudonym erstellen">Projektpseudonym erstellen</button>
+  <button type="submit" class="PatientenansichtButton">Zusammenfuehren</button>
+  <button type="submit" class="PatientenansichtButton">Loeschen</button>
+  <input id="suchleiste" type="text"  placeholder="Suche...">
+ <button id="suchbutton" type="submit" class="PatientenansichtButton"><ion-icon name="search-outline"></ion-icon></button>
+
+  </div>
+<br><br>
+<table id="patientlist">
+
+  <tr id="addPatientzeile">
+    <!--<form action="/action_page.php">-->
+    <th colspan="2">neuer Patient:</th>
+    <th><input type="text" name="nachname" placeholder="Nachname"><ion-icon name="caret-down-circle-outline"></ion-icon></th>
+    <th><input type="text" name="gebutsname" placeholder="Gebutsname"> <button class="filterbutton" type="button"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
+    <th><input type="text" id="vorname" name="vorname" placeholder="Vorname"> <button class="filterbutton" type="button"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
+    <th><input type="text" id="geburtsdatum" name="geburtsdatum" placeholder="Geburtsdatum"> <button class="filterbutton" type="button"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
+    <th><input type="text" id="wohnort" name="wohnort" placeholder="Wohnort"> <button type="button" class="filterbutton"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
+    <th><input type="text" id="plz" name="plz" placeholder="PLZ"> <button class="filterbutton" type="button"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
+    <th><button type="submit" id="addpatientbutton"><img src="https://img.icons8.com/cotton/64/000000/add-male-user--v2.png"/></button></th>
+  <!--</form>-->
+  </tr>
+
+  <tr id="patientenlisteHead">
+  <th><form action="/action_page.php">
+    <label class="container">
+      <input type="checkbox" checked="checked">
+      <span class="checkmark"></span>
+    </label>
+  </form></th>
+  <th>Pseudonym</th>
+  <th>Nachname</th>
+  <th>Geburtsname</th>
+  <th>Vorname</th>
+  <th>Gebutsdatum</th>
+  <th>Wohnort</th>
+  <th>PLZ</th>
+  <th>Tools</th>
+  </tr>
+
+  <tr>
+    <td><form action="/action_page.php">
+      <label class="container">
+        <input type="checkbox" checked="checked">
+        <span class="checkmark"></span>
+      </label>
+    </form></td>
+    <td>ERWN5C0R</td>
+    <td>Misicher</td>
+    <td> </td>
+    <td>Grit</td>
+    <td>17.02.1978</td>
+    <td>Aglasterhausen</td>
+    <td>74858</td>
+
+    <td>
+      <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+      <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span>
+      </button>
+      <button type="submit" class="toolbutton">
+       <span class="toolbutton__icon"><ion-icon name="people"></ion-icon></span>
+      </button>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon"><ion-icon name="create"></ion-icon></span>
+      </button>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon"><ion-icon name="trash"></ion-icon></span>
+      </button>
+    </td>
+  </tr>
+
+  <tr>
+    <td> <form action="/action_page.php">
+      <label class="container">
+        <input type="checkbox" checked="checked">
+        <span class="checkmark"></span>
+      </label>
+    </form> </td>
+    <td>ERWN5C0R</td>
+    <td>Misicher</td>
+    <td> </td>
+    <td>Grit</td>
+    <td>17.02.1978</td>
+    <td>Aglasterhausen</td>
+    <td>74858</td>
+    <td><button type="submit" class="toolbutton">
+      <span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span>
+    </button>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon"><ion-icon name="people"></ion-icon></span>
+      </button>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon"><ion-icon name="create"></ion-icon></span>
+      </button>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon"><ion-icon name="trash"></ion-icon></span>
+      </button></td>
+  </tr>
+
+  <tr>
+    <td> <form action="/action_page.php">
+      <label class="container">
+        <input type="checkbox" checked="checked">
+        <span class="checkmark"></span>
+      </label>
+    </form> </td>
+    <td>ERWN5C0R</td>
+    <td>Misicher</td>
+    <td> </td>
+    <td>Grit</td>
+    <td>17.02.1978</td>
+    <td>Aglasterhausen</td>
+    <td>74858</td>
+    <td><button type="submit" class="toolbutton">
+      <span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span>
+    </button>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon"><ion-icon name="people"></ion-icon></span>
+      </button>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon"><ion-icon name="create"></ion-icon></span>
+      </button>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon"><ion-icon name="trash"></ion-icon></span>
+      </button></td>
+  </tr>
+
+  <tr>
+    <td><form action="/action_page.php">
+      <label class="container">
+        <input type="checkbox" checked="checked">
+        <span class="checkmark"></span>
+      </label>
+    </form> </td>
+    <td>ERWN5C0R</td>
+    <td>Misicher</td>
+    <td> </td>
+    <td>Grit</td>
+    <td>17.02.1978</td>
+    <td>Aglasterhausen</td>
+    <td>74858</td>
+    <td><button type="submit" class="toolbutton">
+      <span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span>
+    </button>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon"><ion-icon name="people"></ion-icon></span>
+      </button>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon"><ion-icon name="create"></ion-icon></span>
+      </button>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon"><ion-icon name="trash"></ion-icon></span>
+      </button></td>
+  </tr>
+
+  <tr>
+    <td><form action="/action_page.php">
+      <label class="container">
+        <input type="checkbox" checked="checked">
+        <span class="checkmark"></span>
+      </label>
+    </form> </td>
+    <td>ERWN5C0R</td>
+    <td>Misicher</td>
+    <td> </td>
+    <td>Grit</td>
+    <td>17.02.1978</td>
+    <td>Aglasterhausen</td>
+    <td>74858</td>
+    <td><button type="submit" class="toolbutton">
+      <span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span>
+    </button>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon"><ion-icon name="people"></ion-icon></span>
+      </button>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon"><ion-icon name="create"></ion-icon></span>
+      </button>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon"><ion-icon name="trash"></ion-icon></span>
+      </button></td>
+  </tr>
+
+  <tr>
+    <td><form action="/action_page.php">
+      <label class="container">
+        <input type="checkbox" checked="checked">
+        <span class="checkmark"></span>
+      </label>
+    </form> </td>
+    <td>ERWN5C0R</td>
+    <td>Misicher</td>
+    <td> </td>
+    <td>Grit</td>
+    <td>17.02.1978</td>
+    <td>Aglasterhausen</td>
+    <td>74858</td>
+    <td><button type="submit" class="toolbutton">
+      <span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span>
+    </button>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon"><ion-icon name="people"></ion-icon></span>
+      </button>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon"><ion-icon name="create"></ion-icon></span>
+      </button>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon" ><ion-icon name="trash"></ion-icon></span>
+      </button></td>
+  </tr>
+
+</table>
+</div>

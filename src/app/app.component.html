@@ -1,0 +1,63 @@
+<style>
+  #kopfzeile{
+    width: 100%;
+    height: 10%;
+    background-color: #f2f2f2;
+  }
+  h1{
+    font-family: Arial;
+    padding-top: 50px;
+    margin-left:100px;
+    color: black;
+    font-size: 50px;
+  }
+
+   #navigationsleiste{
+     background-color: #f2f2f2;
+     float: left;
+     height: 100%;
+     width: 12%;
+
+   }
+
+  .navbutton{
+    width: 80%;
+    margin: 30px;
+    padding:10px;
+    border: none;
+    background: none;
+    float: left;
+    text-align: left;
+  }
+
+  #homebutton{
+    margin-top: 150px;
+  }
+
+  #hauptteil{
+    background-color: white;
+
+  }
+
+  #fusszeile{
+    background-color: yellow;
+  }
+</style>
+<div id="kopfzeile">
+  <h1>Mainzelliste</h1>
+</div>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<div id="navigationsleiste">
+
+  <button type="button" id="homebutton" class="navbutton"><ion-icon name="home-sharp"></ion-icon>  Home</button>
+  <button type="button" class="navbutton"> <ion-icon name="person-add-sharp"></ion-icon> PID anfordern</button>
+  <button type="button" class="navbutton"><ion-icon name="list-sharp"></ion-icon> Patientenliste</button>
+  <button type="button" class="navbutton"><ion-icon name="document-text-sharp"></ion-icon>  Audit-Trail</button>
+</div>
+<div id="hauptteil">
+<router-outlet></router-outlet>
+</div>
+
+<div id="fusszeile">
+</div>
