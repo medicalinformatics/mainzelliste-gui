@@ -43,18 +43,10 @@
     background-color: yellow;
   }
 </style>
-<div id="kopfzeile">
-  <h1>Mainzelliste</h1>
-</div>
-<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-<div id="navigationsleiste">
+<app-head></app-head>
 
-  <button type="button" id="homebutton" class="navbutton"><ion-icon name="home-sharp"></ion-icon>  Home</button>
-  <button type="button" class="navbutton"> <ion-icon name="person-add-sharp"></ion-icon> PID anfordern</button>
-  <button type="button" class="navbutton"><ion-icon name="list-sharp"></ion-icon> Patientenliste</button>
-  <button type="button" class="navbutton"><ion-icon name="document-text-sharp"></ion-icon>  Audit-Trail</button>
-</div>
+<app-navigationsseite></app-navigationsseite>
+
 <div id="hauptteil">
 <router-outlet></router-outlet>
 </div>
