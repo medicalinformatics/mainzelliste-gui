@@ -14,6 +14,7 @@ import { IonicModule } from '@ionic/angular';
 import { FooterComponent } from './footer/footer.component';
 import {AddPatientFormularComponent} from "./add-patient-formular/add-patient-formular.component";
 import {PatientenlisteComponent} from "./patientenliste/patientenliste.component";
+import { CloneComponent } from './clone/clone.component';
 
 
 
@@ -30,7 +31,8 @@ import {PatientenlisteComponent} from "./patientenliste/patientenliste.component
     AddPatientFormularComponent,
     routingComponents,
     IdcardComponent,
-    FooterComponent
+    FooterComponent,
+    CloneComponent
   ],
   imports: [
     BrowserModule,
