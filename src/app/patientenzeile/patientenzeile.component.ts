@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-patientenzeile',
@@ -7,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PatientenzeileComponent implements OnInit {
 
+ /* @Input() character: any;
+  @Input() columns: string[] | undefined;
+*/
   constructor() { }
 
   ngOnInit(): void {

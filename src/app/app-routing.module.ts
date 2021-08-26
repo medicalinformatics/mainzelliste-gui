@@ -23,4 +23,4 @@ const routes: Routes = [
 
 })
 export class AppRoutingModule{}
-export const routingComponents =[PatientenlisteComponent, AddPatientFormularComponent, HomeComponent, AudittrailComponent]
+export const routingComponents =[PatientenlisteComponent, AddPatientFormularComponent, HomeComponent, AudittrailComponent, IdcardComponent, CloneComponent]

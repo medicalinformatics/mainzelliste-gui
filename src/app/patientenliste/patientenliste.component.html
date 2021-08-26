@@ -2,7 +2,8 @@
     #patientlist {
       font-family: Arial, Helvetica, sans-serif;
       border-collapse: collapse;
-      width: 89%;
+      width: 98%;
+      margin-left: 1%;
     }
 
     #patientlist td, #patientlist th {
@@ -150,7 +151,7 @@
       text-decoration: none;
       display: inline-block;
       font-size: 16px;
-      margin-left: 10px;
+      margin-left: 1%;
       border-radius: 15px;
 
     }
@@ -178,11 +179,11 @@
 
   }
     p{
-      background-color: #f2f2f2;
+      padding-left: 1%;
+      background-color: white;
       font-size: 35px;
-      padding-left: 200px;
-      padding-top: 20px;
-      padding-bottom: 20px;
+      font-family: Arial;
+
     }
 
     .toolbutton__icon{
@@ -200,6 +201,8 @@
     a{
       color: black;
     }
+
+
   </style>
 
 
@@ -304,31 +307,7 @@
   </tr>
 
   <tr>
-    <td> <form action="/action_page.php">
-      <label class="container">
-        <input type="checkbox" checked="checked">
-        <span class="checkmark"></span>
-      </label>
-    </form> </td>
-    <td>ERWN5C0R</td>
-    <td>Misicher</td>
-    <td> </td>
-    <td>Grit</td>
-    <td>17.02.1978</td>
-    <td>Aglasterhausen</td>
-    <td>74858</td>
-    <td><button type="submit" class="toolbutton">
-      <span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span>
-    </button>
-      <button type="submit" class="toolbutton">
-        <span class="toolbutton__icon"><ion-icon name="people"></ion-icon></span>
-      </button>
-      <button type="submit" class="toolbutton">
-        <span class="toolbutton__icon"><ion-icon name="create"></ion-icon></span>
-      </button>
-      <button type="submit" class="toolbutton">
-        <span class="toolbutton__icon"><ion-icon name="trash"></ion-icon></span>
-      </button></td>
+    <app-patientenzeile></app-patientenzeile>
   </tr>
 
   <tr>
@@ -386,34 +365,28 @@
         <span class="toolbutton__icon"><ion-icon name="trash"></ion-icon></span>
       </button></td>
   </tr>
+  <!--
+    <tr>
+      <th *ngFor="let col of columns">
+        {{col}}
+      </th>
+    </tr>
+    <tr *ngFor="let char of characters | async">
+      <td *ngFor="let col of columns">
+        {{char[col]}}
+   /td>
+    </tr>
 
-  <tr>
-    <td><form action="/action_page.php">
-      <label class="container">
-        <input type="checkbox" checked="checked">
-        <span class="checkmark"></span>
-      </label>
-    </form> </td>
-    <td>ERWN5C0R</td>
-    <td>Misicher</td>
-    <td> </td>
-    <td>Grit</td>
-    <td>17.02.1978</td>
-    <td>Aglasterhausen</td>
-    <td>74858</td>
-    <td><button type="submit" class="toolbutton">
-      <span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span>
-    </button>
-      <button type="submit" class="toolbutton">
-        <span class="toolbutton__icon"><ion-icon name="people"></ion-icon></span>
-      </button>
-      <button type="submit" class="toolbutton">
-        <span class="toolbutton__icon"><ion-icon name="create"></ion-icon></span>
-      </button>
-      <button type="submit" class="toolbutton">
-        <span class="toolbutton__icon" ><ion-icon name="trash"></ion-icon></span>
-      </button></td>
-  </tr>
 
+    <tr>
+      <th *ngFor="let c of columns">{{c}}</th>
+    </tr>
+    <tr *ngFor="let ch of characters | async"
+        patientenzeile
+        [character]="ch"
+        [columns]="columns">
+
+    </tr>
+    -->
 </table>
 </div>

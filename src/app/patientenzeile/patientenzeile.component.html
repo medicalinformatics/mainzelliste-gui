@@ -183,37 +183,35 @@
 
 </style>
 <body>
-<table>
-<tr>
-<td><form action="/action_page.php">
-  <label class="container">
-    <input type="checkbox" checked="checked">
-    <span class="checkmark"></span>
-  </label>
-</form></td>
-<td>ERWN5C0R</td>
-<td>Misicher</td>
-<td> </td>
-<td>Grit</td>
-<td>17.02.1978</td>
-<td>Aglasterhausen</td>
-<td>74858</td>
 
-<td>
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-  <button type="submit" class="toolbutton">
-    <span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span>
-  </button>
-  <button type="submit" class="toolbutton">
-    <span class="toolbutton__icon"><ion-icon name="people"></ion-icon></span>
-  </button>
-  <button type="submit" class="toolbutton">
-    <span class="toolbutton__icon"><ion-icon name="create"></ion-icon></span>
-  </button>
-  <button type="submit" class="toolbutton">
-    <span class="toolbutton__icon"><ion-icon name="trash"></ion-icon></span>
-  </button>
-</td>
-</tr></table>
+  <tr>
+    <td> <form action="/action_page.php">
+      <label class="container">
+        <input type="checkbox" checked="checked">
+        <span class="checkmark"></span>
+      </label>
+    </form> </td>
+    <td>ERWN5C0R</td>
+    <td>Misicher</td>
+    <td> </td>
+    <td>Grit</td>
+    <td>17.02.1978</td>
+    <td>Aglasterhausen</td>
+    <td>74858</td>
+    <td><button type="submit" class="toolbutton">
+      <a routerLink="/idcard" ><span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span></a>
+    </button>
+      <button type="submit" class="toolbutton">
+        <a routerLink="/clone" ><span class="toolbutton__icon"><ion-icon name="people"></ion-icon></span></a>
+      </button>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon"><ion-icon name="create"></ion-icon></span>
+      </button>
+      <button type="submit" class="toolbutton">
+        <span class="toolbutton__icon"><ion-icon name="trash"></ion-icon></span>
+      </button></td>
+  </tr>
+
+  <<!--  <td *ngFor="let col of columns"> {{character[col]}}</td>-->
+
 </body>

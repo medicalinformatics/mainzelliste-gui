@@ -15,7 +15,7 @@ import { FooterComponent } from './footer/footer.component';
 import {AddPatientFormularComponent} from "./add-patient-formular/add-patient-formular.component";
 import {PatientenlisteComponent} from "./patientenliste/patientenliste.component";
 import { CloneComponent } from './clone/clone.component';
-
+/*imports: [BrowserAnimationsModule];*/
 
 
 @NgModule({

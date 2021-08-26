@@ -1,15 +1,29 @@
 import { Component, OnInit } from '@angular/core';
+import { AdventureTimeService } from '../adventure-time.service';
+import {Observable} from "rxjs";
+
 
 @Component({
   selector: 'app-patientenliste',
   templateUrl: './patientenliste.component.html',
   styleUrls: ['./patientenliste.component.css']
 })
+
+
+
 export class PatientenlisteComponent implements OnInit {
   title="Patientenliste";
-  constructor() { }
+ /* characters: Observable<any[]> | undefined;
+  columns: string[] | undefined;*/
 
-  ngOnInit(): void {
+
+  constructor(/*private atService: AdventureTimeService*/) {}
+
+  ngOnInit() {/*
+    this.columns = this.atService.getColumns();
+    //["name", "age", "species", "occupation"]
+    this.characters = this.atService.getCharacters();
+    //all data in mock-data.ts*/
   }
 
 
