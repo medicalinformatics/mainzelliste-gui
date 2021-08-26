@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AdventureTimeService } from '../adventure-time.service';
 import {Observable} from "rxjs";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {FilterComponent} from "../filter/filter.component";
 
 
 @Component({
@@ -17,7 +19,10 @@ export class PatientenlisteComponent implements OnInit {
   columns: string[] | undefined;*/
 
 
-  constructor(/*private atService: AdventureTimeService*/) {}
+  constructor(public dialog: MatDialog ) {
+
+
+  }
 
   ngOnInit() {/*
     this.columns = this.atService.getColumns();
@@ -26,6 +31,12 @@ export class PatientenlisteComponent implements OnInit {
     //all data in mock-data.ts*/
   }
 
+  openfilter(){
+  console.log("halloo");
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus=true;
+    this.dialog.open(FilterComponent);
+  }
 
 
 }

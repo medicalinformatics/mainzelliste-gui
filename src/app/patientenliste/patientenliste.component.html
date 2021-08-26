@@ -223,7 +223,7 @@
   <tr id="addPatientzeile">
     <!--<form action="/action_page.php">-->
     <th colspan="2">neuer Patient:</th>
-    <th><input type="text" name="nachname" placeholder="Nachname"> <ion-icon name="caret-down-circle-outline"></ion-icon></th>
+    <th><input type="text" name="nachname" placeholder="Nachname"> <button (click)="openfilter()"><ion-icon  name="caret-down-circle-outline"></ion-icon></button></th>
     <th><input type="text" name="gebutsname" placeholder="Gebutsname"> <ion-icon name="caret-down-circle-outline"></ion-icon></th>
     <th><input type="text" id="vorname" name="vorname" placeholder="Vorname"> <ion-icon name="caret-down-circle-outline"></ion-icon></th>
     <th><input type="text" id="geburtsdatum" name="geburtsdatum" placeholder="Geburtsdatum"> <ion-icon name="caret-down-circle-outline"></ion-icon></th>
@@ -306,9 +306,8 @@
       </button></td>
   </tr>
 
-  <tr>
-    <app-patientenzeile></app-patientenzeile>
-  </tr>
+  <tr app-patientenzeile> </tr>
+
 
   <tr>
     <td><form action="/action_page.php">

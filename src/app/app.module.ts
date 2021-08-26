@@ -15,7 +15,10 @@ import { FooterComponent } from './footer/footer.component';
 import {AddPatientFormularComponent} from "./add-patient-formular/add-patient-formular.component";
 import {PatientenlisteComponent} from "./patientenliste/patientenliste.component";
 import { CloneComponent } from './clone/clone.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatDialogModule} from "@angular/material/dialog";
 /*imports: [BrowserAnimationsModule];*/
+
 
 
 @NgModule({
@@ -38,6 +41,8 @@ import { CloneComponent } from './clone/clone.component';
     BrowserModule,
     AppRoutingModule,
     IonicModule.forRoot(),
+    BrowserAnimationsModule,
+    MatDialogModule
 
 
 

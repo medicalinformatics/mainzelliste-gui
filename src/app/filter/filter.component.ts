@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-filter',
@@ -8,8 +9,12 @@ import { Component, OnInit } from '@angular/core';
 export class FilterComponent implements OnInit {
   title="Filter";
 
-  constructor() { }
+  constructor(public dialogRef: MatDialogRef<FilterComponent>) { }
   ngOnInit(): void {
   }
 
+  closeFilter(){
+    console.log("halloo");
+    this.dialogRef.close();
+  }
 }

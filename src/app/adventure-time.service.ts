@@ -11,10 +11,11 @@ export class AdventureTimeService {
 
   constructor() { }
 
- /* getCharacters(): Observable<any[]>{
+/*getCharacters(): Observable<any[]>{
     return Observable.of(CHARACTERS).delay(100);
-  }
-  getColumns(): string[]{
-    return ["nachname", "vorname", "geburtsname", "geburtsdatum","wohnort", "plz"]};*/
-}
+  }*/
+ /* getColumns(): string[]{
+    return ["nachname", "vorname", "geburtsname", "geburtsdatum","wohnort", "plz"]};
 
+*/
+}
