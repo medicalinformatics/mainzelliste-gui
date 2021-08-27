@@ -1,38 +1,38 @@
-
-    <td> <form action="/myaction.php">
+<td> <form action="/myaction.php">
       <label class="container">
         <input type="checkbox" checked="checked">
         <span class="checkmark"></span>
       </label>
       </form></td>
 
-    <td>ERWN5C0R</td>
+<td>ERWN5C0R</td>
 
-    <td>Misicher</td>
+<td>Misicher</td>
 
-    <td> </td>
+<td> </td>
 
-    <td>Grit</td>
+<td>Grit</td>
 
-    <td>17.02.1978</td>
+<td>17.02.1978</td>
 
-    <td>Aglasterhausen</td>
+<td>Aglasterhausen</td>
 
-    <td>74858</td>
+<td>74858</td>
 
-    <td><button type="submit" class="toolbutton">
+<td>
+  <button id="idCardTool" type="submit" class="toolbutton">
       <a routerLink="/idcard" ><span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span></a>
-    </button>
-      <button type="submit" class="toolbutton">
+  </button>
+  <button id="cloneButtonTool" type="submit" class="toolbutton">
         <a routerLink="/clone" ><span class="toolbutton__icon"><ion-icon name="people"></ion-icon></span></a>
-      </button>
-      <button type="submit" class="toolbutton">
+  </button>
+  <button (click)="editPatientenZeile()" id="editButtonTool" type="submit" class="toolbutton">
         <span class="toolbutton__icon"><ion-icon name="create"></ion-icon></span>
-      </button>
-      <button type="submit" class="toolbutton">
+  </button>
+  <button id="deleteButtonTool" type="submit" class="toolbutton">
         <span class="toolbutton__icon"><ion-icon name="trash"></ion-icon></span>
-      </button>
-    </td>
+  </button>
+</td>
 
 
 

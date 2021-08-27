@@ -15,4 +15,7 @@ export class PatientenzeileComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  editPatientenZeile() {
+
+  }
 }

@@ -1,0 +1,12 @@
+#kopfzeile{
+  width: 100%;
+  height: 10%;
+  background-color: #f2f2f2;
+}
+h1{
+  font-family: Arial;
+  color: black;
+  padding-left: 80px;
+  padding-top: 30px;
+  font-size: 45px;
+}

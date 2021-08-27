@@ -1,0 +1,33 @@
+nav{
+  background-color: #f2f2f2;
+  float: left;
+  height: 100%;
+  width: 10%;
+  padding-left: 35px;
+  border-right: solid;
+  border-color: white;
+
+
+
+}
+a{
+  color: black;
+  font-size: 22px;
+
+}
+
+ion-icon{
+  padding-right: 15px;
+  font-size: 25px;
+}
+.navbutton{
+  width: 80%;
+  margin: 30px;
+  padding:10px;
+  border: none;
+  background: none;
+  float: left;
+  text-align: left;
+}
+
+

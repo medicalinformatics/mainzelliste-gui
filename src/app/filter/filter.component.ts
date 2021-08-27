@@ -14,7 +14,7 @@ export class FilterComponent implements OnInit {
   }
 
   closeFilter(){
-    console.log("halloo");
+    console.log("closedFilter");
     this.dialogRef.close();
   }
 }

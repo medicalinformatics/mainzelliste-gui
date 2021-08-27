@@ -17,6 +17,7 @@ import {PatientenlisteComponent} from "./patientenliste/patientenliste.component
 import { CloneComponent } from './clone/clone.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatDialogModule} from "@angular/material/dialog";
+import { EditPatientenZeileComponent } from './edit-patienten-zeile/edit-patienten-zeile.component';
 /*imports: [BrowserAnimationsModule];*/
 
 
@@ -35,7 +36,8 @@ import {MatDialogModule} from "@angular/material/dialog";
     routingComponents,
     IdcardComponent,
     FooterComponent,
-    CloneComponent
+    CloneComponent,
+    EditPatientenZeileComponent
   ],
   imports: [
     BrowserModule,
