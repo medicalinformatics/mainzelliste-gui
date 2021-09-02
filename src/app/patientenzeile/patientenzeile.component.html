@@ -1,3 +1,42 @@
+<!-- <td> <form action="/myaction.php">
+  <label class="container">
+    <input type="checkbox" checked="checked">
+    <span class="checkmark"></span>
+  </label>
+</form></td>
+
+<td> KJH543J1</td>
+
+<td >Schmidt</td>
+
+<td> </td>
+
+<td> Frank</td>
+
+<td> 01.01.1990</td>
+
+<td> Berlin</td>
+
+<td> 10115</td>
+
+<td>
+  <button id="idCardTool" type="submit" class="toolbutton">
+    <a routerLink="/idcard" ><span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span></a>
+  </button>
+  <button id="cloneButtonTool" type="submit" class="toolbutton">
+    <a routerLink="/clone" ><span class="toolbutton__icon"><ion-icon name="people"></ion-icon></span></a>
+  </button>
+  <button id="editButtonTool" (click)="show = !show"  type="submit" class="toolbutton">
+    <span class="toolbutton__icon"><ion-icon name="create"></ion-icon></span>
+    {{show ? 'hide' : 'show'}}</button>
+  <button id="deleteButtonTool" type="submit" class="toolbutton">
+    <span class="toolbutton__icon"><ion-icon name="trash"></ion-icon></span>
+  </button>
+</td>
+
+-->
+
+
 <td> <form action="/myaction.php">
       <label class="container">
         <input type="checkbox" checked="checked">
@@ -5,19 +44,19 @@
       </label>
       </form></td>
 
-<td>ERWN5C0R</td>
+<td>{{patient.pseudonym}}</td>
 
-<td>Misicher</td>
+<td>{{patient.nachname}}</td>
 
-<td> </td>
+<td> {{patient.geburtsname}}</td>
 
-<td>Grit</td>
+<td>{{patient.vorname}}</td>
 
-<td>17.02.1978</td>
+<td>{{patient.geburtsdatum}}</td>
 
-<td>Aglasterhausen</td>
+<td>{{patient.wohnort}}</td>
 
-<td>74858</td>
+<td>{{patient.plz}}</td>
 
 <td>
   <button id="idCardTool" type="submit" class="toolbutton">
@@ -33,8 +72,6 @@
         <span class="toolbutton__icon"><ion-icon name="trash"></ion-icon></span>
   </button>
 </td>
-
-
 
   <!--  <td *ngFor="let col of columns"> {{character[col]}}</td>-->
 

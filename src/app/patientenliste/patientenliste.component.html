@@ -32,31 +32,19 @@
       <span class="checkmark"></span>
     </label>
   </form></th>
-  <th>Pseudonym <button class="filterbutton" (click)="openfilterpseudonyme()"><ion-icon  name="caret-down-circle-outline"></ion-icon></button></th>
-  <th>Nachname <button class="filterbutton" (click)="openfilternachname()"><ion-icon  name="caret-down-circle-outline"></ion-icon></button></th>
-  <th>Geburtsname <button class="filterbutton" (click)="openfiltergeburtsname()"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
-  <th>Vorname <button class="filterbutton" (click)="openfiltervorname()"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
-  <th>Gebutsdatum <button class="filterbutton" (click)="openfiltergeburtsdatum()"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
-  <th>Wohnort <button class="filterbutton" (click)="openfilterwohnort()"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
-  <th>PLZ <button class="filterbutton" (click)="openfilterplz()"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
+  <th>Pseudonym <button class="filterbutton" (click)="openfilter('pseudonymfilter')"><ion-icon  name="caret-down-circle-outline"></ion-icon></button></th>
+  <th>Nachname <button class="filterbutton" (click)="openfilter('nachnamefilter')"><ion-icon  name="caret-down-circle-outline"></ion-icon></button></th>
+  <th>Geburtsname <button class="filterbutton" (click)="openfilter('geburtsnamefilter')"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
+  <th>Vorname <button class="filterbutton" (click)="openfilter('vornamefilter')"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
+  <th>Geburtsdatum <button class="filterbutton" (click)="openfilter('geburtsdatumfilter')"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
+  <th>Wohnort <button class="filterbutton" (click)="openfilter('wohnortfilter')"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
+  <th>PLZ <button class="filterbutton" (click)="openfilter('plzfilter')"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
   <th>Tools</th>
   </tr>
 
-  <tr app-patientenzeile> </tr>
+  <tr *ngFor="let patient of data" [patient]="patient" app-patientenzeile></tr>
+  <tr app-edit-patienten-zeile></tr>
 
-  <tr app-patientenzeile> </tr>
-
-  <tr app-patientenzeile> </tr>
-
-  <tr app-patientenzeile> </tr>
-
-  <tr app-patientenzeile> </tr>
-
-  <tr app-patientenzeile> </tr>
-
-  <tr app-edit-patienten-zeile> </tr>
-
-  <tr app-patientenzeile> </tr>
   <!--
     <tr>
       <th *ngFor="let col of columns">

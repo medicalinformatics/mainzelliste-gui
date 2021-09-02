@@ -6,11 +6,14 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./patientenzeile.component.css']
 })
 export class PatientenzeileComponent implements OnInit {
-
+  @Input() patient: any;
+  show = true;
  /* @Input() character: any;
   @Input() columns: string[] | undefined;
 */
-  constructor() { }
+  constructor() {
+
+  }
 
   ngOnInit(): void {
   }
