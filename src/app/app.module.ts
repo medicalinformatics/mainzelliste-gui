@@ -9,7 +9,6 @@ import { HeadComponent } from './head/head.component';
 import { FilterComponent } from './filter/filter.component';
 import {AppRoutingModule, routingComponents} from './app-routing.module';
 import { IdcardComponent } from './idcard/idcard.component';
-import {IonIcon} from "ionicons/components/ion-icon";
 import { IonicModule } from '@ionic/angular';
 import { FooterComponent } from './footer/footer.component';
 import {AddPatientFormularComponent} from "./add-patient-formular/add-patient-formular.component";
@@ -23,8 +22,6 @@ import { ZusammenfuehrenComponent } from './zusammenfuehren/zusammenfuehren.comp
 import { ErgebnisZusammenfuehrenComponent } from './ergebnis-zusammenfuehren/ergebnis-zusammenfuehren.component';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { PatientComponent } from './patient/patient.component';
-
-/*imports: [BrowserAnimationsModule];*/
 
 
 
@@ -56,8 +53,6 @@ import { PatientComponent } from './patient/patient.component';
     MatDialogModule,
     FormsModule,
     MatFormFieldModule
-
-
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -16,13 +16,8 @@
 
   <tr >
     <th  class="tabellenspalte" colspan="2">neuer Patient:</th>
-    <th *ngFor=" let field of data[0].fields"><input type="text" name="nachname" placeholder="Nachname" [(ngModel)]="data."> </th>
-  <!--  <th><input type="text" name="geburtsname" placeholder="Geburtsname" [(ngModel)]="geburtsname"> </th>
-    <th><input type="text" id="vorname" name="vorname" placeholder="Vorname" [(ngModel)]="vorname"> </th>
-    <th><input type="text" id="geburtsdatum" name="geburtsdatum" placeholder="Geburtsdatum" [(ngModel)]="geburtsdatum"> </th>
-    <th><input type="text" id="wohnort" name="wohnort" placeholder="Wohnort" [(ngModel)]="wohnort"> </th>
-    <th><input type="text" id="plz" name="plz" placeholder="PLZ" [(ngModel)]="plz"> </th>-->
-    <th id="addPatientzeile"><button type="submit" (click)="erstelleNeuenPatienten"  id="addpatientbutton"><ion-icon name="person-add"></ion-icon></button></th>
+    <th *ngFor=" let field of fields"><input type="text" name="{{field}}}" placeholder="{{field}}" [(ngModel)]="tmpPatient.fields[field]"></th>
+    <th id="addPatientzeile"><button type="submit" (click)="erstelleNeuenPatienten()"  id="addpatientbutton"><ion-icon name="person-add"></ion-icon></button></th>
   </tr>
 
   <tr id="patientenlisteHead">
@@ -42,7 +37,7 @@
   <th class="tabellenspalte">Tools</th>
   </tr>
 
-  <tr *ngFor="let patient of data" [patient]="patient" app-patientenzeile></tr>
+  <tr *ngFor="let patient of data | async" [patient]="patient" [fields]="fields" app-patientenzeile></tr>
 
 </table>
 </div>

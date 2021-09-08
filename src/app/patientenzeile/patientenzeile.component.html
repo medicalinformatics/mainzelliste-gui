@@ -7,7 +7,8 @@
       </form>
 </td>
 
-<td *ngFor="let field of patient | keyvalue" > <input *ngIf="editMode" type="text" name="nachname" [(ngModel)]="field.value" >  <span *ngIf="!editMode">{{field.value}}</span></td>
+<td><input *ngIf="editMode" type="text" name="{{patient.ids[0].idType}}" [(ngModel)]="patient.ids[0].idString" >  <span *ngIf="!editMode">{{patient.ids[0].idString}}</span></td>
+<td *ngFor="let field of fields" > <input *ngIf="editMode" type="text" name="nachname" [(ngModel)]="patient.fields[field]" >  <span *ngIf="!editMode">{{patient.fields[field]}}</span></td>
 
 <td *ngIf="!editMode">
   <button id="idCardTool" type="submit" class="toolbutton">

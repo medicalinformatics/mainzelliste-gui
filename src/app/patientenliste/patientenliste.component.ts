@@ -1,41 +1,27 @@
-import { Component, OnInit } from '@angular/core';
-import { AdventureTimeService } from '../adventure-time.service';
-import {Observable} from "rxjs";
+import {Component} from '@angular/core';
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {FilterComponent} from "../filter/filter.component";
+import {Patient} from "../model/patient";
+import {PatientService} from "../services/patient.service";
 
 
 @Component({
   selector: 'app-patientenliste',
-  //directives: '[app-edit-patienten-zeile]',
   templateUrl: './patientenliste.component.html',
   styleUrls: ['./patientenliste.component.css']
 })
 
 
-export class PatientenlisteComponent implements OnInit {
-  data: Array<any>;
-  title="Patientenliste";
- /* characters: Observable<any[]> | undefined;
-  columns: string[] | undefined;*/
- // patientenzeile= PaientenZeileComponent;
+export class PatientenlisteComponent {
+  title = "Patientenliste";
+  patientService: PatientService;
+  data: Promise<Array<Patient>>;
+  tmpPatient: Patient = new Patient();
+  fields: Array<string> = ["vorname", "nachname", "geburtsname", "geburtsdatum", "plz", "wohnort"];
 
-
-  constructor(public dialog: MatDialog ) {
-
-    this.data = [
-      { pseudonym: 'MKJH56FR', nachname: 'Müller', geburtsname: '', vorname: 'Sara', geburtsdatum: '01.01.2000', wohnort: 'Berlin', plz: '10115' },
-      { pseudonym: 'MN321L09', nachname: 'Schmidt', geburtsname: 'Sommer', vorname: 'Laura', geburtsdatum: '19.03.1968', wohnort: 'Hamburg', plz: '20095' },
-      { pseudonym: 'ASDKJU11', nachname: 'Frank', geburtsname: '', vorname: 'Tim', geburtsdatum: '15.05.1980', wohnort: 'Hannover', plz: '30159' },
-      { pseudonym: 'CQKF88A0', nachname: 'Friedrich', geburtsname: '', vorname: 'Max', geburtsdatum: '23.02.1995', wohnort: 'München', plz: '80331' }
-    ];
-  }
-
-  ngOnInit() {/*
-    this.columns = this.atService.getColumns();
-    //["name", "age", "species", "occupation"]
-    this.characters = this.atService.getCharacters();
-    //all data in mock-data.ts*/
+  constructor(public dialog: MatDialog, patientService: PatientService) {
+    this.patientService = patientService;
+    this.data = patientService.getPatients();
   }
 
   openfilter(spalte: string) {
@@ -43,7 +29,7 @@ export class PatientenlisteComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
     if (spalte == 'pseudonymfilter') {
-      this.dialog.open(FilterComponent, { position: {top: '0%', left: '0%'}});
+      this.dialog.open(FilterComponent, {position: {top: '0%', left: '0%'}});
     } else if (spalte == 'nachnamefilter') {
       this.dialog.open(FilterComponent, {position: {top: '0%', left: '0%'}});
     } else if (spalte == 'geburtsnamefilter') {
@@ -59,13 +45,12 @@ export class PatientenlisteComponent implements OnInit {
     }
   }
 
- /* openfilter(spalte: string){
-    console.log("opened nachnameFilter");
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.autoFocus=true;
-    this.dialog.open(FilterComponent);
+  erstelleNeuenPatienten () {
+    this.patientService.createPatient(this.tmpPatient).then((result) => {
+      if (result == 200) {
+        this.tmpPatient = new Patient();
+      }
+    });
   }
-*/
-
 
 }
