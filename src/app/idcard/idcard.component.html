@@ -6,9 +6,13 @@
 
 <div id="patientendaten">
 <h2>Patientendaten</h2>
+  <!-- TODO: Make this look awesome -->
+  <div *ngFor="let field of fields" class="patientendatenzeile">{{field}}: {{patient.fields[field]}}</div>
 </div>
 <div id="pseudonyme">
 <h2>Pseudonyme</h2>
+  <!-- TODO: Make this look awesome -->
+  <div *ngFor="let id of patient.ids" class="patientendatenzeile">{{id.idType}}: {{id.idString}}</div>
 </div>
   <div>
     <button type="submit" class="IDCardAnsichtButton">Drucken</button><br><br><br><br><br>

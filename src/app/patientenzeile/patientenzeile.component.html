@@ -12,7 +12,7 @@
 
 <td *ngIf="!editMode">
   <button id="idCardTool" type="submit" class="toolbutton">
-      <a routerLink="/idcard" ><span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span></a>
+      <a [routerLink]="['/idcard']" [state]="{patient: patient, fields: fields}" ><span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span></a>
   </button>
   <button id="cloneButtonTool" type="submit" class="toolbutton">
         <a routerLink="/clone" ><span class="toolbutton__icon"><ion-icon name="people"></ion-icon></span></a>
