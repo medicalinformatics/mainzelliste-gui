@@ -1,20 +1,15 @@
-#filterfenster{
-  position: fixed;
-  top: 31%;
-  left:28%;
-  right: 0;
-  bottom: 0;
-  z-index: 1;
-  overflow: auto;
-  width: 18%;
-  height: 25%;
-  background-color: white;
-  border: dimgrey solid 0.5px;
-}
 
+/*
 .mat-dialog-container{
  width: 50%;
+ border:none;
+  padding: 4px;
 
+}*/
+
+#filterfenster{
+  border: none;
+  padding: 2px;
 }
 
 .header{

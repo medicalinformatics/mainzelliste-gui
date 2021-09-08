@@ -2,6 +2,7 @@ h2{
   font-family: Arial;
   font-size: 35px;
   margin-left: 5%;
+  margin-top: 2%;
 }
 
 h1{
@@ -20,7 +21,7 @@ h1{
 
 #patientendaten{
   width: 30%;
-  height: 45%;
+  height: 39%;
   background-color: #f2f2f2;
   border: solid;
   border-width: 3px;
@@ -29,34 +30,40 @@ h1{
   left: 0%;
   position:absolute;
   margin-left:1%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
 }
 
 #pseudonyme{
   width: 30%;
-  height: 45%;
+  height: 39%;
   background-color: #f2f2f2;
   border: solid;
   border-width: 3px;
   border-radius: 5px;
   border-color: #888888;
-  top: 6%;
+  top: 8%;
   left: 35%;
   position:absolute;
   margin-left:1%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
 }
 
 #historie{
   width: 85%;
-  height: 35%;
+  height: 34%;
   background-color: #f2f2f2;
   border: solid;
   border-width: 3px;
   border-radius: 5px;
   border-color: #888888;
-  top: 55%;
+  top: 50%;
   left: 0px;
   position:absolute;
   margin-left:1%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
 }
 
 .IDCardAnsichtButton {
@@ -73,6 +80,8 @@ h1{
   position: absolute;
   left: 85%;
   font-size: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
 
 }
 

@@ -18,6 +18,12 @@ import { CloneComponent } from './clone/clone.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatDialogModule} from "@angular/material/dialog";
 import { EditPatientenZeileComponent } from './edit-patienten-zeile/edit-patienten-zeile.component';
+import {FormsModule} from "@angular/forms";
+import { ZusammenfuehrenComponent } from './zusammenfuehren/zusammenfuehren.component';
+import { ErgebnisZusammenfuehrenComponent } from './ergebnis-zusammenfuehren/ergebnis-zusammenfuehren.component';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { PatientComponent } from './patient/patient.component';
+
 /*imports: [BrowserAnimationsModule];*/
 
 
@@ -37,15 +43,19 @@ import { EditPatientenZeileComponent } from './edit-patienten-zeile/edit-patient
     IdcardComponent,
     FooterComponent,
     CloneComponent,
-    EditPatientenZeileComponent
+    EditPatientenZeileComponent,
+    ZusammenfuehrenComponent,
+    ErgebnisZusammenfuehrenComponent,
+    PatientComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     IonicModule.forRoot(),
     BrowserAnimationsModule,
-    MatDialogModule
-
+    MatDialogModule,
+    FormsModule,
+    MatFormFieldModule
 
 
   ],

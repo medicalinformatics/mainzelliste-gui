@@ -1,3 +1,11 @@
+.mat-dialog-container{
+  padding: 4px;
+}
+
+#zsmfuehrenbutton{
+color: white;
+}
+
 #patientlist {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
@@ -14,12 +22,15 @@
 
 #patientlist tr:hover {background-color: #ddd;}
 
-#patientlist th {
+th {
   padding-top: 13px;
   padding-bottom: 13px;
   text-align: left;
   background-color: #888888;
-  color: white;
+  color: dimgrey;
+}
+.tabellenspalte{
+  color:white;
 }
 
 input[type=text] {
@@ -138,6 +149,8 @@ section {
   color: grey;
   width: 60px;
   height: 55px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
 }
 
 
@@ -152,6 +165,7 @@ section {
   font-size: 16px;
   margin-left: 1%;
   border-radius: 15px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
 }
 
@@ -159,6 +173,8 @@ section {
   float: right;
   width: 400px;
   margin-right: 30px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
 }
 
 #suchbutton{
@@ -182,8 +198,10 @@ section {
 p{
   padding-left: 1%;
   background-color: white;
-  font-size: 35px;
+  font-size: 40px;
   font-family: Arial;
+  margin-top: 1%;
+
 
 }
 
@@ -201,5 +219,6 @@ p{
 }
 a{
   color: black;
+  text-decoration: none;
 }
 

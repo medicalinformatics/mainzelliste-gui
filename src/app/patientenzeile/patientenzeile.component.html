@@ -1,64 +1,15 @@
-<!-- <td> <form action="/myaction.php">
-  <label class="container">
-    <input type="checkbox" checked="checked">
-    <span class="checkmark"></span>
-  </label>
-</form></td>
-
-<td> KJH543J1</td>
-
-<td >Schmidt</td>
-
-<td> </td>
-
-<td> Frank</td>
-
-<td> 01.01.1990</td>
-
-<td> Berlin</td>
-
-<td> 10115</td>
-
-<td>
-  <button id="idCardTool" type="submit" class="toolbutton">
-    <a routerLink="/idcard" ><span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span></a>
-  </button>
-  <button id="cloneButtonTool" type="submit" class="toolbutton">
-    <a routerLink="/clone" ><span class="toolbutton__icon"><ion-icon name="people"></ion-icon></span></a>
-  </button>
-  <button id="editButtonTool" (click)="show = !show"  type="submit" class="toolbutton">
-    <span class="toolbutton__icon"><ion-icon name="create"></ion-icon></span>
-    {{show ? 'hide' : 'show'}}</button>
-  <button id="deleteButtonTool" type="submit" class="toolbutton">
-    <span class="toolbutton__icon"><ion-icon name="trash"></ion-icon></span>
-  </button>
-</td>
-
--->
-
 
 <td> <form action="/myaction.php">
       <label class="container">
-        <input type="checkbox" checked="checked">
+        <input type="checkbox">
         <span class="checkmark"></span>
       </label>
-      </form></td>
+      </form>
+</td>
 
-<td>{{patient.pseudonym}}</td>
+<td *ngFor="let field of patient | keyvalue" > <input *ngIf="editMode" type="text" name="nachname" [(ngModel)]="field.value" >  <span *ngIf="!editMode">{{field.value}}</span></td>
 
-<td>{{patient.nachname}}</td>
-
-<td> {{patient.geburtsname}}</td>
-
-<td>{{patient.vorname}}</td>
-
-<td>{{patient.geburtsdatum}}</td>
-
-<td>{{patient.wohnort}}</td>
-
-<td>{{patient.plz}}</td>
-
-<td>
+<td *ngIf="!editMode">
   <button id="idCardTool" type="submit" class="toolbutton">
       <a routerLink="/idcard" ><span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span></a>
   </button>
@@ -68,11 +19,14 @@
   <button (click)="editPatientenZeile()" id="editButtonTool" type="submit" class="toolbutton">
         <span class="toolbutton__icon"><ion-icon name="create"></ion-icon></span>
   </button>
-  <button id="deleteButtonTool" type="submit" class="toolbutton">
+  <button id="deleteButtonTool" (click)="deletePatientenZeile()" type="submit" class="toolbutton">
         <span class="toolbutton__icon"><ion-icon name="trash"></ion-icon></span>
   </button>
 </td>
+<td *ngIf="editMode">
+  <button (click)="editPatientenZeile()" type="submit" class="fertigButton">
+    Fertig
+  </button></td>
 
-  <!--  <td *ngFor="let col of columns"> {{character[col]}}</td>-->
 
 

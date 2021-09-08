@@ -6,8 +6,10 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./patientenzeile.component.css']
 })
 export class PatientenzeileComponent implements OnInit {
-  @Input() patient: any;
+  @Input() patient: {[key: string]:string}={};
   show = true;
+  editMode: boolean = false;
+  deleteMode: boolean = false;
  /* @Input() character: any;
   @Input() columns: string[] | undefined;
 */
@@ -19,6 +21,11 @@ export class PatientenzeileComponent implements OnInit {
   }
 
   editPatientenZeile() {
+    this.editMode=!this.editMode;
+
+  }
+
+  deletePatientenZeile(){
 
   }
 }

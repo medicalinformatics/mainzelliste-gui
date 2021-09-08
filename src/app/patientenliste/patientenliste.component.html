@@ -2,8 +2,10 @@
   <br>
   <p>{{title}}</p>
   <div>
-  <button type="submit" class="PatientenansichtButton" name="Projektpseudonym erstellen">Projektpseudonym erstellen</button>
-  <button type="submit" class="PatientenansichtButton">Zusammenfuehren</button>
+    <br>
+
+  <button type="submit" class="PatientenansichtButton" name="Projektpseudonym erstellen"> Projekt erstellen </button>
+  <button type="submit" class="PatientenansichtButton"><a id="zsmfuehrenbutton" routerLink="/zusammenfuehren"> Zusammenfuehren <ion-icon name="git-merge"></ion-icon></a></button>
   <button type="submit" class="PatientenansichtButton">Loeschen</button>
   <input id="suchleiste" type="text"  placeholder="Suche...">
  <button id="suchbutton" type="submit" class="PatientenansichtButton"><ion-icon id="searchicon" name="search-outline"></ion-icon></button>
@@ -12,61 +14,35 @@
 <br><br>
 <table id="patientlist">
 
-  <tr id="addPatientzeile">
-    <!--<form action="/action_page.php">-->
-    <th colspan="2">neuer Patient:</th>
-    <th><input type="text" name="nachname" placeholder="Nachname"> </th>
-    <th><input type="text" name="gebutsname" placeholder="Gebutsname"> </th>
-    <th><input type="text" id="vorname" name="vorname" placeholder="Vorname"> </th>
-    <th><input type="text" id="geburtsdatum" name="geburtsdatum" placeholder="Geburtsdatum"> </th>
-    <th><input type="text" id="wohnort" name="wohnort" placeholder="Wohnort"> </th>
-    <th><input type="text" id="plz" name="plz" placeholder="PLZ"> </th>
-    <th><button type="submit" id="addpatientbutton"><ion-icon name="person-add"></ion-icon></button></th>
-  <!--</form>-->
+  <tr >
+    <th  class="tabellenspalte" colspan="2">neuer Patient:</th>
+    <th *ngFor=" let field of data[0].fields"><input type="text" name="nachname" placeholder="Nachname" [(ngModel)]="data."> </th>
+  <!--  <th><input type="text" name="geburtsname" placeholder="Geburtsname" [(ngModel)]="geburtsname"> </th>
+    <th><input type="text" id="vorname" name="vorname" placeholder="Vorname" [(ngModel)]="vorname"> </th>
+    <th><input type="text" id="geburtsdatum" name="geburtsdatum" placeholder="Geburtsdatum" [(ngModel)]="geburtsdatum"> </th>
+    <th><input type="text" id="wohnort" name="wohnort" placeholder="Wohnort" [(ngModel)]="wohnort"> </th>
+    <th><input type="text" id="plz" name="plz" placeholder="PLZ" [(ngModel)]="plz"> </th>-->
+    <th id="addPatientzeile"><button type="submit" (click)="erstelleNeuenPatienten"  id="addpatientbutton"><ion-icon name="person-add"></ion-icon></button></th>
   </tr>
 
   <tr id="patientenlisteHead">
   <th><form action="/action_page.php">
     <label class="container">
-      <input type="checkbox" checked="checked">
+      <input type="checkbox" >
       <span class="checkmark"></span>
     </label>
   </form></th>
-  <th>Pseudonym <button class="filterbutton" (click)="openfilter('pseudonymfilter')"><ion-icon  name="caret-down-circle-outline"></ion-icon></button></th>
-  <th>Nachname <button class="filterbutton" (click)="openfilter('nachnamefilter')"><ion-icon  name="caret-down-circle-outline"></ion-icon></button></th>
-  <th>Geburtsname <button class="filterbutton" (click)="openfilter('geburtsnamefilter')"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
-  <th>Vorname <button class="filterbutton" (click)="openfilter('vornamefilter')"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
-  <th>Geburtsdatum <button class="filterbutton" (click)="openfilter('geburtsdatumfilter')"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
-  <th>Wohnort <button class="filterbutton" (click)="openfilter('wohnortfilter')"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
-  <th>PLZ <button class="filterbutton" (click)="openfilter('plzfilter')"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
-  <th>Tools</th>
+  <th class="tabellenspalte">Pseudonym <button class="filterbutton" (click)="openfilter('pseudonymfilter')"><ion-icon  name="caret-down-circle-outline"></ion-icon></button></th>
+  <th class="tabellenspalte">Nachname <button class="filterbutton" (click)="openfilter('nachnamefilter')"><ion-icon  name="caret-down-circle-outline"></ion-icon></button></th>
+  <th class="tabellenspalte">Geburtsname <button class="filterbutton" (click)="openfilter('geburtsnamefilter')"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
+  <th class="tabellenspalte">Vorname <button class="filterbutton" (click)="openfilter('vornamefilter')"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
+  <th class="tabellenspalte">Geburtsdatum <button class="filterbutton" (click)="openfilter('geburtsdatumfilter')"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
+  <th class="tabellenspalte">Wohnort <button class="filterbutton" (click)="openfilter('wohnortfilter')"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
+  <th class="tabellenspalte">PLZ <button class="filterbutton" (click)="openfilter('plzfilter')"><ion-icon name="caret-down-circle-outline"></ion-icon></button></th>
+  <th class="tabellenspalte">Tools</th>
   </tr>
 
   <tr *ngFor="let patient of data" [patient]="patient" app-patientenzeile></tr>
-  <tr app-edit-patienten-zeile></tr>
 
-  <!--
-    <tr>
-      <th *ngFor="let col of columns">
-        {{col}}
-      </th>
-    </tr>
-    <tr *ngFor="let char of characters | async">
-      <td *ngFor="let col of columns">
-        {{char[col]}}
-   /td>
-    </tr>
-
-
-    <tr>
-      <th *ngFor="let c of columns">{{c}}</th>
-    </tr>
-    <tr *ngFor="let ch of characters | async"
-        patientenzeile
-        [character]="ch"
-        [columns]="columns">
-
-    </tr>
-    -->
 </table>
 </div>
