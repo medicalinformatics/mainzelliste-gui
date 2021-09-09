@@ -9,37 +9,93 @@ export class PatientService {
 
   patients: Array<Patient> = [
     new Patient({
-      nachname: 'Müller',
-      geburtsname: '',
-      vorname: 'Sara',
-      geburtsdatum: '01.01.2000',
-      wohnort: 'Berlin',
-      plz: '10115'
-    }, [{idType: 'pseudonym', idString: 'MKJH56FR'}]),
+      Nachname: 'Graf',
+      Geburtsname: '',
+      Vorname: 'Sabine',
+      Geburtsdatum: '01.01.2000',
+      Wohnort: 'Berlin',
+      PLZ: '10115'
+    }, [{idType: 'Pseudonym', idString: 'MKJH56FR'}]),
     new Patient({
-      nachname: 'Schmidt',
-      geburtsname: 'Sommer',
-      vorname: 'Laura',
-      geburtsdatum: '19.03.1968',
-      wohnort: 'Hamburg',
-      plz: '20095'
-    }, [{idType: "pseudonym", idString: 'MN321L09'}]),
+      Nachname: 'Schmidt',
+      Geburtsname: 'Sommer',
+      Vorname: 'Laura Marie',
+      Geburtsdatum: '19.03.1968',
+      Wohnort: 'Hamburg',
+      PLZ: '20095'
+    }, [{idType: "Pseudonym", idString: 'MN321L09'}]),
     new Patient({
-      nachname: 'Frank',
-      geburtsname: '',
-      vorname: 'Tim',
-      geburtsdatum: '15.05.1980',
-      wohnort: 'Hannover',
-      plz: '30159'
-    }, [{idType: "pseudonym", idString: "ASDKJU11"}]),
+      Nachname: 'Eckardt',
+      Geburtsname: '',
+      Vorname: 'Paul',
+      Geburtsdatum: '15.05.1980',
+      Wohnort: 'Hannover',
+      PLZ: '30159'
+    }, [{idType: "Pseudonym", idString: "ASDKJU11"}]),
     new Patient({
-      nachname: 'Friedrich',
-      geburtsname: '',
-      vorname: 'Max',
-      geburtsdatum: '23.02.1995',
-      wohnort: 'München',
-      plz: '80331'
-    }, [{idType: "pseudonym", idString: "CQKF88A0"}])
+      Nachname: 'Friedrich',
+      Geburtsname: '',
+      Vorname: 'Leonard',
+      Geburtsdatum: '23.02.1995',
+      Wohnort: 'München',
+      PLZ: '80331'
+    }, [{idType: "Pseudonym", idString: "CQKF88A0"}]),
+    new Patient({
+      Nachname: 'Schulz',
+      Geburtsname: 'Haas',
+      Vorname: 'Julia',
+      Geburtsdatum: '16.03.1983',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "VKLH0876"}]),
+    new Patient({
+      Nachname: 'Hartmann',
+      Geburtsname: 'Dreher',
+      Vorname: 'Jasmin',
+      Geburtsdatum: '23.02.1992',
+      Wohnort: 'Nürnberg',
+      PLZ: '90402'
+    }, [{idType: "Pseudonym", idString: "YBNPU21"}]),
+    new Patient({
+      Nachname: 'Hoyer',
+      Geburtsname: '',
+      Vorname: 'Alexander',
+      Geburtsdatum: '19.11.1986',
+      Wohnort: 'Wiesbaden',
+      PLZ: '55246'
+    }, [{idType: "Pseudonym", idString: "JCMR52L"}]),
+    new Patient({
+      Nachname: 'Kremer',
+      Geburtsname: '',
+      Vorname: 'Jonas',
+      Geburtsdatum: '30.07.1975',
+      Wohnort: 'Frankfurt am Main',
+      PLZ: '60306'
+    }, [{idType: "Pseudonym", idString: "LGF491AS"}]),
+    new Patient({
+      Nachname: 'Martens',
+      Geburtsname: '',
+      Vorname: 'Phillip',
+      Geburtsdatum: '19.11.1991',
+      Wohnort: 'Erlangen',
+      PLZ: '91058'
+    }, [{idType: "Pseudonym", idString: "XKIIU34A"}]),
+    new Patient({
+      Nachname: 'Ruppert',
+      Geburtsname: '',
+      Vorname: 'Mark',
+      Geburtsdatum: '19.11.1962',
+      Wohnort: 'Landau',
+      PLZ: '76829'
+    }, [{idType: "Pseudonym", idString: "SQI009TF"}]),
+    new Patient({
+      Nachname: 'Schaller',
+      Geburtsname: 'Lechner',
+      Vorname: 'Tamara',
+      Geburtsdatum: '25.05.1982',
+      Wohnort: 'Konstanz',
+      PLZ: '78462'
+    }, [{idType: "Pseudonym", idString: "POV762HG"}])
   ];
 
   getPatients(): Promise<Array<Patient>> {

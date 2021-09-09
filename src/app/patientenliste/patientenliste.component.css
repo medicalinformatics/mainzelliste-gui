@@ -20,7 +20,7 @@ color: white;
 
 #patientlist tr:nth-child(even){background-color: #f2f2f2;}
 
-#patientlist tr:hover {background-color: #ddd;}
+#patientlist tr:hover {background-color: #ADDFFF;}
 
 th {
   padding-top: 13px;

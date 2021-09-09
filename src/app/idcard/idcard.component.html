@@ -2,17 +2,17 @@
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 <body>
 <br>
-<span class="titleicon"><ion-icon name="id-card"></ion-icon>  ID CARD OF PATIENT</span><br><br><br>
+<span class="titleicon"><ion-icon name="id-card"></ion-icon>  ID CARD OF PATIENT </span><br><br><br>
 
 <div id="patientendaten">
 <h2>Patientendaten</h2>
-  <!-- TODO: Make this look awesome -->
-  <div *ngFor="let field of fields" class="patientendatenzeile">{{field}}: {{patient.fields[field]}}</div>
+
+  <div id ="pDaten" *ngFor="let field of fields" class="patientendatenzeile">{{field}}: {{patient.fields[field]}}</div>
 </div>
 <div id="pseudonyme">
 <h2>Pseudonyme</h2>
-  <!-- TODO: Make this look awesome -->
-  <div *ngFor="let id of patient.ids" class="patientendatenzeile">{{id.idType}}: {{id.idString}}</div>
+
+  <div id="pPseudonyme" *ngFor="let id of patient.ids" class="patientendatenzeile">{{id.idType}}: {{id.idString}}</div>
 </div>
   <div>
     <button type="submit" class="IDCardAnsichtButton">Drucken</button><br><br><br><br><br>

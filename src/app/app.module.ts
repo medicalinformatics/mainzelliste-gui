@@ -22,6 +22,7 @@ import { ZusammenfuehrenComponent } from './zusammenfuehren/zusammenfuehren.comp
 import { ErgebnisZusammenfuehrenComponent } from './ergebnis-zusammenfuehren/ergebnis-zusammenfuehren.component';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { PatientComponent } from './patient/patient.component';
+import { PatientAngelegtComponent } from './patient-angelegt/patient-angelegt.component';
 
 
 
@@ -43,7 +44,8 @@ import { PatientComponent } from './patient/patient.component';
     EditPatientenZeileComponent,
     ZusammenfuehrenComponent,
     ErgebnisZusammenfuehrenComponent,
-    PatientComponent
+    PatientComponent,
+    PatientAngelegtComponent
   ],
   imports: [
     BrowserModule,

@@ -11,7 +11,7 @@ input[type=text], select {
   box-sizing: border-box;
 }
 
-input[type=submit] {
+button{
   width: 20%;
   background-color: #3895D3;
   color: white;
@@ -23,8 +23,8 @@ input[type=submit] {
   float: right;
 }
 
-input[type=submit]:hover {
-  background-color: #45a049;
+button:hover {
+  background-color: #ADDFFF;
 }
 
 div {
@@ -40,7 +40,7 @@ div {
 
 label{
   font-weight: bold;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 p{
@@ -51,4 +51,10 @@ p{
   padding-bottom: 20px;
   width: 90%;
   float: left;
+}
+
+a{
+  color:white;
+  text-decoration: none;
+  font-size: 20px;
 }

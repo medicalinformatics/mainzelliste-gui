@@ -3,13 +3,16 @@
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 <br>
-<span class="titleicon"><ion-icon name="id-card"></ion-icon>  Ähnliche Patienten finden</span><br><br><br>
+<span class="titleicon"><ion-icon name="people"></ion-icon>  Ähnliche Patienten finden</span><br><br><br>
 
 <div id="patientendaten">
   <h2>Patientendaten</h2>
+  <div id ="pDaten" *ngFor="let field of fields" class="patientendatenzeile">{{field}}: {{patient.fields[field]}}</div>
+
 </div>
 <div id="pseudonyme">
   <h2>Pseudonyme für diesen Patienten</h2>
+  <div id="pPseudonyme" *ngFor="let id of patient.ids" class="patientendatenzeile">{{id.idType}}: {{id.idString}}</div>
 </div>
 
 <div id="historie">

@@ -1,14 +1,15 @@
 h2{
-  font-family: Arial;
+  font-family: Verdana;
   font-size: 35px;
   margin-left: 5%;
   margin-top: 2%;
+  font-weight: bold;
 }
 
 h1{
   font-family: Arial;
   font-size: 40px;
-
+  font-weight: bold;
 }
 
 .titleicon{
@@ -17,16 +18,17 @@ h1{
   font-size: 40px;
   margin-left: 1%;
   margin-top: 5%;
+  font-weight: bold;
 }
 
 #patientendaten{
   width: 30%;
   height: 39%;
-  background-color: #f2f2f2;
+  background-color: #f1f1f1;
   border: solid;
   border-width: 3px;
   border-radius: 5px;
-  border-color: #888888;
+  border-color: #cccccc;
   left: 0%;
   position:absolute;
   margin-left:1%;
@@ -37,11 +39,11 @@ h1{
 #pseudonyme{
   width: 30%;
   height: 39%;
-  background-color: #f2f2f2;
+  background-color: #f1f1f1;
   border: solid;
   border-width: 3px;
   border-radius: 5px;
-  border-color: #888888;
+  border-color: #cccccc;
   top: 8%;
   left: 35%;
   position:absolute;
@@ -53,11 +55,11 @@ h1{
 #historie{
   width: 85%;
   height: 34%;
-  background-color: #f2f2f2;
+  background-color: #f1f1f1;
   border: solid;
   border-width: 3px;
   border-radius: 5px;
-  border-color: #888888;
+  border-color: #cccccc;
   top: 50%;
   left: 0px;
   position:absolute;
@@ -85,3 +87,16 @@ h1{
 
 }
 
+#pDaten{
+  font-size: 24px;
+  line-height: 120%;
+  margin-left: 5%;
+  margin-top: 4%;
+}
+
+#pPseudonyme{
+  font-size: 24px;
+  line-height: 120%;
+  margin-left: 5%;
+  margin-top: 4%;
+}

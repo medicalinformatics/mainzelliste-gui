@@ -17,7 +17,7 @@ export class PatientenlisteComponent {
   patientService: PatientService;
   data: Promise<Array<Patient>>;
   tmpPatient: Patient = new Patient();
-  fields: Array<string> = ["vorname", "nachname", "geburtsname", "geburtsdatum", "plz", "wohnort"];
+  fields: Array<string> = ["Nachname", "Geburtsname", "Vorname", "Geburtsdatum", "Wohnort", "PLZ"];
 
   constructor(public dialog: MatDialog, patientService: PatientService) {
     this.patientService = patientService;
@@ -29,19 +29,19 @@ export class PatientenlisteComponent {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
     if (spalte == 'pseudonymfilter') {
-      this.dialog.open(FilterComponent, {position: {top: '0%', left: '0%'}});
+      this.dialog.open(FilterComponent, {position: {top: '16.5%', left: '11%'}});
     } else if (spalte == 'nachnamefilter') {
-      this.dialog.open(FilterComponent, {position: {top: '0%', left: '0%'}});
+      this.dialog.open(FilterComponent, {position: {top: '16.5%', left: '21%'}});
     } else if (spalte == 'geburtsnamefilter') {
-      this.dialog.open(FilterComponent, {position: {top: '31%', left: '48%'}});
+      this.dialog.open(FilterComponent, {position: {top: '16.5%', left: '31%'}});
     } else if (spalte == 'vornamefilter') {
-      this.dialog.open(FilterComponent, {position: {top: '31%', left: '58%'}});
+      this.dialog.open(FilterComponent, {position: {top: '16.5%', left: '41%'}});
     } else if (spalte == 'geburtsdatumfilter') {
-      this.dialog.open(FilterComponent, {position: {top: '31%', left: '68%'}});
+      this.dialog.open(FilterComponent, {position: {top: '16.5%', left: '53%'}});
     } else if (spalte == 'wohnortfilter') {
-      this.dialog.open(FilterComponent, {position: {top: '31%', left: '78%'}});
+      this.dialog.open(FilterComponent, {position: {top: '16.5%', left: '63%'}});
     } else if (spalte == 'plzfilter') {
-      this.dialog.open(FilterComponent, {position: {top: '31%', left: '88%'}});
+      this.dialog.open(FilterComponent, {position: {top: '16.5%', left: '75%'}});
     }
   }
 

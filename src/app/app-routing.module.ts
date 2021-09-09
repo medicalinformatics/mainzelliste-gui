@@ -8,7 +8,7 @@ import {IdcardComponent} from "./idcard/idcard.component";
 import {CloneComponent} from "./clone/clone.component";
 import {ZusammenfuehrenComponent} from "./zusammenfuehren/zusammenfuehren.component";
 import {ErgebnisZusammenfuehrenComponent} from "./ergebnis-zusammenfuehren/ergebnis-zusammenfuehren.component";
-
+import {PatientAngelegtComponent} from "./patient-angelegt/patient-angelegt.component";
 
 const routes: Routes = [
   {path: 'patientenliste', component: PatientenlisteComponent},
@@ -18,7 +18,8 @@ const routes: Routes = [
   {path: 'idcard', component: IdcardComponent},
   {path: 'clone', component: CloneComponent},
   {path: 'zusammenfuehren', component: ZusammenfuehrenComponent},
-  {path: 'ergebnis-zusammenfuehren', component: ErgebnisZusammenfuehrenComponent}
+  {path: 'ergebnis-zusammenfuehren', component: ErgebnisZusammenfuehrenComponent},
+  {path: 'patientangelegt', component: PatientAngelegtComponent}
 ];
 
 @NgModule({
@@ -27,4 +28,4 @@ const routes: Routes = [
 
 })
 export class AppRoutingModule{}
-export const routingComponents =[PatientenlisteComponent, AddPatientFormularComponent, HomeComponent, AudittrailComponent, IdcardComponent, CloneComponent, ZusammenfuehrenComponent, ErgebnisZusammenfuehrenComponent]
+export const routingComponents =[PatientenlisteComponent, AddPatientFormularComponent, HomeComponent, AudittrailComponent, IdcardComponent, CloneComponent, ZusammenfuehrenComponent, ErgebnisZusammenfuehrenComponent, PatientAngelegtComponent]
