@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
+
 @Component({
   selector: 'app-add-patient-formular',
   templateUrl: './add-patient-formular.component.html',

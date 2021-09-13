@@ -23,6 +23,7 @@ import { ErgebnisZusammenfuehrenComponent } from './ergebnis-zusammenfuehren/erg
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { PatientComponent } from './patient/patient.component';
 import { PatientAngelegtComponent } from './patient-angelegt/patient-angelegt.component';
+import {MatButtonModule} from "@angular/material/button";
 
 
 
@@ -47,15 +48,16 @@ import { PatientAngelegtComponent } from './patient-angelegt/patient-angelegt.co
     PatientComponent,
     PatientAngelegtComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    IonicModule.forRoot(),
-    BrowserAnimationsModule,
-    MatDialogModule,
-    FormsModule,
-    MatFormFieldModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        IonicModule.forRoot(),
+        BrowserAnimationsModule,
+        MatDialogModule,
+        FormsModule,
+        MatFormFieldModule,
+        MatButtonModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

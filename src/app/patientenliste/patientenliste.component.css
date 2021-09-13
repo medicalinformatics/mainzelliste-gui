@@ -2,20 +2,70 @@
   padding: 4px;
 }
 
+#patientenlisteAnsicht{
+  overflow-x: auto;
+  overflow-y: auto;
+}
+#filtersection{
+  border: #dddddd solid thin;
+  background-color: #f2f2f2;
+  font-family: Arial;
+  font-size: 28px;
+  width: 98%;
+  height: 20%;
+  margin: 1%;
+  padding-bottom: 30px;
+  padding-top: 30px;
+  padding-left: 1rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+.filterwahl{
+  font-family: Verdana;
+  position: center;
+  display: inline;
+  border:#3895D3 solid thin;
+  background-color: #ADDFFF;
+  width:10%;
+  height: 98%;
+  margin-left: 1%;
+  padding: 15px;
+  font-size: 25px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+#closefilterwahl{
+  font-size: 30px;
+  color: white;
+}
+
+#filterSectionInput{
+  height: 98%;
+  width: max-content;
+  background:none;
+  border:none;
+}
+
 #zsmfuehrenbutton{
 color: white;
 }
 
 #patientlist {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, sans-serif;
   border-collapse: collapse;
   width: 98%;
   margin-left: 1%;
+  font-size: 24px;
+  overflow-x: auto;
+  overflow-y: auto;
 }
 
 #patientlist td, #patientlist th {
   border: 1px solid #ddd;
-  padding: 10px;
+  padding: 20px 10px 20px 10px;
+  font-family: Arial;
 }
 
 #patientlist tr:nth-child(even){background-color: #f2f2f2;}
@@ -66,9 +116,8 @@ tr:nth-child{
 .container {
   display: block;
   position: relative;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-bottom: 10px ;
+  padding-left: 70%;
+  padding-bottom: 50% ;
   cursor: pointer;
   font-size: 22px;
   -webkit-user-select: none;
@@ -89,11 +138,13 @@ tr:nth-child{
 /* Create a custom checkbox */
 .checkmark {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 5%;
+  left:20%;
   height: 25px;
   width: 25px;
   background-color: #eee;
+  border: #dddddd solid thin;
+
 }
 
 /* On mouse-over, add a grey background color */
@@ -156,16 +207,20 @@ section {
 
 .PatientenansichtButton {
   background-color: #3895D3; /* Green */
-  border: none;
   color: white;
-  padding: 10px 32px;
+  margin-right: 2rem;
+  margin-left: 1rem;
+  font-size: 22px;
+  padding: 5px 30px 5px 30px;
+ /* padding: 10px 32px;
+   border: none;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
   margin-left: 1%;
   border-radius: 15px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
 
 }
 
@@ -201,6 +256,7 @@ p{
   font-size: 40px;
   font-family: Arial;
   margin-top: 1%;
+  margin-bottom: 2%;
 
 
 }

@@ -18,6 +18,7 @@ export class PatientenlisteComponent {
   data: Promise<Array<Patient>>;
   tmpPatient: Patient = new Patient();
   fields: Array<string> = ["Nachname", "Geburtsname", "Vorname", "Geburtsdatum", "Wohnort", "PLZ"];
+  filterChoice: Array<string>=[];
 
   constructor(public dialog: MatDialog, patientService: PatientService) {
     this.patientService = patientService;
@@ -53,4 +54,7 @@ export class PatientenlisteComponent {
     });
   }
 
+  useFilter(filterWahl:string){
+    this.filterChoice.push(filterWahl);
+  }
 }

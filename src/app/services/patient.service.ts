@@ -95,6 +95,22 @@ export class PatientService {
       Geburtsdatum: '25.05.1982',
       Wohnort: 'Konstanz',
       PLZ: '78462'
+    }, [{idType: "Pseudonym", idString: "POV762HG"}]),
+    new Patient({
+      Nachname: 'Schaller',
+      Geburtsname: 'Lechner',
+      Vorname: 'Tamara',
+      Geburtsdatum: '25.05.1982',
+      Wohnort: 'Konstanz',
+      PLZ: '78462'
+    }, [{idType: "Pseudonym", idString: "POV762HG"}]),
+    new Patient({
+      Nachname: 'Schaller',
+      Geburtsname: 'Lechner',
+      Vorname: 'Tamara',
+      Geburtsdatum: '25.05.1982',
+      Wohnort: 'Konstanz',
+      PLZ: '78462'
     }, [{idType: "Pseudonym", idString: "POV762HG"}])
   ];
 

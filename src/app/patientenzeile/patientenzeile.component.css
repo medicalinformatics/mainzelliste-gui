@@ -47,27 +47,19 @@ input[type=submit] {
   cursor: pointer;
 }
 
-input[type=submit]:hover {
-  background-color: #45a049;
-}
-
-tr:nth-child{
-  background-color: #45a049;
-}
-
-
 .container {
   display: block;
   position: relative;
-  padding-left: 10px;
+  padding-left:15px;
   padding-right: 10px;
-  padding-bottom: 10px ;
+  padding-bottom: 20px ;
   cursor: pointer;
   font-size: 22px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+
 }
 
 
@@ -81,11 +73,12 @@ tr:nth-child{
 
 .checkmark {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 5%;
+  left: 20%;
   height: 25px;
   width: 25px;
   background-color: #eee;
+  border: #dddddd solid thin;
 }
 
 .container:hover input ~ .checkmark {
