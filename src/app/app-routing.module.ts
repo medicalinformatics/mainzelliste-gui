@@ -1,25 +1,24 @@
 import {NgModule} from '@angular/core';
 import{ Routes, RouterModule} from '@angular/router';
-import {AddPatientFormularComponent} from "./add-patient-formular/add-patient-formular.component";
-import {PatientenlisteComponent} from "./patientenliste/patientenliste.component";
+import {PatientlistComponent} from "./patientlist/patientlist.component";
 import {HomeComponent} from "./home/home.component";
 import {AudittrailComponent} from "./audittrail/audittrail.component";
 import {IdcardComponent} from "./idcard/idcard.component";
-import {CloneComponent} from "./clone/clone.component";
-import {ZusammenfuehrenComponent} from "./zusammenfuehren/zusammenfuehren.component";
-import {ErgebnisZusammenfuehrenComponent} from "./ergebnis-zusammenfuehren/ergebnis-zusammenfuehren.component";
-import {PatientAngelegtComponent} from "./patient-angelegt/patient-angelegt.component";
+import {SimilarPatientComponent} from "./similarPatient/similarPatient.component";
+import {PatientlistViewComponent} from "./patientlist-view/patientlist-view.component";
+import {CreatePatientComponent} from "./createPatient/createPatient.component";
+import {MergePatientsComponent} from "./mergePatients/mergePatients.component";
+
 
 const routes: Routes = [
-  {path: 'patientenliste', component: PatientenlisteComponent},
-  {path: 'add-patient-formular', component: AddPatientFormularComponent},
+  {path: 'patientlist', component: PatientlistComponent},
+  {path: 'create-patient', component: CreatePatientComponent},
   {path: 'home', component: HomeComponent},
   {path: 'audittrail', component: AudittrailComponent},
   {path: 'idcard', component: IdcardComponent},
-  {path: 'clone', component: CloneComponent},
-  {path: 'zusammenfuehren', component: ZusammenfuehrenComponent},
-  {path: 'ergebnis-zusammenfuehren', component: ErgebnisZusammenfuehrenComponent},
-  {path: 'patientangelegt', component: PatientAngelegtComponent}
+  {path: 'similar-patient', component: SimilarPatientComponent},
+  {path: 'merge-patients', component: MergePatientsComponent},
+  {path:'patientlist-view', component: PatientlistViewComponent}
 ];
 
 @NgModule({
@@ -28,4 +27,4 @@ const routes: Routes = [
 
 })
 export class AppRoutingModule{}
-export const routingComponents =[PatientenlisteComponent, AddPatientFormularComponent, HomeComponent, AudittrailComponent, IdcardComponent, CloneComponent, ZusammenfuehrenComponent, ErgebnisZusammenfuehrenComponent, PatientAngelegtComponent]
+export const routingComponents =[PatientlistComponent, HomeComponent, AudittrailComponent, IdcardComponent, SimilarPatientComponent, MergePatientsComponent, PatientlistViewComponent, CreatePatientComponent]

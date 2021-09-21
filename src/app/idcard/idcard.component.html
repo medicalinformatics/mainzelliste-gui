@@ -6,22 +6,22 @@
 
 <div id="patientendaten">
 <h2>Patientendaten</h2>
-
+<!--<app-create-patient></app-create-patient>-->
   <div id ="pDaten" *ngFor="let field of fields" class="patientendatenzeile">{{field}}: {{patient.fields[field]}}</div>
-</div>
-<div id="pseudonyme">
-<h2>Pseudonyme</h2>
+ </div>
+ <div id="pseudonyme">
+ <h2>Pseudonyme</h2>
 
-  <div id="pPseudonyme" *ngFor="let id of patient.ids" class="patientendatenzeile">{{id.idType}}: {{id.idString}}</div>
-</div>
-  <div>
-    <button type="submit" class="IDCardAnsichtButton">Drucken</button><br><br><br><br><br>
-    <button type="submit" class="IDCardAnsichtButton">Projektpseudonym erstellen</button><br><br><br><br><br>
-    <button type="submit" class="IDCardAnsichtButton">Editieren</button><br><br><br><br><br>
-    <button type="submit" class="IDCardAnsichtButton">Zusammenfuehren</button><br><br><br><br><br>
-    <button type="submit" class="IDCardAnsichtButton">Loeschen</button><br><br><br><br><br>
-  </div>
-  <div id="historie">
-  <h2>Historie</h2>
-</div>
-</body>
+   <div id="pPseudonyme" *ngFor="let id of patient.ids" class="patientendatenzeile">{{id.idType}}: {{id.idString}}</div>
+ </div>
+   <div>
+     <button type="submit" class="IDCardAnsichtButton">Drucken</button><br><br><br><br><br>
+     <button type="submit" class="IDCardAnsichtButton">Projektpseudonym erstellen</button><br><br><br><br><br>
+     <button type="submit" class="IDCardAnsichtButton">Editieren</button><br><br><br><br><br>
+     <button type="submit" class="IDCardAnsichtButton">Zusammenfuehren</button><br><br><br><br><br>
+     <button type="submit" class="IDCardAnsichtButton">Loeschen</button><br><br><br><br><br>
+   </div>
+   <div id="historie">
+   <h2>Historie</h2>
+ </div>
+ </body>

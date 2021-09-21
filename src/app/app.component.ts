@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import{NavigationsseiteComponent} from "./navigationsseite/navigationsseite.component";
+import{NavigationComponent} from "./navigation/navigation.component";
 
 @Component({
   selector: 'app-root',

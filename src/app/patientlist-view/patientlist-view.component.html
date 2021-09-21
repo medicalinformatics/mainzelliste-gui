@@ -1,0 +1,38 @@
+<div id="patientenlisteAnsicht">
+  <br>
+  <p>Patientenliste</p>
+  <div class="filtersection">Suche...</div>
+  <div class="filtersection">
+    Filter:
+    <div class="filterwahl"> Marie
+      <ion-icon id="closefilterwahl" name="close-circle"></ion-icon>
+    </div>
+    <input id="filterSectionInput">
+  </div>
+  <div>
+    <br>
+    <button mat-raised-button type="submit" class="PatientenansichtButton" name="Projektpseudonym erstellen"> Projekt
+      erstellen
+      <ion-icon name="cube"></ion-icon>
+    </button>
+    <button mat-raised-button type="submit" class="PatientenansichtButton">
+      <a id="zsmfuehrenbutton" routerLink="/zusammenfuehren">
+        Zusammenführen
+        <ion-icon name="git-merge"></ion-icon>
+      </a></button>
+
+    <button mat-raised-button type="submit" class="PatientenansichtButton">Löschen
+      <ion-icon name="trash"></ion-icon>
+    </button>
+
+    <!--<input mat-raised-button id="suchleiste" type="text" placeholder="Suche...">
+    <button mat-raised-button id="suchbutton" type="submit" class="PatientenansichtButton">
+      <ion-icon id="searchicon" name="search-outline"></ion-icon>
+    </button>-->
+
+  </div>
+  <br><br>
+
+ <app-patientlist></app-patientlist>
+
+</div>
