@@ -1,5 +1,5 @@
 <mat-form-field *ngFor="let field of configuredFields | async">
   <mat-label>{{field.name}}</mat-label>
-  <input matInput>
+  <input matInput placeholder="{{field.hint}}">
 </mat-form-field>
 
