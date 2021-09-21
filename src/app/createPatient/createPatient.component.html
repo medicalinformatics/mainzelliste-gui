@@ -2,27 +2,6 @@
 <p>Personenidentifikator anfordern</p>
 
 <div>
-  <form action="/action_page.php">
-    <label for="vorname">*Vorname</label>
-    <input type="text" id="vorname" name="vorname" placeholder=" ">
-
-    <label for="nachname">*Nachname</label>
-    <input type="text" id="nachname" name="Nachname" placeholder=" ">
-
-    <label for="geburtsname">Geburtsname (falls abweichend)</label>
-    <input type="text" id="geburtsname" name="geburtsname" placeholder=" ">
-
-    <label for="geburtsdatum">*Geburtsdatum</label>
-    <input type="text" id="geburtsdatum" name="geburtsdatum" placeholder=" ">
-
-    <label for="wohnort">*Wohnort</label>
-    <input type="text" id=wohnort name="wohnort" placeholder=" ">
-
-    <label for="plz">*PLZ</label>
-    <input type="text" id="plz" name="plz" placeholder=" ">
-
-
-    <button type="submit"><a routerLink="/patientangelegt">Anfordern</a></button>
-  </form>
+  <app-patient-fields [fields]="patient.fields"></app-patient-fields>
 </div>
 </body>

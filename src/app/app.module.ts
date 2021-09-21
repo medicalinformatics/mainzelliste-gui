@@ -16,12 +16,14 @@ import { SimilarPatientComponent } from './similarPatient/similarPatient.compone
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatDialogModule} from "@angular/material/dialog";
 import {FormsModule} from "@angular/forms";
-import {MatFormFieldModule} from '@angular/material/form-field';
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from '@angular/material/form-field';
 import { PatientComponent } from './patient/patient.component';
 import {MatButtonModule} from "@angular/material/button";
 import {ScrollingModule} from "@angular/cdk/scrolling";
 import { PatientlistViewComponent } from './patientlist-view/patientlist-view.component';
 import { HistorieComponent } from './historie/historie.component';
+import { PatientFieldsComponent } from './patient-fields/patient-fields.component';
+import {MatInputModule} from "@angular/material/input";
 
 
 
@@ -41,7 +43,8 @@ import { HistorieComponent } from './historie/historie.component';
     PatientComponent,
     PatientlistViewComponent,
     HistorieComponent,
-    CreatePatientComponent
+    CreatePatientComponent,
+    PatientFieldsComponent
   ],
     imports: [
         BrowserModule,
@@ -51,10 +54,13 @@ import { HistorieComponent } from './historie/historie.component';
         MatDialogModule,
         FormsModule,
         MatFormFieldModule,
+        MatInputModule,
         MatButtonModule,
         ScrollingModule
     ],
-  providers: [],
+  providers: [
+    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

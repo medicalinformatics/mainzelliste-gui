@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {Patient} from "../model/patient";
 
 
 @Component({
@@ -8,9 +9,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreatePatientComponent implements OnInit {
   title="Patient einfügen";
+  patient: Patient;
 
   constructor() {
-
+    this.patient = new Patient();
   }
 
   ngOnInit(): void {
