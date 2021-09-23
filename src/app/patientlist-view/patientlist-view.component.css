@@ -4,18 +4,35 @@
 
 #patientenlisteAnsicht{
   overflow-x: auto;
-  overflow-y: auto;
+ /* overflow-y: auto;*/
 }
-.filtersection{
+.filtersection1{
   border: #dddddd solid thin;
   background-color: #f2f2f2;
   font-family: Arial;
   font-size: 28px;
   width: 98%;
-  height: 20%;
-  margin: 1%;
+  height: 18%;
+  margin-left: 1%;
+  margin-bottom: 1%;
   padding-bottom: 30px;
   padding-top: 30px;
+  padding-left: 1rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+.filtersection2{
+  border: #dddddd solid thin;
+  background-color: #ADDFFF;
+  font-family: Arial;
+  font-size: 28px;
+  width: 98%;
+  height: 12%;
+  margin-left: 1%;
+  margin-bottom: 1%;
+  padding-bottom: 30px;
+  padding-top: 20px;
   padding-left: 1rem;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
@@ -30,6 +47,7 @@
   width:10%;
   height: 98%;
   margin-left: 1%;
+  margin-bottom: 10px;
   padding: 15px;
   font-size: 25px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -212,6 +230,8 @@ section {
   margin-left: 1rem;
   font-size: 22px;
   padding: 5px 30px 5px 30px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
   /* padding: 10px 32px;
     border: none;
    text-align: center;

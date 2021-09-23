@@ -15,13 +15,13 @@
       <a [routerLink]="['/idcard']" [state]="{patient: patient, fields: fields}" ><span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span></a>
   </button>
   <button id="cloneButtonTool" type="submit" class="toolbutton">
-        <a [routerLink]="['/clone']" [state]="{patient: patient, fields: fields}"><span class="toolbutton__icon"><ion-icon name="people"></ion-icon></span></a>
+        <a [routerLink]="['/similar-patient']" [state]="{patient: patient, fields: fields}"><span class="toolbutton__icon"><ion-icon name="people"></ion-icon></span></a>
   </button>
   <button (click)="editPatientenZeile()" id="editButtonTool" type="submit" class="toolbutton">
-        <span class="toolbutton__icon"><ion-icon name="create"></ion-icon></span>
+        <span [routerLink]="['/edit-patient']" class="toolbutton__icon"><ion-icon name="create"></ion-icon></span>
   </button>
   <button id="deleteButtonTool" (click)="deletePatientenZeile()" type="submit" class="toolbutton">
-        <span class="toolbutton__icon"><ion-icon name="trash"></ion-icon></span>
+        <span [routerLink]="['/delete-patient']" class="toolbutton__icon"><ion-icon name="trash"></ion-icon></span>
   </button>
 </td>
 <td *ngIf="editMode">

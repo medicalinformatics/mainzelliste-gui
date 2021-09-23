@@ -8,6 +8,8 @@ import {SimilarPatientComponent} from "./similarPatient/similarPatient.component
 import {PatientlistViewComponent} from "./patientlist-view/patientlist-view.component";
 import {CreatePatientComponent} from "./createPatient/createPatient.component";
 import {MergePatientsComponent} from "./mergePatients/mergePatients.component";
+import {EditPatientComponent} from "./edit-patient/edit-patient.component";
+import {DeletePatientComponent} from "./delete-patient/delete-patient.component";
 
 
 const routes: Routes = [
@@ -18,7 +20,9 @@ const routes: Routes = [
   {path: 'idcard', component: IdcardComponent},
   {path: 'similar-patient', component: SimilarPatientComponent},
   {path: 'merge-patients', component: MergePatientsComponent},
-  {path:'patientlist-view', component: PatientlistViewComponent}
+  {path:'patientlist-view', component: PatientlistViewComponent},
+  {path: 'edit-patient', component: EditPatientComponent},
+  {path: 'delete-patient', component: DeletePatientComponent}
 ];
 
 @NgModule({
@@ -27,4 +31,4 @@ const routes: Routes = [
 
 })
 export class AppRoutingModule{}
-export const routingComponents =[PatientlistComponent, HomeComponent, AudittrailComponent, IdcardComponent, SimilarPatientComponent, MergePatientsComponent, PatientlistViewComponent, CreatePatientComponent]
+export const routingComponents =[PatientlistComponent, HomeComponent, AudittrailComponent, IdcardComponent, SimilarPatientComponent, MergePatientsComponent, PatientlistViewComponent, CreatePatientComponent,EditPatientComponent,DeletePatientComponent]

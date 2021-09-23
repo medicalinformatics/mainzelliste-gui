@@ -49,6 +49,7 @@ h1{
   position:absolute;
   margin-left:1%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
 }
 
 #historie{
@@ -67,7 +68,16 @@ h1{
 
 }
 
-.IDCardAnsichtButton {
+.DeletePatientFragestellung{
+  position: absolute;
+  display: inline-block;
+  left: 65%;
+  font-size: 22px;
+  font-family: inherit;
+
+}
+
+.DeletePatientButtonLöschen{
   background-color: #3895D3;
   border: none;
   color: white;
@@ -75,14 +85,28 @@ h1{
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
   border-radius: 5px;
   position: absolute;
-  left: 75%;
+  font-size: 20px;
+  left: 77%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  width: 8%;
+}
+.DeletePatientButtonAbbruch {
+  background-color: #888888;
+  border: none;
+  color: white;
+  padding: 15px 42px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 5px;
+  position: absolute;
+  left: 65%;
   font-size: 20px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  width: 10%;
-
+  width: 8%;
+  top: 17%;
 }
 
 #pDaten{

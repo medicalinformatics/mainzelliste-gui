@@ -1,0 +1,17 @@
+.example-form {
+  width: 60%;
+  height: 10%;
+  margin-inline: auto;
+  font-size: 13px;
+}
+
+.example-full-width {
+  width: 60%;
+  height: 10%;
+  margin-bottom: 1%;
+  background-color: white;
+  color: #3895D3;
+  font-size: 18px;
+
+
+}

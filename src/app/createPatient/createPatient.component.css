@@ -1,16 +1,7 @@
 body{
-  background-color: #f2f2f2;
+  background-color: white;
 }
-input[type=text], select {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 20px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
+/*
 button{
   width: 20%;
   background-color: #3895D3;
@@ -21,11 +12,14 @@ button{
   border-radius: 4px;
   cursor: pointer;
   float: right;
-}
+}*/
+/*
 
 button:hover {
   background-color: #ADDFFF;
 }
+*/
+/*
 
 div {
   border-radius: 5px;
@@ -38,26 +32,47 @@ div {
   float: left;
   position: absolute;
 }
+*/
+/*
 
 label{
   font-weight: bold;
-  font-size: 20px;
+  font-size: 28px;
 }
+*/
 
 p{
-  background-color: #f2f2f2;
   font-size: 35px;
-  padding-left: 200px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  width: 90%;
-  float: left;
+  font-family: Arial;
+  padding-top: 3%;
+  margin-left: 10%;
+  margin-bottom: 3%;
+
+}
+
+.example-button-row {
+  top:65%;
+  left:50%;
   position: absolute;
-
+  display: flex;
+  font-size: 40px;
 }
 
-a{
+button{
   color:white;
-  text-decoration: none;
-  font-size: 20px;
+  background-color: #3895D0;
+  font-size: 22px;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
+
+.example-button-row .mat-button-base {
+  margin: 8px 8px 8px 0;
+}
+mat-raised-button{
+  width: 5%;
+}
+
+

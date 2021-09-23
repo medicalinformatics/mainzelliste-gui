@@ -1,0 +1,28 @@
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<body>
+<br>
+<span class="titleicon"><ion-icon name="create"></ion-icon> Edit Patient </span><br><br><br>
+
+<div id="patientendaten">
+  <h2>Patientendaten</h2>
+  <app-patient-fields></app-patient-fields>  <!--  <div *ngFor="let field of fields" >{{field}}: {{patient.fields[field]}}</div>-->
+</div>
+
+
+<div id="pseudonyme">
+  <h2>Pseudonyme</h2>
+  <div id="pPseudonyme" *ngFor="let id of patient.ids" class="patientendatenzeile">{{id.idType}}: {{id.idString}}</div>
+</div>
+
+<div>
+  <button type="submit" class="EditPageButtonFertig">Fertig</button>
+  <br><br><br><br><br>
+  <button type="submit" class="EditPageButtonAbbruch">Abbruch</button>
+  <br><br><br><br><br>
+</div>
+
+<div id="historie">
+  <h2>Historie</h2>
+</div>
+</body>

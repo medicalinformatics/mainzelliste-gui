@@ -1,5 +1,6 @@
-<mat-form-field *ngFor="let field of configuredFields | async">
+<form  class="example-form">
+<mat-form-field class="example-full-width" *ngFor="let field of configuredFields | async">
   <mat-label>{{field.name}}</mat-label>
   <input matInput placeholder="{{field.hint}}">
 </mat-form-field>
-
+</form>
