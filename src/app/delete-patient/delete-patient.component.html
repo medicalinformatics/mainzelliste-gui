@@ -6,7 +6,7 @@
 
 <div id="patientendaten">
   <h2>Patientendaten</h2>
-  <app-patient-fields></app-patient-fields> <!--*ngFor="let fields of patient">{{fields}}: {{patient.fields[fields]}}-->
+  <app-patient-fields [readOnly]="true"></app-patient-fields> <!--*ngFor="let fields of patient">{{fields}}: {{patient.fields[fields]}}-->
   <!--  <div id ="pDaten" *ngFor="let field of fields" class="patientendatenzeile">{{field}}: {{patient.fields[field]}}</div>-->
 </div>
 

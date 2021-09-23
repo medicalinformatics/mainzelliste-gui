@@ -12,6 +12,7 @@ export class PatientFieldsComponent implements OnInit {
   @Input() fields: {[key: string]: any} = {};
   fieldService: FieldService;
   configuredFields: Promise<Array<Field>>;
+  @Input() readOnly: boolean= false;
 
   constructor(fieldService: FieldService) {
     this.fieldService = fieldService;
