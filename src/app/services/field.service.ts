@@ -8,12 +8,12 @@ export class FieldService {
   fields: Array<Field>
   constructor() {
     this.fields = [
-      new Field( "Vorname", true, "", "This is a useful hint"),
-      new Field("Nachname", true, ""),
-      new Field("Geburtsname", true, ""),
-      new Field("Geburtsdatum", true, ""),
-      new Field("Wohnort", true, ""),
-      new Field("PLZ", true, "")
+      new Field( "Vorname", true, "", "Max"),
+      new Field("Nachname", true, "", "Mustermann"),
+      new Field("Geburtsname", true, "", "falls vorhanden"),
+      new Field("Geburtsdatum", true, "", "00.00.0000"),
+      new Field("Wohnort", true, "", "Musterstadt"),
+      new Field("PLZ", true, "", "mind. 5 Zeichen")
     ]
   }
   getFields(): Promise<Array<Field>> {
