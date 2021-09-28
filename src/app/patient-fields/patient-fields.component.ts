@@ -1,6 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FieldService} from "../services/field.service";
 import {Field} from "../model/field";
+import {FormControl, FormGroup} from "@angular/forms";
+import {CreatePatientComponent} from "../createPatient/createPatient.component";
+import {Patient} from "../model/patient";
+import {PatientService} from "../services/patient.service";
 
 @Component({
   selector: 'app-patient-fields',
@@ -8,6 +12,17 @@ import {Field} from "../model/field";
   styleUrls: ['./patient-fields.component.css']
 })
 export class PatientFieldsComponent implements OnInit {
+
+  tmpPatient: Patient = new Patient();
+
+  formData={
+    Nachname:'',
+    Geburtsname:'',
+    Vorname:'',
+    Geburtsdatum:'',
+    Wohnort:'',
+    Plz:''
+  };
 
   @Input() fields: {[key: string]: any} = {};
   fieldService: FieldService;
@@ -17,6 +32,9 @@ export class PatientFieldsComponent implements OnInit {
   constructor(fieldService: FieldService) {
     this.fieldService = fieldService;
     this.configuredFields = fieldService.getFields();
+    patientService: PatientService;
+    // @Input() patient: Patient = new Patient()
+
   }
 
   ngOnInit(): void {

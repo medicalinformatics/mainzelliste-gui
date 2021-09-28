@@ -1,3 +1,12 @@
 .mat-dialog-container{
   padding: 4px;
 }
+.mat-form-field-wrapper{
+  padding-bottom: 0.8em!important;
+}
+
+#hauptteil{
+  width: 88%;
+  background-color: white;
+  margin-left: 12%
+}

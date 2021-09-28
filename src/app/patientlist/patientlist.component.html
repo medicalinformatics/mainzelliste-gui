@@ -33,7 +33,8 @@
   <cdk-virtual-scroll-viewport tableSize="50" class="example-viewport">
 
     <div cdkVirtualFor="let item of items" class="example-item">-->
-      <table id="patientlist">
+<div class="mat-elevation-z8">
+      <table mat-table id="patientlist">
 
         <!-- <tr >
            <th  class="tabellenspalte" colspan="2">neuer Patient:</th>
@@ -91,6 +92,7 @@
         <tr *ngFor="let patient of data | async" [patient]="patient" [fields]="fields" app-patientrow></tr>
 
       </table>
+</div>
    <!-- </div>
   </cdk-virtual-scroll-viewport>
 </div>-->

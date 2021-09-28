@@ -6,7 +6,16 @@
 </div>
 
   <div class="example-button-row">
-    <button mat-raised-button> Anfordern </button>
+    <button mat-raised-button type="submit" > Anfordern </button>
   </div>
 
 </body>
+
+
+<!-- <tr >
+   <th  class="tabellenspalte" colspan="2">neuer Patient:</th>
+   <th *ngFor=" let field of fields"><input type="text" name="{{field}}}" placeholder="{{field}}" [(ngModel)]="tmpPatient.fields[field]"></th>
+   <th id="addPatientzeile"><button type="submit" (click)="erstelleNeuenPatienten()"  id="addpatientbutton"><ion-icon name="person-add"></ion-icon></button></th>
+ </tr>-->
+
+<!--(click)="createNewPatient()"-->

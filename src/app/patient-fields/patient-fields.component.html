@@ -1,6 +1,14 @@
-<form  class="example-form">
-<mat-form-field class="example-full-width" *ngFor="let field of configuredFields | async">
-  <mat-label>{{field.name}}</mat-label>
-  <input [readonly]="readOnly" matInput [value]="fields[field.name]" placeholder="{{field.hint}}">
-</mat-form-field>
+<form class="example-form">
+  <table class="example-table" cellspacing="0">
+    <tr *ngFor="let field of configuredFields | async">
+      <td>
+        <mat-form-field class="example-full-width" >
+          <mat-label>{{field.name}}</mat-label>
+          <input  [readonly]="readOnly" matInput [value]="fields[field.name]" placeholder={{field.hint}}>
+        </mat-form-field>
+      </td>
+    </tr>
+  </table>
 </form>
+<!--[(ngModel)]="patient.fields[field]"-->
+<!--[(ngModel)]="tmpPatient.fields[field]"-->

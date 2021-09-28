@@ -1,17 +1,33 @@
 .example-form {
-  width: 60%;
-  height: 10%;
   margin-inline: auto;
-  font-size: 13px;
+
 }
 
 .example-full-width {
-  width: 60%;
-  height: 10%;
-  margin-bottom: 1%;
-  background-color: white;
-  color: #3895D3;
-  font-size: 18px;
+  width: 100%;
+  margin-bottom: 5px;
+  color: black;
+  font-size: 14px;
+}
 
+.example-table{
+  width: 90%;
+  margin: 0% 5% ;
+  max-width: 700px;
+}
 
+.mat-form-field-appearance-fill .mat-form-field-flex {
+padding: 0.5em 0.75em 0em 0.75em;
+}
+
+.mat-form-field-underline{
+  bottom: 0em;
+}
+
+.mat-form-field-wrapper{
+  padding-bottom: 0.8em!important;
+}
+
+tr{
+  margin-top: -5em;
 }

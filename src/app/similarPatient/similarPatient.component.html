@@ -5,12 +5,13 @@
 <br>
 <span class="titleicon"><ion-icon name="people"></ion-icon>  Ähnliche Patienten finden</span><br><br><br>
 
+
 <div id="patientendaten">
   <h2>Patientendaten</h2>
-  <app-patient-fields></app-patient-fields>
-<!--  <div id ="pDaten" *ngFor="let field of fields" class="patientendatenzeile">{{field}}: {{patient.fields[field]}}</div>-->
-
+  <app-patient-fields [readOnly]=true [fields]="patient.fields"></app-patient-fields> <!--*ngFor="let fields of patient">{{fields}}: {{patient.fields[fields]}}-->
+  <!--  <div id ="pDaten" *ngFor="let field of fields" class="patientendatenzeile">{{field}}: {{patient.fields[field]}}</div>-->
 </div>
+
 <div id="pseudonyme">
   <h2>Pseudonyme für diesen Patienten</h2>
   <div id="pPseudonyme" *ngFor="let id of patient.ids" class="patientendatenzeile">{{id.idType}}: {{id.idString}}</div>

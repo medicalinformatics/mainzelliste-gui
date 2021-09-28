@@ -2,7 +2,7 @@ nav{
   background-color: #f2f2f2;
   float: left;
   height: 100%;
-  width: 10%;
+  width: 12%;
   padding-left: 35px;
   border-right: solid;
   border-color: white;
@@ -11,7 +11,7 @@ nav{
 a{
   color: black;
   font-size: 22px;
-text-decoration: none;
+  text-decoration: none;
 }
 
 ion-icon{

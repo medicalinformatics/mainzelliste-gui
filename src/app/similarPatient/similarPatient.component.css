@@ -1,15 +1,13 @@
 h2{
   font-family: Verdana;
-  font-size: 35px;
+  font-size: 28px;
   margin-left: 5%;
   margin-top: 2%;
-  font-weight: bold;
 }
 
 h1{
   font-family: Arial;
   font-size: 40px;
-  font-weight: bold;
 }
 
 .titleicon{
@@ -18,7 +16,6 @@ h1{
   font-size: 40px;
   margin-left: 1%;
   margin-top: 5%;
-  font-weight: bold;
 }
 
 #patientendaten{
@@ -33,7 +30,7 @@ h1{
   position:absolute;
   margin-left:1%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
+  overflow: auto;
 }
 
 #pseudonyme{

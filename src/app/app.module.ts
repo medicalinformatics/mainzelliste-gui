@@ -28,7 +28,7 @@ import { EditPatientComponent } from './edit-patient/edit-patient.component';
 import { DeletePatientComponent } from './delete-patient/delete-patient.component';
 import { PatientPseudonymsComponent } from './patient-pseudonyms/patient-pseudonyms.component';
 import { PatientDataComponent } from './patient-data/patient-data.component';
-
+import {FormGroup,FormControl} from "@angular/forms";
 
 
 @NgModule({
@@ -64,7 +64,7 @@ import { PatientDataComponent } from './patient-data/patient-data.component';
         MatFormFieldModule,
         MatInputModule,
         MatButtonModule,
-        ScrollingModule
+        ScrollingModule,
     ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}
