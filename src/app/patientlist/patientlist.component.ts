@@ -19,7 +19,6 @@ export class PatientlistComponent {
   tmpPatient: Patient = new Patient();
   fields: Array<string> = ["Nachname", "Geburtsname", "Vorname", "Geburtsdatum", "Wohnort", "PLZ"];
   filterChoice: Array<string>=[];
-
   constructor(public dialog: MatDialog, patientService: PatientService) {
     this.patientService = patientService;
     this.data = patientService.getPatients();

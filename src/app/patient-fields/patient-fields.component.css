@@ -15,7 +15,7 @@
   margin: 0% 5% ;
   max-width: 1000px;
 }
-
+/*
 .mat-form-field-appearance-fill .mat-form-field-flex {
 padding: 0.5em 0.75em 0em 0.75em;
 }
@@ -30,4 +30,19 @@ padding: 0.5em 0.75em 0em 0.75em;
 
 tr{
   margin-top: -5em;
+}*/
+::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 0.5em;
+}
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-infix {
+  padding: .25em 0 .25em 0;
+}
+::ng-deep .mat-form-field-underline {
+  bottom: 0.4em;
+}
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+  background-color: white;
+  -webkit-box-shadow: inset 3px 3px 4px -2px #757575;
+  box-shadow: inset 3px 3px 4px -2px #757575;
+  border-right: 1px solid #757575;
 }

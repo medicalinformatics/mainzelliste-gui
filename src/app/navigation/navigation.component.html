@@ -4,20 +4,20 @@
 <nav mat-sidenav-container>
   <table>
     <tr>
-      <td id="nav_home">
+      <td class="nav_item " (click)="chBackground($event,'HomeClass')">
         <a routerLink="/home"><ion-icon name="home-sharp"></ion-icon>Home</a>
       </td>
     </tr>
     <tr>
-      <td class="nav_item"><a routerLink="/create-patient"><ion-icon name="person-add-sharp"></ion-icon>PID anfordern</a>
+      <td class="nav_item" (click)="chBackground($event,'PIDClass')"><a routerLink="/create-patient"><ion-icon name="person-add-sharp"></ion-icon>PID anfordern</a>
       </td>
     </tr>
     <tr>
-      <td class="nav_item"><a routerLink="/patientlist-view"><ion-icon name="list-sharp"></ion-icon>Patientenliste</a>
+      <td class="nav_item " (click)="chBackground($event,'ListClass')"><a routerLink="/patientlist-view"><ion-icon name="list-sharp"></ion-icon>Patientenliste</a>
       </td>
     </tr>
     <tr>
-      <td class="nav_item"><a onclick="chBackground()" routerLink="/audittrail"><ion-icon name="document-text-sharp"></ion-icon>Audit-Trail</a></td>
+      <td class="nav_item " (click)="chBackground($event,'AuditClass')"><a routerLink="/audittrail"><ion-icon name="document-text-sharp"></ion-icon>Audit-Trail</a></td>
     </tr>
   </table>
 </nav>

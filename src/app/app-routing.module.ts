@@ -22,7 +22,8 @@ const routes: Routes = [
   {path: 'merge-patients', component: MergePatientsComponent},
   {path:'patientlist-view', component: PatientlistViewComponent},
   {path: 'edit-patient', component: EditPatientComponent},
-  {path: 'delete-patient', component: DeletePatientComponent}
+  {path: 'delete-patient', component: DeletePatientComponent},
+  {path: '', redirectTo: 'home', pathMatch: 'full'}
 ];
 
 @NgModule({

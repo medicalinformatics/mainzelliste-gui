@@ -11,10 +11,7 @@ p{
 }
 
 .example-button-row {
-  top:48%;
-  left:21%;
-  position: absolute;
-  display: flex;
+
   font-size: 40px;
 }
 
@@ -27,12 +24,15 @@ button{
   padding-top: 15px;
   padding-bottom: 15px;
 }
-
+.example-button-row {
+  margin-left: 5.9%;
+  width: 90%;
+  max-width: 1000px;
+}
 .example-button-row .mat-button-base {
   margin: 8px 8px 8px 0;
+  float: right
 }
-mat-raised-button{
-  width: 5%;
-}
+
 
 

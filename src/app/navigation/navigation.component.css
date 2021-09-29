@@ -2,14 +2,14 @@ nav{
   background-color: #f2f2f2;
   float: left;
   height: 100%;
-  width: 12%;
+  width: 250px;
   box-shadow:4px 7px 10px rgba(0,0,0,.4);
 
 }
 
 a{
   color: black;
-  font-size: 28px;
+  font-size: 20px;
   text-decoration: none;
   font-family: Verdana;
   color: #494949;
@@ -30,23 +30,17 @@ td{
   width:100%;
 }
 
-#nav_home{
-  padding-top: 4em;
-  float:left;
-  witdh:100%;
 
-}
 
-#nav_home:hover{
-  background-color: #dddddd;
-}
 
 .nav_item{
-width:100%;
   float:left;
 
 }
 
+.nav_item.active {
+  background-color: #dddddd;
+}
 .nav_item:hover{
   background-color: #dddddd;
 
