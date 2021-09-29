@@ -16,22 +16,20 @@ a{
   float:left;
   padding-left: 1em;
 
-
 }
 
 ion-icon{
   padding-right: 30px;
   font-size: 25px;
+
 }
 
 td{
   padding-top: 4em;
   padding-bottom:4em;
   width:100%;
+
 }
-
-
-
 
 .nav_item{
   float:left;

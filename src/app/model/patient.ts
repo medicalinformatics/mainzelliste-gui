@@ -12,6 +12,9 @@ export class Patient {
         fields[value.name]=""
       }
     })
+
+
+
   }
 
 }

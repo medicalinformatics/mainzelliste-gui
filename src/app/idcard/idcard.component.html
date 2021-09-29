@@ -1,5 +1,4 @@
-<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
 <body>
 <br>
 <span class="titleicon"><ion-icon name="id-card"></ion-icon>  ID Card </span><br><br><br>
@@ -13,7 +12,7 @@
 
 <div id="pseudonyme">
   <h2>Pseudonyme</h2>
-  <div id="pPseudonyme" *ngFor="let id of patient.ids" class="patientendatenzeile">{{id.idType}}: {{id.idString}}</div>
+ <app-patient-pseudonyms [readOnly]=true></app-patient-pseudonyms>
 </div>
 
 <div>

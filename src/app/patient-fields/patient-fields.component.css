@@ -1,36 +1,18 @@
-.example-form {
-  margin-inline: auto;
-
-}
-
 .example-full-width {
   width: 100%;
   margin-bottom: 5px;
   color: black;
-  font-size: 28px;
+  font-size: 20px;
 }
-
 .example-table{
   width: 90%;
   margin: 0% 5% ;
-  max-width: 1000px;
+  max-width: 700px;
 }
-/*
-.mat-form-field-appearance-fill .mat-form-field-flex {
-padding: 0.5em 0.75em 0em 0.75em;
-}
+.example-form {
+  margin-inline: auto;
 
-.mat-form-field-underline{
-  bottom: 0em;
 }
-
-.mat-form-field-wrapper{
-  padding-bottom: 0.8em!important;
-}
-
-tr{
-  margin-top: -5em;
-}*/
 ::ng-deep .mat-form-field-wrapper {
   padding-bottom: 0.5em;
 }

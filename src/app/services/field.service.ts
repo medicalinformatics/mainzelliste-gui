@@ -8,7 +8,7 @@ export class FieldService {
   fields: Array<Field>
   constructor() {
     this.fields = [
-      new Field( "Vorname", true, "", "Max"),
+      new Field("Vorname", true, "", "Max"),
       new Field("Nachname", true, "", "Mustermann"),
       new Field("Geburtsname", true, "", "falls vorhanden"),
       new Field("Geburtsdatum", true, "", "00.00.0000"),

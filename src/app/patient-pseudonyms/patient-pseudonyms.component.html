@@ -1,13 +1,4 @@
-<form class="example-form">
-  <table class="example-table" cellspacing="0">
-    <tr>
-      <td>
-        <mat-form-field class="example-full-width" >
-          <mat-label>Pseudonym</mat-label>
-          <input type="text">
-        </mat-form-field>
-      </td>
-    </tr>
-  </table>
-</form>
-
+<mat-form-field class="example-full-width" >
+  <mat-label *ngFor="let id of patient.ids">{{id.idType}}</mat-label>
+  <input matInput id="pPseudonyme"  [readonly]="readOnly" *ngFor="let id of patient.ids" class="patientendatenzeile" value=" {{id.idString}}">
+</mat-form-field>

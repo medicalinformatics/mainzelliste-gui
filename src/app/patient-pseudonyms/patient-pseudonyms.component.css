@@ -4,15 +4,16 @@
 }
 
 .example-full-width {
-  width: 100%;
+  width: 90%;
   margin-bottom: 5px;
   color: black;
-  font-size: 14px;
+  font-size: 20px;
+  margin: 0% 5% ;
 }
 
 .example-table{
   width: 90%;
-  margin: 0% 5% ;
+
   max-width: 700px;
 }
 
@@ -30,4 +31,20 @@
 
 tr{
   margin-top: -5em;
+}
+
+::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 0.5em;
+}
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-infix {
+  padding: .25em 0 .25em 0;
+}
+::ng-deep .mat-form-field-underline {
+  bottom: 0.4em;
+}
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+  background-color: white;
+  -webkit-box-shadow: inset 3px 3px 4px -2px #757575;
+  box-shadow: inset 3px 3px 4px -2px #757575;
+  border-right: 1px solid #757575;
 }

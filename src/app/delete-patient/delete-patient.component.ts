@@ -17,4 +17,12 @@ export class DeletePatientComponent implements OnInit {
     this.fields = history.state.fields;
   }
 
+/*  deletePatientenZeile(){
+    this.patientService.deletePatient(this.patient).then((result) => {
+      if (result == 204) {
+        // TODO: What should happen here? This component will not survice the deletePatient call ...
+      }
+    });
+  }*/
+
 }

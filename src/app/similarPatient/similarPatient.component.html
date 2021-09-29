@@ -13,8 +13,8 @@
 </div>
 
 <div id="pseudonyme">
-  <h2>Pseudonyme für diesen Patienten</h2>
-  <div id="pPseudonyme" *ngFor="let id of patient.ids" class="patientendatenzeile">{{id.idType}}: {{id.idString}}</div>
+  <h2>Pseudonyme</h2>
+  <app-patient-pseudonyms [readOnly]=true></app-patient-pseudonyms>
 </div>
 
 <div id="historie">

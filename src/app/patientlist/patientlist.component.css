@@ -50,7 +50,6 @@ color: white;
 
 #patientlist {
   font-family: Arial, sans-serif;
-  border-collapse: collapse;
   width: 98%;
   margin-left: 1%;
   font-size: 24px;
@@ -248,7 +247,6 @@ section {
 }
 p{
   padding-left: 1%;
-  background-color: white;
   font-size: 40px;
   font-family: Arial;
   margin-top: 1%;

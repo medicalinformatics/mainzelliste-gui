@@ -13,13 +13,13 @@
 
 <div id="pseudonyme">
   <h2>Pseudonyme</h2>
-  <div id="pPseudonyme" *ngFor="let id of patient.ids" class="patientendatenzeile">{{id.idType}}: {{id.idString}}</div>
+  <app-patient-pseudonyms [readOnly]=true></app-patient-pseudonyms>
 </div>
 
 <div>
   <p class="DeletePatientFragestellung"> Soll der folgende Patient wirklich gelöscht werden?</p>
   <br><br><br><br><br>
-  <button type="submit" class="DeletePatientButtonLöschen">Löschen</button>
+  <button  type="submit" class="DeletePatientButtonLöschen">Löschen</button>
   <br><br><br><br><br>
   <button type="submit" class="DeletePatientButtonAbbruch">Abbruch</button>
 </div>
@@ -27,3 +27,4 @@
   <h2>Historie</h2>
 </div>
 </body>
+<!--(click)="deletePatientenZeile()"-->
