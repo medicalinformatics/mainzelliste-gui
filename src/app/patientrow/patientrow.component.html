@@ -21,7 +21,7 @@
   <button (click)="editPatientenZeile()" id="editButtonTool" type="submit" class="toolbutton">
         <span [routerLink]="['/edit-patient']" [state]="{patient: patient, fields: fields}" class="toolbutton__icon"><ion-icon name="create"></ion-icon></span>
   </button>
-  <button id="deleteButtonTool" (click)="deletePatientenZeile()" type="submit" class="toolbutton">
+  <button id="deleteButtonTool" type="submit" class="toolbutton">
         <span [routerLink]="['/delete-patient']" [state]="{patient: patient, fields: fields}" class="toolbutton__icon"><ion-icon name="trash"></ion-icon></span>
   </button>
 </td>
@@ -32,3 +32,4 @@
 
 
 
+<!--(click)="deletePatientenZeile()"-->

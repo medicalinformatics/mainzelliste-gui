@@ -40,10 +40,7 @@ h1{
   width: 30%;
   height: 39%;
   background-color: #f1f1f1;
-  border: solid;
-  border-width: 3px;
   border-radius: 5px;
-  border-color: #cccccc;
   top: 8.4%;
   left: 31%;
   position:absolute;
@@ -56,10 +53,7 @@ h1{
   width: 85%;
   height: 34%;
   background-color: #f1f1f1;
-  border: solid;
-  border-width: 3px;
   border-radius: 5px;
-  border-color: #cccccc;
   top: 50%;
   left: 0px;
   position:absolute;

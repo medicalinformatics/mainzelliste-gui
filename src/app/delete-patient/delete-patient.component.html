@@ -19,12 +19,12 @@
 <div>
   <p class="DeletePatientFragestellung"> Soll der folgende Patient wirklich gelöscht werden?</p>
   <br><br><br><br><br>
-  <button  type="submit" class="DeletePatientButtonLöschen">Löschen</button>
+  <button  type="submit" (click)="deletePatientenZeile()"  class="DeletePatientButtonLöschen" [routerLink]="['/patientlist-view']">Löschen</button>
   <br><br><br><br><br>
-  <button type="submit" class="DeletePatientButtonAbbruch">Abbruch</button>
+  <button type="submit" class="DeletePatientButtonAbbruch" [routerLink]="['/patientlist-view']">Abbruch</button>
 </div>
 <div id="historie">
   <h2>Historie</h2>
 </div>
 </body>
-<!--(click)="deletePatientenZeile()"-->
+
