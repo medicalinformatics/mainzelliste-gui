@@ -7,13 +7,13 @@
   width: 100%;
   margin-bottom: 5px;
   color: black;
-  font-size: 14px;
+  font-size: 28px;
 }
 
 .example-table{
   width: 90%;
   margin: 0% 5% ;
-  max-width: 700px;
+  max-width: 1000px;
 }
 
 .mat-form-field-appearance-fill .mat-form-field-flex {

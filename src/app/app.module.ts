@@ -29,7 +29,9 @@ import { DeletePatientComponent } from './delete-patient/delete-patient.componen
 import { PatientPseudonymsComponent } from './patient-pseudonyms/patient-pseudonyms.component';
 import { PatientDataComponent } from './patient-data/patient-data.component';
 import {FormGroup,FormControl} from "@angular/forms";
-
+import {MatSidenavContainer} from "@angular/material/sidenav";
+import {MatSidenav} from "@angular/material/sidenav";
+import {MatSidenavModule} from "@angular/material/sidenav";
 
 @NgModule({
   declarations: [
@@ -65,6 +67,7 @@ import {FormGroup,FormControl} from "@angular/forms";
         MatInputModule,
         MatButtonModule,
         ScrollingModule,
+        MatSidenavModule,
     ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}

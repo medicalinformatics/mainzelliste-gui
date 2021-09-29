@@ -3,29 +3,55 @@ nav{
   float: left;
   height: 100%;
   width: 12%;
-  padding-left: 35px;
-  border-right: solid;
-  border-color: white;
+  box-shadow:4px 7px 10px rgba(0,0,0,.4);
+
 }
 
 a{
   color: black;
-  font-size: 22px;
+  font-size: 28px;
   text-decoration: none;
+  font-family: Verdana;
+  color: #494949;
+  float:left;
+  padding-left: 1em;
+
+
 }
 
 ion-icon{
-  padding-right: 15px;
+  padding-right: 30px;
   font-size: 25px;
 }
-.navbutton{
-  width: 80%;
-  margin: 30px;
-  padding:10px;
-  border: none;
-  background: none;
-  float: left;
-  text-align: left;
+
+td{
+  padding-top: 4em;
+  padding-bottom:4em;
+  width:100%;
 }
 
+#nav_home{
+  padding-top: 4em;
+  float:left;
+  witdh:100%;
+
+}
+
+#nav_home:hover{
+  background-color: #dddddd;
+}
+
+.nav_item{
+width:100%;
+  float:left;
+
+}
+
+.nav_item:hover{
+  background-color: #dddddd;
+
+}table{
+  width: 100%;
+  float:left;
+ }
 

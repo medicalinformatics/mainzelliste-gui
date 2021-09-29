@@ -5,14 +5,14 @@ p{
   font-size: 35px;
   font-family: Arial;
   padding-top: 3%;
-  margin-left: 10%;
+  margin-left: 5%;
   margin-bottom: 3%;
 
 }
 
 .example-button-row {
-  top:68%;
-  left:50%;
+  top:48%;
+  left:21%;
   position: absolute;
   display: flex;
   font-size: 40px;

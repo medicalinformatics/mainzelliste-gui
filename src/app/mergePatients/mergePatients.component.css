@@ -22,10 +22,7 @@ h1{
   width: 25%;
   height: 60%;
   background-color: #f2f2f2;
-  border: solid;
-  border-width: 3px;
   border-radius: 5px;
-  border-color: #888888;
   left: 0%;
   position:absolute;
   margin-left:1%;
@@ -37,10 +34,7 @@ h1{
   width: 25%;
   height: 60%;
   background-color: #f2f2f2;
-  border: solid;
-  border-width: 3px;
   border-radius: 5px;
-  border-color: #888888;
   top: 10%;
   left: 60%;
   position:absolute;
@@ -52,10 +46,7 @@ h1{
   width: 25%;
   height: 60%;
   background-color: #ADDFFF;
-  border: solid;
-  border-width: 3px;
   border-radius: 5px;
-  border-color: #888888;
   top: 10%;
   left: 30%;
   position:absolute;
@@ -81,13 +72,9 @@ h1{
   border:none;
 }
 
-#ergebniszsmfuehrenButton{
-  color: white;
-  top: 80%;
-  left: 80%;
-}
 .patientendatenzeile{
-  border: solid lightgrey 1px;
+  border-top: solid white 1px;
+  border-bottom:solid white 1px;
   padding: 2%;
   font-size: 22px;
 
@@ -99,7 +86,7 @@ h1{
   top: 75%;
   left: 77%;
   position:absolute;
-  border-radius: 30px;
+  border-radius: 15px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
 }

@@ -1,10 +1,23 @@
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
-<nav>
-  <br><br>
-  <ion-icon name="home-sharp"></ion-icon> <a routerLink="/home" >Home</a> <br><br><br><br>
-  <ion-icon name="person-add-sharp"></ion-icon> <a routerLink="/create-patient" >PID anfordern</a> <br><br><br><br>
-  <ion-icon name="list-sharp"></ion-icon> <a routerLink="/patientlist-view">Patientenliste</a> <br><br><br><br>
-  <ion-icon name="document-text-sharp"></ion-icon> <a routerLink="/audittrail" >Audit-Trail</a> <br><br><br><br>
+<nav mat-sidenav-container>
+  <table>
+    <tr>
+      <td id="nav_home">
+        <a routerLink="/home"><ion-icon name="home-sharp"></ion-icon>Home</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="nav_item"><a routerLink="/create-patient"><ion-icon name="person-add-sharp"></ion-icon>PID anfordern</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="nav_item"><a routerLink="/patientlist-view"><ion-icon name="list-sharp"></ion-icon>Patientenliste</a>
+      </td>
+    </tr>
+    <tr>
+      <td class="nav_item"><a onclick="chBackground()" routerLink="/audittrail"><ion-icon name="document-text-sharp"></ion-icon>Audit-Trail</a></td>
+    </tr>
+  </table>
 </nav>

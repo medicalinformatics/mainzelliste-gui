@@ -11,7 +11,9 @@ export class NavigationComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
+chBackground(){
+    // document.navigation.nav_item.style.background = '#dddddd'
+}
 
 }
 
