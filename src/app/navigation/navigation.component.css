@@ -3,13 +3,13 @@ nav{
   float: left;
   height: 100%;
   width: 250px;
-  box-shadow:4px 7px 10px rgba(0,0,0,.4);
+  box-shadow:1px 10px 10px rgba(0,0,0,.4);
 
 }
 
 a{
   color: black;
-  font-size: 20px;
+  font-size: 18px;
   text-decoration: none;
   font-family: Verdana;
   color: #494949;

@@ -8,29 +8,19 @@ p{
 
 }
 
-.example-button-row {
-
-  font-size: 40px;
-}
-
 button{
   color:white;
   background-color: #3895D0;
-  font-size: 22px;
-  padding-left: 30px;
-  padding-right: 30px;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  font-size: 18px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  left: 29%;
+
+
 }
-.example-button-row {
-  margin-left: 5.9%;
-  width: 90%;
-  max-width: 1000px;
-}
-.example-button-row .mat-button-base {
-  margin: 8px 8px 8px 0;
-  float: right
-}
+
 
 
 

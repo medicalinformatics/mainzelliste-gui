@@ -27,7 +27,7 @@
   height: 98%;
   margin-left: 1%;
   padding: 15px;
-  font-size: 25px;
+  font-size: 23px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
 }
@@ -52,7 +52,7 @@ color: white;
   font-family: Arial, sans-serif;
   width: 98%;
   margin-left: 1%;
-  font-size: 24px;
+  font-size: 18px;
   overflow: auto;
 }
 
@@ -67,16 +67,18 @@ color: white;
 #patientlist tr:hover {background-color: #ADDFFF;}
 
 th {
-  padding-top: 13px;
-  padding-bottom: 13px;
   text-align: left;
   background-color: #888888;
-  color: dimgrey;
+  color: white;
+  font-size: 20px;
 }
+/*
 .tabellenspalte{
   color:white;
-  font-size: 25px;
+  font-size: 18px;
+
 }
+*/
 
 input[type=text] {
   width: 100%;

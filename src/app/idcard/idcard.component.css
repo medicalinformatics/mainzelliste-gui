@@ -1,9 +1,8 @@
 h2{
-  font-family: Verdana;
-  font-size: 35px;
+  font-family: Tahoma;
+  font-size: 28px;
   margin-left: 5%;
   margin-top:20px;
-  font-weight: bold;
 }
 
 h1{
@@ -14,11 +13,10 @@ h1{
 }
 
 .titleicon{
-  font-size: 28px;
+  padding-left: 1%;
+  font-size: 35px;
   font-family: Arial;
-  font-size: 40px;
-  margin-left: 1%;
-  font-weight: bold;
+  margin-top: 0.8%;
 }
 
 #patientendaten{
@@ -39,7 +37,6 @@ h1{
   height: 39%;
   background-color: #f1f1f1;
   border-radius: 5px;
-  top: 8.4%;
   left: 31%;
   position:absolute;
   margin-left:1%;
@@ -72,10 +69,10 @@ h1{
   font-size: 16px;
   border-radius: 5px;
   position: absolute;
-  left: 75%;
-  font-size: 20px;
+  left: 78%;
+  font-size: 14px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  width: 10%;
+  width: 8%;
   margin-bottom: 2%;
 
 }

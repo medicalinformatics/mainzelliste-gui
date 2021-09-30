@@ -2,7 +2,7 @@
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 <body>
 <br>
-<span class="titleicon"><ion-icon name="trash"></ion-icon>  Patient löschen</span><br><br><br>
+<p class="titleicon"><ion-icon name="trash"></ion-icon>  Patient löschen</p><br>
 
 <div id="patientendaten">
   <h2>Patientendaten</h2>
@@ -19,9 +19,10 @@
 <div>
   <p class="DeletePatientFragestellung"> Soll der folgende Patient wirklich gelöscht werden?</p>
   <br><br><br><br><br>
+  <div id="deletepatientbuttons">
   <button  type="submit" (click)="deletePatientenZeile()"  class="DeletePatientButtonLöschen" [routerLink]="['/patientlist-view']">Löschen</button>
-  <br><br><br><br><br>
   <button type="submit" class="DeletePatientButtonAbbruch" [routerLink]="['/patientlist-view']">Abbruch</button>
+</div>
 </div>
 <div id="historie">
   <h2>Historie</h2>
