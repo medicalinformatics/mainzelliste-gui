@@ -4,7 +4,7 @@
   <div class="filtersection1"><input id="filterSectionInput" placeholder="Suche..."><ion-icon id="SearchIcon" name="search-outline"></ion-icon></div>
 
   <div class="filtersection2"> Filter
-    <div class="filterwahl"> Marie <ion-icon id="closefilterwahl" name="close-circle"></ion-icon></div>
+    <div class="filterwahl"> Marie <ion-icon class="closefilterwahl" name="close-circle"></ion-icon></div>
   </div>
 
   <div>
@@ -14,7 +14,7 @@
       <ion-icon name="cube"></ion-icon>
     </button>
     <button mat-raised-button type="submit" class="PatientenansichtButton">
-      <a id="zsmfuehrenbutton" routerLink="/merge-patients">
+      <a id="zsmfuehrenbutton" routerLink="/merge-patients" [state]="{patient: patient, fields: fields}" >
         Zusammenführen
         <ion-icon name="git-merge"></ion-icon>
       </a></button>

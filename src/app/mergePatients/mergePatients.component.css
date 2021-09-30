@@ -27,7 +27,7 @@ h1{
   position:absolute;
   margin-left:1%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
+  overflow: auto;
 }
 
 #patientdaten2{
@@ -40,6 +40,7 @@ h1{
   position:absolute;
   margin-left:1%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  overflow: auto;
 
 }
 #finalpatientendaten{
@@ -52,6 +53,7 @@ h1{
   position:absolute;
   margin-left:1%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  overflow: auto;
 
 }
 
@@ -94,4 +96,54 @@ h1{
   color: white;
   font-family: "Arial";
   text-decoration: none;
+}
+.example-form {
+  margin-inline: auto;
+
+}
+
+.example-full-width {
+  width: 90%;
+  margin-bottom: 5px;
+  color: black;
+  font-size: 20px;
+  margin: 0% 5% ;
+}
+
+.example-table{
+  width: 90%;
+
+  max-width: 700px;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-flex {
+  padding: 0.5em 0.75em 0em 0.75em;
+}
+
+.mat-form-field-underline{
+  bottom: 0em;
+}
+
+.mat-form-field-wrapper{
+  padding-bottom: 0.8em!important;
+}
+
+tr{
+  margin-top: -5em;
+}
+
+::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 0.5em;
+}
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-infix {
+  padding: .25em 0 .25em 0;
+}
+::ng-deep .mat-form-field-underline {
+  bottom: 0.4em;
+}
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+  background-color: white;
+  -webkit-box-shadow: inset 3px 3px 4px -2px #757575;
+  box-shadow: inset 3px 3px 4px -2px #757575;
+  border-right: 1px solid #757575;
 }
