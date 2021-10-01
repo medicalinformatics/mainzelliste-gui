@@ -87,7 +87,7 @@ export class PatientService {
       Geburtsdatum: '19.11.1962',
       Wohnort: 'Landau',
       PLZ: '76829'
-    }, [{idType: "Pseudonym", idString: "SQI009TF"}]),
+    }, [{idType: "Pseudonym", idString: "SQI009TF"}])/*,
     new Patient({
       Nachname: 'Schaller',
       Geburtsname: 'Lechner',
@@ -111,7 +111,7 @@ export class PatientService {
       Geburtsdatum: '25.05.1982',
       Wohnort: 'Konstanz',
       PLZ: '78462'
-    }, [{idType: "Pseudonym", idString: "POV762HG"}])
+    }, [{idType: "Pseudonym", idString: "POV762HG"}])*/
   ];
 
   getPatients(): Promise<Array<Patient>> {
@@ -142,10 +142,17 @@ export class PatientService {
   };
 
   deletePatient(patient: Patient): Promise<number> {
+    console.log("service is deleting");console.log(patient);
     return new Promise((resolve, reject) => {
-      let index = this.patients.indexOf(patient);
+      let index = this.patients.findIndex((patientFromArray)=>{
+        return patientFromArray.ids[0].idString===patient.ids[0].idString;
+      });
+      console.log(this.patients[0]);
+      console.log(index);
       if (index > -1) {
+
         this.patients.splice(index, 1);
+        resolve(204);
       }
     })
   }

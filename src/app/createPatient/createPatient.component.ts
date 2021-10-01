@@ -11,32 +11,28 @@ import {PatientService} from "../services/patient.service";
 export class CreatePatientComponent implements OnInit {
   title="Patient einfügen";
   patient: Patient;
+  patientService: PatientService;
   /*tmpPatient=*/
 
-/*  formData={
-    Nachname: '',
-    Geburtsname: '',
-    Vorname: '',
-    Geburtsdatum: '',
-    Wohnort: '',
-    PLZ: '',
-    idType: '',
-    idString: ''
-  }*/
 
-  constructor() {
+  constructor(patientService: PatientService) {
+    this.patientService= patientService;
     this.patient = new Patient();
   }
 
   ngOnInit(): void {
   }
-/*
+
   createNewPatient () {
-    this.patientService.createPatient(this.tmpPatient).then((result) => {
+    this.patientService.createPatient(this.patient).then((result) => {
       if (result == 200) {
-        this.tmpPatient = new Patient();
+        this.patient = new Patient();
       }
     });
   }
-*/
+
+
+  fieldsChanged(newFields: {[p: string]: any}) {
+    this.patient.fields = newFields;
+  }
 }

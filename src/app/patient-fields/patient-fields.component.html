@@ -4,7 +4,7 @@
       <td>
         <mat-form-field class="example-full-width" >
           <mat-label>{{field.name}}</mat-label>
-          <input  [readonly]="readOnly" matInput [value]="fields[field.name]" placeholder={{field.hint}}>
+          <input  [readonly]="readOnly" matInput [value]="fields[field.name]" (change)="fieldChanged()" placeholder={{field.hint}}>
         </mat-form-field>
       </td>
     </tr>

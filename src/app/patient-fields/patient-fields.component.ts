@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FieldService} from "../services/field.service";
 import {Field} from "../model/field";
 import {FormControl, FormGroup} from "@angular/forms";
@@ -24,7 +24,8 @@ export class PatientFieldsComponent implements OnInit {
     Plz:''
   };
 
-  @Input() fields: {[key: string]: any} = {};
+  @Input()  fields: {[key: string]: any} = {};
+  @Output() fieldEvent = new EventEmitter<{[key: string]: any}>();
   fieldService: FieldService;
   configuredFields: Promise<Array<Field>>;
   @Input() readOnly: boolean= false;
@@ -38,6 +39,11 @@ export class PatientFieldsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.fieldEvent.emit(this.fields);
+  }
+
+  fieldChanged(){
+
   }
 
 }
