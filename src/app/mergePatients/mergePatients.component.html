@@ -1,7 +1,7 @@
 
 <body>
 <br>
-<h1>Patienten zusammenführen</h1>
+<p>Patienten zusammenführen</p>
 <br><br><br>
 
 
@@ -61,8 +61,8 @@
 <div id="patientdaten2">
   <h2>Patientendaten 2</h2>
   <mat-form-field class="example-full-width" >
-    <mat-label *ngFor="let id of patient.ids">{{id.idType}}</mat-label>
-    <input matInput   [readonly]="readOnly" *ngFor="let id of patient.ids" class="patientendatenzeile" value=" {{id.idString}}"><button class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button>
+      <mat-label *ngFor="let id of patient.ids">{{id.idType}}</mat-label>
+   <input matInput   [readonly]="readOnly" *ngFor="let id of patient.ids" class="patientendatenzeile" value=" {{id.idString}}"><button class="PfeilNachLinks"><ion-icon name="arrow-back-circle"></ion-icon> </button>
   </mat-form-field>
 
   <!--  <div class="patientendatenzeile">Pseudonym <button class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button></div>
@@ -72,7 +72,7 @@
   <div *ngFor="let field of configuredFields | async">
     <mat-form-field class="example-full-width" >
       <mat-label >{{field.name}}</mat-label>
-      <input  [readonly]="readOnly" matInput [value]="fields[field.name]"> <button class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button>
+      <input  [readonly]="readOnly" matInput [value]="fields[field.name]"> <button class="PfeilNachLinks"><ion-icon name="arrow-back-circle"></ion-icon></button>
     </mat-form-field>
 
   </div>

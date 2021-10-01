@@ -53,7 +53,8 @@ color: white;
   width: 98%;
   margin-left: 1%;
   font-size: 18px;
-  overflow: auto;
+  height: 500px!important;
+
 }
 
 #patientlist td, #patientlist th {
@@ -274,3 +275,6 @@ a{
   text-decoration: none;
 }
 
+#datenzeilen{
+  overflow: auto;
+}

@@ -89,7 +89,7 @@
           <th class="tabellenspalte">Aktionen</th>
         </tr>
 
-        <tr *ngFor="let patient of data | async" [patient]="patient" [fields]="fields" app-patientrow></tr>
+        <tr id="datenzeilen" *ngFor="let patient of data | async" [patient]="patient" [fields]="fields" app-patientrow></tr>
 
       </table>
 
