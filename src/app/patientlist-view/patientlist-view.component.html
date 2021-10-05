@@ -9,19 +9,21 @@
 
   <div>
     <br>
-    <button mat-raised-button type="submit" class="PatientenansichtButton" name="Projektpseudonym erstellen"> Projekt
+    <button mat-raised-button type="submit" class="PatientenansichtButton" name="Projektpseudonym erstellen" matBadge="7" [matBadgeHidden]="hidden" (click)="toggleBadgeVisibility()"> Projekt
       erstellen
       <ion-icon name="cube"></ion-icon>
     </button>
-    <button mat-raised-button type="submit" class="PatientenansichtButton">
+    <button mat-raised-button type="submit" class="PatientenansichtButton" matBadge="7" [matBadgeHidden]="hidden" (click)="toggleBadgeVisibility()">
       <a id="zsmfuehrenbutton" routerLink="/merge-patients" [state]="{patient: patient, fields: fields}" >
         Zusammenführen
         <ion-icon name="git-merge"></ion-icon>
       </a></button>
 
-    <button mat-raised-button type="submit" class="PatientenansichtButton">Löschen
+    <button mat-raised-button type="submit" class="PatientenansichtButton" matBadge="7" [matBadgeHidden]="hidden" (click)="toggleBadgeVisibility()">Löschen
       <ion-icon name="trash"></ion-icon>
     </button>
+
+
 
     <!--<input mat-raised-button id="suchleiste" type="text" placeholder="Suche...">
     <button mat-raised-button id="suchbutton" type="submit" class="PatientenansichtButton">

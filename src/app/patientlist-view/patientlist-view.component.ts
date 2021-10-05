@@ -8,10 +8,14 @@ import {Patient} from "../model/patient";
   styleUrls: ['./patientlist-view.component.css']
 })
 export class PatientlistViewComponent implements OnInit {
-    title="Patientenliste";
+  title="Patientenliste";
   patientService: PatientService;
   patient: Patient = new Patient();
   fields: Array<string> = [];
+  hidden = false;
+
+/*  public fields: { [key: string]: any } = {}
+  selectedPatients{[select: boolean, selectedPatient: object]} = {};*/
 
 
   constructor(patientService: PatientService) {
@@ -23,4 +27,7 @@ export class PatientlistViewComponent implements OnInit {
     this.fields = history.state.fields;
   }
 
+  toggleBadgeVisibility() {
+    this.hidden = !this.hidden;
+  }
 }

@@ -32,6 +32,7 @@ import {FormGroup,FormControl} from "@angular/forms";
 import {MatSidenavContainer} from "@angular/material/sidenav";
 import {MatSidenav} from "@angular/material/sidenav";
 import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatBadgeModule} from "@angular/material/badge";
 
 @NgModule({
   declarations: [
@@ -56,19 +57,20 @@ import {MatSidenavModule} from "@angular/material/sidenav";
     PatientPseudonymsComponent,
     PatientDataComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        IonicModule.forRoot(),
-        BrowserAnimationsModule,
-        MatDialogModule,
-        FormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        ScrollingModule,
-        MatSidenavModule,
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    IonicModule.forRoot(),
+    BrowserAnimationsModule,
+    MatDialogModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    ScrollingModule,
+    MatSidenavModule,
+    MatBadgeModule,
+  ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}
   ],

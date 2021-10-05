@@ -15,6 +15,9 @@ export class PatientrowComponent {
   editMode: boolean = false;
   deleteMode: boolean = false;
 
+  @Input() checked: boolean = false;
+  // @Input() id: string;
+
   constructor(patientService: PatientService) {
     this.patientService = patientService;
   }
