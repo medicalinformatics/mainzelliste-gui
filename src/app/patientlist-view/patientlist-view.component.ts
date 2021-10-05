@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {PatientService} from "../services/patient.service";
 import {Patient} from "../model/patient";
+import {MatChipInputEvent} from "@angular/material/chips";
+import {COMMA, ENTER} from "@angular/cdk/keycodes";
 
 @Component({
   selector: 'app-patientlist-view',
@@ -17,6 +19,38 @@ export class PatientlistViewComponent implements OnInit {
 /*  public fields: { [key: string]: any } = {}
   selectedPatients{[select: boolean, selectedPatient: object]} = {};*/
 
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  tableHead= [
+    {name: 'Nachname'},
+    {name: 'Geburtsname'},
+    {name: 'Vorname'},
+    {name: 'Geburtsdatum'},
+    {name: 'PLZ'},
+    {name: 'Wohnort'},
+  ];
+
+  add(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+/*    // Add our fruit
+    if (value) {
+      this.fruits.push({name: value});
+    }*/
+
+    // Clear the input value
+    event.chipInput!.clear();
+  }
+
+/*  remove(fruit: Fruit): void {
+    const index = this.fruits.indexOf(fruit);
+
+    if (index >= 0) {
+      this.fruits.splice(index, 1);
+    }
+  }*/
 
   constructor(patientService: PatientService) {
     this.patientService = patientService;

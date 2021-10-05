@@ -33,6 +33,8 @@ import {MatSidenavContainer} from "@angular/material/sidenav";
 import {MatSidenav} from "@angular/material/sidenav";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatBadgeModule} from "@angular/material/badge";
+import {MatChipsModule} from "@angular/material/chips";
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -70,6 +72,8 @@ import {MatBadgeModule} from "@angular/material/badge";
     ScrollingModule,
     MatSidenavModule,
     MatBadgeModule,
+    MatChipsModule,
+    MatIconModule,
   ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}
