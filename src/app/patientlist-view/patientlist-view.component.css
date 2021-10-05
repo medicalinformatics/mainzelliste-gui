@@ -227,7 +227,9 @@ section {
 
 
 .PatientenansichtButton {
-  background-color: #3895D3; /* Green */
+  background-color: #888888;
+  margin-bottom: 1%;
+  float: right;
   color: white;
   margin-right: 2rem;
   margin-left:1.51rem;
