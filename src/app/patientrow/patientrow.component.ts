@@ -15,7 +15,9 @@ export class PatientrowComponent {
   editMode: boolean = false;
   deleteMode: boolean = false;
 
-  @Input() checked: boolean = false;
+  selectedPatients: Array<{patient: Patient}> = [];
+
+  @Input() checked: boolean | undefined;
   // @Input() id: string;
 
   constructor(patientService: PatientService) {
@@ -32,5 +34,9 @@ export class PatientrowComponent {
         // TODO: What should happen here? This component will not survice the deletePatient call ...
       }
     });
+  }
+
+  selectPatient(patient:Patient) {
+    // this.selectedPatients.push(patient);
   }
 }

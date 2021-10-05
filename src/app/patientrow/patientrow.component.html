@@ -1,10 +1,9 @@
 
-<td> <form action="/myaction.php">
+<td>
       <label class="container">
-        <input type="checkbox" checked="false" >
+        <input mat-checkbox type="checkbox" [checked]=selectPatient(patient)>
         <span class="checkmark"></span>
       </label>
-      </form>
 </td>
 
 <td><input *ngIf="editMode" type="text" name="{{patient.ids[0].idType}}" [(ngModel)]="patient.ids[0].idString" >  <span *ngIf="!editMode">{{patient.ids[0].idString}}</span></td>

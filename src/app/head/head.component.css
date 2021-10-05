@@ -1,13 +1,13 @@
 #kopfzeile {
   width: 100%;
   height: 10%;
-  background-color: #f2f2f2;
+  background-color: #528FB7;
   box-shadow: 0px 15px 10px -15px rgba(0,0,0,.4);
 }
 
 h1{
   font-family: Arial;
-  color: black;
+  color: white;
   padding-left: 3%;
   padding-top: 2%;
   font-size: 50px;
