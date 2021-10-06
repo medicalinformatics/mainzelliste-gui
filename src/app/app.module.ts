@@ -36,6 +36,7 @@ import {MatBadgeModule} from "@angular/material/badge";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatIconModule} from "@angular/material/icon";
 import {MatCheckbox} from "@angular/material/checkbox";
+import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import {MatCheckbox} from "@angular/material/checkbox";
     MatSidenavModule,
     MatBadgeModule,
     MatChipsModule,
-    MatIconModule
+    MatIconModule,
+    MatCardModule
   ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}

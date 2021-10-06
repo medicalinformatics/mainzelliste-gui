@@ -1,16 +1,15 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {PatientSearchComponent} from "../patientSearch/patientSearch.component";
 import {Patient} from "../model/patient";
 import {PatientService} from "../services/patient.service";
-
+import {PatientrowComponent} from "../patientrow/patientrow.component";
 
 @Component({
   selector: 'app-patientlist',
   templateUrl: './patientlist.component.html',
   styleUrls: ['./patientlist.component.css']
 })
-
 
 export class PatientlistComponent {
   title = "Patientenliste";
@@ -19,6 +18,10 @@ export class PatientlistComponent {
   tmpPatient: Patient = new Patient();
   fields: Array<string> = ["Nachname", "Geburtsname", "Vorname", "Geburtsdatum", "Wohnort", "PLZ"];
   filterChoice: Array<string>=[];
+
+  @Output() selectedP = new EventEmitter<PatientlistComponent>();
+  selectedPatients: Array<Patient> = [];
+
   constructor(public dialog: MatDialog, patientService: PatientService) {
     this.patientService = patientService;
     this.data = patientService.getPatients();
@@ -55,5 +58,11 @@ export class PatientlistComponent {
 
   useFilter(filterWahl:string){
     this.filterChoice.push(filterWahl);
+  }
+
+  patientSelected(row: PatientrowComponent){
+    this.selectedPatients.push(row.patient);
+    this.selectedP.emit(this);
+
   }
 }

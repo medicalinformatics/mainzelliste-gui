@@ -116,3 +116,10 @@ h1{
   box-shadow: inset 3px 3px 4px -2px #757575;
   border-right: 1px solid #757575;
 }
+
+
+.mat-card{
+  width:35%;
+  min-height: 20%;
+  display: flex;
+}

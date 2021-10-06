@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {PatientService} from "../services/patient.service";
 import {Patient} from "../model/patient";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {PatientlistComponent} from "../patientlist/patientlist.component";
 
 @Component({
   selector: 'app-patientlist-view',
@@ -14,15 +15,14 @@ export class PatientlistViewComponent implements OnInit {
   patientService: PatientService;
   patient: Patient = new Patient();
   fields: Array<string> = [];
-  hidden = false;
-
-/*  public fields: { [key: string]: any } = {}
-  selectedPatients{[select: boolean, selectedPatient: object]} = {};*/
+  selectedPatients: Array<Patient> = [];
 
   selectable = true;
   removable = true;
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
+
+
   tableHead= [
     {name: 'Nachname'},
     {name: 'Geburtsname'},
@@ -52,6 +52,7 @@ export class PatientlistViewComponent implements OnInit {
     }
   }*/
 
+
   constructor(patientService: PatientService) {
     this.patientService = patientService;
   }
@@ -61,7 +62,8 @@ export class PatientlistViewComponent implements OnInit {
     this.fields = history.state.fields;
   }
 
-  toggleBadgeVisibility() {
-    this.hidden = !this.hidden;
+  patientSelected(list: PatientlistComponent){
+    this.selectedPatients=list.selectedPatients;
   }
+
 }

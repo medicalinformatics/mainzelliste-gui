@@ -321,10 +321,10 @@ a{
 }
 
 .mat-chip.mat-standard-chip{
-  font-size: 20px;
+  font-size: 22px;
   background-color: #9ABED5;
   color:white;
-  padding:20px;
+  padding:25px;
 }
 .mat-icon{
   bottom:9px;

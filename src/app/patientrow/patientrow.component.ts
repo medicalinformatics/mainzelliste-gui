@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {Patient} from "../model/patient";
 import {PatientService} from "../services/patient.service";
 
@@ -11,14 +11,11 @@ export class PatientrowComponent {
   patientService: PatientService;
   @Input() patient: Patient = new Patient()
   @Input() fields : Array<string> = [];
+  @Output() selectedP = new EventEmitter<PatientrowComponent>();
+
   show = true;
   editMode: boolean = false;
   deleteMode: boolean = false;
-
-  selectedPatients: Array<{patient: Patient}> = [];
-
-  @Input() checked: boolean | undefined;
-  // @Input() id: string;
 
   constructor(patientService: PatientService) {
     this.patientService = patientService;
@@ -36,7 +33,11 @@ export class PatientrowComponent {
     });
   }
 
-  selectPatient(patient:Patient) {
-    // this.selectedPatients.push(patient);
+  selectPatient() {
+    console.log("pushing one patient in chosenArray")
+    this.selectedP.emit(this);
+    console.log(this);
+
   }
+
 }

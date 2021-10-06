@@ -1,7 +1,7 @@
 
 <td>
       <label class="container">
-        <input mat-checkbox type="checkbox" [checked]=selectPatient(patient)>
+        <input mat-checkbox type="checkbox" (click)="selectPatient()">
         <span class="checkmark"></span>
       </label>
 </td>
@@ -28,7 +28,3 @@
   <button (click)="editPatientenZeile()" type="submit" class="fertigButton">
     Fertig
   </button></td>
-
-
-
-<!--(click)="deletePatientenZeile()"-->

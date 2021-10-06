@@ -1,98 +1,50 @@
-<!--<div id="patientenlisteAnsicht">
-  <br>
-  <p>{{title}}</p>
-  <div id="filtersection">
-    Filter:
-    <div class="filterwahl"> Marie
-      <ion-icon id="closefilterwahl" name="close-circle"></ion-icon>
-    </div>
-    <input id="filterSectionInput">
-  </div>
-  <div>
-    <br>
-    <button mat-raised-button type="submit" class="PatientenansichtButton" name="Projektpseudonym erstellen"> Projekt
-      erstellen
-      <ion-icon name="cube"></ion-icon>
-    </button>
-    <button mat-raised-button type="submit" class="PatientenansichtButton"><a id="zsmfuehrenbutton"
-                                                                              routerLink="/zusammenfuehren">
-      Zusammenführen
-      <ion-icon name="git-merge"></ion-icon>
-    </a></button>
-    <button mat-raised-button type="submit" class="PatientenansichtButton">Löschen
-      <ion-icon name="trash"></ion-icon>
-    </button>
-    <input mat-raised-button id="suchleiste" type="text" placeholder="Suche...">
-    <button mat-raised-button id="suchbutton" type="submit" class="PatientenansichtButton">
-      <ion-icon id="searchicon" name="search-outline"></ion-icon>
-    </button>
+<table mat-table id="patientlist">
+  <tr id="patientenlisteHead">
+    <th>
+      <label class="container">
+        <input type="checkbox">
+        <span class="checkmark"></span>
+      </label>
+    </th>
+    <th class="tabellenspalte">PID
+      <button class="filterbutton" (click)="openfilter('pseudonymfilter')">
+        <ion-icon name="caret-down-circle-outline"></ion-icon>
+      </button>
+    </th>
+    <th class="tabellenspalte">Nachname
+      <button class="filterbutton" (click)="openfilter('nachnamefilter')">
+        <ion-icon name="caret-down-circle-outline"></ion-icon>
+      </button>
+    </th>
+    <th class="tabellenspalte">Geburtsname
+      <button class="filterbutton" (click)="openfilter('geburtsnamefilter')">
+        <ion-icon name="caret-down-circle-outline"></ion-icon>
+      </button>
+    </th>
+    <th class="tabellenspalte">Vorname
+      <button class="filterbutton" (click)="openfilter('vornamefilter')">
+        <ion-icon name="caret-down-circle-outline"></ion-icon>
+      </button>
+    </th>
+    <th class="tabellenspalte">Geburtsdatum
+      <button class="filterbutton" (click)="openfilter('geburtsdatumfilter')">
+        <ion-icon name="caret-down-circle-outline"></ion-icon>
+      </button>
+    </th>
+    <th class="tabellenspalte">Wohnort
+      <button class="filterbutton" (click)="openfilter('wohnortfilter')">
+        <ion-icon name="caret-down-circle-outline"></ion-icon>
+      </button>
+    </th>
+    <th class="tabellenspalte">PLZ
+      <button class="filterbutton" (click)="openfilter('plzfilter')">
+        <ion-icon name="caret-down-circle-outline"></ion-icon>
+      </button>
+    </th>
+    <th class="tabellenspalte">Aktionen</th>
+  </tr>
 
-  </div>
-  <br><br>
+  <tr id="datenzeilen" *ngFor="let patient of data | async" [patient]="patient" [fields]="fields"
+      (selectedP)="patientSelected($event)" app-patientrow></tr>
 
-  <cdk-virtual-scroll-viewport tableSize="50" class="example-viewport">
-
-    <div cdkVirtualFor="let item of items" class="example-item">-->
-
-      <table mat-table id="patientlist">
-
-        <!-- <tr >
-           <th  class="tabellenspalte" colspan="2">neuer Patient:</th>
-           <th *ngFor=" let field of fields"><input type="text" name="{{field}}}" placeholder="{{field}}" [(ngModel)]="tmpPatient.fields[field]"></th>
-           <th id="addPatientzeile"><button type="submit" (click)="erstelleNeuenPatienten()"  id="addpatientbutton"><ion-icon name="person-add"></ion-icon></button></th>
-         </tr>-->
-
-        <tr id="patientenlisteHead">
-          <th>
-            <form action="/action_page.php">
-              <label class="container">
-                <input type="checkbox">
-                <span class="checkmark"></span>
-              </label>
-            </form>
-          </th>
-          <th class="tabellenspalte">PID
-            <button class="filterbutton" (click)="openfilter('pseudonymfilter')">
-              <ion-icon name="caret-down-circle-outline"></ion-icon>
-            </button>
-          </th>
-          <th class="tabellenspalte">Nachname
-            <button class="filterbutton" (click)="openfilter('nachnamefilter')">
-              <ion-icon name="caret-down-circle-outline"></ion-icon>
-            </button>
-          </th>
-          <th class="tabellenspalte">Geburtsname
-            <button class="filterbutton" (click)="openfilter('geburtsnamefilter')">
-              <ion-icon name="caret-down-circle-outline"></ion-icon>
-            </button>
-          </th>
-          <th class="tabellenspalte">Vorname
-            <button class="filterbutton" (click)="openfilter('vornamefilter')">
-              <ion-icon name="caret-down-circle-outline"></ion-icon>
-            </button>
-          </th>
-          <th class="tabellenspalte">Geburtsdatum
-            <button class="filterbutton" (click)="openfilter('geburtsdatumfilter')">
-              <ion-icon name="caret-down-circle-outline"></ion-icon>
-            </button>
-          </th>
-          <th class="tabellenspalte">Wohnort
-            <button class="filterbutton" (click)="openfilter('wohnortfilter')">
-              <ion-icon name="caret-down-circle-outline"></ion-icon>
-            </button>
-          </th>
-          <th class="tabellenspalte">PLZ
-            <button class="filterbutton" (click)="openfilter('plzfilter')">
-              <ion-icon name="caret-down-circle-outline"></ion-icon>
-            </button>
-          </th>
-          <th class="tabellenspalte">Aktionen</th>
-        </tr>
-
-        <tr id="datenzeilen" *ngFor="let patient of data | async" [patient]="patient" [fields]="fields" app-patientrow></tr>
-
-      </table>
-
-   <!-- </div>
-  </cdk-virtual-scroll-viewport>
-</div>-->
+</table>
