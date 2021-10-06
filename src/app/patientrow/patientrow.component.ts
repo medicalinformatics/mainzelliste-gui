@@ -16,6 +16,7 @@ export class PatientrowComponent {
   show = true;
   editMode: boolean = false;
   deleteMode: boolean = false;
+  selected: boolean = false;
 
   constructor(patientService: PatientService) {
     this.patientService = patientService;
@@ -35,6 +36,7 @@ export class PatientrowComponent {
 
   selectPatient() {
     console.log("pushing one patient in chosenArray")
+    this.selected=!this.selected;
     this.selectedP.emit(this);
     console.log(this);
 

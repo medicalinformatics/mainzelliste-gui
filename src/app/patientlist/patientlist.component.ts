@@ -61,8 +61,18 @@ export class PatientlistComponent {
   }
 
   patientSelected(row: PatientrowComponent){
-    this.selectedPatients.push(row.patient);
+    console.log(row.selected);
+    if (row.selected) {
+     this.selectedPatients.push(row.patient);
+   }
+   else{
+     let index = this.selectedPatients.findIndex((patientFromArray)=>{
+       return patientFromArray.ids[0].idString===row.patient.ids[0].idString;
+     });
+     if (index > -1) {
+       this.selectedPatients.splice(index, 1);
+     }
+   }
     this.selectedP.emit(this);
-
   }
 }
