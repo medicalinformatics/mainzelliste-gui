@@ -7,9 +7,7 @@
       <mat-chip  [selectable]="selectable"
                 [removable]="removable" > <!--(removed)="remove(fruit)"-->
         Vorname: Marie
-        <button matChipRemove *ngIf="removable">
-          <mat-icon>cancel</mat-icon>
-        </button>
+        <button matChipRemove *ngIf="removable"><mat-icon>cancel</mat-icon></button>
       </mat-chip>
       <input placeholder="Search..."
              [matChipInputFor]="chipList"
@@ -17,6 +15,12 @@
              [matChipInputAddOnBlur]="addOnBlur"
              (matChipInputTokenEnd)="add($event)">
     </mat-chip-list>
+    <mat-autocomplete #auto="matAutocomplete" ><!--(optionSelected)="selected($event)"-->
+      <mat-option ><!--*ngFor="let fruit of filteredFruits | async" [value]="fruit"-->
+        Vorname:
+        Nachname:
+      </mat-option>
+    </mat-autocomplete>
   </mat-form-field>
 </div>
 
@@ -26,17 +30,18 @@
       erstellen
       <ion-icon name="cube"></ion-icon>
     </button>
-    <button mat-raised-button type="submit" class="PatientenansichtButton" [matBadge]="selectedPatients.length" [matBadgeHidden]="selectedPatients.length<2">
-      <a id="zsmfuehrenbutton" routerLink="/merge-patients" [state]="{patient: patient, fields: fields}" >
+    <button mat-raised-button type="submit" class="PatientenansichtButton" [matBadge]="selectedPatients.length" [matBadgeHidden]="selectedPatients.length<2" style="background-color: #3895D0">
+      <a class="zsmfuehrenbutton" routerLink="/merge-patients" [state]="{patient: patient, fields: fields}" >
         Zusammenführen
         <ion-icon name="git-merge"></ion-icon>
       </a></button>
 
-    <button mat-raised-button type="submit" class="PatientenansichtButton" [matBadge]="selectedPatients.length" [matBadgeHidden]="selectedPatients.length<2">Löschen
-      <ion-icon name="trash"></ion-icon>
+    <button mat-raised-button type="submit" class="PatientenansichtButton" [matBadge]="selectedPatients.length" [matBadgeHidden]="selectedPatients.length<2">
+      <a class="zsmfuehrenbutton" routerLink="/delete-multiple-patients" [state]="{patient: selectedPatients, fields: fields}" >Löschen<ion-icon name="trash"></ion-icon></a>
     </button>
 
   </div>
+
   <br><br>
 
   <app-patientlist (selectedP)="patientSelected($event)"></app-patientlist>

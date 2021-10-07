@@ -37,6 +37,8 @@ import {MatChipsModule} from "@angular/material/chips";
 import {MatIconModule} from "@angular/material/icon";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {MatCardModule} from "@angular/material/card";
+import { DeleteMultiplePatientsComponent } from './delete-multiple-patients/delete-multiple-patients.component';
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 
 @NgModule({
   declarations: [
@@ -59,7 +61,8 @@ import {MatCardModule} from "@angular/material/card";
     EditPatientComponent,
     DeletePatientComponent,
     PatientPseudonymsComponent,
-    PatientDataComponent
+    PatientDataComponent,
+    DeleteMultiplePatientsComponent
   ],
   imports: [
     BrowserModule,
@@ -76,7 +79,8 @@ import {MatCardModule} from "@angular/material/card";
     MatBadgeModule,
     MatChipsModule,
     MatIconModule,
-    MatCardModule
+    MatCardModule,
+    MatAutocompleteModule
   ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}

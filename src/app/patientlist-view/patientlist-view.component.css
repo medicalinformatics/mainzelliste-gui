@@ -1,3 +1,4 @@
+
 #patientenlisteAnsicht{
   margin-left: 2%;
 }
@@ -11,13 +12,13 @@
 }
 
 .filtersection1{
-  /*border: #dddddd solid thin;*/
+  border: #dddddd solid thin;
   background-color: #f2f2f2;
   font-family: Arial;
   font-size: 28px;
   width: 98%;
   margin-left: 1%;
-  /*margin-bottom: 1%;*/
+  margin-bottom: 1%;
   padding-bottom: 15px;
   padding-top: 15px;
   padding-left: 1rem;
@@ -26,7 +27,7 @@
 }
 
 .filtersection2{
-  /*border: #dddddd solid thin;*/
+  border: #dddddd solid thin;
   background-color: #ADDFFF;
   font-family: Arial;
   font-size: 24px;
@@ -70,7 +71,7 @@
   border:none;
 }
 
-#zsmfuehrenbutton{
+.zsmfuehrenbutton{
   color: white;
 }
 
@@ -147,7 +148,7 @@ tr:nth-child{
   user-select: none;
 }
 
-/* Hide the browser's default checkbox */
+ /*Hide the browser's default checkbox*/
 .container input {
   position: absolute;
   opacity: 0;
@@ -211,6 +212,7 @@ section {
   margin: 8px 8px 8px 0;
 }
 
+
 #addpatientbutton{
   margin-left: 55px;
   position: center;
@@ -224,10 +226,12 @@ section {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
 }
-
+.PatientenansichtButton{
+  background-color: #3895D3;
+}
 
 .PatientenansichtButton {
-  background-color: #888888;
+  background-color: lightgray;
   margin-bottom: 1%;
   float: right;
   color: white;
@@ -237,7 +241,7 @@ section {
   padding: 5px 30px 5px 30px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
-  /* padding: 10px 32px;
+  /*padding: 10px 32px;
     border: none;
    text-align: center;
    text-decoration: none;
@@ -352,4 +356,14 @@ a{
 }
 .mat-badge-active{
   background: #3895D3;
+}
+
+.mat-badge-medium.mat-badge-overlap.mat-badge-after .mat-badge-content{
+  background-color: white;
+  color: #494949;
+}
+
+.mat-badge-content{
+  background-color: white;
+  color: #494949;
 }

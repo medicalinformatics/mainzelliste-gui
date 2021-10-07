@@ -1,4 +1,3 @@
-
 h2{
   font-family: Tahoma;
   font-size: 28px;
@@ -15,43 +14,79 @@ h2{
   margin-top: 0.8%;
 }
 
-#patientendaten{
-  width: 30%;
+#patientendaten1{
   height: 39%;
+  width: 100%;
   background-color: #f1f1f1;
   border-width: 3px;
   border-radius: 5px;
-  left: 0%;
-  position:absolute;
+  position:relative;
   margin-left:1%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  overflow: auto;
 }
 
-#pseudonyme{
-  width: 30%;
+
+#patientendaten2{
   height: 39%;
+  width: 100%;
   background-color: #f1f1f1;
+  border-width: 3px;
   border-radius: 5px;
-  left: 31%;
-  position:absolute;
+  position:relative;
   margin-left:1%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  overflow: auto;
 }
 
-#historie{
-  width: 85%;
-  height: 34%;
+#pseudonyme1{
+  height: 39%;
+  width: 100%;
   background-color: #f1f1f1;
   border-radius: 5px;
-  top: 50%;
-  left: 0px;
-  position:absolute;
+  top: 1%;
+  position:relative;
   margin-left:1%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+
+#pseudonyme2{
+  height: 39%;
+  width: 100%;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  top: 1%;
+  position:relative;
+  margin-left:1%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#historie1{
+  height: 39%;
+  width: 100%;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  top: 1%;
+  position:relative;
+  margin-left:1%;
+  margin-bottom: 5%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
 }
+
+
+#historie2{
+  height: 39%;
+  width: 100%;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  top: 1%;
+  position:relative;
+  margin-left:1%;
+  margin-bottom: 5%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
 
 .DeletePatientFragestellung{
   position: absolute;
@@ -95,7 +130,7 @@ h2{
   position: absolute;
   width: 20%;
   height: 9%;
-  top: 15%;
+  top: 20%;
   left: 65%;
   float: right;
 }
@@ -118,4 +153,44 @@ h2{
 .patientendatenzeile .fields{
   font-family: "Arial Black";
   font-size: 10px;
+}
+
+#deletePatient1{
+  position: absolute;
+  top:10%;
+  width: 30%;
+  height: inherit;
+  background-color: #284B63;
+  padding-right: 15px;
+  border-radius: 5px;
+
+}
+
+#deletePatient2{
+  background-color: #094846;
+  position: absolute;
+  top: 10%;
+  width: 30%;
+  height: inherit;
+  left:31%;
+  padding-right: 15px;
+  border-radius: 5px;
+}
+
+body{
+  top:10%;
+  overflow: auto;
+
+}
+
+
+.patientDiv{
+  font-size: 28px;
+  padding: 6px;
+  margin-left:5px;
+  margin-top:10px;
+  color: white;
+  position: center;
+  text-align: center;
+
 }

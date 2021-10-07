@@ -10,6 +10,7 @@ import {CreatePatientComponent} from "./createPatient/createPatient.component";
 import {MergePatientsComponent} from "./mergePatients/mergePatients.component";
 import {EditPatientComponent} from "./edit-patient/edit-patient.component";
 import {DeletePatientComponent} from "./delete-patient/delete-patient.component";
+import {DeleteMultiplePatientsComponent} from "./delete-multiple-patients/delete-multiple-patients.component";
 
 
 const routes: Routes = [
@@ -23,6 +24,7 @@ const routes: Routes = [
   {path:'patientlist-view', component: PatientlistViewComponent},
   {path: 'edit-patient', component: EditPatientComponent},
   {path: 'delete-patient', component: DeletePatientComponent},
+  {path: 'delete-multiple-patients', component:DeleteMultiplePatientsComponent},
   {path: '', redirectTo: 'home', pathMatch: 'full'}
 ];
 
@@ -32,4 +34,4 @@ const routes: Routes = [
 
 })
 export class AppRoutingModule{}
-export const routingComponents =[PatientlistComponent, HomeComponent, AudittrailComponent, IdcardComponent, SimilarPatientComponent, MergePatientsComponent, PatientlistViewComponent, CreatePatientComponent,EditPatientComponent,DeletePatientComponent]
+export const routingComponents =[PatientlistComponent, HomeComponent, AudittrailComponent, IdcardComponent, SimilarPatientComponent, MergePatientsComponent, PatientlistViewComponent, CreatePatientComponent,EditPatientComponent,DeletePatientComponent, DeleteMultiplePatientsComponent]

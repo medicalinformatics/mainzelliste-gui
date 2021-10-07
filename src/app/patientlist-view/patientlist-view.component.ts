@@ -11,7 +11,7 @@ import {PatientlistComponent} from "../patientlist/patientlist.component";
   styleUrls: ['./patientlist-view.component.css']
 })
 export class PatientlistViewComponent implements OnInit {
-  title="Patientenliste";
+  title = "Patientenliste";
   patientService: PatientService;
   patient: Patient = new Patient();
   fields: Array<string> = [];
@@ -23,7 +23,27 @@ export class PatientlistViewComponent implements OnInit {
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
 
-  tableHead= [
+  btn = document.getElementsByClassName("PatientenansichtButton");
+  chckbox = document.getElementsByClassName("mat-checkbox");
+
+
+  /*
+     elems = document.querySelectorAll('.mat-checkbox');
+     btn = document.querySelector('.PatientenansichtButton');
+     [].forEach.call(elems, function(el)){
+     el.addEventListener('change', function(){
+       checked = document.querySelectorAll('.mat-checkbox:checked');
+       if(checked.length){
+         btn.style.backgroundColor = 'green';
+       }else{
+         btn.style.backgroundColor = '';
+       }
+    })}
+     }
+  */
+
+
+  tableHead = [
     {name: 'Nachname'},
     {name: 'Geburtsname'},
     {name: 'Vorname'},
@@ -35,22 +55,22 @@ export class PatientlistViewComponent implements OnInit {
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
 
-/*    // Add our fruit
-    if (value) {
-      this.fruits.push({name: value});
-    }*/
+    /*    // Add our fruit
+        if (value) {
+          this.fruits.push({name: value});
+        }*/
 
     // Clear the input value
     event.chipInput!.clear();
   }
 
-/*  remove(fruit: Fruit): void {
-    const index = this.fruits.indexOf(fruit);
+  /*  remove(fruit: Fruit): void {
+      const index = this.fruits.indexOf(fruit);
 
-    if (index >= 0) {
-      this.fruits.splice(index, 1);
-    }
-  }*/
+      if (index >= 0) {
+        this.fruits.splice(index, 1);
+      }
+    }*/
 
 
   constructor(patientService: PatientService) {
@@ -62,8 +82,14 @@ export class PatientlistViewComponent implements OnInit {
     this.fields = history.state.fields;
   }
 
-  patientSelected(list: PatientlistComponent){
-    this.selectedPatients=list.selectedPatients;
+  patientSelected(list: PatientlistComponent) {
+    this.selectedPatients = list.selectedPatients;
+
+    for(var i=0; i<this.chckbox.length; i++){
+    /*if(this.chckbox[i].checked){
+      this.btn.style.backgroundColor = "green";
+    }*/
+    }
   }
 
 }
