@@ -1,13 +1,14 @@
-
-  <p>Patientenliste</p>
+<p>Patientenliste</p>
 <div id="Searchbar">
   <mat-form-field class="example-chip-list" appearance="fill">
     <mat-label>Filter</mat-label>
     <mat-chip-list #chipList aria-label="Fruit selection">
-      <mat-chip  [selectable]="selectable"
-                [removable]="removable" > <!--(removed)="remove(fruit)"-->
+      <mat-chip [selectable]="selectable"
+                [removable]="removable"> <!--(removed)="remove(fruit)"-->
         Vorname: Marie
-        <button matChipRemove *ngIf="removable"><ion-icon id="closeChip" name="close-circle"></ion-icon></button>
+        <button matChipRemove *ngIf="removable">
+          <ion-icon id="closeChip" name="close-circle"></ion-icon>
+        </button>
       </mat-chip>
       <input placeholder="Search..."
              [matChipInputFor]="chipList"
@@ -15,34 +16,41 @@
              [matChipInputAddOnBlur]="addOnBlur"
              (matChipInputTokenEnd)="add($event)">
     </mat-chip-list>
-    <mat-autocomplete #auto="matAutocomplete" ><!--(optionSelected)="selected($event)"-->
-      <mat-option > <!--*ngFor="let field of fields | async" [value]="field"-->
+    <mat-autocomplete #auto="matAutocomplete"><!--(optionSelected)="selected($event)"-->
+      <mat-option> <!--*ngFor="let field of fields | async" [value]="field"-->
 
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
 </div>
 
-  <div>
-    <br>
-    <button mat-raised-button type="submit" class="PatientenansichtButton" name="Projektpseudonym erstellen" [matBadge]="selectedPatients.length" [matBadgeHidden]="selectedPatients.length<2"> Projekt
-      erstellen
-      <ion-icon name="cube"></ion-icon>
-    </button>
-    <button mat-raised-button type="submit" class="PatientenansichtButton" [matBadge]="selectedPatients.length" [matBadgeHidden]="selectedPatients.length<2" style="background-color: #3895D0">
-      <a class="zsmfuehrenbutton" routerLink="/merge-patients" [state]="{patient: patient, fields: fields}" >
-        Zusammenführen
-        <ion-icon name="git-merge"></ion-icon>
-      </a></button>
+<div>
+  <br>
+  <button mat-raised-button type="submit" class="PatientenansichtButton" name="Projektpseudonym erstellen"
+          [disabled]="selectedPatients.length<2" [matBadge]="selectedPatients.length"
+          [matBadgeHidden]="selectedPatients.length<2"> Projekt
+    Erstellen
+    <ion-icon name="cube"></ion-icon>
+  </button>
+  <button mat-raised-button [routerLink]="['/merge-patients']" [state]="{patient: patient, fields: fields}"
+          type="submit" class="PatientenansichtButton" [disabled]="selectedPatients.length<2"
+          [matBadge]="selectedPatients.length" [matBadgeHidden]="selectedPatients.length<2">
+    Zusammenführen
+    <ion-icon name="git-merge"></ion-icon>
+  </button>
 
-    <button mat-raised-button type="submit" class="PatientenansichtButton" [matBadge]="selectedPatients.length" [matBadgeHidden]="selectedPatients.length<2">
-      <a class="zsmfuehrenbutton" routerLink="/delete-multiple-patients" [state]="{patient: selectedPatients, fields: fields}" >Löschen<ion-icon name="trash"></ion-icon></a>
-    </button>
+  <button mat-raised-button matBadgeColor="warn" [routerLink]="['/delete-multiple-patients']"
+          [state]="{patient: selectedPatients, fields: fields}" type="submit" class="PatientenansichtButton"
+          [disabled]="selectedPatients.length<2" [matBadge]="selectedPatients.length"
+          [matBadgeHidden]="selectedPatients.length<2">
+    Löschen
+    <ion-icon name="trash"></ion-icon>
+  </button>
 
-  </div>
+</div>
 
-  <br><br>
+<br><br>
 
-  <app-patientlist (selectedP)="patientSelected($event)"></app-patientlist>
+<app-patientlist (selectedP)="patientSelected($event)"></app-patientlist>
 
 

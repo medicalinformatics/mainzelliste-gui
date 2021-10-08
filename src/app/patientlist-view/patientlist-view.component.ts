@@ -25,10 +25,6 @@ export class PatientlistViewComponent implements OnInit {
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
-
-  btn: HTMLCollectionOf<HTMLButtonElement> = document.getElementsByClassName("PatientenansichtButton") as HTMLCollectionOf<HTMLButtonElement>;
-  chckbox: HTMLCollectionOf<HTMLInputElement> = document.getElementsByClassName("mat-checkbox") as HTMLCollectionOf<HTMLInputElement>;
-
   mySearchInput = [{name: 'Nachname'}
   ];
   mySearchSection = [
@@ -88,18 +84,5 @@ export class PatientlistViewComponent implements OnInit {
 
   patientSelected(list: PatientlistComponent) {
     this.selectedPatients = list.selectedPatients;
-    let a: number = 0;
-    for (let i = 0; i < this.chckbox.length; i++) {
-      if (this.chckbox[i].checked) {
-        a++;
-      }
-      if (a > 1) {
-        for (let b = 0; b < this.btn.length; b++) {
-          this.btn[b].style.backgroundColor = "green";
-        }
-      }
-    }
   }
-
-
 }

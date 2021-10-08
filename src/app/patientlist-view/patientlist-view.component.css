@@ -71,9 +71,7 @@
   border:none;
 }
 
-.zsmfuehrenbutton{
-  color: white;
-}
+
 
 #patientlist {
   font-family: Arial, sans-serif;
@@ -228,29 +226,18 @@ section {
 }
 .PatientenansichtButton{
   background-color: #3895D3;
-}
-
-.PatientenansichtButton {
-  background-color: lightgray;
+  color:white;
   margin-bottom: 1%;
   float: right;
-  color: white;
   margin-right: 2rem;
   margin-left:1.51rem;
   font-size: 18px;
   padding: 5px 30px 5px 30px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
 
-  /*padding: 10px 32px;
-    border: none;
-   text-align: center;
-   text-decoration: none;
-   display: inline-block;
-   font-size: 16px;
-   margin-left: 1%;
-   border-radius: 15px;
-   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
-
+.PatientenansichtButton[disabled]{
+  background-color: lightgray;
 }
 
 #suchleiste{
@@ -301,10 +288,7 @@ p{
   width: 40px;
   height: 40px;
 }
-a{
-  color: black;
-  text-decoration: none;
-}
+
 
 #SearchIcon{
   float:left;
