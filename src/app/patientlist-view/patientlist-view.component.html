@@ -1,13 +1,14 @@
-<p>Patientenliste</p>
-<div id="Searchbar">
-  <mat-form-field class="example-chip-list" appearance="fill">
+<h1>Patientenliste</h1>
+
+  <mat-form-field appearance="fill">
     <mat-label>Filter</mat-label>
     <mat-chip-list #chipList aria-label="Fruit selection">
-      <mat-chip [selectable]="selectable"
-                [removable]="removable"> <!--(removed)="remove(fruit)"-->
-        Vorname: Marie
+      <mat-chip  *ngFor="let fruit of fruits"
+                 [selectable]="selectable"
+                 [removable]="removable" (removed)="remove(fruit)">
+        {{fruit.name}}
         <button matChipRemove *ngIf="removable">
-          <ion-icon id="closeChip" name="close-circle"></ion-icon>
+          <mat-icon>cancel</mat-icon>
         </button>
       </mat-chip>
       <input placeholder="Search..."
@@ -22,25 +23,25 @@
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
-</div>
+
 
 <div>
   <br>
-  <button mat-raised-button type="submit" class="PatientenansichtButton" name="Projektpseudonym erstellen"
+  <button mat-raised-button name="Projektpseudonym erstellen"
           [disabled]="selectedPatients.length<2" [matBadge]="selectedPatients.length"
           [matBadgeHidden]="selectedPatients.length<2"> Projekt
     Erstellen
     <ion-icon name="cube"></ion-icon>
   </button>
   <button mat-raised-button [routerLink]="['/merge-patients']" [state]="{patient: patient, fields: fields}"
-          type="submit" class="PatientenansichtButton" [disabled]="selectedPatients.length<2"
+          [disabled]="selectedPatients.length<2"
           [matBadge]="selectedPatients.length" [matBadgeHidden]="selectedPatients.length<2">
     Zusammenführen
     <ion-icon name="git-merge"></ion-icon>
   </button>
 
   <button mat-raised-button matBadgeColor="warn" [routerLink]="['/delete-multiple-patients']"
-          [state]="{patient: selectedPatients, fields: fields}" type="submit" class="PatientenansichtButton"
+          [state]="{patient: selectedPatients, fields: fields}"
           [disabled]="selectedPatients.length<2" [matBadge]="selectedPatients.length"
           [matBadgeHidden]="selectedPatients.length<2">
     Löschen

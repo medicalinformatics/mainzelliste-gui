@@ -24,6 +24,11 @@ export class PatientlistViewComponent implements OnInit {
   removable = true;
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  fruits: Array<any> = [
+    {name: 'Lemon'},
+    {name: 'Lime'},
+    {name: 'Apple'},
+  ];
 
   mySearchInput = [{name: 'Nachname'}
   ];
@@ -51,26 +56,25 @@ export class PatientlistViewComponent implements OnInit {
      }
   */
 
-
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
 
     // Add our fruit
     if (value) {
-      // this.mySearchInput.push({name.value});
+      this.fruits.push({name: value});
     }
 
     // Clear the input value
     event.chipInput!.clear();
   }
 
-  /*  remove(fruit: Fruit): void {
-      const index = this.fruits.indexOf(fruit);
+  remove(fruit: any): void {
+    const index = this.fruits.indexOf(fruit);
 
-      if (index >= 0) {
-        this.fruits.splice(index, 1);
-      }
-    }*/
+    if (index >= 0) {
+      this.fruits.splice(index, 1);
+    }
+  }
 
 
   constructor(patientService: PatientService) {
