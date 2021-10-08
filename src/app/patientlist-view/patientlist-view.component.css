@@ -367,3 +367,11 @@ a{
   background-color: white;
   color: #494949;
 }
+
+#closeChip{
+  color: white;
+  font-size: 28px;
+  margin-bottom: 30px;
+  padding-bottom: 30px;
+  right: 5%;
+}

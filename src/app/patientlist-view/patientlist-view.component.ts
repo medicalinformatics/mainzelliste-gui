@@ -4,6 +4,9 @@ import {Patient} from "../model/patient";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {PatientlistComponent} from "../patientlist/patientlist.component";
+import {FieldService} from "../services/field.service";
+import {Field} from "../model/field";
+import {count} from "rxjs/operators";
 
 @Component({
   selector: 'app-patientlist-view',
@@ -23,9 +26,19 @@ export class PatientlistViewComponent implements OnInit {
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
 
-  btn = document.getElementsByClassName("PatientenansichtButton");
-  chckbox = document.getElementsByClassName("mat-checkbox");
+  btn: HTMLCollectionOf<HTMLButtonElement> = document.getElementsByClassName("PatientenansichtButton") as HTMLCollectionOf<HTMLButtonElement>;
+  chckbox: HTMLCollectionOf<HTMLInputElement> = document.getElementsByClassName("mat-checkbox") as HTMLCollectionOf<HTMLInputElement>;
 
+  mySearchInput = [{name: 'Nachname'}
+  ];
+  mySearchSection = [
+    {name: 'Nachname'},
+    {name: 'Geburtsname'},
+    {name: 'Vorname'},
+    {name: 'Geburtsdatum'},
+    {name: 'PLZ'},
+    {name: 'Wohnort'},
+  ];
 
   /*
      elems = document.querySelectorAll('.mat-checkbox');
@@ -43,22 +56,13 @@ export class PatientlistViewComponent implements OnInit {
   */
 
 
-  tableHead = [
-    {name: 'Nachname'},
-    {name: 'Geburtsname'},
-    {name: 'Vorname'},
-    {name: 'Geburtsdatum'},
-    {name: 'PLZ'},
-    {name: 'Wohnort'},
-  ];
-
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
 
-    /*    // Add our fruit
-        if (value) {
-          this.fruits.push({name: value});
-        }*/
+    // Add our fruit
+    if (value) {
+      // this.mySearchInput.push({name.value});
+    }
 
     // Clear the input value
     event.chipInput!.clear();
@@ -84,12 +88,18 @@ export class PatientlistViewComponent implements OnInit {
 
   patientSelected(list: PatientlistComponent) {
     this.selectedPatients = list.selectedPatients;
-
-    for(var i=0; i<this.chckbox.length; i++){
-    /*if(this.chckbox[i].checked){
-      this.btn.style.backgroundColor = "green";
-    }*/
+    let a: number = 0;
+    for (let i = 0; i < this.chckbox.length; i++) {
+      if (this.chckbox[i].checked) {
+        a++;
+      }
+      if (a > 1) {
+        for (let b = 0; b < this.btn.length; b++) {
+          this.btn[b].style.backgroundColor = "green";
+        }
+      }
     }
   }
+
 
 }

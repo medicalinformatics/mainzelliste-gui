@@ -7,7 +7,7 @@
       <mat-chip  [selectable]="selectable"
                 [removable]="removable" > <!--(removed)="remove(fruit)"-->
         Vorname: Marie
-        <button matChipRemove *ngIf="removable"><mat-icon>cancel</mat-icon></button>
+        <button matChipRemove *ngIf="removable"><ion-icon id="closeChip" name="close-circle"></ion-icon></button>
       </mat-chip>
       <input placeholder="Search..."
              [matChipInputFor]="chipList"
@@ -16,9 +16,8 @@
              (matChipInputTokenEnd)="add($event)">
     </mat-chip-list>
     <mat-autocomplete #auto="matAutocomplete" ><!--(optionSelected)="selected($event)"-->
-      <mat-option ><!--*ngFor="let fruit of filteredFruits | async" [value]="fruit"-->
-        Vorname:
-        Nachname:
+      <mat-option > <!--*ngFor="let field of fields | async" [value]="field"-->
+
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
