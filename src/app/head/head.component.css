@@ -39,3 +39,27 @@ h1 span{
   font-size: 24px;
 
 }
+
+#UserProfil{
+float:left;
+}
+
+.material-icons{
+  font-size: 70px;
+  margin-top: 50px;
+  color:#494949;
+}
+
+#UserName{
+  margin-top: 80px;
+  float:right;
+  font-size: 26px;
+  font-family: Tahoma;
+}
+
+#Account{
+  margin-right: 40px;
+width:11%;
+  height:95%;
+  float: right;
+}
