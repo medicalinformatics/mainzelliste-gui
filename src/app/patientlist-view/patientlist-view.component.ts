@@ -4,9 +4,6 @@ import {Patient} from "../model/patient";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {PatientlistComponent} from "../patientlist/patientlist.component";
-import {FieldService} from "../services/field.service";
-import {Field} from "../model/field";
-import {count} from "rxjs/operators";
 
 @Component({
   selector: 'app-patientlist-view',
@@ -40,21 +37,6 @@ export class PatientlistViewComponent implements OnInit {
     {name: 'PLZ'},
     {name: 'Wohnort'},
   ];
-
-  /*
-     elems = document.querySelectorAll('.mat-checkbox');
-     btn = document.querySelector('.PatientenansichtButton');
-     [].forEach.call(elems, function(el)){
-     el.addEventListener('change', function(){
-       checked = document.querySelectorAll('.mat-checkbox:checked');
-       if(checked.length){
-         btn.style.backgroundColor = 'green';
-       }else{
-         btn.style.backgroundColor = '';
-       }
-    })}
-     }
-  */
 
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
