@@ -22,18 +22,21 @@ h1{
   margin-top: 2%;
   margin-bottom: 2%;
 }
-/*
+
 .mat-chip.mat-standard-chip{
-  font-size: 22px;
-  background-color: #9ABED5;
-  color:white;
+  font-size: 20px;
+  background-color: #ADDFFF;
+  color:#494949;
   padding:25px;
+  border-radius: 0px;
 }
 .mat-icon{
   bottom:9px;
   right:18px;
-}*/
+}
 
 mat-form-field{
-  width:100%;
+  width:97.5%;
+  margin-left: 20px;
+  font-size: 24px;
 }

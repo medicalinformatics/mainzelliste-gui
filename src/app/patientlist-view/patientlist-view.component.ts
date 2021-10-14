@@ -1,9 +1,13 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild, AfterViewInit} from '@angular/core';
 import {PatientService} from "../services/patient.service";
 import {Patient} from "../model/patient";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {PatientlistComponent} from "../patientlist/patientlist.component";
+import {Observable} from "rxjs";
+import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
+import {FormControl} from "@angular/forms";
+import {map, startWith} from "rxjs/operators";
 
 @Component({
   selector: 'app-patientlist-view',
@@ -20,30 +24,29 @@ export class PatientlistViewComponent implements OnInit {
   selectable = true;
   removable = true;
   addOnBlur = true;
-  readonly separatorKeysCodes = [ENTER, COMMA] as const;
-  fruits: Array<any> = [
-    {name: 'Lemon'},
-    {name: 'Lime'},
-    {name: 'Apple'},
-  ];
+  separatorKeysCodes = [ENTER, COMMA] as const;
+  fruitCtrl = new FormControl();
+  searchedCriteria: Observable<string[]>;
 
-  mySearchInput = [{name: 'Nachname'}
-  ];
-  mySearchSection = [
-    {name: 'Nachname'},
-    {name: 'Geburtsname'},
-    {name: 'Vorname'},
-    {name: 'Geburtsdatum'},
-    {name: 'PLZ'},
-    {name: 'Wohnort'},
-  ];
+  fruits: Array<string> = ['Vorname: Marie'];
+
+  allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
+  //@ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
+
+  constructor(patientService: PatientService) {
+    this.patientService = patientService;
+    this.searchedCriteria = this.fruitCtrl.valueChanges.pipe(
+      startWith(null),
+      map((fruit: string | null) => fruit ? this._filter(fruit) : this.allFruits.slice()));
+  }
+
 
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
 
     // Add our fruit
     if (value) {
-      this.fruits.push({name: value});
+      this.fruits.push(event.value);
     }
 
     // Clear the input value
@@ -58,9 +61,19 @@ export class PatientlistViewComponent implements OnInit {
     }
   }
 
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.fruits.push(event.option.viewValue);
+   // this.fruitInput.nativeElement.value = '';
+    this.fruitCtrl.setValue(null);
+  }
 
-  constructor(patientService: PatientService) {
-    this.patientService = patientService;
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.allFruits.filter(fruit => fruit.toLowerCase().includes(filterValue));
+  }
+//_______________________________________
+  patientSelected(list: PatientlistComponent) {
+    this.selectedPatients = list.selectedPatients;
   }
 
   ngOnInit(): void {
@@ -68,7 +81,8 @@ export class PatientlistViewComponent implements OnInit {
     this.fields = history.state.fields;
   }
 
-  patientSelected(list: PatientlistComponent) {
-    this.selectedPatients = list.selectedPatients;
+  ngAfterViewInit(){
+
   }
+
 }

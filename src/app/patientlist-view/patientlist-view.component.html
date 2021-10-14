@@ -1,46 +1,51 @@
-<h1>Patientenliste</h1>
+<script src="patientlist-view.component.ts"></script><h1>Patientenliste</h1>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Filter</mat-label>
-    <mat-chip-list #chipList aria-label="Fruit selection">
-      <mat-chip  *ngFor="let fruit of fruits"
-                 [selectable]="selectable"
-                 [removable]="removable" (removed)="remove(fruit)">
-        {{fruit.name}}
-        <button matChipRemove *ngIf="removable">
-          <mat-icon>cancel</mat-icon>
-        </button>
-      </mat-chip>
-      <input placeholder="Search..."
-             [matChipInputFor]="chipList"
-             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-             [matChipInputAddOnBlur]="addOnBlur"
-             (matChipInputTokenEnd)="add($event)">
-    </mat-chip-list>
-    <mat-autocomplete #auto="matAutocomplete"><!--(optionSelected)="selected($event)"-->
-      <mat-option> <!--*ngFor="let field of fields | async" [value]="field"-->
+<mat-form-field appearance="fill">
+  <mat-label>Filter</mat-label>
+  <mat-chip-list #chipList aria-label="Fruit selection">
+    <mat-chip *ngFor="let fruit of fruits"
+              [selectable]="selectable"
+              [removable]="removable" (removed)="remove(fruit)">
+      {{fruit}}
+      <button matChipRemove *ngIf="removable">
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip>
 
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
+    <input placeholder="Search..."
+           #fruitInput
+           [matChipInputFor]="chipList"
+           [formControl]="fruitCtrl"
+           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+           [matChipInputAddOnBlur]="addOnBlur"
+           [matAutocomplete]="auto"
+           (matChipInputTokenEnd)="add($event)">
+  </mat-chip-list>
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+    <mat-option *ngFor="let fruit of searchedCriteria | async" [value]="fruit">
+      {{fruit}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
 
 
 <div>
   <br>
-  <button mat-raised-button name="Projektpseudonym erstellen"
+  <button mat-raised-button matBadgeColor="accent" name="Projektpseudonym erstellen"
           [disabled]="selectedPatients.length<2" [matBadge]="selectedPatients.length"
           [matBadgeHidden]="selectedPatients.length<2"> Projekt
     Erstellen
     <ion-icon name="cube"></ion-icon>
   </button>
-  <button mat-raised-button [routerLink]="['/merge-patients']" [state]="{patient: patient, fields: fields}"
+  <button mat-raised-button matBadgeColor="accent" [routerLink]="['/merge-patients']"
+          [state]="{patient: patient, fields: fields}"
           [disabled]="selectedPatients.length<2"
           [matBadge]="selectedPatients.length" [matBadgeHidden]="selectedPatients.length<2">
     Zusammenführen
     <ion-icon name="git-merge"></ion-icon>
   </button>
 
-  <button mat-raised-button matBadgeColor="warn" [routerLink]="['/delete-multiple-patients']"
+  <button mat-raised-button matBadgeColor="accent" [routerLink]="['/delete-multiple-patients']"
           [state]="{patient: selectedPatients, fields: fields}"
           [disabled]="selectedPatients.length<2" [matBadge]="selectedPatients.length"
           [matBadgeHidden]="selectedPatients.length<2">

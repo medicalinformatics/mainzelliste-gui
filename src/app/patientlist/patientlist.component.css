@@ -278,3 +278,7 @@ a{
 #datenzeilen{
   overflow: auto;
 }
+
+mat-paginator{
+  font-size: 16px;
+}

@@ -15,7 +15,7 @@ import {PatientlistComponent} from "./patientlist/patientlist.component";
 import { SimilarPatientComponent } from './similarPatient/similarPatient.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatDialogModule} from "@angular/material/dialog";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from '@angular/material/form-field';
 import { PatientComponent } from './patient/patient.component';
 import {MatButtonModule} from "@angular/material/button";
@@ -39,6 +39,7 @@ import {MatCheckbox} from "@angular/material/checkbox";
 import {MatCardModule} from "@angular/material/card";
 import { DeleteMultiplePatientsComponent } from './delete-multiple-patients/delete-multiple-patients.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 @NgModule({
   declarations: [
@@ -80,7 +81,9 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
     MatChipsModule,
     MatIconModule,
     MatCardModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatPaginatorModule,
+    ReactiveFormsModule
   ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}

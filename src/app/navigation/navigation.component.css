@@ -36,10 +36,8 @@ td{
 }
 
 .nav_item.active {
-  background-color: #dddddd;
 }
 .nav_item:hover{
-  background-color: #dddddd;
 
 }table{
   width: 100%;
