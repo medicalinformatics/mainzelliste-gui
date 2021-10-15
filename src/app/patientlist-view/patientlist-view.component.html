@@ -12,8 +12,8 @@
       </button>
     </mat-chip>
 
-    <input placeholder="Search..."
-           #fruitInput
+    <input #fruitInput
+           placeholder="Search..."
            [matChipInputFor]="chipList"
            [formControl]="fruitCtrl"
            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"

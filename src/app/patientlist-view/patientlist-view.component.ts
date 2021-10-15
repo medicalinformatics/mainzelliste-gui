@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild, AfterViewInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {PatientService} from "../services/patient.service";
 import {Patient} from "../model/patient";
 import {MatChipInputEvent} from "@angular/material/chips";
@@ -31,7 +31,8 @@ export class PatientlistViewComponent implements OnInit {
   fruits: Array<string> = ['Vorname: Marie'];
 
   allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
-  //@ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
+  @ViewChild('fruitInput')
+  fruitInput!: ElementRef<HTMLInputElement>;
 
   constructor(patientService: PatientService) {
     this.patientService = patientService;
@@ -63,7 +64,7 @@ export class PatientlistViewComponent implements OnInit {
 
   selected(event: MatAutocompleteSelectedEvent): void {
     this.fruits.push(event.option.viewValue);
-   // this.fruitInput.nativeElement.value = '';
+    this.fruitInput.nativeElement.value = '';
     this.fruitCtrl.setValue(null);
   }
 
@@ -71,7 +72,7 @@ export class PatientlistViewComponent implements OnInit {
     const filterValue = value.toLowerCase();
     return this.allFruits.filter(fruit => fruit.toLowerCase().includes(filterValue));
   }
-//_______________________________________
+
   patientSelected(list: PatientlistComponent) {
     this.selectedPatients = list.selectedPatients;
   }
@@ -79,10 +80,6 @@ export class PatientlistViewComponent implements OnInit {
   ngOnInit(): void {
     this.patient = history.state.patient;
     this.fields = history.state.fields;
-  }
-
-  ngAfterViewInit(){
-
   }
 
 }
