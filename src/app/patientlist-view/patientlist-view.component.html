@@ -9,13 +9,11 @@
       {{fruit}}
       <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
     </mat-chip>
-
-    <input placeholder="Search..."
-           #fruitInput
+    <input #fruitInput
+           placeholder="Search..."
            [matChipInputFor]="chipList"
            [formControl]="fruitCtrl"
            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-           [matChipInputAddOnBlur]="addOnBlur"
            [matAutocomplete]="auto"
            (matChipInputTokenEnd)="add($event)">
   </mat-chip-list>
@@ -25,7 +23,6 @@
     </mat-option>
   </mat-autocomplete>
 </mat-form-field>
-
 
 <div>
   <br>
