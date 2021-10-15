@@ -8,6 +8,8 @@ import {Observable} from "rxjs";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {FormControl} from "@angular/forms";
 import {map, startWith} from "rxjs/operators";
+import {Field} from "../model/field";
+import {FieldService} from "../services/field.service";
 
 @Component({
   selector: 'app-patientlist-view',
@@ -30,15 +32,42 @@ export class PatientlistViewComponent implements OnInit {
 
   fruits: Array<string> = ['Vorname: Marie'];
 
-  allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
+  exampleArray: Array<Patient>=[ new Patient({
+    Nachname: 'Graf',
+    Geburtsname: '',
+    Vorname: 'Sabine',
+    Geburtsdatum: '01.01.2000',
+    Wohnort: 'Berlin',
+    PLZ: '10115'
+  }, [{idType: 'Pseudonym', idString: 'MKJH56FR'}]),
+    new Patient({
+      Nachname: 'Schmidt',
+      Geburtsname: 'Sommer',
+      Vorname: 'Laura Marie',
+      Geburtsdatum: '19.03.1968',
+      Wohnort: 'Hamburg',
+      PLZ: '20095'
+    }, [{idType: "Pseudonym", idString: 'MN321L09'}])];
+
+  // aus AngularMaterials allFruits: string[] = [];
+  // allPatientsToSearch: string[]=[];
+  // allPatientsToSearch=this.exampleArray.map((this.exampleArray)=> this.exampleArray.fields);
+  // allFieldsToSearch = FieldService.name.map(function (f){return f.name.toString()});
+  // allFieldsToSearch = FieldService.name.toString();
+
+  allPatientsToSearch: Array <string>=[];
+
+
   @ViewChild('fruitInput')
   fruitInput!: ElementRef<HTMLInputElement>;
 
   constructor(patientService: PatientService) {
     this.patientService = patientService;
+    this.allPatientsToSearch = this.patientService.patients.map(function (p){return p.fields.toString()});
+    // this.fillSearchOptions();
     this.searchedCriteria = this.fruitCtrl.valueChanges.pipe(
       startWith(null),
-      map((fruit: string | null) => fruit ? this._filter(fruit) : this.allFruits.slice()));
+      map((field: string | null) => field ? this._filter(field) : this.allPatientsToSearch.slice()));
   }
 
 
@@ -70,7 +99,7 @@ export class PatientlistViewComponent implements OnInit {
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.allFruits.filter(fruit => fruit.toLowerCase().includes(filterValue));
+    return this.allPatientsToSearch.filter(fruit => fruit.toLowerCase().includes(filterValue));
   }
 
   patientSelected(list: PatientlistComponent) {
@@ -81,5 +110,18 @@ export class PatientlistViewComponent implements OnInit {
     this.patient = history.state.patient;
     this.fields = history.state.fields;
   }
+
+/*  fillSearchOptions() {
+    for (let i = 0; i < this.exampleArray.length; i++) {
+      console.log(this.exampleArray[i]);
+      let x = this.exampleArray[i].fields.toString();
+
+      for(let field in this.fields)
+      let y = this.exampleArray[i].field.toString();
+
+      this.allPatientsToSearch.push(x);
+      this.allPatientsToSearch.push(y);
+    }
+  }*/
 
 }

@@ -55,10 +55,11 @@ float:left;
   float:right;
   font-size: 26px;
   font-family: Tahoma;
+  margin-right: 40px;
 }
 
 #Account{
-  margin-right: 40px;
+
 width:11%;
   height:95%;
   float: right;
