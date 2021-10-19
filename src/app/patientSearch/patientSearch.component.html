@@ -1,38 +1,50 @@
 <div id="filterfenster">
 
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-
   <div class="header"> {{title}} <button id="closeicon" (click)="closeFilter()"><ion-icon  name="close-circle"></ion-icon></button> </div>
 
   <div class="sortierenDiv">
   <h4>Sortieren</h4>
-  <button class="aufsteigendButton"><ion-icon id="buttonicon1" name="swap-vertical-outline"></ion-icon>Aufsteigend</button>
-  <button class="absteigendButton"><ion-icon id="buttonicon2" name="swap-vertical-outline"></ion-icon>Absteigend</button>
+  <button mat-raised-button class="aufsteigendButton"><ion-icon id="buttonicon1" name="swap-vertical-outline"></ion-icon>Aufsteigend</button>
+  <button mat-raised-button class="absteigendButton"><ion-icon id="buttonicon2" name="swap-vertical-outline"></ion-icon>Absteigend</button>
   </div>
 
   <div class="filterDiv">
   <h4>Filter</h4>
-  <div class="dropdown">
-    <button class="dropbtn">eine Option auswaehlen</button>
-    <div class="dropdown-content">
-      <a href="#">gleich</a>
-      <a href="#">nicht gleich</a>
-      <a href="#">Beginnt mit</a>
-      <a href="#">Endet mit</a>
-      <a href="#">Enthaelt</a>
-      <a href="#">Enthaelt nicht</a>
-    </div>
-  </div>
 
-  <input id="filtereingabe" type="text"> <ion-icon id="kalendericon" name="calendar-outline"></ion-icon>
-  <br><br>
+    <mat-form-field id="filterOptionDropdown" appearance="fill">
+      <mat-label>Filter-Option auswählen</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let filterOption of filterOptions" [value]="filterOption">
+          {{filterOption}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <input id="suchleiste" type="text"  placeholder="Suche...">
-  <br><br>
+<!--  <mat-form-field class="filterDatum">
+    <mat-date-range-input [rangePicker]="picker">
+      <input matStartDate placeholder="Start date">
+      <input matEndDate placeholder="End date">
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker></mat-date-range-picker>
+  </mat-form-field>--><!--  <mat-form-field class="filterDatum">
+    <mat-date-range-input [rangePicker]="picker">
+      <input matStartDate placeholder="Start date">
+      <input matEndDate placeholder="End date">
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker></mat-date-range-picker>
+  </mat-form-field>-->
 
+    <mat-form-field id="suchleiste" appearance="fill">
+      <mat-label>Suche Patient</mat-label>
+      <input type="text"
+             placeholder="Suche nach Patient..."
+             matInput>
+    </mat-form-field>
+
+  <br>
   <div>
-    <label class="container"> XXXXX <input type="checkbox"> <span class="checkmark" checked="checked"></span> </label>
 
     <label class="container"> XXXXX <input type="checkbox"> <span class="checkmark" checked="checked"></span> </label>
 
@@ -42,9 +54,8 @@
 
     <label class="container"> XXXXX <input type="checkbox"> <span class="checkmark" checked="checked"></span> </label>
 
+    <label class="container"> XXXXX <input type="checkbox"> <span class="checkmark" checked="checked"></span> </label>
 
   </div>
 </div>
-
 </div>
-

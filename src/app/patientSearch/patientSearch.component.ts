@@ -8,6 +8,7 @@ import {MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
 })
 export class PatientSearchComponent implements OnInit {
   title="Filter";
+  filterOptions: Array<string>=["gleich", "nicht gleich", "Bgeinnt mit", "Endet mit", "Enthält", "Enthält nicht"];
 
   constructor(public dialogRef: MatDialogRef<PatientSearchComponent>) { }
   ngOnInit(): void {

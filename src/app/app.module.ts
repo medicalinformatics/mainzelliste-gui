@@ -41,6 +41,8 @@ import { DeleteMultiplePatientsComponent } from './delete-multiple-patients/dele
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatSelectModule} from "@angular/material/select";
+import {MatDatepickerModule} from "@angular/material/datepicker";
 
 @NgModule({
   declarations: [
@@ -66,27 +68,29 @@ import {MatToolbarModule} from "@angular/material/toolbar";
     PatientDataComponent,
     DeleteMultiplePatientsComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        IonicModule.forRoot(),
-        BrowserAnimationsModule,
-        MatDialogModule,
-        FormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        ScrollingModule,
-        MatSidenavModule,
-        MatBadgeModule,
-        MatChipsModule,
-        MatIconModule,
-        MatCardModule,
-        MatAutocompleteModule,
-        MatPaginatorModule,
-        ReactiveFormsModule,
-        MatToolbarModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    IonicModule.forRoot(),
+    BrowserAnimationsModule,
+    MatDialogModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    ScrollingModule,
+    MatSidenavModule,
+    MatBadgeModule,
+    MatChipsModule,
+    MatIconModule,
+    MatCardModule,
+    MatAutocompleteModule,
+    MatPaginatorModule,
+    ReactiveFormsModule,
+    MatToolbarModule,
+    MatSelectModule,
+    MatDatepickerModule
+  ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}
   ],

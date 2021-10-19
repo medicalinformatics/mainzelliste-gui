@@ -6,12 +6,12 @@
 }
 
 .header{
-  height:15%;
-  padding: 5px;
+  height:25%;
+  padding: 15px;
   background-color: grey;
   border-width: thick;
   font-family: Arial;
-  font-size: larger;
+  font-size: 20px;
   color: white;
   font-size: 25px;
   width: 100%;
@@ -83,28 +83,10 @@ h1{
    background-color: #3895D0;
 }
 
-button {
-  background-color: #3895D3;
-  border: none;
-  color: white;
-  padding-bottom: 3%;
-  padding-top: 3%;
-  padding-left: 4%;
-  padding-right: 4%;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 12px;
-  margin-left: 0.5%;
-  margin-bottom: 3%;
-  border-radius: 25px;
-
-}
 #suchleiste{
   border-color: #888888;
-  width: 85%;
-  height: 20%;
-  font-size: 16px;
+  width: 95%;
+  font-size: 13px;
   margin-left: 0.5%;
   margin-bottom: 3%;
 }
@@ -190,6 +172,7 @@ button {
   margin-right: 0.5%;
   border: none;
   background: none;
+  color:white;
 }
 
 #kalendericon{
@@ -212,28 +195,26 @@ button {
   padding-bottom: 3%;
 }
 .aufsteigendButton{
-  background-color: #3895D3;
-  border: none;
-  color: white;
-  padding-bottom: 3%;
-  padding-top: 3%;
-  padding-left: 5%;
-  padding-right: 5%;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 15px;
-  margin-left: 5%;
-  margin-bottom: 1%;
-  border-radius: 35px;
+    width: 40%;
+    border: none;
+    padding-bottom: 1%;
+    padding-top: 1%;
+    padding-left: 5%;
+    padding-right: 5%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+    margin-left: 8%;
+    margin-bottom: 1%;
+    border-radius: 15px;
 }
 
 .absteigendButton{
-  background-color: #3895D3;
+  width: 40%;
   border: none;
-  color: white;
-  padding-bottom: 3%;
-  padding-top: 3%;
+  padding-bottom: 1%;
+  padding-top: 1%;
   padding-left: 5%;
   padding-right: 5%;
   text-align: center;
@@ -242,7 +223,7 @@ button {
   font-size: 15px;
   margin-left: 8%;
   margin-bottom: 1%;
-  border-radius: 35px;
+  border-radius: 15px;
 }
 #buttonicon1{
   float: right;
@@ -253,3 +234,10 @@ button {
   margin-left: 5px;
 }
 
+#filterOptionDropdown{
+  width: 35%;
+}
+
+.filterDatum{
+  width: 30%;
+}
