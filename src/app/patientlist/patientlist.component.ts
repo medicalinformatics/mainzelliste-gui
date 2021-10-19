@@ -4,6 +4,7 @@ import {PatientSearchComponent} from "../patientSearch/patientSearch.component";
 import {Patient} from "../model/patient";
 import {PatientService} from "../services/patient.service";
 import {PatientrowComponent} from "../patientrow/patientrow.component";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-patientlist',

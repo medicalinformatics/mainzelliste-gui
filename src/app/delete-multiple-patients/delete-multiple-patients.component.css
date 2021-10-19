@@ -1,155 +1,32 @@
-h2{
-  font-family: Tahoma;
-  font-size: 28px;
-  margin-left: 5%;
-  margin-top:20px;
-}
-
-
-
-h1{
+.titleicon{
   padding-left: 1%;
   font-size: 35px;
   font-family: Arial;
   margin-top: 0.8%;
 }
 
-#patientendaten1{
-  height: 20%;
-  width: 100%;
-  background-color: #f1f1f1;
-  border-width: 3px;
-  border-radius: 5px;
-  position:relative;
-  margin-left:1%;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-
-#patientendaten2{
-  height: 20%;
-  width: 100%;
-  background-color: #f1f1f1;
-  border-width: 3px;
-  border-radius: 5px;
-  position:relative;
-  margin-left:1%;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-#pseudonyme1{
-  height: 20%;
-  width: 100%;
-  background-color: #f1f1f1;
-  border-radius: 5px;
-  top: 1%;
-  position:relative;
-  margin-left:1%;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-
-#pseudonyme2{
-  height: 20%;
-  width: 100%;
-  background-color: #f1f1f1;
-  border-radius: 5px;
-  top: 1%;
-  position:relative;
-  margin-left:1%;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-#historie1{
-  height: 20%;
-  width: 100%;
-  background-color: #f1f1f1;
-  border-radius: 5px;
-  top: 1%;
-  position:relative;
-  margin-left:1%;
-  margin-bottom: 5%;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
-}
-
-
-#historie2{
-  height: 20%;
-  width: 100%;
-  background-color: #f1f1f1;
-  border-radius: 5px;
-  top: 1%;
-  position:relative;
-  margin-left:1%;
-  margin-bottom: 5%;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
-}
-
-
 .DeletePatientFragestellung{
-  /*position: absolute;*/
   display: inline-block;
   left: 65%;
   font-size: 22px;
   font-family: inherit;
-
+  padding-bottom: 30px;
+  padding-left: 65px;
 }
 
-.DeletePatientButtonLöschen{
+.DeletePatientButtonLöschen {
   background-color: #3895D3;
   color: white;
-  flex: 1 1 39%;
+  width: 28%;
+  padding-top:3px;
+  padding-bottom: 3px;
 }
+
 .DeletePatientButtonAbbruch {
   background-color: #888888;
   color: white;
-  flex: 1 1 39%;
+  width: 28%;
+  padding-top:3px;
+  padding-bottom: 3px;
 }
 
-
-#pDaten{
-  font-size: 24px;
-  line-height: 120%;
-  margin-left: 5%;
-  margin-top: 4%;
-}
-
-#pPseudonyme{
-  font-size: 24px;
-  line-height: 120%;
-  margin-left: 5%;
-  margin-top: 4%;
-}
-
-.patientendatenzeile .fields{
-  font-family: "Arial Black";
-  font-size: 10px;
-}
-
-#deletePatient1{
-  height: 50px;
-  /*background-color: #284B63;*/
-  padding-right: 15px;
-  border-radius: 5px;
-
-}
-
-#deletePatient2{
-  height: 100%;
-  background-color: #094846;
-  padding-right: 15px;
-  border-radius: 5px;
-}
-
-.patientDiv{
-  font-size: 28px;
-  /*padding: 6px;*/
-  /*margin-left:5px;*/
-  margin-top:10px;
-  color: white;
-  /*position: center;*/
-  text-align: center;
-  background-color: #284B63;
-}

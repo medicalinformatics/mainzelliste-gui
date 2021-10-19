@@ -15,14 +15,6 @@ export class PatientFieldsComponent implements OnInit {
 
   tmpPatient: Patient = new Patient();
 
-  formData={
-    Nachname:'',
-    Geburtsname:'',
-    Vorname:'',
-    Geburtsdatum:'',
-    Wohnort:'',
-    Plz:''
-  };
 
   @Input()  fields: {[key: string]: any} = {};
   @Output() fieldEvent = new EventEmitter<{[key: string]: any}>();

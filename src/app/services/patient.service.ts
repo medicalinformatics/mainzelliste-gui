@@ -87,7 +87,7 @@ export class PatientService {
       Geburtsdatum: '19.11.1962',
       Wohnort: 'Landau',
       PLZ: '76829'
-    }, [{idType: "Pseudonym", idString: "SQI009TF"}])/*,
+    }, [{idType: "Pseudonym", idString: "SQI009TF"}]),
     new Patient({
       Nachname: 'Schaller',
       Geburtsname: 'Lechner',
@@ -111,7 +111,7 @@ export class PatientService {
       Geburtsdatum: '25.05.1982',
       Wohnort: 'Konstanz',
       PLZ: '78462'
-    }, [{idType: "Pseudonym", idString: "POV762HG"}])*/
+    }, [{idType: "Pseudonym", idString: "POV762HG"}])/**/
   ];
 
   getPatients(): Promise<Array<Patient>> {

@@ -111,17 +111,17 @@ export class PatientlistViewComponent implements OnInit {
     this.fields = history.state.fields;
   }
 
-/*  fillSearchOptions() {
-    for (let i = 0; i < this.exampleArray.length; i++) {
-      console.log(this.exampleArray[i]);
-      let x = this.exampleArray[i].fields.toString();
+  /*  fillSearchOptions() {
+      for (let i = 0; i < this.exampleArray.length; i++) {
+        console.log(this.exampleArray[i]);
+        let x = this.exampleArray[i].fields.toString();
 
-      for(let field in this.fields)
-      let y = this.exampleArray[i].field.toString();
+        for(let field in this.fields)
+        let y = this.exampleArray[i].field.toString();
 
-      this.allPatientsToSearch.push(x);
-      this.allPatientsToSearch.push(y);
-    }
-  }*/
+        this.allPatientsToSearch.push(x);
+        this.allPatientsToSearch.push(y);
+      }
+    }*/
 
 }

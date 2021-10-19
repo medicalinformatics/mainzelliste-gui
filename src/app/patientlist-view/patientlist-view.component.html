@@ -41,7 +41,7 @@
   </button>
 
   <button mat-raised-button matBadgeColor="accent" [routerLink]="['/delete-multiple-patients']"
-          [state]="{patient: selectedPatients, fields: fields}"
+          [state]="{patients: selectedPatients, fields: fields}"
           [disabled]="selectedPatients.length<2" [matBadge]="selectedPatients.length"
           [matBadgeHidden]="selectedPatients.length<2">
     Löschen
@@ -53,5 +53,4 @@
 <br><br>
 
 <app-patientlist (selectedP)="patientSelected($event)"></app-patientlist>
-
 

@@ -1,13 +1,19 @@
 <div class="wrapper">
   <app-head style="flex: 1 1 5%;"></app-head>
-  <div style="flex: 1 1 90%">
+
+  <div style="flex: 1 1 95%">
+
     <div style="display: flex; flex-flow: row; min-height: 100%;">
       <app-navigation style="flex: 1 1 8%;"></app-navigation>
+
       <div style="flex: 1 1 90%; display: flex; flex-flow: column; overflow: auto">
+
         <div style="flex: 1 1 auto;">
           <router-outlet></router-outlet>
         </div>
-        <app-footer style="flex: 0 0 200px"></app-footer>
+
+        <app-footer style="flex: 0 0 40%"></app-footer>
+
       </div>
     </div>
   </div>
