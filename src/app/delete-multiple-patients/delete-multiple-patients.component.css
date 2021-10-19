@@ -89,7 +89,7 @@ h1{
 
 
 .DeletePatientFragestellung{
-  position: absolute;
+  /*position: absolute;*/
   display: inline-block;
   left: 65%;
   font-size: 22px;
@@ -99,40 +99,13 @@ h1{
 
 .DeletePatientButtonLöschen{
   background-color: #3895D3;
-  border: none;
   color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  border-radius: 5px;
-  font-size: 14px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  width: 39%;
-  float: right!important;
+  flex: 1 1 39%;
 }
 .DeletePatientButtonAbbruch {
   background-color: #888888;
-  border: none;
   color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  border-radius: 5px;
-  font-size: 14px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  width: 39%;
-  float: left;
-
-}
-#deletepatientbuttons{
-  position: absolute;
-  width: 20%;
-  height: 9%;
-  top: 20%;
-  left: 65%;
-  float: right;
+  flex: 1 1 39%;
 }
 
 
@@ -156,41 +129,27 @@ h1{
 }
 
 #deletePatient1{
-  position: absolute;
-  top:10%;
-  width: 30%;
-  height: 3000px;
-  background-color: #284B63;
+  height: 50px;
+  /*background-color: #284B63;*/
   padding-right: 15px;
   border-radius: 5px;
 
 }
 
 #deletePatient2{
+  height: 100%;
   background-color: #094846;
-  position: absolute;
-  top: 10%;
-  width: 30%;
-  height: 3000px;
-  left:31%;
   padding-right: 15px;
   border-radius: 5px;
 }
 
-body{
-  top:10%;
-  overflow: auto;
-
-}
-
-
 .patientDiv{
   font-size: 28px;
-  padding: 6px;
-  margin-left:5px;
+  /*padding: 6px;*/
+  /*margin-left:5px;*/
   margin-top:10px;
   color: white;
-  position: center;
+  /*position: center;*/
   text-align: center;
-
+  background-color: #284B63;
 }

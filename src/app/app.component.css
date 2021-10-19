@@ -1,16 +1,29 @@
-
-.mat-dialog-container{
+.wrapper, html, body {
+  height: 100%;
+  margin: 0;
+}
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+/*.mat-dialog-container{
   padding: 4px;
 }
 .mat-form-field-wrapper{
   padding-bottom: 0.8em!important;
 }
 
-
 #hauptteil{
   width: 88%;
   background-color: white;
   margin-left: 280px;
-  height:88%;
+  min-height:5000px;
+}*/
+
+app-head{
+  background-color: #f2f2f2;
 }
 
+app-footer{
+  background-color: #f2f2f2;
+}

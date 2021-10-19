@@ -1,49 +1,37 @@
-
-<body id="body">
-<br>
-<h1 class="titleicon"><ion-icon name="trash"></ion-icon>  Patienten löschen</h1><br>
-
-<div id="deletePatient1">
-  <p class="patientDiv">Patient 1</p>
-  <div id="patientendaten1">
-    <h2>Patientendaten</h2>
-    <app-patient-fields [readOnly]=true [fields]="patient.fields"></app-patient-fields> <!--*ngFor="let fields of patient">{{fields}}: {{patient.fields[fields]}}-->
-    <!--  <div id ="pDaten" *ngFor="let field of fields" class="patientendatenzeile">{{field}}: {{patient.fields[field]}}</div>-->
+<div style="width: 100%; height: 100%">
+  <div>
+    <mat-icon>delete</mat-icon>
+    Patienten löschen
   </div>
-  <div id="pseudonyme1">
-    <h2>Pseudonyme</h2>
-    <app-patient-pseudonyms [readOnly]=true></app-patient-pseudonyms>
-  </div>
-  <div id="historie1">
-    <h2>Historie</h2>
+  <div style="height: 100%">
+    <div style="display: flex; flex-flow: row; height: 100%">
+      <div style="flex: 1 1 70%; display: flex; flex-flow: row; overflow-x: auto; justify-content: space-around; align-items: stretch; background-color: red">
+        <mat-card id="deletePatient1" *ngFor="let patient of patients" style="background-color: green">
+         <p class="patientDiv">Patient 1</p>  <!--
+         <div id="patientendaten1">
+            <app-patient-fields [readOnly]=true [fields]="patient.fields"></app-patient-fields>
+          </div>
+          <div id="pseudonyme1">
+            <app-patient-pseudonyms [readOnly]=true></app-patient-pseudonyms>
+          </div>
+          <div id="historie1">
+            <h2>Historie</h2>
+          </div>-->
+        </mat-card>
+      </div>
+      <div style="flex: 1 1 30%; display: flex; flex-flow: column;background-color: yellow">
+        <p class="DeletePatientFragestellung"> Sollen die beiden Patient wirklich gelöscht
+          werden?</p>
+        <div style="display: flex; flex-flow: row; justify-content: space-around; gap: 0 15px">
+          <button mat-raised-button type="submit" (click)="deletePatientenZeile()" class="DeletePatientButtonLöschen"
+                  [routerLink]="['/patientlist-view']">Löschen
+          </button>
+          <button mat-raised-button type="submit" class="DeletePatientButtonAbbruch"
+                  [routerLink]="['/patientlist-view']">
+            Abbruch
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-
-
-<div id="deletePatient2">
-  <p class="patientDiv">Patient 2</p>
-  <div id="patientendaten2">
-    <h2>Patientendaten</h2>
-    <app-patient-fields [readOnly]=true [fields]="patient.fields"></app-patient-fields>
-  </div>
-  <div id="pseudonyme2">
-    <h2>Pseudonyme</h2>
-    <app-patient-pseudonyms [readOnly]=true></app-patient-pseudonyms>
-  </div>
-  <div id="historie2">
-    <h2>Historie</h2>
-  </div>
-</div>
-
-<br><br><br><br><br>
-
-<div>
-  <p class="DeletePatientFragestellung"> Sollen die beiden Patient wirklich gelöscht werden?</p>
-</div>
-<div id="deletepatientbuttons">
-  <button  type="submit" (click)="deletePatientenZeile()"  class="DeletePatientButtonLöschen" [routerLink]="['/patientlist-view']">Löschen</button>
-  <button type="submit" class="DeletePatientButtonAbbruch" [routerLink]="['/patientlist-view']">Abbruch</button>
-</div>
-
-</body>
-

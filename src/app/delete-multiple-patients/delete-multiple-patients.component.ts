@@ -9,7 +9,7 @@ import {PatientService} from "../services/patient.service";
 })
 export class DeleteMultiplePatientsComponent implements OnInit {
   patientService: PatientService;
-  patient: Patient = new Patient();
+  patients: Array<Patient> = [];
   fields: Array<string> = [];
 
   constructor(patientService: PatientService) {
@@ -17,17 +17,19 @@ export class DeleteMultiplePatientsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.patient = history.state.patient;
+    this.patients = history.state.patients;
     this.fields = history.state.fields;
   }
 
   deletePatientenZeile(){
     console.log("deleted..");
-    this.patientService.deletePatient(this.patient).then((result) => {
-      if (result == 204) {
-        // TODO: What should happen here? This component will not survice the deletePatient call ...
-      }
-    });
+    this.patients.forEach((patient) => {
+      this.patientService.deletePatient(patient).then((result) => {
+        if (result == 204) {
+          // TODO: What should happen here? This component will not survice the deletePatient call ...
+        }
+      });
+    })
   }
 
 }
