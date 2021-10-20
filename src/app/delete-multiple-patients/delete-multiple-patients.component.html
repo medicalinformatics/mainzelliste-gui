@@ -17,9 +17,7 @@
           </div>
           <div id="pseudonyme1" style="background-color: green; flex: 1 1 30%; display: flex">
             <mat-card-title>Pseudonyme</mat-card-title><br>
-            <!--
-                        <app-patient-pseudonyms [readOnly]=true></app-patient-pseudonyms>
-            -->
+            <app-patient-pseudonyms [readOnly]=true [pseudonyms]="patient.ids"></app-patient-pseudonyms>
           </div>
           <div id="historie1" style="background-color: green; flex: 1 1 30%; display: flex">
             <mat-card-title>Historie</mat-card-title>

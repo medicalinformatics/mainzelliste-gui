@@ -1,5 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Patient} from "../model/patient";
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'app-patient-pseudonyms',
@@ -7,17 +6,11 @@ import {Patient} from "../model/patient";
   styleUrls: ['./patient-pseudonyms.component.css']
 })
 
-export class PatientPseudonymsComponent implements OnInit {
-  patient: Patient = new Patient();
-  fields: Array<string> = [];
+export class PatientPseudonymsComponent{
+  @Input() pseudonyms: Array<{ idType: string, idString: string }>=[];
   @Input() readOnly: boolean= false;
 
   constructor() {
-  }
-
-  ngOnInit(): void {
-    this.patient = history.state.patient;
-    this.fields = history.state.fields;
   }
 
 }
