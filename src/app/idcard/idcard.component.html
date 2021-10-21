@@ -1,34 +1,43 @@
+<div style="width: 100%; height: 100%">
+  <br>
+  <p class="titleicon">
+    <ion-icon name="id-card"></ion-icon>
+    ID Card
+  </p>
+  <br>
+<div style=" background-color:white; margin-top:0.5%; flex: 1 1 70%; display: flex; flex-flow: row; justify-content: space-around; align-items: stretch; justify-content: space-around; gap: 0 1%">
+  <mat-card id="patientendaten" style="background-color: #f2f2f2; color:black; flex: 1 1 25%; display: flex;  flex-flow: column">
+    <mat-card-title>Patientendaten</mat-card-title>
+    <app-patient-fields [readOnly]=true [fields]="patient.fields"></app-patient-fields>
+  </mat-card>
 
-<body>
-<br>
-<p class="titleicon"><ion-icon name="id-card"></ion-icon>  ID Card </p><br>
+  <mat-card id="pseudonyme" style="background-color: #f2f2f2; color:black; flex: 1 1 25%; display: flex;  flex-flow: column">
+    <mat-card-title>Pseudonyme</mat-card-title>
+    <app-patient-pseudonyms [readOnly]=true [pseudonyms]="patient.ids"></app-patient-pseudonyms>
+  </mat-card>
 
-<div id="patientendaten">
-  <h2>Patientendaten</h2>
-    <app-patient-fields [readOnly]=true [fields]="patient.fields"></app-patient-fields> <!--*ngFor="let fields of patient">{{fields}}: {{patient.fields[fields]}}-->
-    <!--  <div id ="pDaten" *ngFor="let field of fields" class="patientendatenzeile">{{field}}: {{patient.fields[field]}}</div>-->
-
+  <div class="IDCardAnsichtButton"
+       style=" background-color: white; flex: 1 1 2%; display: flex;  flex-flow: column; justify-content: flex-end; align-items: stretch;">
+    <button mat-raised-button class="IDCardButtons">Drucken</button>
+    <br><br><br><br><br>
+    <button mat-raised-button class="IDCardButtons">Projektpseudonym <br> erstellen</button>
+    <br><br><br><br><br>
+    <button mat-raised-button class="IDCardButtons" [routerLink]="['/edit-patient']"
+            [state]="{patient: patient, fields: fields}">Editieren
+    </button>
+    <br><br><br><br><br>
+    <button mat-raised-button class="IDCardButtons" [routerLink]="['/delete-patient']"
+            [state]="{patient: patient, fields: fields}">Löschen
+    </button>
+    <br><br><br><br><br>
+  </div>
 </div>
 
-
-<div id="pseudonyme">
-  <h2>Pseudonyme</h2>
- <app-patient-pseudonyms [readOnly]=true [pseudonyms]="patient.ids"></app-patient-pseudonyms>
+  <mat-card id="historie" style="background-color: #f2f2f2; color:black; flex: 1 1 80%; display: flex;  flex-flow: column">
+    <mat-card-title>Historie</mat-card-title>
+    <mat-form-field class="historieInput" hideRequiredMarker>
+      <mat-label>Historie des Patienten</mat-label>
+      <input style="height: 200px" matInput placeholder="Historie des Patienten">
+    </mat-form-field>
+  </mat-card>
 </div>
-
-<div>
-  <button type="submit" class="IDCardAnsichtButton">Drucken</button>
-  <br><br><br><br><br>
-  <button type="submit" class="IDCardAnsichtButton">Projektpseudonym erstellen</button>
-  <br><br><br><br><br>
-  <button type="submit" class="IDCardAnsichtButton" [routerLink]="['/edit-patient']" [state]="{patient: patient, fields: fields}">Editieren</button>
-  <br><br><br><br><br>
-  <button type="submit" class="IDCardAnsichtButton" [routerLink]="['/merge-patients']" [state]="{patient: patient, fields: fields}">Zusammenführen</button>
-  <br><br><br><br><br>
-  <button type="submit" class="IDCardAnsichtButton" [routerLink]="['/delete-patient']" [state]="{patient: patient, fields: fields}" >Löschen</button>
-  <br><br><br><br><br>
-</div>
-<div id="historie">
-  <h2>Historie</h2>
-</div>
-</body>
