@@ -6,35 +6,40 @@
   </h2>
   <br>
 
-  <div style="height: 85%; display:flex; flex-flow: column">
+  <div style="height: 90%; display:flex; flex-flow: column">
     <div style="display: flex; flex-flow: row; height: 100%">
-      <div style="flex: 1 1 80%; display: flex; flex-flow: row; justify-content: space-around; align-items: stretch; background-color: red; justify-content: space-around; gap: 0 30px">
-        <mat-card id="deletePatient1" *ngFor="let patient of patients" style=" flex: 1 1 85%; display: flex; flex-flow: column; justify-content: space-around; align-items: stretch;column-gap: 30px;">
-          <mat-card-title class="patientDiv">Patient</mat-card-title>
-          <div id="patientendaten1"  style="background-color: green; flex: 1 1 40%; display: flex;  flex-flow: column">
+      <div style="flex: 1 1 80%; display: flex; flex-flow: row; justify-content: space-around; align-items: stretch; background-color: white; justify-content: space-around; gap: 0 30px">
+        <mat-card id="deletePatient1" *ngFor="let patient of patients" style=" flex: 1 1 65%; display: flex; flex-flow: column; justify-content: space-around; align-items: stretch;column-gap: 30px;">
+          <mat-card-header>Patient</mat-card-header>
+          <div id="patientendaten1"  style="background-color: #f2f2f2; flex: 1 1 40%; display: flex;  flex-flow: column">
             <mat-card-title>Patientendaten</mat-card-title>
             <app-patient-fields [readOnly]=true [fields]="patient.fields"></app-patient-fields>
           </div>
-          <div id="pseudonyme1" style="background-color: green; flex: 1 1 30%; display: flex">
-            <mat-card-title>Pseudonyme</mat-card-title><br>
+          <div id="pseudonyme1" style="background-color: #f2f2f2; flex: 1 1 40%; display: flex; flex-flow:column" >
+            <mat-card-title>Pseudonyme</mat-card-title>
             <app-patient-pseudonyms [readOnly]=true [pseudonyms]="patient.ids"></app-patient-pseudonyms>
           </div>
-          <div id="historie1" style="background-color: green; flex: 1 1 30%; display: flex">
+          <div id="historie1" style="background-color: #f2f2f2; flex: 1 1 40%; display: flex; flex-flow:column">
             <mat-card-title>Historie</mat-card-title>
+            <mat-form-field class="historieInput" >
+              <mat-label>Historie des Patienten</mat-label>
+              <input style="height: 200px" matInput placeholder="Historie des Patienten">
+            </mat-form-field>
+
           </div>
         </mat-card>
       </div>
 
       <!-- Fragestellung-->
-      <div style="flex: 1 1 30%; display: flex; flex-flow: column;background-color: yellow">
+      <div style="flex: 1 1 30%; display: flex; flex-flow: column;background-color: white">
         <p class="DeletePatientFragestellung"> Sollen die beiden Patient wirklich gelöscht werden?</p>
         <div style="display: flex; flex-flow: row; justify-content: space-around; gap: 0 15px">
-          <button mat-raised-button type="submit" (click)="deletePatientenZeile()" class="DeletePatientButtonLöschen"
-                  [routerLink]="['/patientlist-view']">Löschen
-          </button>
           <button mat-raised-button type="submit" class="DeletePatientButtonAbbruch"
                   [routerLink]="['/patientlist-view']">
             Abbruch
+          </button>
+          <button mat-raised-button type="submit" (click)="deletePatientenZeile()" class="DeletePatientButtonLöschen"
+                  [routerLink]="['/patientlist-view']">Löschen
           </button>
         </div>
       </div>

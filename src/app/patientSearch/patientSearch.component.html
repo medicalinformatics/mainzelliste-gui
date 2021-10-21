@@ -1,15 +1,25 @@
 <div id="filterfenster">
 
-  <div class="header"> {{title}} <button id="closeicon" (click)="closeFilter()"><ion-icon  name="close-circle"></ion-icon></button> </div>
+  <div class="header"> {{title}}
+    <button id="closeicon" (click)="closeFilter()">
+      <ion-icon name="close-circle"></ion-icon>
+    </button>
+  </div>
 
   <div class="sortierenDiv">
-  <h4>Sortieren</h4>
-  <button mat-raised-button class="aufsteigendButton"><ion-icon id="buttonicon1" name="swap-vertical-outline"></ion-icon>Aufsteigend</button>
-  <button mat-raised-button class="absteigendButton"><ion-icon id="buttonicon2" name="swap-vertical-outline"></ion-icon>Absteigend</button>
+    <h4>Sortieren</h4>
+    <button mat-raised-button class="aufsteigendButton">
+      <ion-icon id="buttonicon1" name="swap-vertical-outline"></ion-icon>
+      Aufsteigend
+    </button>
+    <button mat-raised-button class="absteigendButton">
+      <ion-icon id="buttonicon2" name="swap-vertical-outline"></ion-icon>
+      Absteigend
+    </button>
   </div>
 
   <div class="filterDiv">
-  <h4>Filter</h4>
+    <h4>Filter</h4>
 
     <mat-form-field id="filterOptionDropdown" appearance="fill">
       <mat-label>Filter-Option auswählen</mat-label>
@@ -20,14 +30,22 @@
       </mat-select>
     </mat-form-field>
 
-<!--  <mat-form-field class="filterDatum">
-    <mat-date-range-input [rangePicker]="picker">
-      <input matStartDate placeholder="Start date">
-      <input matEndDate placeholder="End date">
-    </mat-date-range-input>
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-date-range-picker #picker></mat-date-range-picker>
-  </mat-form-field>--><!--  <mat-form-field class="filterDatum">
+    <mat-form-field appearance="legacy">
+      <mat-label>Zeitraum wählen</mat-label>
+      <mat-date-range-input [rangePicker]="picker" [formGroup]="dateRange">
+        <input matStartDate formControlName="start" placeholder="Start Date">
+        <input matEndDate formControlName="end" placeholder="End Date">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+
+    <h2>
+      Start: {{dateRange.value.start | date}}
+      End: {{dateRange.value.end | date}}
+    </h2>
+
+    <!--  <mat-form-field class="filterDatum">
     <mat-date-range-input [rangePicker]="picker">
       <input matStartDate placeholder="Start date">
       <input matEndDate placeholder="End date">
@@ -43,19 +61,19 @@
              matInput>
     </mat-form-field>
 
-  <br>
-  <div>
+    <br>
+    <div>
 
-    <label class="container"> XXXXX <input type="checkbox"> <span class="checkmark" checked="checked"></span> </label>
+      <label class="container"> XXXXX <input type="checkbox"> <span class="checkmark" checked="checked"></span> </label>
 
-    <label class="container"> XXXXX <input type="checkbox"> <span class="checkmark" checked="checked"></span> </label>
+      <label class="container"> XXXXX <input type="checkbox"> <span class="checkmark" checked="checked"></span> </label>
 
-    <label class="container"> XXXXX <input type="checkbox"> <span class="checkmark" checked="checked"></span> </label>
+      <label class="container"> XXXXX <input type="checkbox"> <span class="checkmark" checked="checked"></span> </label>
 
-    <label class="container"> XXXXX <input type="checkbox"> <span class="checkmark" checked="checked"></span> </label>
+      <label class="container"> XXXXX <input type="checkbox"> <span class="checkmark" checked="checked"></span> </label>
 
-    <label class="container"> XXXXX <input type="checkbox"> <span class="checkmark" checked="checked"></span> </label>
+      <label class="container"> XXXXX <input type="checkbox"> <span class="checkmark" checked="checked"></span> </label>
 
+    </div>
   </div>
-</div>
 </div>

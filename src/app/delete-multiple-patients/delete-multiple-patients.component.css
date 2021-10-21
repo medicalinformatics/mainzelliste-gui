@@ -1,8 +1,10 @@
 .titleicon{
-  padding-left: 1%;
-  font-size: 35px;
+  padding-left: 2%;
+  font-size: 40px;
   font-family: Arial;
-  margin-top: 0.8%;
+  margin-top: 2%;
+  margin-bottom: 1%;
+
 }
 
 .DeletePatientFragestellung{
@@ -30,3 +32,37 @@
   padding-bottom: 3px;
 }
 
+mat-card-title{
+  padding: 3%;
+}
+
+mat-card-header{
+  font-size: 30px;
+  font-family: Arial;
+  padding-bottom: 3%;
+  padding-top: 3%;
+  color:white;
+}
+
+.historieInput{
+  width: 90%;
+  margin: 0% 5% ;
+  max-width: 700px;
+  color: black;
+  font-size: 18px;
+  height: 20%;
+  margin-bottom: 5%;
+}
+
+#deletePatient1{
+  background-color: #284B63;
+  margin-left: 3%;
+  padding-bottom: 5%;
+  margin-bottom: 10%;
+}
+
+.delete_outline_icon{
+  font-size:40px;
+  padding: 5px;
+  margin-right: 10px;
+}
