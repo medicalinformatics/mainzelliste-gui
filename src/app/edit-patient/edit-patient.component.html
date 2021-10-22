@@ -1,26 +1,40 @@
-<body>
-<br>
-<p class="titleicon"><ion-icon name="create"></ion-icon> Edit Patient </p><br>
+<div style="width: 100%; height: 100%">
+  <br>
+  <p class="titleicon">
+    <ion-icon name="create"></ion-icon>
+    Edit Patient
+  </p>
+  <br>
 
-<div id="patientendaten">
-  <h2>Patientendaten</h2>
-  <app-patient-fields [readOnly]=false [fields]="patient.fields"></app-patient-fields> <!--*ngFor="let fields of patient">{{fields}}: {{patient.fields[fields]}}-->
-  <!--  <div id ="pDaten" *ngFor="let field of fields" class="patientendatenzeile">{{field}}: {{patient.fields[field]}}</div>-->
-</div>
+  <div
+    style=" background-color:white; margin-top:0.5%; flex: 1 1 70%; display: flex; flex-flow: row; justify-content: space-around; align-items: stretch; justify-content: space-around; gap: 0 1%">
+    <mat-card id="patientendaten"
+              style="background-color: #f2f2f2; color:black; flex: 1 1 25%; display: flex;  flex-flow: column">
+      <mat-card-title>Patientendaten</mat-card-title>
+      <app-patient-fields [readOnly]=false [fields]="patient.fields"></app-patient-fields>
+      <!--*ngFor="let fields of patient">{{fields}}: {{patient.fields[fields]}}-->
+    </mat-card>
 
-<div id="pseudonyme">
-  <h2>Pseudonyme</h2>
-  <app-patient-pseudonyms [readOnly]=false [pseudonyms]="patient.ids"></app-patient-pseudonyms>
-</div>
+    <mat-card id="pseudonyme"
+              style="background-color: #f2f2f2; color:black; flex: 1 1 25%; display: flex;  flex-flow: column">
+      <mat-card-title>Pseudonyme</mat-card-title>
+      <app-patient-pseudonyms [readOnly]=false [pseudonyms]="patient.ids"></app-patient-pseudonyms>
+    </mat-card>
 
-<div>
-  <button type="submit" [routerLink]="['/patientlist-view']" class="EditPageButtonFertig">Fertig</button>
-  <br><br><br><br><br>
-  <button type="submit" [routerLink]="['/patientlist-view']" class="EditPageButtonAbbruch">Abbruch</button>
-  <br><br><br><br><br>
-</div>
+    <div class="IDCardAnsichtButton"
+         style=" background-color: white; flex: 1 1 2%; display: flex;  flex-flow: column; justify-content: flex-end; align-items: stretch; align-self: flex-start">
+      <button mat-raised-button class="IDCardButtons" [routerLink]="['/patientlist-view']">Fertig</button>
+      <br>
+      <button mat-raised-button class="IDCardButtons" [routerLink]="['/patientlist-view']">Abbruch</button>
+    </div>
+  </div>
 
-<div id="historie">
-  <h2>Historie</h2>
+  <mat-card id="historie"
+            style="background-color: #f2f2f2; color:black; flex: 1 1 80%; display: flex;  flex-flow: column;">
+    <mat-card-title>Historie</mat-card-title>
+    <mat-form-field class="historieInput" hideRequiredMarker>
+      <mat-label>Historie des Patienten</mat-label>
+      <input style="height: 200px" matInput placeholder="Historie des Patienten">
+    </mat-form-field>
+  </mat-card>
 </div>
-</body>
