@@ -49,27 +49,8 @@
   font-size: 18px;
   padding: 5px 30px 5px 30px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
 }
 
-#pDaten{
-  font-size: 24px;
-  line-height: 120%;
-  margin-left: 5%;
-  margin-top: 4%;
-}
-
-#pPseudonyme{
-  font-size: 24px;
-  line-height: 120%;
-  margin-left: 5%;
-  margin-top: 4%;
-}
-
-.patientendatenzeile .fields{
-  font-family: "Arial Black";
-  font-size: 10px;
-}
 .example-full-width {
   width: 90%;
   color: black;

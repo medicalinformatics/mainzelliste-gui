@@ -1,7 +1,19 @@
-#foot-content{
+.foot-content{
   color: #284B63;
   padding-top: 30px;
-  padding-right: 10px;
-  float: right;
+  padding-right: 30px;
+  padding-left: 30px;
+  float: left;
   font-family: Tahoma;
+}
+
+#magicLogo{
+  margin-left: 60px;
+  margin-top:40px;
+}
+
+
+#dkfzLogo{
+  margin-left: 60px;
+  margin-top:40px;
 }
