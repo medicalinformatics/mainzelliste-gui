@@ -13,4 +13,9 @@ describe('PatientService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+  it('should filter', () => {
+    expect(service.getPatients([{field:'Vorname',searchCriteria:'Laura'}])).toHaveSize(1);
+  });
+
 });

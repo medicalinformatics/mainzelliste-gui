@@ -114,10 +114,27 @@ export class PatientService {
     }, [{idType: "Pseudonym", idString: "POV762HG"}])/**/
   ];
 
-  getPatients(): Promise<Array<Patient>> {
+  getPatients(filters: Array<{ field: string, searchCriteria: string }>): Promise<Array<Patient>> {
     // TODO: Create proper method to get all patients from a mainzelliste instance
     return new Promise((resolve, reject) => {
-      resolve(this.patients);
+      if (filters.length == 0) {
+        resolve(this.patients)
+      } else {
+        let filterPatients = this.patients.filter((patient) => {
+          let matched = false;
+          console.log(patient);
+          filters.forEach((filter) => {
+            console.log(filter);
+            if (patient.fields[filter.field].indexOf(filter.searchCriteria) != -1) {
+              matched = true;
+            }
+            console.log(patient.fields[filter.field].indexOf(filter.searchCriteria));
+          })
+          console.log(matched);
+          return matched;
+        });
+        resolve(filterPatients);
+      }
     });
   }
 
@@ -130,22 +147,23 @@ export class PatientService {
     });
   }
 
-  private getMockId (): string {
+  private getMockId(): string {
     let result = '';
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let charactersLength = characters.length;
-    for ( let i = 0; i < 8; i++ ) {
+    for (let i = 0; i < 8; i++) {
       result += characters.charAt(Math.floor(Math.random() *
-          charactersLength));
+        charactersLength));
     }
     return result;
   };
 
   deletePatient(patient: Patient): Promise<number> {
-    console.log("service is deleting");console.log(patient);
+    console.log("service is deleting");
+    console.log(patient);
     return new Promise((resolve, reject) => {
-      let index = this.patients.findIndex((patientFromArray)=>{
-        return patientFromArray.ids[0].idString===patient.ids[0].idString;
+      let index = this.patients.findIndex((patientFromArray) => {
+        return patientFromArray.ids[0].idString === patient.ids[0].idString;
       });
       console.log(this.patients[0]);
       console.log(index);
@@ -156,4 +174,6 @@ export class PatientService {
       }
     })
   }
+
+
 }

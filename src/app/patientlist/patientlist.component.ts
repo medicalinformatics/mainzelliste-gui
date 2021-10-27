@@ -25,7 +25,7 @@ export class PatientlistComponent {
 
   constructor(public dialog: MatDialog, patientService: PatientService) {
     this.patientService = patientService;
-    this.data = patientService.getPatients();
+    this.data = patientService.getPatients([]);
   }
 
   openfilter(spalte: string) {
