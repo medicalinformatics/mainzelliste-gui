@@ -4,23 +4,24 @@
 <mat-form-field appearance="fill">
   <mat-label>Filter</mat-label>
   <mat-chip-list #chipList aria-label="Fruit selection">
-    <mat-chip *ngFor="let fruit of fruits"
+    <mat-chip *ngFor="let fruit of filters"
               [selectable]="selectable"
               [removable]="removable" (removed)="remove(fruit)">
-      {{fruit}}
+      {{fruit.field}}:{{fruit.searchCriteria}}
       <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
     </mat-chip>
     <input #fruitInput
+           [(ngModel)]="filterEingabe"
            placeholder="Search..."
            [matChipInputFor]="chipList"
-           [formControl]="fruitCtrl"
+           [formControl]="filterCtrl"
            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
            [matAutocomplete]="auto"
            (matChipInputTokenEnd)="add($event)">
   </mat-chip-list>
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-    <mat-option *ngFor="let fruit of searchedCriteria | async" [value]="fruit">
-      {{fruit}}
+    <mat-option *ngFor="let field of allFieldsToSearch" [value]="{field:field,searchCriteria:filterEingabe}">
+      {{field}}:{{filterEingabe}}
     </mat-option>
   </mat-autocomplete>
 </mat-form-field>
@@ -53,5 +54,5 @@
 
 <br><br>
 
-<app-patientlist (selectedP)="patientSelected($event)"></app-patientlist>
+<app-patientlist (selectedP)="patientSelected($event)" [data]="patients"></app-patientlist>
 

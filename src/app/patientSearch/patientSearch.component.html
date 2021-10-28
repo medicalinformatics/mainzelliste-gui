@@ -30,29 +30,20 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="legacy">
+    <mat-form-field class="zeitraumFilter" appearance="legacy">
       <mat-label>Zeitraum wählen</mat-label>
-      <mat-date-range-input [rangePicker]="picker" [formGroup]="dateRange">
+      <mat-date-range-input class="zeitraumFilter" [rangePicker]="picker" [formGroup]="dateRange">
         <input matStartDate formControlName="start" placeholder="Start Date">
         <input matEndDate formControlName="end" placeholder="End Date">
       </mat-date-range-input>
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-date-range-picker #picker></mat-date-range-picker>
     </mat-form-field>
-
+<!--
     <h2>
       Start: {{dateRange.value.start | date}}
       End: {{dateRange.value.end | date}}
-    </h2>
-
-    <!--  <mat-form-field class="filterDatum">
-    <mat-date-range-input [rangePicker]="picker">
-      <input matStartDate placeholder="Start date">
-      <input matEndDate placeholder="End date">
-    </mat-date-range-input>
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-date-range-picker #picker></mat-date-range-picker>
-  </mat-form-field>-->
+    </h2>-->
 
     <mat-form-field id="suchleiste" appearance="fill">
       <mat-label>Suche Patient</mat-label>

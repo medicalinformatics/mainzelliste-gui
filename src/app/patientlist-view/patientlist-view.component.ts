@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, Output, ViewChild} from '@angular/core';
 import {PatientService} from "../services/patient.service";
 import {Patient} from "../model/patient";
 import {MatChipInputEvent} from "@angular/material/chips";
@@ -8,7 +8,6 @@ import {Observable} from "rxjs";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {FormControl} from "@angular/forms";
 import {map, startWith} from "rxjs/operators";
-import {Field} from "../model/field";
 import {FieldService} from "../services/field.service";
 
 @Component({
@@ -22,61 +21,50 @@ export class PatientlistViewComponent implements OnInit {
   patient: Patient = new Patient();
   fields: Array<string> = [];
   selectedPatients: Array<Patient> = [];
+  patients: Promise <Array<Patient>>;
 
   selectable = true;
   removable = true;
   addOnBlur = true;
   separatorKeysCodes = [ENTER, COMMA] as const;
-  fruitCtrl = new FormControl();
-  searchedCriteria: Observable<string[]>;
+  filterCtrl = new FormControl();
 
-  fruits: Array<string> = ['Vorname: Marie'];
+  filters:Array <{field:string,searchCriteria:string}> = [];
 
-  exampleArray: Array<Patient>=[ new Patient({
-    Nachname: 'Graf',
-    Geburtsname: '',
-    Vorname: 'Sabine',
-    Geburtsdatum: '01.01.2000',
-    Wohnort: 'Berlin',
-    PLZ: '10115'
-  }, [{idType: 'Pseudonym', idString: 'MKJH56FR'}]),
-    new Patient({
-      Nachname: 'Schmidt',
-      Geburtsname: 'Sommer',
-      Vorname: 'Laura Marie',
-      Geburtsdatum: '19.03.1968',
-      Wohnort: 'Hamburg',
-      PLZ: '20095'
-    }, [{idType: "Pseudonym", idString: 'MN321L09'}])];
+  filterEingabe: string | undefined;
+  allFieldsToSearch: Array <string>=['Pseudonym', 'Nachname', 'Geburtsname', 'Vorname', 'Geburtsdatum', 'PLZ', 'Wohnort'];
+// filterToSearch: Array <{field: string,filter: string}>=[{'Pseudonym',filterEingabe}, {'Nachname',filterEingabe}, {'Geburtsname',filterEingabe}, {'Vorname',filterEingabe}, {'Geburtsdatum',filterEingabe}, {'PLZ',filterEingabe}, {'Wohnort',filterEingabe}];
 
-  // aus AngularMaterials allFruits: string[] = [];
-  // allPatientsToSearch: string[]=[];
-  // allPatientsToSearch=this.exampleArray.map((this.exampleArray)=> this.exampleArray.fields);
-  // allFieldsToSearch = FieldService.name.map(function (f){return f.name.toString()});
-  // allFieldsToSearch = FieldService.name.toString();
-
-  allPatientsToSearch: Array <string>=[];
-
+  selectedCriteria:any;
 
   @ViewChild('fruitInput')
-  fruitInput!: ElementRef<HTMLInputElement>;
+  filterInput!: ElementRef<HTMLInputElement>;
+
+  private filterValue: string | undefined;
 
   constructor(patientService: PatientService) {
     this.patientService = patientService;
-    this.allPatientsToSearch = this.patientService.patients.map(function (p){return p.fields.toString()});
-    // this.fillSearchOptions();
-    this.searchedCriteria = this.fruitCtrl.valueChanges.pipe(
+    this.patients = patientService.getPatients(this.filters);
+
+    // this.allPatientsToSearch = this.patientService.patients.map(function (p){return p.fields.toString()});
+    /*this.searchedCriteria = this.filterCtrl.valueChanges.pipe(
       startWith(null),
       map((field: string | null) => field ? this._filter(field) : this.allPatientsToSearch.slice()));
-  }
+  */}
 
 
   add(event: MatChipInputEvent): void {
+    console.log(event);
     const value = (event.value || '').trim();
 
     // Add our fruit
     if (value) {
-      this.fruits.push(event.value);
+      console.log("here we are");
+     let filter:{ field: string, searchCriteria: string } = JSON.parse(event.value);
+      this.filters.push(filter);
+      this.patients=this.patientService.getPatients(this.filters);
+
+
     }
 
     // Clear the input value
@@ -84,23 +72,30 @@ export class PatientlistViewComponent implements OnInit {
   }
 
   remove(fruit: any): void {
-    const index = this.fruits.indexOf(fruit);
+    const index = this.filters.indexOf(fruit);
 
     if (index >= 0) {
-      this.fruits.splice(index, 1);
+      this.filters.splice(index, 1);
+      this.patients=this.patientService.getPatients(this.filters);
+
     }
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.fruits.push(event.option.viewValue);
-    this.fruitInput.nativeElement.value = '';
-    this.fruitCtrl.setValue(null);
+   // this.filters.push(event.option.viewValue);
+    this.filters.push(event.option.value);
+    this.selectedCriteria=(event.option.value);
+    this.filterInput.nativeElement.value = '';
+    this.filterCtrl.setValue(null);
+    this.patients=this.patientService.getPatients(this.filters);
   }
+/*
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.allPatientsToSearch.filter(fruit => fruit.toLowerCase().includes(filterValue));
   }
+*/
 
   patientSelected(list: PatientlistComponent) {
     this.selectedPatients = list.selectedPatients;
@@ -111,17 +106,10 @@ export class PatientlistViewComponent implements OnInit {
     this.fields = history.state.fields;
   }
 
-  /*  fillSearchOptions() {
-      for (let i = 0; i < this.exampleArray.length; i++) {
-        console.log(this.exampleArray[i]);
-        let x = this.exampleArray[i].fields.toString();
-
-        for(let field in this.fields)
-        let y = this.exampleArray[i].field.toString();
-
-        this.allPatientsToSearch.push(x);
-        this.allPatientsToSearch.push(y);
-      }
-    }*/
-
+  searchforFilter():void{
+    let filteredData = this.patientService.patients.map(function (p) {
+      //search for filterToSearch arguments in Patientlist
+      return p.fields.toString()
+    });
+  }
 }

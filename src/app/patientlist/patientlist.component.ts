@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {PatientSearchComponent} from "../patientSearch/patientSearch.component";
 import {Patient} from "../model/patient";
@@ -15,7 +15,7 @@ import {Observable} from "rxjs";
 export class PatientlistComponent {
   title = "Patientenliste";
   patientService: PatientService;
-  data: Promise<Array<Patient>>;
+  @Input() data!: Promise<Array<Patient>>;
   tmpPatient: Patient = new Patient();
   fields: Array<string> = ["Nachname", "Geburtsname", "Vorname", "Geburtsdatum", "Wohnort", "PLZ"];
   filterChoice: Array<string>=[];
@@ -25,7 +25,6 @@ export class PatientlistComponent {
 
   constructor(public dialog: MatDialog, patientService: PatientService) {
     this.patientService = patientService;
-    this.data = patientService.getPatients([]);
   }
 
   openfilter(spalte: string) {
@@ -76,4 +75,6 @@ export class PatientlistComponent {
    }
     this.selectedP.emit(this);
   }
+
+
 }

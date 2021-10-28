@@ -140,15 +140,17 @@ tr:nth-child{
   left:20%;
   height: 25px;
   width: 25px;
-  background-color: #eee;
+  background-color: #dddddd;
   border: #dddddd solid thin;
 
 }
 
 /* On mouse-over, add a grey background color */
+/*
 .container:hover input ~ .checkmark {
   background-color: #ccc;
 }
+*/
 
 /* When the checkbox is checked, add a blue background */
 .container input:checked ~ .checkmark {
@@ -282,4 +284,7 @@ a{
 mat-paginator{
   font-size: 16px;
   padding-bottom: 5%;
+  max-width: 90%;
+  float:right;
 }
+
