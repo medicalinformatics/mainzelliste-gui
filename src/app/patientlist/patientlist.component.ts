@@ -30,7 +30,7 @@ export class PatientlistComponent implements AfterViewInit{
   columns: string[] = ["select"];
 
   constructor(public dialog: MatDialog, patientService: PatientService) {
-    this.columns = this.columns.concat(this.fields);
+    this.columns = this.columns.concat(this.fields).concat(["actions"]);
     this.patientService = patientService;
     this.patients = this.patientService.patientsDataSource;
 
