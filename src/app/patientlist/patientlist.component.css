@@ -49,19 +49,20 @@ color: white;
 }
 
 #patientlist {
-  font-family: Arial, sans-serif;
+  /*font-family: Arial, sans-serif;
   width: 98%;
   margin-left: 1%;
   font-size: 18px;
-  height: 500px!important;
+  height: 500px!important;*/
+  width: 98%;
 
 }
 
-#patientlist td, #patientlist th {
+/*#patientlist td, #patientlist th {
   border: 1px solid #ddd;
   padding: 20px 10px 20px 10px;
   font-family: Arial;
-}
+}*/
 
 #patientlist tr:nth-child(even){background-color: #f2f2f2;}
 

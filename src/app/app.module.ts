@@ -28,14 +28,10 @@ import { EditPatientComponent } from './edit-patient/edit-patient.component';
 import { DeletePatientComponent } from './delete-patient/delete-patient.component';
 import { PatientPseudonymsComponent } from './patient-pseudonyms/patient-pseudonyms.component';
 import { PatientDataComponent } from './patient-data/patient-data.component';
-import {FormGroup,FormControl} from "@angular/forms";
-import {MatSidenavContainer} from "@angular/material/sidenav";
-import {MatSidenav} from "@angular/material/sidenav";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatBadgeModule} from "@angular/material/badge";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatIconModule} from "@angular/material/icon";
-import {MatCheckbox} from "@angular/material/checkbox";
 import {MatCardModule} from "@angular/material/card";
 import { DeleteMultiplePatientsComponent } from './delete-multiple-patients/delete-multiple-patients.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
@@ -45,6 +41,7 @@ import {MatSelectModule} from "@angular/material/select";
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
+import {MatTableModule} from "@angular/material/table";
 
 
 @NgModule({
@@ -93,7 +90,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatToolbarModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatTableModule
   ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}

@@ -1,55 +1,69 @@
-<table mat-table id="patientlist">
-  <tr id="patientenlisteHead">
-    <th>
-      <label class="container">
-        <input type="checkbox">
-        <span class="checkmark"></span>
-      </label>
-    </th>
-    <th class="tabellenspalte">PID
-      <button class="filterbutton" (click)="openfilter('pseudonymfilter')">
-        <ion-icon name="caret-down-circle-outline"></ion-icon>
-      </button>
-    </th>
-    <th class="tabellenspalte">Nachname
-      <button class="filterbutton" (click)="openfilter('nachnamefilter')">
-        <ion-icon name="caret-down-circle-outline"></ion-icon>
-      </button>
-    </th>
-    <th class="tabellenspalte">Geburtsname
-      <button class="filterbutton" (click)="openfilter('geburtsnamefilter')">
-        <ion-icon name="caret-down-circle-outline"></ion-icon>
-      </button>
-    </th>
-    <th class="tabellenspalte">Vorname
-      <button class="filterbutton" (click)="openfilter('vornamefilter')">
-        <ion-icon name="caret-down-circle-outline"></ion-icon>
-      </button>
-    </th>
-    <th class="tabellenspalte">Geburtsdatum
-      <button class="filterbutton" (click)="openfilter('geburtsdatumfilter')">
-        <ion-icon name="caret-down-circle-outline"></ion-icon>
-      </button>
-    </th>
-    <th class="tabellenspalte">Wohnort
-      <button class="filterbutton" (click)="openfilter('wohnortfilter')">
-        <ion-icon name="caret-down-circle-outline"></ion-icon>
-      </button>
-    </th>
-    <th class="tabellenspalte">PLZ
-      <button class="filterbutton" (click)="openfilter('plzfilter')">
-        <ion-icon name="caret-down-circle-outline"></ion-icon>
-      </button>
-    </th>
-    <th class="tabellenspalte">Aktionen</th>
-  </tr>
+<!--<table mat-table id="patientlist">-->
+<!--  <tr id="patientenlisteHead">-->
+<!--    <th>-->
+<!--      <label class="container">-->
+<!--        <input type="checkbox">-->
+<!--        <span class="checkmark"></span>-->
+<!--      </label>-->
+<!--    </th>-->
+<!--    <th class="tabellenspalte">PID-->
+<!--      <button class="filterbutton" (click)="openfilter('pseudonymfilter')">-->
+<!--        <ion-icon name="caret-down-circle-outline"></ion-icon>-->
+<!--      </button>-->
+<!--    </th>-->
+<!--    <th class="tabellenspalte">Nachname-->
+<!--      <button class="filterbutton" (click)="openfilter('nachnamefilter')">-->
+<!--        <ion-icon name="caret-down-circle-outline"></ion-icon>-->
+<!--      </button>-->
+<!--    </th>-->
+<!--    <th class="tabellenspalte">Geburtsname-->
+<!--      <button class="filterbutton" (click)="openfilter('geburtsnamefilter')">-->
+<!--        <ion-icon name="caret-down-circle-outline"></ion-icon>-->
+<!--      </button>-->
+<!--    </th>-->
+<!--    <th class="tabellenspalte">Vorname-->
+<!--      <button class="filterbutton" (click)="openfilter('vornamefilter')">-->
+<!--        <ion-icon name="caret-down-circle-outline"></ion-icon>-->
+<!--      </button>-->
+<!--    </th>-->
+<!--    <th class="tabellenspalte">Geburtsdatum-->
+<!--      <button class="filterbutton" (click)="openfilter('geburtsdatumfilter')">-->
+<!--        <ion-icon name="caret-down-circle-outline"></ion-icon>-->
+<!--      </button>-->
+<!--    </th>-->
+<!--    <th class="tabellenspalte">Wohnort-->
+<!--      <button class="filterbutton" (click)="openfilter('wohnortfilter')">-->
+<!--        <ion-icon name="caret-down-circle-outline"></ion-icon>-->
+<!--      </button>-->
+<!--    </th>-->
+<!--    <th class="tabellenspalte">PLZ-->
+<!--      <button class="filterbutton" (click)="openfilter('plzfilter')">-->
+<!--        <ion-icon name="caret-down-circle-outline"></ion-icon>-->
+<!--      </button>-->
+<!--    </th>-->
+<!--    <th class="tabellenspalte">Aktionen</th>-->
+<!--  </tr>-->
 
-  <tr id="datenzeilen" *ngFor="let patient of data | async" [patient]="patient" [fields]="fields"
-      (selectedP)="patientSelected($event)" app-patientrow></tr>
+<!--  <tr id="datenzeilen" *ngFor="let patient of data | async" [patient]="patient" [fields]="fields"-->
+<!--      (selectedP)="patientSelected($event)" app-patientrow></tr>-->
+<!--</table>-->
+
+<!--<mat-paginator [length]="100"-->
+<!--               [pageSize]="10"-->
+<!--               [pageSizeOptions]="[5, 10, 25, 100]"-->
+<!--               aria-label="Select page">-->
+<!--</mat-paginator>-->
+
+<table id="patientlist" mat-table [dataSource]="patients" class="mat-elevation-z8">
+
+  <!--- Note that these columns can be defined in any order.
+        The actual rendered columns are set as a property on the row definition" -->
+
+  <ng-container *ngFor="let field of fields" matColumnDef="{{field}}">
+    <th mat-header-cell *matHeaderCellDef> {{field}} </th>
+    <td mat-cell *matCellDef="let element"> {{element.fields[field]}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="fields"></tr>
+  <tr mat-row *matRowDef="let row; columns: fields;"></tr>
 </table>
-
-<mat-paginator [length]="100"
-               [pageSize]="10"
-               [pageSizeOptions]="[5, 10, 25, 100]"
-               aria-label="Select page">
-</mat-paginator>
