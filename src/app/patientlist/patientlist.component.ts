@@ -4,7 +4,7 @@ import {PatientSearchComponent} from "../patientSearch/patientSearch.component";
 import {Patient} from "../model/patient";
 import {PatientService} from "../services/patient.service";
 import {PatientrowComponent} from "../patientrow/patientrow.component";
-import {MatTable} from "@angular/material/table";
+import {SelectionModel} from "@angular/cdk/collections";
 
 @Component({
   selector: 'app-patientlist',
@@ -16,16 +16,24 @@ export class PatientlistComponent {
   title = "Patientenliste";
   patientService: PatientService;
   patients: Patient[] = [];
+  selection: SelectionModel<Patient>;
+
   tmpPatient: Patient = new Patient();
-  fields: Array<string> = ["Nachname", "Geburtsname", "Vorname", "Geburtsdatum", "Wohnort", "PLZ"];
+  fields: string[] = ["Nachname", "Geburtsname", "Vorname", "Geburtsdatum", "Wohnort", "PLZ"];
   filterChoice: Array<string>=[];
 
   @Output() selectedP = new EventEmitter<PatientlistComponent>();
   selectedPatients: Array<Patient> = [];
+  columns: string[] = ["select"];
 
   constructor(public dialog: MatDialog, patientService: PatientService) {
+    this.columns = this.columns.concat(this.fields);
     this.patientService = patientService;
     this.patients = this.patientService.patients;
+
+    const initialSelection: Patient[] = [];
+    const allowMultiSelect = true;
+    this.selection = new SelectionModel<Patient>(allowMultiSelect, initialSelection);
   }
 
   openfilter(spalte: string) {
@@ -75,5 +83,19 @@ export class PatientlistComponent {
      }
    }
     this.selectedP.emit(this);
+  }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.patients.length;
+    return numSelected == numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.patients.forEach(row => this.selection.select(row));
   }
 }
