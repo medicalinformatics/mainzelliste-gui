@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Patient} from "../model/patient";
+import {MatTableDataSource} from "@angular/material/table";
 
 @Injectable({
   providedIn: 'root'
@@ -113,6 +114,8 @@ export class PatientService {
       PLZ: '78462'
     }, [{idType: "Pseudonym", idString: "POV762HG"}])/**/
   ];
+
+  patientsDataSource: MatTableDataSource<Patient> = new MatTableDataSource<Patient>(this.patients);
 
   getPatients(): Promise<Array<Patient>> {
     // TODO: Create proper method to get all patients from a mainzelliste instance

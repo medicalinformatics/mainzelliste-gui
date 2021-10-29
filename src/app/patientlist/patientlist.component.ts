@@ -1,10 +1,12 @@
-import {Component, ElementRef, EventEmitter, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {PatientSearchComponent} from "../patientSearch/patientSearch.component";
 import {Patient} from "../model/patient";
 import {PatientService} from "../services/patient.service";
 import {PatientrowComponent} from "../patientrow/patientrow.component";
 import {SelectionModel} from "@angular/cdk/collections";
+import {MatTableDataSource} from "@angular/material/table";
+import {MatPaginator} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-patientlist',
@@ -12,10 +14,10 @@ import {SelectionModel} from "@angular/cdk/collections";
   styleUrls: ['./patientlist.component.css']
 })
 
-export class PatientlistComponent {
+export class PatientlistComponent implements AfterViewInit{
   title = "Patientenliste";
   patientService: PatientService;
-  patients: Patient[] = [];
+  patients: MatTableDataSource<Patient>;
   selection: SelectionModel<Patient>;
 
   tmpPatient: Patient = new Patient();
@@ -23,13 +25,14 @@ export class PatientlistComponent {
   filterChoice: Array<string>=[];
 
   @Output() selectedP = new EventEmitter<PatientlistComponent>();
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   selectedPatients: Array<Patient> = [];
   columns: string[] = ["select"];
 
   constructor(public dialog: MatDialog, patientService: PatientService) {
     this.columns = this.columns.concat(this.fields);
     this.patientService = patientService;
-    this.patients = this.patientService.patients;
+    this.patients = this.patientService.patientsDataSource;
 
     const initialSelection: Patient[] = [];
     const allowMultiSelect = true;
@@ -88,7 +91,7 @@ export class PatientlistComponent {
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.patients.length;
+    const numRows = this.patients.data.length;
     return numSelected == numRows;
   }
 
@@ -96,6 +99,10 @@ export class PatientlistComponent {
   masterToggle() {
     this.isAllSelected() ?
       this.selection.clear() :
-      this.patients.forEach(row => this.selection.select(row));
+      this.patients.data.forEach(row => this.selection.select(row));
+  }
+
+  ngAfterViewInit(): void {
+    this.patients.paginator = this.paginator;
   }
 }
