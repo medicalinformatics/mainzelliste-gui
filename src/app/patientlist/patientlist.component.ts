@@ -1,12 +1,12 @@
-import {AfterViewInit, Component, EventEmitter, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {PatientSearchComponent} from "../patientSearch/patientSearch.component";
 import {Patient} from "../model/patient";
 import {PatientService} from "../services/patient.service";
-import {PatientrowComponent} from "../patientrow/patientrow.component";
 import {SelectionModel} from "@angular/cdk/collections";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
+import {MatCheckboxChange} from "@angular/material/checkbox";
 
 @Component({
   selector: 'app-patientlist',
@@ -15,24 +15,17 @@ import {MatPaginator} from "@angular/material/paginator";
 })
 
 export class PatientlistComponent implements AfterViewInit{
-  title = "Patientenliste";
-  patientService: PatientService;
-  patients: MatTableDataSource<Patient>;
+  @Input() patients!: MatTableDataSource<Patient>;
   selection: SelectionModel<Patient>;
+  @Output() selectedPatients: EventEmitter<Patient[]> = new EventEmitter<Patient[]>();
 
-  tmpPatient: Patient = new Patient();
   fields: string[] = ["Nachname", "Geburtsname", "Vorname", "Geburtsdatum", "Wohnort", "PLZ"];
-  filterChoice: Array<string>=[];
-
-  @Output() selectedP = new EventEmitter<PatientlistComponent>();
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  selectedPatients: Array<Patient> = [];
   columns: string[] = ["select"];
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(public dialog: MatDialog, patientService: PatientService) {
     this.columns = this.columns.concat(this.fields).concat(["actions"]);
-    this.patientService = patientService;
-    this.patients = this.patientService.patientsDataSource;
 
     const initialSelection: Patient[] = [];
     const allowMultiSelect = true;
@@ -60,34 +53,6 @@ export class PatientlistComponent implements AfterViewInit{
     }
   }
 
-  erstelleNeuenPatienten () {
-    this.patientService.createPatient(this.tmpPatient).then((result) => {
-      if (result == 200) {
-        this.tmpPatient = new Patient();
-      }
-    });
-  }
-
-  useFilter(filterWahl:string){
-    this.filterChoice.push(filterWahl);
-  }
-
-  patientSelected(row: PatientrowComponent){
-    console.log(row.selected);
-    if (row.selected) {
-     this.selectedPatients.push(row.patient);
-   }
-   else{
-     let index = this.selectedPatients.findIndex((patientFromArray)=>{
-       return patientFromArray.ids[0].idString===row.patient.ids[0].idString;
-     });
-     if (index > -1) {
-       this.selectedPatients.splice(index, 1);
-     }
-   }
-    this.selectedP.emit(this);
-  }
-
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -100,6 +65,12 @@ export class PatientlistComponent implements AfterViewInit{
     this.isAllSelected() ?
       this.selection.clear() :
       this.patients.data.forEach(row => this.selection.select(row));
+    this.selectedPatients.emit(this.selection.selected);
+  }
+
+  selectedRow(event: MatCheckboxChange, row: Patient) {
+    event ? this.selection.toggle(row) : null;
+    this.selectedPatients.emit(this.selection.selected);
   }
 
   ngAfterViewInit(): void {

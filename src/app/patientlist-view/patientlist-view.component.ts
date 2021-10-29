@@ -32,29 +32,6 @@ export class PatientlistViewComponent implements OnInit {
 
   fruits: Array<string> = ['Vorname: Marie'];
 
-  exampleArray: Array<Patient>=[ new Patient({
-    Nachname: 'Graf',
-    Geburtsname: '',
-    Vorname: 'Sabine',
-    Geburtsdatum: '01.01.2000',
-    Wohnort: 'Berlin',
-    PLZ: '10115'
-  }, [{idType: 'Pseudonym', idString: 'MKJH56FR'}]),
-    new Patient({
-      Nachname: 'Schmidt',
-      Geburtsname: 'Sommer',
-      Vorname: 'Laura Marie',
-      Geburtsdatum: '19.03.1968',
-      Wohnort: 'Hamburg',
-      PLZ: '20095'
-    }, [{idType: "Pseudonym", idString: 'MN321L09'}])];
-
-  // aus AngularMaterials allFruits: string[] = [];
-  // allPatientsToSearch: string[]=[];
-  // allPatientsToSearch=this.exampleArray.map((this.exampleArray)=> this.exampleArray.fields);
-  // allFieldsToSearch = FieldService.name.map(function (f){return f.name.toString()});
-  // allFieldsToSearch = FieldService.name.toString();
-
   allPatientsToSearch: Array <string>=[];
 
 
@@ -102,8 +79,8 @@ export class PatientlistViewComponent implements OnInit {
     return this.allPatientsToSearch.filter(fruit => fruit.toLowerCase().includes(filterValue));
   }
 
-  patientSelected(list: PatientlistComponent) {
-    this.selectedPatients = list.selectedPatients;
+  patientSelected(selectedPatients: Patient[]) {
+    this.selectedPatients = selectedPatients;
   }
 
   ngOnInit(): void {
