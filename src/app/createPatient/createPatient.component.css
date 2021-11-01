@@ -1,11 +1,10 @@
 
-p{
-  font-size: 35px;
-  font-family: Arial;
-  margin-top: 3%;
-  margin-left: 5%;
+h2{
+  font-size: 40px;
+  margin-left: 1%;
+  margin-top: 2%;
   margin-bottom: 3%;
-
+  font-family: "Arial";
 }
 
 button{

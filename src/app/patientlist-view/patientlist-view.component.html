@@ -1,58 +1,59 @@
-<script src="patientlist-view.component.ts"></script>
-<h1>Patientenliste</h1>
+<div style="height: 100%; width: 100%;padding-bottom: 5%">
+    <h2>Patientenliste</h2>
 
-<mat-form-field appearance="fill">
-  <mat-label>Filter</mat-label>
-  <mat-chip-list #chipList aria-label="Fruit selection">
-    <mat-chip *ngFor="let fruit of filters"
-              [selectable]="selectable"
-              [removable]="removable" (removed)="remove(fruit)">
-      {{fruit.field}}:{{fruit.searchCriteria}}
-      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-    </mat-chip>
-    <input #fruitInput
-           [(ngModel)]="filterEingabe"
-           placeholder="Search..."
-           [matChipInputFor]="chipList"
-           [formControl]="filterCtrl"
-           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-           [matAutocomplete]="auto"
-           (matChipInputTokenEnd)="add($event)">
-  </mat-chip-list>
-  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-    <mat-option *ngFor="let field of allFieldsToSearch" [value]="{field:field,searchCriteria:filterEingabe}">
-      {{field}}:{{filterEingabe}}
-    </mat-option>
-  </mat-autocomplete>
-</mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Filter/Suche...</mat-label>
+      <mat-chip-list #chipList aria-label="Fruit selection">
+        <mat-chip *ngFor="let fruit of filters"
+                  [selectable]="selectable"
+                  [removable]="removable" (removed)="remove(fruit)">
+          {{fruit.field}}:{{fruit.searchCriteria}}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+        <input #fruitInput
+               [(ngModel)]="filterEingabe"
+               placeholder="Search..."
+               [matChipInputFor]="chipList"
+               [formControl]="filterCtrl"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [matAutocomplete]="auto"
+               (matChipInputTokenEnd)="add($event)">
+      </mat-chip-list>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+        <mat-option *ngFor="let field of allFieldsToSearch" [value]="{field:field,searchCriteria:filterEingabe}">
+          {{field}}:{{filterEingabe}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
 
-<div>
-  <br>
-  <button mat-raised-button matBadgeColor="accent" name="Projektpseudonym erstellen"
-          [disabled]="selectedPatients.length<2" [matBadge]="selectedPatients.length"
-          [matBadgeHidden]="selectedPatients.length<2"> Projekt
-    Erstellen
-    <ion-icon name="cube"></ion-icon>
-  </button>
-  <button mat-raised-button matBadgeColor="accent" [routerLink]="['/merge-patients']"
-          [state]="{patient: patient, fields: fields}"
-          [disabled]="selectedPatients.length<2"
-          [matBadge]="selectedPatients.length" [matBadgeHidden]="selectedPatients.length<2">
-    Zusammenführen
-    <ion-icon name="git-merge"></ion-icon>
-  </button>
+    <div>
+      <br>
+      <button mat-raised-button matBadgeColor="accent" name="Projektpseudonym erstellen"
+              disabled="disabled"> Projekt
+        Erstellen
+        <ion-icon name="cube"></ion-icon>
+      </button>
+      <button mat-raised-button matBadgeColor="accent" [routerLink]="['/merge-patients']"
+              [state]="{patients: selectedPatients, fields: fields}"
+              [disabled]="selectedPatients.length!=2"
+              [matBadge]="selectedPatients.length"
+              [matBadgeHidden]="selectedPatients.length<1">
+        Zusammenführen
+        <ion-icon name="git-merge"></ion-icon>
+      </button>
 
-  <button mat-raised-button matBadgeColor="accent" [routerLink]="['/delete-multiple-patients']"
-          [state]="{patients: selectedPatients, fields: fields}"
-          [disabled]="selectedPatients.length<2" [matBadge]="selectedPatients.length"
-          [matBadgeHidden]="selectedPatients.length<2">
-    Löschen
-    <ion-icon name="trash"></ion-icon>
-  </button>
+      <button mat-raised-button matBadgeColor="accent" [routerLink]="['/delete-multiple-patients']"
+              [state]="{patients: selectedPatients}"
+              [disabled]="selectedPatients.length!=2"
+              [matBadge]="selectedPatients.length"
+              [matBadgeHidden]="selectedPatients.length<1">
+        Löschen
+        <ion-icon name="trash"></ion-icon>
+      </button>
+
+    </div>
+
+    <br><br>
+  <app-patientlist (selectedP)="patientSelected($event)" [data]="patients"></app-patientlist>
 
 </div>
-
-<br><br>
-
-<app-patientlist (selectedP)="patientSelected($event)" [data]="patients"></app-patientlist>
-

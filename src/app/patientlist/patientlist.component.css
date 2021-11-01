@@ -53,7 +53,7 @@ color: white;
   width: 98%;
   margin-left: 1%;
   font-size: 18px;
-  height: 500px!important;
+  /*height: 500px!important;*/
 
 }
 
@@ -69,7 +69,7 @@ color: white;
 
 th {
   text-align: left;
-  background-color: #284B63;
+  background-color: #294E66;
   color: white;
   font-size: 20px;
 }
@@ -140,8 +140,8 @@ tr:nth-child{
   left:20%;
   height: 25px;
   width: 25px;
-  background-color: #dddddd;
-  border: #dddddd solid thin;
+  background-color: #48738F;
+  border: #48738F solid thin;
 
 }
 
@@ -154,7 +154,7 @@ tr:nth-child{
 
 /* When the checkbox is checked, add a blue background */
 .container input:checked ~ .checkmark {
-  background-color: #2196F3;
+  background-color: #8BC1E5;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
@@ -182,10 +182,6 @@ tr:nth-child{
   transform: rotate(45deg);
 }
 
-section {
-  display: table;
-}
-
 .example-button-row .mat-button-base {
   margin: 8px 8px 8px 0;
 }
@@ -206,22 +202,12 @@ section {
 
 
 .PatientenansichtButton {
-  background-color: #3895D3; /* Green */
+  background-color: #8BC1E5; /* Green */
   color: white;
   margin-right: 2rem;
   margin-left: 1rem;
   font-size: 22px;
   padding: 5px 30px 5px 30px;
- /* padding: 10px 32px;
-   border: none;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin-left: 1%;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
-
 }
 
 #suchleiste{
@@ -277,9 +263,6 @@ a{
   text-decoration: none;
 }
 
-#datenzeilen{
-  overflow: auto;
-}
 
 mat-paginator{
   font-size: 16px;

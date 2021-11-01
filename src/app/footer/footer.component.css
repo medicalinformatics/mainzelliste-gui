@@ -4,6 +4,8 @@
   padding-left: 60px;
   float: left;
   font-family: Tahoma;
+  font-size: 20px;
+  line-height: 150%;
 }
 .foot-content2{
   color: #284B63;
@@ -11,6 +13,9 @@
   padding-left: 15%;
   float: left;
   font-family: Tahoma;
+  font-size: 20px;
+  line-height: 150%;
+
 }
 
 #magicLogo{

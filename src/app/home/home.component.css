@@ -1,18 +1,36 @@
-#hinweise{
+.hinweise{
   font-family: Arial;
   width: 60%;
   margin-left: 2%;
   font-size: 22px;
   line-height: 150%;
 }
+
 p{
   font-family: Arial;
   margin-left: 2%;
   font-size: 28px;
-
 }
 
-#title{
-  margin-top: 50px;
+h2{
+  font-size: 40px;
+  margin-left: 1%;
+  margin-top: 2%;
+  font-family: "Arial";
+  margin-bottom: 2%;
+}
+h4{
+
+  font-size: 30px;
+  margin-left: 2%;
+  margin-bottom: 1%;
+  font-family: "Arial";
+  line-height: 120%;
 }
 
+h3{
+  font-size: 30px;
+  margin-left: 1%;
+  margin-bottom: 1%;
+  font-family: "Arial";
+}

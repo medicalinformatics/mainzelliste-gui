@@ -1,8 +1,9 @@
 .titleicon{
-  padding-left: 1%;
-  font-size: 35px;
+  padding-left: 2%;
+  font-size: 40px;
   font-family: Arial;
-  margin-top: 0.8%;
+  margin-top: 1.5%;
+  margin-bottom: 1%;
 }
 
 #patientendaten{
@@ -39,55 +40,29 @@
 
 .DeletePatientFragestellung{
   display: inline-block;
-  font-size: 22px;
-  font-family: inherit;
+  font-size: 24px;
+  font-family: Helvetica;
+
 
 }
 
 .DeletePatientButtonLöschen{
-  background-color: #3895D3;
-  border: none;
+  background-color: #3895D0;
+  font-size: 18px;
   color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  border-radius: 5px;
-  font-size: 14px;
+  padding: 5px 30px 5px 30px;
+  width: 40%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  width: 39%;
-  float: right!important;
 }
+
 .DeletePatientButtonAbbruch {
   background-color: #888888;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  border-radius: 5px;
-  font-size: 14px;
+  font-size: 18px;
+  color:white;
+  padding: 5px 30px 5px 30px;
+  width: 40%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  width: 39%;
-  float: left;
 
-}
-#deletepatientbuttons{
-  position: absolute;
-  width: 20%;
-  height: 9%;
-  top: 15%;
-  left: 65%;
-  float: right;
-}
-
-
-#pDaten{
-  font-size: 24px;
-  line-height: 120%;
-  margin-left: 5%;
-  margin-top: 4%;
 }
 
 
@@ -97,18 +72,4 @@ mat-card-title{
   font-size: 28px;
   font-family: Arial;
   padding-left: 20px;
-}
-
-
-
-.IDCardButtons{
-  background-color: #3895D3;
-  color:white;
-  margin-bottom: 1%;
-  float: right;
-  margin-right: 2rem;
-  margin-left:1.51rem;
-  font-size: 18px;
-  padding: 5px 30px 5px 30px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }

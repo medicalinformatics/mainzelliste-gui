@@ -21,7 +21,7 @@
     </mat-card>
 
     <div style=" flex: 1 1 10%; display: flex; flex-flow: column;background-color: white">
-      <p class="DeletePatientFragestellung" style="margin-left:6%;"> Soll der folgende Patient wirklich gelöscht werden?</p>
+      <p class="DeletePatientFragestellung" style="margin-left:3%;"> Soll der folgende Patient wirklich gelöscht werden?</p>
      <br> <br> <div style="display: flex; flex-flow: row; justify-content: space-around; gap: 0 15px">
         <button mat-raised-button type="submit" class="DeletePatientButtonAbbruch"
                 [routerLink]="['/patientlist-view']">
@@ -39,7 +39,7 @@
     <mat-card-title>Historie</mat-card-title>
     <mat-form-field class="historieInput" hideRequiredMarker>
       <mat-label>Historie des Patienten</mat-label>
-      <input style="height: 200px" matInput placeholder="Historie des Patienten">
+      <input disabled="disabled" style="height: 200px" matInput placeholder="Historie des Patienten">
     </mat-form-field>
   </mat-card>
 </div>

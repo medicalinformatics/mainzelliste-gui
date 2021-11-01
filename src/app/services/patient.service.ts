@@ -103,7 +103,7 @@ export class PatientService {
       Geburtsdatum: '25.05.1982',
       Wohnort: 'Konstanz',
       PLZ: '78462'
-    }, [{idType: "Pseudonym", idString: "POV762HG"}]),
+    }, [{idType: "Pseudonym", idString: "000FVC1Q"}]),
     new Patient({
       Nachname: 'Schaller',
       Geburtsname: 'Lechner',
@@ -111,7 +111,23 @@ export class PatientService {
       Geburtsdatum: '25.05.1982',
       Wohnort: 'Konstanz',
       PLZ: '78462'
-    }, [{idType: "Pseudonym", idString: "POV762HG"}])/**/
+    }, [{idType: "Pseudonym", idString: "KTS254XC"}]),
+    new Patient({
+      Nachname: 'Plenz',
+      Geburtsname: '',
+      Vorname: 'Ralf',
+      Geburtsdatum: '15.07.1964',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "GF7L09S2"}]),
+    new Patient({
+      Nachname: 'Appel',
+      Geburtsname: 'Plenz',
+      Vorname: 'Jana',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
   ];
 
   getPatients(filters: Array<{ field: string, searchCriteria: string }>): Promise<Array<Patient>> {

@@ -9,27 +9,30 @@
 
 .DeletePatientFragestellung{
   display: inline-block;
-  left: 65%;
-  font-size: 22px;
+  font-size: 24px;
   font-family: inherit;
   padding-bottom: 30px;
-  padding-left: 65px;
+  padding-left: 55px;
+  line-height: 150%;
 }
 
 .DeletePatientButtonLöschen {
-  background-color: #3895D3;
+
+  background-color: #3895D0;
+  font-size: 18px;
   color: white;
-  width: 28%;
-  padding-top:3px;
-  padding-bottom: 3px;
+  padding: 5px 30px 5px 30px;
+  width: 35%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .DeletePatientButtonAbbruch {
   background-color: #888888;
   color: white;
-  width: 28%;
-  padding-top:3px;
-  padding-bottom: 3px;
+  width: 35%;
+  font-size: 18px;
+  padding: 5px 30px 5px 30px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 mat-card-title{

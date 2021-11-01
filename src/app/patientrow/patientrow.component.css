@@ -86,7 +86,7 @@ input[type=submit] {
 }
 
 .container input:checked ~ .checkmark {
-  background-color: #2196F3;
+  background-color: #3895D0;
 }
 
 .checkmark:after {
@@ -111,9 +111,6 @@ input[type=submit] {
   transform: rotate(45deg);
 }
 
-section {
-  display: table;
-}
 
 .example-button-row .mat-button-base {
   margin: 8px 8px 8px 0;
@@ -145,7 +142,7 @@ a{
 
 
 .fertigButton{
-  background-color: #3895D3;
+  background-color: #3895D0;
   width: 90%;
   height: 95%;
   font-size: 20px;
