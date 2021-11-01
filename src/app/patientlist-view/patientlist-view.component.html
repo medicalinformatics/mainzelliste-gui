@@ -34,7 +34,7 @@
         <ion-icon name="cube"></ion-icon>
       </button>
       <button mat-raised-button matBadgeColor="accent" [routerLink]="['/merge-patients']"
-              [state]="{patients: selectedPatients, fields: fields}"
+              [state]="{patients: selectedPatients}"
               [disabled]="selectedPatients.length!=2"
               [matBadge]="selectedPatients.length"
               [matBadgeHidden]="selectedPatients.length<1">

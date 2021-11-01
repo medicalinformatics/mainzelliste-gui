@@ -10,23 +10,16 @@ import {Field} from "../model/field";
   styleUrls: ['./mergePatients.component.css']
 })
 export class MergePatientsComponent implements OnInit {
-  patient: Patient = new Patient();
-  @Input() readOnly: boolean= false;
+  patientService: PatientService;
+  patients: Array<Patient> = [];
 
+  constructor(patientService: PatientService) {
+    this.patientService = patientService;
 
-  @Input() fields: {[key: string]: any} = {};
-  fieldService: FieldService;
-  configuredFields: Promise<Array<Field>>;
-
-  constructor(fieldService: FieldService) {
-    this.fieldService = fieldService;
-    this.configuredFields = fieldService.getFields();
-    patientService: PatientService;
   }
 
   ngOnInit(): void {
-    this.patient = history.state.patient;
-    this.fields = history.state.fields;
+    this.patients = history.state.patients;
   }
 
 }

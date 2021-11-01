@@ -1,85 +1,48 @@
 
-<body>
-<br>
-<p>Patienten zusammenführen</p>
-<br><br><br>
+<div style="height:100%; width:100%">
 
+  <h2 class="titleicon">
+    <ion-icon name="git-merge"></ion-icon>
+    Patienten zusammenführen
+  </h2>
 
-<div id="patientendaten1">
-  <h2>Patientendaten 1</h2>
-  <mat-form-field class="example-full-width" >
-    <mat-label *ngFor="let id of patient.ids">{{id.idType}}</mat-label>
-    <input matInput id="pPseudonyme"  [readonly]="readOnly" *ngFor="let id of patient.ids" class="patientendatenzeile" value=" {{id.idString}}"><button class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button>
-  </mat-form-field>
+<div  style="display: flex; flex-flow: row; justify-content: space-around;">
 
-<!--  <div class="patientendatenzeile">Pseudonym <button class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button></div>
-<div class="patientendatenzeile">Intern Pseudonym <button class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button> </div>
-  <div class="patientendatenzeile">Extern Pseudonym <button class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button></div>
--->
-<div *ngFor="let field of configuredFields | async">
-  <mat-form-field class="example-full-width" >
-    <mat-label >{{field.name}}</mat-label>
-    <input  [readonly]="readOnly" matInput [value]="fields[field.name]"> <button class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button>
-  </mat-form-field>
+<mat-card class="patientCard" style="width: 28%">
+  <mat-card-header>Patientendaten 1</mat-card-header>
 
-</div>
- <!-- <div class="patientendatenzeile">Nachname <button class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button></div>
-  <div class="patientendatenzeile">Geburtsname <button class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button></div>
-  <div class="patientendatenzeile">Vorname <button class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button> </div>
-  <div class="patientendatenzeile">Geburtsdatum <button class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button></div>
-  <div class="patientendatenzeile">Wohnort <button class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button></div>
-  <div class="patientendatenzeile">PLZ <button class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button></div>-->
-</div>
-
-<div id="finalpatientendaten">
-  <h2>Final Patientendaten</h2>
-
-  <mat-form-field class="example-full-width" >
-    <mat-label *ngFor="let id of patient.ids">{{id.idType}}</mat-label>
-    <input matInput  [readonly]="readOnly" *ngFor="let id of patient.ids" class="patientendatenzeile" ><button class="PfeilNachRechts"><ion-icon class="closefilterwahl" name="close-circle"></ion-icon></button>
-  </mat-form-field>
-  <div *ngFor="let field of configuredFields | async">
-    <mat-form-field class="example-full-width" >
-      <mat-label >{{field.name}}</mat-label>
-      <input  [readonly]="readOnly" matInput> <button class="PfeilNachRechts"><ion-icon class="closefilterwahl" name="close-circle"></ion-icon></button>
-    </mat-form-field>
-
+  <div class="pseudonyme" style="background-color: #f2f2f2; flex: 1 1 40%; display: flex; flex-flow:column" >
+    <mat-card-title>Pseudonyme</mat-card-title>
+    <div style="flex-flow: row">
+    <app-patient-pseudonyms style="width: 90%" [readOnly]=true [pseudonyms]="patients[0].ids"></app-patient-pseudonyms><button style="width: 10%; color: #3895D0; border:none; background:none; font-size: 30px;float:right" class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button>
+  </div>
   </div>
 
-<!--  <div class="patientendatenzeile">Pseudonym</div>
-  <div class="patientendatenzeile">Intern Pseudonym</div>
-  <div class="patientendatenzeile">Extern Pseudonym</div>
+  <div class="patientendaten"  style="background-color: #f2f2f2; flex: 1 1 40%; display: flex;  flex-flow: column">
+    <mat-card-title>Patientendaten</mat-card-title>
+    <app-patient-fields [readOnly]=true [fields]="patients[0].fields"></app-patient-fields><button style="width: 10%; border:none;color: #3895D0; background:none; font-size: 30px; float:right;" class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button>
+  </div>
+</mat-card>
 
-  <div class="patientendatenzeile">Nachname</div>
-  <div class="patientendatenzeile">Geburtsname</div>
-  <div class="patientendatenzeile">Vorname</div>
-  <div class="patientendatenzeile">Geburtsdatum</div>
-  <div class="patientendatenzeile">Wohnort</div>
-  <div class="patientendatenzeile">PLZ</div>-->
-</div>
+<mat-card style="width: 28%" class="MergeCard">
+  <mat-card-header>Final Patientendaten</mat-card-header>
 
-<div id="patientdaten2">
-  <h2>Patientendaten 2</h2>
-  <mat-form-field class="example-full-width" >
-      <mat-label *ngFor="let id of patient.ids">{{id.idType}}</mat-label>
-   <input matInput   [readonly]="readOnly" *ngFor="let id of patient.ids" class="patientendatenzeile" value=" {{id.idString}}"><button class="PfeilNachLinks"><ion-icon name="arrow-back-circle"></ion-icon> </button>
-  </mat-form-field>
+</mat-card>
 
-  <!--  <div class="patientendatenzeile">Pseudonym <button class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button></div>
-  <div class="patientendatenzeile">Intern Pseudonym <button class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button> </div>
-    <div class="patientendatenzeile">Extern Pseudonym <button class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button></div>
-  -->
-  <div *ngFor="let field of configuredFields | async">
-    <mat-form-field class="example-full-width" >
-      <mat-label >{{field.name}}</mat-label>
-      <input  [readonly]="readOnly" matInput [value]="fields[field.name]"> <button class="PfeilNachLinks"><ion-icon name="arrow-back-circle"></ion-icon></button>
-    </mat-form-field>
+<mat-card style="width: 28%" class="patientCard">
+  <mat-card-header>Patientendaten 2</mat-card-header>
+  <div class="pseudonyme" style="background-color: #f2f2f2; flex: 1 1 40%; display: flex; flex-flow:column" >
+    <mat-card-title>Pseudonyme</mat-card-title>
+    <app-patient-pseudonyms [readOnly]=true [pseudonyms]="patients[1].ids"></app-patient-pseudonyms><button style="width: 10%; border:none;color: #3895D0; background:none; font-size: 30px;float:left" class="PfeilNachLinks"><ion-icon name="arrow-back-circle"></ion-icon></button>
 
   </div>
+  <div class="patientendaten"  style="background-color: #f2f2f2; flex: 1 1 40%; display: flex;  flex-flow: column">
+    <mat-card-title>Patientendaten</mat-card-title>
+    <app-patient-fields [readOnly]=true [fields]="patients[1].fields"></app-patient-fields><button style="width: 10%; border:none;color: #3895D0; background:none; font-size: 30px;float:left" class="PfeilNachLinks"><ion-icon name="arrow-back-circle"></ion-icon></button>
+  </div>
+
+</mat-card>
 </div>
+<button mat-raised-button id="ergebnisButton"><a style="color: white;text-decoration: none" routerLink="/ergebnis-zusammenfuehren">Zusammenführen</a></button>
 
-<button id="ergebnisButton"><a id="ergebnisLink" routerLink="/ergebnis-zusammenfuehren">Zusammenführen</a></button>
-
-</body>
-
-<!--value="{{fields[field.name]}}"-->
+</div>
