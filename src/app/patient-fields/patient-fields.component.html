@@ -2,7 +2,7 @@
   <table class="example-table" cellspacing="0">
     <tr *ngFor="let field of configuredFields | async">
       <td>
-        <mat-form-field class="example-full-width" >
+        <mat-form-field class="example-full-width"  >
           <mat-label>{{field.name}}</mat-label>
           <input  [readonly]="readOnly" matInput [value]="fields[field.name]" (change)="fieldChanged()" placeholder={{field.hint}}>
         </mat-form-field>

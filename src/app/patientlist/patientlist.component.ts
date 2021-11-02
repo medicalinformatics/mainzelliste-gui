@@ -32,19 +32,19 @@ export class PatientlistComponent {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
     if (spalte == 'pseudonymfilter') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '16.5%', left: '11%'}});
+      this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '11%'}, data:{dialogtitle:"Pseudonym"}});
     } else if (spalte == 'nachnamefilter') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '16.5%', left: '21%'}});
+      this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '21%'}});
     } else if (spalte == 'geburtsnamefilter') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '16.5%', left: '31%'}});
+      this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '31%'}});
     } else if (spalte == 'vornamefilter') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '16.5%', left: '41%'}});
+      this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '41%'}});
     } else if (spalte == 'geburtsdatumfilter') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '16.5%', left: '53%'}});
+      this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '53%'}});
     } else if (spalte == 'wohnortfilter') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '16.5%', left: '63%'}});
+      this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '63%'}});
     } else if (spalte == 'plzfilter') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '16.5%', left: '75%'}});
+      this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '75%'}});
     }
   }
 

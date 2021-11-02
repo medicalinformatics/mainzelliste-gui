@@ -2,13 +2,18 @@
 
 #filterfenster{
   border: none;
+}
 
+h2{
+  font-size: 20px;
+  color:black;
+  font-family: Arial;
 }
 
 .header{
   height:25%;
   padding: 15px;
-  background-color: grey;
+  background-color: #284B63;
   border-width: thick;
   font-family: Arial;
   font-size: 20px;
@@ -86,7 +91,7 @@ h1{
 #suchleiste{
   border-color: #888888;
   width: 95%;
-  font-size: 13px;
+  font-size: 16px;
   margin-left: 0.5%;
   margin-bottom: 3%;
 }
@@ -177,6 +182,7 @@ h1{
   border: none;
   background: none;
   color:white;
+  margin-bottom: 0.5%;
 }
 
 .filterDiv{
@@ -202,10 +208,12 @@ h1{
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 15px;
+    font-size: 18px;
     margin-left: 8%;
     margin-bottom: 1%;
     border-radius: 15px;
+  background-color: #ADDFFF;
+  color: white;
 }
 
 .absteigendButton{
@@ -218,32 +226,41 @@ h1{
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 15px;
+  font-size: 18px;
   margin-left: 8%;
   margin-bottom: 1%;
   border-radius: 15px;
+  background-color: #ADDFFF;
+  color: white;
 }
 #buttonicon1{
   float: right;
   margin-left: 5px;
+  margin-top: 7px;
+  font-size: 25px;
 }
 #buttonicon2{
   float: right;
   margin-left: 5px;
+  margin-top: 7px;
+  font-size: 25px;
+
+
 }
 
 #filterOptionDropdown{
-  width: 35%;
+  width: 45%;
+  font-size: 16px;
 }
 
 .filterDatum{
   width: 30%;
 }
 
-.zeitraumFilter{
-  float: right;
-  padding-left: 8%;
-
+#zeitraumFilter{
+  width:45%;
+  margin-left: 5%;
+  font-size: 16px;
 }
 .mat-dialog-container{
   padding: 2px;
