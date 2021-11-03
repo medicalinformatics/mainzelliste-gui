@@ -3,12 +3,8 @@ import {PatientService} from "../services/patient.service";
 import {Patient} from "../model/patient";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
-import {PatientlistComponent} from "../patientlist/patientlist.component";
-import {Observable} from "rxjs";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {FormControl} from "@angular/forms";
-import {map, startWith} from "rxjs/operators";
-import {FieldService} from "../services/field.service";
 
 @Component({
   selector: 'app-patientlist-view',

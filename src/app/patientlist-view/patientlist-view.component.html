@@ -54,6 +54,6 @@
     </div>
 
     <br><br>
-  <app-patientlist (selectedP)="patientSelected($event)" [data]="patients"></app-patientlist>
+  <app-patientlist [patients]="patientService.patientsDataSource" (selectedPatients)="patientSelected($event)"></app-patientlist>
 
 </div>
