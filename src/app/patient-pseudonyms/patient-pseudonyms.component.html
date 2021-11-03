@@ -1,5 +1,8 @@
-<mat-form-field *ngFor="let pseudonym of pseudonyms" class="example-full-width">
+<div style="width: 100%">
+  <mat-form-field *ngFor="let pseudonym of pseudonyms" class="example-full-width">
   <mat-label >{{pseudonym.idType}}</mat-label>
-  <input matInput id="pPseudonyme" [readonly]="readOnly"
+  <input style="width: 95%" matInput id="pPseudonyme" [readonly]="readOnly"
          class="patientendatenzeile" value=" {{pseudonym.idString}}">
+  <mat-icon [ngStyle]="{'color':'#888888'}">file_copy</mat-icon>
 </mat-form-field>
+</div>
