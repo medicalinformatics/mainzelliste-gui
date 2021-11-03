@@ -85,10 +85,4 @@ export class PatientlistViewComponent implements OnInit {
     this.fields = history.state.fields;
   }
 
-  searchforFilter():void{
-    let filteredData = this.patientService.patients.map(function (p) {
-      //search for filterToSearch arguments in Patientlist
-      return p.fields.toString()
-    });
-  }
 }

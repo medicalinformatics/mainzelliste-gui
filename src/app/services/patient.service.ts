@@ -8,7 +8,7 @@ import {MatTableDataSource} from "@angular/material/table";
 // NOTE: Currently this is just a mockup for the real patient service. It currently doesn't do any sync with the mainzelliste.
 export class PatientService {
 
-  patients: Array<Patient> = [
+  mockUpData: Array<Patient> = [
     new Patient({
       Nachname: 'Graf',
       Geburtsname: '',
@@ -131,15 +131,16 @@ export class PatientService {
     }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
   ];
 
-  patientsDataSource: MatTableDataSource<Patient> = new MatTableDataSource<Patient>(this.patients);
+  patientsDataSource: MatTableDataSource<Patient> = new MatTableDataSource<Patient>(this.mockUpData);
 
   getPatients(filters: Array<{ field: string, searchCriteria: string }>): Promise<Array<Patient>> {
     // TODO: Create proper method to get all patients from a mainzelliste instance
     return new Promise((resolve, reject) => {
       if (filters.length == 0) {
-        resolve(this.patients)
+        this.patientsDataSource.data = this.mockUpData
+        resolve(this.patientsDataSource.data)
       } else {
-        let filterPatients = this.patients.filter((patient) => {
+        let filterPatients = this.patientsDataSource.data.filter((patient) => {
           let matched = false;
           console.log(patient);
           filters.forEach((filter) => {
@@ -152,6 +153,7 @@ export class PatientService {
           console.log(matched);
           return matched;
         });
+        this.patientsDataSource.data = filterPatients;
         resolve(filterPatients);
       }
     });
@@ -161,7 +163,7 @@ export class PatientService {
     // TODO: Create proper mainzelliste call for this and return that as result.
     return new Promise((resolve, reject) => {
       tmpPatient.ids.push({idType: "pseudonym", idString: this.getMockId()});
-      this.patients.push(tmpPatient);
+      this.patientsDataSource.data.push(tmpPatient);
       resolve(200);
     });
   }
@@ -175,20 +177,20 @@ export class PatientService {
         charactersLength));
     }
     return result;
-  };
+  }
 
   deletePatient(patient: Patient): Promise<number> {
     console.log("service is deleting");
     console.log(patient);
     return new Promise((resolve, reject) => {
-      let index = this.patients.findIndex((patientFromArray) => {
+      let index = this.patientsDataSource.data.findIndex((patientFromArray) => {
         return patientFromArray.ids[0].idString === patient.ids[0].idString;
       });
-      console.log(this.patients[0]);
+      console.log(this.patientsDataSource.data[0]);
       console.log(index);
       if (index > -1) {
 
-        this.patients.splice(index, 1);
+        this.patientsDataSource.data.splice(index, 1);
         resolve(204);
       }
     })
