@@ -11,16 +11,16 @@
 <td *ngFor="let field of fields" > <input *ngIf="editMode" type="text" name="nachname" [(ngModel)]="patient.fields[field]" >  <span *ngIf="!editMode">{{patient.fields[field]}}</span></td>
 
 <td *ngIf="!editMode">
-  <button id="idCardTool" type="submit" class="toolbutton">
+  <button id="idCardTool" class="toolbutton">
       <a [routerLink]="['/idcard']" [state]="{patient: patient, fields: fields}" ><span class="toolbutton__icon"><ion-icon name="id-card"></ion-icon></span></a>
   </button>
-  <button id="cloneButtonTool" type="submit" class="toolbutton">
+  <button id="cloneButtonTool" class="toolbutton">
         <a [routerLink]="['/similar-patient']" [state]="{patient: patient, fields: fields}"><span class="toolbutton__icon"><ion-icon name="people"></ion-icon></span></a>
   </button>
-  <button (click)="editPatientenZeile()" id="editButtonTool" type="submit" class="toolbutton">
+  <button (click)="editPatientenZeile()" id="editButtonTool" class="toolbutton">
         <span [routerLink]="['/edit-patient']" [state]="{patient: patient, fields: fields}" class="toolbutton__icon"><ion-icon name="create"></ion-icon></span>
   </button>
-  <button id="deleteButtonTool" type="submit" class="toolbutton">
+  <button id="deleteButtonTool" class="toolbutton">
         <span [routerLink]="['/delete-patient']" [state]="{patient: patient, fields: fields}" class="toolbutton__icon"><ion-icon name="trash"></ion-icon></span>
   </button>
 </td>

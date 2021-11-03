@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {PatientSearchComponent} from "../patientSearch/patientSearch.component";
 import {Patient} from "../model/patient";
@@ -11,7 +11,8 @@ import {MatCheckboxChange} from "@angular/material/checkbox";
 @Component({
   selector: 'app-patientlist',
   templateUrl: './patientlist.component.html',
-  styleUrls: ['./patientlist.component.css']
+  styleUrls: ['./patientlist.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class PatientlistComponent implements AfterViewInit{

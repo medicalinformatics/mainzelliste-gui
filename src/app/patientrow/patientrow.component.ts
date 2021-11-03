@@ -1,11 +1,12 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation} from '@angular/core';
 import {Patient} from "../model/patient";
 import {PatientService} from "../services/patient.service";
 
 @Component({
   selector: '[app-patientrow]',
   templateUrl: './patientrow.component.html',
-  styleUrls: ['./patientrow.component.css']
+  styleUrls: ['./patientrow.component.css'],
+
 })
 export class PatientrowComponent {
   patientService: PatientService;
