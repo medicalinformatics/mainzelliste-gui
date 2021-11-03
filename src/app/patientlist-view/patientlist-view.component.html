@@ -44,7 +44,7 @@
 
       <button mat-raised-button matBadgeColor="accent" [routerLink]="['/delete-multiple-patients']"
               [state]="{patients: selectedPatients}"
-              [disabled]="selectedPatients.length!=2"
+              [disabled]="selectedPatients.length<2"
               [matBadge]="selectedPatients.length"
               [matBadgeHidden]="selectedPatients.length<1">
         Löschen
