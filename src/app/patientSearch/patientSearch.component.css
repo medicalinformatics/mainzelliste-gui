@@ -1,15 +1,19 @@
-/*
+
 
 #filterfenster{
   border: none;
-  padding: 2px;
+}
 
+h2{
+  font-size: 20px;
+  color:black;
+  font-family: Arial;
 }
 
 .header{
   height:25%;
   padding: 15px;
-  background-color: grey;
+  background-color: #284B63;
   border-width: thick;
   font-family: Arial;
   font-size: 20px;
@@ -32,7 +36,7 @@ h1{
   margin-left: 4%;
 }
 
-!* Style The Dropdown Button *!
+/*!* Style The Dropdown Button *!*/
 .dropbtn {
   background-color: #3895D3;
   color: white;
@@ -45,14 +49,14 @@ h1{
   cursor: pointer;
 }
 
-!* The container <div> - needed to position the dropdown content *!
+/*!* The container <div> - needed to position the dropdown content *!*/
 .dropdown {
   position: relative;
   display: inline-block;
   margin-left: 2%;
 }
 
-!* Dropdown Content (Hidden by Default) *!
+/*!* Dropdown Content (Hidden by Default) *!*/
 .dropdown-content {
   display: none;
   position: absolute;
@@ -63,7 +67,7 @@ h1{
   font-family: Arial;
 }
 
-!* Links inside the dropdown *!
+/*!* Links inside the dropdown *!*/
 .dropdown-content a {
   color: black;
   padding: 12px 16px;
@@ -71,15 +75,15 @@ h1{
   display: block;
 }
 
-!* Change color of dropdown links on hover *!
+/*!* Change color of dropdown links on hover *!*/
 .dropdown-content a:hover {background-color: #f1f1f1}
 
-!* Show the dropdown menu on hover *!
+/*!* Show the dropdown menu on hover *!*/
 .dropdown:hover .dropdown-content {
   display: block;
 }
 
-!* Change the background color of the dropdown button when the dropdown content is shown *!
+/*!* Change the background color of the dropdown button when the dropdown content is shown *!*/
 .dropdown:hover .dropbtn {
    background-color: #3895D0;
 }
@@ -87,7 +91,7 @@ h1{
 #suchleiste{
   border-color: #888888;
   width: 95%;
-  font-size: 13px;
+  font-size: 16px;
   margin-left: 0.5%;
   margin-bottom: 3%;
 }
@@ -113,7 +117,9 @@ h1{
   margin-left: 1%;
 }
 
+/*
 !* Hide the browser's default checkbox *!
+*/
 .container input {
   position: absolute;
   opacity: 0;
@@ -122,7 +128,9 @@ h1{
   width: 0;
 }
 
+/*
 !* Create a custom checkbox *!
+*/
 .checkmark {
   position: absolute;
   top: 0;
@@ -133,29 +141,29 @@ h1{
   border: solid dimgrey 0.3px;
 }
 
-!* On mouse-over, add a grey background color *!
+/*!* On mouse-over, add a grey background color *!*/
 .container:hover input ~ .checkmark {
   background-color: #ccc;
 }
 
-!* When the checkbox is checked, add a blue background *!
+/*!* When the checkbox is checked, add a blue background *!*/
 .container input:checked ~ .checkmark {
   background-color: #2196F3;
 }
 
-!* Create the checkmark/indicator (hidden when not checked) *!
+/*!* Create the checkmark/indicator (hidden when not checked) *!*/
 .checkmark:after {
   content: "";
   position: absolute;
   display: none;
 }
 
-!* Show the checkmark when checked *!
+/*!* Show the checkmark when checked *!*/
 .container input:checked ~ .checkmark:after {
   display: block;
 }
 
-!* Style the checkmark/indicator *!
+/*!* Style the checkmark/indicator *!*/
 .container .checkmark:after {
   left: 6px;
   top: 2px;
@@ -174,12 +182,7 @@ h1{
   border: none;
   background: none;
   color:white;
-}
-
-#kalendericon{
-  font-size: 25px;
-  margin-right: 1%;
-  float: right;
+  margin-bottom: 0.5%;
 }
 
 .filterDiv{
@@ -205,10 +208,12 @@ h1{
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 15px;
+    font-size: 18px;
     margin-left: 8%;
     margin-bottom: 1%;
     border-radius: 15px;
+  background-color: #ADDFFF;
+  color: white;
 }
 
 .absteigendButton{
@@ -221,25 +226,42 @@ h1{
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 15px;
+  font-size: 18px;
   margin-left: 8%;
   margin-bottom: 1%;
   border-radius: 15px;
+  background-color: #ADDFFF;
+  color: white;
 }
 #buttonicon1{
   float: right;
   margin-left: 5px;
+  margin-top: 7px;
+  font-size: 25px;
 }
 #buttonicon2{
   float: right;
   margin-left: 5px;
+  margin-top: 7px;
+  font-size: 25px;
+
+
 }
 
 #filterOptionDropdown{
-  width: 35%;
+  width: 45%;
+  font-size: 16px;
 }
 
 .filterDatum{
   width: 30%;
 }
-*/
+
+#zeitraumFilter{
+  width:45%;
+  margin-left: 5%;
+  font-size: 16px;
+}
+.mat-dialog-container{
+  padding: 2px;
+}

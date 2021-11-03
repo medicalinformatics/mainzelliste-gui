@@ -1,13 +1,11 @@
 <div id="filterfenster">
 
   <div class="header"> {{title}}
-    <button id="closeicon" (click)="closeFilter()">
-      <ion-icon name="close-circle"></ion-icon>
-    </button>
+      <ion-icon id="closeicon" name="close-circle" (click)="closeFilter()"></ion-icon>
   </div>
 
   <div class="sortierenDiv">
-    <h4>Sortieren</h4>
+    <h2>Sortieren</h2>
     <button mat-raised-button class="aufsteigendButton">
       <ion-icon id="buttonicon1" name="swap-vertical-outline"></ion-icon>
       Aufsteigend
@@ -19,9 +17,9 @@
   </div>
 
   <div class="filterDiv">
-    <h4>Filter</h4>
-
-    <mat-form-field id="filterOptionDropdown" appearance="fill">
+    <h2>Filter</h2>
+  <div style="flex-flow: row; justify-content: space-between">
+    <mat-form-field id="filterOptionDropdown" appearance="outline">
       <mat-label>Filter-Option auswählen</mat-label>
       <mat-select>
         <mat-option *ngFor="let filterOption of filterOptions" [value]="filterOption">
@@ -30,31 +28,24 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="legacy">
+    <mat-form-field id="zeitraumFilter" appearance="outline">
       <mat-label>Zeitraum wählen</mat-label>
-      <mat-date-range-input [rangePicker]="picker" [formGroup]="dateRange">
-        <input matStartDate formControlName="start" placeholder="Start Date">
-        <input matEndDate formControlName="end" placeholder="End Date">
+      <mat-date-range-input class="zeitraumFilter" [rangePicker]="picker" [formGroup]="dateRange">
+        <input matStartDate formControlName="start" placeholder="Start">
+        <input matEndDate formControlName="end" placeholder="Ende">
       </mat-date-range-input>
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-date-range-picker #picker></mat-date-range-picker>
     </mat-form-field>
 
+</div>
+<!--
     <h2>
       Start: {{dateRange.value.start | date}}
       End: {{dateRange.value.end | date}}
-    </h2>
+    </h2>-->
 
-    <!--  <mat-form-field class="filterDatum">
-    <mat-date-range-input [rangePicker]="picker">
-      <input matStartDate placeholder="Start date">
-      <input matEndDate placeholder="End date">
-    </mat-date-range-input>
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-date-range-picker #picker></mat-date-range-picker>
-  </mat-form-field>-->
-
-    <mat-form-field id="suchleiste" appearance="fill">
+    <mat-form-field id="suchleiste" appearance="outline">
       <mat-label>Suche Patient</mat-label>
       <input type="text"
              placeholder="Suche nach Patient..."

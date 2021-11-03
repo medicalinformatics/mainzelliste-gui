@@ -1,4 +1,4 @@
-<ng-container>
+<ng-container style="width: 100%; height: 100%">
   <table id="patientlist" mat-table [dataSource]="patients" class="mat-elevation-z8">
 
     <ng-container matColumnDef="select">
@@ -52,7 +52,10 @@
         (click)="selection.toggle(row)"></tr>
 
   </table>
-  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"
+  <mat-paginator [length]="100"
+                 [pageSize]="15"
+                 [pageSizeOptions]="[15, 50, 100]"
+                 disabled="disabled"
                  aria-label="Select page">
   </mat-paginator>
 </ng-container>

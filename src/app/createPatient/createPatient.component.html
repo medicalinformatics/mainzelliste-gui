@@ -1,14 +1,14 @@
+<div style="height:100%;width:100%;">
+<h2>Personenidentifikator anfordern</h2>
 
-<p>Personenidentifikator anfordern</p>
-
-<div>
+<div style="margin-bottom: 150px;">
   <app-patient-fields (fieldEvent)="fieldsChanged($event)" [fields]="patient.fields"></app-patient-fields>
   <div class="example-button-row">
     <br><br>
-    <button mat-raised-button type="submit" (click)="createNewPatient()"> Anfordern </button>
+    <button mat-raised-button routerLink="/patientlist-view" (click)="createNewPatient()"> Anfordern </button>
   </div>
 </div>
-
+</div>
 
 
 

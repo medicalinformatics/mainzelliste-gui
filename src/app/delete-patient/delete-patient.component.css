@@ -1,121 +1,75 @@
-
-h2{
-  font-family: Tahoma;
-  font-size: 28px;
-  margin-left: 5%;
-  margin-top:20px;
-}
-
-
-
 .titleicon{
-  padding-left: 1%;
-  font-size: 35px;
+  padding-left: 2%;
+  font-size: 40px;
   font-family: Arial;
-  margin-top: 0.8%;
+  margin-top: 1.5%;
+  margin-bottom: 1%;
 }
 
 #patientendaten{
+  margin-left: 2%;
   width: 30%;
-  height: 39%;
-  background-color: #f1f1f1;
-  border-width: 3px;
-  border-radius: 5px;
-  left: 0%;
-  position:absolute;
-  margin-left:1%;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  overflow: auto;
 }
 
 #pseudonyme{
   width: 30%;
-  height: 39%;
-  background-color: #f1f1f1;
-  border-radius: 5px;
-  left: 31%;
-  position:absolute;
-  margin-left:1%;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  overflow: auto;
 }
 
 #historie{
-  width: 85%;
-  height: 34%;
-  background-color: #f1f1f1;
-  border-radius: 5px;
-  top: 50%;
-  left: 0px;
-  position:absolute;
-  margin-left:1%;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  width: 91%;
+  margin-bottom: 10%;
+  margin-top: 1%;
+  margin-left: 2%;
+  padding-bottom: 2%;
+}
 
+.historieInput{
+  width: 95%;
+  margin: 0% 2% ;
+  color: black;
+  font-size: 18px;
+  height: 20%;
+  margin-bottom: 5%;
+}
+
+
+.IDCardAnsichtButton {
+  float:right;
+  margin-right: 5%;
 }
 
 .DeletePatientFragestellung{
-  position: absolute;
   display: inline-block;
-  left: 65%;
-  font-size: 22px;
-  font-family: inherit;
+  font-size: 24px;
+  font-family: Helvetica;
+
 
 }
 
 .DeletePatientButtonLöschen{
-  background-color: #3895D3;
-  border: none;
+  background-color: #3895D0;
+  font-size: 18px;
   color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  border-radius: 5px;
-  font-size: 14px;
+  padding: 5px 30px 5px 30px;
+  width: 40%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  width: 39%;
-  float: right!important;
 }
+
 .DeletePatientButtonAbbruch {
   background-color: #888888;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  border-radius: 5px;
-  font-size: 14px;
+  font-size: 18px;
+  color:white;
+  padding: 5px 30px 5px 30px;
+  width: 40%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  width: 39%;
-  float: left;
 
 }
-#deletepatientbuttons{
-  position: absolute;
-  width: 20%;
-  height: 9%;
-  top: 15%;
-  left: 65%;
-  float: right;
-}
 
 
-#pDaten{
-  font-size: 24px;
-  line-height: 120%;
-  margin-left: 5%;
-  margin-top: 4%;
-}
-
-#pPseudonyme{
-  font-size: 24px;
-  line-height: 120%;
-  margin-left: 5%;
-  margin-top: 4%;
-}
-
-.patientendatenzeile .fields{
-  font-family: "Arial Black";
-  font-size: 10px;
+mat-card-title{
+  padding-top: 20px;
+  padding-bottom: 20px;
+  font-size: 28px;
+  font-family: Arial;
+  padding-left: 20px;
 }

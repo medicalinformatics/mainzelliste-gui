@@ -2,7 +2,7 @@
 
   <h2 class="titleicon">
     <ion-icon name="trash"></ion-icon>
-    Patient löschen
+    Patienten löschen
   </h2>
   <br>
 
@@ -23,7 +23,7 @@
             <mat-card-title>Historie</mat-card-title>
             <mat-form-field class="historieInput" >
               <mat-label>Historie des Patienten</mat-label>
-              <input style="height: 200px" matInput placeholder="Historie des Patienten">
+              <input disabled="disabled" style="height: 200px" matInput placeholder="Historie des Patienten">
             </mat-form-field>
 
           </div>
@@ -32,7 +32,7 @@
 
       <!-- Fragestellung-->
       <div style="flex: 1 1 30%; display: flex; flex-flow: column;background-color: white">
-        <p class="DeletePatientFragestellung"> Sollen die beiden Patient wirklich gelöscht werden?</p>
+        <p class="DeletePatientFragestellung"> Sollen die beiden Patienten wirklich <br>gelöscht werden?</p>
         <div style="display: flex; flex-flow: row; justify-content: space-around; gap: 0 15px">
           <button mat-raised-button type="submit" class="DeletePatientButtonAbbruch"
                   [routerLink]="['/patientlist-view']">

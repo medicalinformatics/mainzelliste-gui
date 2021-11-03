@@ -25,7 +25,7 @@
          style=" background-color: white; flex: 1 1 2%; display: flex;  flex-flow: column; justify-content: flex-end; align-items: stretch; align-self: flex-start">
       <button mat-raised-button class="IDCardButtons" [routerLink]="['/patientlist-view']">Fertig</button>
       <br>
-      <button mat-raised-button class="IDCardButtons" [routerLink]="['/patientlist-view']">Abbruch</button>
+      <button style="background-color: #888888" mat-raised-button class="IDCardButtons" [routerLink]="['/patientlist-view']">Abbruch</button>
     </div>
   </div>
 
@@ -34,7 +34,7 @@
     <mat-card-title>Historie</mat-card-title>
     <mat-form-field class="historieInput" hideRequiredMarker>
       <mat-label>Historie des Patienten</mat-label>
-      <input style="height: 200px" matInput placeholder="Historie des Patienten">
+      <input disabled="disabled" style="height: 200px" matInput placeholder="Historie des Patienten">
     </mat-form-field>
   </mat-card>
 </div>

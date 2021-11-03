@@ -1,147 +1,47 @@
-h2{
-  font-family: Tahoma;
-  font-size: 28px;
-  margin-left: 5%;
-  margin-top:20px;
-}
-
-p{
-  padding-left: 1%;
-  font-size: 35px;
+.titleicon{
+  padding-left: 2%;
+  font-size: 40px;
   font-family: Arial;
-  margin-top: 0.8%;
-}
-
-#patientendaten1{
-  width: 25%;
-  height: 60%;
-  background-color: #f2f2f2;
-  border-radius: 5px;
-  left: 0%;
-  top: 10%;
-  position:absolute;
-  margin-left:1%;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  overflow: auto;
-}
-
-#patientdaten2{
-  width: 25%;
-  height: 60%;
-  background-color: #f2f2f2;
-  border-radius: 5px;
-  top: 10%;
-  left: 60%;
-  position:absolute;
-  margin-left:1%;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  overflow: auto;
+  margin-top: 2%;
+  margin-bottom: 2%;
 
 }
-#finalpatientendaten{
-  width: 25%;
-  height: 60%;
+mat-card-title{
+  padding: 3%;
+}
+
+mat-card-header{
+  font-size: 30px;
+  font-family: Arial;
+  padding-bottom: 3%;
+  padding-top: 3%;
+  color:white;
+}
+
+.patientCard{
+  background-color: #284B63;
+  padding-bottom: 3%;
+  margin-bottom: 3%;
+}
+
+.MergeCard{
   background-color: #ADDFFF;
-  border-radius: 5px;
-  top: 10%;
-  left: 30%;
-  position:absolute;
-  margin-left:1%;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  overflow: auto;
-
+  padding-bottom: 3%;
+  margin-bottom: 3%;
 }
 
-.PfeilNachRechts{
-  font-size: 28px;
-  float:right;
-  background: none;
-  border:none;
-  color: #494949 ;
-
-}
-.PfeilNachLinks{
-  font-size: 28px;
-  margin-right: 10px;
-  padding:0px;
-  margin-bottom: 0px;
-  margin-top: 0px;
-  background: none;
-  border:none;
-  float: left;
-  color: #494949 ;
-}
-
-.patientendatenzeile{
-  border-top: solid white 1px;
-  border-bottom:solid white 1px;
-  padding: 2%;
-  font-size: 22px;
-
-}
 #ergebnisButton{
-  padding: 25px;
-  font-size: 22px;
-  background-color: #3895D3;
-  top: 75%;
-  left: 77%;
-  position:absolute;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
-}
-#ergebnisLink{
+  background-color: #3895D0;
+  font-size: 18px;
   color: white;
-  font-family: "Arial";
-  text-decoration: none;
-}
-.example-form {
-  margin-inline: auto;
-
-}
-
-.example-full-width {
-  width: 90%;
-  margin-bottom: 5px;
-  color: black;
-  font-size: 20px;
-  margin: 0% 5% ;
+  padding: 5px 30px 5px 30px;
+  width: 10%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  float:right;
+  margin-right:2.5%;
+  margin-bottom: 10%;
 }
 
-.example-table{
-  width: 90%;
-
-  max-width: 700px;
-}
-
-.mat-form-field-appearance-fill .mat-form-field-flex {
-  padding: 0.5em 0.75em 0em 0.75em;
-}
-
-.mat-form-field-underline{
-  bottom: 0em;
-}
-
-.mat-form-field-wrapper{
-  padding-bottom: 0.8em!important;
-}
-
-tr{
-  margin-top: -5em;
-}
-
-::ng-deep .mat-form-field-wrapper {
-  padding-bottom: 0.5em;
-}
-::ng-deep .mat-form-field-appearance-fill .mat-form-field-infix {
-  padding: .25em 0 .25em 0;
-}
-::ng-deep .mat-form-field-underline {
-  bottom: 0.4em;
-}
-::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
-  background-color: white;
-  -webkit-box-shadow: inset 3px 3px 4px -2px #757575;
-  box-shadow: inset 3px 3px 4px -2px #757575;
-  border-right: 1px solid #757575;
+.patientendaten{
+  padding-bottom: 8%;
 }
