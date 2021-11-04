@@ -2,7 +2,7 @@
 <h2>Personenidentifikator anfordern</h2>
 
 <div style="margin-bottom: 150px;">
-  <app-patient-fields (fieldEvent)="fieldsChanged($event)" [fields]="patient.fields"></app-patient-fields>
+  <app-patient-fields (fieldEvent)="fieldsChanged($event)" [fields]="patient.fields" ></app-patient-fields>
   <div class="example-button-row">
     <br><br>
     <button mat-raised-button routerLink="/patientlist-view" (click)="createNewPatient()"> Anfordern </button>

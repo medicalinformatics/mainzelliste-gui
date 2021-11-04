@@ -5,7 +5,7 @@
        <div style="width: 100%">
          <mat-form-field class="example-full-width"  >
           <mat-label>{{field.name}}</mat-label>
-          <input style="width: 95%" [readonly]="readOnly" matInput [value]="fields[field.name]" (change)="fieldChanged()" placeholder={{field.hint}}>
+          <input style="width: 95%" [readonly]="readOnly" matInput (input)="fieldChanged()" placeholder="{{field.hint}}" [(ngModel)]="fields[field.name]" [name]="field.name">
            <mat-icon [ngStyle]="{'color':'#888888'}">file_copy</mat-icon></mat-form-field>
         </div>
       </td>

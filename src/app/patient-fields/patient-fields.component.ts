@@ -31,10 +31,10 @@ export class PatientFieldsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fieldEvent.emit(this.fields);
   }
 
   fieldChanged(){
+    this.fieldEvent.emit(this.fields);
 
   }
 

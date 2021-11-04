@@ -12,7 +12,6 @@ export class CreatePatientComponent implements OnInit {
   title="Patient einfügen";
   patient: Patient;
   patientService: PatientService;
-  /*tmpPatient=*/
 
 
   constructor(patientService: PatientService) {
@@ -34,5 +33,7 @@ export class CreatePatientComponent implements OnInit {
 
   fieldsChanged(newFields: {[p: string]: any}) {
     this.patient.fields = newFields;
+    console.log("new Field");
+
   }
 }
