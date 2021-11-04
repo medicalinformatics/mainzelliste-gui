@@ -14,7 +14,7 @@
   <div class="pseudonyme" style="background-color: #f2f2f2; flex: 1 1 40%; display: flex; flex-flow:column" >
     <mat-card-title>Pseudonyme</mat-card-title>
     <div style="flex-flow: row">
-    <app-patient-pseudonyms style="width: 90%" [readOnly]=true [pseudonyms]="patients[0].ids"></app-patient-pseudonyms>
+    <app-patient-pseudonyms style="width: 90%" [readOnly]=true [merging]=true [pseudonyms]="patients[0].ids"></app-patient-pseudonyms>
   </div>
   </div>
 
@@ -32,12 +32,11 @@
   <mat-card-header>Patientendaten 2</mat-card-header>
   <div class="pseudonyme" style="background-color: #f2f2f2; flex: 1 1 40%; display: flex; flex-flow:column" >
     <mat-card-title>Pseudonyme</mat-card-title>
-    <app-patient-pseudonyms [readOnly]=true [pseudonyms]="patients[1].ids"></app-patient-pseudonyms><button style="width: 10%; border:none;color: #3895D0; background:none; font-size: 30px;float:left" class="PfeilNachLinks"><ion-icon name="arrow-back-circle"></ion-icon></button>
-
+    <app-patient-pseudonyms [readOnly]=true [merging2]=true [pseudonyms]="patients[1].ids"></app-patient-pseudonyms>
   </div>
   <div class="patientendaten"  style="background-color: #f2f2f2; flex: 1 1 40%; display: flex;  flex-flow: column">
     <mat-card-title>Patientendaten</mat-card-title>
-    <app-patient-fields [readOnly]=true [fields]="patients[1].fields"></app-patient-fields><button style="width: 10%; border:none;color: #3895D0; background:none; font-size: 30px;float:left" class="PfeilNachLinks"><ion-icon name="arrow-back-circle"></ion-icon></button>
+    <app-patient-fields [readOnly]=true [merging2]=true [fields]="patients[1].fields"></app-patient-fields>
   </div>
 
 </mat-card>

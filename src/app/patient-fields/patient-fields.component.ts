@@ -22,6 +22,8 @@ export class PatientFieldsComponent implements OnInit {
   configuredFields: Promise<Array<Field>>;
   @Input() readOnly: boolean= false;
   @Input() merging: boolean=false;
+  @Input() merging2: boolean=false;
+
 
   constructor(fieldService: FieldService) {
     this.fieldService = fieldService;
