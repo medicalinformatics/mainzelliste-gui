@@ -43,3 +43,7 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Configuration
+src/assets/config
+!src/assets/config/config.template.json
