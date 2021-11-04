@@ -249,7 +249,7 @@ h1{
 }
 
 #filterOptionDropdown{
-  width: 45%;
+  width: 30%;
   font-size: 16px;
 }
 
@@ -258,7 +258,7 @@ h1{
 }
 
 #zeitraumFilter{
-  width:45%;
+  width:30%;
   margin-left: 5%;
   font-size: 16px;
 }

@@ -34,23 +34,23 @@ export class PatientlistComponent implements AfterViewInit{
     this.selection = new SelectionModel<Patient>(allowMultiSelect, initialSelection);
   }
 
-  openfilter(spalte: string) {
+  openFilter(spalte: string) {
     console.log("opened filter");
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
-    if (spalte == 'pseudonymfilter') {
+    if (spalte == 'Pseudonym') {
       this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '11%'}, data:{dialogtitle:"Pseudonym"}});
-    } else if (spalte == 'nachnamefilter') {
+    } else if (spalte == 'Nachname') {
       this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '21%'}});
-    } else if (spalte == 'geburtsnamefilter') {
+    } else if (spalte == 'Geburtsname') {
       this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '31%'}});
-    } else if (spalte == 'vornamefilter') {
+    } else if (spalte == 'Vorname') {
       this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '41%'}});
-    } else if (spalte == 'geburtsdatumfilter') {
+    } else if (spalte == 'Geburtsdatum') {
       this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '53%'}});
-    } else if (spalte == 'wohnortfilter') {
+    } else if (spalte == 'Wohnort') {
       this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '63%'}});
-    } else if (spalte == 'plzfilter') {
+    } else if (spalte == 'PLZ') {
       this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '75%'}});
     }
   }
