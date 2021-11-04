@@ -6,8 +6,9 @@
          <mat-form-field class="example-full-width"  >
           <mat-label>{{field.name}}</mat-label>
           <input style="width: 95%" [readonly]="readOnly" matInput (input)="fieldChanged()" placeholder="{{field.hint}}" [(ngModel)]="fields[field.name]" [name]="field.name">
-           <mat-icon [ngStyle]="{'color':'#888888'}">file_copy</mat-icon></mat-form-field>
+           <mat-icon *ngIf="readOnly" [ngStyle]="{'color':'#888888'}">file_copy</mat-icon></mat-form-field>
         </div>
+        <button *ngIf="merging" style="width: 10%; color: #3895D0; border:none; background:none; font-size: 30px;float:right" class="PfeilNachRechts"><ion-icon name="arrow-forward-circle"></ion-icon></button>
       </td>
     </tr>
   </table>

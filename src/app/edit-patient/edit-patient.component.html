@@ -11,8 +11,7 @@
     <mat-card id="patientendaten"
               style="background-color: #f2f2f2; color:black; flex: 1 1 25%; display: flex;  flex-flow: column">
       <mat-card-title>Patientendaten</mat-card-title>
-      <app-patient-fields [readOnly]=false [fields]="patient.fields"></app-patient-fields>
-      <!--*ngFor="let fields of patient">{{fields}}: {{patient.fields[fields]}}-->
+      <app-patient-fields [readOnly]=false (fieldEvent)="fieldsChanged($event)" [fields]="patient.fields"></app-patient-fields>
     </mat-card>
 
     <mat-card id="pseudonyme"

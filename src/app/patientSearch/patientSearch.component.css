@@ -1,9 +1,4 @@
 
-
-#filterfenster{
-  border: none;
-}
-
 h2{
   font-size: 20px;
   color:black;
@@ -249,7 +244,7 @@ h1{
 }
 
 #filterOptionDropdown{
-  width: 30%;
+  width: 35%;
   font-size: 16px;
 }
 
@@ -258,10 +253,7 @@ h1{
 }
 
 #zeitraumFilter{
-  width:30%;
+  width:55%;
   margin-left: 5%;
   font-size: 16px;
-}
-.mat-dialog-container{
-  padding: 2px;
 }
