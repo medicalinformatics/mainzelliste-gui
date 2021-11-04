@@ -24,9 +24,10 @@ export class PatientlistComponent implements AfterViewInit{
   columns: string[] = ["select"];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  pseudonyms: string[]=["Pseudonym"];
 
   constructor(public dialog: MatDialog, patientService: PatientService) {
-    this.columns = this.columns.concat(this.fields).concat(["actions"]);
+    this.columns = this.columns.concat(this.pseudonyms).concat(this.fields).concat(["actions"]);
 
     const initialSelection: Patient[] = [];
     const allowMultiSelect = true;
