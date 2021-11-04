@@ -15,8 +15,9 @@ services:
     ports:
       - "8080:8080"
     environment:
-      ML_API_KEY: pleaseChangeMe
+      ML_API_KEY: changeThisApiKey
       ML_DB_HOST: mainzelliste-db
+      ML_DB_PASS: mainzelliste
     depends_on:
       - mainzelliste-db
   mainzelliste-db:
