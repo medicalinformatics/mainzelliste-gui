@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, Output, ViewChild, ViewEncapsulation} from '@angular/core';
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {PatientSearchComponent} from "../patientSearch/patientSearch.component";
 import {Patient} from "../model/patient";
@@ -11,7 +11,8 @@ import {MatCheckboxChange} from "@angular/material/checkbox";
 @Component({
   selector: 'app-patientlist',
   templateUrl: './patientlist.component.html',
-  styleUrls: ['./patientlist.component.css']
+  styleUrls: ['./patientlist.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class PatientlistComponent implements AfterViewInit{
@@ -23,32 +24,33 @@ export class PatientlistComponent implements AfterViewInit{
   columns: string[] = ["select"];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  pseudonyms: string[]=["Pseudonym"];
 
   constructor(public dialog: MatDialog, patientService: PatientService) {
-    this.columns = this.columns.concat(this.fields).concat(["actions"]);
+    this.columns = this.columns.concat(this.pseudonyms).concat(this.fields).concat(["actions"]);
 
     const initialSelection: Patient[] = [];
     const allowMultiSelect = true;
     this.selection = new SelectionModel<Patient>(allowMultiSelect, initialSelection);
   }
 
-  openfilter(spalte: string) {
+  openFilter(spalte: string) {
     console.log("opened filter");
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
-    if (spalte == 'pseudonymfilter') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '11%'}, data:{dialogtitle:"Pseudonym"}});
-    } else if (spalte == 'nachnamefilter') {
+    if (spalte == 'Pseudonym') {
+      this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '11%'}, minWidth:"20%",minHeight:"40%", data:{dialogtitle:"Pseudonym"}});
+    } else if (spalte == 'Nachname') {
       this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '21%'}});
-    } else if (spalte == 'geburtsnamefilter') {
+    } else if (spalte == 'Geburtsname') {
       this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '31%'}});
-    } else if (spalte == 'vornamefilter') {
+    } else if (spalte == 'Vorname') {
       this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '41%'}});
-    } else if (spalte == 'geburtsdatumfilter') {
+    } else if (spalte == 'Geburtsdatum') {
       this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '53%'}});
-    } else if (spalte == 'wohnortfilter') {
+    } else if (spalte == 'Wohnort') {
       this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '63%'}});
-    } else if (spalte == 'plzfilter') {
+    } else if (spalte == 'PLZ') {
       this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '75%'}});
     }
   }

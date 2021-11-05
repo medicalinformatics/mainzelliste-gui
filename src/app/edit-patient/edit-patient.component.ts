@@ -19,6 +19,11 @@ export class EditPatientComponent implements OnInit {
     this.fields = history.state.fields;
   }
 
+  fieldsChanged(newFields: {[p: string]: any}) {
+    this.patient.fields = newFields;
+    console.log("new Field");
+
+  }
 }
 
 

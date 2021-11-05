@@ -21,6 +21,9 @@ export class PatientFieldsComponent implements OnInit {
   fieldService: FieldService;
   configuredFields: Promise<Array<Field>>;
   @Input() readOnly: boolean= false;
+  @Input() merging: boolean=false;
+  @Input() merging2: boolean=false;
+
 
   constructor(fieldService: FieldService) {
     this.fieldService = fieldService;
@@ -31,10 +34,10 @@ export class PatientFieldsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fieldEvent.emit(this.fields);
   }
 
   fieldChanged(){
+    this.fieldEvent.emit(this.fields);
 
   }
 

@@ -9,6 +9,9 @@ import {Component, Input} from '@angular/core';
 export class PatientPseudonymsComponent{
   @Input() pseudonyms: Array<{ idType: string, idString: string }>=[];
   @Input() readOnly: boolean= false;
+  @Input() merging: boolean=false;
+  @Input() merging2: boolean=false;
+
 
   constructor() {
   }

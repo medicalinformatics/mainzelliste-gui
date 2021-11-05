@@ -1,70 +1,57 @@
 <div id="filterfenster">
-
   <div class="header"> {{title}}
-      <ion-icon id="closeicon" name="close-circle" (click)="closeFilter()"></ion-icon>
+    <ion-icon id="closeicon" name="close-circle" (click)="closeFilter()"></ion-icon>
+  </div>
+
+  <div style="width:100%; padding:2%; background-color: #E6B0AA; font-size: 25px; color: white">
+    <mat-icon style="font-size: 30px; padding-right: 1.5%">hourglass_bottom</mat-icon> Component in Progress..
   </div>
 
   <div class="sortierenDiv">
     <h2>Sortieren</h2>
     <button mat-raised-button class="aufsteigendButton">
-      <ion-icon id="buttonicon1" name="swap-vertical-outline"></ion-icon>
+      <mat-icon id="buttonicon1">swap_vert</mat-icon>
       Aufsteigend
     </button>
     <button mat-raised-button class="absteigendButton">
-      <ion-icon id="buttonicon2" name="swap-vertical-outline"></ion-icon>
+      <mat-icon id="buttonicon2">swap_vert</mat-icon>
       Absteigend
     </button>
   </div>
 
   <div class="filterDiv">
     <h2>Filter</h2>
-  <div style="flex-flow: row; justify-content: space-between">
-    <mat-form-field id="filterOptionDropdown" appearance="outline">
-      <mat-label>Filter-Option auswählen</mat-label>
-      <mat-select>
-        <mat-option *ngFor="let filterOption of filterOptions" [value]="filterOption">
-          {{filterOption}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
 
-    <mat-form-field id="zeitraumFilter" appearance="outline">
-      <mat-label>Zeitraum wählen</mat-label>
-      <mat-date-range-input class="zeitraumFilter" [rangePicker]="picker" [formGroup]="dateRange">
-        <input matStartDate formControlName="start" placeholder="Start">
-        <input matEndDate formControlName="end" placeholder="Ende">
-      </mat-date-range-input>
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-date-range-picker #picker></mat-date-range-picker>
-    </mat-form-field>
+    <div style="flex-flow: row; justify-content: space-evenly">
 
-</div>
-<!--
-    <h2>
-      Start: {{dateRange.value.start | date}}
-      End: {{dateRange.value.end | date}}
-    </h2>-->
+      <mat-form-field style="width: 47%; margin-right: 2%" appearance="outline">
+        <mat-label>Filter-Option auswählen</mat-label>
+        <mat-select>
+          <mat-option *ngFor="let filterOption of filterOptions" [value]="filterOption">
+            {{filterOption}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-    <mat-form-field id="suchleiste" appearance="outline">
+      <mat-form-field style="width: 47%; margin-left: 2%" appearance="outline">
+        <mat-label>Zeitraum auswählen</mat-label>
+        <input matInput [matDatepicker]="picker">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+    </div>
+
+    <mat-form-field class="example-full-width" style="width: 98%" appearance="outline">
       <mat-label>Suche Patient</mat-label>
-      <input type="text"
-             placeholder="Suche nach Patient..."
-             matInput>
+      <input matInput placeholder="Suche nach Patient..">
     </mat-form-field>
 
     <br>
-    <div>
-
-      <label class="container"> XXXXX <input type="checkbox"> <span class="checkmark" checked="checked"></span> </label>
-
-      <label class="container"> XXXXX <input type="checkbox"> <span class="checkmark" checked="checked"></span> </label>
-
-      <label class="container"> XXXXX <input type="checkbox"> <span class="checkmark" checked="checked"></span> </label>
-
-      <label class="container"> XXXXX <input type="checkbox"> <span class="checkmark" checked="checked"></span> </label>
-
-      <label class="container"> XXXXX <input type="checkbox"> <span class="checkmark" checked="checked"></span> </label>
-
-    </div>
+<div style="flex-flow: column; font-size: 15px;">
+    <mat-checkbox style="transform: scale(1)!important;margin: 10px;" class="example-margin"></mat-checkbox><br>
+    <mat-checkbox  style="transform: scale(1)!important;margin: 10px;" class="example-margin"></mat-checkbox><br>
+    <mat-checkbox  style="transform: scale(1)!important;margin: 10px;" class="example-margin"></mat-checkbox>
+</div>
   </div>
 </div>
