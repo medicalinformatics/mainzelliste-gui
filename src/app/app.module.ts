@@ -43,6 +43,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import { UserComponent } from './user/user.component';
+import {HttpClientModule} from "@angular/common/http";
 
 
 @NgModule({
@@ -67,7 +69,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     DeletePatientComponent,
     PatientPseudonymsComponent,
     PatientDataComponent,
-    DeleteMultiplePatientsComponent
+    DeleteMultiplePatientsComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,
@@ -94,7 +97,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     MatNativeDateModule,
     MatTableModule,
     MatCheckboxModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    HttpClientModule
   ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}
