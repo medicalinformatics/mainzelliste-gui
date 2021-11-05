@@ -11,12 +11,14 @@ interface AppConfig {
 })
 export class ConfigurationService {
   patientLists: PatientList[] = [];
+  selectedPatientList!: PatientList;
 
   constructor(httpClient: HttpClient) {
-    httpClient.get<AppConfig>('/assets/config.json')
+    httpClient.get<AppConfig>('/assets/config/config.json')
     .toPromise()
     .then(config => {
       this.patientLists = config.patientLists;
+      this.selectedPatientList = this.patientLists[0];
     });
   }
 }
