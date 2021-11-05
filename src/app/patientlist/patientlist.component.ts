@@ -39,7 +39,7 @@ export class PatientlistComponent implements AfterViewInit{
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
     if (spalte == 'Pseudonym') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '11%'}, minWidth:"20%", data:{dialogtitle:"Pseudonym"}});
+      this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '11%'}, minWidth:"20%",minHeight:"40%", data:{dialogtitle:"Pseudonym"}});
     } else if (spalte == 'Nachname') {
       this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '21%'}});
     } else if (spalte == 'Geburtsname') {

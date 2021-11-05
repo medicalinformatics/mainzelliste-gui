@@ -18,9 +18,9 @@ export class PatientSearchComponent implements OnInit {
 
   filterOptions: Array<string>=["gleich", "nicht gleich", "Beginnt mit", "Endet mit", "Enthält", "Enthält nicht"];
   title="Filter";
-  dateRange = new FormGroup({
+  range = new FormGroup({
     start: new FormControl(),
-    end: new FormControl()
+    end: new FormControl(),
   });
 
 

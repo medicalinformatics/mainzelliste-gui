@@ -39,6 +39,6 @@ export class CreatePatientComponent implements OnInit {
   }
 
   sendBanner($event: any) {
-    
+
   }
 }
