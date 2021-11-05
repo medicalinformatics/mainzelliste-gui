@@ -1,4 +1,7 @@
 version: "3.8"
+secrets:
+  mainzelliste.docker.conf:
+    file: ./mainzelliste.docker.conf
 services:
   mainzelliste-gui:
     image: medicalinformatics/mainzelliste-gui
@@ -18,8 +21,11 @@ services:
       ML_API_KEY: changeThisApiKey
       ML_DB_HOST: mainzelliste-db
       ML_DB_PASS: mainzelliste
+      ML_ALLOWED_ORIGINS: "http://localhost:4200"
     depends_on:
       - mainzelliste-db
+    secrets:
+      - mainzelliste.docker.conf
   mainzelliste-db:
     image: postgres:13-alpine
     environment:
