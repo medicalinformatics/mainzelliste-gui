@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Patient} from "../model/patient";
 import {PatientFieldsComponent} from "../patient-fields/patient-fields.component";
 import {PatientService} from "../services/patient.service";
@@ -12,6 +12,7 @@ export class CreatePatientComponent implements OnInit {
   title="Patient einfügen";
   patient: Patient;
   patientService: PatientService;
+  @Input() fields : Array<string> = [];
 
 
   constructor(patientService: PatientService) {
@@ -35,5 +36,9 @@ export class CreatePatientComponent implements OnInit {
     this.patient.fields = newFields;
     console.log("new Field");
 
+  }
+
+  sendBanner($event: any) {
+    
   }
 }
