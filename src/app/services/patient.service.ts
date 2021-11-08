@@ -132,28 +132,20 @@ export class PatientService {
     }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
   ];
 
-  constructor(patientListService: PatientListService) {
-    patientListService.getPatients().then(patients => {
+  constructor(private patientListService: PatientListService) {
+    this.rerenderPatients(patientListService.getPatients())
+  }
+
+  rerenderPatients(patients: Promise<Patient[]>, filters?: Array<{ field: string, searchCriteria: string }>) {
+    patients.then(patients => {
       // TODO: Find a better way for transforming the single fields to one combined field
       patients.forEach(patient => {
         let birthdate: string = patient.fields.Geburtstag + "." + patient.fields.Geburtsmonat + "." + patient.fields.Geburtsjahr;
         patient.fields.Geburtsdatum = birthdate
         return patient;
       })
-      this.patientsDataSource = new MatTableDataSource<Patient>(patients)
-    })
-  }
-
-  patientsDataSource: MatTableDataSource<Patient> = new MatTableDataSource<Patient>(this.mockUpData);
-
-  getPatients(filters: Array<{ field: string, searchCriteria: string }>): Promise<Array<Patient>> {
-    // TODO: Create proper method to get all patients from a mainzelliste instance
-    return new Promise((resolve, reject) => {
-      if (filters.length == 0) {
-        this.patientsDataSource.data = this.mockUpData
-        resolve(this.patientsDataSource.data)
-      } else {
-        let filterPatients = this.patientsDataSource.data.filter((patient) => {
+      if (filters != undefined) {
+        patients = patients.filter((patient) => {
           let matched = false;
           console.log(patient);
           filters.forEach((filter) => {
@@ -165,11 +157,21 @@ export class PatientService {
           })
           console.log(matched);
           return matched;
-        });
-        this.patientsDataSource.data = filterPatients;
-        resolve(filterPatients);
+        })
       }
-    });
+      this.patientsDataSource = new MatTableDataSource<Patient>(patients)
+    })
+  }
+
+  patientsDataSource: MatTableDataSource<Patient> = new MatTableDataSource<Patient>(this.mockUpData);
+
+  getPatients(filters: Array<{ field: string, searchCriteria: string }>) {
+    // TODO: Create proper method to get all patients from a mainzelliste instance
+    if (filters.length == 0) {
+      this.rerenderPatients(this.patientListService.getPatients());
+    } else {
+      this.rerenderPatients(this.patientListService.getPatients(), filters);
+    }
   }
 
   createPatient(tmpPatient: Patient): Promise<number> {

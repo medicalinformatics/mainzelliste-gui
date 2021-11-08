@@ -17,7 +17,6 @@ export class PatientlistViewComponent implements OnInit {
   patient: Patient = new Patient();
   fields: Array<string> = [];
   selectedPatients: Array<Patient> = [];
-  patients: Promise <Array<Patient>>;
 
   selectable = true;
   removable = true;
@@ -39,7 +38,7 @@ export class PatientlistViewComponent implements OnInit {
 
   constructor(patientService: PatientService) {
     this.patientService = patientService;
-    this.patients = patientService.getPatients(this.filters);
+    patientService.getPatients(this.filters);
   }
 
   add(event: MatChipInputEvent): void {
@@ -51,7 +50,7 @@ export class PatientlistViewComponent implements OnInit {
       console.log("here we are");
      let filter:{ field: string, searchCriteria: string } = JSON.parse(event.value);
       this.filters.push(filter);
-      this.patients=this.patientService.getPatients(this.filters);
+      this.patientService.getPatients(this.filters);
     }
 
     // Clear the input value
@@ -63,8 +62,7 @@ export class PatientlistViewComponent implements OnInit {
 
     if (index >= 0) {
       this.filters.splice(index, 1);
-      this.patients=this.patientService.getPatients(this.filters);
-
+      this.patientService.getPatients(this.filters);
     }
   }
 
@@ -73,7 +71,7 @@ export class PatientlistViewComponent implements OnInit {
     this.selectedCriteria=(event.option.value);
     this.filterInput.nativeElement.value = '';
     this.filterCtrl.setValue(null);
-    this.patients=this.patientService.getPatients(this.filters);
+    this.patientService.getPatients(this.filters);
   }
 
   patientSelected(selectedPatients: Patient[]) {
