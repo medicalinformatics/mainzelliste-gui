@@ -24,7 +24,7 @@
 
     <div class="IDCardAnsichtButton"
          style=" background-color: white; flex: 1 1 2%; display: flex;  flex-flow: column; justify-content: flex-end; align-items: stretch; align-self: flex-start">
-      <button mat-raised-button class="IDCardButtons" [routerLink]="['/patientlist-view']">Fertig</button>
+      <button mat-raised-button class="IDCardButtons" (click)="sendChanges()">Fertig</button>
       <br>
       <button style="background-color: #888888" mat-raised-button class="IDCardButtons" [routerLink]="['/patientlist-view']">Abbruch</button>
     </div>

@@ -4,6 +4,7 @@ import {UserService} from "./user.service";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {PatientList} from "../model/patientlist";
 import {Patient} from "../model/patient";
+import {Observable} from "rxjs";
 
 interface Token {
   id: string
@@ -107,6 +108,28 @@ export class PatientListService {
       headers: this.mainzellisteHeaders
     }).toPromise().then(token => {
       return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + token.id).toPromise();
+    })
+  }
+
+  editPatient(patient: Patient) {
+    return this.httpClient.post<Token>(this.userService.user.session + "tokens", {
+      "type": "editPatient",
+      "data": {
+        "patientId": {
+          "idType": "pid",
+          "idString": patient.ids[0].idString
+        },
+        "fields":["Vorname", "Nachname", "Geburtsname", "Geburtstag", "Geburtsmonat", "Geburtsjahr", "PLZ", "Wohnort"]
+      }
+    }, {
+      headers: this.mainzellisteHeaders
+    }).toPromise().then(token => {
+      console.log("Edit Patient Token: " + token)
+      patient.fields.Geburtstag = patient.fields.Geburtsdatum.split('.')[0]
+      patient.fields.Geburtsmonat = patient.fields.Geburtsdatum.split('.')[1]
+      patient.fields.Geburtsjahr = patient.fields.Geburtsdatum.split('.')[2]
+      delete patient.fields.Geburtsdatum
+      return this.httpClient.put(this.patientList.url + "/patients/tokenId/" + token.id, patient.fields).toPromise();
     })
   }
 }

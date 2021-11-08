@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {Patient} from "../model/patient";
+import {PatientListService} from "../services/patient-list.service";
+import {PatientService} from "../services/patient.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-edit-patient',
@@ -11,7 +14,11 @@ export class EditPatientComponent implements OnInit {
   patient: Patient = new Patient();
 
 
-  constructor() { }
+  constructor(
+    private patientListService: PatientListService,
+    private patientService: PatientService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.patient = history.state.patient;
@@ -19,6 +26,18 @@ export class EditPatientComponent implements OnInit {
 
   fieldsChanged(newFields: {[p: string]: any}) {
     this.patient.fields = newFields;
+  }
+
+  sendChanges() {
+    this.patientListService.editPatient(this.patient).then(success => {
+      this.patientService.rerenderPatients(this.patientListService.getPatients())
+      this.router.navigate(["/patientlist-view"]).then(success => {
+          console.log('Navigation to patientlist-view worked')
+        }, error => {
+          console.log('Navigation to patientlist-view did not work')
+        }
+      )
+    }, error => {})
   }
 }
 
