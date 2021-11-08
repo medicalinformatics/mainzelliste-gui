@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {Patient} from "../model/patient";
 import {PatientService} from "../services/patient.service";
+import {PatientListService} from "../services/patient-list.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-delete-patient',
@@ -11,7 +13,9 @@ export class DeletePatientComponent implements OnInit {
   patientService: PatientService;
   patient: Patient = new Patient();
 
-  constructor(patientService: PatientService) {
+  constructor(patientService: PatientService
+              , private patientListService: PatientListService
+              , private router: Router) {
     this.patientService = patientService;
   }
 
@@ -21,10 +25,13 @@ export class DeletePatientComponent implements OnInit {
 
   deletePatientenZeile(){
     console.log("deleted..");
-    this.patientService.deletePatient(this.patient).then((result) => {
-      if (result == 204) {
-        // TODO: What should happen here? This component will not survice the deletePatient call ...
-      }
+    this.patientListService.deletePatient(this.patient).then((result) => {
+      this.patientService.rerenderPatients(this.patientListService.getPatients());
+      this.router.navigate(["patientlist-view"]).then(success => {
+        console.log('good')
+      }, error => {
+        console.log('not so good')
+      })
     });
   }
 

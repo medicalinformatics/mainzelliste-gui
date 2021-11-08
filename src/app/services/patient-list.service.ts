@@ -132,4 +132,21 @@ export class PatientListService {
       return this.httpClient.put(this.patientList.url + "/patients/tokenId/" + token.id, patient.fields).toPromise();
     })
   }
+
+  deletePatient(patient: Patient) {
+    return this.httpClient.post<Token>(this.userService.user.session + "tokens", {
+      "type": "deletePatient",
+      "data": {
+        "patientId": {
+          "idType": "pid",
+          "idString": patient.ids[0].idString
+        }
+      }
+    }, {
+      headers: this.mainzellisteHeaders
+    }).toPromise().then(token => {
+      console.log("Delete Patient Token: " + token)
+      return this.httpClient.delete(this.patientList.url + "/patients?tokenId=" + token.id).toPromise();
+    })
+  }
 }
