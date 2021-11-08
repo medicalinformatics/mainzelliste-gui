@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Patient} from "../model/patient";
 import {MatTableDataSource} from "@angular/material/table";
+import {PatientListService} from "./patient-list.service";
 
 @Injectable({
   providedIn: 'root'
@@ -130,6 +131,18 @@ export class PatientService {
       PLZ: '01967'
     }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
   ];
+
+  constructor(patientListService: PatientListService) {
+    patientListService.getPatients().then(patients => {
+      // TODO: Find a better way for transforming the single fields to one combined field
+      patients.forEach(patient => {
+        let birthdate: string = patient.fields.Geburtstag + "." + patient.fields.Geburtsmonat + "." + patient.fields.Geburtsjahr;
+        patient.fields.Geburtsdatum = birthdate
+        return patient;
+      })
+      this.patientsDataSource = new MatTableDataSource<Patient>(patients)
+    })
+  }
 
   patientsDataSource: MatTableDataSource<Patient> = new MatTableDataSource<Patient>(this.mockUpData);
 
