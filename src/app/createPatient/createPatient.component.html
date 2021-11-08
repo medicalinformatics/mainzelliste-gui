@@ -5,7 +5,7 @@
   <app-patient-fields (fieldEvent)="fieldsChanged($event)" [fields]="patient.fields" ></app-patient-fields>
   <div class="example-button-row">
     <br><br>
-    <button mat-raised-button routerLink="/idcard" [state]="{patient: patient, fields: fields}" (click)="createNewPatient()"> Anfordern </button>
+    <button mat-raised-button (click)="createNewPatient()"> Anfordern </button>
   </div>
 </div>
 </div>

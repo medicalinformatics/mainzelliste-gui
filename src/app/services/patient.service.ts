@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Patient} from "../model/patient";
 import {MatTableDataSource} from "@angular/material/table";
-import {PatientListService} from "./patient-list.service";
+import {Id, PatientListService} from "./patient-list.service";
 
 @Injectable({
   providedIn: 'root'
@@ -174,12 +174,12 @@ export class PatientService {
     }
   }
 
-  createPatient(tmpPatient: Patient): Promise<number> {
+  createPatient(tmpPatient: Patient): Promise<Patient[]> {
     // TODO: Create proper mainzelliste call for this and return that as result.
-    return new Promise((resolve, reject) => {
-      tmpPatient.ids.push({idType: "pseudonym", idString: this.getMockId()});
-      this.patientsDataSource.data.push(tmpPatient);
-      resolve(200);
+    return this.patientListService.addPatient(tmpPatient).then(id => {
+      this.rerenderPatients(this.patientListService.getPatients());
+      let mappedId = new Id('pid', id.newId, id.tentative, id.uri);
+      return this.patientListService.readPatient(mappedId);
     });
   }
 
@@ -210,4 +210,5 @@ export class PatientService {
       }
     })
   }
+
 }
