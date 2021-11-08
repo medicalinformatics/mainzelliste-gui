@@ -10,7 +10,6 @@ import {PatientService} from "../services/patient.service";
 export class DeletePatientComponent implements OnInit {
   patientService: PatientService;
   patient: Patient = new Patient();
-  fields: Array<string> = [];
 
   constructor(patientService: PatientService) {
     this.patientService = patientService;
@@ -18,7 +17,6 @@ export class DeletePatientComponent implements OnInit {
 
   ngOnInit(): void {
     this.patient = history.state.patient;
-    this.fields = history.state.fields;
   }
 
   deletePatientenZeile(){

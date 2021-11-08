@@ -36,22 +36,22 @@
       <th mat-header-cell *matHeaderCellDef> Aktionen </th>
       <td mat-cell *matCellDef="let element">
         <button style="background: none;">
-          <a [routerLink]="['/idcard']" [state]="{patient: element, fields: fields}">
+          <a [routerLink]="['/idcard']" [state]="{patient: element}">
             <mat-icon style="transform:scale(1.3); margin-left:20px;">fact_check</mat-icon>
           </a>
         </button>
         <button style="background: none;">
-          <a [routerLink]="['/similar-patient']" [state]="{patient: element, fields: fields}">
+          <a [routerLink]="['/similar-patient']" [state]="{patient: element}">
             <mat-icon style="transform:scale(1.3); margin-left: 20px;">people</mat-icon>
           </a>
         </button>
         <button style="background: none;">
-          <a [routerLink]="['/edit-patient']" [state]="{patient: element, fields: fields}">
+          <a [routerLink]="['/edit-patient']" [state]="{patient: element}">
             <mat-icon style="transform:scale(1.3); margin-left: 20px;">edit</mat-icon>
           </a>
         </button>
         <button style="background: none;">
-          <a [routerLink]="['/delete-patient']" [state]="{patient: element, fields: fields}">
+          <a [routerLink]="['/delete-patient']" [state]="{patient: element}">
             <mat-icon style="transform:scale(1.3); margin-left: 20px;">delete</mat-icon>
           </a>
         </button>

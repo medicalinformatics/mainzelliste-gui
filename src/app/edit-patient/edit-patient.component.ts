@@ -9,20 +9,16 @@ import {Patient} from "../model/patient";
 export class EditPatientComponent implements OnInit {
 
   patient: Patient = new Patient();
-  fields: Array<string> = [];
 
 
   constructor() { }
 
   ngOnInit(): void {
     this.patient = history.state.patient;
-    this.fields = history.state.fields;
   }
 
   fieldsChanged(newFields: {[p: string]: any}) {
     this.patient.fields = newFields;
-    console.log("new Field");
-
   }
 }
 
