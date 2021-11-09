@@ -1,4 +1,8 @@
 <div class="wrapper">
+
+  <!--HEADER AND CONTENT AS COLUMN-->
+  <app-head style="flex: 1 1 5%;"></app-head>
+
   <div style="flex: 1 1 95%">
 
     <!-- NAVIGATION AND CONTENT NEXT TO EACH OTHER-->
@@ -7,8 +11,6 @@
 
       <div style="flex: 1 1 92%; display: flex; flex-flow: column; overflow: auto">
 
-        <!--HEADER AND CONTENT AS COLUMN-->
-        <app-head style="flex: 1 1 5%;"></app-head>
         <!-- DONTENT AND FOOTER AS COLUMN ADJUSTABLE -->
         <div style="flex: 1 1 auto;">
           <router-outlet></router-outlet>

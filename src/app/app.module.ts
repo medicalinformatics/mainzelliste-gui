@@ -48,7 +48,6 @@ import {HttpClientModule} from "@angular/common/http";
 import {PatientListService} from "./services/patient-list.service";
 import {ConfigurationService} from "./services/configuration.service";
 import {UserService} from "./services/user.service";
-import {MatTooltipModule} from "@angular/material/tooltip";
 
 
 @NgModule({
@@ -102,8 +101,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     MatTableModule,
     MatCheckboxModule,
     MatCheckboxModule,
-    HttpClientModule,
-    MatTooltipModule
+    HttpClientModule
   ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}},
