@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-envsubst < /usr/share/nginx/html/assets/config.template.json > /usr/share/nginx/html/assets/config.json
+envsubst < /usr/share/nginx/html/assets/config/config.template.json > /usr/share/nginx/html/assets/config/config.json
 bash /docker-entrypoint.sh
