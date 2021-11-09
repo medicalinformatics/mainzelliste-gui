@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AudittrailComponent } from './audittrail/audittrail.component';
@@ -45,6 +45,9 @@ import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { UserComponent } from './user/user.component';
 import {HttpClientModule} from "@angular/common/http";
+import {PatientListService} from "./services/patient-list.service";
+import {ConfigurationService} from "./services/configuration.service";
+import {UserService} from "./services/user.service";
 
 
 @NgModule({
@@ -101,7 +104,14 @@ import {HttpClientModule} from "@angular/common/http";
     HttpClientModule
   ],
   providers: [
-    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}
+    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}},
+    {
+      provide: APP_INITIALIZER,
+      multi : true,
+      deps : [ConfigurationService],
+      useFactory : (configService: ConfigurationService) =>  () => {
+        configService.loadConfig()
+      }}
   ],
   bootstrap: [AppComponent]
 })
