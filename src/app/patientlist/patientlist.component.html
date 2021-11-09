@@ -35,22 +35,22 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> Aktionen </th>
       <td mat-cell *matCellDef="let element">
-        <button style="background: none;">
+        <button matTooltip="View Patient" style="background: none;">
           <a [routerLink]="['/idcard']" [state]="{patient: element}">
             <mat-icon style="transform:scale(1.3); margin-left:20px;">fact_check</mat-icon>
           </a>
         </button>
-        <button style="background: none;">
+        <button matTooltip="Search Similar Patients" style="background: none;">
           <a [routerLink]="['/similar-patient']" [state]="{patient: element}">
             <mat-icon style="transform:scale(1.3); margin-left: 20px;">people</mat-icon>
           </a>
         </button>
-        <button style="background: none;">
+        <button matTooltip="Edit Patient" style="background: none;">
           <a [routerLink]="['/edit-patient']" [state]="{patient: element}">
             <mat-icon style="transform:scale(1.3); margin-left: 20px;">edit</mat-icon>
           </a>
         </button>
-        <button style="background: none;">
+        <button matTooltip="Delete Patient" style="background: none;">
           <a [routerLink]="['/delete-patient']" [state]="{patient: element}">
             <mat-icon style="transform:scale(1.3); margin-left: 20px;">delete</mat-icon>
           </a>
