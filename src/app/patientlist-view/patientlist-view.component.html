@@ -7,7 +7,7 @@
         <mat-chip *ngFor="let fruit of filters"
                   [selectable]="selectable"
                   [removable]="removable" (removed)="remove(fruit)">
-          {{fruit.field}}:{{fruit.searchCriteria}}
+          {{fruit.field}}: {{fruit.searchCriteria}}
           <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
         </mat-chip>
         <input #fruitInput
@@ -21,7 +21,7 @@
       </mat-chip-list>
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
         <mat-option *ngFor="let field of allFieldsToSearch" [value]="{field:field,searchCriteria:filterEingabe}">
-          {{field}}:{{filterEingabe}}
+          <b>{{field}}</b>: {{filterEingabe}}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
