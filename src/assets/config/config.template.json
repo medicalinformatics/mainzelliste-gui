@@ -1,11 +1,11 @@
 {
   "patientLists": [
     {
-      "url": "https://your.mainzelliste.de",
-      "apiKey": "apiKeyWithPermissionToReadConfiguration",
+      "url": "${MAINZELLISTE_URL}",
+      "apiKey": "${MAINZELLISTE_API_KEY}",
       "controlNumberGenerator": {
-        "url": "https://your.controlnumbergenerator.de",
-        "apiKey": "apiKeyWithPermissionToCreateControlNumbers"
+        "url": "${CONTROLNUMBERGENERATOR_URL}",
+        "apiKey": "${CONTROLNUMBERGENERATOR_API_KEY}"
       }
     }
   ]
