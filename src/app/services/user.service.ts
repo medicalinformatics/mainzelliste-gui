@@ -29,9 +29,9 @@ export class UserService {
   getSession(): Promise<Session> {
     return this.httpClient
     .post<Session>(
-      this.configService.selectedPatientList.url.toString() + "/sessions",
+      "https://test.verbis.dkfz.de/mainzelliste" + "/sessions",
       {},
-      {headers: {"mainzellisteApiKey": this.configService.selectedPatientList.apiKey}})
+      {headers: {"mainzellisteApiKey": "changeThisApiKey"}})
     .toPromise()
   }
 

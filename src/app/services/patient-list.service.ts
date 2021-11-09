@@ -40,7 +40,8 @@ export class PatientListService {
     private userService: UserService,
     private httpClient: HttpClient
   ) {
-    this.patientList = this.configService.patientLists[0];
+    // TODO: Fix the issue with loading the apiKey at application startup then directly accessing patientlist-view
+    this.patientList = new PatientList(new URL("https://test.verbis.dkfz.de/mainzelliste/"), "changeThisApiKey");
     console.log(this.patientList)
     this.mainzellisteHeaders = new HttpHeaders()
     .set('mainzellisteApiKey', this.patientList.apiKey)
@@ -64,7 +65,7 @@ export class PatientListService {
       }, {
         headers: this.mainzellisteHeaders
       }).toPromise().then(token => {
-        return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + token.id).toPromise();
+        return this.httpClient.get<Patient[]>(this.patientList.url + "patients?tokenId=" + token.id).toPromise();
       })
     })
   }
@@ -87,7 +88,7 @@ export class PatientListService {
         for (let field in patient.fields) {
           body.set(field, patient.fields[field]);
         }
-        return this.httpClient.post<{ newId: string, tentative: boolean, uri: URL }>(this.patientList.url + "/patients?tokenId=" + token.id, body, {
+        return this.httpClient.post<{ newId: string, tentative: boolean, uri: URL }>(this.patientList.url + "patients?tokenId=" + token.id, body, {
           headers: new HttpHeaders()
           .set('Content-Type', 'application/x-www-form-urlencoded')
         }).toPromise();
@@ -112,7 +113,7 @@ export class PatientListService {
       }, {
         headers: this.mainzellisteHeaders
       }).toPromise().then(token => {
-        return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + token.id).toPromise();
+        return this.httpClient.get<Patient[]>(this.patientList.url + "patients?tokenId=" + token.id).toPromise();
       })
     })
   }
@@ -136,7 +137,7 @@ export class PatientListService {
         patient.fields.Geburtsmonat = patient.fields.Geburtsdatum.split('.')[1]
         patient.fields.Geburtsjahr = patient.fields.Geburtsdatum.split('.')[2]
         delete patient.fields.Geburtsdatum
-        return this.httpClient.put(this.patientList.url + "/patients/tokenId/" + token.id, patient.fields).toPromise();
+        return this.httpClient.put(this.patientList.url + "patients/tokenId/" + token.id, patient.fields).toPromise();
       })
     })
   }
@@ -155,7 +156,7 @@ export class PatientListService {
         headers: this.mainzellisteHeaders
       }).toPromise().then(token => {
         console.log("Delete Patient Token: " + token)
-        return this.httpClient.delete(this.patientList.url + "/patients?tokenId=" + token.id).toPromise();
+        return this.httpClient.delete(this.patientList.url + "patients?tokenId=" + token.id).toPromise();
       })
     })
   }
