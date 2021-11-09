@@ -4,7 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {ConfigurationService} from "./configuration.service";
 
 /** represents a mainzelliste session response */
-interface Session {
+export interface Session {
   sessionId: string,
   uri: URL
 }
@@ -26,15 +26,13 @@ export class UserService {
     return this.user.session != undefined;
   }
 
-  createSession() {
-    this.httpClient
+  getSession(): Promise<Session> {
+    return this.httpClient
     .post<Session>(
       this.configService.selectedPatientList.url.toString() + "/sessions",
       {},
       {headers: {"mainzellisteApiKey": this.configService.selectedPatientList.apiKey}})
-    .toPromise().then(session => {
-      this.user.session = session.uri;
-    });
+    .toPromise()
   }
 
 }
