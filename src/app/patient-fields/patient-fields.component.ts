@@ -23,6 +23,8 @@ export class PatientFieldsComponent implements OnInit {
   @Input() readOnly: boolean= false;
   @Input() merging: boolean=false;
   @Input() merging2: boolean=false;
+  private Finalpatient= new Patient;
+
 
 
   constructor(fieldService: FieldService) {
@@ -40,5 +42,9 @@ export class PatientFieldsComponent implements OnInit {
     this.fieldEvent.emit(this.fields);
 
   }
+
+  slideData(): void{
+    this.Finalpatient.fields=this.tmpPatient.fields;
+  };
 
 }

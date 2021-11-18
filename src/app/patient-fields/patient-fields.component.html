@@ -5,8 +5,7 @@
         <div style="width: 100%; flex-flow: row">
 
           <button *ngIf="merging2"
-                  style=" align-self:center; align-items: baseline; margin-top: 20px; width: 5%; margin-right: 20px; color: #3895D0; border:none; background:none; font-size: 30px;float:left"
-                  class="PfeilNachRechts">
+                  style=" align-self:center; align-items: baseline; margin-top: 20px; width: 5%; margin-right: 20px; color: #f1f1f1; border:none; background:none; font-size: 30px;float:left">
             <ion-icon name="arrow-back-circle"></ion-icon>
           </button>
 
@@ -18,8 +17,8 @@
           </mat-form-field>
 
           <button *ngIf="merging"
-                  style="align-self:center; align-items: baseline; margin-top: 20px; width: 5%; color: #3895D0; border:none; background:none; font-size: 30px;float:right"
-                  class="PfeilNachRechts">
+                  style="align-self:center; align-items: baseline; margin-top: 20px; width: 5%; color: #f1f1f1; border:none; background:none; font-size: 30px;float:right"
+          (click)="slideData">
             <ion-icon name="arrow-forward-circle"></ion-icon>
           </button>
 

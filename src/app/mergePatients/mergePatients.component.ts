@@ -12,6 +12,10 @@ import {Field} from "../model/field";
 export class MergePatientsComponent implements OnInit {
   patientService: PatientService;
   patients: Array<Patient> = [];
+  finalPseudonym: any;
+  finalFields: any;
+  finalPseudonyms: any;
+  Finalpatient= new Patient;
 
   constructor(patientService: PatientService) {
     this.patientService = patientService;
