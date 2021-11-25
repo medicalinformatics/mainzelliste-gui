@@ -15,7 +15,6 @@ export class PatientFieldsComponent implements OnInit {
 
   tmpPatient: Patient = new Patient();
 
-
   @Input()  fields: {[key: string]: any} = {};
   @Output() fieldEvent = new EventEmitter<{[key: string]: any}>();
   fieldService: FieldService;
@@ -23,9 +22,8 @@ export class PatientFieldsComponent implements OnInit {
   @Input() readOnly: boolean= false;
   @Input() merging: boolean=false;
   @Input() merging2: boolean=false;
-  private Finalpatient= new Patient;
 
-
+  finalPatient = new Patient;
 
   constructor(fieldService: FieldService) {
     this.fieldService = fieldService;
@@ -43,8 +41,8 @@ export class PatientFieldsComponent implements OnInit {
 
   }
 
-  slideData(): void{
-    this.Finalpatient.fields=this.tmpPatient.fields;
+  slideData(field: any): void{
+      this.finalPatient.fields=field;
   };
 
 }

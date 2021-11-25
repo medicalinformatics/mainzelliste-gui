@@ -1,18 +1,19 @@
-
 <div style="height:100%; width:100%">
-<div style="width:100%; padding:1%; background-color: #E6B0AA; font-size: 30px; color: white">
-  <mat-icon style="font-size: 30px; padding-right: 1.5%">hourglass_bottom</mat-icon> Function in Progress..
+
+<div style="width:100%; padding:1%; background-color: #E6B0AA; color: white"> <!-- font-size: 30px; -->
+  <mat-icon style="padding-right: 1.5%">hourglass_bottom</mat-icon> <!-- font-size: 30px; --> Function in Progress..
 </div>
-  <h2 class="titleicon">
-    <ion-icon name="git-merge"></ion-icon>
+
+  <h1 class="titleicon">
+    <mat-icon>merge_type</mat-icon>
     Patienten zusammenführen
-  </h2>
+  </h1>
 
 <div  style="display: flex; flex-flow: row; justify-content: space-around;">
 
 <!--PATIENTENDATEN1-->
 <mat-card class="patientCard" style="width: 28%">
-  <mat-card-header>Patientendaten 1</mat-card-header>
+  <mat-card-title>Patientendaten 1</mat-card-title>
 
   <div class="pseudonyme" style=" flex: 1 1 40%; display: flex; flex-flow:column" >
     <mat-card-title style="color:white">Pseudonyme</mat-card-title>
@@ -28,7 +29,7 @@
 
 <!-- FINALER PATIENT -->
 <mat-card style="width: 28%" class="MergeCard">
-  <mat-card-header>Finale Patientendaten</mat-card-header>
+  <mat-card-title>Finale Patientendaten</mat-card-title>
 
   <div class="pseudonyme" style=" flex: 1 1 40%; display: flex; flex-flow:column" >
     <mat-card-title style="color:white">Pseudonyme</mat-card-title>
@@ -44,15 +45,15 @@
 
 <!--PATIENTENDATEN2-->
 <mat-card style="width: 28%" class="patientCard">
-  <mat-card-header>Patientendaten 2</mat-card-header>
-  <div class="pseudonyme" style=" flex: 1 1 40%; display: flex; flex-flow:column;" >
+  <mat-card-title>Patientendaten 2</mat-card-title>
+  <div class="pseudonyme" style=" flex: 1 1 40%; display: flex; flex-flow:column; " >
     <mat-card-title style="color:white">Pseudonyme</mat-card-title>
-    <mat-card-content style="display: flex; flex-flow:row;">
-    <div style="width:11%;height:100%;color:#284B63">.</div>
+    <mat-card-content style="display: flex; flex-flow:row; float:right;">
+    <div style="width:11%;height:100%;color:#284B63">Abstannnnd</div>
     <app-patient-pseudonyms style="margin:0%; width:95%" [readOnly]=true [pseudonyms]="patients[1].ids"></app-patient-pseudonyms>
     </mat-card-content>
   </div>
-  <div class="patientendaten"  style=" flex: 1 1 40%; display: flex;  flex-flow: column">
+  <div class="patientendaten"  style=" flex: 1 1 50%; display: flex;  flex-flow: column">
     <mat-card-title style="color:white">Patientendaten</mat-card-title>
     <app-patient-fields [readOnly]=true [merging2]=true [fields]="patients[1].fields"></app-patient-fields>
   </div>
@@ -60,5 +61,4 @@
 </mat-card>
 </div>
 <button mat-raised-button id="ergebnisButton"><a style="color: white;text-decoration: none" routerLink="/ergebnis-zusammenfuehren">Zusammenführen</a></button>
-
 </div>

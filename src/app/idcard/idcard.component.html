@@ -1,11 +1,11 @@
 <div style="width: 100%; height: 100%">
   <br>
-  <p class="titleicon">
-    <ion-icon name="id-card"></ion-icon>
+  <h2 class="titleicon">
+    <mat-icon style="transform: scale(1.7); margin-right: 0.5em;">badge</mat-icon>
     ID Card
-  </p>
+  </h2>
   <br>
-<div style=" background-color:white; margin-top:0.5%; flex: 1 1 70%; display: flex; flex-flow: row; justify-content: space-around; align-items: stretch; justify-content: space-around; gap: 0 1%">
+<div style=" background:none; margin-top:0.5%; flex: 1 1 70%; display: flex; flex-flow: row; justify-content: space-around; align-items: stretch; justify-content: space-around; gap: 0 1%">
   <mat-card id="patientendaten" style="background-color: #f2f2f2; color:black; flex: 1 1 25%; display: flex;  flex-flow: column">
     <mat-card-title>Patientendaten</mat-card-title>
     <app-patient-fields [readOnly]=true [fields]="patient.fields"></app-patient-fields>
@@ -17,24 +17,25 @@
   </mat-card>
 
   <div class="IDCardAnsichtButton"
-       style=" background-color: white; flex: 1 1 2%; display: flex;  flex-flow: column; justify-content: flex-end; align-items: stretch;">
+       style=" background-color: white; flex: 1 1 2%; display: flex;  flex-flow: column; justify-content: flex-start; align-items: stretch;">
     <button mat-raised-button class="IDCardButtons">Drucken</button>
-    <br><br><br><br><br>
-    <button mat-raised-button class="IDCardButtons">Projektpseudonym <br> erstellen</button>
-    <br><br><br><br><br>
+    <br>
+    <button mat-raised-button class="IDCardButtons">Projekt erstellen</button>
+    <br>
     <button mat-raised-button class="IDCardButtons" [routerLink]="['/edit-patient']"
             [state]="{patient: patient, fields: fields}">Editieren
     </button>
-    <br><br><br><br><br>
+    <br>
+
     <button mat-raised-button class="IDCardButtons" [routerLink]="['/delete-patient']"
             [state]="{patient: patient, fields: fields}">Löschen
     </button>
-    <br><br><br><br><br>
+    <br>
   </div>
 </div>
 
   <mat-card id="historie" style="background-color: #f2f2f2; color:black; flex: 1 1 80%; display: flex;  flex-flow: column">
-    <mat-card-header style="width:100%; padding:1%; background-color: #E6B0AA; font-size: 26px; color: white">
+    <mat-card-header style="width:100%; padding:1%; background-color: #E6B0AA; color: white">
       Function in Progress..
     </mat-card-header>
     <mat-card-title>Historie</mat-card-title>

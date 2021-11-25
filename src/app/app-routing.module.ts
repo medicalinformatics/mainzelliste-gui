@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import{ Routes, RouterModule} from '@angular/router';
 import {PatientlistComponent} from "./patientlist/patientlist.component";
-import {HomeComponent} from "./home/home.component";
+import {InfoComponent} from "./info/info.component";
 import {AudittrailComponent} from "./audittrail/audittrail.component";
 import {IdcardComponent} from "./idcard/idcard.component";
 import {SimilarPatientComponent} from "./similarPatient/similarPatient.component";
@@ -16,7 +16,7 @@ import {DeleteMultiplePatientsComponent} from "./delete-multiple-patients/delete
 const routes: Routes = [
   {path: 'patientlist', component: PatientlistComponent},
   {path: 'create-patient', component: CreatePatientComponent},
-  {path: 'home', component: HomeComponent},
+  {path: 'info', component: InfoComponent},
   {path: 'audittrail', component: AudittrailComponent},
   {path: 'idcard', component: IdcardComponent},
   {path: 'similar-patient', component: SimilarPatientComponent},
@@ -25,7 +25,7 @@ const routes: Routes = [
   {path: 'edit-patient', component: EditPatientComponent},
   {path: 'delete-patient', component: DeletePatientComponent},
   {path: 'delete-multiple-patients', component:DeleteMultiplePatientsComponent},
-  {path: '', redirectTo: 'home', pathMatch: 'full'}
+  {path: '', redirectTo: 'patientlist-view', pathMatch: 'full'}
 ];
 
 @NgModule({
@@ -34,4 +34,4 @@ const routes: Routes = [
 
 })
 export class AppRoutingModule{}
-export const routingComponents =[PatientlistComponent, HomeComponent, AudittrailComponent, IdcardComponent, SimilarPatientComponent, MergePatientsComponent, PatientlistViewComponent, CreatePatientComponent,EditPatientComponent,DeletePatientComponent, DeleteMultiplePatientsComponent]
+export const routingComponents =[PatientlistComponent, AudittrailComponent, IdcardComponent, SimilarPatientComponent, MergePatientsComponent, PatientlistViewComponent, CreatePatientComponent,EditPatientComponent,DeletePatientComponent, DeleteMultiplePatientsComponent, InfoComponent]

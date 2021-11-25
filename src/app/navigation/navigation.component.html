@@ -1,26 +1,30 @@
-<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-
 <nav mat-sidenav-container>
   <table>
 
     <tr>
-    <td class="nav_item" (click)="chBackground($event)"><a routerLink="/patientlist-view"><ion-icon name="list-sharp"></ion-icon>Patientenliste</a>
+    <td class="nav_item" (click)="chBackground($event)">
+      <a routerLink="/patientlist-view" style="display: flex; align-items: center;">
+        <mat-icon class="nav_icon">list</mat-icon>Patientenliste</a>
     </td>
   </tr>
 
     <tr>
-      <td class="nav_item" (click)="chBackground($event)"><a routerLink="/create-patient"><ion-icon name="person-add-sharp"></ion-icon>neuer Patient</a>
+      <td class="nav_item" (click)="chBackground($event)">
+        <a routerLink="/create-patient" style="display: flex; align-items: center;">
+          <mat-icon class="nav_icon">person_add_alt</mat-icon>neuer Patient</a>
       </td>
     </tr>
 
     <tr>
-      <td class="nav_item" (click)="chBackground($event)"><a routerLink="/audittrail"><ion-icon name="document-text-sharp"></ion-icon>Audit-Trail</a></td>
+      <td class="nav_item" (click)="chBackground($event)">
+        <a routerLink="/audittrail" style="display: flex; align-items: center;">
+          <mat-icon class="nav_icon">list_alt</mat-icon>Audit-Trail</a></td>
     </tr>
 
     <tr>
     <td class="nav_item" (click)="chBackground($event)">
-      <a routerLink="/home"><ion-icon name="information-circle"></ion-icon>Info</a>
+      <a routerLink="/info" style="display: flex; align-items: center;">
+        <mat-icon class="nav_icon">info</mat-icon>Info</a>
     </td>
   </tr>
   </table>

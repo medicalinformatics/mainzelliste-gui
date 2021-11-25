@@ -1,14 +1,14 @@
 <div style="height: 100%; width: 100%;padding-bottom: 5%">
     <h2>Patientenliste</h2>
 
-    <mat-form-field appearance="fill">
+    <mat-form-field id="filterBoard" appearance="fill">
       <mat-label>Filter/Suche...</mat-label>
       <mat-chip-list #chipList aria-label="Fruit selection">
         <mat-chip *ngFor="let fruit of filters"
                   [selectable]="selectable"
-                  [removable]="removable" (removed)="remove(fruit)">
-          {{fruit.field}}:{{fruit.searchCriteria}}
-          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                  [removable]="removable" (removed)="remove(fruit)" style="font-family: Tahoma;">
+          {{fruit.field}}: {{fruit.searchCriteria}}
+          <mat-icon matChipRemove *ngIf="removable" style="color:#494949">cancel</mat-icon>
         </mat-chip>
         <input #fruitInput
                [(ngModel)]="filterEingabe"
@@ -28,18 +28,16 @@
 
     <div>
       <br>
-      <button mat-raised-button matBadgeColor="accent" name="Projektpseudonym erstellen"
-              disabled="disabled"> Projekt
-        Erstellen
-        <ion-icon name="cube"></ion-icon>
+      <button mat-raised-button matBadgeColor="accent"
+              disabled="disabled"> <mat-icon>grid_view</mat-icon> Projekt Erstellen
       </button>
       <button mat-raised-button matBadgeColor="accent" [routerLink]="['/merge-patients']"
               [state]="{patients: selectedPatients}"
               [disabled]="selectedPatients.length!=2"
               [matBadge]="selectedPatients.length"
               [matBadgeHidden]="selectedPatients.length<1">
+        <mat-icon>merge_type</mat-icon>
         Zusammenführen
-        <ion-icon name="git-merge"></ion-icon>
       </button>
 
       <button mat-raised-button matBadgeColor="accent" [routerLink]="['/delete-multiple-patients']"
@@ -47,8 +45,8 @@
               [disabled]="selectedPatients.length<2"
               [matBadge]="selectedPatients.length"
               [matBadgeHidden]="selectedPatients.length<1">
-        Löschen
-        <ion-icon name="trash"></ion-icon>
+        <mat-icon>delete_outline</mat-icon> Löschen
+
       </button>
 
     </div>

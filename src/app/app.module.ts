@@ -43,6 +43,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 
 @NgModule({
@@ -69,33 +70,34 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     PatientDataComponent,
     DeleteMultiplePatientsComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    IonicModule.forRoot(),
-    BrowserAnimationsModule,
-    MatDialogModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    ScrollingModule,
-    MatSidenavModule,
-    MatBadgeModule,
-    MatChipsModule,
-    MatIconModule,
-    MatCardModule,
-    MatAutocompleteModule,
-    MatPaginatorModule,
-    ReactiveFormsModule,
-    MatToolbarModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatTableModule,
-    MatCheckboxModule,
-    MatCheckboxModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        IonicModule.forRoot(),
+        BrowserAnimationsModule,
+        MatDialogModule,
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        ScrollingModule,
+        MatSidenavModule,
+        MatBadgeModule,
+        MatChipsModule,
+        MatIconModule,
+        MatCardModule,
+        MatAutocompleteModule,
+        MatPaginatorModule,
+        ReactiveFormsModule,
+        MatToolbarModule,
+        MatSelectModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatTableModule,
+        MatCheckboxModule,
+        MatCheckboxModule,
+        MatTooltipModule
+    ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}
   ],

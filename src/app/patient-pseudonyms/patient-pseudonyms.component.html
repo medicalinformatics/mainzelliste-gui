@@ -12,9 +12,9 @@
 
         <mat-form-field  style="width:90%" class="example-full-width">
           <mat-label>{{pseudonym.idType}}</mat-label>
-          <input style="width: 92%" matInput id="pPseudonyme" [readonly]="readOnly"
+          <input style="width: 90%" matInput id="pPseudonyme" [readonly]="readOnly"
                  class="patientendatenzeile" value=" {{pseudonym.idString}}">
-          <mat-icon [ngStyle]="{'color':'#888888'}">file_copy</mat-icon>
+          <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
         </mat-form-field>
 
 <!--        <button *ngIf="merging"

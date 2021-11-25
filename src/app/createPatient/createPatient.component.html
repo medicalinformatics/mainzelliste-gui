@@ -1,23 +1,11 @@
 <div style="height:100%;width:100%;">
 <h2>Personenidentifikator anfordern</h2>
 
-<div style="margin-bottom: 150px;">
+<div style="margin-bottom: 150px;width: 50%">
   <app-patient-fields (fieldEvent)="fieldsChanged($event)" [fields]="patient.fields" ></app-patient-fields>
-  <div class="example-button-row">
+  <div>
     <br><br>
     <button mat-raised-button routerLink="/idcard" [state]="{patient: patient, fields: fields}" (click)="createNewPatient()"> Anfordern </button>
   </div>
 </div>
 </div>
-
-
-
-
-
-<!-- <tr >
-   <th  class="tabellenspalte" colspan="2">neuer Patient:</th>
-   <th *ngFor=" let field of fields"><input type="text" name="{{field}}}" placeholder="{{field}}" [(ngModel)]="tmpPatient.fields[field]"></th>
-   <th id="addPatientzeile"><button type="submit" (click)="erstelleNeuenPatienten()"  id="addpatientbutton"><ion-icon name="person-add"></ion-icon></button></th>
- </tr>-->
-
-<!--(click)="createNewPatient()"-->
