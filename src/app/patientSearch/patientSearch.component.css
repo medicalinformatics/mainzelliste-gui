@@ -1,6 +1,5 @@
 
 h2{
-  /*font-size: 20px;*/
   color:black;
   font-family: Arial;
 }
@@ -11,16 +10,11 @@ h2{
   background-color: #284B63;
   border-width: thick;
   font-family: Arial;
-  /*font-size: 20px;*/
   color: white;
-  /*font-size: 25px;*/
   width: 100%;
-
 }
 
-
 #closeicon{
-  /*font-size: 30px;*/
   float: right;
   margin-right: 0.5%;
   border: none;
@@ -51,7 +45,6 @@ h2{
     padding-right: 5%;
     text-align: center;
     text-decoration: none;
-    /*font-size: 18px;*/
     margin-left: 8%;
     margin-bottom: 1%;
     border-radius: 15px;
@@ -68,7 +61,6 @@ h2{
   padding-right: 5%;
   text-align: center;
   text-decoration: none;
-  /*font-size: 18px;*/
   margin-left: 8%;
   margin-bottom: 1%;
   border-radius: 15px;
@@ -79,12 +71,10 @@ h2{
   float: right;
   margin-left: 5px;
   margin-top: 7px;
-  /*font-size: 25px;*/
 }
 #buttonicon2{
   float: right;
   margin-left: 5px;
   margin-top: 7px;
-  /*font-size: 25px;*/
 }
 

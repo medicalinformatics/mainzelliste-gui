@@ -6,11 +6,18 @@
         <div style="width: 100%; flex-flow: row">
 
           <button *ngIf="merging2" (click)="slideData(fields[field.name])"
-                  style=" align-self:center; align-items: baseline; margin-top: 20px; width: 5%; margin-right: 20px; color: #f1f1f1; border:none; background:none; float:left"> <!-- font-size: 30px;-->
-            <ion-icon name="arrow-back-circle"></ion-icon>
+                  style="color: #f1f1f1; border:none; background:none; float:left"> <!-- font-size: 30px; -->
+            <mat-icon>arrow_back</mat-icon>
           </button>
 
-          <mat-form-field style="width: 90%" class="example-full-width">
+          <mat-form-field *ngIf="merging2" style="width: 90%; float:right" class="example-full-width" >
+            <mat-label>{{field.name}}</mat-label>
+            <input style="width: 90%; " [readonly]="readOnly" matInput (input)="fieldChanged()"
+                   placeholder="{{field.hint}}" [(ngModel)]="fields[field.name]" [name]="field.name">
+            <mat-icon *ngIf="readOnly" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field *ngIf="merging" style="width: 90%" class="example-full-width" >
             <mat-label>{{field.name}}</mat-label>
             <input style="width: 90%" [readonly]="readOnly" matInput (input)="fieldChanged()"
                    placeholder="{{field.hint}}" [(ngModel)]="fields[field.name]" [name]="field.name">
@@ -18,8 +25,8 @@
           </mat-form-field>
 
           <button *ngIf="merging" (click)="slideData(fields[field.name])"
-                  style="align-self:center; align-items: baseline; margin-top: 20px; width: 5%; color: #f1f1f1; border:none; background:none; float:right"> <!-- font-size: 30px; -->
-            <ion-icon name="arrow-forward-circle"></ion-icon>
+                  style="color: #f1f1f1; border:none; background:none; float:right"> <!-- font-size: 30px; -->
+            <mat-icon>arrow_back</mat-icon>
           </button>
 
         </div>

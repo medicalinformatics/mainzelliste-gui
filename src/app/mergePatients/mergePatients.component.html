@@ -44,21 +44,20 @@
 </mat-card>
 
 <!--PATIENTENDATEN2-->
-<mat-card style="width: 28%" class="patientCard">
-  <mat-card-title>Patientendaten 2</mat-card-title>
-  <div class="pseudonyme" style=" flex: 1 1 40%; display: flex; flex-flow:column; " >
-    <mat-card-title style="color:white">Pseudonyme</mat-card-title>
-    <mat-card-content style="display: flex; flex-flow:row; float:right;">
-    <div style="width:11%;height:100%;color:#284B63">Abstannnnd</div>
-    <app-patient-pseudonyms style="margin:0%; width:95%" [readOnly]=true [pseudonyms]="patients[1].ids"></app-patient-pseudonyms>
-    </mat-card-content>
-  </div>
-  <div class="patientendaten"  style=" flex: 1 1 50%; display: flex;  flex-flow: column">
-    <mat-card-title style="color:white">Patientendaten</mat-card-title>
-    <app-patient-fields [readOnly]=true [merging2]=true [fields]="patients[1].fields"></app-patient-fields>
-  </div>
+  <mat-card class="patientCard" style="width: 28%">
+    <mat-card-title>Patientendaten 1</mat-card-title>
 
-</mat-card>
+    <div class="pseudonyme" style=" flex: 1 1 40%; display: flex; flex-flow:column" >
+      <mat-card-title style="color:white">Pseudonyme</mat-card-title>
+      <div style="flex-flow: row">
+        <app-patient-pseudonyms style="width: 90%" [readOnly]=true [pseudonyms]="patients[0].ids"></app-patient-pseudonyms>
+      </div>
+    </div>
+
+    <div class="patientendaten"  style=" flex: 1 1 40%; display: flex;  flex-flow: column">
+      <mat-card-title style="color:white">Patientendaten</mat-card-title>
+      <app-patient-fields [readOnly]=true [merging]=true [fields]="patients[0].fields"></app-patient-fields></div>
+  </mat-card>
 </div>
 <button mat-raised-button id="ergebnisButton"><a style="color: white;text-decoration: none" routerLink="/ergebnis-zusammenfuehren">Zusammenführen</a></button>
 </div>
