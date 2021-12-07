@@ -1,6 +1,6 @@
 .mat-raised-button{
   background-color: #ADDFFF;
-  color:white;
+  color:#294E66;
   margin-bottom: 1%;
   float: right;
   margin-right: 2%;
@@ -11,7 +11,7 @@
   background-color: lightgray;
 }
 
-h2{
+h1{
   margin-left: 2%;
   margin-top: 2%;
   margin-bottom: 3%;
@@ -20,7 +20,7 @@ h2{
 
 .mat-chip.mat-standard-chip{
   background-color: #ADDFFF;
-  color:white;
+  color:#294E66;
   padding:1em;
   border-radius: 0px;
 }

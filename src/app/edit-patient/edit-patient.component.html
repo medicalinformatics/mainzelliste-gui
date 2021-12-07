@@ -1,9 +1,9 @@
 <div style="width: 100%; height: 100%">
 
-  <h2 class="titleicon">
+  <h1 class="titleicon">
     <mat-icon style="transform: scale(1.7); margin-right: 0.5em;">edit</mat-icon>
     Edit Patient
-  </h2>
+  </h1>
   <br>
 
   <div
@@ -20,11 +20,10 @@
       <app-patient-pseudonyms [readOnly]=false [pseudonyms]="patient.ids"></app-patient-pseudonyms>
     </mat-card>
 
-    <div class="IDCardAnsichtButton"
-         style=" background-color: white; flex: 1 1 2%; display: flex;  flex-flow: column; justify-content: flex-end; align-items: stretch; align-self: flex-start">
+    <div style=" background-color: white; flex: 1 1 2%; display: flex;  flex-flow: column; justify-content: flex-end; align-items: stretch; align-self: flex-start">
       <button mat-raised-button class="IDCardButtons" [routerLink]="['/patientlist-view']">Fertig</button>
       <br>
-      <button style="background-color: #888888" mat-raised-button class="IDCardButtons" [routerLink]="['/patientlist-view']">Abbruch</button>
+      <button style="background-color: #888888; color:#f2f2f2" mat-raised-button class="IDCardButtons" [routerLink]="['/patientlist-view']">Abbruch</button>
     </div>
   </div>
 

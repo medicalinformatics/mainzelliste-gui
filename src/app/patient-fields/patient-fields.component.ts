@@ -23,6 +23,8 @@ export class PatientFieldsComponent implements OnInit {
   @Input() merging: boolean=false;
   @Input() merging2: boolean=false;
 
+  @Output() selectedP = new EventEmitter<PatientFieldsComponent>();
+
   finalPatient = new Patient;
 
   constructor(fieldService: FieldService) {
@@ -44,5 +46,12 @@ export class PatientFieldsComponent implements OnInit {
   slideData(field: any): void{
       this.finalPatient.fields=field;
   };
+
+  selectPatient() {
+    console.log("Data will be emitted to MergeComponent")
+    this.selectedP.emit(this);
+    console.log(this);
+
+  }
 
 }

@@ -53,7 +53,7 @@ export class PatientlistComponent implements AfterViewInit{
     } else if (spalte == 'PLZ') {
       this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '75%'}});
     }
-  }
+  };
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {

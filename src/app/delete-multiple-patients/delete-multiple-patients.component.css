@@ -6,7 +6,6 @@
 }
 
 .DeletePatientFragestellung{
-  display: inline-block;
   font-family: Arial;
   padding-bottom: 30px;
   padding-left: 5%;
@@ -15,7 +14,7 @@
 
 .DeletePatientButtonLöschen {
   background-color: #ADDFFF;
-  color: white;
+  color: #294E66;
   width: 35%;
   font-family: Arial;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -31,7 +30,7 @@
 
 mat-card-title{
   transform: scale(0.7);
-  padding-top: 1%;
+  padding-top: 5%;
   padding-bottom: 1%;
   font-family: Arial;
 }
@@ -50,5 +49,6 @@ mat-card-title{
   margin-left: 3%;
   padding-bottom: 5%;
   margin-bottom: 10%;
+
 }
 

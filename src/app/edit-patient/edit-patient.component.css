@@ -33,7 +33,7 @@
 .EditPageButtonFertig {
   background-color: #ADDFFF;
   border: none;
-  color: white;
+  color: #294E66;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -77,7 +77,7 @@ mat-card-title{
 
 .IDCardButtons{
   background-color: #ADDFFF;
-  color:white;
+  color:#294E66;
   margin-bottom: 1%;
   float: right;
   margin-right: 2rem;
