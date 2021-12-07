@@ -13,52 +13,52 @@
 
 <!--PATIENTENDATEN1-->
 <mat-card class="patientCard" style="width: 30%">
-  <mat-card-title>Patientendaten 1</mat-card-title>
+  <mat-card-title style="font-size: xx-large">Patientendaten 1</mat-card-title>
 
-  <div class="pseudonyme" style=" flex: 1 1 40%; display: flex; flex-flow:column" >
-    <mat-card-title style="color:#294E66">Pseudonyme</mat-card-title>
+  <div class="pseudonyme" style=" flex: 1 1 40%; display: flex; flex-flow:column; padding-top: 5%" >
+    <mat-card-title style="color:#294E66; font-size: x-large">Pseudonyme</mat-card-title>
     <div style="flex-flow: row">
     <app-patient-pseudonyms style="width: 90%" [readOnly]=true [pseudonyms]="patients[0].ids"></app-patient-pseudonyms>
   </div>
   </div>
 
-  <div class="patientendaten"  style=" flex: 1 1 40%; display: flex;  flex-flow: column">
-    <mat-card-title style="color:#294E66">Patientendaten</mat-card-title>
+  <div class="patientendaten"  style=" flex: 1 1 40%; display: flex;  flex-flow: column; padding-top: 5%">
+    <mat-card-title style="color:#294E66; font-size: x-large">Patientendaten</mat-card-title>
     <app-patient-fields [readOnly]=true [merging]=true [fields]="patients[0].fields"></app-patient-fields></div>
 </mat-card>
 
 <!-- FINALER PATIENT -->
 <mat-card style="width: 30%" class="MergeCard">
-  <mat-card-title>Finale Patientendaten</mat-card-title>
+  <mat-card-title style="font-size: xx-large">Finale Patientendaten</mat-card-title>
 
-  <div class="pseudonyme" style=" flex: 1 1 40%; display: flex; flex-flow:column" >
-    <mat-card-title style="color:#294E66">Pseudonyme</mat-card-title>
-    <div style="flex-flow: row; justify-content: center ">
+  <div class="pseudonyme" style=" flex: 1 1 40%; display: flex; flex-flow:column;; padding-top: 5%" >
+    <mat-card-title style="color:#294E66; font-size: x-large">Pseudonyme</mat-card-title>
+    <div style="flex-flow: column; justify-content: center ">
       <app-patient-pseudonyms style="width: 90%" [readOnly]=true [pseudonyms]="patients[0].ids"></app-patient-pseudonyms>
     </div>
   </div>
 
-  <div class="patientendaten"  style=" flex: 1 1 40%; display: flex;  flex-flow: column">
-    <mat-card-title style="color:#294E66">Patientendaten</mat-card-title>
+  <div class="patientendaten"  style=" flex: 1 1 40%; display: flex;  flex-flow: column; padding-top: 5%">
+    <mat-card-title style="color:#294E66; font-size: x-large;">Patientendaten</mat-card-title>
     <app-patient-fields [readOnly]=true [fields]="Finalpatient.fields" ></app-patient-fields></div>
 </mat-card>
 
 <!--PATIENTENDATEN2-->
   <mat-card class="patientCard" style="width: 30%">
-    <mat-card-title>Patientendaten 2</mat-card-title>
+    <mat-card-title style="font-size: xx-large">Patientendaten 2</mat-card-title>
 
-    <div class="pseudonyme" style=" flex: 1 1 40%; display: flex; flex-flow:column" >
-      <mat-card-title style="color:#294E66">Pseudonyme</mat-card-title>
-      <div style="flex-flow: row">
-        <app-patient-pseudonyms style="width: 90%" [readOnly]=true [pseudonyms]="patients[1].ids"></app-patient-pseudonyms>
+    <div class="pseudonyme" style=" flex: 1 1 40%; display: flex; flex-flow:column; padding-top: 5%" >
+      <mat-card-title style="color:#294E66; font-size: x-large">Pseudonyme</mat-card-title>
+      <div style="flex-flow: column; float:right; justify-content: flex-end; ">
+        <app-patient-pseudonyms style="width:100%; float:right; justify-content: flex-end" [readOnly]=true [pseudonyms]="patients[1].ids"></app-patient-pseudonyms>
       </div>
     </div>
 
-    <div class="patientendaten"  style=" flex: 1 1 40%; display: flex;  flex-flow: column">
-      <mat-card-title style="color:#294E66">Patientendaten</mat-card-title>
+    <div class="patientendaten"  style=" flex: 1 1 40%; display: flex;  flex-flow: column; padding-top: 5%">
+      <mat-card-title style="color:#294E66; font-size: x-large;">Patientendaten</mat-card-title>
       <app-patient-fields [readOnly]=true [merging2]=true [fields]="patients[1].fields"></app-patient-fields></div>
   </mat-card>
 
 </div>
-<button mat-raised-button id="ergebnisButton"><a style="color: white;text-decoration: none" routerLink="/ergebnis-zusammenfuehren">Zusammenführen</a></button>
+<button mat-raised-button id="ergebnisButton"><a style="color: #294E66;text-decoration: none" routerLink="/ergebnis-zusammenfuehren">Zusammenführen</a></button>
 </div>

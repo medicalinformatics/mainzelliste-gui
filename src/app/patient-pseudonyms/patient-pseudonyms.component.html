@@ -2,11 +2,11 @@
 <table class="example-table" cellspacing="0">
   <tr *ngFor="let pseudonym of pseudonyms">
     <td>
-      <div style="width: 100%; flex-flow: row">
+      <div style="width: 100%; flex-flow: column">
 
         <mat-form-field  style="width:90%" class="example-full-width">
           <mat-label>{{pseudonym.idType}}</mat-label>
-          <input style="width: 85%" matInput id="pPseudonyme" [readonly]="readOnly"
+          <input style="width: 90%" matInput id="pPseudonyme" [readonly]="readOnly"
                  class="patientendatenzeile" value=" {{pseudonym.idString}}">
           <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
         </mat-form-field>
