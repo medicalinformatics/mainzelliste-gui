@@ -5,7 +5,7 @@
 
         <div style="width: 100%; flex-flow: row">
 
-          <button *ngIf="merging2" (click)="slideData(fields[field.name])"
+          <button *ngIf="merging2"> <!-- (click)="slideData(fields[field.name])-->
                   style=" margin-top:4%; border:none; background:none; float:left;">
             <mat-icon style="color: #4b4b4b">arrow_circle_left</mat-icon>
           </button>
@@ -17,7 +17,7 @@
             <mat-icon *ngIf="readOnly" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
           </mat-form-field>
 
-          <button *ngIf="merging" (click)="slideData(fields[field.name])"
+          <button *ngIf="merging"> <!--(click)="slideData(fields[field.name])-->
                   style=" margin-top:4%; border:none; background:none; float:right;">
             <mat-icon style="color: #4b4b4b">arrow_circle_right</mat-icon>
           </button>

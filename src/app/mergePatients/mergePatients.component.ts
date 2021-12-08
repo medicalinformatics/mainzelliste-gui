@@ -23,4 +23,5 @@ export class MergePatientsComponent implements OnInit {
     this.patients = history.state.patients;
   }
 
+
 }
