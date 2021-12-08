@@ -20,8 +20,8 @@
                (matChipInputTokenEnd)="add($event)">
       </mat-chip-list>
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-        <mat-option *ngFor="let field of allFieldsToSearch" [value]="{field:field,searchCriteria:filterEingabe}">
-          {{field}}:{{filterEingabe}}
+        <mat-option style="height: auto" *ngFor="let field of allFieldsToSearch" [value]="{field:field,searchCriteria:filterEingabe}">
+          <div style="font-weight: bold">{{field}}:</div><div style="text-indent: 2%;">{{filterEingabe}}<hr color="#888888" style=" width: 100%; justify-content: flex-start; justify-self: flex-start; justify-items: flex-start; text-align: left"></div>
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
