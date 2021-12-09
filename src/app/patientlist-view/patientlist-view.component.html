@@ -31,7 +31,7 @@
       <button mat-raised-button matBadgeColor="accent"
               disabled="disabled"> <mat-icon>grid_view</mat-icon> Projekt Erstellen
       </button>
-      <button mat-raised-button matBadgeColor="accent" [routerLink]="['/merge-patients']"
+      <button mat-raised-button matBadgeColor="accent" [routerLink]="['/patienten-zusammenfuehren']"
               [state]="{patients: selectedPatients}"
               [disabled]="selectedPatients.length!=2"
               [matBadge]="selectedPatients.length"
@@ -40,7 +40,7 @@
         Zusammenführen
       </button>
 
-      <button mat-raised-button matBadgeColor="accent" [routerLink]="['/delete-multiple-patients']"
+      <button mat-raised-button matBadgeColor="accent" [routerLink]="['/patienten-loeschen']"
               [state]="{patients: selectedPatients}"
               [disabled]="selectedPatients.length<2"
               [matBadge]="selectedPatients.length"

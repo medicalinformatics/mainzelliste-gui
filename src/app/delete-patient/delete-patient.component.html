@@ -24,11 +24,11 @@
       <h2 class="DeletePatientFragestellung" style="margin-left:3%;"> Soll der folgende Patient wirklich gelöscht werden?</h2>
      <br> <br> <div style="display: flex; flex-flow: row; justify-content: space-around; gap: 0 15px">
         <button mat-raised-button type="submit" class="DeletePatientButtonAbbruch"
-                [routerLink]="['/patientlist-view']">
+                [routerLink]="['/patientenliste']">
           Abbruch
         </button>
         <button mat-raised-button type="submit" (click)="deletePatientenZeile()" class="DeletePatientButtonLöschen"
-                [routerLink]="['/patientlist-view']">Löschen
+                [routerLink]="['/patientenliste']">Löschen
         </button>
       </div>
     </div>

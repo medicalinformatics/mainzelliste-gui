@@ -60,5 +60,5 @@
   </mat-card>
 
 </div>
-<button mat-raised-button id="ergebnisButton"><a style="color: #294E66;text-decoration: none" routerLink="/ergebnis-zusammenfuehren">Zusammenführen</a></button>
+<button mat-raised-button id="ergebnisButton"><a style="color: #294E66;text-decoration: none" [state]="{patient: patient, fields: fields}" routerLink="/idcard">Zusammenführen</a></button>
 </div>

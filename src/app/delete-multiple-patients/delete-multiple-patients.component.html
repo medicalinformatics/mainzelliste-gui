@@ -32,14 +32,14 @@
 
       <!-- Fragestellung-->
       <div style="flex: 1 1 30%; display: flex; flex-flow: column;background-color: white">
-        <h2 class="DeletePatientFragestellung"> Sollen die beiden Patienten wirklich <br>gelöscht werden?</h2>
+        <h2 class="DeletePatientFragestellung"> Sollen die beiden Patienten wirklich gelöscht werden?</h2>
         <div style="display: flex; flex-flow: row; justify-content: space-around; gap: 0 15px">
           <button mat-raised-button type="submit" class="DeletePatientButtonAbbruch"
-                  [routerLink]="['/patientlist-view']">
+                  [routerLink]="['/patientenliste']">
             Abbruch
           </button>
           <button mat-raised-button type="submit" (click)="deletePatientenZeile()" class="DeletePatientButtonLöschen"
-                  [routerLink]="['/patientlist-view']">Löschen
+                  [routerLink]="['/patientenliste']">Löschen
           </button>
         </div>
       </div>

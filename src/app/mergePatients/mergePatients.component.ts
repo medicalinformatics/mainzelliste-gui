@@ -12,6 +12,11 @@ import {Field} from "../model/field";
 export class MergePatientsComponent implements OnInit {
   patientService: PatientService;
   patients: Array<Patient> = [];
+
+  @Input() patient: Patient = new Patient()
+  @Input() fields : Array<string> = [];
+
+
   @Input() Finalpatient= new Patient;
 
   constructor(patientService: PatientService) {

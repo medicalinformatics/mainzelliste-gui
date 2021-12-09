@@ -14,18 +14,17 @@ import {DeleteMultiplePatientsComponent} from "./delete-multiple-patients/delete
 
 
 const routes: Routes = [
-  {path: 'patientlist', component: PatientlistComponent},
-  {path: 'create-patient', component: CreatePatientComponent},
+  {path: 'neuen-patient-erstellen', component: CreatePatientComponent},
   {path: 'info', component: InfoComponent},
   {path: 'audittrail', component: AudittrailComponent},
   {path: 'idcard', component: IdcardComponent},
   {path: 'similar-patient', component: SimilarPatientComponent},
-  {path: 'merge-patients', component: MergePatientsComponent},
-  {path:'patientlist-view', component: PatientlistViewComponent},
+  {path: 'patienten-zusammenfuehren', component: MergePatientsComponent},
+  {path:'patientenliste', component: PatientlistViewComponent},
   {path: 'edit-patient', component: EditPatientComponent},
   {path: 'delete-patient', component: DeletePatientComponent},
-  {path: 'delete-multiple-patients', component:DeleteMultiplePatientsComponent},
-  {path: '', redirectTo: 'patientlist-view', pathMatch: 'full'}
+  {path: 'patienten-loeschen', component:DeleteMultiplePatientsComponent},
+  {path: '', redirectTo: 'patientenliste', pathMatch: 'full'}
 ];
 
 @NgModule({
