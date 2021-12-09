@@ -17,6 +17,9 @@ export class PatientFieldsComponent implements OnInit {
 
   @Input()  fields: {[key: string]: any} = {};
   @Output() fieldEvent = new EventEmitter<{[key: string]: any}>();
+
+  @Output() slideFieldEvent = new EventEmitter<{name:string,value:string}>();
+
   fieldService: FieldService;
   configuredFields: Promise<Array<Field>>;
   @Input() readOnly: boolean= false;
@@ -43,8 +46,9 @@ export class PatientFieldsComponent implements OnInit {
 
   }
 
-  slideData(field: any): void{
-      this.finalPatient.fields=field;
+  slideData(value: string, name: string): void{
+      this.finalPatient.fields[name]= value;
+      this.slideFieldEvent.emit({value:value, name:name});
   };
 
   selectPatient() {

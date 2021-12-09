@@ -16,8 +16,7 @@ export class MergePatientsComponent implements OnInit {
   @Input() patient: Patient = new Patient()
   @Input() fields : Array<string> = [];
 
-
-  @Input() Finalpatient= new Patient;
+  @Input() finalPatient= new Patient;
 
   constructor(patientService: PatientService) {
     this.patientService = patientService;
@@ -28,5 +27,8 @@ export class MergePatientsComponent implements OnInit {
     this.patients = history.state.patients;
   }
 
+  updateFinalPatient( name:string, value:string){
+    this.finalPatient.fields[name]= value;
+}
 
 }
