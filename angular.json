@@ -35,7 +35,7 @@
               }
             ],
             "styles": [
-              "src/theme.scss",
+              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles.css",
               {
                 "input": "node_modules/@ionic/angular/css/core.css"
