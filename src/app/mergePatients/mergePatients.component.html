@@ -24,7 +24,7 @@
 
   <div class="patientendaten"  style=" flex: 1 1 40%; display: flex;  flex-flow: column; padding-top: 5%">
     <mat-card-title style="color:#294E66; font-size: x-large">Patientendaten</mat-card-title>
-    <app-patient-fields [readOnly]=true [merging]=true [fields]="patients[0].fields" (slideFieldEvent)="updateFinalPatient($event.name, $event.value)"></app-patient-fields></div>
+    <app-patient-fields [readOnly]=true  side="right" [fields]="patients[0].fields" (slideFieldEvent)="updateFinalPatient($event.name, $event.value)"></app-patient-fields></div>
 </mat-card>
 
 <!-- FINALER PATIENT -->
@@ -56,7 +56,7 @@
 
     <div class="patientendaten"  style=" flex: 1 1 40%; display: flex;  flex-flow: column; padding-top: 5%">
       <mat-card-title style="color:#294E66; font-size: x-large;">Patientendaten</mat-card-title>
-      <app-patient-fields [readOnly]=true [merging2]=true [fields]="patients[1].fields" (slideFieldEvent)="updateFinalPatient($event.name, $event.value)"></app-patient-fields></div>
+      <app-patient-fields side="left" [readOnly]=true  [fields]="patients[1].fields" (slideFieldEvent)="updateFinalPatient($event.name, $event.value)"></app-patient-fields></div>
   </mat-card>
 
 </div>

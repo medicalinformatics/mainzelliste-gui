@@ -5,9 +5,8 @@
 
         <div style="width: 100%; flex-flow: row">
 
-          <button *ngIf="merging2" style=" margin-top:4%; border:none; background:none; float:left;" (click)="slideData(fields[field.name], field.name)">
-
-            <mat-icon style="color: #4b4b4b">arrow_circle_left</mat-icon>
+          <button *ngIf="side!='none'" style=" margin-top:4%; border:none; background:none;" [ngStyle]="{float:side}" (click)="slideData(fields[field.name], field.name)">
+            <mat-icon style="color: #4b4b4b">arrow_circle_{{side}}</mat-icon>
           </button>
 
           <mat-form-field style="width: 90%;" class="example-full-width" >
@@ -16,10 +15,6 @@
                    placeholder="{{field.hint}}" [(ngModel)]="fields[field.name]" [name]="field.name">
             <mat-icon *ngIf="readOnly" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
           </mat-form-field>
-
-          <button *ngIf="merging" style=" margin-top:4%; border:none; background:none; float:right;" (click)="slideData(fields[field.name], field.name)">
-            <mat-icon style="color: #4b4b4b">arrow_circle_right</mat-icon>
-          </button>
 
         </div>
       </td>

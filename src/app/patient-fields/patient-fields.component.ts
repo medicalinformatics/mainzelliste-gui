@@ -11,6 +11,7 @@ import {PatientService} from "../services/patient.service";
   templateUrl: './patient-fields.component.html',
   styleUrls: ['./patient-fields.component.css']
 })
+
 export class PatientFieldsComponent implements OnInit {
 
   tmpPatient: Patient = new Patient();
@@ -23,8 +24,7 @@ export class PatientFieldsComponent implements OnInit {
   fieldService: FieldService;
   configuredFields: Promise<Array<Field>>;
   @Input() readOnly: boolean= false;
-  @Input() merging: boolean=false;
-  @Input() merging2: boolean=false;
+  @Input() side: string="none";
 
   constructor(fieldService: FieldService) {
     this.fieldService = fieldService;
