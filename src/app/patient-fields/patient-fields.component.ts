@@ -26,16 +26,9 @@ export class PatientFieldsComponent implements OnInit {
   @Input() merging: boolean=false;
   @Input() merging2: boolean=false;
 
-  @Output() selectedP = new EventEmitter<PatientFieldsComponent>();
-
-  finalPatient = new Patient;
-
   constructor(fieldService: FieldService) {
     this.fieldService = fieldService;
     this.configuredFields = fieldService.getFields();
-    patientService: PatientService;
-    // @Input() patient: Patient = new Patient()
-
   }
 
   ngOnInit(): void {
@@ -47,15 +40,7 @@ export class PatientFieldsComponent implements OnInit {
   }
 
   slideData(value: string, name: string): void{
-      this.finalPatient.fields[name]= value;
       this.slideFieldEvent.emit({value:value, name:name});
   };
-
-  selectPatient() {
-    console.log("Data will be emitted to MergeComponent")
-    this.selectedP.emit(this);
-    console.log(this);
-
-  }
 
 }
