@@ -33,7 +33,7 @@
 
   <div class="pseudonyme" style=" flex: 1 1 40%; display: flex; flex-flow:column;; padding-top: 5%" >
     <mat-card-title style="color:#294E66; font-size: x-large">Pseudonyme</mat-card-title>
-    <div style="flex-flow: column; justify-content: center ">
+    <div style="flex-flow: column; justify-content: flex-end ">
       <!-- WOHER SOLL DER FINALEPATIENT SEIN PSEUDONYM ERHALTEN? -->
       <app-patient-pseudonyms style="width: 90%" [readOnly]=true [pseudonyms]="emptyPatient.ids"></app-patient-pseudonyms> <!-- [pseudonyms]="patients[0].ids" -->
     </div>
@@ -48,10 +48,13 @@
   <mat-card class="patientCard" style="width: 30%">
     <mat-card-title style="font-size: xx-large">Patientendaten 2</mat-card-title>
 
-    <div class="pseudonyme" style=" flex: 1 1 80%; display: flex; flex-flow:column; padding-top: 5%" >
+    <div class="pseudonyme" style=" flex: 1 1 100%; display: flex; flex-flow:column; padding-top: 5%" >
       <mat-card-title style="color:#294E66; font-size: x-large">Pseudonyme</mat-card-title>
-      <div style="flex-flow: column; justify-content: flex-end; ">
-        <app-patient-pseudonyms style="width:100%; float:right; justify-content: flex-end" [readOnly]=true [pseudonyms]="patients[1].ids"></app-patient-pseudonyms>
+      <div style="flex: 1 1 100%; display: flex; flex-flow: row">
+        <div style=" width: 10%; height: auto; color:#f2f2f2">holder</div>
+        <div style="flex-flow: column; width: 100% ">
+          <app-patient-pseudonyms style="width:160%; " [readOnly]=true [pseudonyms]="patients[1].ids"></app-patient-pseudonyms>
+        </div>
       </div>
     </div>
 
