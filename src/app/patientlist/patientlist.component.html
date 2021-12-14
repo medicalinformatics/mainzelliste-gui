@@ -26,7 +26,7 @@
 
     <ng-container *ngFor="let field of fields" matColumnDef="{{field}}">
       <th mat-header-cell *matHeaderCellDef><div style="width: 100%;">{{field}}</div>
-        <button class= "filterbutton"><mat-icon matTooltip="Filter" style="transform: scale(0.7); float: right" >
+        <button class= "filterbutton"><mat-icon matTooltip="Filter" style="transform: scale(0.7); float: right" (click)="openFilter(field)">
           arrow_circle_down</mat-icon> </button></th>
 
       <td mat-cell *matCellDef="let element"> {{element.fields[field]}} </td>

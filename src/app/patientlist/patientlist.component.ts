@@ -39,21 +39,24 @@ export class PatientlistComponent implements AfterViewInit{
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
     if (spalte == 'Pseudonym') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '11%'}, minWidth:"20%",minHeight:"40%", data:{dialogtitle:"Pseudonym"}});
+      this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container', position: {top: '11%', left: '11%'}, minWidth:"20%",minHeight:"40%", data:{dialogtitle:"Pseudonym"}});
+
+      // this.dialog.open(PatientSearchComponent, {position: {top: '11%', left: '11%'}, minWidth:"20%",minHeight:"40%", data:{dialogtitle:"Pseudonym"}});
     } else if (spalte == 'Nachname') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '21%'}});
+      this.dialog.open(PatientSearchComponent, {position: {top: '11%', left: '21%'}});
     } else if (spalte == 'Geburtsname') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '31%'}});
+      this.dialog.open(PatientSearchComponent, {position: {top: '11%', left: '31%'}});
     } else if (spalte == 'Vorname') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '41%'}});
+      this.dialog.open(PatientSearchComponent, {position: {top: '11%', left: '41%'}});
     } else if (spalte == 'Geburtsdatum') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '53%'}});
+      this.dialog.open(PatientSearchComponent, {position: {top: '11%', left: '53%'}});
     } else if (spalte == 'Wohnort') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '63%'}});
+      this.dialog.open(PatientSearchComponent, {position: {top: '11%', left: '63%'}});
     } else if (spalte == 'PLZ') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '21%', left: '75%'}});
+      this.dialog.open(PatientSearchComponent, {position: {top: '11%', left: '75%'}});
     }
   };
+
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
