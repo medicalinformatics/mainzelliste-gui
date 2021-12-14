@@ -29,6 +29,15 @@ export class MergePatientsComponent implements OnInit {
 
   updateFinalPatient( name:string, value:string){
     this.finalPatient.fields[name]= value;
+    this.finalPatient.ids=this.patients[0].ids;
 }
 
+
+  createNewPatient () {
+    this.patientService.createPatient(this.finalPatient).then((result) => {
+      if (result == 200) {
+        this.patient = new Patient();
+      }
+    });
+  }
 }
