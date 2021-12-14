@@ -17,9 +17,11 @@ export class MergePatientsComponent implements OnInit {
   @Input() fields : Array<string> = [];
 
   @Input() finalPatient= new Patient;
+  emptyPatient= new Patient;
 
   constructor(patientService: PatientService) {
     this.patientService = patientService;
+    this.emptyPatient.ids=[{idType: "Pseudonym", idString: " "}];
 
   }
 
@@ -29,7 +31,6 @@ export class MergePatientsComponent implements OnInit {
 
   updateFinalPatient( name:string, value:string){
     this.finalPatient.fields[name]= value;
-    this.finalPatient.ids=this.patients[0].ids;
 }
 
 

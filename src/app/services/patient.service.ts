@@ -162,7 +162,7 @@ export class PatientService {
   createPatient(tmpPatient: Patient): Promise<number> {
     // TODO: Create proper mainzelliste call for this and return that as result.
     return new Promise((resolve, reject) => {
-      tmpPatient.ids.push({idType: "pseudonym", idString: this.getMockId()});
+      tmpPatient.ids.push({idType: "Pseudonym", idString: this.getMockId()});
       this.patientsDataSource.data.push(tmpPatient);
       resolve(200);
     });

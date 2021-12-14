@@ -34,8 +34,8 @@
   <div class="pseudonyme" style=" flex: 1 1 40%; display: flex; flex-flow:column;; padding-top: 5%" >
     <mat-card-title style="color:#294E66; font-size: x-large">Pseudonyme</mat-card-title>
     <div style="flex-flow: column; justify-content: center ">
-      <!-- WELCHEN PSEUDONYM SOLL FINALPATIENT ERHALTEN? -->
-      <app-patient-pseudonyms style="width: 90%" [readOnly]=true [pseudonyms]="patients[0].ids"></app-patient-pseudonyms>
+      <!-- WOHER SOLL DER FINALEPATIENT SEIN PSEUDONYM ERHALTEN? -->
+      <app-patient-pseudonyms style="width: 90%" [readOnly]=true [pseudonyms]="emptyPatient.ids"></app-patient-pseudonyms> <!-- [pseudonyms]="patients[0].ids" -->
     </div>
   </div>
 
@@ -55,7 +55,7 @@
       </div>
     </div>
 
-    <div class="patientendaten"  style=" flex: 1 1 80%; display: flex;  flex-flow: column;  padding-top: 5%">
+    <div class="patientendaten"  style=" flex: 1 1 80%; display: flex;  flex-flow: column; float right;  padding-top: 5%">
       <mat-card-title style="color:#294E66; font-size: x-large;">Patientendaten</mat-card-title>
       <app-patient-fields side="left" [readOnly]=true  [fields]="patients[1].fields" (slideFieldEvent)="updateFinalPatient($event.name, $event.value)"></app-patient-fields></div>
   </mat-card>
