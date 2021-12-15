@@ -52,6 +52,9 @@ mat-paginator{
 }
 
 .custom-dialog-container .mat-dialog-container {
-width: 100px;
-height: 100px;
+  width: 25em;
+  height: 30em;
+  padding:0px;
+
+;
 }
