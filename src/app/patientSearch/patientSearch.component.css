@@ -1,15 +1,9 @@
-.custom-dialog-container .mat-dialog-container {
-  /* add your styles */
-}
-
-h2{
-  color:black;
-  font-family: Arial;
-}
-
 .header{
   height:25%;
-  padding: 15px;
+  padding-left: 5%;
+  padding-top:3%;
+  padding-bottom: 3%;
+  padding-right:5%;
   background-color: #284B63;
   border-width: thick;
   font-family: Arial;
@@ -26,50 +20,49 @@ h2{
   margin-bottom: 0.5%;
 }
 
-.filterDiv{
-  background-color: #f1f1f1;
-  border: solid white 0.5px;
-  padding: 1%;
-  padding-bottom: 3%;
-}
-
 .sortierenDiv{
   background-color: #f1f1f1;
   border: solid white 0.5px;
-  padding: 1%;
-  padding-bottom: 3%;
+  padding-left: 3%;
+  padding-right: 3%;
+  padding-bottom: 2%;
+  padding-top: 2%;
+ }
+
+.filterDiv{
+  background-color: #f1f1f1;
+  border: solid white 0.5px;
+  padding-left: 3%;
+  padding-right: 3%;
+  padding-bottom: 2%;
+  padding-top: 2%;
 }
 
+.h4{
+  margin-left:5%;
+}
 .aufsteigendButton{
-    width: 40%;
+    width: 45%;
     border: none;
-    padding-bottom: 1%;
-    padding-top: 1%;
-    padding-left: 5%;
-    padding-right: 5%;
     text-align: center;
     text-decoration: none;
     margin-left: 8%;
     margin-bottom: 1%;
     border-radius: 15px;
     background-color: #ADDFFF;
-    color: white;
+    color: #294E66;
 }
 
 .absteigendButton{
-  width: 40%;
+  width: 45%;
   border: none;
-  padding-bottom: 1%;
-  padding-top: 1%;
-  padding-left: 5%;
-  padding-right: 5%;
   text-align: center;
   text-decoration: none;
   margin-left: 8%;
   margin-bottom: 1%;
   border-radius: 15px;
   background-color: #ADDFFF;
-  color: white;
+  color: #294E66;
 }
 #buttonicon1{
   float: right;

@@ -48,13 +48,16 @@ mat-paginator{
   float:right;
   margin-top: 1.5%;
   margin-right: 1.5%;
-  font-size: xx-large;
+  font-size: xxx-large;
 }
 
 .custom-dialog-container .mat-dialog-container {
   width: 25em;
   height: 30em;
   padding:0px;
+}
 
-;
+.custom-dialog-container .mat-dialog-container .mat-h3{
+  margin:0px;
+  padding:0px;
 }

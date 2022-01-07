@@ -19,6 +19,7 @@ export class PatientlistComponent implements AfterViewInit{
   @Input() patients!: MatTableDataSource<Patient>;
   selection: SelectionModel<Patient>;
   @Output() selectedPatients: EventEmitter<Patient[]> = new EventEmitter<Patient[]>();
+  @Output() filterData = '';
 
   fields: string[] = ["Nachname", "Geburtsname", "Vorname", "Geburtsdatum", "Wohnort", "PLZ"];
   columns: string[] = ["select"];
@@ -39,21 +40,20 @@ export class PatientlistComponent implements AfterViewInit{
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
     if (spalte == 'Pseudonym') {
-      this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container', data:{dialogtitle:"Pseudonym"}}); // position: {top: '11%', left: '11%'}, minWidth:"20%",minHeight:"40%",
-
+      this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
       // this.dialog.open(PatientSearchComponent, {position: {top: '11%', left: '11%'}, minWidth:"20%",minHeight:"40%", data:{dialogtitle:"Pseudonym"}});
     } else if (spalte == 'Nachname') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '11%', left: '21%'}});
-    } else if (spalte == 'Geburtsname') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '11%', left: '31%'}});
+      this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
+      } else if (spalte == 'Geburtsname') {
+      this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
     } else if (spalte == 'Vorname') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '11%', left: '41%'}});
+      this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
     } else if (spalte == 'Geburtsdatum') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '11%', left: '53%'}});
+      this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
     } else if (spalte == 'Wohnort') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '11%', left: '63%'}});
+      this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
     } else if (spalte == 'PLZ') {
-      this.dialog.open(PatientSearchComponent, {position: {top: '11%', left: '75%'}});
+      this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
     }
   };
 
@@ -81,4 +81,5 @@ export class PatientlistComponent implements AfterViewInit{
   ngAfterViewInit(): void {
     this.patients.paginator = this.paginator;
   }
+
 }
