@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Patient} from "../model/patient";
 import {MatTableDataSource} from "@angular/material/table";
+import {Id, PatientListService} from "./patient-list.service";
 
 @Injectable({
   providedIn: 'root'
@@ -299,16 +300,20 @@ export class PatientService {
 
   ];
 
-  patientsDataSource: MatTableDataSource<Patient> = new MatTableDataSource<Patient>(this.mockUpData);
+  constructor(private patientListService: PatientListService) {
+    this.rerenderPatients(patientListService.getPatients())
+  }
 
-  getPatients(filters: Array<{ field: string, searchCriteria: string }>): Promise<Array<Patient>> {
-    // TODO: Create proper method to get all patients from a mainzelliste instance
-    return new Promise((resolve, reject) => {
-      if (filters.length == 0) {
-        this.patientsDataSource.data = this.mockUpData
-        resolve(this.patientsDataSource.data)
-      } else {
-        let filterPatients = this.patientsDataSource.data.filter((patient) => {
+  rerenderPatients(patients: Promise<Patient[]>, filters?: Array<{ field: string, searchCriteria: string }>) {
+    patients.then(patients => {
+      // TODO: Find a better way for transforming the single fields to one combined field
+      patients.forEach(patient => {
+        let birthdate: string = patient.fields.Geburtstag + "." + patient.fields.Geburtsmonat + "." + patient.fields.Geburtsjahr;
+        patient.fields.Geburtsdatum = birthdate
+        return patient;
+      })
+      if (filters != undefined) {
+        patients = patients.filter((patient) => {
           let matched = false;
           console.log(patient);
           filters.forEach((filter) => {
@@ -320,19 +325,29 @@ export class PatientService {
           })
           console.log(matched);
           return matched;
-        });
-        this.patientsDataSource.data = filterPatients;
-        resolve(filterPatients);
+        })
       }
-    });
+      this.patientsDataSource = new MatTableDataSource<Patient>(patients)
+    })
   }
 
-  createPatient(tmpPatient: Patient): Promise<number> {
+  patientsDataSource: MatTableDataSource<Patient> = new MatTableDataSource<Patient>(this.mockUpData);
+
+  getPatients(filters: Array<{ field: string, searchCriteria: string }>) {
+    // TODO: Create proper method to get all patients from a mainzelliste instance
+    if (filters.length == 0) {
+      this.rerenderPatients(this.patientListService.getPatients());
+    } else {
+      this.rerenderPatients(this.patientListService.getPatients(), filters);
+      }
+  }
+
+  createPatient(tmpPatient: Patient): Promise<Patient[]> {
     // TODO: Create proper mainzelliste call for this and return that as result.
-    return new Promise((resolve, reject) => {
-      tmpPatient.ids.push({idType: "Pseudonym", idString: this.getMockId()});
-      this.patientsDataSource.data.push(tmpPatient);
-      resolve(200);
+    return this.patientListService.addPatient(tmpPatient).then(id => {
+      this.rerenderPatients(this.patientListService.getPatients());
+      let mappedId = new Id('pid', id.newId, id.tentative, id.uri);
+      return this.patientListService.readPatient(mappedId);
     });
   }
 
@@ -363,4 +378,5 @@ export class PatientService {
       }
     })
   }
+
 }

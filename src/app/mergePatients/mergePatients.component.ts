@@ -36,7 +36,7 @@ export class MergePatientsComponent implements OnInit {
 
   createNewPatient () {
     this.patientService.createPatient(this.finalPatient).then((result) => {
-      if (result == 200) {
+      if (result.length != -1) {
         this.patient = new Patient();
       }
     });
