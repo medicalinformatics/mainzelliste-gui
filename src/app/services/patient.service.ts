@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Patient} from "../model/patient";
 import {MatTableDataSource} from "@angular/material/table";
-import {Id, PatientListService} from "./patient-list.service";
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +16,7 @@ export class PatientService {
       Geburtsdatum: '01.01.2000',
       Wohnort: 'Berlin',
       PLZ: '10115'
-    }, [{idType: 'Pseudonym', idString: 'MKJH56FR'}]),
+    }, [{idType: 'interner Pseudonym', idString: 'MKJH56FR'}, {idType: "externer Pseudonym", idString: "GFTD09BV"}, {idType: "klinischer Pseudonym", idString: "GFTD09BV"}]),
     new Patient({
       Nachname: 'Schmidt',
       Geburtsname: 'Sommer',
@@ -25,7 +24,7 @@ export class PatientService {
       Geburtsdatum: '19.03.1968',
       Wohnort: 'Hamburg',
       PLZ: '20095'
-    }, [{idType: "Pseudonym", idString: 'MN321L09'}]),
+    }, [{idType: "Pseudonym", idString: 'MN321L09'}, {idType: "externer Pseudonym", idString: "GFTD09BV"}, {idType: "klinischer Pseudonym", idString: "GFTD09BV"}]),
     new Patient({
       Nachname: 'Eckardt',
       Geburtsname: '',
@@ -33,7 +32,7 @@ export class PatientService {
       Geburtsdatum: '15.05.1980',
       Wohnort: 'Hannover',
       PLZ: '30159'
-    }, [{idType: "Pseudonym", idString: "ASDKJU11"}]),
+    }, [{idType: "Pseudonym", idString: "ASDKJU11"}, {idType: "externer Pseudonym", idString: "GFTD09BV"}, {idType: "klinischer Pseudonym", idString: "GFTD09BV"}]),
     new Patient({
       Nachname: 'Friedrich',
       Geburtsname: '',
@@ -41,7 +40,7 @@ export class PatientService {
       Geburtsdatum: '23.02.1995',
       Wohnort: 'München',
       PLZ: '80331'
-    }, [{idType: "Pseudonym", idString: "CQKF88A0"}]),
+    }, [{idType: "Pseudonym", idString: "CQKF88A0"}, {idType: "externer Pseudonym", idString: "GFTD09BV"}, {idType: "klinischer Pseudonym", idString: "GFTD09BV"}]),
     new Patient({
       Nachname: 'Schulz',
       Geburtsname: 'Haas',
@@ -113,39 +112,203 @@ export class PatientService {
       Geburtsdatum: '25.05.1982',
       Wohnort: 'Konstanz',
       PLZ: '78462'
-    }, [{idType: "Pseudonym", idString: "KTS254XC"}]),
+    }, [{idType: "Pseudonym", idString: "KTS254XC"}, {idType: "Pseudonym", idString: "GFTD09BV"}]),
     new Patient({
-      Nachname: 'Plenz',
+      Nachname: 'Schaller',
       Geburtsname: '',
-      Vorname: 'Ralf',
+      Vorname: 'Lucas',
       Geburtsdatum: '15.07.1964',
       Wohnort: 'Dresden',
       PLZ: '01967'
     }, [{idType: "Pseudonym", idString: "GF7L09S2"}]),
     new Patient({
-      Nachname: 'Appel',
-      Geburtsname: 'Plenz',
-      Vorname: 'Jana',
+      Nachname: 'Bartz-Hisgen',
+      Geburtsname: 'Kremer',
+      Vorname: 'Lukas',
       Geburtsdatum: '23.09.1997',
       Wohnort: 'Dresden',
       PLZ: '01967'
     }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
+    new Patient({
+      Nachname: 'Götz',
+      Geburtsname: '',
+      Vorname: 'Aaron',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
+    new Patient({
+      Nachname: 'Gröner',
+      Geburtsname: '',
+      Vorname: 'Daniel',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
+    new Patient({
+      Nachname: 'Schulz',
+      Geburtsname: '',
+      Vorname: 'Denniz',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
+    new Patient({
+      Nachname: 'Springer',
+      Geburtsname: '',
+      Vorname: 'Denise',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
+    new Patient({
+      Nachname: 'Merckel',
+      Geburtsname: '',
+      Vorname: 'Markus',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
+    new Patient({
+      Nachname: 'Maier',
+      Geburtsname: '',
+      Vorname: 'Hans',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
+    new Patient({
+      Nachname: 'Mayer',
+      Geburtsname: '',
+      Vorname: 'Saskia',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
+    new Patient({
+      Nachname: 'Müller',
+      Geburtsname: 'Plenz',
+      Vorname: 'Ulrike',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
+    new Patient({
+      Nachname: 'Friedrich',
+      Geburtsname: '',
+      Vorname: 'Helena',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
+    new Patient({
+      Nachname: 'Wilhelm',
+      Geburtsname: '',
+      Vorname: 'Jelena',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
+    new Patient({
+      Nachname: 'Sommer',
+      Geburtsname: '',
+      Vorname: 'Steffanie',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
+    new Patient({
+      Nachname: 'Hartmann',
+      Geburtsname: '',
+      Vorname: 'Thorsten',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
+    new Patient({
+      Nachname: 'Rudolf',
+      Geburtsname: '',
+      Vorname: 'Sebastian',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),new Patient({
+      Nachname: 'Friedrich',
+      Geburtsname: '',
+      Vorname: 'Kevin',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
+    new Patient({
+      Nachname: 'Kaiser',
+      Geburtsname: '',
+      Vorname: 'Jan',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
+    new Patient({
+      Nachname: 'Peter',
+      Geburtsname: '',
+      Vorname: 'Natascha',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
+    new Patient({
+      Nachname: 'Gumbel',
+      Geburtsname: '',
+      Vorname: 'Kimberly',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),new Patient({
+      Nachname: 'Franz',
+      Geburtsname: '',
+      Vorname: 'Ingrid',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
+    new Patient({
+      Nachname: 'Hartmann',
+      Geburtsname: '',
+      Vorname: 'Verena',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),new Patient({
+      Nachname: 'Müller',
+      Geburtsname: '',
+      Vorname: 'Julian',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
+    new Patient({
+      Nachname: 'Schmidt',
+      Geburtsname: '',
+      Vorname: 'Sara',
+      Geburtsdatum: '23.09.1997',
+      Wohnort: 'Dresden',
+      PLZ: '01967'
+    }, [{idType: "Pseudonym", idString: "A235H7VB"}]),
+
+
+
   ];
 
-  constructor(private patientListService: PatientListService) {
-    this.rerenderPatients(patientListService.getPatients())
-  }
+  patientsDataSource: MatTableDataSource<Patient> = new MatTableDataSource<Patient>(this.mockUpData);
 
-  rerenderPatients(patients: Promise<Patient[]>, filters?: Array<{ field: string, searchCriteria: string }>) {
-    patients.then(patients => {
-      // TODO: Find a better way for transforming the single fields to one combined field
-      patients.forEach(patient => {
-        let birthdate: string = patient.fields.Geburtstag + "." + patient.fields.Geburtsmonat + "." + patient.fields.Geburtsjahr;
-        patient.fields.Geburtsdatum = birthdate
-        return patient;
-      })
-      if (filters != undefined) {
-        patients = patients.filter((patient) => {
+  getPatients(filters: Array<{ field: string, searchCriteria: string }>): Promise<Array<Patient>> {
+    // TODO: Create proper method to get all patients from a mainzelliste instance
+    return new Promise((resolve, reject) => {
+      if (filters.length == 0) {
+        this.patientsDataSource.data = this.mockUpData
+        resolve(this.patientsDataSource.data)
+      } else {
+        let filterPatients = this.patientsDataSource.data.filter((patient) => {
           let matched = false;
           console.log(patient);
           filters.forEach((filter) => {
@@ -157,29 +320,19 @@ export class PatientService {
           })
           console.log(matched);
           return matched;
-        })
+        });
+        this.patientsDataSource.data = filterPatients;
+        resolve(filterPatients);
       }
-      this.patientsDataSource = new MatTableDataSource<Patient>(patients)
-    })
+    });
   }
 
-  patientsDataSource: MatTableDataSource<Patient> = new MatTableDataSource<Patient>(this.mockUpData);
-
-  getPatients(filters: Array<{ field: string, searchCriteria: string }>) {
-    // TODO: Create proper method to get all patients from a mainzelliste instance
-    if (filters.length == 0) {
-      this.rerenderPatients(this.patientListService.getPatients());
-    } else {
-      this.rerenderPatients(this.patientListService.getPatients(), filters);
-    }
-  }
-
-  createPatient(tmpPatient: Patient): Promise<Patient[]> {
+  createPatient(tmpPatient: Patient): Promise<number> {
     // TODO: Create proper mainzelliste call for this and return that as result.
-    return this.patientListService.addPatient(tmpPatient).then(id => {
-      this.rerenderPatients(this.patientListService.getPatients());
-      let mappedId = new Id('pid', id.newId, id.tentative, id.uri);
-      return this.patientListService.readPatient(mappedId);
+    return new Promise((resolve, reject) => {
+      tmpPatient.ids.push({idType: "Pseudonym", idString: this.getMockId()});
+      this.patientsDataSource.data.push(tmpPatient);
+      resolve(200);
     });
   }
 
@@ -210,5 +363,4 @@ export class PatientService {
       }
     })
   }
-
 }

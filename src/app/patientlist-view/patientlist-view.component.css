@@ -1,12 +1,9 @@
 .mat-raised-button{
-  background-color: #3895D0;
-  color:white;
+  background-color: #ADDFFF;
+  color:#294E66;
   margin-bottom: 1%;
   float: right;
-  margin-right: 2rem;
-  margin-left:1.51rem;
-  font-size: 18px;
-  padding: 5px 30px 5px 30px;
+  margin-right: 2%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
@@ -14,29 +11,23 @@
   background-color: lightgray;
 }
 
-
-h2{
-  font-size: 40px;
-  margin-left: 1%;
+h1{
+  margin-left: 2%;
   margin-top: 2%;
   margin-bottom: 3%;
   font-family: "Arial";
 }
 
 .mat-chip.mat-standard-chip{
-  font-size: 20px;
   background-color: #ADDFFF;
-  color:#494949;
-  padding:25px;
+  color:#294E66;
+  padding:1em;
   border-radius: 0px;
 }
-.mat-icon{
-  bottom:9px;
-  right:18px;
-}
 
-mat-form-field{
-  width:97.5%;
-  margin-left: 20px;
-  font-size: 24px;
+#filterBoard{
+  font-size: large;
+  width:96%;
+  margin-right: 2%;
+  margin-left: 2%;
 }

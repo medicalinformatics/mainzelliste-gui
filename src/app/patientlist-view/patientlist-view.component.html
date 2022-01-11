@@ -1,14 +1,13 @@
-<div style="height: 100%; width: 100%;padding-bottom: 5%">
-    <h2>Patientenliste</h2>
+<div style="height: 100%; min-height: 100%; width: 100%;padding-bottom: 10%; padding-top: 3%">
 
-    <mat-form-field appearance="fill">
+    <mat-form-field color="primary"  id="filterBoard" appearance="fill">
       <mat-label>Filter/Suche...</mat-label>
       <mat-chip-list #chipList aria-label="Fruit selection">
         <mat-chip *ngFor="let fruit of filters"
                   [selectable]="selectable"
-                  [removable]="removable" (removed)="remove(fruit)">
+                  [removable]="removable" (removed)="remove(fruit)" style="font-family: Tahoma;">
           {{fruit.field}}: {{fruit.searchCriteria}}
-          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          <mat-icon matChipRemove *ngIf="removable" style="color:#494949">cancel</mat-icon>
         </mat-chip>
         <input #fruitInput
                [(ngModel)]="filterEingabe"
@@ -20,35 +19,33 @@
                (matChipInputTokenEnd)="add($event)">
       </mat-chip-list>
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-        <mat-option *ngFor="let field of allFieldsToSearch" [value]="{field:field,searchCriteria:filterEingabe}">
-          <b>{{field}}</b>: {{filterEingabe}}
+        <mat-option style="height: auto" *ngFor="let field of allFieldsToSearch" [value]="{field:field,searchCriteria:filterEingabe}">
+          <div style="font-weight: bold">{{field}}:</div><div style="text-indent: 2%;">{{filterEingabe}}<hr color="#888888" style=" width: 100%; justify-content: flex-start; justify-self: flex-start; justify-items: flex-start; text-align: left"></div>
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
 
     <div>
       <br>
-      <button mat-raised-button matBadgeColor="accent" name="Projektpseudonym erstellen"
-              disabled="disabled"> Projekt
-        Erstellen
-        <ion-icon name="cube"></ion-icon>
+      <button mat-raised-button matBadgeColor="accent"
+              disabled="disabled"> <mat-icon>grid_view</mat-icon> Projekt Erstellen
       </button>
-      <button mat-raised-button matBadgeColor="accent" [routerLink]="['/merge-patients']"
+      <button mat-raised-button matBadgeColor="accent" [routerLink]="['/patienten-zusammenfuehren']"
               [state]="{patients: selectedPatients}"
               [disabled]="selectedPatients.length!=2"
               [matBadge]="selectedPatients.length"
               [matBadgeHidden]="selectedPatients.length<1">
+        <mat-icon>merge_type</mat-icon>
         Zusammenführen
-        <ion-icon name="git-merge"></ion-icon>
       </button>
 
-      <button mat-raised-button matBadgeColor="accent" [routerLink]="['/delete-multiple-patients']"
+      <button mat-raised-button matBadgeColor="accent" [routerLink]="['/patienten-loeschen']"
               [state]="{patients: selectedPatients}"
               [disabled]="selectedPatients.length<2"
               [matBadge]="selectedPatients.length"
               [matBadgeHidden]="selectedPatients.length<1">
-        Löschen
-        <ion-icon name="trash"></ion-icon>
+        <mat-icon>delete_outline</mat-icon> Löschen
+
       </button>
 
     </div>

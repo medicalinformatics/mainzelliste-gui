@@ -1,22 +1,16 @@
 
-h2{
-  font-size: 40px;
-  margin-left: 1%;
+h1{
+  margin-left: 2%;
   margin-top: 2%;
   margin-bottom: 3%;
   font-family: "Arial";
 }
 
 button{
-  color:white;
-  background-color: #3895D0;
-  font-size: 18px;
-  padding-left: 40px;
-  padding-right: 40px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  left: 29%;
-
+  color:#294E66;
+  background-color: #ADDFFF;
+float: right;
+  margin-right: 14%;
 
 }
 

@@ -1,15 +1,13 @@
 <div style="width: 100%; height: 100%">
-  <div style="width:100%; padding:1%; background-color: #E6B0AA; font-size: 30px; color: white">
-    <mat-icon style="font-size: 30px; padding-right: 1.5%">hourglass_bottom</mat-icon> Function in Progress..
-  </div>
-  <p class="titleicon">
-    <ion-icon name="create"></ion-icon>
+
+  <h1 class="titleicon">
+    <mat-icon style="transform: scale(1.7); margin-right: 0.5em;">edit</mat-icon>
     Edit Patient
-  </p>
+  </h1>
   <br>
 
   <div
-    style=" background-color:white; margin-top:0.5%; flex: 1 1 70%; display: flex; flex-flow: row; justify-content: space-around; align-items: stretch; justify-content: space-around; gap: 0 1%">
+    style=" background:none; margin-top:0.5%; flex: 1 1 70%; display: flex; flex-flow: row; justify-content: space-around; align-items: stretch; justify-content: space-around; gap: 0 1%">
     <mat-card id="patientendaten"
               style="background-color: #f2f2f2; color:black; flex: 1 1 25%; display: flex;  flex-flow: column">
       <mat-card-title>Patientendaten</mat-card-title>
@@ -22,17 +20,16 @@
       <app-patient-pseudonyms [readOnly]=false [pseudonyms]="patient.ids"></app-patient-pseudonyms>
     </mat-card>
 
-    <div class="IDCardAnsichtButton"
-         style=" background-color: white; flex: 1 1 2%; display: flex;  flex-flow: column; justify-content: flex-end; align-items: stretch; align-self: flex-start">
-      <button mat-raised-button class="IDCardButtons" (click)="sendChanges()">Fertig</button>
+    <div style=" background-color: white; flex: 1 1 2%; display: flex;  flex-flow: column; justify-content: flex-end; align-items: stretch; align-self: flex-start">
+     <!-- Besser zur ID Card? --> <button mat-raised-button class="IDCardButtons" [routerLink]="['/patientenliste']">Fertig</button>
       <br>
-      <button style="background-color: #888888" mat-raised-button class="IDCardButtons" [routerLink]="['/patientlist-view']">Abbruch</button>
+      <button style="background-color: #888888; color:#f2f2f2" mat-raised-button class="IDCardButtons" [routerLink]="['/patientenliste']">Abbruch</button>
     </div>
   </div>
 
   <mat-card id="historie"
             style="background-color: #f2f2f2; color:black; flex: 1 1 80%; display: flex;  flex-flow: column;">
-    <mat-card-header style="width:100%; padding:1%; background-color: #E6B0AA; font-size: 26px; color: white">
+    <mat-card-header style="width:100%; padding:1%; background-color: #E6B0AA;  color: white"> <!-- font-size: 26px; -->
       Function in Progress..
     </mat-card-header>
     <mat-card-title>Historie</mat-card-title>

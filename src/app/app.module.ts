@@ -1,4 +1,4 @@
-import {APP_INITIALIZER, NgModule} from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AudittrailComponent } from './audittrail/audittrail.component';
@@ -48,6 +48,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {PatientListService} from "./services/patient-list.service";
 import {ConfigurationService} from "./services/configuration.service";
 import {UserService} from "./services/user.service";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 
 @NgModule({
@@ -75,43 +76,37 @@ import {UserService} from "./services/user.service";
     DeleteMultiplePatientsComponent,
     UserComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    IonicModule.forRoot(),
-    BrowserAnimationsModule,
-    MatDialogModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    ScrollingModule,
-    MatSidenavModule,
-    MatBadgeModule,
-    MatChipsModule,
-    MatIconModule,
-    MatCardModule,
-    MatAutocompleteModule,
-    MatPaginatorModule,
-    ReactiveFormsModule,
-    MatToolbarModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatTableModule,
-    MatCheckboxModule,
-    MatCheckboxModule,
-    HttpClientModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        IonicModule.forRoot(),
+        BrowserAnimationsModule,
+        MatDialogModule,
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        ScrollingModule,
+        MatSidenavModule,
+        MatBadgeModule,
+        MatChipsModule,
+        MatIconModule,
+        MatCardModule,
+        MatAutocompleteModule,
+        MatPaginatorModule,
+        ReactiveFormsModule,
+        MatToolbarModule,
+        MatSelectModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatTableModule,
+        MatCheckboxModule,
+        MatCheckboxModule,
+        MatTooltipModule,
+        HttpClientModule
+    ],
   providers: [
-    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}},
-    {
-      provide: APP_INITIALIZER,
-      multi : true,
-      deps : [ConfigurationService],
-      useFactory : (configService: ConfigurationService) =>  () => {
-        configService.loadConfig()
-      }}
+    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}
   ],
   bootstrap: [AppComponent]
 })

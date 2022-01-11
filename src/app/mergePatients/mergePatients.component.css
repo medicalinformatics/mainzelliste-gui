@@ -1,27 +1,15 @@
 .titleicon{
-  padding-left: 2%;
-  font-size: 40px;
+  margin-left: 3%;
   font-family: Arial;
-  margin-top: 2%;
+  margin-top: 1.5%;
   margin-bottom: 2%;
-
-}
-mat-card-title{
-  padding: 3%;
-}
-
-mat-card-header{
-  font-size: 30px;
-  font-family: Arial;
-  padding-bottom: 3%;
-  padding-top: 3%;
-  color:white;
 }
 
 .patientCard{
-  background-color: #284B63;
+  background-color: #f2f2f2;
   padding-bottom: 3%;
   margin-bottom: 3%;
+  color: #294E66;
 }
 
 .MergeCard{
@@ -31,11 +19,8 @@ mat-card-header{
 }
 
 #ergebnisButton{
-  background-color: #3895D0;
-  font-size: 18px;
+  background-color: #ADDFFF;
   color: white;
-  padding: 5px 30px 5px 30px;
-  width: 10%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   float:right;
   margin-right:2.5%;
@@ -44,4 +29,10 @@ mat-card-header{
 
 .patientendaten{
   padding-bottom: 8%;
+}
+mat-card-title{
+  transform: scale(0.7);
+  padding-top: 1%;
+  padding-bottom: 1%;
+  font-family: Arial;
 }

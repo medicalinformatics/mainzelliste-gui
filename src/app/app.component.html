@@ -1,25 +1,19 @@
-<div class="wrapper">
+<div class="wrapper" style="display: flex; overflow: auto">
 
   <!--HEADER AND CONTENT AS COLUMN-->
-  <app-head style="flex: 1 1 5%;"></app-head>
-
-  <div style="flex: 1 1 95%">
+  <app-head style="flex: 1 1 3%;"></app-head>
 
     <!-- NAVIGATION AND CONTENT NEXT TO EACH OTHER-->
-    <div style="display: flex; flex-flow: row; min-height: 100%;">
-      <app-navigation style="flex: 1 1 8%;"></app-navigation>
+    <div style="display: flex; flex-flow: row; min-height: auto;">
+      <app-navigation style="flex: 1 1 5%;"></app-navigation>
 
-      <div style="flex: 1 1 92%; display: flex; flex-flow: column; overflow: auto">
-
-        <!-- DONTENT AND FOOTER AS COLUMN ADJUSTABLE -->
+      <div style="flex: 1 1 95%; display: flex; flex-flow: column;">
         <div style="flex: 1 1 auto;">
           <router-outlet></router-outlet>
         </div>
-        <app-footer style="flex: 0 0 50%;"></app-footer>
-
       </div>
     </div>
-  </div>
+    <app-footer style="flex: 0 0 5%;"></app-footer>
 </div>
 
 

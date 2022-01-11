@@ -3,6 +3,7 @@ import {MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
 import {FormControl, FormGroup} from "@angular/forms";
 import {PatientService} from "../services/patient.service";
 import {Patient} from "../model/patient";
+import {add} from "ionicons/icons";
 
 @Component({
   selector: 'app-patient-search',
@@ -13,8 +14,12 @@ export class PatientSearchComponent implements OnInit {
 
   patientService: PatientService;
   patients: Array<Patient> = [];
-  fields: Array<string> = [];
 
+  @Input() patient: Patient = new Patient()
+  @Input() fields : Array<string> = [];
+
+//Test
+  selectedFilter: Array<string>=[];
 
   filterOptions: Array<string>=["gleich", "nicht gleich", "Beginnt mit", "Endet mit", "Enthält", "Enthält nicht"];
   title="Filter";
@@ -29,12 +34,14 @@ export class PatientSearchComponent implements OnInit {
 
   }
   ngOnInit(): void {
-    this.patients = history.state.patient;
 
   }
 
   closeFilter(){
     console.log("closedFilter");
     this.dialogRef.close();
+  }
+
+  updatePatientlist(){
   }
 }

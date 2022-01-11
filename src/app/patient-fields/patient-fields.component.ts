@@ -11,26 +11,24 @@ import {PatientService} from "../services/patient.service";
   templateUrl: './patient-fields.component.html',
   styleUrls: ['./patient-fields.component.css']
 })
+
 export class PatientFieldsComponent implements OnInit {
 
   tmpPatient: Patient = new Patient();
 
-
   @Input()  fields: {[key: string]: any} = {};
   @Output() fieldEvent = new EventEmitter<{[key: string]: any}>();
+
+  @Output() slideFieldEvent = new EventEmitter<{name:string,value:string}>();
+
   fieldService: FieldService;
   configuredFields: Promise<Array<Field>>;
   @Input() readOnly: boolean= false;
-  @Input() merging: boolean=false;
-  @Input() merging2: boolean=false;
-
+  @Input() side: string="none";
 
   constructor(fieldService: FieldService) {
     this.fieldService = fieldService;
     this.configuredFields = fieldService.getFields();
-    patientService: PatientService;
-    // @Input() patient: Patient = new Patient()
-
   }
 
   ngOnInit(): void {
@@ -40,5 +38,9 @@ export class PatientFieldsComponent implements OnInit {
     this.fieldEvent.emit(this.fields);
 
   }
+
+  slideData(value: string, name: string): void{
+      this.slideFieldEvent.emit({value:value, name:name});
+  };
 
 }

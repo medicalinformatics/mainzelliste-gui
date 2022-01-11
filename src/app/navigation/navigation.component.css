@@ -1,47 +1,26 @@
 nav{
   background-color: #294E66;
-  float: left;
-  height: 100%;
-  width: 250px;
+  height:100%;
   box-shadow:1px 10px 10px rgba(0,0,0,.4);
-  height: 100%
-
+  padding:1em;
 }
 
 a{
   color: white;
-  font-size: 18px;
   text-decoration: none;
-  font-family: Verdana;
+  font-family: Helvetica;
   float:left;
-  padding-left: 1em;
-
-}
-
-ion-icon{
-  padding-right: 30px;
-  font-size: 25px;
-
+  padding-left: 0.5em;
+  transform: scale(0.9);
 }
 
 td{
-  padding-top: 2em;
-  padding-bottom:2em;
-  width:100%;
-
+  padding-top: 1em;
+  padding-bottom:1em;
 }
 
-.nav_item{
-  float:left;
-
+.nav_icon{
+  margin-right: 0.5em;
 }
 
-.nav_item.active {
-}
-.nav_item:hover{
-
-}table{
-  width: 100%;
-  float:left;
- }
 

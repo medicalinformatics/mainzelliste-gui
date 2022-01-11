@@ -13,8 +13,15 @@ export class MergePatientsComponent implements OnInit {
   patientService: PatientService;
   patients: Array<Patient> = [];
 
+  @Input() patient: Patient = new Patient()
+  @Input() fields : Array<string> = [];
+
+  @Input() finalPatient= new Patient;
+  emptyPatient= new Patient;
+
   constructor(patientService: PatientService) {
     this.patientService = patientService;
+    this.emptyPatient.ids=[{idType: "Pseudonym", idString: " "}];
 
   }
 
@@ -22,4 +29,16 @@ export class MergePatientsComponent implements OnInit {
     this.patients = history.state.patients;
   }
 
+  updateFinalPatient( name:string, value:string){
+    this.finalPatient.fields[name]= value;
+}
+
+
+  createNewPatient () {
+    this.patientService.createPatient(this.finalPatient).then((result) => {
+      if (result == 200) {
+        this.patient = new Patient();
+      }
+    });
+  }
 }
