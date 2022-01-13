@@ -44,12 +44,13 @@ import { MatNativeDateModule } from '@angular/material/core';
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { UserComponent } from './user/user.component';
-import {HttpClientModule} from "@angular/common/http";
-import {PatientListService} from "./services/patient-list.service";
-import {ConfigurationService} from "./services/configuration.service";
-import {UserService} from "./services/user.service";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {AppConfigService} from "./app-config.service";
 
+function initializeAppFactory(service:AppConfigService, httpClient: HttpClient): () => Promise<any> {
+  return () => service.load();
+}
 
 @NgModule({
   declarations: [
@@ -77,7 +78,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     UserComponent
   ],
     imports: [
-        BrowserModule,
+      BrowserModule,
         AppRoutingModule,
         IonicModule.forRoot(),
         BrowserAnimationsModule,
@@ -106,9 +107,17 @@ import {MatTooltipModule} from "@angular/material/tooltip";
         HttpClientModule
     ],
   providers: [
-    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}
+    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}},
+    {provide: APP_INITIALIZER,
+      useFactory: initializeAppFactory,
+      deps: [
+        AppConfigService
+      ],
+      multi: true
+    }
   ],
   bootstrap: [AppComponent],
   entryComponents:[PatientSearchComponent]
 })
+
 export class AppModule { }
