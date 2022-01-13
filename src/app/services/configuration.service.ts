@@ -1,30 +1,33 @@
-import {Injectable} from '@angular/core';
-import {PatientList} from "../model/patientlist";
-import {HttpClient} from "@angular/common/http";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+/*import { AppConfig } from './app-config';*/
 
 interface AppConfig {
-  patientLists: PatientList[]
+  title?: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ConfigurationService {
-  patientLists: PatientList[] = [];
-  selectedPatientList!: PatientList;
 
-  constructor(
-    private httpClient: HttpClient
-  ) {
-  }
+  data: AppConfig = {};
 
-  loadConfig() {
-    this.httpClient.get<AppConfig>('/assets/config/config.json')
-    .toPromise()
-    .then(config => {
-      console.log(config)
-      this.patientLists = config.patientLists;
-      this.selectedPatientList = this.patientLists[0];
+  constructor(private http: HttpClient) {}
+
+  load(defaults?: AppConfig): Promise<AppConfig> {
+    return new Promise<AppConfig>(resolve => {
+      this.http.get('app.config.json').subscribe(
+        response => {
+          console.log('using server-side configuration');
+          this.data = Object.assign({}, defaults || {}, response || {});
+          resolve(this.data);
+        },
+        () => {
+          console.log('using default configuration');
+          this.data = Object.assign({}, defaults || {});
+          resolve(this.data);
+        }
+      );
     });
   }
+
 }
