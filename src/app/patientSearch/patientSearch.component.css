@@ -83,21 +83,20 @@
   padding-bottom: 4%;
   padding-top: 2%;
 }
+#filterEndeButtonAbbruch{
+  background-color: #888888;
+  color: white;
+  width: 30%;
+  font-family: Arial;
+  font-weight: lighter;
+
+}
 
 #filterEndeButtonCheck{
   background-color: #ADDFFF;
   color: #294E66;
-  width:30%;
+  width: 30%;
   font-family: Arial;
-}
+  font-weight: lighter;
 
-#filterEndeButtonAbbruch{
-  background-color: #888888;
-  color:white;
-  width:30%;
-  font-family: Arial;
-}
-
-.custom-dialog-container .mat-dialog-container .mat-h3, .mat-subheading-2, .mat-typography h3 {
-margin:0px;
 }
