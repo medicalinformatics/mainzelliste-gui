@@ -52,12 +52,16 @@ mat-paginator{
 }
 
 .custom-dialog-container .mat-dialog-container {
-  width: 25em;
-  height: 30em;
+  width: 30em;
+  height: 30.7em;
   padding:0px;
 }
 
 .custom-dialog-container .mat-dialog-container .mat-h3{
   margin:0px;
   padding:0px;
+}
+
+.custom-dialog-container .mat-dialog-container .mat-h3, .mat-subheading-2, .mat-typography h3 {
+  margin:0px;
 }

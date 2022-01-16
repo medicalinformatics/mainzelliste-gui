@@ -1,8 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
-import {FormControl, FormGroup} from "@angular/forms";
+import {Component, Inject, Injectable, Input, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
+import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {PatientService} from "../services/patient.service";
-import {Patient} from "../model/patient";
 
 @Component({
   selector: 'app-patient-search',
@@ -11,27 +10,28 @@ import {Patient} from "../model/patient";
 })
 
 export class PatientSearchComponent implements OnInit {
-  patientService: PatientService;
-  patients: Array<Patient> = [];
-  @Input() patient: Patient = new Patient()
-  @Input() fields: Array<string> = [];
 
   filterOptions: Array<string> = ["gleich", "nicht gleich", "Beginnt mit", "Endet mit", "Enthält", "Enthält nicht"];
-  title = "Filter";
   range = new FormGroup({
     start: new FormControl(),
     end: new FormControl(),
   });
 
-  constructor(public dialogRef: MatDialogRef<PatientSearchComponent>, patientService: PatientService) {
-    this.patientService = patientService;
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: PatientService, public dialogRef: MatDialogRef<PatientSearchComponent>) {
+
   }
 
   ngOnInit(): void {
+
   }
 
-  closeFilter() {
-    console.log("closedFilter");
+
+  save(){
+    this.dialogRef.close();
+  }
+
+  close() {
     this.dialogRef.close();
   }
 
