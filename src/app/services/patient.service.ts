@@ -310,14 +310,12 @@ export class PatientService {
       Geburtsdatum: '14.09.2001',
       Wohnort: 'Unterweid',
       PLZ: '36452'
-    }, [{idType: "Pseudonym", idString: "KMNH76FC"}]),
-
-
-
+    }, [{idType: "Pseudonym", idString: "KMNH76FC"}])
   ];
 
   constructor(private patientListService: PatientListService) {
-    this.rerenderPatients(patientListService.getPatients())
+    console.log("patientservice constructed");
+    this.rerenderPatients(patientListService.getPatients());
   }
 
   rerenderPatients(patients: Promise<Patient[]>, filters?: Array<{ field: string, searchCriteria: string }>) {

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {User} from "../model/user";
 import {HttpClient} from "@angular/common/http";
-import {ConfigurationService} from "./configuration.service";
+import {AppConfigService} from "../app-config.service";
 
 /** represents a mainzelliste session response */
 export interface Session {
@@ -17,7 +17,7 @@ export class UserService {
 
   constructor(
     private httpClient: HttpClient,
-    private configService: ConfigurationService
+    private configService: AppConfigService
   ) {
   }
 
@@ -29,9 +29,9 @@ export class UserService {
   getSession(): Promise<Session> {
     return this.httpClient
     .post<Session>(
-      "https://test.verbis.dkfz.de/mainzelliste" + "/sessions",
+      this.configService.data[0].url + "/sessions",
       {},
-      {headers: {"mainzellisteApiKey": "changeThisApiKey"}})
+      {headers: {"mainzellisteApiKey": this.configService.data[0].apiKey}})
     .toPromise()
   }
 
