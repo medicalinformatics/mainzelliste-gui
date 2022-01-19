@@ -1,25 +1,23 @@
-<div id="filterfenster">
-  <h3 mat-dialog-title class="header"> {{title}}
-    <button id="closeicon"><mat-icon  (click)="closeFilter()">cancel</mat-icon></button>
-  </h3>
+<h3 class="header"> Filter </h3>
 
   <div class="sortierenDiv">
     <h4>Sortieren</h4>
     <div style="display: flex; flex-flow: row; justify-content: space-evenly">
-    <button mat-raised-button class="aufsteigendButton">
-      <mat-icon id="buttonicon1">swap_vert</mat-icon>
-      Aufsteigend
-    </button>
-    <button mat-raised-button class="absteigendButton">
-      <mat-icon id="buttonicon2">swap_vert</mat-icon>
-      Absteigend
-    </button></div>
+      <button mat-raised-button class="aufsteigendButton">
+        <mat-icon id="buttonicon1">swap_vert</mat-icon>
+        Aufsteigend
+      </button>
+      <button mat-raised-button class="absteigendButton">
+        <mat-icon id="buttonicon2">swap_vert</mat-icon>
+        Absteigend
+      </button>
+    </div>
   </div>
 
   <div class="filterDiv">
     <h4>Filter</h4>
     <div style="flex-flow: row; justify-content: space-evenly">
-      <mat-form-field style="width: 47%; margin-right: 2%" appearance="outline">
+      <mat-form-field style="width: 45%; margin-right: 2%" appearance="outline">
         <mat-label>Textfilter auswählen</mat-label>
         <mat-select>
           <mat-option *ngFor="let filterOption of filterOptions" [value]="filterOption">
@@ -28,7 +26,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field style="width: 47%; margin-left: 2%" appearance="outline">
+      <mat-form-field style="width: 48%; margin-left: 2%" appearance="outline">
         <mat-label>Zeitraum</mat-label>
         <mat-date-range-input [rangePicker]="picker">
           <input matStartDate placeholder="Beginn">
@@ -38,19 +36,15 @@
         <mat-date-range-picker #picker></mat-date-range-picker>
       </mat-form-field>
 
-    <mat-form-field class="example-full-width" style="width: 98%" appearance="outline">
-      <mat-label>Suche Patient</mat-label>
-      <input matInput placeholder="Suche nach Patient..">
-    </mat-form-field>
-
+      <mat-form-field class="example-full-width" style="width: 98%" appearance="outline">
+        <mat-label>Suche Patient</mat-label>
+        <input matInput placeholder="Suche nach Patient..">
+      </mat-form-field>
     </div>
-  <div style="overflow: auto; height: 30%; display:flex; flex-flow: column">
-<!--    <mat-checkbox *ngFor="let name of patients.fields"></mat-checkbox>-->
-    <mat-checkbox></mat-checkbox>
-    <mat-checkbox></mat-checkbox>
-    <mat-checkbox></mat-checkbox>
-    <mat-checkbox></mat-checkbox>
-    <mat-checkbox></mat-checkbox>
   </div>
+
+ <div class="filterEnde" style="flex-flow: row; display: flex; justify-content: space-evenly; width: 100%">
+    <button mat-button id="filterEndeButtonCheck" (click)="save()">Filter</button>
+    <button mat-button id="filterEndeButtonAbbruch" (click)="close()">Abbruch</button>
   </div>
-</div>
+

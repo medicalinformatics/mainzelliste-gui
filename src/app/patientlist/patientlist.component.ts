@@ -1,5 +1,14 @@
-import {AfterViewInit, Component, EventEmitter, Input, Output, ViewChild, ViewEncapsulation} from '@angular/core';
-import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  Output,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {PatientSearchComponent} from "../patientSearch/patientSearch.component";
 import {Patient} from "../model/patient";
 import {PatientService} from "../services/patient.service";
@@ -27,7 +36,8 @@ export class PatientlistComponent implements AfterViewInit{
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   pseudonyms: string[]=["Pseudonym"];
 
-  constructor(public dialog: MatDialog, patientService: PatientService) {
+  //KONSTRUKTOR
+  constructor(public dialog: MatDialog) {
     this.columns = this.columns.concat(this.pseudonyms).concat(this.fields).concat(["actions"]);
 
     const initialSelection: Patient[] = [];
@@ -35,12 +45,12 @@ export class PatientlistComponent implements AfterViewInit{
     this.selection = new SelectionModel<Patient>(allowMultiSelect, initialSelection);
   }
 
-  openFilter(spalte: string) {
+  openFilter(spalte: string): void{
     console.log("opened filter");
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
     if (spalte == 'Pseudonym') {
-      this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
+      this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container', data:{person:{name:'Simon',age:32,}},});
       // this.dialog.open(PatientSearchComponent, {position: {top: '11%', left: '11%'}, minWidth:"20%",minHeight:"40%", data:{dialogtitle:"Pseudonym"}});
     } else if (spalte == 'Nachname') {
       this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
@@ -57,8 +67,6 @@ export class PatientlistComponent implements AfterViewInit{
     }
   };
 
-
-  /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.patients.data.length;
@@ -81,5 +89,26 @@ export class PatientlistComponent implements AfterViewInit{
   ngAfterViewInit(): void {
     this.patients.paginator = this.paginator;
   }
+/*
 
+  openDialog() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+
+    dialogConfig.data = {
+      id: 1,
+      title: 'Angular For Beginners'
+    };
+
+    this.dialog.open(PatientSearchComponent, dialogConfig);
+
+    const dialogRef = this.dialog.open(PatientSearchComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(
+      data => console.log("Dialog output:", data)
+    );
+  }
+*/
 }

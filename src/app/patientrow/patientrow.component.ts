@@ -6,8 +6,8 @@ import {PatientService} from "../services/patient.service";
   selector: '[app-patientrow]',
   templateUrl: './patientrow.component.html',
   styleUrls: ['./patientrow.component.css'],
-
 })
+
 export class PatientrowComponent {
   patientService: PatientService;
   @Input() patient: Patient = new Patient()
@@ -40,7 +40,6 @@ export class PatientrowComponent {
     this.selected=!this.selected;
     this.selectedP.emit(this);
     console.log(this);
-
   }
 
 }

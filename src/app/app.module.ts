@@ -108,6 +108,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents:[PatientSearchComponent]
 })
 export class AppModule { }

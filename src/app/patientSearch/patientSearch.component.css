@@ -1,5 +1,5 @@
 .header{
-  height:25%;
+  height:13%;
   padding-left: 5%;
   padding-top:3%;
   padding-bottom: 3%;
@@ -42,11 +42,11 @@
   margin-left:5%;
 }
 .aufsteigendButton{
-    width: 45%;
+    width: 37%;
     border: none;
     text-align: center;
     text-decoration: none;
-    margin-left: 8%;
+    margin-left: 3%;
     margin-bottom: 1%;
     border-radius: 15px;
     background-color: #ADDFFF;
@@ -54,11 +54,11 @@
 }
 
 .absteigendButton{
-  width: 45%;
+  width: 37%;
   border: none;
   text-align: center;
   text-decoration: none;
-  margin-left: 8%;
+  margin-left: 5%;
   margin-bottom: 1%;
   border-radius: 15px;
   background-color: #ADDFFF;
@@ -75,3 +75,29 @@
   margin-top: 7px;
 }
 
+.filterEnde{
+  background-color: #f1f1f1;
+  border: solid white 0.5px;
+  padding-left: 3%;
+  padding-right: 3%;
+  padding-bottom: 4%;
+  padding-top: 2%;
+}
+
+#filterEndeButtonCheck{
+  background-color: #ADDFFF;
+  color: #294E66;
+  width:30%;
+  font-family: Arial;
+}
+
+#filterEndeButtonAbbruch{
+  background-color: #888888;
+  color:white;
+  width:30%;
+  font-family: Arial;
+}
+
+.custom-dialog-container .mat-dialog-container .mat-h3, .mat-subheading-2, .mat-typography h3 {
+margin:0px;
+}
