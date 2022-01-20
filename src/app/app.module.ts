@@ -41,11 +41,11 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
-import { UserComponent } from './user/user.component';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {AppConfigService} from "./app-config.service";
 import { ErrorComponent } from './error/error.component';
+import {SessionComponent} from "./user/session.component";
 
 function initializeAppFactory(service:AppConfigService, httpClient: HttpClient): () => Promise<any> {
   return () => service.load();
@@ -74,7 +74,7 @@ function initializeAppFactory(service:AppConfigService, httpClient: HttpClient):
     PatientPseudonymsComponent,
     PatientDataComponent,
     DeleteMultiplePatientsComponent,
-    UserComponent,
+    SessionComponent,
     ErrorComponent
   ],
     imports: [
