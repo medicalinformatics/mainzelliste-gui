@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {UserService} from "../services/user.service";
+import {SessionService} from "../services/session.service";
 
 @Component({
   selector: 'app-user',
@@ -8,7 +8,7 @@ import {UserService} from "../services/user.service";
 })
 export class UserComponent {
   constructor(
-    public userService: UserService
+    public userService: SessionService
   ) {
   }
 }
