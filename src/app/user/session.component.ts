@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import {SessionService} from "../services/session.service";
 
 @Component({
-  selector: 'app-user',
+  selector: 'app-session',
   templateUrl: './session.component.html',
   styleUrls: ['./session.component.css']
 })
 export class SessionComponent {
   constructor(
-    public userService: SessionService
+    public sessionService: SessionService
   ) {
   }
 }

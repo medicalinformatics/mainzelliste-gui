@@ -1,27 +1,18 @@
-mat-icon{
-  font-size: 60px;
+div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#UserIcon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
   color:#494949;
 }
 
-#UserProfil{
-  /*float:left;*/
-}
-
-#UserName{
-  padding-left: 5px;
-  padding-top: 7%;
-  padding-bottom: 5px;
-  /*float:right;*/
-  font-size: 18px;
+span {
+  color: #494949;
   font-family: Tahoma;
-}
-
-#Account{
-  /*margin-top:2%;*/
-  /*width:11%;*/
-  /*height:50%;*/
-  /*float: right;*/
-  display: flex;
-  flex-flow: row;
-  justify-content: space-around;
+  font-size: 16px;
 }

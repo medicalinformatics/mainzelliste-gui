@@ -1,4 +1,12 @@
-<div id="Account">
-  <mat-icon id="UserProfil">account_circle</mat-icon>
-  <span id="UserName">{{userService.sessionValue.sessionId}}</span>
-</div>
+<button mat-button [matMenuTriggerFor]="logoutDropDown">
+  <mat-icon id="UserIcon">account_circle</mat-icon>
+  <span>{{sessionService.sessionValue.sessionId}}</span>
+</button>
+<!-- TODO: Make the DropDown prettier -->
+<mat-menu #logoutDropDown
+          xPosition="before">
+  <button mat-menu-item (click)="sessionService.logout()">
+    <mat-icon>logout</mat-icon>
+    <span>Logout</span>
+  </button>
+</mat-menu>

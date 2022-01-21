@@ -12,6 +12,7 @@ import {DeletePatientComponent} from "./delete-patient/delete-patient.component"
 import {DeleteMultiplePatientsComponent} from "./delete-multiple-patients/delete-multiple-patients.component";
 import {ErrorComponent} from "./error/error.component";
 import {SessionGuard} from "./guards/session-guard.service";
+import {LogoutComponent} from "./logout/logout.component";
 
 
 const routes: Routes = [
@@ -27,10 +28,11 @@ const routes: Routes = [
       {path: 'patientenliste', component: PatientlistViewComponent},
       {path: 'edit-patient', component: EditPatientComponent},
       {path: 'delete-patient', component: DeletePatientComponent},
-      {path: 'patienten-loeschen', component:DeleteMultiplePatientsComponent},
+      {path: 'patienten-loeschen', component:DeleteMultiplePatientsComponent}
   ]},
   // Needs to be outside, because we want message why user couldn't authenticate
-  {path: 'error', component: ErrorComponent}
+  {path: 'error', component: ErrorComponent},
+  {path: 'logout', component: LogoutComponent}
 ];
 
 @NgModule({

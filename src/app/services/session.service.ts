@@ -49,7 +49,8 @@ export class SessionService {
   logout () {
     localStorage.removeItem("mainzellisteSession");
     this.sessionSubject.next(new Session());
-    this.router.navigate(['login'])
+    // TODO: Implement Logout Page
+    this.router.navigate(['logout'])
   }
 
   /**
