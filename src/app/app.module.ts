@@ -47,6 +47,7 @@ import { UserComponent } from './user/user.component';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {AppConfigService} from "./app-config.service";
+import {MatDividerModule} from "@angular/material/divider";
 
 function initializeAppFactory(service:AppConfigService, httpClient: HttpClient): () => Promise<any> {
   return () => service.load();
@@ -78,7 +79,7 @@ function initializeAppFactory(service:AppConfigService, httpClient: HttpClient):
     UserComponent
   ],
     imports: [
-      BrowserModule,
+        BrowserModule,
         AppRoutingModule,
         IonicModule.forRoot(),
         BrowserAnimationsModule,
@@ -104,7 +105,8 @@ function initializeAppFactory(service:AppConfigService, httpClient: HttpClient):
         MatCheckboxModule,
         MatCheckboxModule,
         MatTooltipModule,
-        HttpClientModule
+        HttpClientModule,
+        MatDividerModule
     ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}},

@@ -1,37 +1,42 @@
 <div style="width: 100%; height: 100%">
   <br>
-  <h1 class="titleicon">
-    <mat-icon style="transform: scale(1.7); margin-right: 0.5em;">badge</mat-icon>
+  <h1 class="titleicon" >
+<!-- ID CARD ICON:   <mat-icon style="transform: scale(1.7); margin-right: 0.5em;">badge</mat-icon>-->
     ID Card
   </h1>
   <br>
 <div style=" background:none; margin-top:0.5%; flex: 1 1 70%; display: flex; flex-flow: row; justify-content: space-around; align-items: stretch; justify-content: space-around; gap: 0 1%">
-  <mat-card id="patientendaten" style="background-color: #f2f2f2; color:black; flex: 1 1 25%; display: flex;  flex-flow: column">
+  <mat-card id="patientendaten" style="; flex: 1 1 25%; display: flex;  flex-flow: column">
     <mat-card-title>Patientendaten</mat-card-title>
     <app-patient-fields [readOnly]=true [fields]="patient.fields"></app-patient-fields>
   </mat-card>
 
-  <mat-card id="pseudonyme" style="background-color: #f2f2f2; color:black; flex: 1 1 25%; display: flex;  flex-flow: column">
+  <mat-card id="pseudonyme" style="flex: 1 1 25%; display: flex;  flex-flow: column">
     <mat-card-title>Pseudonyme</mat-card-title>
     <app-patient-pseudonyms [readOnly]=true [pseudonyms]="patient.ids"></app-patient-pseudonyms>
   </mat-card>
 
-  <div class="IDCardAnsichtButton"
-       style=" background-color: white; flex: 1 1 2%; display: flex;  flex-flow: column; justify-content: flex-start; align-items: stretch;">
-    <button mat-raised-button class="IDCardButtons">Drucken</button>
-    <br>
-    <button mat-raised-button class="IDCardButtons">Projekt erstellen</button>
-    <br>
-    <button mat-raised-button class="IDCardButtons" [routerLink]="['/edit-patient']"
-            [state]="{patient: patient}">Editieren
-    </button>
-    <br>
+    <section style="display: flex; flex: 1 1 1%; margin-left:2%; flex-flow: column;">
 
-    <button mat-raised-button class="IDCardButtons" [routerLink]="['/delete-patient']"
-            [state]="{patient: patient}">Löschen
-    </button>
-    <br>
-  </div>
+            <button mat-fab style="background-color:#053E6A; color:white;" aria-label="Example icon button with a delete icon">
+              <mat-icon matTooltip="Drucken">print</mat-icon>
+            </button>
+<br>
+            <button mat-fab style="background-color:#053E6A; color:white;" aria-label="Example icon button with a delete icon">
+              <mat-icon matTooltip="ID hinzufügen">subtitles</mat-icon>
+            </button>
+      <br>
+            <button mat-fab [routerLink]="['/edit-patient']"
+                    [state]="{patient: patient}" style="background-color:#ffd60a; color:white;" aria-label="Example icon button with a delete icon">
+              <mat-icon matTooltip="Edit">edit</mat-icon>
+            </button>
+      <br>
+            <button mat-fab [routerLink]="['/delete-patient']"
+                    [state]="{patient: patient}" style="background-color:#da1e37; color:white;" aria-label="Example icon button with a delete icon">
+              <mat-icon matTooltip="Löschen">delete</mat-icon>
+            </button>
+      <br>
+    </section>
 </div>
 
  <app-historie></app-historie>
