@@ -8,6 +8,5 @@ RUN npm run build
 FROM nginx:1.21
 COPY nginx.conf /etc/nginx/templates/mainzelliste-gui.nginx.conf.template
 COPY --from=build /usr/src/app/dist/uebung /usr/share/nginx/html
-COPY ./mainzelliste-gui.entrypoint.sh /
-RUN chmod +x /mainzelliste-gui.entrypoint.sh
-ENTRYPOINT ["/mainzelliste-gui.entrypoint.sh"]
+COPY ./mainzelliste-gui.entrypoint.sh /docker-entrypoint.d/
+RUN chmod +x /docker-entrypoint.d/mainzelliste-gui.entrypoint.sh
