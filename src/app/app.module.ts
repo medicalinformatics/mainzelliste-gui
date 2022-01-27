@@ -8,7 +8,6 @@ import { HeadComponent } from './head/head.component';
 import { PatientSearchComponent } from './patientSearch/patientSearch.component';
 import {AppRoutingModule, routingComponents} from './app-routing.module';
 import { IdcardComponent } from './idcard/idcard.component';
-import { IonicModule } from '@ionic/angular';
 import { FooterComponent }from './footer/footer.component';
 import {CreatePatientComponent} from "./createPatient/createPatient.component";
 import {PatientlistComponent} from "./patientlist/patientlist.component";
@@ -53,34 +52,33 @@ function initializeAppFactory(service:AppConfigService, httpClient: HttpClient):
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    AudittrailComponent,
-    NavigationComponent,
-    PatientlistComponent,
-    PatientrowComponent,
-    HeadComponent,
-    PatientSearchComponent,
-    routingComponents,
-    IdcardComponent,
-    FooterComponent,
-    SimilarPatientComponent,
-    PatientComponent,
-    PatientlistViewComponent,
-    HistorieComponent,
-    CreatePatientComponent,
-    PatientFieldsComponent,
-    EditPatientComponent,
-    DeletePatientComponent,
-    PatientPseudonymsComponent,
-    PatientDataComponent,
-    DeleteMultiplePatientsComponent,
-    UserComponent
-  ],
+    declarations: [
+        AppComponent,
+        AudittrailComponent,
+        NavigationComponent,
+        PatientlistComponent,
+        PatientrowComponent,
+        HeadComponent,
+        PatientSearchComponent,
+        routingComponents,
+        IdcardComponent,
+        FooterComponent,
+        SimilarPatientComponent,
+        PatientComponent,
+        PatientlistViewComponent,
+        HistorieComponent,
+        CreatePatientComponent,
+        PatientFieldsComponent,
+        EditPatientComponent,
+        DeletePatientComponent,
+        PatientPseudonymsComponent,
+        PatientDataComponent,
+        DeleteMultiplePatientsComponent,
+        UserComponent
+    ],
     imports: [
-      BrowserModule,
+        BrowserModule,
         AppRoutingModule,
-        IonicModule.forRoot(),
         BrowserAnimationsModule,
         MatDialogModule,
         FormsModule,
@@ -106,18 +104,17 @@ function initializeAppFactory(service:AppConfigService, httpClient: HttpClient):
         MatTooltipModule,
         HttpClientModule
     ],
-  providers: [
-    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}},
-    {provide: APP_INITIALIZER,
-      useFactory: initializeAppFactory,
-      deps: [
-        AppConfigService
-      ],
-      multi: true
-    }
-  ],
-  bootstrap: [AppComponent],
-  entryComponents:[PatientSearchComponent]
+    providers: [
+        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
+        { provide: APP_INITIALIZER,
+            useFactory: initializeAppFactory,
+            deps: [
+                AppConfigService
+            ],
+            multi: true
+        }
+    ],
+    bootstrap: [AppComponent]
 })
 
 export class AppModule { }
