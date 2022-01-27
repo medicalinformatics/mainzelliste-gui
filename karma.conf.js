@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/uebung'),
+      dir: require('path').join(__dirname, './coverage/mainzelliste-gui'),
       subdir: '.',
       reporters: [
         { type: 'html' },

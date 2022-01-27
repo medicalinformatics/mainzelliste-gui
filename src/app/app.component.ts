@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import{NavigationComponent} from "./navigation/navigation.component";
 
 @Component({
   selector: 'app-root',
@@ -7,6 +6,5 @@ import{NavigationComponent} from "./navigation/navigation.component";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'mainzelliste';
-
+  title = 'mainzelliste-gui';
 }
