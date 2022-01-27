@@ -8,7 +8,6 @@ import { HeadComponent } from './head/head.component';
 import { PatientSearchComponent } from './patientSearch/patientSearch.component';
 import {AppRoutingModule, routingComponents} from './app-routing.module';
 import { IdcardComponent } from './idcard/idcard.component';
-import { IonicModule } from '@ionic/angular';
 import { FooterComponent }from './footer/footer.component';
 import {CreatePatientComponent} from "./createPatient/createPatient.component";
 import {PatientlistComponent} from "./patientlist/patientlist.component";
@@ -80,7 +79,6 @@ function initializeAppFactory(service:AppConfigService, httpClient: HttpClient):
     imports: [
       BrowserModule,
         AppRoutingModule,
-        IonicModule.forRoot(),
         BrowserAnimationsModule,
         MatDialogModule,
         FormsModule,
