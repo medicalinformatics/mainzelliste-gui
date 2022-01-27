@@ -2,7 +2,8 @@ FROM node:lts as build
 WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 RUN npm install
-COPY ./ ./
+COPY ./angular.json ./tsconfig.json ./tsconfig.app.json ./
+COPY ./src ./src
 RUN npm run build
 
 FROM nginx:1.21
