@@ -1,6 +1,0 @@
-# IDE specific files
-.idea
-*.iml
-# Build Output
-dist
-node_modules
