@@ -35,6 +35,7 @@ export class PatientListService {
     private httpClient: HttpClient
   ) {
     this.patientList = this.configService.data[0];
+    // this.patientList.fieldMappings["FIRST_NAME"];
     this.mainzellisteHeaders = new HttpHeaders()
     .set('mainzellisteApiKey', this.patientList.apiKey)
     .set('mainzellisteApiVersion', '3.2')

@@ -8,57 +8,56 @@
 <div  style="display: flex; flex-flow: row; justify-content: space-evenly;">
 
 <!--PATIENTENDATEN1-->
-<mat-card class="patientCard" style="width: 30%">
-  <mat-card-title style="font-size: xx-large">Patientendaten 1</mat-card-title>
+<mat-card class="patientCard" style="width: 28%">
+  <mat-card-title style="font-size: xx-large; margin-left: -15%">Patientendaten 1</mat-card-title>
 
   <div class="pseudonyme" style=" flex: 1 1 40%; display: flex; flex-flow:column; padding-top: 5%" >
-    <mat-card-title style="color:#294E66; font-size: x-large">Pseudonyme</mat-card-title>
+    <mat-card-title style="color:dimgray; font-size: x-large; margin-left: -15%">Pseudonyme</mat-card-title>
     <div style="flex-flow: row">
-    <app-patient-pseudonyms style="width: 90%" [readOnly]=true [pseudonyms]="patients[0].ids"></app-patient-pseudonyms>
+    <app-patient-pseudonyms style="width: 90%" [readOnly]=true [pseudonyms]="patients[0].ids" (slideFieldEvent)="updatePseudonymOfFinalPatient($event.name, $event.value)"></app-patient-pseudonyms>
   </div>
   </div>
 
   <div class="patientendaten"  style=" flex: 1 1 40%; display: flex;  flex-flow: column; padding-top: 5%">
-    <mat-card-title style="color:#294E66; font-size: x-large">Patientendaten</mat-card-title>
-    <app-patient-fields [readOnly]=true  side="right" [fields]="patients[0].fields" (slideFieldEvent)="updateFinalPatient($event.name, $event.value)"></app-patient-fields></div>
+    <mat-card-title style="color:dimgray; font-size: x-large; margin-left: -15%">Patientendaten</mat-card-title>
+    <app-patient-fields [readOnly]=true  side="right" [fields]="patients[0].fields" (slideFieldEvent)="updateFieldsOfFinalPatient($event.name, $event.value)"></app-patient-fields></div>
 </mat-card>
 
 <!-- FINALER PATIENT -->
-<mat-card style="width: 30%" class="MergeCard">
-  <mat-card-title style="font-size: xx-large">Finale Patientendaten</mat-card-title>
+<mat-card style="width: 28%" class="MergeCard">
+  <mat-card-title style="font-size: xx-large; color:black; margin-left: -15%">Finale Patientendaten</mat-card-title>
 
   <div class="pseudonyme" style=" flex: 1 1 40%; display: flex; flex-flow:column;; padding-top: 5%" >
-    <mat-card-title style="color:#294E66; font-size: x-large">Pseudonyme</mat-card-title>
-    <div style="flex-flow: column; justify-content: flex-end ">
+    <mat-card-title style="color:dimgray; font-size: x-large; margin-left: -15%">Pseudonyme</mat-card-title>
+<!--  <div style="flex-flow: column; justify-content: flex-end ">-->
       <!-- WOHER SOLL DER FINALEPATIENT SEIN PSEUDONYM ERHALTEN? -->
-      <app-patient-pseudonyms style="width: 90%" [readOnly]=true [pseudonyms]="emptyPatient.ids"></app-patient-pseudonyms> <!-- [pseudonyms]="patients[0].ids" -->
-    </div>
+      <app-patient-pseudonyms  [readOnly]=true [pseudonyms]="patients[0].ids"></app-patient-pseudonyms> <!-- [pseudonyms]="patients[0].ids"  [pseudonyms]="emptyPatient.ids"  [pseudonyms]="finalPatient.ids"-->
+<!--   </div>-->
   </div>
 
   <div class="patientendaten"  style=" flex: 1 1 40%; display: flex;  flex-flow: column; padding-top: 5%">
-    <mat-card-title style="color:#294E66; font-size: x-large;">Patientendaten</mat-card-title>
-    <app-patient-fields [readOnly]=true [fields]="finalPatient.fields" ></app-patient-fields></div>
+    <mat-card-title style="color:dimgray; font-size: x-large; margin-left: -15%">Patientendaten</mat-card-title>
+    <app-patient-fields [readOnly]=true [fields]="finalPatient.fields" ></app-patient-fields>
+  </div>
 </mat-card>
 
 <!--PATIENTENDATEN2-->
-  <mat-card class="patientCard" style="width: 30%">
-    <mat-card-title style="font-size: xx-large">Patientendaten 2</mat-card-title>
+  <mat-card class="patientCard" style="width: 28%">
+    <mat-card-title style="font-size: xx-large; margin-left: -15%">Patientendaten 2</mat-card-title>
 
     <div class="pseudonyme" style=" flex: 1 1 100%; display: flex; flex-flow:column; padding-top: 5%" >
-      <mat-card-title style="color:#294E66; font-size: x-large">Pseudonyme</mat-card-title>
-      <div style="flex: 1 1 100%; display: flex; flex-flow: row">
-        <div style=" width: 10%; height: auto; color:#f2f2f2">holder</div>
-        <div style="flex-flow: column; width: 100% ">
-          <app-patient-pseudonyms style="width:160%; " [readOnly]=true [pseudonyms]="patients[1].ids"></app-patient-pseudonyms>
+      <mat-card-title style="color:dimgray; font-size: x-large; margin-left: -15%">Pseudonyme</mat-card-title>
+      <!-- TODO: justify-content to flex-end & make pseudonym chooseable-->
+        <div style="flex: 1 1 100%; display: flex; flex-flow: column; justify-content: flex-end; flow:right;">
+          <app-patient-pseudonyms [readOnly]=true [pseudonyms]="patients[1].ids" (slideFieldEvent)="updatePseudonymOfFinalPatient($event.name, $event.value)"></app-patient-pseudonyms> <!-- style="width:160%;"-->
         </div>
-      </div>
     </div>
 
     <div class="patientendaten"  style=" flex: 1 1 80%; display: flex;  flex-flow: column;;  padding-top: 5%">
-      <mat-card-title style="color:#294E66; font-size: x-large;">Patientendaten</mat-card-title>
-      <app-patient-fields side="left" [readOnly]=true  [fields]="patients[1].fields" (slideFieldEvent)="updateFinalPatient($event.name, $event.value)"></app-patient-fields></div>
+      <mat-card-title style="color:dimgray; font-size: x-large; margin-left: -15%">Patientendaten</mat-card-title>
+      <app-patient-fields side="left" [readOnly]=true  [fields]="patients[1].fields" (slideFieldEvent)="updateFieldsOfFinalPatient($event.name, $event.value)"></app-patient-fields></div>
   </mat-card>
 
 </div>
-<button mat-raised-button id="ergebnisButton"><a style="color: #294E66;text-decoration: none" [state]="{patient: finalPatient, fields: finalPatient.fields}" (click)="createNewPatient()"  routerLink="/idcard">Zusammenführen</a></button>
+<button mat-raised-button id="ergebnisButton"><a style="color: black;text-decoration: none" [state]="{patient: finalPatient, fields: finalPatient.fields}" (click)="createNewPatient()"  routerLink="/idcard">Zusammenführen</a></button>
 </div>

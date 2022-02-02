@@ -5,7 +5,10 @@ mat-toolbar {
 }
 
 h1{
-  color:#284B63;
+  margin-top: 0.5%;
+  margin-left:10rem;
+  float:left;
+  color:#053E6A;
   font-family: Tahoma;
 }
 

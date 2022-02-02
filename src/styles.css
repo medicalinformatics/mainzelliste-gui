@@ -7,3 +7,86 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/*following CSS-Design of all mat-cards (specially for iD-Card-, editcomponent and deleteComponent and mergeComponent)*/
+
+mat-card {
+  border: solid thin lightgray;
+}
+
+mat-card-title{
+  transform: scale(0.9);
+  padding-top: 1%;
+  padding-bottom: 2%;
+  font-family: Arial;
+}
+
+.patientendatenMatCard{
+  margin-left: 2%;
+  width: 30%;
+}
+
+.pseudonymeMatCard{
+  width: 30%;
+}
+
+/*following: CSS-Design of all Inputs (specially for Search/FilterInput in Patientlist-ViewComponent, Patient-FieldsComponent and Patient-PseudonymComponent) */
+
+::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 0.5em;
+}
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-infix {
+  padding: .25em 0 .25em 0;
+}
+::ng-deep .mat-form-field-underline {
+  bottom: 0.4em;
+}
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+  background-color: white;
+  -webkit-box-shadow: inset 1.5px 1px 2px -0.5px #757575;
+  /*box-shadow: inset 3px 3px 4px -2px #757575;*/
+  border-right: 1px solid #757575;
+}
+
+/*following: CSS-design of Patientfield- and PatientPseudonymComponent*/
+
+.patientField{
+  width: 90%;
+  margin: 0% 5% ;
+  max-width: 700px;
+}
+
+.inputField {
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+#arrow{
+  margin-top:4%;
+  border:none;
+  background:none;
+  color: #4b4b4b
+}
+
+/*following CSS-Design of all Submit-Buttons*/
+
+.submit{
+  background-color: #ADDFFF;
+  color:#053E6A;
+
+}
+
+.submitBreak{
+  background-color: #888888;
+  color: white;
+}
+
+
+/*following CSS-Design for Header of all Components*/
+/*TODO from editComponent Header isnt working - margins are not reacting*/
+.title{
+  font-family: Arial;
+  margin-bottom: 1%;
+  text-align: left;
+
+}

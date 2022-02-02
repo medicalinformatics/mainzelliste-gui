@@ -1,8 +1,7 @@
-.titleicon{
-  margin-left: 3%;
-  font-family: Arial;
+.title{
+  text-align: left;
   margin-top: 1.5%;
-  margin-bottom: 1%;
+  margin-left: 3%;
 }
 
 #patientendaten{
@@ -14,65 +13,14 @@
   width: 30%;
 }
 
-#historie{
-  width: 91%;
-  margin-bottom: 10%;
-  margin-top: 1%;
-  margin-left: 2%;
-  padding-bottom: 2%;
-}
-
-
-.historieInput{
-  width: 95%;
-  margin: 0% 2% ;
-  color: black;
-  height: 20%;
-  margin-bottom: 5%;
-}
-
-
 .IDCardAnsichtButton {
   float:right;
   margin-right: 5%;
 }
 
-.IDCardButtons{
-  background-color: #ADDFFF;
-  color:#294E66;
-  font-family: Arial;
-  margin-bottom: 1%;
-  float: right;
-  margin-right: 2rem;
-  margin-left:1.51rem;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-.example-full-width {
-  width: 90%;
-  color: black;
-  margin: 0% 5% ;
-}
-::ng-deep .mat-form-field-wrapper {
-  padding-bottom: 0.5em;
-}
-::ng-deep .mat-form-field-appearance-fill .mat-form-field-infix {
-  padding: .25em 0 .25em 0;
-}
-::ng-deep .mat-form-field-underline {
-  bottom: 0.4em;
-}
-::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
-  background-color: white;
-  -webkit-box-shadow: inset 3px 3px 4px -2px #757575;
-  box-shadow: inset 3px 3px 4px -2px #757575;
-  border-right: 1px solid #757575;
-}
-
 mat-card-title{
-  transform: scale(0.7);
+  transform: scale(0.9);
   padding-top: 1%;
-  padding-bottom: 1%;
+  padding-bottom: 2%;
   font-family: Arial;
 }
-

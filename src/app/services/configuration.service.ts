@@ -9,7 +9,7 @@ interface AppConfig {
 @Injectable({ providedIn: 'root' })
 export class ConfigurationService {
 
-  data: AppConfig = {};
+  data: AppConfig = { };
 
   constructor(private http: HttpClient) {}
 

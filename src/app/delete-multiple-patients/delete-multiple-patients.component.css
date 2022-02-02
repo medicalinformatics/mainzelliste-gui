@@ -1,3 +1,4 @@
+
 .titleicon{
   margin-left: 3%;
   font-family: Arial;
@@ -14,41 +15,28 @@
 
 .DeletePatientButtonLöschen {
   background-color: #ADDFFF;
-  color: #294E66;
+  color: white;
   width: 35%;
-  font-family: Arial;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .DeletePatientButtonAbbruch {
   background-color: #888888;
   color: white;
-  font-family: Arial;
   width: 35%;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 mat-card-title{
-  transform: scale(0.7);
+  transform: scale(0.9);
   padding-top: 5%;
   padding-bottom: 1%;
   font-family: Arial;
 }
 
-.historieInput{
-  width: 80%;
-  margin: 0% 5% ;
-  max-width: 700px;
-  color: black;
-  height: 20%;
-  margin-bottom: 5%;
-}
-
 #deletePatient1{
-  background-color: #284B63;
+  background-color: white;
   margin-left: 3%;
   padding-bottom: 5%;
   margin-bottom: 10%;
+  border: solid thin lightgray;
 
 }
-
