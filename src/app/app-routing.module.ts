@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
-import {PatientlistComponent} from "./patientlist/patientlist.component";
 import {InfoComponent} from "./info/info.component";
 import {AudittrailComponent} from "./audittrail/audittrail.component";
 import {IdcardComponent} from "./idcard/idcard.component";
@@ -11,20 +10,29 @@ import {MergePatientsComponent} from "./mergePatients/mergePatients.component";
 import {EditPatientComponent} from "./edit-patient/edit-patient.component";
 import {DeletePatientComponent} from "./delete-patient/delete-patient.component";
 import {DeleteMultiplePatientsComponent} from "./delete-multiple-patients/delete-multiple-patients.component";
+import {ErrorComponent} from "./error/error.component";
+import {SessionGuard} from "./guards/session-guard.service";
+import {LogoutComponent} from "./logout/logout.component";
 
 
 const routes: Routes = [
-  {path: 'neuen-patient-erstellen', component: CreatePatientComponent},
-  {path: 'info', component: InfoComponent},
-  {path: 'audittrail', component: AudittrailComponent},
-  {path: 'idcard', component: IdcardComponent},
-  {path: 'similar-patient', component: SimilarPatientComponent},
-  {path: 'patienten-zusammenfuehren', component: MergePatientsComponent},
-  {path:'patientenliste', component: PatientlistViewComponent},
-  {path: 'edit-patient', component: EditPatientComponent},
-  {path: 'delete-patient', component: DeletePatientComponent},
-  {path: 'patienten-loeschen', component:DeleteMultiplePatientsComponent},
-  {path: '', redirectTo: 'patientenliste', pathMatch: 'full'}
+  // TODO: All Paths should have english wording.
+  {path: '', canActivateChild: [SessionGuard], children: [
+      {path: '', pathMatch: 'full' ,redirectTo: 'patientenliste'},
+      {path: 'neuen-patient-erstellen', component: CreatePatientComponent},
+      {path: 'info', component: InfoComponent},
+      {path: 'audittrail', component: AudittrailComponent},
+      {path: 'idcard', component: IdcardComponent},
+      {path: 'similar-patient', component: SimilarPatientComponent},
+      {path: 'patienten-zusammenfuehren', component: MergePatientsComponent},
+      {path: 'patientenliste', component: PatientlistViewComponent},
+      {path: 'edit-patient', component: EditPatientComponent},
+      {path: 'delete-patient', component: DeletePatientComponent},
+      {path: 'patienten-loeschen', component:DeleteMultiplePatientsComponent}
+  ]},
+  // Needs to be outside, because we want message why user couldn't authenticate
+  {path: 'error', component: ErrorComponent},
+  {path: 'logout', component: LogoutComponent}
 ];
 
 @NgModule({
@@ -33,4 +41,4 @@ const routes: Routes = [
 
 })
 export class AppRoutingModule{}
-export const routingComponents =[PatientlistComponent, AudittrailComponent, IdcardComponent, SimilarPatientComponent, MergePatientsComponent, PatientlistViewComponent, CreatePatientComponent,EditPatientComponent,DeletePatientComponent, DeleteMultiplePatientsComponent, InfoComponent]
+export const routingComponents =[AudittrailComponent, IdcardComponent, SimilarPatientComponent, MergePatientsComponent, PatientlistViewComponent, CreatePatientComponent,EditPatientComponent,DeletePatientComponent, DeleteMultiplePatientsComponent, InfoComponent]

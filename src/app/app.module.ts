@@ -15,7 +15,7 @@ import { SimilarPatientComponent } from './similarPatient/similarPatient.compone
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatDialogModule} from "@angular/material/dialog";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from '@angular/material/form-field';
 import { PatientComponent } from './patient/patient.component';
 import {MatButtonModule} from "@angular/material/button";
 import {ScrollingModule} from "@angular/cdk/scrolling";
@@ -38,44 +38,48 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSelectModule} from "@angular/material/select";
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
-import { UserComponent } from './user/user.component';
+import { SessionComponent } from './user/session.component';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {AppConfigService} from "./app-config.service";
+import { ErrorComponent } from './error/error.component';
+import {MatMenuModule} from "@angular/material/menu";
+import { LogoutComponent } from './logout/logout.component';
 
 function initializeAppFactory(service:AppConfigService, httpClient: HttpClient): () => Promise<any> {
   return () => service.load();
 }
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        AudittrailComponent,
-        NavigationComponent,
-        PatientlistComponent,
-        PatientrowComponent,
-        HeadComponent,
-        PatientSearchComponent,
-        routingComponents,
-        IdcardComponent,
-        FooterComponent,
-        SimilarPatientComponent,
-        PatientComponent,
-        PatientlistViewComponent,
-        HistorieComponent,
-        CreatePatientComponent,
-        PatientFieldsComponent,
-        EditPatientComponent,
-        DeletePatientComponent,
-        PatientPseudonymsComponent,
-        PatientDataComponent,
-        DeleteMultiplePatientsComponent,
-        UserComponent
-    ],
+  declarations: [
+    AppComponent,
+    AudittrailComponent,
+    NavigationComponent,
+    PatientlistComponent,
+    PatientrowComponent,
+    HeadComponent,
+    PatientSearchComponent,
+    routingComponents,
+    IdcardComponent,
+    FooterComponent,
+    SimilarPatientComponent,
+    PatientComponent,
+    PatientlistViewComponent,
+    HistorieComponent,
+    CreatePatientComponent,
+    PatientFieldsComponent,
+    EditPatientComponent,
+    DeletePatientComponent,
+    PatientPseudonymsComponent,
+    PatientDataComponent,
+    DeleteMultiplePatientsComponent,
+    SessionComponent,
+    ErrorComponent,
+    LogoutComponent
+  ],
     imports: [
         BrowserModule,
         AppRoutingModule,
@@ -102,7 +106,8 @@ function initializeAppFactory(service:AppConfigService, httpClient: HttpClient):
         MatCheckboxModule,
         MatCheckboxModule,
         MatTooltipModule,
-        HttpClientModule
+    HttpClientModule,
+    MatMenuModule
     ],
     providers: [
         { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
