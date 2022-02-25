@@ -1,14 +1,14 @@
 .header{
-  height:13%;
+  height:8%;
   padding-left: 5%;
   padding-top:3%;
   padding-bottom: 3%;
   padding-right:5%;
-  background-color: #284B63;
+  background-color: #053E6A;
   border-width: thick;
   font-family: Arial;
   color: white;
-  width: 100%;
+  width: 90%;
 }
 
 #closeicon{
@@ -78,8 +78,7 @@
 .filterEnde{
   background-color: #f1f1f1;
   border: solid white 0.5px;
-  padding-left: 3%;
-  padding-right: 3%;
+
   padding-bottom: 4%;
   padding-top: 2%;
 }

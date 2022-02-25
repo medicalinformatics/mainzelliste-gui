@@ -13,6 +13,7 @@ export class IdcardComponent implements OnInit {
 
   constructor(patientService: PatientService) {
     this.patientService = patientService;
+
   }
 
   ngOnInit(): void {

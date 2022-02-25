@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {Patient} from "../model/patient";
 import {PatientService} from "../services/patient.service";
 import {Router} from "@angular/router";
+import {FormControl, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-create-patient',
@@ -12,6 +13,13 @@ export class CreatePatientComponent {
   title="Patient einfügen";
   patient: Patient;
   @Input() fields : Array<string> = [];
+
+
+  dataControll = new FormControl('', Validators.required);
+  selectFormControl = new FormControl('', Validators.required);
+
+  //
+
 
   constructor(
     private patientService: PatientService,
@@ -41,4 +49,7 @@ export class CreatePatientComponent {
   sendBanner($event: any) {
 
   }
+}
+
+export class AddPatientFormularComponent {
 }

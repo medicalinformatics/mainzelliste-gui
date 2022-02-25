@@ -18,7 +18,7 @@
 }
 
 .mat-header-cell{
-  background-color: #294E66;
+  background-color: #053E6A;
   color: white;
   font-family: Tahoma;
   font-size: inherit
@@ -29,12 +29,12 @@
 }
 
 .mat-header-cell .mat-checkbox-frame.mat-checkbox-indeterminate{
-  border-color: #284B63;
+  border-color: #053E6A;
 }
 
 .filterbutton{
   float: right;
-  border:none;
+  border:none!important;
   background: none;
   color: white;
 }
@@ -48,12 +48,11 @@ mat-paginator{
   float:right;
   margin-top: 1.5%;
   margin-right: 1.5%;
-  font-size: xxx-large;
 }
 
 .custom-dialog-container .mat-dialog-container {
-  width: 35em;
-  height: 32em;
+  width: 36em;
+  height: 31em;
   padding:0px;
 }
 

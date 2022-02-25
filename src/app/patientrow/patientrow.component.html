@@ -8,17 +8,22 @@
 <td *ngFor="let field of fields" > <input *ngIf="editMode" type="text" name="nachname" [(ngModel)]="patient.fields[field]" >  <span *ngIf="!editMode">{{patient.fields[field]}}</span></td>
 
 <td style=" display:flex; flex-flow: row">
-  <button id="idCardTool" class="toolbutton">
+
+  <button styel="border:none; background:none;">
       <a [routerLink]="['/idcard']" [state]="{patient: patient, fields: fields}"><mat-icon>fact_check</mat-icon></a>
   </button>
-  <button id="cloneButtonTool" class="toolbutton">
-        <a [routerLink]="['/similar-patient']" [state]="{patient: patient, fields: fields}"><mat-icon>people</mat-icon></a>
+
+  <button styel="border:none; background:none;">
+        <mat-icon>people</mat-icon>
   </button>
-  <button (click)="editPatientenZeile()" id="editButtonTool" class="toolbutton">
-    <a [routerLink]="['/edit-patient']" [state]="{patient: patient, fields: fields}"><mat-icon>edit</mat-icon></a>
+
+  <button styel="border:none; background:none;"(click)="editPatientenZeile()" style="border:none; background: none;">
+    <a styel="border:none; background:none;" [routerLink]="['/edit-patient']" [state]="{patient: patient, fields: fields}"><mat-icon>edit</mat-icon></a>
   </button>
-  <button id="deleteButtonTool" class="toolbutton">
-        <a [routerLink]="['/delete-patient']" [state]="{patient: patient, fields: fields}"><mat-icon>delete</mat-icon></a>
+
+  <button styel="border:none; background:none;">
+        <a styel="border:none; background:none;" [routerLink]="['/delete-patient']" [state]="{patient: patient, fields: fields}"><mat-icon>delete</mat-icon></a>
   </button>
+
 </td>
 
