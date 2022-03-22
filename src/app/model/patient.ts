@@ -12,6 +12,7 @@ export class Patient {
       if (fields[value.name] === undefined) {
         fields[value.name]=""
       }
+      // müssen hier die IDs definiert/befüllt werden?
     })
 
   }

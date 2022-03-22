@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Patient} from "../model/patient";
 import {PatientListService} from "../services/patient-list.service";
 import {PatientService} from "../services/patient.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-edit-patient',
@@ -13,15 +13,19 @@ export class EditPatientComponent implements OnInit {
 
   patient: Patient = new Patient();
 
-
   constructor(
     private patientListService: PatientListService,
     private patientService: PatientService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     this.patient = history.state.patient;
+    this.route.queryParams.subscribe(params => {
+      this.patient.ids[0] = params['patientid'];
+    })
+
   }
 
   fieldsChanged(newFields: {[p: string]: any}) {

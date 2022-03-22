@@ -16,7 +16,8 @@ export class PatientList {
     public apiKey: string,
     public controlNumberGenerator?: ControlNumberGenerator,
   // wenn nicht gesetzt automatisch erste id die von mainzelliste angeben wird
-  public mainIdType?: string,
+    public mainIdType?: string,
+
   // von gui auf mainzelliste backend
 
   // TODO check how to express optional fields

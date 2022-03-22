@@ -1,6 +1,7 @@
 import {Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation} from '@angular/core';
 import {Patient} from "../model/patient";
 import {PatientService} from "../services/patient.service";
+import {Router, ActivatedRoute, ParamMap} from '@angular/router';
 
 @Component({
   selector: '[app-patientrow]',
@@ -19,8 +20,16 @@ export class PatientrowComponent {
   deleteMode: boolean = false;
   selected: boolean = false;
 
-  constructor(patientService: PatientService) {
+  constructor(private route: ActivatedRoute, patientService: PatientService) {
     this.patientService = patientService;
+  }
+
+  ngOnInit(){
+    this.route.queryParams.subscribe(params => {
+      console.log(params);
+      this.patient.ids[0] = params['id'];
+
+    })
   }
 
   editPatientenZeile() {
@@ -41,5 +50,10 @@ export class PatientrowComponent {
     this.selectedP.emit(this);
     console.log(this);
   }
+
+/*  GotoIDCard(){
+    var patientId = 1;
+    this.route.navigate(['/idcard', patientId])
+  }*/
 
 }

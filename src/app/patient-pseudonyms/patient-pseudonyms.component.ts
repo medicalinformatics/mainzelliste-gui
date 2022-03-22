@@ -15,6 +15,7 @@ export class PatientPseudonymsComponent{
   @Output() pseudonymEvent = new EventEmitter<{name:string,value:string}>();
   @Input()  fields: {[key: string]: any} = {};
 
+  //TODO patientlist.service hier aufrufen
   constructor() {
 
   }
@@ -27,5 +28,6 @@ export class PatientPseudonymsComponent{
   slideData(value: string, name: string): void{
     this.slideFieldEvent.emit({value:value, name:name});
   };
+
 
 }

@@ -382,6 +382,8 @@ export class PatientService {
     });
   }*/
 
+//TODO dem neuen Patienten ein Projekt zuweisen können
+
   createPatient(tmpPatient: Patient): Promise<Patient[]> {
     // TODO: Create proper mainzelliste call for this and return that as result.
     return this.patientListService.addPatient(tmpPatient).then(id => {
@@ -391,16 +393,16 @@ export class PatientService {
     });
   }
 
-  private patientIDs(patientService:PatientService): Array<{ idType: string, idString: string }> {
+/*  private patientIDs(patientService:PatientService): Array<{ idType: string, idString: string }> {
     let tmpPatient = Array<{ idType: string, idString: string }>;
      let ids =
        this.patientservice.tmpPatient.ids.push()
 
     return tmpPatient;
-  }
+  }*/
 
 
-/*  private getMockId(): string {
+  /*  private getMockId(): string {
     let result = '';
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let charactersLength = characters.length;
