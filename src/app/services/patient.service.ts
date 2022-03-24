@@ -384,14 +384,16 @@ export class PatientService {
 
 //TODO dem neuen Patienten ein Projekt zuweisen können
 
-  createPatient(tmpPatient: Patient): Promise<Patient[]> {
+  createPatient(tmpPatient: Patient, idType?: string): Promise<Patient[]> {
     // TODO: Create proper mainzelliste call for this and return that as result.
-    return this.patientListService.addPatient(tmpPatient).then(id => {
+    return this.patientListService.addPatient(tmpPatient, idType).then(id => {
       this.rerenderPatients(this.patientListService.getPatients());
       let mappedId = new Id('pid', id.newId, id.tentative, id.uri);
       return this.patientListService.readPatient(mappedId);
     });
   }
+
+
 
 /*  private patientIDs(patientService:PatientService): Array<{ idType: string, idString: string }> {
     let tmpPatient = Array<{ idType: string, idString: string }>;

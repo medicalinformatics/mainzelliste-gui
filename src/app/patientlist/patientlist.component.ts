@@ -3,7 +3,7 @@ import {
   Component,
   EventEmitter,
   Inject,
-  Input,
+  Input, OnInit,
   Output,
   ViewChild,
   ViewEncapsulation
@@ -16,6 +16,7 @@ import {SelectionModel} from "@angular/cdk/collections";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatCheckboxChange} from "@angular/material/checkbox";
+import {PatientListService} from "../services/patient-list.service";
 
 @Component({
   selector: 'app-patientlist',
@@ -24,8 +25,8 @@ import {MatCheckboxChange} from "@angular/material/checkbox";
   encapsulation: ViewEncapsulation.None
 })
 
-export class PatientlistComponent implements AfterViewInit{
-  @Input() patients!: MatTableDataSource<Patient>;
+export class PatientlistComponent implements AfterViewInit, OnInit{
+  patients: MatTableDataSource<Patient>;
   selection: SelectionModel<Patient>;
   @Output() selectedPatients: EventEmitter<Patient[]> = new EventEmitter<Patient[]>();
   @Output() filterData = '';
@@ -34,12 +35,13 @@ export class PatientlistComponent implements AfterViewInit{
   columns: string[] = ["select"];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  pseudonyms: string[]=["Pseudonym"];
+  pseudonyms: string[]=[];
 
   //KONSTRUKTOR
-  constructor(public dialog: MatDialog) {
-    this.columns = this.columns.concat(this.pseudonyms).concat(this.fields).concat(["actions"]);
-
+  private patientListService: PatientListService;
+  constructor(public dialog: MatDialog, patientListService: PatientListService, patientService: PatientService) {
+    this.patientListService = patientListService;
+    this.patients = patientService.patientsDataSource;
     const initialSelection: Patient[] = [];
     const allowMultiSelect = true;
     this.selection = new SelectionModel<Patient>(allowMultiSelect, initialSelection);
@@ -89,26 +91,12 @@ export class PatientlistComponent implements AfterViewInit{
   ngAfterViewInit(): void {
     this.patients.paginator = this.paginator;
   }
-/*
 
-  openDialog() {
-    const dialogConfig = new MatDialogConfig();
-
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-
-    dialogConfig.data = {
-      id: 1,
-      title: 'Angular For Beginners'
-    };
-
-    this.dialog.open(PatientSearchComponent, dialogConfig);
-
-    const dialogRef = this.dialog.open(PatientSearchComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(
-      data => console.log("Dialog output:", data)
-    );
+  ngOnInit(): void{
+      this.patientListService.getPatientListIdTypes().then((idTypes) => {
+        this.pseudonyms = idTypes;
+      this.columns = this.columns.concat(idTypes).concat(this.fields).concat(["actions"]);
+    })
   }
-*/
+
 }

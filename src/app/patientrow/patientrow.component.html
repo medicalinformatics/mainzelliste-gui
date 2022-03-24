@@ -19,11 +19,11 @@
   </button>
 
   <button styel="border:none; background:none;"(click)="editPatientenZeile()" style="border:none; background: none;">
-    <a styel="border:none; background:none;" [routerLink]="['/edit-patient']" routerLinkActive="active" [state]="{patient: patient, fields: fields}"><mat-icon>edit</mat-icon></a>
+    <a styel="border:none; background:none;" [routerLink]="['/edit-patient']"><mat-icon>edit</mat-icon></a> <!-- [state]="{patient: patient, fields: fields}"-->
   </button>
 
   <button styel="border:none; background:none;">
-        <a styel="border:none; background:none;" routerLink="/delete-patient" routerLinkActive="active" [state]="{patient: patient, fields: fields}"><mat-icon>delete</mat-icon></a>
+        <a styel="border:none; background:none;" routerLink="/delete-patient"><mat-icon>delete</mat-icon></a> <!--[state]="{patient: patient, fields: fields}"-->
   </button>
 
 </td>

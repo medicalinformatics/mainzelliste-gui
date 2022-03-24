@@ -26,11 +26,9 @@ export class PatientListService {
   private patientList: PatientList;
   private mainzellisteHeaders: HttpHeaders
   private mainzellisteFields = ["Vorname", "Nachname", "Geburtsname", "Geburtstag", "Geburtsmonat", "Geburtsjahr", "Wohnort", "PLZ"];
-  // Projektnamen kommen hier rein "mainzellisteResultIds"- davor stand "pid" im Array
 
-  private mainzellisteResultIds = ["pid"]; //Objekt mit allen Ids eines Patienten
-  private mainzellisteMainId = "eagerPid";
-  private mainzellisteIds: string[] = [];
+  private mainzellisteResultIds: Array<string> = []; //Objekt mit allen Ids eines Patienten
+
 
   constructor(
     private configService: AppConfigService,
@@ -41,51 +39,48 @@ export class PatientListService {
     this.mainzellisteHeaders = new HttpHeaders()
       .set('mainzellisteApiKey', this.patientList.apiKey)
       .set('mainzellisteApiVersion', '3.2')
-    // this.mainzellisteIds=this.patientList.
-
-    httpClient.get<string[]>(
-      this.patientList.url+"/configuration/idTypes",
-      {headers: this.mainzellisteHeaders }
-    ).toPromise().then((response) => {
-      this.mainzellisteIds = response
-      if(this.patientList.mainIdType != undefined){
-        this.mainzellisteMainId = this.patientList.mainIdType;
-      }else{
-        this.mainzellisteMainId = this.mainzellisteIds[0];
-      }
-      console.log(this.mainzellisteIds);
-      console.log(this.mainzellisteMainId);
-    });
-
-    //TODO funktion in der results befüllt wird und nicht vordefiniert ist wie oben (Aufgabe idTypen herausbekommen)
-
-    // this.patientList.fieldMappings["FIRST_NAME"];
-    //TODO In mainzellisteResultIds müssen alle Sammel Ids alle Patienten gepusht werden
-
-   // this.patientService.mainzellisteResultIds.push() = PatientList.;
-
-
   }
 
-  getPatients(): Promise<Patient[]>{
+  getPatientListIdTypes(): Promise<Array<string>>{
+    return this.httpClient.get<string[]>(
+      this.patientList.url+"/configuration/idTypes",
+      {headers: this.mainzellisteHeaders }
+    ).toPromise();
+  }
+
+   async getPatientListMainIdType():Promise<string>{
+     let patientListIdTypes = await this.getPatientListIdTypes();
+     if(this.patientList.mainIdType != undefined){
+       return this.patientList.mainIdType;
+     }else{
+       return patientListIdTypes[0];
+     }
+}
+
+  async getPatients(): Promise<Patient[]>{
+    console.log(await this.getPatientListMainIdType());
     return this.sessionService.createToken(
       "readPatients",
       new ReadPatientsTokenData([{
-          idType: this.mainzellisteMainId,
+          idType: await this.getPatientListMainIdType(),
           idString: "*"
         }], this.mainzellisteFields,
-        this.mainzellisteResultIds)
+        await this.getPatientListIdTypes())
     ).toPromise().then(token => {
       return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + token.id).toPromise();
       // soll hier auch die Zuweisung der patientenID in die URL erfolgen?
     })
   }
 
-  addPatient(patient: Patient): Promise<{ newId: string, tentative: boolean, uri: URL }> {
+  async addPatient(patient: Patient, idType?: string): Promise<{ newId: string, tentative: boolean, uri: URL }> {
+    console.log(this.mainzellisteResultIds); // ersetzten durch await this.getPatientListIdTypes
+    if(idType == undefined){
+      idType = await this.getPatientListMainIdType();
+    }
     return this.sessionService.createToken(
       "addPatient",
       new AddPatientTokenData(
-        this.mainzellisteResultIds
+        [idType]
       )
     ).toPromise().then(token => {
       patient.fields.Geburtstag = patient.fields.Geburtsdatum.split('.')[0]
