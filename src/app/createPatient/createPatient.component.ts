@@ -33,17 +33,11 @@ export class CreatePatientComponent {
     this.patientListPseudonyms=patientListService.getPatientListIdTypes();
   }
 
-  createNewPatient () {
+  async createNewPatient () {
     console.log(this.pseudonymSelection);
-    this.patientService.createPatient(this.patient, this.pseudonymSelection.value).then(patient => {
-      this.router.navigate(["/idcard"], {state: {patient: patient[0]}}).then(success => {
-        //TODO Pseudonym anzeigen in ID Card
-        console.log("successfully navigated to idcard")
-      }).catch(error => {
-        console.log("Can't navigate to idcard because of error.")
-        console.log(error)
-      })
-    });
+    let patients = await this.patientService.createPatient(this.patient, this.pseudonymSelection.value);
+    console.log(patients[0]);
+    await this.router.navigate(["/idcard"], {state: {patient: patients[0]}});
   }
 
 

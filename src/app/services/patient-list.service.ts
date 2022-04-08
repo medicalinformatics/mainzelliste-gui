@@ -27,9 +27,6 @@ export class PatientListService {
   private mainzellisteHeaders: HttpHeaders
   private mainzellisteFields = ["Vorname", "Nachname", "Geburtsname", "Geburtstag", "Geburtsmonat", "Geburtsjahr", "Wohnort", "PLZ"];
 
-  private mainzellisteResultIds: Array<string> = []; //Objekt mit allen Ids eines Patienten
-
-
   constructor(
     private configService: AppConfigService,
     private sessionService: SessionService,
@@ -73,7 +70,7 @@ export class PatientListService {
   }
 
   async addPatient(patient: Patient, idType?: string): Promise<{ newId: string, tentative: boolean, uri: URL }> {
-    console.log(this.mainzellisteResultIds); // ersetzten durch await this.getPatientListIdTypes
+    console.log(await this.getPatientListIdTypes())
     if(idType == undefined){
       idType = await this.getPatientListMainIdType();
     }
@@ -98,18 +95,16 @@ export class PatientListService {
     })
   }
 
-  readPatient(id: Id): Promise<Patient[]> {
+  async readPatient(id: Id): Promise<Patient[]> {
     console.log(id);
-    return this.sessionService.createToken(
+    let readToken = await this.sessionService.createToken(
       "readPatients",
       new ReadPatientsTokenData(
         [{idType: id.idType, idString: id.idString}],
         this.mainzellisteFields,
-        this.mainzellisteResultIds
-      )
-    ).toPromise().then(token => {
-      return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + token.id).toPromise();
-    })
+        await this.getPatientListIdTypes()
+      )).toPromise();
+    return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + readToken.id).toPromise();
   }
 
   editPatient(patient: Patient) {
