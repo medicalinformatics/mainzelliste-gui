@@ -31,22 +31,13 @@ export class MergePatientsComponent implements OnInit {
 
   updateFieldsOfFinalPatient(name:string, value:string){
     this.finalPatient.fields[name]= value;
-
-}
+  }
 
   updatePseudonymOfFinalPatient (name:string, value: string){
     // this.finalPatient.ids[name]=value;
-}
+  }
 
-  createNewPatient () {
-    this.patientService.createPatient(this.finalPatient).then((result) => {
-      // Anfangspatienten 1 und 2 müssen nach dem Mergen gelöscht werden
-      /* this.patientService.deletePatient(this.patients[0]);
-         this.patientService.deletePatient(this.patients[1]);*/
-
-      if (result.length != -1) {
-        this.patient = new Patient();
-      }
-    });
+  mergePatients() {
+    // TODO: Needs Backend Implementation
   }
 }

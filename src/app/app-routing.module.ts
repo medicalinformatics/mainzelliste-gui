@@ -21,7 +21,7 @@ const routes: Routes = [
       {path: 'add-new-patient', component: CreatePatientComponent},
       {path: 'info', component: InfoComponent},
       {path: 'audittrail', component: AudittrailComponent},
-      {path: 'idcard', component: IdcardComponent}, ///:patientid -  /:id
+      {path: 'idcard/:idType/:idString', component: IdcardComponent}, ///:patientid -  /:id
       {path: 'merge-patients', component: MergePatientsComponent}, ///:ids
       {path: 'patientlist', component: PatientlistViewComponent},
       {path: 'edit-patient', component: EditPatientComponent}, // /:patientid

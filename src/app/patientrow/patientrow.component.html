@@ -9,21 +9,21 @@
 
 <td style=" display:flex; flex-flow: row">
 
-  <button [routerLink]="['/idcard']" styel="border:none; background:none;">
+  <button [routerLink]="['/idcard', patient.ids[0].idType, patient.ids[0].idString]" style="border:none; background:none;">
       <a><mat-icon>fact_check</mat-icon></a>
   </button>
 
 <!--[state]="{patient: patient, fields: fields}"-->
-  <button styel="border:none; background:none;">
+  <button style="border:none; background:none;">
         <mat-icon>people</mat-icon>
   </button>
 
-  <button styel="border:none; background:none;"(click)="editPatientenZeile()" style="border:none; background: none;">
+  <button style="border:none; background:none;"(click)="editPatientenZeile()" style="border:none; background: none;">
     <a styel="border:none; background:none;" [routerLink]="['/edit-patient']"><mat-icon>edit</mat-icon></a> <!-- [state]="{patient: patient, fields: fields}"-->
   </button>
 
-  <button styel="border:none; background:none;">
-        <a styel="border:none; background:none;" routerLink="/delete-patient"><mat-icon>delete</mat-icon></a> <!--[state]="{patient: patient, fields: fields}"-->
+  <button style="border:none; background:none;">
+        <a style="border:none; background:none;" routerLink="/delete-patient"><mat-icon>delete</mat-icon></a> <!--[state]="{patient: patient, fields: fields}"-->
   </button>
 
 </td>
