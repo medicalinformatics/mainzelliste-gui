@@ -21,12 +21,12 @@ const routes: Routes = [
       {path: 'add-new-patient', component: CreatePatientComponent},
       {path: 'info', component: InfoComponent},
       {path: 'audittrail', component: AudittrailComponent},
-      {path: 'idcard/:idType/:idString', component: IdcardComponent}, ///:patientid -  /:id
-      {path: 'merge-patients', component: MergePatientsComponent}, ///:ids
+      {path: 'idcard/:idType/:idString', component: IdcardComponent},
+      {path: 'merge-patients', component: MergePatientsComponent},
       {path: 'patientlist', component: PatientlistViewComponent},
-      {path: 'edit-patient', component: EditPatientComponent}, // /:patientid
-      {path: 'delete-patient', component: DeletePatientComponent}, // /:patientid
-      {path: 'delete-patients', component:DeleteMultiplePatientsComponent} // /:ids
+      {path: 'edit-patient', component: EditPatientComponent},
+      {path: 'delete-patient', component: DeletePatientComponent},
+      {path: 'delete-patients', component:DeleteMultiplePatientsComponent}
   ]},
 
   // Needs to be outside, because we want message why user couldn't authenticate

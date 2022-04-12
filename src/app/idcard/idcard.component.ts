@@ -20,6 +20,7 @@ export class IdcardComponent implements OnInit {
     private patientListService: PatientListService
   ) {
     activatedRoute.params.subscribe((params) => {
+      console.log(this.idType, this.idString); // kommt hier nicht rein
       if (params["idType"] !== undefined)
         this.idType = params["idType"]
       if (params["idString"] !== undefined)
