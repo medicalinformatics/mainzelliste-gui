@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AudittrailComponent } from './audittrail/audittrail.component';
 import { NavigationComponent } from './navigation/navigation.component';
-import { PatientrowComponent } from './patientrow/patientrow.component';
 import { HeadComponent } from './head/head.component';
 import { PatientSearchComponent } from './patientSearch/patientSearch.component';
 import {AppRoutingModule, routingComponents} from './app-routing.module';
@@ -60,7 +59,6 @@ function initializeAppFactory(service:AppConfigService, httpClient: HttpClient):
     AudittrailComponent,
     NavigationComponent,
     PatientlistComponent,
-    PatientrowComponent,
     HeadComponent,
     PatientSearchComponent,
     routingComponents,
