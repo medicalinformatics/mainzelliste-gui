@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {SessionService} from "./session.service";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {PatientList} from "../model/patientlist";
 import {Patient} from "../model/patient";
 import {AppConfigService} from "../app-config.service";
@@ -52,21 +52,19 @@ export class PatientListService {
      }else{
        return patientListIdTypes[0];
      }
-}
+   }
 
   async getPatients(): Promise<Patient[]>{
     console.log(await this.getPatientListMainIdType());
-    return this.sessionService.createToken(
+    let token = await this.sessionService.createToken(
       "readPatients",
       new ReadPatientsTokenData([{
           idType: await this.getPatientListMainIdType(),
           idString: "*"
         }], this.mainzellisteFields,
         await this.getPatientListIdTypes())
-    ).toPromise().then(token => {
-      return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + token.id).toPromise();
-      // soll hier auch die Zuweisung der patientenID in die URL erfolgen?
-    })
+    ).toPromise();
+    return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + token.id).toPromise();
   }
 
   async addPatient(patient: Patient, idType?: string): Promise<{ newId: string, tentative: boolean, uri: URL }> {
@@ -123,15 +121,13 @@ export class PatientListService {
     })
   }
 
-  deletePatient(patient: Patient) {
-    return this.sessionService.createToken(
+  async deletePatient(patient: Patient): Promise<Object> {
+    let token = await this.sessionService.createToken(
       "deletePatient",
       new DeletePatientTokenData(
         {idType: "pid", idString: patient.ids[0].idString}
       )
-    ).toPromise().then(token => {
-        console.log("Delete Patient Token: " + token)
-        return this.httpClient.delete(this.patientList.url + "/patients?tokenId=" + token.id).toPromise();
-    })
+    ).toPromise();
+      return this.httpClient.delete(this.patientList.url + "/patients?tokenId=" + token.id).toPromise();
   }
 }

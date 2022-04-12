@@ -25,12 +25,9 @@ export class DeleteMultiplePatientsComponent implements OnInit {
 
   deletePatientenZeile(){
     this.patients.forEach((patient) => {
-      this.patientListService.deletePatient(patient).then(success => {
-        this.patientService.rerenderPatients(this.patientListService.getPatients());
-      }, error => {
-        console.log("This is not so good")
-      });
+      this.patientService.deletePatient(patient);
     })
+    this.router.navigate(['/patientlist']);
   }
 
 }

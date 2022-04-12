@@ -356,80 +356,21 @@ export class PatientService {
       }
   }
 
-/*  getPatients(filters: Array<{ field: string, searchCriteria: string }>): Promise<Array<Patient>> {
-    // TODO: Create proper method to get all patients from a mainzelliste instance
-    return new Promise((resolve, reject) => {
-      if (filters.length == 0) {
-        this.patientsDataSource.data = this.mockUpData
-        resolve(this.patientsDataSource.data)
-      } else {
-        let filterPatients = this.patientsDataSource.data.filter((patient) => {
-          let matched = false;
-          console.log(patient);
-          filters.forEach((filter) => {
-            console.log(filter);
-            if (patient.fields[filter.field].indexOf(filter.searchCriteria) != -1) {
-              matched = true;
-            }
-            console.log(patient.fields[filter.field].indexOf(filter.searchCriteria));
-          })
-          console.log(matched);
-          return matched;
-        });
-        this.patientsDataSource.data = filterPatients;
-        resolve(filterPatients);
-      }
-    });
-  }*/
-
-//TODO dem neuen Patienten ein Projekt zuweisen können
-
   async createPatient(tmpPatient: Patient, idType?: string): Promise<Id> {
     // TODO: Create proper mainzelliste call for this and return that as result.
     if (idType == undefined) {
       idType = await this.patientListService.getPatientListMainIdType();
     }
     let newId = await this.patientListService.addPatient(tmpPatient, idType);
+    this.rerenderPatients(this.patientListService.getPatients());
     return new Id(idType, newId.newId, newId.tentative);
   }
 
-
-
-/*  private patientIDs(patientService:PatientService): Array<{ idType: string, idString: string }> {
-    let tmpPatient = Array<{ idType: string, idString: string }>;
-     let ids =
-       this.patientservice.tmpPatient.ids.push()
-
-    return tmpPatient;
-  }*/
-
-
-  /*  private getMockId(): string {
-    let result = '';
-    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let charactersLength = characters.length;
-    for (let i = 0; i < 8; i++) {
-      result += characters.charAt(Math.floor(Math.random() *
-        charactersLength));
-    }
-    return result;
-  }*/
-
-  deletePatient(patient: Patient): Promise<number> {
-    console.log("service is deleting");
-    console.log(patient);
-    return new Promise((resolve, reject) => {
-      let index = this.patientsDataSource.data.findIndex((patientFromArray) => {
-        return patientFromArray.ids[0].idString === patient.ids[0].idString;
-      });
-      console.log(this.patientsDataSource.data[0]);
-      console.log(index);
-      if (index > -1) {
-
-        this.patientsDataSource.data.splice(index, 1);
-        resolve(204);
-      }
-    })
+  async deletePatient(patient: Patient){
+     this.patientListService.deletePatient(patient).then(response => {
+       console.log(response);
+       this.rerenderPatients(this.patientListService.getPatients())
+     }).then(error => {console.log(error)})
   }
 
 }

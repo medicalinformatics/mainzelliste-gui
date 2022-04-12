@@ -26,16 +26,10 @@ export class DeletePatientComponent implements OnInit {
     this.patient = history.state.patient;
 }
 
-  deletePatientenZeile(){
-    console.log("deleted..");
-    this.patientListService.deletePatient(this.patient).then((result) => {
-      this.patientService.rerenderPatients(this.patientListService.getPatients());
-      this.router.navigate(["patientlist-view"]).then(success => {
-        console.log('good')
-      }, error => {
-        console.log('not so good')
-      })
-    });
+  async deletePatientenZeile(){
+    await this.patientService.deletePatient(this.patient);
+    this.router.navigate(['/patientlist']);
+
   }
 
 }

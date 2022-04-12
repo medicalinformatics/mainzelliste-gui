@@ -36,12 +36,12 @@ export class PatientlistComponent implements AfterViewInit, OnInit{
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   pseudonyms: string[]=[];
-
-  //KONSTRUKTOR
   private patientListService: PatientListService;
+
   constructor(public dialog: MatDialog, patientListService: PatientListService, patientService: PatientService) {
     this.patientListService = patientListService;
     this.patients = patientService.patientsDataSource;
+
     const initialSelection: Patient[] = [];
     const allowMultiSelect = true;
     this.selection = new SelectionModel<Patient>(allowMultiSelect, initialSelection);
@@ -95,8 +95,8 @@ export class PatientlistComponent implements AfterViewInit, OnInit{
   ngOnInit(): void{
       this.patientListService.getPatientListIdTypes().then((idTypes) => {
         this.pseudonyms = idTypes;
-      this.columns = this.columns.concat(idTypes).concat(this.fields).concat(["actions"]);
-    })
+        this.columns = this.columns.concat(idTypes).concat(this.fields).concat(["actions"]);
+      })
   }
 
 }
