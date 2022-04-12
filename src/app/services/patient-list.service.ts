@@ -109,7 +109,7 @@ export class PatientListService {
     return this.sessionService.createToken(
       "editPatient",
       new EditPatientTokenData(
-        {idType: "pid", idString: patient.ids[0].idString}
+        {idType: patient.ids[0].idType, idString: patient.ids[0].idString}
       )
     ).toPromise().then(token => {
         console.log("Edit Patient Token: " + token)

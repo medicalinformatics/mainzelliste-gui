@@ -49,12 +49,12 @@
 <!--          </a>-->
         </button>
         <button style="background: none;border:none;">
-          <a [routerLink]="['/edit-patient']" [state]="{patient: element, fields: fields}">
+          <a [routerLink]="['/edit-patient', element.ids[0].idType, element.ids[0].idString]">
             <mat-icon matTooltip="Edit">edit</mat-icon>
           </a>
         </button>
         <button style="background: none;border:none;">
-          <a [routerLink]="['/delete-patient']" [state]="{patient: element, fields: fields}">
+          <a [routerLink]="['/delete-patient', element.ids[0].idType, element.ids[0].idString]">
             <mat-icon matTooltip="Löschen">delete</mat-icon>
           </a>
         </button>

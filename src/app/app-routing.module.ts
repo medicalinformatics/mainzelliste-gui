@@ -24,8 +24,8 @@ const routes: Routes = [
       {path: 'idcard/:idType/:idString', component: IdcardComponent},
       {path: 'merge-patients', component: MergePatientsComponent},
       {path: 'patientlist', component: PatientlistViewComponent},
-      {path: 'edit-patient', component: EditPatientComponent},
-      {path: 'delete-patient', component: DeletePatientComponent},
+      {path: 'edit-patient/:idType/:idString', component: EditPatientComponent},
+      {path: 'delete-patient/:idType/:idString', component: DeletePatientComponent},
       {path: 'delete-patients', component:DeleteMultiplePatientsComponent}
   ]},
 
