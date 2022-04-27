@@ -99,4 +99,7 @@ export class PatientlistComponent implements AfterViewInit, OnInit{
       })
   }
 
+  startSimilarPatientSearch() {
+
+  }
 }

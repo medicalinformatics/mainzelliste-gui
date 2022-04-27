@@ -1,29 +1,43 @@
 <div style="height: 100%; min-height: 10em; width: 100%;padding-bottom: 10%; padding-top: 3%">
 
     <mat-form-field color="primary"  id="filterBoard" appearance="fill">
-      <mat-label>Filter/Suche...</mat-label>
+      <mat-label>Filter/Suche</mat-label>
       <mat-chip-list #chipList aria-label="Fruit selection">
+
+        <mat-chip style="background-color: #dddddd" *ngIf="similarPatientActive">Ähnliche Patienten:
+          <mat-icon matChipRemove (click)="closeSimilarPatientSearch()" style="color:#494949">cancel</mat-icon>
+        </mat-chip>
+
         <mat-chip *ngFor="let fruit of filters"
                   [selectable]="selectable"
                   [removable]="removable" (removed)="remove(fruit)" style="font-family: Tahoma;">
           {{fruit.field}}: {{fruit.searchCriteria}}
           <mat-icon matChipRemove *ngIf="removable" style="color:#494949">cancel</mat-icon>
         </mat-chip>
-        <input #fruitInput
+
+        <input *ngIf="similarPatientActive"
                [(ngModel)]="filterEingabe"
-               placeholder="Search..."
+               placeholder="Patienten suchen..."
                [matChipInputFor]="chipList"
                [formControl]="filterCtrl"
                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                [matAutocomplete]="auto"
                (matChipInputTokenEnd)="add($event)">
+
+        <input *ngIf="!similarPatientActive" #fruitInput
+               [(ngModel)]="filterEingabe"
+               placeholder="Suchen..."
+               [matChipInputFor]="chipList"
+               [formControl]="filterCtrl"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [matAutocomplete]="auto"
+               (matChipInputTokenEnd)="add($event)">
+
       </mat-chip-list>
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
         <mat-option style="height: auto" *ngFor="let field of allFieldsToSearch" [value]="{field:field,searchCriteria:filterEingabe}">
           <div style="font-weight: bold">{{field}}:</div><div style="text-indent: 2%;">{{filterEingabe}}</div>
-<!--
-          <hr color="#888888" style=" width: 100%; justify-content: flex-start; justify-self: flex-start; justify-items: flex-start; text-align: left">
--->
+
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>

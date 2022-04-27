@@ -1,16 +1,18 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {PatientService} from "../services/patient.service";
 import {Patient} from "../model/patient";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {FormControl} from "@angular/forms";
+import {Observable, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-patientlist-view',
   templateUrl: './patientlist-view.component.html',
   styleUrls: ['./patientlist-view.component.css']
 })
+
 export class PatientlistViewComponent implements OnInit {
   title = "Patientenliste";
   patientService: PatientService;
@@ -36,6 +38,8 @@ export class PatientlistViewComponent implements OnInit {
   @ViewChild('fruitInput')
   filterInput!: ElementRef<HTMLInputElement>;
 
+  similarPatientActive: boolean = true;
+
   constructor(patientService: PatientService) {
     this.patientService = patientService;
   }
@@ -44,15 +48,12 @@ export class PatientlistViewComponent implements OnInit {
     console.log(event);
     const value = (event.value || '').trim();
 
-    // Add our fruit
     if (value) {
       console.log("here we are");
      let filter:{ field: string, searchCriteria: string } = JSON.parse(event.value);
       this.filters.push(filter);
       this.patientService.getPatients(this.filters);
     }
-
-    // Clear the input value
     event.chipInput!.clear();
   }
 
@@ -81,4 +82,11 @@ export class PatientlistViewComponent implements OnInit {
     this.patientService.getPatients(this.filters);
   }
 
+  activateSimilarPatientSearch(){
+    this.similarPatientActive = true;
+  }
+
+  closeSimilarPatientSearch() {
+    this.similarPatientActive = false;
+  }
 }
