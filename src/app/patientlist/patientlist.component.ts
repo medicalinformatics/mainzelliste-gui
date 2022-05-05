@@ -31,6 +31,9 @@ export class PatientlistComponent implements AfterViewInit, OnInit{
   @Output() selectedPatients: EventEmitter<Patient[]> = new EventEmitter<Patient[]>();
   @Output() filterData = '';
 
+  //SIMILAR-PATIENT-FEATURE
+  @Output() similarPatientEvent = new EventEmitter<Patient>();
+
   fields: string[] = ["Nachname", "Geburtsname", "Vorname", "Geburtsdatum", "Wohnort", "PLZ"];
   columns: string[] = ["select"];
 
@@ -99,7 +102,7 @@ export class PatientlistComponent implements AfterViewInit, OnInit{
       })
   }
 
-  startSimilarPatientSearch() {
-
+  startSimilarPatientSearch(sPatient: Patient) {
+    this.similarPatientEvent.emit(sPatient);
   }
 }

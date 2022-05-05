@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Patient} from "../model/patient";
 import {MatTableDataSource} from "@angular/material/table";
 import {Id, PatientListService} from "./patient-list.service";
+import {FieldFilter, Filter} from "../model/filter";
 
 @Injectable({
   providedIn: 'root'
@@ -318,7 +319,7 @@ export class PatientService {
     this.rerenderPatients(patientListService.getPatients());
   }
 
-  rerenderPatients(patients: Promise<Patient[]>, filters?: Array<{ field: string, searchCriteria: string }>) {
+  rerenderPatients(patients: Promise<Patient[]>, filters?: Filter[]) {
     patients.then(patients => {
       // TODO: Find a better way for transforming the single fields to one combined field
       patients.forEach(patient => {
@@ -332,10 +333,12 @@ export class PatientService {
           console.log(patient);
           filters.forEach((filter) => {
             console.log(filter);
-            if (patient.fields[filter.field].indexOf(filter.searchCriteria) != -1) {
-              matched = true;
+            if(filter instanceof FieldFilter) {
+              if (patient.fields[filter.searchField.name].indexOf(filter.searchField.value) != -1) {
+                matched = true;
+              }
+              console.log(patient.fields[filter.searchField.name].indexOf(filter.searchField.value));
             }
-            console.log(patient.fields[filter.field].indexOf(filter.searchCriteria));
           })
           console.log(matched);
           return matched;
@@ -347,7 +350,7 @@ export class PatientService {
 
   patientsDataSource: MatTableDataSource<Patient> = new MatTableDataSource<Patient>(this.mockUpData);
 
-  getPatients(filters: Array<{ field: string, searchCriteria: string }>) {
+  getPatients(filters: Filter[]) {
     // TODO: Create proper method to get all patients from a mainzelliste instance
     if (filters.length == 0) {
       this.rerenderPatients(this.patientListService.getPatients());

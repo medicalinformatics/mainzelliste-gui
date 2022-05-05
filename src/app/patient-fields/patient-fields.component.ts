@@ -17,8 +17,8 @@ export class PatientFieldsComponent implements OnInit {
   tmpPatient: Patient = new Patient();
 
   @Input()  fields: {[key: string]: any} = {};
-  @Output() fieldEvent = new EventEmitter<{[key: string]: any}>();
 
+  @Output() fieldEvent = new EventEmitter<{[key: string]: any}>();
   @Output() slideFieldEvent = new EventEmitter<{name:string,value:string}>();
 
   fieldService: FieldService;

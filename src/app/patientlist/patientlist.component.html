@@ -44,7 +44,7 @@
           </a>
         </button>
         <button style="background: none;border:none;">
-            <mat-icon (click)="startSimilarPatientSearch()" matTooltip="Ähnliche Patienten">people</mat-icon>
+            <mat-icon (click)="startSimilarPatientSearch(element)" matTooltip="Ähnliche Patienten">people</mat-icon>
         </button>
         <button style="background: none;border:none;">
           <a [routerLink]="['/edit-patient', element.ids[0].idType, element.ids[0].idString]">
