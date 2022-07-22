@@ -24,10 +24,11 @@ export class CreatePatientComponent {
   patientService: PatientService;
   patientListService: PatientListService;
 
-  constructor(patientService: PatientService,
+  constructor(
+    patientService: PatientService,
     patientListService: PatientListService,
-    private router: Router) {
-
+    private router: Router
+  ) {
     this.patientService = patientService;
     this.patientListService = patientListService;
     this.patientListPseudonyms=patientListService.getPatientListIdTypes();

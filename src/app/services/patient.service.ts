@@ -2,10 +2,12 @@ import {Injectable} from '@angular/core';
 import {Patient} from "../model/patient";
 import {MatTableDataSource} from "@angular/material/table";
 import {Id, PatientListService} from "./patient-list.service";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
+// TODO: Try to remove this one and completly replace with patient-list.service.ts
 // NOTE: Currently this is just a mockup for the real patient service. It currently doesn't do any sync with the mainzelliste.
 export class PatientService {
 
@@ -342,6 +344,13 @@ export class PatientService {
         })
       }
       this.patientsDataSource = new MatTableDataSource<Patient>(patients)
+    }).catch((err: HttpErrorResponse) => {
+      if (err.status === 404) {
+        if (err.error === "No patient found") {
+          console.log("patientsdatasource is set")
+          this.patientsDataSource = new MatTableDataSource<Patient>([])
+        }
+      }
     })
   }
 

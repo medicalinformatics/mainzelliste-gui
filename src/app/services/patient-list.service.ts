@@ -8,6 +8,7 @@ import {ReadPatientsTokenData} from "../model/read-patients-token-data";
 import {AddPatientTokenData} from "../model/add-patient-token-data";
 import {EditPatientTokenData} from "../model/edit-patient-token-data";
 import {DeletePatientTokenData} from "../model/delete-patient-token-data";
+import {Field} from "../model/field";
 
 export class Id {
   constructor(
@@ -36,6 +37,12 @@ export class PatientListService {
     this.mainzellisteHeaders = new HttpHeaders()
       .set('mainzellisteApiKey', this.patientList.apiKey)
       .set('mainzellisteApiVersion', '3.2')
+  }
+
+  getPatientListFields(): Promise<Array<Field>>{
+    return new Promise((resolve, reject) => {
+      resolve(this.patientList.fields);
+    });
   }
 
   getPatientListIdTypes(): Promise<Array<string>>{
