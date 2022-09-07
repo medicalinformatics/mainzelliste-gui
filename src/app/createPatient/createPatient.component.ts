@@ -37,6 +37,8 @@ export class CreatePatientComponent {
   async createNewPatient () {
     console.log(this.pseudonymSelection);
     let newId = await this.patientService.createPatient(this.patient, this.pseudonymSelection.value);
+    console.log("Pat. VersNr." + this.patient.fields[6]);
+    console.log(" Field VersNr." + this.fields[6]);
     await this.router.navigate(["/idcard", newId.idType, newId.idString]);
   }
 

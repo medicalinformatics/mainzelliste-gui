@@ -88,6 +88,7 @@ export class PatientListService {
       patient.fields.Geburtstag = patient.fields.Geburtsdatum.split('.')[0]
       patient.fields.Geburtsmonat = patient.fields.Geburtsdatum.split('.')[1]
       patient.fields.Geburtsjahr = patient.fields.Geburtsdatum.split('.')[2]
+      console.log("Vers." +patient.fields.Versicherungsnummer);
       delete patient.fields.Geburtsdatum
       let body = new URLSearchParams();
       for (let field in patient.fields) {

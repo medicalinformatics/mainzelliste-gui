@@ -10,12 +10,15 @@ export class FieldService {
 
   constructor(private configService: AppConfigService) {
     this.fields = this.configService.data[0].fields;
+    console.log("Fields" + this.fields[0].name);
+
   }
 
   getFields(): Promise<Array<Field>> {
     // TODO: Create proper method to get all fields from a mainzelliste instance
     return new Promise((resolve, reject) => {
       resolve(this.fields);
+      console.log("Fields=" + this.fields[0].name);
     });
   }
 }

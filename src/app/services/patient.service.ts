@@ -373,6 +373,7 @@ export class PatientService {
     let newId = await this.patientListService.addPatient(tmpPatient, idType);
     this.rerenderPatients(this.patientListService.getPatients());
     return new Id(idType, newId.newId, newId.tentative);
+
   }
 
   async deletePatient(patient: Patient){
@@ -381,5 +382,6 @@ export class PatientService {
        this.rerenderPatients(this.patientListService.getPatients())
      }).then(error => {console.log(error)})
   }
+
 
 }
