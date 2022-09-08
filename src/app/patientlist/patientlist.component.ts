@@ -17,6 +17,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatCheckboxChange} from "@angular/material/checkbox";
 import {PatientListService} from "../services/patient-list.service";
+import {AppConfigService} from "../app-config.service";
 
 @Component({
   selector: 'app-patientlist',
@@ -31,16 +32,17 @@ export class PatientlistComponent implements AfterViewInit, OnInit{
   @Output() selectedPatients: EventEmitter<Patient[]> = new EventEmitter<Patient[]>();
   @Output() filterData = '';
 
-  fields: string[] = ["Nachname", "Geburtsname", "Vorname", "Geburtsdatum", "Wohnort", "PLZ"];
+  fields: string[];
   columns: string[] = ["select"];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   pseudonyms: string[]=[];
   private patientListService: PatientListService;
 
-  constructor(public dialog: MatDialog, patientListService: PatientListService, patientService: PatientService) {
+  constructor(public dialog: MatDialog, patientListService: PatientListService, patientService: PatientService, configService: AppConfigService) {
     this.patientListService = patientListService;
     this.patients = patientService.patientsDataSource;
+    this.fields = configService.data[0].fields.map(f => f.name);
 
     const initialSelection: Patient[] = [];
     const allowMultiSelect = true;

@@ -26,7 +26,7 @@ export class PatientListService {
 
   private patientList: PatientList;
   private mainzellisteHeaders: HttpHeaders
-  private mainzellisteFields = ["Vorname", "Nachname", "Geburtsname", "Geburtstag", "Geburtsmonat", "Geburtsjahr", "Wohnort", "PLZ"];
+  private mainzellisteFields: string[] = [];
 
   constructor(
     private configService: AppConfigService,
@@ -34,6 +34,21 @@ export class PatientListService {
     private httpClient: HttpClient
   ) {
     this.patientList = this.configService.data[0];
+
+    // init mainzelliste field array from configuration
+    let fields: Array<Field> = this.patientList.fields;
+    let index: number = 0;
+    for(const i in fields){
+      if(fields[i].mainzellisteFields != undefined){
+        for(const j in fields[i].mainzellisteFields) {
+          this.mainzellisteFields[index] = fields[i].mainzellisteFields[j];
+          index++;
+        }
+      } else {
+        this.mainzellisteFields[index] = fields[i].mainzellisteField;
+        index++;
+      }
+    }
     this.mainzellisteHeaders = new HttpHeaders()
       .set('mainzellisteApiKey', this.patientList.apiKey)
       .set('mainzellisteApiVersion', '3.2')
