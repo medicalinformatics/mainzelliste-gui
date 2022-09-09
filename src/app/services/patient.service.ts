@@ -320,14 +320,9 @@ export class PatientService {
     this.rerenderPatients(patientListService.getPatients());
   }
 
-  rerenderPatients(patients: Promise<Patient[]>, filters?: Array<{ field: string, searchCriteria: string }>) {
-    patients.then(patients => {
-      // TODO: Find a better way for transforming the single fields to one combined field
-      patients.forEach(patient => {
-        let birthdate: string = patient.fields.Geburtstag + "." + patient.fields.Geburtsmonat + "." + patient.fields.Geburtsjahr;
-        patient.fields.Geburtsdatum = birthdate
-        return patient;
-      })
+  rerenderPatients(patientsPromise: Promise<Patient[]>, filters?: Array<{ field: string, searchCriteria: string }>) {
+    patientsPromise.then(patients => {
+      patients = patients.map(patient => this.patientListService.convertToDisplayPatient(patient));
       if (filters != undefined) {
         patients = patients.filter((patient) => {
           let matched = false;
@@ -382,6 +377,4 @@ export class PatientService {
        this.rerenderPatients(this.patientListService.getPatients())
      }).then(error => {console.log(error)})
   }
-
-
 }

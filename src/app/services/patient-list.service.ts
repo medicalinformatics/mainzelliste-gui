@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {SessionService} from "./session.service";
-import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {PatientList} from "../model/patientlist";
 import {Patient} from "../model/patient";
 import {AppConfigService} from "../app-config.service";
@@ -100,14 +100,10 @@ export class PatientListService {
         [idType]
       )
     ).toPromise().then(token => {
-      patient.fields.Geburtstag = patient.fields.Geburtsdatum.split('.')[0]
-      patient.fields.Geburtsmonat = patient.fields.Geburtsdatum.split('.')[1]
-      patient.fields.Geburtsjahr = patient.fields.Geburtsdatum.split('.')[2]
-      console.log("Vers." +patient.fields.Versicherungsnummer);
-      delete patient.fields.Geburtsdatum
       let body = new URLSearchParams();
-      for (let field in patient.fields) {
-        body.set(field, patient.fields[field]);
+      const convertedFields = this.convertToPatient(patient).fields
+      for (const name in convertedFields) {
+        body.set(name, convertedFields[name]);
       }
       return this.httpClient.post<{ newId: string, tentative: boolean, uri: URL }>(this.patientList.url + "/patients?tokenId=" + token.id, body, {
         headers: new HttpHeaders()
@@ -128,19 +124,15 @@ export class PatientListService {
     return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + readToken.id).toPromise();
   }
 
-  editPatient(patient: Patient) {
+  editPatient(displayPatient: Patient) {
     return this.sessionService.createToken(
       "editPatient",
       new EditPatientTokenData(
-        {idType: patient.ids[0].idType, idString: patient.ids[0].idString}
+        {idType: displayPatient.ids[0].idType, idString: displayPatient.ids[0].idString}
       )
     ).toPromise().then(token => {
         console.log("Edit Patient Token: " + token)
-        patient.fields.Geburtstag = patient.fields.Geburtsdatum.split('.')[0]
-        patient.fields.Geburtsmonat = patient.fields.Geburtsdatum.split('.')[1]
-        patient.fields.Geburtsjahr = patient.fields.Geburtsdatum.split('.')[2]
-        delete patient.fields.Geburtsdatum
-        return this.httpClient.put(this.patientList.url + "/patients/tokenId/" + token.id, patient.fields).toPromise();
+        return this.httpClient.put(this.patientList.url + "/patients/tokenId/" + token.id, this.convertToPatient(displayPatient).fields).toPromise();
     })
   }
 
@@ -152,5 +144,54 @@ export class PatientListService {
       )
     ).toPromise();
       return this.httpClient.delete(this.patientList.url + "/patients?tokenId=" + token.id).toPromise();
+  }
+
+  // Utils
+  //-------
+
+  convertToDisplayPatient(patient: Patient): Patient {
+    let displayPatient = new Patient();
+    for(const fieldConfig of this.patientList.fields) {
+      switch (fieldConfig.type+"") {
+        case "TEXT":{
+          if(patient.fields[fieldConfig.name] != undefined) {
+            displayPatient.fields[fieldConfig.name] = patient.fields[fieldConfig.name];
+          }
+          break;
+        }
+        case "DATE": {
+          displayPatient.fields[fieldConfig.name] = fieldConfig.mainzellisteFields
+          .filter(f => patient.fields[f] != undefined)
+          .map(f => patient.fields[f])
+          .join('.');
+          break;
+        }
+      }
+    }
+    displayPatient.ids = patient.ids;
+    return displayPatient;
+  }
+
+  convertToPatient(displayPatient: Patient): Patient {
+    let patient = new Patient();
+    for(const fieldConfig of this.patientList.fields) {
+      switch (fieldConfig.type+"") {
+        case "TEXT":{
+          if(displayPatient.fields[fieldConfig.name] != undefined) {
+            patient.fields[fieldConfig.name] = displayPatient.fields[fieldConfig.name];
+          }
+          break;
+        }
+        case "DATE": {
+          if(displayPatient.fields[fieldConfig.name] != undefined) {
+            const dateFields = displayPatient.fields[fieldConfig.name].split('.');
+            fieldConfig.mainzellisteFields.forEach((n,i) => patient.fields[n] = dateFields[i]);
+          }
+          break;
+        }
+      }
+    }
+    patient.ids = displayPatient.ids;
+    return patient;
   }
 }
