@@ -128,7 +128,8 @@ export class PatientListService {
     return this.sessionService.createToken(
       "editPatient",
       new EditPatientTokenData(
-        {idType: displayPatient.ids[0].idType, idString: displayPatient.ids[0].idString}
+        {idType: displayPatient.ids[0].idType, idString: displayPatient.ids[0].idString},
+        this.mainzellisteFields
       )
     ).toPromise().then(token => {
         console.log("Edit Patient Token: " + token)
