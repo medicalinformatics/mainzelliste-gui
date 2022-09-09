@@ -10,8 +10,8 @@ import {Patient} from "../model/patient";
 })
 
 export class IdcardComponent implements OnInit {
-  private idString: string = "";
-  private idType: string = "";
+  public idString: string = "";
+  public idType: string = "";
   public patient: Patient = new Patient();
 
   constructor(
