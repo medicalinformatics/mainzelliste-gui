@@ -23,6 +23,11 @@
         <mat-icon matTooltip="Drucken">print</mat-icon>
       </button>
       <br>
+      <button mat-fab [routerLink]="['/consent']"
+              [state]="{patient: patient}" style="background-color:#053E6A; color:white;" aria-label="Example icon button with a delete icon">
+        <mat-icon matTooltip="Add Consent">assignment_turned_in</mat-icon>
+      </button>
+      <br>
       <button mat-fab style="background-color:#053E6A; color:white;" aria-label="Example icon button with a delete icon">
         <mat-icon matTooltip="ID hinzufügen">subtitles</mat-icon>
       </button>

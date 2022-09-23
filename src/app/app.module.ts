@@ -48,6 +48,7 @@ import {AppConfigService} from "./app-config.service";
 import { ErrorComponent } from './error/error.component';
 import {MatMenuModule} from "@angular/material/menu";
 import { LogoutComponent } from './logout/logout.component';
+import { ConsentComponent } from './consent/consent.component';
 
 function initializeAppFactory(service:AppConfigService, httpClient: HttpClient): () => Promise<any> {
   return () => service.load();
@@ -78,7 +79,8 @@ function initializeAppFactory(service:AppConfigService, httpClient: HttpClient):
     DeleteMultiplePatientsComponent,
     SessionComponent,
     ErrorComponent,
-    LogoutComponent
+    LogoutComponent,
+    ConsentComponent
   ],
     imports: [
         BrowserModule,

@@ -13,7 +13,7 @@ import {DeleteMultiplePatientsComponent} from "./delete-multiple-patients/delete
 import {ErrorComponent} from "./error/error.component";
 import {SessionGuard} from "./guards/session-guard.service";
 import {LogoutComponent} from "./logout/logout.component";
-
+import {ConsentComponent} from "./consent/consent.component";
 
 const routes: Routes = [
   // TODO: All Paths should have english wording.
@@ -28,8 +28,10 @@ const routes: Routes = [
       {path: 'patientenliste', component: PatientlistViewComponent},
       {path: 'edit-patient', component: EditPatientComponent},
       {path: 'delete-patient', component: DeletePatientComponent},
-      {path: 'patienten-loeschen', component:DeleteMultiplePatientsComponent}
-  ]},
+      {path: 'patienten-loeschen', component:DeleteMultiplePatientsComponent},
+      {path: 'consent', component:ConsentComponent}
+
+    ]},
   // Needs to be outside, because we want message why user couldn't authenticate
   {path: 'error', component: ErrorComponent},
   {path: 'logout', component: LogoutComponent}
@@ -41,4 +43,4 @@ const routes: Routes = [
 
 })
 export class AppRoutingModule{}
-export const routingComponents =[AudittrailComponent, IdcardComponent, SimilarPatientComponent, MergePatientsComponent, PatientlistViewComponent, CreatePatientComponent,EditPatientComponent,DeletePatientComponent, DeleteMultiplePatientsComponent, InfoComponent]
+export const routingComponents =[AudittrailComponent, IdcardComponent, SimilarPatientComponent, MergePatientsComponent, PatientlistViewComponent, CreatePatientComponent,EditPatientComponent,DeletePatientComponent, DeleteMultiplePatientsComponent, InfoComponent, ConsentComponent]
