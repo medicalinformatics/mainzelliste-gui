@@ -1,23 +1,35 @@
 import { Component, OnInit } from '@angular/core';
+import {ActivatedRoute, Router} from "@angular/router";
+import {Id, PatientListService} from "../services/patient-list.service";
 import {Patient} from "../model/patient";
-import {PatientService} from "../services/patient.service";
 
 @Component({
   selector: 'app-idcard',
   templateUrl: './idcard.component.html',
   styleUrls: ['./idcard.component.css']
 })
+
 export class IdcardComponent implements OnInit {
-  patientService: PatientService;
-  patient: Patient = new Patient();
+  public idString: string = "";
+  public idType: string = "";
+  public patient: Patient = new Patient();
 
-  constructor(patientService: PatientService) {
-    this.patientService = patientService;
-
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private patientListService: PatientListService
+  ) {
+    activatedRoute.params.subscribe((params) => {
+      if (params["idType"] !== undefined)
+        this.idType = params["idType"]
+      if (params["idString"] !== undefined)
+        this.idString = params["idString"]
+    })
   }
 
-  ngOnInit(): void {
-    this.patient = history.state.patient;
+  ngOnInit() {
+    this.patientListService.readPatient(new Id(this.idType, this.idString)).then(patients => {
+      this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
+    });
   }
-
 }

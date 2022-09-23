@@ -5,10 +5,9 @@ div {
 }
 
 #UserIcon {
-  font-size: 64px;
-  width: 64px;
-  height: 64px;
+  font-size: 40px;
   color:#494949;
+  padding-right: 3%;
 }
 
 span {

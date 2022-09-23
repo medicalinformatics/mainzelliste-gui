@@ -1,38 +1,22 @@
 import {ControlNumberGenerator} from "./control-number-generator";
-// currently only this fields are supported,
-// TODO look into support for other fields
-
-export type fieldIndex = string;
- const firstName = "FIRST_NAME";
- // |"LAST_NAME"| "BIRTHDAY"| "BIRTHMONTH"| "BIRTHYEAR"| "BIRTHNAME" | "ZIP"| "RESIDENCE";
-
+import {Field, FieldType} from "./field";
 
 export class PatientList {
-
-
   constructor(
     public url: URL,
     // this needs permission to read the configuration
     public apiKey: string,
-    public controlNumberGenerator?: ControlNumberGenerator,
-  // wenn nicht gesetzt automatisch erste id die von mainzelliste angeben wird
-  public mainIdType?: string,
-  // von gui auf mainzelliste backend
-
-  // TODO check how to express optional fields
- /* public fieldMappings: {
-    [key in fieldIndex]: string;
-  } = {
-    FIRST_NAME: "Vorname",
-    LAST_NAME: "Nachname",
-    BIRTHDAY: "Geburtstag",
-    BIRTHMONTH: "Geburtsmonat",
-    BIRTHYEAR: "Geburtsjahr",
-    BIRTHNAME: "Geburtsname",
-    ZIP: "PLZ",
-    RESIDENCE: "Wohnort"
-  }*/
-) {
-  }
+    // wenn nicht gesetzt automatisch erste id die von mainzelliste angeben wird
+    public mainIdType?: string,
+    public fields: Array<Field> = [
+      new Field("Vorname", "Vorname", [], FieldType.TEXT, true, "", "Max"),
+      new Field("Nachname", "Nachname", [], FieldType.TEXT, true, "", "Mustermann"),
+      new Field("Geburtsname", "Geburtsname",[], FieldType.TEXT, true, "", "falls vorhanden"),
+      new Field("Geburtsdatum", "", ["Geburtsname", "Geburtstag", "Geburtsmonat"], FieldType.DATE, true, "", "00.00.0000"),
+      new Field("Wohnort", "Wohnort",[], FieldType.TEXT, true, "", "Musterstadt"),
+      new Field("PLZ", "PLZ", [], FieldType.TEXT, true, "", "mind. 5 Zeichen")
+    ],
+    public controlNumberGenerator?: ControlNumberGenerator
+  ) {}
 }
 

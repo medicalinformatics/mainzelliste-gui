@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AudittrailComponent } from './audittrail/audittrail.component';
 import { NavigationComponent } from './navigation/navigation.component';
-import { PatientrowComponent } from './patientrow/patientrow.component';
 import { HeadComponent } from './head/head.component';
 import { PatientSearchComponent } from './patientSearch/patientSearch.component';
 import {AppRoutingModule, routingComponents} from './app-routing.module';
@@ -48,6 +47,7 @@ import {AppConfigService} from "./app-config.service";
 import { ErrorComponent } from './error/error.component';
 import {MatMenuModule} from "@angular/material/menu";
 import { LogoutComponent } from './logout/logout.component';
+import {RouterModule} from "@angular/router";
 
 function initializeAppFactory(service:AppConfigService, httpClient: HttpClient): () => Promise<any> {
   return () => service.load();
@@ -59,7 +59,6 @@ function initializeAppFactory(service:AppConfigService, httpClient: HttpClient):
     AudittrailComponent,
     NavigationComponent,
     PatientlistComponent,
-    PatientrowComponent,
     HeadComponent,
     PatientSearchComponent,
     routingComponents,

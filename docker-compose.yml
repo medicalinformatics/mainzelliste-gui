@@ -21,7 +21,7 @@ services:
       ML_API_KEY: changeThisApiKey
       ML_DB_HOST: mainzelliste-db
       ML_DB_PASS: mainzelliste
-      ML_ALLOWED_ORIGINS: "http://localhost"
+      ML_ALLOWED_ORIGINS: "http://localhost:4200"
     depends_on:
       - mainzelliste-db
     secrets:

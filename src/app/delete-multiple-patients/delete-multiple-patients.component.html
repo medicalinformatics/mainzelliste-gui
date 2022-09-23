@@ -36,11 +36,11 @@
         <div class="DeletePatientFragestellung" style="margin-left:3%;margin-right: 7%;"><h3 style="text-align: justify"> Möchten Sie die folgenden Patienten löschen? </h3><br><h4 style="font-weight: 100; text-align: justify">Die Patientendaten werden vollständig gelöscht und können nicht wiederhergestellt werden.</h4></div>
         <div style="display: flex; flex-flow: row; justify-content: space-around; gap: 0 15px">
           <button mat-raised-button type="submit" class="DeletePatientButtonAbbruch"
-                  [routerLink]="['/patientenliste']">
+                  [routerLink]="['/patientlist']">
             Abbruch
           </button>
           <button mat-raised-button type="submit" (click)="deletePatientenZeile()" class="DeletePatientButtonLöschen"
-                  [routerLink]="['/patientenliste']">Löschen
+                  [routerLink]="['/patientlist']">Löschen
           </button>
         </div>
       </div>
