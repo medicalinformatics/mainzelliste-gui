@@ -3,6 +3,7 @@ import {Patient} from "../model/patient";
 import {PatientListService} from "../services/patient-list.service";
 import {PatientService} from "../services/patient.service";
 import {Router} from "@angular/router";
+import {MatRadioModule} from '@angular/material/radio';
 
 
 @Component({
@@ -13,6 +14,12 @@ import {Router} from "@angular/router";
 
 export class ConsentComponent implements OnInit {
   patient: Patient = new Patient();
+  foods: any[] = [
+    {value: '2.16.840.1.113883.3.1937.777.24.2.1790', viewValue: '1.6d: 2.16.840.1.113883.3.1937.777.24.2.1790'},
+    {value: '2.16.840.1.113883.3.1937.777.24.2.1791', viewValue: '1.6f: 2.16.840.1.113883.3.1937.777.24.2.1791'},
+    {value: '2.16.840.1.113883.3.1937.777.24.2.2079', viewValue: '1.7.2: 2.16.840.1.113883.3.1937.777.24.2.2079'},
+  ];
+
   constructor(
     private patientListService: PatientListService,
     private patientService: PatientService,

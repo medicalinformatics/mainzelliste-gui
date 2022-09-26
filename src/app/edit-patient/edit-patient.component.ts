@@ -13,7 +13,6 @@ export class EditPatientComponent implements OnInit {
 
   patient: Patient = new Patient();
 
-
   constructor(
     private patientListService: PatientListService,
     private patientService: PatientService,

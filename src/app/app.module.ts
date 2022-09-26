@@ -49,6 +49,7 @@ import { ErrorComponent } from './error/error.component';
 import {MatMenuModule} from "@angular/material/menu";
 import { LogoutComponent } from './logout/logout.component';
 import { ConsentComponent } from './consent/consent.component';
+import {DemoMaterialModule} from "./patientlist/material-module";
 
 function initializeAppFactory(service:AppConfigService, httpClient: HttpClient): () => Promise<any> {
   return () => service.load();
@@ -108,8 +109,9 @@ function initializeAppFactory(service:AppConfigService, httpClient: HttpClient):
         MatCheckboxModule,
         MatCheckboxModule,
         MatTooltipModule,
-    HttpClientModule,
-    MatMenuModule
+        HttpClientModule,
+        MatMenuModule,
+        DemoMaterialModule
     ],
     providers: [
         { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
