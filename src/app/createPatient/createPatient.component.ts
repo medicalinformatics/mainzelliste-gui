@@ -43,8 +43,6 @@ export class CreatePatientComponent {
 
   fieldsChanged(newFields: {[p: string]: any}) {
     this.patient.fields = newFields;
-    console.log("new Field");
-
   }
 
   sendBanner($event: any) {

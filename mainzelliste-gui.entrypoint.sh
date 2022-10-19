@@ -9,4 +9,9 @@ if [ -d "/run/secrets" ]; then
     fi
   done
 fi
-envsubst < /usr/share/nginx/html/assets/config/config.template.json > /usr/share/nginx/html/assets/config/config.json
+
+CONFIG_FILE=/usr/share/nginx/html/assets/config/config.template.json
+if [ -f "/run/secrets/mainzelliste-gui.docker.conf" ]; then
+    CONFIG_FILE=/run/secrets/mainzelliste-gui.docker.conf
+fi
+envsubst < $CONFIG_FILE > /usr/share/nginx/html/assets/config/config.json
