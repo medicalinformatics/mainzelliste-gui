@@ -155,8 +155,8 @@ export class PatientListService {
     for(const fieldConfig of this.patientList.fields) {
       switch (fieldConfig.type+"") {
         case "TEXT":{
-          if(patient.fields[fieldConfig.name] != undefined) {
-            displayPatient.fields[fieldConfig.name] = patient.fields[fieldConfig.name];
+          if(patient.fields[fieldConfig.mainzellisteField] != undefined) {
+            displayPatient.fields[fieldConfig.name] = patient.fields[fieldConfig.mainzellisteField];
           }
           break;
         }
@@ -179,7 +179,7 @@ export class PatientListService {
       switch (fieldConfig.type+"") {
         case "TEXT":{
           if(displayPatient.fields[fieldConfig.name] != undefined) {
-            patient.fields[fieldConfig.name] = displayPatient.fields[fieldConfig.name];
+            patient.fields[fieldConfig.mainzellisteField] = displayPatient.fields[fieldConfig.name];
           }
           break;
         }
