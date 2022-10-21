@@ -8,6 +8,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.navbar-logo {
+  background-repeat:no-repeat;
+  max-height:89px;
+  max-width:330px
+}
+
 /*following CSS-Design of all mat-cards (specially for iD-Card-, editcomponent and deleteComponent and mergeComponent)*/
 
 mat-card {
