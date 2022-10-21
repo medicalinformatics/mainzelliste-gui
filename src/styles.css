@@ -30,24 +30,6 @@ mat-card-title{
   width: 30%;
 }
 
-/*following: CSS-Design of all Inputs (specially for Search/FilterInput in Patientlist-ViewComponent, Patient-FieldsComponent and Patient-PseudonymComponent) */
-
-::ng-deep .mat-form-field-wrapper {
-  padding-bottom: 0.5em;
-}
-::ng-deep .mat-form-field-appearance-fill .mat-form-field-infix {
-  padding: .25em 0 .25em 0;
-}
-::ng-deep .mat-form-field-underline {
-  bottom: 0.4em;
-}
-::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
-  background-color: white;
-  -webkit-box-shadow: inset 1.5px 1px 2px -0.5px #757575;
-  /*box-shadow: inset 3px 3px 4px -2px #757575;*/
-  border-right: 1px solid #757575;
-}
-
 /*following: CSS-design of Patientfield- and PatientPseudonymComponent*/
 
 .patientField{
@@ -56,9 +38,10 @@ mat-card-title{
   max-width: 700px;
 }
 
-.inputField {
-  width: 100%;
-  margin-bottom: 5px;
+mat-form-field.inputField {
+  width: 90%;
+  margin: 0;
+  padding-bottom: 0;
 }
 
 #arrow{
@@ -71,9 +54,8 @@ mat-card-title{
 /*following CSS-Design of all Submit-Buttons*/
 
 .submit{
-  background-color: #ADDFFF;
-  color:#053E6A;
-
+  background-color: #053E6A;
+  color: white;
 }
 
 .submitBreak{

@@ -8,7 +8,7 @@
       <div style="margin-left: 5%">
       <h4>Projekt auswählen:</h4>
 
-      <mat-form-field appearance="fill" style="width: 76.5%">
+      <mat-form-field style="width: 76.5%">
         <mat-label>Projekt</mat-label>
         <mat-select #pseudonymSelection [formControl]="dataControll" required>
           <mat-option *ngFor="let pseudonym of patientListPseudonyms | async" [value]="pseudonym">{{pseudonym}}</mat-option>
@@ -18,8 +18,8 @@
       </mat-form-field>
 
       </div>
-    <br><br>
-      <button mat-raised-button class="submit" style=" right:8%; width: 20%;" (click)="createNewPatient()"> Anfordern </button> <!--[state]="{patient: patient, fields: fields}"-->
+    <br>
     </div>
+    <button mat-raised-button class="submit" style="margin-left: 5%; width: 20%; float: left;" (click)="createNewPatient()"> Anfordern </button> <!--[state]="{patient: patient, fields: fields}"-->
   </div>
 </div>

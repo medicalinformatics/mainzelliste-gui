@@ -6,7 +6,7 @@
           <button id="arrow" *ngIf="side!='none'" [ngStyle]="{float:side}" (click)="slideData(fields[field.name], field.name)">
             <mat-icon>arrow_circle_{{side}}</mat-icon>
           </button>
-          <mat-form-field style="width: 90%;" class="inputField" >
+          <mat-form-field class="inputField">
             <mat-label>{{field.name}}</mat-label>
             <input style="width: 90%; " [readonly]="readOnly" matInput (input)="fieldChanged()"
                    placeholder="{{field.hint}}" [(ngModel)]="fields[field.name]" [name]="field.name">
