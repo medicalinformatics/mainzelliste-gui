@@ -18,25 +18,23 @@
     </mat-card>
 
     <section style="display: flex; flex: 1 1 1%; margin-left:2%; flex-flow: column;">
-
-      <button mat-fab style="background-color:#053E6A; color:white;" aria-label="Example icon button with a delete icon">
+      <button mat-fab style="background-color:#053E6A; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">
         <mat-icon matTooltip="Drucken">print</mat-icon>
       </button>
-      <br>
-      <button mat-fab style="background-color:#053E6A; color:white;" aria-label="Example icon button with a delete icon">
+      <br><br>
+      <button mat-fab style="background-color:#053E6A; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">
         <mat-icon matTooltip="ID hinzufügen">subtitles</mat-icon>
       </button>
-      <br>
+      <br><br>
       <button mat-fab [routerLink]="['/edit-patient', idType, idString]"
-              [state]="{patient: patient}" style="background-color:#ffd60a; color:white;" aria-label="Example icon button with a delete icon">
+              [state]="{patient: patient}" style="background-color:#ffd60a; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">
         <mat-icon matTooltip="Edit">edit</mat-icon>
       </button>
-      <br>
+      <br><br>
       <button mat-fab [routerLink]="['/delete-patient', idType, idString]"
               [state]="{patient: patient}" style="background-color:#da1e37; color:white;" aria-label="Example icon button with a delete icon">
         <mat-icon matTooltip="Löschen">delete</mat-icon>
       </button>
-      <br>
     </section>
   </div>
 
