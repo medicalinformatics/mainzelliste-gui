@@ -1,4 +1,4 @@
-<div style="height:100%;width:100%; padding-left:5%; padding-top:3%">
+<div style="height:100%;width:100%; padding-left:3%; padding-top:3%">
 
   <h1 class="title"> {{title}}</h1>
 
@@ -12,7 +12,9 @@
   <br/><br/>
   <h3>Angaben zur Einwilligung</h3><br/>
   <div style="margin-bottom: 15%;width: 50%">
-    <h4>* Status</h4>
+    <div style="padding-left: 10%">
+
+<!--    <h4>* Status</h4>
     <mat-form-field appearance="fill" style="width:75%">
       <mat-label>Status wählen</mat-label>
       <mat-select >
@@ -22,24 +24,27 @@
       </mat-select>
 
     </mat-form-field>
-    <br/><br/><br/>
+    <br/><br/><br/>-->
     <h4>* Datum wählen</h4>
-    <mat-form-field appearance="fill" style="width:75%">
+    <mat-form-field appearance="fill" style="width:80%">
       <mat-label>DD/MM/YYYY</mat-label>
-      <input matInput [matDatepicker]="picker">
+      <input matInput placeholder="Title" [ngModel]="date">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
     <br/><br/><br/>
     <h4>* Provisions</h4>
+    <h4>{{provisionFirst}}</h4>
     <mat-radio-group aria-label="Select an option">
       <mat-radio-button value="1">Ja</mat-radio-button> <br/><br/>
       <mat-radio-button value="2" checked="true">Nein</mat-radio-button>
     </mat-radio-group>
-    <br/><br/><br/>
-    <h5>* Diese Felder müssen ausgefüllt werden.</h5>
-    <br/><br/><br/>
-    <button mat-raised-button class="submit" style=" right:8%; width: 25%; float:right">Consent hinzufügen</button>
   </div>
+    <br/><br/><br/>
+    <h4>* Diese Felder müssen ausgefüllt werden.</h4>
+    <br/><br/><br/>
+    <button mat-raised-button class="submit">Consent hinzufügen</button>
+  </div>
+
 </div>
 

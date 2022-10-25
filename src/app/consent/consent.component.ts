@@ -4,8 +4,7 @@ import {PatientListService} from "../services/patient-list.service";
 import {PatientService} from "../services/patient.service";
 import {Router} from "@angular/router";
 import FhirConsent from "../../assets/fhirConsent.json";
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+
 
 @Component({
   selector: 'app-consent',
@@ -14,16 +13,10 @@ import { Observable } from 'rxjs';
 })
 
 export class ConsentComponent implements OnInit {
-  // private _jsonURL = '../../assets/fhirConsent.json';
-
-/*
-  public getJSON(): Observable<any> {
-    return this.http.get(this._jsonURL);
-  }
-*/
-
 
   title = FhirConsent.extension[1].valueString;
+  date = FhirConsent.dateTime;
+  provisionFirst = FhirConsent.provision.provision[0].code[0].coding[0].display;
   patient: Patient = new Patient();
   foods: any[] = [
     {value: '2.16.840.1.113883.3.1937.777.24.2.1790', viewValue: '1.6d: 2.16.840.1.113883.3.1937.777.24.2.1790'},
@@ -35,11 +28,8 @@ export class ConsentComponent implements OnInit {
     private patientListService: PatientListService,
     private patientService: PatientService,
     private router: Router,
-    // private http: HttpClient
   ) {
- /*   this.getJSON().subscribe(data => {
-    console.log(data);
-  });*/ }
+ }
 
   ngOnInit(): void {
     this.patient = history.state.patient;
