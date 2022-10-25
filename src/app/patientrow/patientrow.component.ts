@@ -10,7 +10,7 @@ import {PatientService} from "../services/patient.service";
 
 export class PatientrowComponent {
   patientService: PatientService;
-  @Input() patient: Patient = new Patient()
+  @Input() patient: Patient = new Patient();
   @Input() fields : Array<string> = [];
   @Output() selectedP = new EventEmitter<PatientrowComponent>();
 

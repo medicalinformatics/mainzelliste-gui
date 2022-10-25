@@ -225,7 +225,8 @@ export class PatientService {
       Geburtsdatum: '06.07.1981',
       Wohnort: 'Dresden',
       PLZ: '01967'
-    }, [{idType: "Pseudonym", idString: "026HNBFT"}]),new Patient({
+    }, [{idType: "Pseudonym", idString: "026HNBFT"}])
+    ,new Patient({
       Nachname: 'Moser',
       Geburtsname: '',
       Vorname: 'Matthias',
@@ -256,7 +257,8 @@ export class PatientService {
       Geburtsdatum: '18.01.1989',
       Wohnort: 'Dresden',
       PLZ: '01967'
-    }, [{idType: "Pseudonym", idString: "YOK76BNH"}]),new Patient({
+    }, [{idType: "Pseudonym", idString: "YOK76BNH"}]),
+    new Patient({
       Nachname: 'Franz',
       Geburtsname: '',
       Vorname: 'Ingrid',
@@ -271,7 +273,8 @@ export class PatientService {
       Geburtsdatum: '23.11.1969',
       Wohnort: 'Dresden',
       PLZ: '01967'
-    }, [{idType: "Pseudonym", idString: "09NV6DL2"}]),new Patient({
+    }, [{idType: "Pseudonym", idString: "09NV6DL2"}]),
+    new Patient({
       Nachname: 'Müller',
       Geburtsname: '',
       Vorname: 'Julian',
@@ -310,7 +313,7 @@ export class PatientService {
       Geburtsdatum: '14.09.2001',
       Wohnort: 'Unterweid',
       PLZ: '36452'
-    }, [{idType: "Pseudonym", idString: "KMNH76FC"}])
+    }, [{idType: "Pseudonym", idString: "KMNH76FC"}]),
   ];
 
   constructor(private patientListService: PatientListService) {

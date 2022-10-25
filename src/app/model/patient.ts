@@ -5,7 +5,7 @@ export class Patient {
 
   constructor(
     public fields: { [key: string]: string } = {},
-    public ids: Array<{ idType: string, idString: string }> = []
+    public ids: Array<{ idType: string, idString: string }> = [],
   ) {
     let fieldService = new FieldService() /*new Patient*/
     fieldService.fields.forEach(value => {

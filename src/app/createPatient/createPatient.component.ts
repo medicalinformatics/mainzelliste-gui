@@ -49,6 +49,11 @@ export class CreatePatientComponent {
   sendBanner($event: any) {
 
   }
+
+/* consentChanged(newField: boolean) {
+    this.patient.consent = newField;
+    console.log("Consent given:" +this.patient.consent);
+  }*/
 }
 
 export class AddPatientFormularComponent {

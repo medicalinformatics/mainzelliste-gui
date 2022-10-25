@@ -20,7 +20,7 @@
       </mat-form-field>
       </div>
     <br><br>
-      <button mat-raised-button class="submit" style=" right:8%; width: 20%;" routerLink="/idcard" [state]="{patient: patient, fields: fields}" (click)="createNewPatient()"> Anfordern </button>
-    </div>
+      <mat-checkbox   style=" margin-left:5%; ">Einwilligung vorhanden</mat-checkbox> </div>
+      <button mat-raised-button class="submit" style="width: 25%;" routerLink="/idcard" [state]="{patient: patient, fields: fields}" (click)="createNewPatient()"> Anfordern </button> <br/>
   </div>
 </div>

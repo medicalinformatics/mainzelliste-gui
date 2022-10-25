@@ -3,8 +3,9 @@ import {Patient} from "../model/patient";
 import {PatientListService} from "../services/patient-list.service";
 import {PatientService} from "../services/patient.service";
 import {Router} from "@angular/router";
-import {MatRadioModule} from '@angular/material/radio';
-
+import FhirConsent from "../../assets/fhirConsent.json";
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-consent',
@@ -13,6 +14,16 @@ import {MatRadioModule} from '@angular/material/radio';
 })
 
 export class ConsentComponent implements OnInit {
+  // private _jsonURL = '../../assets/fhirConsent.json';
+
+/*
+  public getJSON(): Observable<any> {
+    return this.http.get(this._jsonURL);
+  }
+*/
+
+
+  title = FhirConsent.extension[1].valueString;
   patient: Patient = new Patient();
   foods: any[] = [
     {value: '2.16.840.1.113883.3.1937.777.24.2.1790', viewValue: '1.6d: 2.16.840.1.113883.3.1937.777.24.2.1790'},
@@ -23,8 +34,12 @@ export class ConsentComponent implements OnInit {
   constructor(
     private patientListService: PatientListService,
     private patientService: PatientService,
-    private router: Router
-  ) { }
+    private router: Router,
+    // private http: HttpClient
+  ) {
+ /*   this.getJSON().subscribe(data => {
+    console.log(data);
+  });*/ }
 
   ngOnInit(): void {
     this.patient = history.state.patient;
