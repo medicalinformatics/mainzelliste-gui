@@ -1,4 +1,4 @@
-<div style="height:100%;width:100%; padding-left:3%; padding-top:3%">
+<div style="height:100%;width:90%; padding-left:3%; padding-top:3%">
 
   <h1 class="title"> {{title}}</h1>
 
@@ -8,7 +8,7 @@
     <app-patient-fields [readOnly]=true [fields]="patient.fields"></app-patient-fields>
     <h4>Pseudonyme</h4>-->
     <app-patient-pseudonyms [readOnly]=false [pseudonyms]="patient.ids"></app-patient-pseudonyms>
-<br/><br/> <hr>
+<br/><br/> <hr width="90%" align="center">
   <br/><br/>
   <h3>Angaben zur Einwilligung</h3><br/>
   <div style="margin-bottom: 15%;width: 50%">
@@ -26,22 +26,58 @@
     </mat-form-field>
     <br/><br/><br/>-->
     <h4>* Datum wählen</h4>
-    <mat-form-field appearance="fill" style="width:80%">
+    <mat-form-field appearance="fill" style="width:75%">
       <mat-label>DD/MM/YYYY</mat-label>
       <input matInput placeholder="Title" [ngModel]="date">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
     <br/><br/><br/>
-    <h4>* Provisions</h4>
-    <h4>{{provisionFirst}}</h4>
-    <mat-radio-group aria-label="Select an option">
-      <mat-radio-button value="1">Ja</mat-radio-button> <br/><br/>
-      <mat-radio-button value="2" checked="true">Nein</mat-radio-button>
-    </mat-radio-group>
+    <h3>* Provisions</h3>
+      <div style="padding-bottom: 5%">
+        <h4>{{provision1}}</h4>
+        <mat-radio-group aria-label="Select an option">
+          <mat-radio-button value="1">Ja</mat-radio-button> <br/><br/>
+          <mat-radio-button value="2" checked="true">Nein</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div style="padding-bottom: 5%">
+        <h4>{{provision2}}</h4>
+        <mat-radio-group aria-label="Select an option">
+          <mat-radio-button value="3">Ja</mat-radio-button> <br/><br/>
+          <mat-radio-button value="4" checked="true">Nein</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div style="padding-bottom: 5%">
+        <h4>{{provision3}}</h4>
+        <mat-radio-group aria-label="Select an option">
+          <mat-radio-button value="5">Ja</mat-radio-button> <br/><br/>
+          <mat-radio-button value="6" checked="true">Nein</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div style="padding-bottom: 5%">
+        <h4>{{provision4}}</h4>
+        <mat-radio-group aria-label="Select an option">
+          <mat-radio-button value="7">Ja</mat-radio-button> <br/><br/>
+          <mat-radio-button value="8" checked="true">Nein</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div style="padding-bottom: 5%">
+        <h4>{{provision5}}</h4>
+        <mat-radio-group aria-label="Select an option">
+          <mat-radio-button value="9">Ja</mat-radio-button> <br/><br/>
+          <mat-radio-button value="10" checked="true">Nein</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div style="padding-bottom: 5%">
+        <h4>{{provision6}}</h4>
+        <mat-radio-group aria-label="Select an option">
+          <mat-radio-button value="11">Ja</mat-radio-button> <br/><br/>
+          <mat-radio-button value="12" checked="true">Nein</mat-radio-button>
+        </mat-radio-group>
+    </div>
   </div>
-    <br/><br/><br/>
-    <h4>* Diese Felder müssen ausgefüllt werden.</h4>
+    <h5>* Diese Felder müssen ausgefüllt werden.</h5>
     <br/><br/><br/>
     <button mat-raised-button class="submit">Consent hinzufügen</button>
   </div>
