@@ -9,12 +9,12 @@
       },
       "mainIdType": "pid",
       "fields": [
-        {"name":  "Vorname", "mainzellisteField":  "Vorname", "required":  true, "validator":  ""},
-        {"name":  "Nachname", "mainzellisteField":  "Nachname", "required":  true, "validator":  ""},
-        {"name":  "Geburtsname", "mainzellisteField":  "Geburtsname", "required":  true, "validator":  ""},
-        {"name":  "Geburtsdatum", "mainzellisteFields":  ["Geburtstag", "Geburtsmonat", "Geburtsjahr"], "required":  true, "validator":  ""},
-        {"name":  "PLZ", "mainzellisteField":  "PLZ", "required":  true, "validator":  ""},
-        {"name":  "Wohnort", "mainzellisteField":  "Wohnort", "required":  true, "validator":  ""}
+        {"name":  "Vorname", "mainzellisteField":  "Vorname", "type": "TEXT", "required":  true, "validator":  ""},
+        {"name":  "Nachname", "mainzellisteField":  "Nachname", "type": "TEXT", "required":  true, "validator":  ""},
+        {"name":  "Geburtsname", "mainzellisteField":  "Geburtsname", "type": "TEXT", "required":  true, "validator":  ""},
+        {"name":  "Geburtsdatum", "mainzellisteFields":  ["Geburtstag", "Geburtsmonat", "Geburtsjahr"], "type": "DATE", "required":  true, "validator":  ""},
+        {"name":  "PLZ", "mainzellisteField":  "PLZ", "type": "TEXT", "required":  true, "validator":  ""},
+        {"name":  "Wohnort", "mainzellisteField":  "Wohnort", "type": "TEXT", "required":  true, "validator":  ""}
       ]
     }
   ]
