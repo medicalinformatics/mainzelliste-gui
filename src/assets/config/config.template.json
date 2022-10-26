@@ -6,7 +6,16 @@
       "controlNumberGenerator": {
         "url": "${CONTROLNUMBERGENERATOR_URL}",
         "apiKey": "${CONTROLNUMBERGENERATOR_API_KEY}"
-      }
+      },
+      "mainIdType": "pid",
+      "fields": [
+        {"name":  "Vorname", "mainzellisteField":  "Vorname", "required":  true, "validator":  ""},
+        {"name":  "Nachname", "mainzellisteField":  "Nachname", "required":  true, "validator":  ""},
+        {"name":  "Geburtsname", "mainzellisteField":  "Geburtsname", "required":  true, "validator":  ""},
+        {"name":  "Geburtsdatum", "mainzellisteFields":  ["Geburtstag", "Geburtsmonat", "Geburtsjahr"], "required":  true, "validator":  ""},
+        {"name":  "PLZ", "mainzellisteField":  "PLZ", "required":  true, "validator":  ""},
+        {"name":  "Wohnort", "mainzellisteField":  "Wohnort", "required":  true, "validator":  ""}
+      ]
     }
   ]
 }

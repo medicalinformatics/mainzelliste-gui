@@ -1,8 +1,10 @@
-import {Component, Input} from '@angular/core';
+import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {Patient} from "../model/patient";
 import {PatientService} from "../services/patient.service";
 import {Router} from "@angular/router";
 import {FormControl, Validators} from "@angular/forms";
+import {PatientListService} from "../services/patient-list.service";
+import {MatSelect} from "@angular/material/select";
 
 @Component({
   selector: 'app-create-patient',
@@ -11,39 +13,36 @@ import {FormControl, Validators} from "@angular/forms";
 })
 export class CreatePatientComponent {
   title="Patient einfügen";
-  patient: Patient;
   @Input() fields : Array<string> = [];
-
+  @ViewChild("pseudonymSelection") pseudonymSelection!: MatSelect;
 
   dataControll = new FormControl('', Validators.required);
   selectFormControl = new FormControl('', Validators.required);
+  patientListPseudonyms: Promise<string[]>;
 
-  //
-
+  patient:Patient = new Patient();
+  patientService: PatientService;
+  patientListService: PatientListService;
 
   constructor(
-    private patientService: PatientService,
+    patientService: PatientService,
+    patientListService: PatientListService,
     private router: Router
   ) {
-    this.patient = new Patient();
+    this.patientService = patientService;
+    this.patientListService = patientListService;
+    this.patientListPseudonyms=patientListService.getPatientListIdTypes();
   }
 
-  createNewPatient () {
-    this.patientService.createPatient(this.patient).then(patient => {
-      this.router.navigate(["/idcard"], {state: {patient: patient[0]}}).then(success => {
-        console.log("successfully navigated to idcard")
-      }).catch(error => {
-        console.log("Can't navigate to idcard because of error.")
-        console.log(error)
-      })
-    });
+  async createNewPatient () {
+    console.log(this.pseudonymSelection);
+    let newId = await this.patientService.createPatient(this.patient, this.pseudonymSelection.value);
+    await this.router.navigate(["/idcard", newId.idType, newId.idString]);
   }
 
 
   fieldsChanged(newFields: {[p: string]: any}) {
     this.patient.fields = newFields;
-    console.log("new Field");
-
   }
 
   sendBanner($event: any) {

@@ -22,6 +22,7 @@
           arrow_circle_down</mat-icon></button>
       </th>
       <td mat-cell *matCellDef="let element"> {{element.ids[0].idString}} </td>
+      <!-- anhand von idType pseudonym finden -->
     </ng-container>
 
     <ng-container *ngFor="let field of fields" matColumnDef="{{field}}">
@@ -38,7 +39,7 @@
         arrow_circle_down</mat-icon></th>
       <td mat-cell *matCellDef="let element" style="display: flex; flex-flow: row; justify-content: space-evenly">
         <button style="background: none;border:none;">
-          <a [routerLink]="['/idcard']" [state]="{patient: element, fields: fields}">
+          <a [routerLink]="['/idcard', element.ids[0].idType, element.ids[0].idString]">
             <mat-icon matTooltip="ID-Card">fact_check</mat-icon>
           </a>
         </button>
@@ -48,12 +49,12 @@
 <!--          </a>-->
         </button>
         <button style="background: none;border:none;">
-          <a [routerLink]="['/edit-patient']" [state]="{patient: element, fields: fields}">
+          <a [routerLink]="['/edit-patient', element.ids[0].idType, element.ids[0].idString]">
             <mat-icon matTooltip="Edit">edit</mat-icon>
           </a>
         </button>
         <button style="background: none;border:none;">
-          <a [routerLink]="['/delete-patient']" [state]="{patient: element, fields: fields}">
+          <a [routerLink]="['/delete-patient', element.ids[0].idType, element.ids[0].idString]">
             <mat-icon matTooltip="Löschen">delete</mat-icon>
           </a>
         </button>

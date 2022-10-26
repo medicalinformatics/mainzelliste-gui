@@ -2,10 +2,12 @@ import {Injectable} from '@angular/core';
 import {Patient} from "../model/patient";
 import {MatTableDataSource} from "@angular/material/table";
 import {Id, PatientListService} from "./patient-list.service";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
+// TODO: Try to remove this one and completly replace with patient-list.service.ts
 // NOTE: Currently this is just a mockup for the real patient service. It currently doesn't do any sync with the mainzelliste.
 export class PatientService {
 
@@ -321,14 +323,9 @@ export class PatientService {
     this.rerenderPatients(patientListService.getPatients());
   }
 
-  rerenderPatients(patients: Promise<Patient[]>, filters?: Array<{ field: string, searchCriteria: string }>) {
-    patients.then(patients => {
-      // TODO: Find a better way for transforming the single fields to one combined field
-      patients.forEach(patient => {
-        let birthdate: string = patient.fields.Geburtstag + "." + patient.fields.Geburtsmonat + "." + patient.fields.Geburtsjahr;
-        patient.fields.Geburtsdatum = birthdate
-        return patient;
-      })
+  rerenderPatients(patientsPromise: Promise<Patient[]>, filters?: Array<{ field: string, searchCriteria: string }>) {
+    patientsPromise.then(patients => {
+      patients = patients.map(patient => this.patientListService.convertToDisplayPatient(patient));
       if (filters != undefined) {
         patients = patients.filter((patient) => {
           let matched = false;
@@ -345,6 +342,13 @@ export class PatientService {
         })
       }
       this.patientsDataSource = new MatTableDataSource<Patient>(patients)
+    }).catch((err: HttpErrorResponse) => {
+      if (err.status === 404) {
+        if (err.error === "No patient found") {
+          console.log("patientsdatasource is set")
+          this.patientsDataSource = new MatTableDataSource<Patient>([])
+        }
+      }
     })
   }
 
@@ -359,41 +363,21 @@ export class PatientService {
       }
   }
 
-  createPatient(tmpPatient: Patient): Promise<Patient[]> {
+  async createPatient(tmpPatient: Patient, idType?: string): Promise<Id> {
     // TODO: Create proper mainzelliste call for this and return that as result.
-    return this.patientListService.addPatient(tmpPatient).then(id => {
-      this.rerenderPatients(this.patientListService.getPatients());
-      let mappedId = new Id('pid', id.newId, id.tentative, id.uri);
-      return this.patientListService.readPatient(mappedId);
-    });
-  }
-
-  private getMockId(): string {
-    let result = '';
-    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let charactersLength = characters.length;
-    for (let i = 0; i < 8; i++) {
-      result += characters.charAt(Math.floor(Math.random() *
-        charactersLength));
+    if (idType == undefined) {
+      idType = await this.patientListService.getPatientListMainIdType();
     }
-    return result;
+    let newId = await this.patientListService.addPatient(tmpPatient, idType);
+    this.rerenderPatients(this.patientListService.getPatients());
+    return new Id(idType, newId.newId, newId.tentative);
+
   }
 
-  deletePatient(patient: Patient): Promise<number> {
-    console.log("service is deleting");
-    console.log(patient);
-    return new Promise((resolve, reject) => {
-      let index = this.patientsDataSource.data.findIndex((patientFromArray) => {
-        return patientFromArray.ids[0].idString === patient.ids[0].idString;
-      });
-      console.log(this.patientsDataSource.data[0]);
-      console.log(index);
-      if (index > -1) {
-
-        this.patientsDataSource.data.splice(index, 1);
-        resolve(204);
-      }
-    })
+  async deletePatient(patient: Patient){
+     this.patientListService.deletePatient(patient).then(response => {
+       console.log(response);
+       this.rerenderPatients(this.patientListService.getPatients())
+     }).then(error => {console.log(error)})
   }
-
 }

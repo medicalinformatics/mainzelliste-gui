@@ -3,7 +3,6 @@ import {Routes, RouterModule} from '@angular/router';
 import {InfoComponent} from "./info/info.component";
 import {AudittrailComponent} from "./audittrail/audittrail.component";
 import {IdcardComponent} from "./idcard/idcard.component";
-import {SimilarPatientComponent} from "./similarPatient/similarPatient.component";
 import {PatientlistViewComponent} from "./patientlist-view/patientlist-view.component";
 import {CreatePatientComponent} from "./createPatient/createPatient.component";
 import {MergePatientsComponent} from "./mergePatients/mergePatients.component";
@@ -18,20 +17,19 @@ import {ConsentComponent} from "./consent/consent.component";
 const routes: Routes = [
   // TODO: All Paths should have english wording.
   {path: '', canActivateChild: [SessionGuard], children: [
-      {path: '', pathMatch: 'full' ,redirectTo: 'patientenliste'},
-      {path: 'neuen-patient-erstellen', component: CreatePatientComponent},
+      {path: '', pathMatch: 'full' ,redirectTo: 'patientlist'},
+      {path: 'add-new-patient', component: CreatePatientComponent},
       {path: 'info', component: InfoComponent},
       {path: 'audittrail', component: AudittrailComponent},
-      {path: 'idcard', component: IdcardComponent},
-      {path: 'similar-patient', component: SimilarPatientComponent},
-      {path: 'patienten-zusammenfuehren', component: MergePatientsComponent},
-      {path: 'patientenliste', component: PatientlistViewComponent},
-      {path: 'edit-patient', component: EditPatientComponent},
-      {path: 'delete-patient', component: DeletePatientComponent},
-      {path: 'patienten-loeschen', component:DeleteMultiplePatientsComponent},
+      {path: 'idcard/:idType/:idString', component: IdcardComponent},
+      {path: 'merge-patients', component: MergePatientsComponent},
+      {path: 'patientlist', component: PatientlistViewComponent},
+      {path: 'edit-patient/:idType/:idString', component: EditPatientComponent},
+      {path: 'delete-patient/:idType/:idString', component: DeletePatientComponent},
+      {path: 'delete-patients', component:DeleteMultiplePatientsComponent},
       {path: 'consent', component:ConsentComponent}
-
     ]},
+
   // Needs to be outside, because we want message why user couldn't authenticate
   {path: 'error', component: ErrorComponent},
   {path: 'logout', component: LogoutComponent}
@@ -43,4 +41,4 @@ const routes: Routes = [
 
 })
 export class AppRoutingModule{}
-export const routingComponents =[AudittrailComponent, IdcardComponent, SimilarPatientComponent, MergePatientsComponent, PatientlistViewComponent, CreatePatientComponent,EditPatientComponent,DeletePatientComponent, DeleteMultiplePatientsComponent, InfoComponent, ConsentComponent]
+export const routingComponents =[AudittrailComponent, IdcardComponent, MergePatientsComponent, PatientlistViewComponent, CreatePatientComponent,EditPatientComponent,DeletePatientComponent, DeleteMultiplePatientsComponent, InfoComponent, ConsentComponent]

@@ -14,21 +14,18 @@ import {PatientService} from "../services/patient.service";
 
 export class PatientFieldsComponent implements OnInit {
 
-  tmpPatient: Patient = new Patient();
-
   @Input()  fields: {[key: string]: any} = {};
   @Output() fieldEvent = new EventEmitter<{[key: string]: any}>();
   @Output() consentEvent = new EventEmitter<boolean>();
   @Output() slideFieldEvent = new EventEmitter<{name:string,value:string}>();
 
-  fieldService: FieldService;
   configuredFields: Promise<Array<Field>>;
   @Input() readOnly: boolean= false;
   @Input() side: string="none";
 
   constructor(fieldService: FieldService) {
-    this.fieldService = fieldService;
     this.configuredFields = fieldService.getFields();
+    console.log(this.configuredFields);
   }
 
   ngOnInit(): void {

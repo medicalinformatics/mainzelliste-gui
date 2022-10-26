@@ -38,7 +38,6 @@ export class PatientlistViewComponent implements OnInit {
 
   constructor(patientService: PatientService) {
     this.patientService = patientService;
-    patientService.getPatients(this.filters);
   }
 
   add(event: MatChipInputEvent): void {
@@ -79,8 +78,7 @@ export class PatientlistViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.patient = history.state.patient;
-    this.fields = history.state.fields;
+    this.patientService.getPatients(this.filters);
   }
 
 }

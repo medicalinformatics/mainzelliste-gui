@@ -31,16 +31,18 @@ h1{
   margin-right: 2%;
   margin-left: 2%;
 }
-::ng-deep .mat-form-field-wrapper {
+
+/*following: CSS-Design of all Inputs (specially for Search/FilterInput in Patientlist-ViewComponent, Patient-FieldsComponent and Patient-PseudonymComponent) */
+::ng-deep #filterBoard .mat-form-field-wrapper {
   padding-bottom: 0.5em;
 }
-::ng-deep .mat-form-field-appearance-fill .mat-form-field-infix {
-  padding: .25em 0 .25em 0;
-}
-::ng-deep .mat-form-field-underline {
+::ng-deep #filterBoard .mat-form-field-underline {
   bottom: 0.4em;
 }
-::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+::ng-deep #filterBoard.mat-form-field-appearance-fill .mat-form-field-infix {
+  padding: .25em 0 .25em 0;
+}
+::ng-deep #filterBoard.mat-form-field-appearance-fill .mat-form-field-flex {
   background-color: white;
   -webkit-box-shadow: inset 1.5px 1px 2px -0.5px #757575;
   /*-webkit-box-shadow: inset 3px 3px 4px -2px #757575;*/

@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AudittrailComponent } from './audittrail/audittrail.component';
 import { NavigationComponent } from './navigation/navigation.component';
-import { PatientrowComponent } from './patientrow/patientrow.component';
 import { HeadComponent } from './head/head.component';
 import { PatientSearchComponent } from './patientSearch/patientSearch.component';
 import {AppRoutingModule, routingComponents} from './app-routing.module';
@@ -50,6 +49,7 @@ import {MatMenuModule} from "@angular/material/menu";
 import { LogoutComponent } from './logout/logout.component';
 import { ConsentComponent } from './consent/consent.component';
 import {DemoMaterialModule} from "./patientlist/material-module";
+import {RouterModule} from "@angular/router";
 
 function initializeAppFactory(service:AppConfigService, httpClient: HttpClient): () => Promise<any> {
   return () => service.load();
@@ -61,7 +61,6 @@ function initializeAppFactory(service:AppConfigService, httpClient: HttpClient):
     AudittrailComponent,
     NavigationComponent,
     PatientlistComponent,
-    PatientrowComponent,
     HeadComponent,
     PatientSearchComponent,
     routingComponents,
@@ -114,7 +113,7 @@ function initializeAppFactory(service:AppConfigService, httpClient: HttpClient):
         DemoMaterialModule
     ],
     providers: [
-        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
+        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
         { provide: APP_INITIALIZER,
             useFactory: initializeAppFactory,
             deps: [
