@@ -15,7 +15,7 @@
     <div style="padding-left: 10%">
 
 <!--    <h4>* Status</h4>
-    <mat-form-field appearance="fill" style="width:75%">
+    <mat-form-field appearance="outline" style="width:75%">
       <mat-label>Status wählen</mat-label>
       <mat-select >
         <mat-option *ngFor="let food of foods" [value]="food.value">
@@ -26,7 +26,7 @@
     </mat-form-field>
     <br/><br/><br/>-->
     <h4>* Datum wählen</h4>
-    <mat-form-field appearance="fill" style="width:75%">
+    <mat-form-field appearance="outline" style="width:75%">
       <mat-label>DD/MM/YYYY</mat-label>
       <input matInput placeholder="Title" [ngModel]="date">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>

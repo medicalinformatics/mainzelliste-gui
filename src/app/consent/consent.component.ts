@@ -24,7 +24,7 @@ export class ConsentComponent implements OnInit {
   provision6 = FhirConsent.provision.provision[5].code[0].coding[0].display;
 
   patient: Patient = new Patient();
-  provisions : any[] | undefined;
+  provisions : Array<String> = [];
   provLength: any = FhirConsent.provision.provision.length;
 
 foods: any[] = [
@@ -32,6 +32,7 @@ foods: any[] = [
     {value: '2.16.840.1.113883.3.1937.777.24.2.1791', viewValue: '1.6f: 2.16.840.1.113883.3.1937.777.24.2.1791'},
     {value: '2.16.840.1.113883.3.1937.777.24.2.2079', viewValue: '1.7.2: 2.16.840.1.113883.3.1937.777.24.2.2079'},
   ];
+  provision: any;
 
 
 
@@ -40,6 +41,9 @@ foods: any[] = [
     private patientService: PatientService,
     private router: Router,
   ) {
+ /*  for(var element of FhirConsent.provision.provision){
+     provisions.push(element.code[0].coding[0].display);
+   }*/
  }
 
 
