@@ -27,9 +27,9 @@
     <br/><br/><br/>-->
     <h3 style="font-weight: normal; padding-bottom: 2%">* Datum wählen</h3>
       <div style="padding-left: 10%">
-        <mat-form-field appearance="outline" style="width:75%">
+        <mat-form-field appearance="outline" style="width:75%" (change)="changedDate(date)">
       <mat-label>DD/MM/YYYY</mat-label>
-      <input matInput placeholder="Title" [ngModel]="date">
+      <input matInput placeholder="Title" [ngModel]="date" >
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
@@ -39,46 +39,46 @@
     <div style="padding-left: 10%">
       <div style="padding-bottom: 5%">
         <h4 style="font-weight: lighter;">{{provision1}}</h4>
-        <mat-radio-group style ="display:flex; gap:40px" aria-label="Select an option">
+        <mat-radio-group style ="display:flex; gap:40px" >
           <mat-radio-button value="1" >Ja</mat-radio-button>
           <mat-radio-button value="2" checked="true">Nein</mat-radio-button>
         </mat-radio-group>
       </div>
       <div style="padding-bottom: 5%">
         <h4 style="font-weight: lighter;">{{provision2}}</h4>
-        <mat-radio-group style ="display:flex; gap:40px" aria-label="Select an option">
-          <mat-radio-button value="3">Ja</mat-radio-button>
-          <mat-radio-button value="4" checked="true">Nein</mat-radio-button>
+        <mat-radio-group style ="display:flex; gap:40px" >
+          <mat-radio-button value="3" checked="true">Ja</mat-radio-button>
+          <mat-radio-button value="4" >Nein</mat-radio-button>
         </mat-radio-group>
       </div>
       <div style="padding-bottom: 5%">
         <h4 style="font-weight: lighter;">{{provision3}}</h4>
-        <mat-radio-group style ="display:flex; gap:40px" aria-label="Select an option">
+        <mat-radio-group style ="display:flex; gap:40px" >
           <mat-radio-button value="5">Ja</mat-radio-button>
           <mat-radio-button value="6" checked="true">Nein</mat-radio-button>
         </mat-radio-group>
       </div>
       <div style="padding-bottom: 5%">
         <h4 style="font-weight: lighter;">{{provision4}}</h4>
-        <mat-radio-group style ="display:flex; gap:40px" aria-label="Select an option">
-          <mat-radio-button value="7">Ja</mat-radio-button>
-          <mat-radio-button value="8" checked="true">Nein</mat-radio-button>
+        <mat-radio-group style ="display:flex; gap:40px" >
+          <mat-radio-button value="7" checked="true">Ja</mat-radio-button>
+          <mat-radio-button value="8" >Nein</mat-radio-button>
         </mat-radio-group>
       </div>
       <div style="padding-bottom: 5%">
         <h4 style="font-weight: lighter;">{{provision5}}</h4>
-        <mat-radio-group style ="display:flex; gap:40px" aria-label="Select an option">
-          <mat-radio-button value="9">Ja</mat-radio-button>
+        <mat-radio-group style ="display:flex; gap:40px" >
+          <mat-radio-button value="9" checked="true">Ja</mat-radio-button>
           <mat-radio-button value="10" checked="true">Nein</mat-radio-button>
         </mat-radio-group>
       </div>
-      <div style="padding-bottom: 5%">
+      <!--<div style="padding-bottom: 5%">
         <h4 style="font-weight: lighter;">{{provision6}}</h4>
         <mat-radio-group style ="display:flex; gap:40px" aria-label="Select an option">
           <mat-radio-button value="11">Ja</mat-radio-button>
-          <mat-radio-button value="12" checked="checked">Nein</mat-radio-button>
+          <mat-radio-button value="12" checked="true">Nein</mat-radio-button>
         </mat-radio-group>
-    </div>
+    </div>-->
   </div>
     <h5>* Diese Felder müssen ausgefüllt werden.</h5>
     <br/><br/><br/>

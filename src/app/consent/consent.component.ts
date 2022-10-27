@@ -36,6 +36,7 @@ foods: any[] = [
 
 
 
+
   constructor(
     private patientListService: PatientListService,
     private patientService: PatientService,
@@ -51,7 +52,11 @@ ngOnInit(): void {
     this.patient = history.state.patient;
   }
 
+  changedDate(date:any): void{
+    console.log("Datum geändert:" +date);
+  }
 }
+
 
 
 

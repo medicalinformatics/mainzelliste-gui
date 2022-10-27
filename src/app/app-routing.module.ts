@@ -27,7 +27,7 @@ const routes: Routes = [
       {path: 'edit-patient/:idType/:idString', component: EditPatientComponent},
       {path: 'delete-patient/:idType/:idString', component: DeletePatientComponent},
       {path: 'delete-patients', component:DeleteMultiplePatientsComponent},
-      {path: 'consent', component:ConsentComponent}
+      {path: 'consent/:idType/:idString', component:ConsentComponent}
     ]},
 
   // Needs to be outside, because we want message why user couldn't authenticate
