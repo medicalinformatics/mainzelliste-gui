@@ -22,9 +22,8 @@
           {{food.viewValue}}
         </mat-option>
       </mat-select>
-
     </mat-form-field>
-    <br/><br/><br/>-->
+    <br/>-->
     <h3 style="font-weight: normal; padding-bottom: 2%">* Datum wählen</h3>
       <div style="padding-left: 10%">
         <mat-form-field appearance="outline" style="width:75%" (change)="changedDate(date)">
@@ -37,48 +36,48 @@
     <br/>
     <h3 style="font-weight: normal; padding-bottom: 2%">* Provisions</h3>
     <div style="padding-left: 10%">
-      <div style="padding-bottom: 5%">
-        <h4 style="font-weight: lighter;">{{provision1}}</h4>
-        <mat-radio-group style ="display:flex; gap:40px" >
-          <mat-radio-button value="1" >Ja</mat-radio-button>
-          <mat-radio-button value="2" checked="true">Nein</mat-radio-button>
-        </mat-radio-group>
-      </div>
-      <div style="padding-bottom: 5%">
-        <h4 style="font-weight: lighter;">{{provision2}}</h4>
-        <mat-radio-group style ="display:flex; gap:40px" >
-          <mat-radio-button value="3" checked="true">Ja</mat-radio-button>
-          <mat-radio-button value="4" >Nein</mat-radio-button>
-        </mat-radio-group>
-      </div>
-      <div style="padding-bottom: 5%">
-        <h4 style="font-weight: lighter;">{{provision3}}</h4>
-        <mat-radio-group style ="display:flex; gap:40px" >
-          <mat-radio-button value="5">Ja</mat-radio-button>
-          <mat-radio-button value="6" checked="true">Nein</mat-radio-button>
-        </mat-radio-group>
-      </div>
-      <div style="padding-bottom: 5%">
-        <h4 style="font-weight: lighter;">{{provision4}}</h4>
-        <mat-radio-group style ="display:flex; gap:40px" >
-          <mat-radio-button value="7" checked="true">Ja</mat-radio-button>
-          <mat-radio-button value="8" >Nein</mat-radio-button>
-        </mat-radio-group>
-      </div>
-      <div style="padding-bottom: 5%">
-        <h4 style="font-weight: lighter;">{{provision5}}</h4>
-        <mat-radio-group style ="display:flex; gap:40px" >
-          <mat-radio-button value="9" checked="true">Ja</mat-radio-button>
-          <mat-radio-button value="10" checked="true">Nein</mat-radio-button>
-        </mat-radio-group>
-      </div>
-      <!--<div style="padding-bottom: 5%">
-        <h4 style="font-weight: lighter;">{{provision6}}</h4>
-        <mat-radio-group style ="display:flex; gap:40px" aria-label="Select an option">
-          <mat-radio-button value="11">Ja</mat-radio-button>
-          <mat-radio-button value="12" checked="true">Nein</mat-radio-button>
-        </mat-radio-group>
-    </div>-->
+        <div style="padding-bottom: 5%">
+          <h4 style="font-weight: lighter;">{{provision1}}</h4>
+          <mat-radio-group style ="display:flex; gap:40px" id="firstProv" >
+            <mat-radio-button value="1" name="firstPov">Ja</mat-radio-button>
+            <mat-radio-button value="2" name="firstPov" checked="true" >Nein</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div style="padding-bottom: 5%">
+          <h4 style="font-weight: lighter;">{{provision2}}</h4>
+          <mat-radio-group style ="display:flex; gap:40px" id="secProv">
+            <mat-radio-button value="3" name="secProv" >Ja</mat-radio-button>
+            <mat-radio-button value="4" name="secProv" checked="true">Nein</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div style="padding-bottom: 5%">
+          <h4 style="font-weight: lighter;">{{provision3}}</h4>
+          <mat-radio-group style ="display:flex; gap:40px" id="thirdProv">
+            <mat-radio-button value="5" name="thirdPov">Ja</mat-radio-button>
+            <mat-radio-button value="6" name="thirdPov" checked="true">Nein</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div style="padding-bottom: 5%">
+          <h4 style="font-weight: lighter;">{{provision4}}</h4>
+          <mat-radio-group style ="display:flex; gap:40px" id="fourthProv" >
+            <mat-radio-button value="7" name="fourthProv" >Ja</mat-radio-button>
+            <mat-radio-button value="8" name="fourthProv" checked="true">Nein</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div style="padding-bottom: 5%">
+          <h4 style="font-weight: lighter;">{{provision5}}</h4>
+          <mat-radio-group style ="display:flex; gap:40px" id="fifthProv">
+            <mat-radio-button value="9" name="fifthProv">Ja</mat-radio-button>
+            <mat-radio-button value="10" name="fifthProv" checked="true">Nein</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div style="padding-bottom: 5%">
+          <h4 style="font-weight: lighter;">{{provision6}}</h4>
+          <mat-radio-group style ="display:flex; gap:40px" id="sixthProv">
+            <mat-radio-button name="sixthProv" value="11">Ja</mat-radio-button>
+            <mat-radio-button name="sixthProv" value="12" checked="true">Nein</mat-radio-button>
+          </mat-radio-group>
+        </div>
   </div>
     <h5>* Diese Felder müssen ausgefüllt werden.</h5>
     <br/><br/><br/>
@@ -86,4 +85,3 @@
   </div>
 
 </div>
-
