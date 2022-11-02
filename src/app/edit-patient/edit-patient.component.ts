@@ -37,7 +37,6 @@ export class EditPatientComponent implements OnInit {
 
   fieldsChanged(newFields: {[p: string]: any}) {
     this.patient.fields = newFields;
-    this.sendChanges();
   }
 
   sendChanges() {
