@@ -23,16 +23,23 @@ export class ConsentComponent implements OnInit {
   provision5 = FhirConsent.provision.provision[4].code[0].coding[0].display;
   provision6 = FhirConsent.provision.provision[5].code[0].coding[0].display;
 
-  patient: Patient = new Patient();
+   povs = FhirConsent.provision.provision;
   provisions : Array<String> = [];
+
+   //allSubtitles = this.povs.filter(pov => pov.code[0].coding[0].display != null)
+  allSubtitles = this.povs.forEach(pov => this.provisions.push(pov.code[0].coding[0].display))
+
+
+  patient: Patient = new Patient();
   provLength: any = FhirConsent.provision.provision.length;
 
-foods: any[] = [
+statuses: any[] = [
     {value: '2.16.840.1.113883.3.1937.777.24.2.1790', viewValue: '1.6d: 2.16.840.1.113883.3.1937.777.24.2.1790'},
     {value: '2.16.840.1.113883.3.1937.777.24.2.1791', viewValue: '1.6f: 2.16.840.1.113883.3.1937.777.24.2.1791'},
     {value: '2.16.840.1.113883.3.1937.777.24.2.2079', viewValue: '1.7.2: 2.16.840.1.113883.3.1937.777.24.2.2079'},
   ];
   provision: any;
+  pov: any;
 
 
 
@@ -42,6 +49,7 @@ foods: any[] = [
     private patientService: PatientService,
     private router: Router,
   ) {
+    console.log(this.provisions);
  /*  for(var element of FhirConsent.provision.provision){
      provisions.push(element.code[0].coding[0].display);
    }*/
