@@ -40,15 +40,7 @@ export class EditPatientComponent implements OnInit {
   }
 
   sendChanges() {
-    this.patientListService.editPatient(this.patient).then(success => {
-      this.patientService.rerenderPatients(this.patientListService.getPatients())
-     /* this.router.navigate(["/patientlist"]).then(success => {
-          console.log('Navigation to patientlist-view worked')
-        }, error => {
-          console.log('Navigation to patientlist-view did not work')
-        }
-      )*/
-    }, error => {})
+    this.patientListService.editPatient(this.patient).then().catch(error => {console.log(error)});
   }
 }
 

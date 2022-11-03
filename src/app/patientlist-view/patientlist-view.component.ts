@@ -5,6 +5,7 @@ import {MatChipInputEvent} from "@angular/material/chips";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {FormControl} from "@angular/forms";
+import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
   selector: 'app-patientlist-view',
@@ -17,6 +18,7 @@ export class PatientlistViewComponent implements OnInit {
   patient: Patient = new Patient();
   fields: Array<string> = [];
   selectedPatients: Array<Patient> = [];
+  patientsMatTableData: MatTableDataSource<Patient>;
 
   selectable = true;
   removable = true;
@@ -38,6 +40,7 @@ export class PatientlistViewComponent implements OnInit {
 
   constructor(patientService: PatientService) {
     this.patientService = patientService;
+    this.patientsMatTableData = new MatTableDataSource<Patient>([]);
   }
 
   add(event: MatChipInputEvent): void {
@@ -46,10 +49,9 @@ export class PatientlistViewComponent implements OnInit {
 
     // Add our fruit
     if (value) {
-      console.log("here we are");
      let filter:{ field: string, searchCriteria: string } = JSON.parse(event.value);
       this.filters.push(filter);
-      this.patientService.getPatients(this.filters);
+      this.loadPatients(true).then();
     }
 
     // Clear the input value
@@ -61,7 +63,7 @@ export class PatientlistViewComponent implements OnInit {
 
     if (index >= 0) {
       this.filters.splice(index, 1);
-      this.patientService.getPatients(this.filters);
+      this.loadPatients(true).then();
     }
   }
 
@@ -70,15 +72,19 @@ export class PatientlistViewComponent implements OnInit {
     this.selectedCriteria=(event.option.value);
     this.filterInput.nativeElement.value = '';
     this.filterCtrl.setValue(null);
-    this.patientService.getPatients(this.filters);
+    this.loadPatients(true).then();
   }
 
   patientSelected(selectedPatients: Patient[]) {
     this.selectedPatients = selectedPatients;
   }
 
-  ngOnInit(): void {
-    this.patientService.getPatients(this.filters);
+  async ngOnInit() {
+    await this.loadPatients(false);
   }
 
+  async loadPatients(displayEmpty: boolean){
+    let displayPatients: Patient[] = await this.patientService.getDisplayPatients(this.filters, displayEmpty);
+    this.patientsMatTableData = new MatTableDataSource<Patient>(displayPatients)
+  }
 }
