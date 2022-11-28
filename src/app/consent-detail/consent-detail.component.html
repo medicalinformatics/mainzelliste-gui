@@ -1,0 +1,48 @@
+<div>
+  <div style="margin-left: 5%;">
+    <mat-form-field style="width: 400px">
+      <mat-label>Einwilligungsvorlage</mat-label>
+      <mat-select #templateSelection
+                  (selectionChange)="selectConsentTemplate(templateSelection.value)"
+                  [value]="getSelectedTemplate()" required>
+        <mat-option *ngFor="let consentTemplate of consentTemplates | keyvalue "
+                    [value]="consentTemplate.key">{{consentTemplate.value.title}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+<mat-card *ngIf="consentModel">
+  <h2>{{consentModel.title | uppercase}}</h2>
+  <div *ngFor="let item of consentModel.items; index as i">
+    <div [ngSwitch]="getTypeOf(item)">
+      <div class="form-group">
+        <div *ngSwitchCase="'ConsentDisplayItem'" [innerHTML]="item.text"></div>
+        <div style="padding-bottom: 10px" *ngSwitchCase="'ConsentChoiceItem'">
+          <mat-card>
+            <div [innerHTML]="item.text"></div>
+            <mat-radio-group [(ngModel)]="toChoiceItem(item).answer"
+                             aria-label="Select an option" id="question-{{i}}"
+                             name="question-{{i}}"
+                             style ="display:flex; gap:40px" >
+              <mat-radio-button value="permit">Ja</mat-radio-button>
+              <mat-radio-button value="deny">Nein</mat-radio-button>
+            </mat-radio-group>
+          </mat-card>
+        </div>
+        <div *ngSwitchDefault></div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="form-group">
+    <label>Gültig von </label>
+    <mat-form-field appearance="fill">
+      <mat-label>Gültigkeitsdatum auswählen</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="consentModel.date" name="date">
+      <mat-hint>MM.DD.YYYY</mat-hint>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <label> bis <strong>{{getConsentTimeframe()}}</strong>  </label>
+  </div>
+</mat-card>

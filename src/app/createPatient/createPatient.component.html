@@ -1,24 +1,40 @@
 <div style="height:100%;width:100%;">
-<h1 class="title">Personenidentifikator anfordern</h1>
+  <h1 class="title">Personenidentifikator anfordern</h1>
 
   <div style="margin-bottom: 15%;width: 50%">
     <h4 style="margin-left: 5%">Patientendaten eingeben:</h4>
-    <app-patient-fields (fieldEvent)="fieldsChanged($event)" [fields]="patient.fields" ></app-patient-fields>
+    <app-patient-fields (fieldEvent)="fieldsChanged($event)"
+                        [fields]="patient.fields"></app-patient-fields>
     <div>
       <div style="margin-left: 5%">
-      <h4>Projekt auswählen:</h4>
+      <h4>Pseudonym-Typ auswählen:</h4>
 
-      <mat-form-field style="width: 71%">
-        <mat-label>Projekt</mat-label>
-        <mat-select #pseudonymSelection [formControl]="dataControll" required>
-          <mat-option *ngFor="let pseudonym of patientListPseudonyms | async" [value]="pseudonym">{{pseudonym}}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="dataControll.hasError('required')">Bitte wählen Sie ein Projekt</mat-error>
-        <mat-hint>{{dataControll.value?.sound}}</mat-hint>
-      </mat-form-field>
+        <mat-form-field style="width: 76.5%">
+          <mat-label>Pseudonym-Typ</mat-label>
+          <mat-select #pseudonymSelection [formControl]="dataControll" required>
+            <mat-option *ngFor="let pseudonym of patientListPseudonyms | async"
+                        [value]="pseudonym">{{pseudonym}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="dataControll.hasError('required')">Bitte wählen Sie ein Projekt
+          </mat-error>
+          <mat-hint>{{dataControll.value?.sound}}</mat-hint>
+        </mat-form-field>
       </div>
     </div>
-    <mat-checkbox   style=" margin-left:5%; ">Einwilligung vorhanden</mat-checkbox><br/><br/><br/>
-  <button mat-raised-button class="submit" style="margin-left: 5%; width: 20%; float: left;" (click)="createNewPatient()"> Anfordern </button> <!--[state]="{patient: patient, fields: fields}"-->
+    <div>
+      <div style="margin-left: 5%;">
+        <button *ngIf="!consentModel"style="float: left;" mat-raised-button (click)="openDialog()">
+          <mat-icon>add</mat-icon>Einwilligung Hinzufügen
+        </button>
+        <button *ngIf="consentModel" style="float: left;" mat-raised-button (click)="openDialog()">
+          <mat-icon>edit</mat-icon>{{consentModel.title}}
+        </button>
+      </div>
+    </div>
+
+    <br/><br/><br/>
+    <button mat-raised-button class="submit" style="margin-left: 5%; width: 20%; float: left;"
+            (click)="createNewPatient()"> Anfordern
+    </button> <!--[state]="{patient: patient, fields: fields}"-->
   </div>
 </div>

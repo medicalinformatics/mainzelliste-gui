@@ -1,0 +1,10 @@
+<div style="height:100%;width:90%; padding-left:3%; padding-top:3%">
+
+  <h1 class="title">Angaben zur Einwilligung</h1>
+  <div style="margin-bottom: 15%;width: 75%">
+  <app-consent-detail [(consentModel)]="consentModel"></app-consent-detail>
+  <br/><br/><br/>
+  <button mat-raised-button class="submit"  *ngIf="consentModel"
+          (click)="addConsent()">Einwilligung hinzufügen</button>
+  </div>
+</div>

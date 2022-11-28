@@ -58,6 +58,11 @@
             <mat-icon matTooltip="Löschen">delete</mat-icon>
           </a>
         </button>
+        <button style="background: none;border:none;">
+          <a routerLink="/patient/{{element.ids[0].idType}}/{{element.ids[0].idString}}/add-consent">
+            <mat-icon matTooltip="Einwilligung hinzufügen">assignment_turned_in</mat-icon>
+          </a>
+        </button>
       </td>
     </ng-container>
 

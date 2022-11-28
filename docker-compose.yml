@@ -14,7 +14,7 @@ services:
     depends_on:
       - mainzelliste
   mainzelliste:
-    image: medicalinformatics/mainzelliste:develop
+    image: docker.verbis.dkfz.de/hki/mainzelliste:consent-va3
     ports:
       - "8080:8080"
     environment:
@@ -27,7 +27,7 @@ services:
     secrets:
       - mainzelliste.docker.conf
   mainzelliste-db:
-    image: postgres:13-alpine
+    image: postgres:15-alpine
     environment:
       POSTGRES_DB: mainzelliste
       POSTGRES_USER: mainzelliste

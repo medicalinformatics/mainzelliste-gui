@@ -37,7 +37,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSelectModule} from "@angular/material/select";
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import {MAT_DATE_LOCALE, MatNativeDateModule} from '@angular/material/core';
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { SessionComponent } from './user/session.component';
@@ -50,6 +50,9 @@ import { LogoutComponent } from './logout/logout.component';
 import { ConsentComponent } from './consent/consent.component';
 import {DemoMaterialModule} from "./patientlist/material-module";
 import {RouterModule} from "@angular/router";
+import { ConsentDialogComponent } from './consent-dialog/consent-dialog.component';
+import { ConsentDetailComponent } from './consent-detail/consent-detail.component';
+import { AddConsentComponent } from './add-consent/add-consent.component';
 
 function initializeAppFactory(service:AppConfigService, httpClient: HttpClient): () => Promise<any> {
   return () => service.load();
@@ -80,7 +83,10 @@ function initializeAppFactory(service:AppConfigService, httpClient: HttpClient):
     SessionComponent,
     ErrorComponent,
     LogoutComponent,
-    ConsentComponent
+    ConsentComponent,
+    ConsentDialogComponent,
+    ConsentDetailComponent,
+    AddConsentComponent
   ],
     imports: [
         BrowserModule,
@@ -120,7 +126,8 @@ function initializeAppFactory(service:AppConfigService, httpClient: HttpClient):
                 AppConfigService
             ],
             multi: true
-        }
+        },
+        {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}
     ],
     bootstrap: [AppComponent]
 })

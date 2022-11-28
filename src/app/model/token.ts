@@ -1,5 +1,5 @@
 import {TokenData} from './token-data';
-export type TokenType = 'readPatients' | 'addPatient' | 'editPatient' | 'deletePatient';
+export type TokenType = 'readPatients' | 'addPatient' | 'editPatient' | 'deletePatient' | 'addConsent';
 export class Token {
   constructor(
     public id?: string,

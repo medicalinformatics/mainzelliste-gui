@@ -13,6 +13,7 @@ import {ErrorComponent} from "./error/error.component";
 import {SessionGuard} from "./guards/session-guard.service";
 import {LogoutComponent} from "./logout/logout.component";
 import {ConsentComponent} from "./consent/consent.component";
+import {AddConsentComponent} from "./add-consent/add-consent.component";
 
 const routes: Routes = [
   // TODO: All Paths should have english wording.
@@ -27,7 +28,8 @@ const routes: Routes = [
       {path: 'edit-patient/:idType/:idString', component: EditPatientComponent},
       {path: 'delete-patient/:idType/:idString', component: DeletePatientComponent},
       {path: 'delete-patients', component:DeleteMultiplePatientsComponent},
-      {path: 'consent/:idType/:idString', component:ConsentComponent}
+      {path: 'consent/:idType/:idString', component:ConsentComponent},
+      {path: 'patient/:idType/:idString/add-consent', component:AddConsentComponent}
     ]},
 
   // Needs to be outside, because we want message why user couldn't authenticate
