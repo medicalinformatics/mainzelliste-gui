@@ -1,11 +1,11 @@
 <h1 mat-dialog-title>Angaben zur Einwilligung</h1>
 <form #consentForm="ngForm">
   <div mat-dialog-content>
-    <app-consent-detail [(consentModel)]="consentModel"></app-consent-detail>
+    <app-consent-detail [(dataModel)]="dataModel"></app-consent-detail>
   </div>
   <div mat-dialog-actions>
-    <button mat-stroked-button (click)="onCancel()">Abbrechen</button>
-    <button mat-stroked-button type="submit" (click)="saveChanges()"
+    <button mat-raised-button class="submitBreak" (click)="onCancel()">Abbrechen</button>
+    <button mat-raised-button class="submit"  type="submit" (click)="onSave()"
             [disabled]="!consentForm.form.valid">Speichen
     </button>
   </div>

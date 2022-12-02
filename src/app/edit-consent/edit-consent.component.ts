@@ -5,15 +5,16 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Consent} from "../model/consent";
 
 @Component({
-  selector: 'app-add-consent',
-  templateUrl: './add-consent.component.html',
-  styleUrls: ['./add-consent.component.css']
+  selector: 'app-edit-consent',
+  templateUrl: './edit-consent.component.html',
+  styleUrls: ['./edit-consent.component.css']
 })
-export class AddConsentComponent implements OnInit {
+export class EditConsentComponent implements OnInit {
 
   @ViewChild(ConsentDetailComponent) consentDetail!: ConsentDetailComponent;
 
   dataModel!: Consent;
+  consentId!: string;
   idType!: string;
   idString!: string;
 
@@ -25,11 +26,17 @@ export class AddConsentComponent implements OnInit {
   ngOnInit(): void {
     this.idType = this.route.snapshot.paramMap.get('idType') ?? "";
     this.idString = this.route.snapshot.paramMap.get('idString') ?? "";
+    this.consentId = this.route.snapshot.paramMap.get('id') ?? "";
+    this.consentService.readConsent(this.consentId).then(c => this.dataModel = c);
   }
 
-  async addConsent() {
+  async editConsent() {
     this.dataModel.patientId = {idType: this.idType, idString: this.idString};
-    await this.consentService.addConsent(this.dataModel);
+    await this.consentService.editConsent(this.dataModel);
+    await this.router.navigate(["/idcard", this.idType, this.idString]);
+  }
+
+  async cancel() {
     await this.router.navigate(["/idcard", this.idType, this.idString]);
   }
 }

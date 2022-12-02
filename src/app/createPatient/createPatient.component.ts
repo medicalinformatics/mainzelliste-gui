@@ -7,8 +7,8 @@ import {PatientListService} from "../services/patient-list.service";
 import {MatSelect} from "@angular/material/select";
 import {MatDialog} from "@angular/material/dialog";
 import {ConsentDialogComponent} from "../consent-dialog/consent-dialog.component";
-import {ConsentModel} from "../consentModel";
 import {ConsentService} from "../consent.service";
+import {Consent} from "../model/consent";
 
 @Component({
   selector: 'app-create-patient',
@@ -27,7 +27,7 @@ export class CreatePatientComponent {
   patient:Patient = new Patient();
   patientService: PatientService;
   patientListService: PatientListService;
-  consentModel?: ConsentModel;
+  consent?: Consent;
 
   constructor(
     public dialog: MatDialog,
@@ -44,11 +44,11 @@ export class CreatePatientComponent {
   async createNewPatient () {
     console.log(this.pseudonymSelection);
     let newId = await this.patientService.createPatient(this.patient, this.pseudonymSelection.value);
-    await this.router.navigate(["/idcard", newId.idType, newId.idString]);
-    if(this.consentModel){
-      this.consentModel.patientId = newId;
-      await this.consentService.addConsent(this.consentModel);
+    if(this.consent){
+      this.consent.patientId = newId;
+      await this.consentService.addConsent(this.consent);
     }
+    await this.router.navigate(["/idcard", newId.idType, newId.idString]);
   }
 
 
@@ -60,20 +60,14 @@ export class CreatePatientComponent {
 
   }
 
-/* consentChanged(newField: boolean) {
-    this.patient.consent = newField;
-    console.log("Consent given:" +this.patient.consent);
-  }*/
-  openDialog() {
-    console.log("open dialog: " + this.consentModel);
+  openConsentDialog() {
     const dialogRef = this.dialog.open(ConsentDialogComponent, {
       width: '900px',
-      data: this.consentModel
+      data: this.consent
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.consentModel = result;
-      console.log('The dialog was closed: ' + this.consentModel);
+      this.consent = result;
     });
   }
 }

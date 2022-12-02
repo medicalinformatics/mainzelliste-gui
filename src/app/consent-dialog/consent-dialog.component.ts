@@ -1,17 +1,7 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {ConsentChoiceItem, ConsentDisplayItem, ConsentItem, ConsentModel} from "../consentModel";
-import {ConsentService} from "../consent.service";
-import {MatOption} from "@angular/material/core";
-import {MatSelect} from "@angular/material/select";
-import {MatCardModule} from '@angular/material/card';
 import {ConsentDetailComponent} from "../consent-detail/consent-detail.component";
-
-
-export interface ConsentTemplate {
-  title: string;
-  fhirQuestionnaire: fhir4.Questionnaire
-}
+import {Consent} from "../model/consent";
 
 @Component({
   selector: 'app-consent-dialog',
@@ -25,7 +15,7 @@ export class ConsentDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<ConsentDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public consentModel: ConsentModel) {
+    @Inject(MAT_DIALOG_DATA) public dataModel: Consent) {
   }
 
   ngOnInit(): void {}
@@ -34,9 +24,7 @@ export class ConsentDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  saveChanges() {
-    this.consentModel = this.consentDetail.saveChanges();
-    console.log("save changed : " + this.consentModel);
-    this.dialogRef.close(this.consentModel);
+  onSave() {
+    this.dialogRef.close(this.dataModel);
   }
 }

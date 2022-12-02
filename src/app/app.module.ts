@@ -53,6 +53,7 @@ import {RouterModule} from "@angular/router";
 import { ConsentDialogComponent } from './consent-dialog/consent-dialog.component';
 import { ConsentDetailComponent } from './consent-detail/consent-detail.component';
 import { AddConsentComponent } from './add-consent/add-consent.component';
+import { EditConsentComponent } from './edit-consent/edit-consent.component';
 
 function initializeAppFactory(service:AppConfigService, httpClient: HttpClient): () => Promise<any> {
   return () => service.load();
@@ -86,7 +87,8 @@ function initializeAppFactory(service:AppConfigService, httpClient: HttpClient):
     ConsentComponent,
     ConsentDialogComponent,
     ConsentDetailComponent,
-    AddConsentComponent
+    AddConsentComponent,
+    EditConsentComponent
   ],
     imports: [
         BrowserModule,

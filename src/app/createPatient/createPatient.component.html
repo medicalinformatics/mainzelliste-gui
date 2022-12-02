@@ -23,11 +23,11 @@
     </div>
     <div>
       <div style="margin-left: 5%;">
-        <button *ngIf="!consentModel"style="float: left;" mat-raised-button (click)="openDialog()">
+        <button *ngIf="!consent" style="float: left;" mat-raised-button (click)="openConsentDialog()">
           <mat-icon>add</mat-icon>Einwilligung Hinzufügen
         </button>
-        <button *ngIf="consentModel" style="float: left;" mat-raised-button (click)="openDialog()">
-          <mat-icon>edit</mat-icon>{{consentModel.title}}
+        <button *ngIf="consent" style="float: left;" mat-raised-button (click)="openConsentDialog()">
+          <mat-icon>edit</mat-icon>{{consent.title}}
         </button>
       </div>
     </div>
