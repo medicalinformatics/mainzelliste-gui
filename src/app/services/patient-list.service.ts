@@ -9,6 +9,7 @@ import {AddPatientTokenData} from "../model/add-patient-token-data";
 import {EditPatientTokenData} from "../model/edit-patient-token-data";
 import {DeletePatientTokenData} from "../model/delete-patient-token-data";
 import {Field} from "../model/field";
+import {DatePipe} from "@angular/common";
 
 export class Id {
   constructor(
@@ -161,10 +162,12 @@ export class PatientListService {
           break;
         }
         case "DATE": {
-          displayPatient.fields[fieldConfig.name] = fieldConfig.mainzellisteFields
-          .filter(f => patient.fields[f] != undefined)
-          .map(f => patient.fields[f])
-          .join('.');
+          let extractDate = (fieldNames: string[], fields: { [key: string]: any }, i: number, defaultValue: string): string =>
+            fieldNames.length > i && fieldNames[i] ? fields[fieldNames[i]] : defaultValue;
+          let day = extractDate(fieldConfig.mainzellisteFields, patient.fields,  0, "00");
+          let month = extractDate(fieldConfig.mainzellisteFields, patient.fields, 1, "00");
+          let year = extractDate(fieldConfig.mainzellisteFields, patient.fields, 2, "0000");
+          displayPatient.fields[fieldConfig.name] = `${year}-${month}-${day}`;
           break;
         }
       }
@@ -184,8 +187,10 @@ export class PatientListService {
           break;
         }
         case "DATE": {
-          if(displayPatient.fields[fieldConfig.name] != undefined) {
-            const dateFields = displayPatient.fields[fieldConfig.name].split('.');
+          if(displayPatient.fields[fieldConfig.name] != undefined ) {
+            let dateStr = new DatePipe('en-US').transform(displayPatient.fields[fieldConfig.name], 'dd.MM.yyyy') || "";
+            console.log(dateStr);
+            const dateFields = dateStr.split('.');
             fieldConfig.mainzellisteFields.forEach((n,i) => patient.fields[n] = dateFields[i]);
           }
           break;
