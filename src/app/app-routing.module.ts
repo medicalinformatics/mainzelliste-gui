@@ -12,6 +12,7 @@ import {DeleteMultiplePatientsComponent} from "./delete-multiple-patients/delete
 import {ErrorComponent} from "./error/error.component";
 import {SessionGuard} from "./guards/session-guard.service";
 import {LogoutComponent} from "./logout/logout.component";
+import {LoginComponent} from "./login/login.component";
 
 
 const routes: Routes = [
@@ -31,6 +32,7 @@ const routes: Routes = [
 
   // Needs to be outside, because we want message why user couldn't authenticate
   {path: 'error', component: ErrorComponent},
+  {path: 'login', component: LoginComponent},
   {path: 'logout', component: LogoutComponent}
 ];
 
