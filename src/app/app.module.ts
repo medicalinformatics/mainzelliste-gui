@@ -50,6 +50,7 @@ import { LogoutComponent } from './logout/logout.component';
 import { ConsentComponent } from './consent/consent.component';
 import {DemoMaterialModule} from "./patientlist/material-module";
 import {RouterModule} from "@angular/router";
+import { LoginComponent } from './login/login.component';
 import { ConsentDialogComponent } from './consent-dialog/consent-dialog.component';
 import { ConsentDetailComponent } from './consent-detail/consent-detail.component';
 import { AddConsentComponent } from './add-consent/add-consent.component';
@@ -84,6 +85,7 @@ function initializeAppFactory(service:AppConfigService, httpClient: HttpClient):
     SessionComponent,
     ErrorComponent,
     LogoutComponent,
+    LoginComponent,
     ConsentComponent,
     ConsentDialogComponent,
     ConsentDetailComponent,

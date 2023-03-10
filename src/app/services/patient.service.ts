@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Patient} from "../model/patient";
-import {MatTableDataSource} from "@angular/material/table";
 import {Id, PatientListService} from "./patient-list.service";
-import {HttpErrorResponse} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
@@ -319,14 +317,12 @@ export class PatientService {
   ];
 
   constructor(private patientListService: PatientListService) {
-    console.log("patientservice constructed");
-    this.rerenderPatients(patientListService.getPatients());
   }
 
-  rerenderPatients(patientsPromise: Promise<Patient[]>, filters?: Array<{ field: string, searchCriteria: string }>) {
-    patientsPromise.then(patients => {
-      patients = patients.map(patient => this.patientListService.convertToDisplayPatient(patient));
-      if (filters != undefined) {
+  async getDisplayPatients(filters: Array<{ field: string, searchCriteria: string }>, displayEmpty: boolean): Promise<Patient[]> {
+    try {
+      let patients:Patient[] = await this.patientListService.getPatients();
+      if (filters != undefined && filters.length > 0) {
         patients = patients.filter((patient) => {
           let matched = false;
           console.log(patient);
@@ -341,26 +337,19 @@ export class PatientService {
           return matched;
         })
       }
-      this.patientsDataSource = new MatTableDataSource<Patient>(patients)
-    }).catch((err: HttpErrorResponse) => {
-      if (err.status === 404) {
-        if (err.error === "No patient found") {
-          console.log("patientsdatasource is set")
-          this.patientsDataSource = new MatTableDataSource<Patient>([])
-        }
+      let uiPatients: Patient[] = patients.map(patient => this.patientListService.convertToDisplayPatient(patient));
+      if(uiPatients.length > 0) {
+        return uiPatients;
       }
-    })
-  }
-
-  patientsDataSource: MatTableDataSource<Patient> = new MatTableDataSource<Patient>(this.mockUpData);
-
-  getPatients(filters: Array<{ field: string, searchCriteria: string }>) {
-    // TODO: Create proper method to get all patients from a mainzelliste instance
-    if (filters.length == 0) {
-      this.rerenderPatients(this.patientListService.getPatients());
-    } else {
-      this.rerenderPatients(this.patientListService.getPatients(), filters);
-      }
+    } catch(err) {
+      // if (err instanceof HttpErrorResponse) {
+      //   let error: HttpErrorResponse = err as HttpErrorResponse;
+      //   if (error.status == 404 && error.error === "No patient found") {
+      //     return this.mockUpData;
+      //   }
+      // }
+    }
+    return displayEmpty? [] : this.mockUpData;
   }
 
   async createPatient(tmpPatient: Patient, idType?: string): Promise<Id> {
@@ -369,15 +358,11 @@ export class PatientService {
       idType = await this.patientListService.getPatientListMainIdType();
     }
     let newId = await this.patientListService.addPatient(tmpPatient, idType);
-    this.rerenderPatients(this.patientListService.getPatients());
     return new Id(idType, newId.newId, newId.tentative);
 
   }
 
   async deletePatient(patient: Patient){
-     this.patientListService.deletePatient(patient).then(response => {
-       console.log(response);
-       this.rerenderPatients(this.patientListService.getPatients())
-     }).then(error => {console.log(error)})
+     this.patientListService.deletePatient(patient).then().catch(error => {console.log(error)})
   }
 }

@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {BehaviorSubject, Observable, of, throwError} from 'rxjs';
 import {Session} from '../model/session';
 import {Token, TokenType} from '../model/token';
 import {TokenData} from '../model/token-data';
 import {AppConfigService} from "../app-config.service";
-import {map} from "rxjs/operators";
+import {catchError, map} from "rxjs/operators";
 import {Router} from "@angular/router";
 
 @Injectable({
@@ -50,7 +50,26 @@ export class SessionService {
     localStorage.removeItem("mainzellisteSession");
     this.sessionSubject.next(new Session());
     // TODO: Implement Logout Page
-    this.router.navigate(['logout'])
+  }
+
+  public isAuthenticated(): Observable<boolean> {
+    if (this.sessionSubject.value.sessionId == undefined) {
+      console.log("no session id");
+      return of(false);
+    }
+    return this.httpClient.get<Session>(
+      this.appConfigService.data[0].url + '/sessions/' + this.sessionSubject.value.sessionId)
+    .pipe(map(() => {
+        console.log("get session id");
+        return true;
+      }), catchError( (error) => {
+        console.log("invalid session id " + error.status);
+        if (error.status == 404)
+          return of(false)
+        else
+          throw new Error("Mainzelliste Intenal System Error : " + error.message);
+      })
+    );
   }
 
   /**

@@ -21,7 +21,7 @@
     </mat-card>
 
     <div style="flex: 1 1 1%; display: flex;  flex-flow: column; justify-content: flex-end; align-self: flex-start; margin-right: 5%; ">
-        <button mat-raised-button style="margin-bottom: 15px;" class="submit" [routerLink]="['/patientlist']">Fertig</button>
+        <button mat-raised-button (click)="sendChanges()" style="margin-bottom: 15px;" class="submit"  [routerLink]="['/patientlist']">Fertig</button>
         <br>
         <button mat-raised-button class="submitBreak" [routerLink]="['/patientlist']">Abbruch</button>
     </div>

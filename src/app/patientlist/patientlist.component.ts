@@ -27,7 +27,7 @@ import {AppConfigService} from "../app-config.service";
 })
 
 export class PatientlistComponent implements AfterViewInit, OnInit{
-  patients: MatTableDataSource<Patient>;
+  @Input() patients: MatTableDataSource<Patient>;
   selection: SelectionModel<Patient>;
   @Output() selectedPatients: EventEmitter<Patient[]> = new EventEmitter<Patient[]>();
   @Output() filterData = '';
@@ -39,9 +39,9 @@ export class PatientlistComponent implements AfterViewInit, OnInit{
   pseudonyms: string[]=[];
   private patientListService: PatientListService;
 
-  constructor(public dialog: MatDialog, patientListService: PatientListService, patientService: PatientService, configService: AppConfigService) {
+  constructor(public dialog: MatDialog, patientListService: PatientListService, configService: AppConfigService) {
     this.patientListService = patientListService;
-    this.patients = patientService.patientsDataSource;
+    this.patients = new MatTableDataSource<Patient>([]);
     this.fields = configService.data[0].fields.map(f => f.name);
 
     const initialSelection: Patient[] = [];
