@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivateChild, Router, UrlTree} from '@angular/router';
+import {CanActivateChild, Router, UrlTree} from '@angular/router';
 import {Observable, of} from 'rxjs';
 import {SessionService} from "../services/session.service";
-import {catchError, map} from "rxjs/operators";
+import {catchError, map, mergeMap} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -15,19 +15,21 @@ export class SessionGuard implements CanActivateChild {
   ) {
   }
 
-  canActivateChild(
-    childRoute: ActivatedRouteSnapshot): Observable<boolean | UrlTree> {
-    return this.sessionService.isAuthenticated().pipe(
-      map(isAuthenticated => isAuthenticated ? true : this.router.createUrlTree(
-        ['login'], {
-          queryParams: {
-            url: childRoute.url
-          }
-        })), catchError((error) => {
+  canActivateChild(): Observable<boolean | UrlTree> {
+    return this.sessionService.isSessionValid().pipe(
+      mergeMap((isSessionValid) => isSessionValid ? of(true)
+        : this.sessionService.login().pipe(map(() => true))
+      ),
+      catchError((error) => {
+        if (error.status == 400 || error.status == 401) {
+          error.message = "auth failed, try again " + error.message;
+        } else {
+          error.message = "internal System Error : " + error.message;
+        }
         return of(this.router.createUrlTree(['error'], {
           queryParams: {
             status: error.status,
-            message: error.error
+            message: error.message
           }
         }))
       })

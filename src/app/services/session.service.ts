@@ -34,11 +34,9 @@ export class SessionService {
     return this.sessionSubject.value
   }
 
-  login (apiKey: string) {
-    return this.createSession(apiKey).pipe(
+  login () {
+    return this.createSession().pipe(
       map(session => {
-        // TODO: It doesn't seem to be a good idea to save the apiKey inside the browser session.
-        session.apiKey = window.btoa(apiKey);
         localStorage.setItem("mainzellisteSession", JSON.stringify(session));
         this.sessionSubject.next(session);
         return session;
@@ -48,22 +46,13 @@ export class SessionService {
 
   logout () {
     localStorage.removeItem("mainzellisteSession");
+    let oldSessionId = this.sessionSubject.value.sessionId;
     this.sessionSubject.next(new Session());
-    // TODO: Implement Logout Page
-  }
-
-  public isAuthenticated(): Observable<boolean> {
-    if (this.sessionSubject.value.sessionId == undefined) {
-      console.log("no session id");
-      return of(false);
-    }
-    return this.httpClient.get<Session>(
-      this.appConfigService.data[0].url + '/sessions/' + this.sessionSubject.value.sessionId)
-    .pipe(map(() => {
-        console.log("get session id");
-        return true;
-      }), catchError( (error) => {
-        console.log("invalid session id " + error.status);
+    this.httpClient.delete<Session>(
+      this.appConfigService.data[0].url + '/sessions/' + oldSessionId)
+    .pipe(map(() => true),
+      catchError( (error) => {
+        console.log("can't delete session id " + error.status);
         if (error.status == 404)
           return of(false)
         else
@@ -72,32 +61,49 @@ export class SessionService {
     );
   }
 
+  public isSessionValid(): Observable<boolean> {
+    if (this.sessionSubject.value.sessionId == undefined) {
+      return of(false);
+    }
+    return this.httpClient.get<Session>(
+      this.appConfigService.data[0].url + '/sessions/' + this.sessionSubject.value.sessionId)
+    .pipe(map(() => {
+        return true;
+      }), catchError( (error) => {
+        // invalid session id
+        if (error.status == 404)
+          return of(false)
+        else
+          throw new Error("Mainzelliste Intenal System Error: - status [" + error.status
+            + "] - message [" + error.message + "]");
+      })
+    );
+  }
+
+  public isLoggedIn(): boolean {
+    return this.sessionValue.sessionId !== undefined;
+  }
   /**
    * Create a new session, that allows us to create Tokens
-   * @param apiKey, the apiKey to identify the rights a user has
    */
-  private createSession(apiKey: string): Observable<Session> {
+  private createSession(): Observable<Session> {
     return this.httpClient.post<Session>(this.appConfigService.data[0].url + '/sessions', {}, {
-      headers: new HttpHeaders()
-      .append('mainzellisteApiKey', apiKey)
-      .append('mainzellisteApiVersion', '3.2')
+      headers: new HttpHeaders().append('mainzellisteApiVersion', '3.2')
     });
   }
 
   /**
    * Create a request for generating a token for a given session
-   * @param session
    * @param tokenType
    * @param tokenData
    */
   createToken(tokenType: TokenType, tokenData: TokenData): Observable<Token> {
-    return this.httpClient.post<Token>(this.appConfigService.data[0].url + '/sessions/' + this.sessionValue.sessionId + '/tokens', {
+    return this.httpClient.post<Token>(this.appConfigService.data[0].url + '/sessions/'
+      + this.sessionValue.sessionId + '/tokens', {
       type: tokenType,
       data: tokenData
     }, {
-      headers: new HttpHeaders()
-      .append('mainzellisteApiKey', window.atob(this.sessionValue.apiKey))
-      .append('mainzellisteApiVersion', '3.2')
+      headers: new HttpHeaders().append('mainzellisteApiVersion', '3.2')
     });
   }
 
