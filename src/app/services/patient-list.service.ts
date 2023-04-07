@@ -57,9 +57,7 @@ export class PatientListService {
         index++;
       }
     }
-    this.mainzellisteHeaders = new HttpHeaders()
-      .set('mainzellisteApiKey', this.patientList.apiKey)
-      .set('mainzellisteApiVersion', '3.2')
+    this.mainzellisteHeaders = new HttpHeaders().set('mainzellisteApiVersion', '3.2')
   }
 
   getConfiguredFields(): Array<Field> {
