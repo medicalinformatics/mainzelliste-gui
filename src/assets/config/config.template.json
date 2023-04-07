@@ -12,6 +12,7 @@
         "apiKey": "${CONTROLNUMBERGENERATOR_API_KEY}"
       },
       "mainIdType": "pid",
+      "showAllIds": false,
       "fields": [
         {"name":  "Vorname", "mainzellisteField":  "Vorname", "type": "TEXT", "required":  true, "validator":  ""},
         {"name":  "Nachname", "mainzellisteField":  "Nachname", "type": "TEXT", "required":  true, "validator":  ""},
