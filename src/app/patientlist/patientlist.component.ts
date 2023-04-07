@@ -1,20 +1,9 @@
-import {
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  Inject,
-  Input, OnInit,
-  Output,
-  ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {PatientSearchComponent} from "../patientSearch/patientSearch.component";
 import {Patient} from "../model/patient";
-import {PatientService} from "../services/patient.service";
 import {SelectionModel} from "@angular/cdk/collections";
 import {MatTableDataSource} from "@angular/material/table";
-import {MatPaginator} from "@angular/material/paginator";
 import {MatCheckboxChange} from "@angular/material/checkbox";
 import {PatientListService} from "../services/patient-list.service";
 import {AppConfigService} from "../app-config.service";
@@ -26,23 +15,25 @@ import {AppConfigService} from "../app-config.service";
   encapsulation: ViewEncapsulation.None
 })
 
-export class PatientlistComponent implements AfterViewInit, OnInit{
+export class PatientlistComponent implements OnInit{
   @Input() patients: MatTableDataSource<Patient>;
+  @Input() loading: boolean = false;
   selection: SelectionModel<Patient>;
   @Output() selectedPatients: EventEmitter<Patient[]> = new EventEmitter<Patient[]>();
   @Output() filterData = '';
 
   fields: string[];
   columns: string[] = ["select"];
+  showAllIds: boolean;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  pseudonyms: string[]=[];
+  configuredIdTypes: string[]=[];
   private patientListService: PatientListService;
 
   constructor(public dialog: MatDialog, patientListService: PatientListService, configService: AppConfigService) {
     this.patientListService = patientListService;
     this.patients = new MatTableDataSource<Patient>([]);
     this.fields = configService.data[0].fields.map(f => f.name);
+    this.showAllIds = configService.data[0].showAllIds != undefined && configService.data[0].showAllIds;
 
     const initialSelection: Patient[] = [];
     const allowMultiSelect = true;
@@ -90,15 +81,11 @@ export class PatientlistComponent implements AfterViewInit, OnInit{
     this.selectedPatients.emit(this.selection.selected);
   }
 
-  ngAfterViewInit(): void {
-    this.patients.paginator = this.paginator;
+  ngOnInit(): void {
+    this.patientListService.getConfiguredIdTypes().subscribe((idTypes) => {
+      this.configuredIdTypes = idTypes;
+      let displayIdTypes = this.showAllIds ? idTypes : [this.patientListService.findDefaultIdType(idTypes)];
+      this.columns = this.columns.concat(displayIdTypes).concat(this.fields).concat(["actions"]);
+    })
   }
-
-  ngOnInit(): void{
-      this.patientListService.getPatientListIdTypes().then((idTypes) => {
-        this.pseudonyms = idTypes;
-        this.columns = this.columns.concat(idTypes).concat(this.fields).concat(["actions"]);
-      })
-  }
-
 }

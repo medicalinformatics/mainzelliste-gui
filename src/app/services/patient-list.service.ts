@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {SessionService} from "./session.service";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {PatientList} from "../model/patientlist";
 import {Patient} from "../model/patient";
 import {AppConfigService} from "../app-config.service";
@@ -10,6 +10,8 @@ import {EditPatientTokenData} from "../model/edit-patient-token-data";
 import {DeletePatientTokenData} from "../model/delete-patient-token-data";
 import {Field} from "../model/field";
 import {DatePipe} from "@angular/common";
+import {catchError, map, mergeMap} from "rxjs/operators";
+import {Observable, of, throwError} from "rxjs";
 
 export class Id {
   constructor(
@@ -18,6 +20,11 @@ export class Id {
     public tentative: boolean = false,
     public uri?: URL
   ) {}
+}
+
+export interface ReadPatientsResponse {
+  patients: Patient[];
+  totalCount: string;
 }
 
 @Injectable({
@@ -55,43 +62,87 @@ export class PatientListService {
       .set('mainzellisteApiVersion', '3.2')
   }
 
-  getPatientListFields(): Promise<Array<Field>>{
-    return new Promise((resolve, reject) => {
-      resolve(this.patientList.fields);
-    });
+  getConfiguredFields(): Array<Field> {
+    return this.patientList.fields;
   }
 
-  getPatientListIdTypes(): Promise<Array<string>>{
-    return this.httpClient.get<string[]>(
-      this.patientList.url+"/configuration/idTypes",
-      {headers: this.mainzellisteHeaders }
-    ).toPromise();
+  getConfiguredIdTypes(): Observable<Array<string>> {
+    return this.httpClient.get<string[]>(this.patientList.url + "/configuration/idTypes", {headers: this.mainzellisteHeaders});
   }
 
-   async getPatientListMainIdType():Promise<string>{
-     let patientListIdTypes = await this.getPatientListIdTypes();
-     if(this.patientList.mainIdType != undefined){
-       return this.patientList.mainIdType;
-     }else{
-       return patientListIdTypes[0];
-     }
-   }
+  getConfiguredDefaultIdType(): Observable<string> {
+    if(this.patientList.mainIdType != undefined){
+      return of(this.patientList.mainIdType);
+    }else{ //TODO should be called one time and cached
+      return this.getConfiguredIdTypes().pipe(map(idTypes => idTypes[0]));
+    }
+  }
 
-  async getPatients(): Promise<Patient[]>{
-    console.log(await this.getPatientListMainIdType());
-    let token = await this.sessionService.createToken(
-      "readPatients",
-      new ReadPatientsTokenData([{
-          idType: await this.getPatientListMainIdType(),
-          idString: "*"
-        }], this.mainzellisteFields,
-        await this.getPatientListIdTypes())
-    ).toPromise();
-    return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + token.id).toPromise();
+  findDefaultIdType(configuredIdTypes: string[]): string {
+    return this.patientList.mainIdType != undefined ? this.patientList.mainIdType : configuredIdTypes[0];
+  }
+
+  //TODO Refactor: replace with getConfiguredIdTypes
+  getPatientListIdTypes(): Promise<Array<string>> {
+    return this.getConfiguredIdTypes().toPromise();
+  }
+
+  //TODO Refactor: replace with getConfiguredDefaultIdType
+  async getPatientListMainIdType(): Promise<string> {
+    return this.getConfiguredDefaultIdType().toPromise();
+  }
+
+  /**
+   * Read Patients from backend
+   * @param filters contain search fields and ids
+   * @param pageIndex page number
+   * @param pageSize page limit
+   */
+  getPatients(filters: Array<{ field: string, searchCriteria: string, isIdType: boolean }>,
+              pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
+    return this.getConfiguredIdTypes().pipe(
+      // create read patients token
+      mergeMap(idTypes => {
+        // find searchIds
+        let searchIds: Array<Id> = [];
+        let defaultIdType = this.findDefaultIdType(idTypes);
+        if (filters.every(f => !f.isIdType)) {
+          searchIds = [{idType: defaultIdType, idString: "*", tentative: false}];
+        } else {
+          filters.filter(f => f.isIdType).forEach(f =>
+            searchIds.push({idType: f.field, idString: f.searchCriteria.trim(), tentative: false}));
+        }
+        return this.sessionService.createToken("readPatients",
+          new ReadPatientsTokenData(searchIds, this.mainzellisteFields, idTypes))
+      }),
+      // resolve read patients token
+      mergeMap(token => this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + token.id
+        + "&page=" + pageIndex + "&limit=" + pageSize + "&"
+        + filters.filter(o => !o.isIdType)
+        .map(o => o.field + "=" + o.searchCriteria.trim()).join("&"), {observe: 'response'})
+      .pipe(
+        map((response: HttpResponse<Patient[]>): ReadPatientsResponse => ({
+            patients: response.body ?? [],
+            totalCount: response.headers.get("X-Total-Count") ?? ""
+          })
+        )
+      )),
+      catchError( (error) => {
+        if(error.status >= 400 && error.status < 500) {
+          if (error.status != 404)
+            console.log(error);
+          return of({
+            patients: [],
+            totalCount: "0"
+          });
+        } else
+          return throwError(() => new Error(`Service unavailable: cause status ` +
+            `[${error.status}] msg: ${error.message}`));
+      })
+    )
   }
 
   async addPatient(patient: Patient, idType?: string): Promise<{ newId: string, tentative: boolean, uri: URL }> {
-    console.log(await this.getPatientListIdTypes())
     if(idType == undefined){
       idType = await this.getPatientListMainIdType();
     }
@@ -153,6 +204,10 @@ export class PatientListService {
 
   convertToDisplayPatient(patient: Patient): Patient {
     let displayPatient = new Patient();
+    displayPatient.ids = patient.ids;
+    if(patient.fields == undefined){
+      return displayPatient;
+    }
     for(const fieldConfig of this.patientList.fields) {
       switch (fieldConfig.type+"") {
         case "TEXT":{
@@ -172,7 +227,6 @@ export class PatientListService {
         }
       }
     }
-    displayPatient.ids = patient.ids;
     return displayPatient;
   }
 
@@ -189,7 +243,6 @@ export class PatientListService {
         case "DATE": {
           if(displayPatient.fields[fieldConfig.name] != undefined ) {
             let dateStr = new DatePipe('en-US').transform(displayPatient.fields[fieldConfig.name], 'dd.MM.yyyy') || "";
-            console.log(dateStr);
             const dateFields = dateStr.split('.');
             fieldConfig.mainzellisteFields.forEach((n,i) => patient.fields[n] = dateFields[i]);
           }

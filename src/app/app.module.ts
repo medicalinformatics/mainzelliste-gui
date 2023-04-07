@@ -49,6 +49,7 @@ import {MatMenuModule} from "@angular/material/menu";
 import { LogoutComponent } from './logout/logout.component';
 import {RouterModule} from "@angular/router";
 import { LoginComponent } from './login/login.component';
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 function initializeAppFactory(service:AppConfigService, httpClient: HttpClient): () => Promise<any> {
   return () => service.load();
@@ -81,35 +82,36 @@ function initializeAppFactory(service:AppConfigService, httpClient: HttpClient):
     LogoutComponent,
     LoginComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatDialogModule,
-        FormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        ScrollingModule,
-        MatSidenavModule,
-        MatBadgeModule,
-        MatChipsModule,
-        MatIconModule,
-        MatCardModule,
-        MatAutocompleteModule,
-        MatPaginatorModule,
-        ReactiveFormsModule,
-        MatToolbarModule,
-        MatSelectModule,
-        MatDatepickerModule,
-        MatNativeDateModule,
-        MatTableModule,
-        MatCheckboxModule,
-        MatCheckboxModule,
-        MatTooltipModule,
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatDialogModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    ScrollingModule,
+    MatSidenavModule,
+    MatBadgeModule,
+    MatChipsModule,
+    MatIconModule,
+    MatCardModule,
+    MatAutocompleteModule,
+    MatPaginatorModule,
+    ReactiveFormsModule,
+    MatToolbarModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatTableModule,
+    MatCheckboxModule,
+    MatCheckboxModule,
+    MatTooltipModule,
     HttpClientModule,
-    MatMenuModule
-    ],
+    MatMenuModule,
+    MatProgressBarModule
+  ],
     providers: [
         { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
         { provide: APP_INITIALIZER,
