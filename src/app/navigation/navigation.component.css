@@ -2,16 +2,25 @@ nav{
   background-color: #053E6A;
   height:100%;
   box-shadow:1px 10px 10px rgba(0,0,0,.4);
-  padding:1em;
 }
 
-a{
-  color: white;
-  text-decoration: none;
-  font-family: Helvetica;
-  float:left;
-  padding-left: 0.5em;
-  transform: scale(0.9);
+.sidenav-menu-item{
+  /*font-family: Helvetica;*/
+  /*padding-left: 0.5em;*/
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+.sidenav-menu-item:hover{
+  background-color: #2b5b80;
+}
+
+.sidenav-menu-item mat-icon{
+  margin-right: 0.5em;
 }
 
 td{

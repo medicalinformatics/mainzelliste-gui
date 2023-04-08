@@ -54,4 +54,5 @@ mat-paginator{
   float:right;
   margin-top: 1.5%;
   margin-right: 1.5%;
+  background-color: transparent;
 }
