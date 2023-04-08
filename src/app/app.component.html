@@ -7,17 +7,19 @@
   <!--HEADER AND CONTENT AS COLUMN-->
   <app-head style="flex: 1 1 3%;" *ngIf="sessionService.isLoggedIn()"></app-head>
   <!-- NAVIGATION AND CONTENT NEXT TO EACH OTHER sessionService.isLoggedIn() -->
-  <div style="display: flex; flex-flow: row; flex-basis: 91%; min-height: auto;" *ngIf="sessionService.isLoggedIn()">
-    <app-navigation style="flex: 1 1 5%;"></app-navigation>
-      <cdk-virtual-scroll-viewport itemSize="100%"  style="height: 100%; width: 100%;">
+  <mat-sidenav-container style="flex-basis: 91%; min-height: auto;" *ngIf="sessionService.isLoggedIn()">
+    <mat-sidenav mode="side" class="sidenav-menu" opened>
+      <app-navigation style=" padding-top:22px; color: white; display: flex; flex-flow: column"></app-navigation>
+    </mat-sidenav>
+    <mat-sidenav-content>
       <div style="flex: 1 1 95%; display: flex; flex-flow: column;">
         <div style="flex: 1 1 auto;min-height: 90%;">
           <router-outlet></router-outlet>
         </div>
       </div>
-    </cdk-virtual-scroll-viewport>
-  </div>
-  <app-footer style="flex: 0 0 5%;"></app-footer>
+      <app-footer style="flex: 0 0 5%;"></app-footer>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </div>
 
 

@@ -1,31 +1,16 @@
-<nav mat-sidenav-container>
-  <table>
-
-    <tr>
-    <td class="nav_item" (click)="chBackground($event)">
-      <a routerLink="/patientlist" style="display: flex; align-items: center;">
-        <mat-icon class="nav_icon">list</mat-icon>Patientenliste</a>
-    </td>
-  </tr>
-
-    <tr>
-      <td class="nav_item" (click)="chBackground($event)">
-        <a routerLink="/add-new-patient" style="display: flex; align-items: center;">
-          <mat-icon class="nav_icon">person_add_alt</mat-icon>neuer Patient</a>
-      </td>
-    </tr>
-
-    <tr>
-      <td class="nav_item" (click)="chBackground($event)">
-        <a routerLink="/audittrail" style="display: flex; align-items: center;">
-          <mat-icon class="nav_icon">list_alt</mat-icon>Audit-Trail</a></td>
-    </tr>
-
-    <tr>
-    <td class="nav_item" (click)="chBackground($event)">
-      <a routerLink="/info" style="display: flex; align-items: center;">
-        <mat-icon class="nav_icon">info</mat-icon>Info</a>
-    </td>
-  </tr>
-  </table>
-</nav>
+<button mat-button [routerLink]="['/patientlist']" class="sidenav-menu-item">
+  <mat-icon>list</mat-icon>
+  <span>Patientenliste</span>
+</button>
+<button mat-button [routerLink]="['/add-new-patient']" class="sidenav-menu-item">
+  <mat-icon>person_add_alt</mat-icon>
+  <span>Neuer Patient</span>
+</button>
+<button mat-button [routerLink]="['/audittrail']" class="sidenav-menu-item">
+  <mat-icon>list_alt</mat-icon>
+  <span>Audit-Trail</span>
+</button>
+<button mat-button [routerLink]="['/info']" class="sidenav-menu-item">
+  <mat-icon>info</mat-icon>
+  <span>Info</span>
+</button>

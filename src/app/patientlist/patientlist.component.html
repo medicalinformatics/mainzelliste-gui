@@ -36,9 +36,9 @@
     </ng-container>
 
     <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef> Aktionen  <mat-icon style="transform: scale(0.7); float: right; color:#053E6A" >
+      <th mat-header-cell *matHeaderCellDef style="width: 170px"> Aktionen  <mat-icon style="transform: scale(0.7); float: right; color:#053E6A" >
         arrow_circle_down</mat-icon></th>
-      <td mat-cell *matCellDef="let element" style="display: flex; flex-flow: row; justify-content: space-evenly">
+      <td mat-cell *matCellDef="let element" style="display: flex; flex-flow: row; justify-content: space-evenly;">
         <button mat-icon-button style="background: none;border:none;" [disabled]="loading"
                 [routerLink]="['/idcard', element.ids[0].idType, element.ids[0].idString]">
             <mat-icon matTooltip="ID-Card">fact_check</mat-icon>
@@ -68,8 +68,8 @@
 
     <tr mat-header-row *matHeaderRowDef="columns"></tr>
     <tr mat-header-row  style="height: 0; border: 0;" *matHeaderRowDef="['progress']"></tr>
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" [attr.colspan]="this.columns.length" style="text-align: center">
+    <tr class="mat-row"  *matNoDataRow>
+      <td *ngIf="!loading" class="mat-cell" [attr.colspan]="this.columns.length" style="text-align: center">
         Kein Patient gefunden.
       </td>
     </tr>
