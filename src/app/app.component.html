@@ -9,12 +9,13 @@
   <!-- NAVIGATION AND CONTENT NEXT TO EACH OTHER sessionService.isLoggedIn() -->
   <div style="display: flex; flex-flow: row; flex-basis: 91%; min-height: auto;" *ngIf="sessionService.isLoggedIn()">
     <app-navigation style="flex: 1 1 5%;"></app-navigation>
-
-    <div style="flex: 1 1 95%; display: flex; flex-flow: column;">
-      <div style="flex: 1 1 auto;min-height: 90%;">
-        <router-outlet></router-outlet>
+      <cdk-virtual-scroll-viewport itemSize="100%"  style="height: 100%; width: 100%;">
+      <div style="flex: 1 1 95%; display: flex; flex-flow: column;">
+        <div style="flex: 1 1 auto;min-height: 90%;">
+          <router-outlet></router-outlet>
+        </div>
       </div>
-    </div>
+    </cdk-virtual-scroll-viewport>
   </div>
   <app-footer style="flex: 0 0 5%;"></app-footer>
 </div>
