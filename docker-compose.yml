@@ -2,6 +2,8 @@ version: "3.8"
 secrets:
   mainzelliste.docker.conf:
     file: ./mainzelliste.docker.conf
+volumes:
+  keycloakDB:
 services:
   mainzelliste-gui:
     image: medicalinformatics/mainzelliste-gui:develop
@@ -10,7 +12,6 @@ services:
     environment:
       NGINX_SERVER_NAME: localhost
       MAINZELLISTE_URL: http://localhost:8080
-      MAINZELLISTE_API_KEY: changeThisApiKey
     depends_on:
       - mainzelliste
   mainzelliste:
@@ -22,6 +23,8 @@ services:
       ML_DB_HOST: mainzelliste-db
       ML_DB_PASS: mainzelliste
       ML_ALLOWED_ORIGINS: "http://localhost:4200"
+      ML_OIDC_ISS: http://localhost:8082/realms/mainzelliste
+      ML_OIDC_INTERNAL_ISS_BASE_URL: http://keycloak:8080
     depends_on:
       - mainzelliste-db
     secrets:
@@ -32,3 +35,26 @@ services:
       POSTGRES_DB: mainzelliste
       POSTGRES_USER: mainzelliste
       POSTGRES_PASSWORD: mainzelliste
+  keycloak:
+    image: quay.io/keycloak/keycloak:20.0.1
+    ports:
+      - "8082:8080"
+    command: ["start-dev"]
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: admin
+      KC_DB_URL: jdbc:postgresql://keycloak-db/keycloak
+      KC_FEATURES: token-exchange
+    volumes:
+      - ./resources/keycloak/themes/mainzelliste.jar:/opt/keycloak/providers/mainzelliste.jar
+  keycloak-db:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - keycloakDB:/var/lib/postgresql/data

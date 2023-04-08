@@ -22,6 +22,17 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
+## setup keycloak
+1. create new realm **mainzelliste**
+   1. go to tab **General** and set **Html display name**: `<div class="kc-logo-text"><span></span></div>`
+   2. go to tab **Themes** and choose login theme mainzelliste
+2. create new client **mainzelliste-ui**
+   1. set "Root URL" and "Home URL" to `http://localhost:4200`
+   2. set "valid redirect URI", "valid post logout redirect URI" and "web origins" to `http://localhost:4200/*`
+   3. go to "Login Setting" and select mainzelliste as **Login theme**
+3. create default new user for demo
+   1. go to Credentials tab and add password
+
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.

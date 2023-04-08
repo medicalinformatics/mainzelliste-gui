@@ -5,4 +5,7 @@ export class Patient {
     public ids: Array<{ idType: string, idString: string }> = [],
   ) {}
 
+  getIdString(type:string): string {
+    return this.ids.find(id => id.idType == type)?.idString ?? "";
+  }
 }

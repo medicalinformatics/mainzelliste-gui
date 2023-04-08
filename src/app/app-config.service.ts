@@ -1,13 +1,12 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import {PatientList} from "./model/patientlist";
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {OAuthConfig, PatientList} from "./model/patientlist";
 import {AppConfig} from "./app-config";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class AppConfigService {
 
-
-  data: PatientList[]= [];
+  data: PatientList[] = [];
 
   constructor(private http: HttpClient) {
   }
@@ -27,5 +26,15 @@ export class AppConfigService {
         }
       );
     });
+  }
+
+  private static validateOAuthConfig(config: OAuthConfig | undefined): boolean {
+    return config !== undefined && !AppConfigService.isStringEmpty(config.url)
+      && !AppConfigService.isStringEmpty(config.realm)
+      && !AppConfigService.isStringEmpty(config.clientId)
+  }
+
+  private static isStringEmpty(value: string | undefined): boolean {
+    return value === undefined || value.trim().length === 0;
   }
 }

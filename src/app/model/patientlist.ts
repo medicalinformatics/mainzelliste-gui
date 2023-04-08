@@ -4,10 +4,10 @@ import {Field, FieldType} from "./field";
 export class PatientList {
   constructor(
     public url: URL,
-    // this needs permission to read the configuration
-    public apiKey: string,
+    public oAuthConfig?: OAuthConfig,
     // wenn nicht gesetzt automatisch erste id die von mainzelliste angeben wird
     public mainIdType?: string,
+    public showAllIds?: boolean,
     public fields: Array<Field> = [
       new Field("Vorname", "Vorname", [], FieldType.TEXT, true, "", "Max"),
       new Field("Nachname", "Nachname", [], FieldType.TEXT, true, "", "Mustermann"),
@@ -18,5 +18,11 @@ export class PatientList {
     ],
     public controlNumberGenerator?: ControlNumberGenerator
   ) {}
+}
+
+export interface OAuthConfig {
+  url?: string;
+  realm: string;
+  clientId: string;
 }
 

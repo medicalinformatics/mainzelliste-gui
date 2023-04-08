@@ -2,12 +2,17 @@
   "patientLists": [
     {
       "url": "${MAINZELLISTE_URL}",
-      "apiKey": "${MAINZELLISTE_API_KEY}",
+      "oAuthConfig": {
+        "url": "${KEYCLOAK_URL}",
+        "realm": "${KEYCLOAK_REALM}",
+        "clientId": "${KEYCLOAK_CLIENT_ID}"
+      },
       "controlNumberGenerator": {
         "url": "${CONTROLNUMBERGENERATOR_URL}",
         "apiKey": "${CONTROLNUMBERGENERATOR_API_KEY}"
       },
       "mainIdType": "pid",
+      "showAllIds": false,
       "fields": [
         {"name":  "Vorname", "mainzellisteField":  "Vorname", "type": "TEXT", "required":  true, "validator":  ""},
         {"name":  "Nachname", "mainzellisteField":  "Nachname", "type": "TEXT", "required":  true, "validator":  ""},

@@ -1,11 +1,8 @@
 <div *ngIf="sessionService.sessionValue.sessionId !== undefined">
-  <button mat-button [matMenuTriggerFor]="logoutDropDown">
-    <mat-icon id="UserIcon">account_circle</mat-icon>
-    <span>{{sessionService.sessionValue.sessionId}}</span>
+  <button class="loginButton" mat-button [matMenuTriggerFor]="logoutDropDown">
+    <mat-icon>account_circle</mat-icon> {{getUserName()}} <mat-icon>arrow_drop_down</mat-icon>
   </button>
-  <!-- TODO: Make the DropDown prettier -->
-  <mat-menu #logoutDropDown
-            xPosition="before">
+  <mat-menu #logoutDropDown xPosition="before">
     <button mat-menu-item (click)="logout()">
       <mat-icon>logout</mat-icon>
       <span>Logout</span>

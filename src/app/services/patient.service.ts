@@ -1,6 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Patient} from "../model/patient";
-import {Id, PatientListService} from "./patient-list.service";
+import {Id, PatientListService, ReadPatientsResponse} from "./patient-list.service";
+import {Field} from "../model/field";
+import {map} from "rxjs/operators";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -319,37 +322,24 @@ export class PatientService {
   constructor(private patientListService: PatientListService) {
   }
 
-  async getDisplayPatients(filters: Array<{ field: string, searchCriteria: string }>, displayEmpty: boolean): Promise<Patient[]> {
-    try {
-      let patients:Patient[] = await this.patientListService.getPatients();
-      if (filters != undefined && filters.length > 0) {
-        patients = patients.filter((patient) => {
-          let matched = false;
-          console.log(patient);
-          filters.forEach((filter) => {
-            console.log(filter);
-            if (patient.fields[filter.field].indexOf(filter.searchCriteria) != -1) {
-              matched = true;
-            }
-            console.log(patient.fields[filter.field].indexOf(filter.searchCriteria));
-          })
-          console.log(matched);
-          return matched;
-        })
-      }
-      let uiPatients: Patient[] = patients.map(patient => this.patientListService.convertToDisplayPatient(patient));
-      if(uiPatients.length > 0) {
-        return uiPatients;
-      }
-    } catch(err) {
-      // if (err instanceof HttpErrorResponse) {
-      //   let error: HttpErrorResponse = err as HttpErrorResponse;
-      //   if (error.status == 404 && error.error === "No patient found") {
-      //     return this.mockUpData;
-      //   }
-      // }
-    }
-    return displayEmpty? [] : this.mockUpData;
+  getDisplayPatients(filters: Array<{ field: string, searchCriteria: string, isIdType: boolean }>,
+                     displayEmpty: boolean, pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
+    return this.patientListService.getPatients(filters, pageIndex + 1, pageSize).pipe(
+      map((response: ReadPatientsResponse): ReadPatientsResponse => {
+          let displayPatients: Patient[]
+          if (response.patients.length == 0) {
+            displayPatients = displayEmpty ? [] : this.mockUpData;
+          } else {
+            displayPatients = response.patients
+            .filter(p => p.ids != undefined)
+            .map(patient => this.patientListService.convertToDisplayPatient(patient));
+          }
+          // override patients
+          response.patients = displayPatients;
+          return response;
+        }
+      )
+    )
   }
 
   async createPatient(tmpPatient: Patient, idType?: string): Promise<Id> {
@@ -364,5 +354,13 @@ export class PatientService {
 
   async deletePatient(patient: Patient){
      this.patientListService.deletePatient(patient).then().catch(error => {console.log(error)})
+  }
+
+  getConfiguredFields(): Array<Field> {
+    return this.patientListService.getConfiguredFields();
+  }
+
+  getConfigureIdTypes(): Observable<Array<string>> {
+    return this.patientListService.getConfiguredIdTypes();
   }
 }

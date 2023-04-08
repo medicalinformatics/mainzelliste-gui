@@ -6,11 +6,11 @@
         <mat-chip *ngFor="let fruit of filters"
                   [selectable]="selectable"
                   [removable]="removable" (removed)="remove(fruit)" style="font-family: Tahoma;">
-          {{fruit.field}}: {{fruit.searchCriteria}}
+          {{fruit.display}}: {{fruit.searchCriteria}}
           <mat-icon matChipRemove *ngIf="removable" style="color:#494949">cancel</mat-icon>
         </mat-chip>
         <input #fruitInput
-               [(ngModel)]="filterEingabe"
+               [(ngModel)]="filterInputValue"
                placeholder="Search..."
                [matChipInputFor]="chipList"
                [formControl]="filterCtrl"
@@ -19,8 +19,9 @@
                (matChipInputTokenEnd)="add($event)">
       </mat-chip-list>
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-        <mat-option style="height: auto" *ngFor="let field of allFieldsToSearch" [value]="{field:field,searchCriteria:filterEingabe}">
-          <div style="font-weight: bold">{{field}}:</div><div style="text-indent: 2%;">{{filterEingabe}}</div>
+        <mat-option style="height: auto" *ngFor="let filterItem of filterConfigs"
+                    [value]="{display:filterItem.display, field:filterItem.field, searchCriteria:filterInputValue, isIdType: filterItem.isIdType}">
+          <div [hidden]="filterItem.hidden"><span style="font-weight: bold">{{filterItem.display}}:</span> {{filterInputValue}}</div>
 <!--
           <hr color="#888888" style=" width: 100%; justify-content: flex-start; justify-self: flex-start; justify-items: flex-start; text-align: left">
 -->
@@ -54,6 +55,15 @@
     </div>
 
     <br><br>
-  <app-patientlist (selectedPatients)="patientSelected($event)" [patients]="patientsMatTableData"></app-patientlist>
+  <app-patientlist (selectedPatients)="patientSelected($event)"
+                   [patients]="patientsMatTableData"
+                   [loading]="loading"></app-patientlist>
+
+  <mat-paginator [length]="pageNumber"
+                 [pageSize]="10"
+                 [pageSizeOptions]="[5,10,20,50,100]"
+                 (page)="handlePageEvent($event)"
+                 aria-label="Select page" [disabled]="loading">
+  </mat-paginator>
 
 </div>
