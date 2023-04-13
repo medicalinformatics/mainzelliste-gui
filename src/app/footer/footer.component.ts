@@ -6,9 +6,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./footer.component.css']
 })
 export class FooterComponent implements OnInit {
-  pic1: string = "assets/images/magicPL-Logo.png";
-  magicLogo: string = "assets/images/magicPL-Logo-Transparent.png";
-  dkfzLogo: string = "assets/images/dkfzLogo.png";
+  magicLogo: string = "assets/images/magic-logo.png";
+  dkfzLogo: string = "assets/images/dkfzLogo-small.png";
+  ummLogo: string = "assets/images/umm-logo.png";
+  medmaLogo: string = "assets/images/medma-logo.png";
   constructor() { }
 
   ngOnInit(): void {

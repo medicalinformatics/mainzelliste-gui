@@ -5,25 +5,30 @@ secrets:
 volumes:
   keycloakDB:
 services:
-  mainzelliste-gui:
-    image: medicalinformatics/mainzelliste-gui:develop
-    ports:
-      - "80:80"
-    environment:
-      NGINX_SERVER_NAME: localhost
-      MAINZELLISTE_URL: http://localhost:8080
-    depends_on:
-      - mainzelliste
+#  mainzelliste-gui:
+#    image: medicalinformatics/mainzelliste-gui:develop
+#    ports:
+#      - "80:80"
+#    environment:
+#      NGINX_SERVER_NAME: ${HOST}
+#      MAINZELLISTE_URL: http://${HOST}:8080
+#      KEYCLOAK_URL: http://${HOST}:8082
+#      KEYCLOAK_REALM: mainzelliste
+#      KEYCLOAK_CLIENT_ID: mainzelliste-ui
+#    depends_on:
+#      - mainzelliste
   mainzelliste:
     image: docker.verbis.dkfz.de/hki/mainzelliste:consent-va3
     ports:
       - "8080:8080"
     environment:
+      TOMCAT_REVERSEPROXY_FQDN: ${HOST}
+      TOMCAT_REVERSEPROXY_SSL: "false"
       ML_API_KEY: changeThisApiKey
       ML_DB_HOST: mainzelliste-db
       ML_DB_PASS: mainzelliste
-      ML_ALLOWED_ORIGINS: "http://localhost:4200"
-      ML_OIDC_ISS: http://localhost:8082/realms/mainzelliste
+      ML_ALLOWED_ORIGINS: http://${HOST}
+      ML_OIDC_ISS: http://${HOST}:8082/realms/mainzelliste
       ML_OIDC_INTERNAL_ISS_BASE_URL: http://keycloak:8080
     depends_on:
       - mainzelliste-db
