@@ -5,18 +5,18 @@ secrets:
 volumes:
   keycloakDB:
 services:
-  mainzelliste-gui:
-    image: medicalinformatics/mainzelliste-gui:develop
-    ports:
-      - "80:80"
-    environment:
-      NGINX_SERVER_NAME: ${HOST}
-      MAINZELLISTE_URL: http://${HOST}:8080
-      KEYCLOAK_URL: http://${HOST}:8082
-      KEYCLOAK_REALM: mainzelliste
-      KEYCLOAK_CLIENT_ID: mainzelliste-ui
-    depends_on:
-      - mainzelliste
+#  mainzelliste-gui:
+#    image: medicalinformatics/mainzelliste-gui:develop
+#    ports:
+#      - "80:80"
+#    environment:
+#      NGINX_SERVER_NAME: ${HOST}
+#      MAINZELLISTE_URL: http://${HOST}:8080
+#      KEYCLOAK_URL: http://${HOST}:8082
+#      KEYCLOAK_REALM: mainzelliste
+#      KEYCLOAK_CLIENT_ID: mainzelliste-ui
+#    depends_on:
+#      - mainzelliste
   mainzelliste:
     image: medicalinformatics/mainzelliste:develop
     ports:
