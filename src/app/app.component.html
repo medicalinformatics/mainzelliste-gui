@@ -7,7 +7,7 @@
   <!--HEADER AND CONTENT AS COLUMN-->
   <app-head style="flex: 0 0; height: 75px" *ngIf="sessionService.isLoggedIn()"></app-head>
   <!-- NAVIGATION AND CONTENT NEXT TO EACH OTHER sessionService.isLoggedIn() -->
-  <mat-sidenav-container style="flex-basis: 91%; min-height: auto;" *ngIf="sessionService.isLoggedIn()">
+  <mat-sidenav-container *ngIf="sessionService.isLoggedIn()" style="height: 100%">
     <mat-sidenav mode="side" class="sidenav-menu" opened>
       <app-navigation style=" padding-top:22px; color: white; display: flex; flex-flow: column"></app-navigation>
     </mat-sidenav>
