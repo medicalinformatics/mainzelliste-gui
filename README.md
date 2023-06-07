@@ -33,8 +33,8 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
    1. go to tab **General** and set **Html display name**: `<div class="kc-logo-text"><span></span></div>`
    2. go to tab **Themes** and choose login theme mainzelliste
 2. create new client **mainzelliste-ui**
-   1. set "Root URL" and "Home URL" to `http://localhost`
-   2. set "valid redirect URI", "valid post logout redirect URI" and "web origins" to `http://localhost/*`
+   1. set "Root URL", "Home URL" and "Web origins" to `http://localhost`
+   2. set "valid redirect URI" and "valid post logout redirect URI" to `http://localhost/*`
    3. go to "Login Setting" and select mainzelliste as **Login theme**
 3. create default new user for demo
    1. go to Credentials tab and add password
