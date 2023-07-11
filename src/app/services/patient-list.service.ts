@@ -43,6 +43,10 @@ export class PatientListService {
   ) {
     this.patientList = this.configService.data[0];
 
+    // validate main id type
+    this.configService.validateMainIdType()
+    .subscribe(message => console.log(message))
+
     // init mainzelliste field array from configuration
     let fields: Array<Field> = this.patientList.fields;
     let index: number = 0;
@@ -58,6 +62,20 @@ export class PatientListService {
       }
     }
     this.mainzellisteHeaders = new HttpHeaders().set('mainzellisteApiVersion', '3.2')
+
+    //validate fields
+    let fieldEndpointUrl = this.patientList.url + "/configuration/fieldKeys";
+    this.httpClient.get<string[]>(fieldEndpointUrl, {headers: this.mainzellisteHeaders})
+    .pipe(
+      catchError(e => throwError(new Error("Can't validate field. Failed to connect to the backend Endpoint " + fieldEndpointUrl))),
+      map( fieldNames => {
+        for(let currentField of this.mainzellisteFields){
+          if(!fieldNames.includes(currentField))
+            throw new Error("Configured field '" + currentField +"' not defined in backend configuration")
+        }
+      })
+    )
+    .subscribe(message => console.log(message));
   }
 
   getConfiguredFields(): Array<Field> {
