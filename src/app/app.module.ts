@@ -52,6 +52,7 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {GlobalErrorHandler} from "./error/global-error-handler";
 import {ErrorDialogComponent} from './error-dialog/error-dialog.component';
+import {ErrorCardComponent} from './component-error-card/error-card.component';
 
 function initializeAppFactory(service: AppConfigService, keycloak: KeycloakService): () => Promise<any> {
   return () => service.load()
@@ -105,7 +106,8 @@ function initializeAppFactory(service: AppConfigService, keycloak: KeycloakServi
     SessionComponent,
     ErrorComponent,
     LogoutComponent,
-    ErrorDialogComponent
+    ErrorDialogComponent,
+    ErrorCardComponent
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {ErrorDialogComponent} from "../error-dialog/error-dialog.component";
-import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +18,7 @@ export class GlobalErrorDialogService {
     hasBackdrop: true,
   }
 
-  constructor(private dialog: MatDialog, private router: Router) {
+  constructor(private dialog: MatDialog) {
   }
 
   openDialog(message: string): void {

@@ -107,11 +107,10 @@ export class PatientlistViewComponent implements OnInit {
         this.loading = false;
       },
       error => {
-        // TODO show ERROR
-        console.log("TODO show error" + error);
         this.patientsMatTableData.data = [];
         this.pageNumber = 0;
         this.loading = false
+        throw error;
       }
     )
   }
