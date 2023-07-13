@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {SessionService} from "./session.service";
-import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {PatientList} from "../model/patientlist";
 import {Patient} from "../model/patient";
 import {AppConfigService} from "../app-config.service";
@@ -35,17 +35,29 @@ export class PatientListService {
   private patientList: PatientList;
   private mainzellisteHeaders: HttpHeaders
   private mainzellisteFields: string[] = [];
+  private mainzellisteIdTypes: string[] = []
 
   constructor(
     private configService: AppConfigService,
     private sessionService: SessionService,
     private httpClient: HttpClient
   ) {
-    this.patientList = this.configService.data[0];
+    //TODO cache backend configuration
 
-    // validate main id type
-    this.configService.validateMainIdType()
-    .subscribe(message => console.log(message))
+    this.patientList = this.configService.data[0];
+    this.mainzellisteHeaders = new HttpHeaders().set('mainzellisteApiVersion', '3.2')
+
+    //init mainzelliste id types
+    this.httpClient.get<string[]>(this.patientList.url + "/configuration/idTypes", {headers: this.mainzellisteHeaders})
+    .pipe(
+      catchError(() => throwError(new Error("Can't init id types. Failed to connect to the backend Endpoint /configuration/idTypes"))),
+    )
+    .subscribe( idtypes => {
+      // validate main id type
+      console.log(configService.validateMainIdType(idtypes))
+      //set id types
+      this.mainzellisteIdTypes = idtypes;
+    });
 
     // init mainzelliste field array from configuration
     let fields: Array<Field> = this.patientList.fields;
@@ -61,7 +73,6 @@ export class PatientListService {
         index++;
       }
     }
-    this.mainzellisteHeaders = new HttpHeaders().set('mainzellisteApiVersion', '3.2')
 
     //validate fields
     let fieldEndpointUrl = this.patientList.url + "/configuration/fieldKeys";
@@ -73,6 +84,7 @@ export class PatientListService {
           if(!fieldNames.includes(currentField))
             throw new Error("Configured field '" + currentField +"' not defined in backend configuration")
         }
+        return "Configured fields are valid"
       })
     )
     .subscribe(message => console.log(message));
@@ -82,10 +94,25 @@ export class PatientListService {
     return this.patientList.fields;
   }
 
-  getConfiguredIdTypes(): Observable<Array<string>> {
-    return this.httpClient.get<string[]>(this.patientList.url + "/configuration/idTypes", {headers: this.mainzellisteHeaders});
+  getIdTypes(): Array<string> {
+    return this.mainzellisteIdTypes;
   }
 
+  /**
+   * @deprecated replace with getIdTypes
+   */
+  getConfiguredIdTypes(): Observable<Array<string>> {
+    //TODO remove observable
+    return of(this.mainzellisteIdTypes);
+  }
+
+  getMainIdType(): string {
+    return this.patientList.mainIdType == undefined ? this.getIdTypes()[0] : this.patientList.mainIdType;
+  }
+
+  /**
+   * @deprecated replace with getMainIdType
+   */
   getConfiguredDefaultIdType(): Observable<string> {
     if(this.patientList.mainIdType != undefined){
       return of(this.patientList.mainIdType);
