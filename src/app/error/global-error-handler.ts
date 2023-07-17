@@ -14,8 +14,13 @@ export class GlobalErrorHandler implements ErrorHandler {
   }
 
   handleError(error: any): void {
-    console.log("Global Error Handler: ", error)
+    //unwrapping uncaught promise rejection
+    if(error.promise && error.rejection){
+      error = error.rejection;
+    }
     let errorMessage = error?.message || 'Undefined client error';
+
+    console.log("Global Error Handler: ", error)
     if(error instanceof MainzellisteError) {
       this.errorNotificationService.addMessage(errorMessage)
     } else {

@@ -33,10 +33,9 @@ export class CreatePatientComponent {
     this.idTypesFormControl.setValue(patientListService.getMainIdType());
   }
 
-  async createNewPatient () {
-    console.log(this.idTypesSelection);
-    let newId = await this.patientService.createPatient(this.patient, this.idTypesSelection.value);
-    await this.router.navigate(["/idcard", newId.idType, newId.idString]);
+  createNewPatient() {
+    this.patientService.createPatient(this.patient, this.idTypesSelection.value)
+    .then( newId => this.router.navigate(["/idcard", newId.idType, newId.idString]).then())
   }
 
 

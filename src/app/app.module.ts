@@ -77,7 +77,9 @@ function initializeAppFactory(service: AppConfigService, keycloak: KeycloakServi
         reason = error.error?.length > 0 ? " Reason: " + error.error : "";
       }
       throw new Error("Failed to connect to Keycloak." + reason);
-    });
+    })
+    .then( isLoggedIn => { if(isLoggedIn) service.fetchMainzellisteIdTypes(); return isLoggedIn})
+    .then( isLoggedIn => { if(isLoggedIn) service.fetchMainzellisteFields()});
   });
 }
 

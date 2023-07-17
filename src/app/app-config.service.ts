@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {OAuthConfig, PatientList} from "./model/patientlist";
 import {AppConfig} from "./app-config";
 import {catchError, map} from "rxjs/operators";
@@ -9,6 +9,8 @@ import {throwError} from "rxjs";
 export class AppConfigService {
 
   data: PatientList[] = [];
+  private mainzellisteIdTypes: string[] = [];
+  private mainzellisteFields: string[] = [];
 
   constructor(private httpClient: HttpClient) {
   }
@@ -17,6 +19,7 @@ export class AppConfigService {
    * read and validate the configuration file
    */
   load(): Promise<PatientList[]> {
+    //TODO cache backend configurations
     return new Promise<PatientList[]>((resolve, reject) => {
       this.httpClient.get<AppConfig>('assets/config/config.json')
       .pipe(map(r => Object.assign([], r.patientLists || [])))
@@ -38,11 +41,56 @@ export class AppConfigService {
     });
   }
 
+  getMainzellisteIdTypes(): string[] {
+    return this.mainzellisteIdTypes;
+  }
+
+
+  getMainzellisteFields(): string[] {
+    return this.mainzellisteFields;
+  }
+
   private validateBackendUrl(config: PatientList) {
     return this.httpClient.get<string>(config.url.toString())
     .pipe(map(_r => 'Mainzelliste is online'),
       catchError(_e => throwError(new Error("Mainzelliste backend is offline")))
     )
+  }
+
+  public fetchMainzellisteIdTypes(): Promise<string[]> {
+    return this.httpClient.get<string[]>(this.data[0].url + "/configuration/idTypes", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
+    .pipe(
+      catchError((e) => throwError(new Error("Can't init id types. Failed to connect to the backend Endpoint /configuration/idTypes"))),
+      map(idtypes => {
+        console.log(this.validateMainIdType(idtypes))
+        this.mainzellisteIdTypes = idtypes
+        return idtypes;
+      })
+    ).toPromise();
+  }
+
+  public fetchMainzellisteFields(): Promise<string[]> {
+    let fieldEndpointUrl = this.data[0].url + "/configuration/fieldKeys";
+    return this.httpClient.get<string[]>(fieldEndpointUrl, {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
+    .pipe(
+      catchError(e => throwError(new Error("Can't validate field. Failed to connect to the backend Endpoint " + fieldEndpointUrl))),
+      map(fields => {
+        //validate fields
+        for (let configuredField of this.data[0].fields) {
+          if (configuredField.mainzellisteFields != undefined) {
+            for (let currentField of configuredField.mainzellisteFields) {
+              if (!fields.includes(currentField))
+                throw new Error("Configured field '" + currentField + "' not defined in backend configuration")
+            }
+          } else {
+            if (!fields.includes(configuredField.mainzellisteField))
+              throw new Error("Configured field '" + configuredField.mainzellisteField + "' not defined in backend configuration")
+          }
+        }
+        this.mainzellisteFields = fields;
+        return fields;
+      })
+    ).toPromise();
   }
 
   public validateMainIdType(idTypes: string[]) {

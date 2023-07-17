@@ -4,6 +4,7 @@ import {Id, PatientListService, ReadPatientsResponse} from "./patient-list.servi
 import {Field} from "../model/field";
 import {map} from "rxjs/operators";
 import {Observable} from "rxjs";
+import {MainzellisteError} from "../model/mainzelliste-error.model";
 
 @Injectable({
   providedIn: 'root'
@@ -339,14 +340,11 @@ export class PatientService {
     )
   }
 
-  async createPatient(tmpPatient: Patient, idType?: string): Promise<Id> {
-    // TODO: Create proper mainzelliste call for this and return that as result.
+   createPatient(patient: Patient, idType?: string): Promise<Id> {
     if (idType == undefined) {
-      idType = await this.patientListService.getPatientListMainIdType();
+      throw new MainzellisteError("Please select an id type");
     }
-    let newId = await this.patientListService.addPatient(tmpPatient, idType);
-    return new Id(idType, newId.newId, newId.tentative);
-
+    return this.patientListService.addPatient(patient, idType);
   }
 
   async deletePatient(patient: Patient){
@@ -357,7 +355,7 @@ export class PatientService {
     return this.patientListService.getConfiguredFields();
   }
 
-  getConfigureIdTypes(): Observable<Array<string>> {
-    return this.patientListService.getConfiguredIdTypes();
+  getConfigureIdTypes(): Array<string> {
+    return this.patientListService.getIdTypes();
   }
 }

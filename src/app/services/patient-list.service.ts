@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {SessionService} from "./session.service";
-import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {PatientList} from "../model/patientlist";
 import {Patient} from "../model/patient";
 import {AppConfigService} from "../app-config.service";
@@ -12,6 +12,7 @@ import {Field} from "../model/field";
 import {DatePipe} from "@angular/common";
 import {catchError, map, mergeMap} from "rxjs/operators";
 import {Observable, of, throwError} from "rxjs";
+import {MainzellisteError} from "../model/mainzelliste-error.model";
 
 export class Id {
   constructor(
@@ -34,60 +35,14 @@ export class PatientListService {
 
   private patientList: PatientList;
   private mainzellisteHeaders: HttpHeaders
-  private mainzellisteFields: string[] = [];
-  private mainzellisteIdTypes: string[] = []
 
   constructor(
     private configService: AppConfigService,
     private sessionService: SessionService,
     private httpClient: HttpClient
   ) {
-    //TODO cache backend configuration
-
     this.patientList = this.configService.data[0];
     this.mainzellisteHeaders = new HttpHeaders().set('mainzellisteApiVersion', '3.2')
-
-    //init mainzelliste id types
-    this.httpClient.get<string[]>(this.patientList.url + "/configuration/idTypes", {headers: this.mainzellisteHeaders})
-    .pipe(
-      catchError(() => throwError(new Error("Can't init id types. Failed to connect to the backend Endpoint /configuration/idTypes"))),
-    )
-    .subscribe( idtypes => {
-      // validate main id type
-      console.log(configService.validateMainIdType(idtypes))
-      //set id types
-      this.mainzellisteIdTypes = idtypes;
-    });
-
-    // init mainzelliste field array from configuration
-    let fields: Array<Field> = this.patientList.fields;
-    let index: number = 0;
-    for(const i in fields){
-      if(fields[i].mainzellisteFields != undefined){
-        for(const j in fields[i].mainzellisteFields) {
-          this.mainzellisteFields[index] = fields[i].mainzellisteFields[j];
-          index++;
-        }
-      } else {
-        this.mainzellisteFields[index] = fields[i].mainzellisteField;
-        index++;
-      }
-    }
-
-    //validate fields
-    let fieldEndpointUrl = this.patientList.url + "/configuration/fieldKeys";
-    this.httpClient.get<string[]>(fieldEndpointUrl, {headers: this.mainzellisteHeaders})
-    .pipe(
-      catchError(e => throwError(new Error("Can't validate field. Failed to connect to the backend Endpoint " + fieldEndpointUrl))),
-      map( fieldNames => {
-        for(let currentField of this.mainzellisteFields){
-          if(!fieldNames.includes(currentField))
-            throw new Error("Configured field '" + currentField +"' not defined in backend configuration")
-        }
-        return "Configured fields are valid"
-      })
-    )
-    .subscribe(message => console.log(message));
   }
 
   getConfiguredFields(): Array<Field> {
@@ -95,7 +50,7 @@ export class PatientListService {
   }
 
   getIdTypes(): Array<string> {
-    return this.mainzellisteIdTypes;
+    return this.configService.getMainzellisteIdTypes();
   }
 
   /**
@@ -103,7 +58,8 @@ export class PatientListService {
    */
   getConfiguredIdTypes(): Observable<Array<string>> {
     //TODO remove observable
-    return of(this.mainzellisteIdTypes);
+    console.log("getConfiguredIdTypes " + this.configService.getMainzellisteIdTypes())
+    return of(this.configService.getMainzellisteIdTypes());
   }
 
   getMainIdType(): string {
@@ -143,21 +99,19 @@ export class PatientListService {
    */
   getPatients(filters: Array<{ field: string, searchCriteria: string, isIdType: boolean }>,
               pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
-    return this.getConfiguredIdTypes().pipe(
-      // create read patients token
-      mergeMap(idTypes => {
-        // find searchIds
-        let searchIds: Array<Id> = [];
-        let defaultIdType = this.findDefaultIdType(idTypes);
-        if (filters.every(f => !f.isIdType)) {
-          searchIds = [{idType: defaultIdType, idString: "*", tentative: false}];
-        } else {
-          filters.filter(f => f.isIdType).forEach(f =>
-            searchIds.push({idType: f.field, idString: f.searchCriteria.trim(), tentative: false}));
-        }
-        return this.sessionService.createToken("readPatients",
-          new ReadPatientsTokenData(searchIds, this.mainzellisteFields, idTypes))
-      }),
+    // find searchIds
+    let searchIds: Array<Id> = [];
+    let defaultIdType = this.findDefaultIdType(this.getIdTypes());
+    if (filters.every(f => !f.isIdType)) {
+      searchIds = [{idType: defaultIdType, idString: "*", tentative: false}];
+    } else {
+      filters.filter(f => f.isIdType).forEach(f =>
+        searchIds.push({idType: f.field, idString: f.searchCriteria.trim(), tentative: false}));
+    }
+    // create read patients token
+    return this.sessionService.createToken("readPatients",
+      new ReadPatientsTokenData(searchIds, this.configService.getMainzellisteFields(), this.getIdTypes()))
+    .pipe(
       // resolve read patients token
       mergeMap(token => this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + token.id
         + "&page=" + pageIndex + "&limit=" + pageSize + "&"
@@ -185,26 +139,41 @@ export class PatientListService {
     )
   }
 
-  async addPatient(patient: Patient, idType?: string): Promise<{ newId: string, tentative: boolean, uri: URL }> {
-    if(idType == undefined){
-      idType = await this.getPatientListMainIdType();
-    }
+  addPatient(patient: Patient, idType: string): Promise<Id> {
     return this.sessionService.createToken(
       "addPatient",
       new AddPatientTokenData(
         [idType]
       )
-    ).toPromise().then(token => {
-      let body = new URLSearchParams();
-      const convertedFields = this.convertToPatient(patient).fields
-      for (const name in convertedFields) {
-        body.set(name, convertedFields[name]);
-      }
-      return this.httpClient.post<{ newId: string, tentative: boolean, uri: URL }>(this.patientList.url + "/patients?tokenId=" + token.id, body, {
-        headers: new HttpHeaders()
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-      }).toPromise();
+    )
+    .pipe(
+      mergeMap(token => this.resolveAddPatientToken(token.id, patient))
+    ).toPromise();
+  }
+
+  resolveAddPatientToken(tokenId: string | undefined, patient: Patient): Observable<Id> {
+    //prepare request body
+    let body = new URLSearchParams();
+    const convertedFields = this.convertToPatient(patient).fields
+    for (const name in convertedFields) {
+      body.set(name, convertedFields[name]);
+    }
+
+    //send request
+    return this.httpClient.post<Id>(this.patientList.url + "/patients?tokenId=" + tokenId, body, {
+      headers: new HttpHeaders()
+      .set('Content-Type', 'application/x-www-form-urlencoded')
     })
+    .pipe(
+      catchError(e => {
+        if (e instanceof HttpErrorResponse) {
+          if (e.status == 400 && e.error == "Neither complete IDAT nor an external ID has been given as input!") {
+            return throwError(new MainzellisteError(e.error.toString()));
+          }
+        }
+        return throwError(e);
+      })
+    )
   }
 
   async readPatient(id: Id): Promise<Patient[]> {
@@ -213,7 +182,7 @@ export class PatientListService {
       "readPatients",
       new ReadPatientsTokenData(
         [{idType: id.idType, idString: id.idString}],
-        this.mainzellisteFields,
+        this.configService.getMainzellisteFields(),
         await this.getPatientListIdTypes()
       )).toPromise();
     return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + readToken.id).toPromise();
@@ -224,7 +193,7 @@ export class PatientListService {
       "editPatient",
       new EditPatientTokenData(
         {idType: displayPatient.ids[0].idType, idString: displayPatient.ids[0].idString},
-        this.mainzellisteFields
+        this.configService.getMainzellisteFields()
       )
     ).toPromise().then(token => {
         console.log("Edit Patient Token: " + token)

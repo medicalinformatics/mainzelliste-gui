@@ -88,7 +88,7 @@ export class PatientlistViewComponent implements OnInit {
 
   async ngOnInit() {
     // init id types in auto complete list
-    let configuredIdTypes = await this.patientService.getConfigureIdTypes().toPromise();
+    let configuredIdTypes = this.patientService.getConfigureIdTypes();
     configuredIdTypes.forEach( idType => this.filterConfigs.push({field: idType, display: "Pseudonym (" + idType + ")", isIdType: true, hidden: false}));
     // init. fields
     this.patientService.getConfiguredFields().forEach( fieldConfig => {
