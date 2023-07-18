@@ -1,20 +1,19 @@
 <div style="height:100%;width:100%;">
 <h1 class="title">Personenidentifikator anfordern</h1>
-
   <div style="margin-bottom: 15%;width: 50%">
     <h4 style="margin-left: 5%">Patientendaten eingeben:</h4>
     <app-patient-fields (fieldEvent)="fieldsChanged($event)" [fields]="patient.fields" ></app-patient-fields>
     <div>
       <div style="margin-left: 5%">
-      <h4>Projekt auswählen:</h4>
+      <h4>Pseudonymtyp auswählen:</h4>
 
       <mat-form-field style="width: 76.5%">
-        <mat-label>Projekt</mat-label>
-        <mat-select #pseudonymSelection [formControl]="dataControll" required>
-          <mat-option *ngFor="let pseudonym of patientListPseudonyms | async" [value]="pseudonym">{{pseudonym}}</mat-option>
+        <mat-label>Pseudonymtyp</mat-label>
+        <mat-select #idTypesSelection [formControl]="idTypesFormControl"  [value]="'pid'" required>
+          <mat-option *ngFor="let idType of patientListService.getIdTypes()" [value]="idType">{{idType}}</mat-option>
         </mat-select>
-        <mat-error *ngIf="dataControll.hasError('required')">Bitte wählen Sie ein Projekt</mat-error>
-        <mat-hint>{{dataControll.value?.sound}}</mat-hint>
+        <mat-error *ngIf="idTypesFormControl.hasError('required')">Bitte wählen Sie ein Pseudonymtyp</mat-error>
+        <mat-hint>{{idTypesFormControl.value?.sound}}</mat-hint>
       </mat-form-field>
 
       </div>

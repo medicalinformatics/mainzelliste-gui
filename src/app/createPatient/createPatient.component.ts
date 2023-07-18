@@ -1,10 +1,11 @@
-import {Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
 import {Patient} from "../model/patient";
 import {PatientService} from "../services/patient.service";
 import {Router} from "@angular/router";
 import {FormControl, Validators} from "@angular/forms";
 import {PatientListService} from "../services/patient-list.service";
 import {MatSelect} from "@angular/material/select";
+import {MainzellisteError} from "../model/mainzelliste-error.model";
 
 @Component({
   selector: 'app-create-patient',
@@ -14,11 +15,10 @@ import {MatSelect} from "@angular/material/select";
 export class CreatePatientComponent {
   title="Patient einfügen";
   @Input() fields : Array<string> = [];
-  @ViewChild("pseudonymSelection") pseudonymSelection!: MatSelect;
+  @ViewChild("idTypesSelection") idTypesSelection!: MatSelect;
 
-  dataControll = new FormControl('', Validators.required);
+  idTypesFormControl = new FormControl('', Validators.required);
   selectFormControl = new FormControl('', Validators.required);
-  patientListPseudonyms: Promise<string[]>;
 
   patient:Patient = new Patient();
   patientService: PatientService;
@@ -31,24 +31,17 @@ export class CreatePatientComponent {
   ) {
     this.patientService = patientService;
     this.patientListService = patientListService;
-    this.patientListPseudonyms=patientListService.getPatientListIdTypes();
+    this.idTypesFormControl.setValue(patientListService.getMainIdType());
   }
 
-  async createNewPatient () {
-    console.log(this.pseudonymSelection);
-    let newId = await this.patientService.createPatient(this.patient, this.pseudonymSelection.value);
-    await this.router.navigate(["/idcard", newId.idType, newId.idString]);
+  createNewPatient() {
+    this.patientService.createPatient(this.patient, this.idTypesSelection.value)
+    .catch( e => {throw MainzellisteError.createFrom(e, true)})
+    .then( newId => { console.log(newId); this.router.navigate(["/idcard", newId.idType, newId.idString]).then()})
   }
 
 
   fieldsChanged(newFields: {[p: string]: any}) {
     this.patient.fields = newFields;
   }
-
-  sendBanner($event: any) {
-
-  }
-}
-
-export class AddPatientFormularComponent {
 }

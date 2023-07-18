@@ -1,4 +1,4 @@
-import {APP_INITIALIZER, NgModule} from '@angular/core';
+import {APP_INITIALIZER, ErrorHandler, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent} from './app.component';
 import {AudittrailComponent} from './audittrail/audittrail.component';
@@ -50,10 +50,13 @@ import {LogoutComponent} from './logout/logout.component';
 import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {GlobalErrorHandler} from "./error/global-error-handler";
+import {ErrorDialogComponent} from './error-dialog/error-dialog.component';
+import {ErrorCardComponent} from './component-error-card/error-card.component';
 
-function initializeAppFactory(service:AppConfigService, keycloak: KeycloakService): () => Promise<any> {
-
-  return () => service.load().then( config => {
+function initializeAppFactory(service: AppConfigService, keycloak: KeycloakService): () => Promise<any> {
+  return () => service.load()
+  .then(config => {
     return keycloak.init({
       config: {
         url: config[0].oAuthConfig?.url ?? "",
@@ -66,7 +69,17 @@ function initializeAppFactory(service:AppConfigService, keycloak: KeycloakServic
         silentCheckSsoRedirectUri:
           window.location.origin + '/assets/silent-check-sso.html'
       }
-    });
+    })
+    .catch(error => {
+      // find error reason
+      let reason = "";
+      if (!!error) {
+        reason = error.error?.length > 0 ? " Reason: " + error.error : "";
+      }
+      throw new Error("Failed to connect to Keycloak." + reason);
+    })
+    .then( isLoggedIn => { if(isLoggedIn) service.fetchMainzellisteIdTypes(); return isLoggedIn})
+    .then( isLoggedIn => { if(isLoggedIn) service.fetchMainzellisteFields()});
   });
 }
 
@@ -94,7 +107,9 @@ function initializeAppFactory(service:AppConfigService, keycloak: KeycloakServic
     DeleteMultiplePatientsComponent,
     SessionComponent,
     ErrorComponent,
-    LogoutComponent
+    LogoutComponent,
+    ErrorDialogComponent,
+    ErrorCardComponent
   ],
   imports: [
     BrowserModule,
@@ -134,7 +149,8 @@ function initializeAppFactory(service:AppConfigService, keycloak: KeycloakServic
             useFactory: initializeAppFactory,
             deps: [ AppConfigService, KeycloakService ],
             multi: true
-        }
+        },
+        {provide: ErrorHandler, useClass: GlobalErrorHandler}
     ],
     bootstrap: [AppComponent]
 })

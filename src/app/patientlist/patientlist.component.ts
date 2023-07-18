@@ -82,10 +82,8 @@ export class PatientlistComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.patientListService.getConfiguredIdTypes().subscribe((idTypes) => {
-      this.configuredIdTypes = idTypes;
-      let displayIdTypes = this.showAllIds ? idTypes : [this.patientListService.findDefaultIdType(idTypes)];
-      this.columns = this.columns.concat(displayIdTypes).concat(this.fields).concat(["actions"]);
-    })
+    this.configuredIdTypes = this.patientListService.getIdTypes();
+    let displayIdTypes = this.showAllIds ? this.configuredIdTypes : [this.patientListService.findDefaultIdType(this.configuredIdTypes)];
+    this.columns = this.columns.concat(displayIdTypes).concat(this.fields).concat(["actions"]);
   }
 }

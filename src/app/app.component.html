@@ -11,7 +11,8 @@
     <mat-sidenav mode="side" class="sidenav-menu" opened>
       <app-navigation style=" padding-top:22px; color: white; display: flex; flex-flow: column"></app-navigation>
     </mat-sidenav>
-    <mat-sidenav-content>
+    <mat-sidenav-content style="padding-bottom: 10%; padding-top: 3%">
+      <app-error-card></app-error-card>
       <div style="flex: 1 1 95%; display: flex; flex-flow: column;">
         <div style="flex: 1 1 auto;min-height: 90%;">
           <router-outlet></router-outlet>
