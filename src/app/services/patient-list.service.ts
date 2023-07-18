@@ -13,6 +13,7 @@ import {DatePipe} from "@angular/common";
 import {catchError, map, mergeMap} from "rxjs/operators";
 import {Observable, of, throwError} from "rxjs";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
+import {ErrorMessage, ErrorMessages} from "../error/error-messages";
 
 export class Id {
   constructor(
@@ -35,6 +36,9 @@ export class PatientListService {
 
   private patientList: PatientList;
   private mainzellisteHeaders: HttpHeaders
+  private addPatientConflictErrorMessages: ErrorMessage[] = [ErrorMessages.CREATE_PATIENT_CONFLICT_EXT_IDS,
+    ErrorMessages.CREATE_PATIENT_CONFLICT_IDAT, ErrorMessages.CREATE_PATIENT_CONFLICT_EXT_IDS_IDAT_MULTIPLE_MATCH,
+    ErrorMessages.CREATE_PATIENT_CONFLICT_EXT_IDS_MULTIPLE_MATCH, ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH];
 
   constructor(
     private configService: AppConfigService,
@@ -160,19 +164,30 @@ export class PatientListService {
     }
 
     //send request
-    return this.httpClient.post<Id>(this.patientList.url + "/patients?tokenId=" + tokenId, body, {
+    return this.httpClient.post<Id[]>(this.patientList.url + "/patients?tokenId=" + tokenId, body, {
       headers: new HttpHeaders()
       .set('Content-Type', 'application/x-www-form-urlencoded')
+      .set('mainzellisteApiVersion', '3.2')
     })
     .pipe(
       catchError(e => {
         if (e instanceof HttpErrorResponse) {
-          if (e.status == 400 && e.error == "Neither complete IDAT nor an external ID has been given as input!") {
-            return throwError(new MainzellisteError(e.error.toString()));
+          if (e.status == 400 && e.error == ErrorMessages.CREATE_PATIENT_MISSING_FIELD.message) {
+            return throwError(new MainzellisteError(ErrorMessages.CREATE_PATIENT_MISSING_FIELD));
+          } else if(e.status == 409){
+            let errorMessage = this.addPatientConflictErrorMessages.find( msg => msg.message == e.error )
+            if(errorMessage != undefined)
+              return throwError(new MainzellisteError(errorMessage));
+            else {
+              errorMessage = this.addPatientConflictErrorMessages.find( msg => msg.message == e.error.message )
+              if(errorMessage != undefined)
+                return throwError(new MainzellisteError(errorMessage));
+            }
           }
         }
         return throwError(e);
-      })
+      }),
+      map( ids => ids[0])
     )
   }
 

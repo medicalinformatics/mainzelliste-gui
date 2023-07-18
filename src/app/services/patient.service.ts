@@ -5,6 +5,7 @@ import {Field} from "../model/field";
 import {map} from "rxjs/operators";
 import {Observable} from "rxjs";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
+import {ErrorMessages} from "../error/error-messages";
 
 @Injectable({
   providedIn: 'root'
@@ -342,7 +343,7 @@ export class PatientService {
 
    createPatient(patient: Patient, idType?: string): Promise<Id> {
     if (idType == undefined) {
-      throw new MainzellisteError("Please select an id type");
+      throw new MainzellisteError(ErrorMessages.CREATE_PATIENT_MISSING_ID_TYPE);
     }
     return this.patientListService.addPatient(patient, idType);
   }

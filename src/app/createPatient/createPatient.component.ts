@@ -5,6 +5,7 @@ import {Router} from "@angular/router";
 import {FormControl, Validators} from "@angular/forms";
 import {PatientListService} from "../services/patient-list.service";
 import {MatSelect} from "@angular/material/select";
+import {MainzellisteError} from "../model/mainzelliste-error.model";
 
 @Component({
   selector: 'app-create-patient',
@@ -35,7 +36,8 @@ export class CreatePatientComponent {
 
   createNewPatient() {
     this.patientService.createPatient(this.patient, this.idTypesSelection.value)
-    .then( newId => this.router.navigate(["/idcard", newId.idType, newId.idString]).then())
+    .catch( e => {throw MainzellisteError.createFrom(e, true)})
+    .then( newId => { console.log(newId); this.router.navigate(["/idcard", newId.idType, newId.idString]).then()})
   }
 
 

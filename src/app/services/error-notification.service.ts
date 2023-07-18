@@ -10,7 +10,9 @@ export class ErrorNotificationService {
   constructor() {
   }
 
-  addMessage(message: string): void {
+  addMessage(message: string, clean?: boolean): void {
+    if(clean != undefined && clean)
+      this.messages = [];
     this.messages.push(message);
     this.display = true;
   }
