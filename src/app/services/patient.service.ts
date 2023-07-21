@@ -341,11 +341,11 @@ export class PatientService {
     )
   }
 
-   createPatient(patient: Patient, idType?: string): Promise<Id> {
-    if (idType == undefined) {
+   createPatient(patient: Patient, idTypes: string[]): Promise<Id> {
+    if (idTypes == undefined || idTypes.length == 0) {
       throw new MainzellisteError(ErrorMessages.CREATE_PATIENT_MISSING_ID_TYPE);
     }
-    return this.patientListService.addPatient(patient, idType);
+    return this.patientListService.addPatient(patient, idTypes);
   }
 
   async deletePatient(patient: Patient){

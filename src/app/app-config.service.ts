@@ -5,10 +5,19 @@ import {AppConfig} from "./app-config";
 import {catchError, map} from "rxjs/operators";
 import {throwError} from "rxjs";
 
+
+export interface IdGenerator {
+  name: string,
+  idType: string,
+  isExternal: boolean,
+  isPersistant: boolean
+}
+
 @Injectable({providedIn: 'root'})
 export class AppConfigService {
 
   data: PatientList[] = [];
+  private mainzellisteIdGenerators: IdGenerator[] = [];
   private mainzellisteIdTypes: string[] = [];
   private mainzellisteFields: string[] = [];
 
@@ -45,6 +54,9 @@ export class AppConfigService {
     return this.mainzellisteIdTypes;
   }
 
+  getMainzellisteIdGenerators(): IdGenerator[] {
+    return this.mainzellisteIdGenerators;
+  }
 
   getMainzellisteFields(): string[] {
     return this.mainzellisteFields;
@@ -57,14 +69,15 @@ export class AppConfigService {
     )
   }
 
-  public fetchMainzellisteIdTypes(): Promise<string[]> {
-    return this.httpClient.get<string[]>(this.data[0].url + "/configuration/idTypes", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
+  public fetchMainzellisteIdGenerators(): Promise<IdGenerator[]> {
+    return this.httpClient.get<IdGenerator[]>(this.data[0].url + "/configuration/idTypes", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
     .pipe(
       catchError((e) => throwError(new Error("Can't init id types. Failed to connect to the backend Endpoint /configuration/idTypes"))),
-      map(idtypes => {
-        console.log(this.validateMainIdType(idtypes))
-        this.mainzellisteIdTypes = idtypes
-        return idtypes;
+      map(idGenerators => {
+        console.log(this.validateMainIdType(idGenerators))
+        this.mainzellisteIdGenerators = idGenerators
+        this.mainzellisteIdTypes = idGenerators.map( g => g.idType);
+        return idGenerators;
       })
     ).toPromise();
   }
@@ -93,9 +106,9 @@ export class AppConfigService {
     ).toPromise();
   }
 
-  public validateMainIdType(idTypes: string[]) {
+  public validateMainIdType(idGenerators: IdGenerator[]) {
     let config = this.data[0];
-    let idType = idTypes[0];
+    let idType = idGenerators[0].idType;
 
     //set main id type if the configured value is empty
     if (AppConfigService.isStringEmpty(config.mainIdType)) {

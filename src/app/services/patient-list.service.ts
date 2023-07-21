@@ -3,7 +3,7 @@ import {SessionService} from "./session.service";
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {PatientList} from "../model/patientlist";
 import {Patient} from "../model/patient";
-import {AppConfigService} from "../app-config.service";
+import {AppConfigService, IdGenerator} from "../app-config.service";
 import {ReadPatientsTokenData} from "../model/read-patients-token-data";
 import {AddPatientTokenData} from "../model/add-patient-token-data";
 import {EditPatientTokenData} from "../model/edit-patient-token-data";
@@ -55,6 +55,10 @@ export class PatientListService {
 
   getIdTypes(): Array<string> {
     return this.configService.getMainzellisteIdTypes();
+  }
+
+  getIdGenerators(): Array<IdGenerator> {
+    return this.configService.getMainzellisteIdGenerators();
   }
 
   /**
@@ -143,12 +147,9 @@ export class PatientListService {
     )
   }
 
-  addPatient(patient: Patient, idType: string): Promise<Id> {
+  addPatient(patient: Patient, idTypes: string[]): Promise<Id> {
     return this.sessionService.createToken(
-      "addPatient",
-      new AddPatientTokenData(
-        [idType]
-      )
+      "addPatient", new AddPatientTokenData(idTypes)
     )
     .pipe(
       mergeMap(token => this.resolveAddPatientToken(token.id, patient))
@@ -162,6 +163,9 @@ export class PatientListService {
     for (const name in convertedFields) {
       body.set(name, convertedFields[name]);
     }
+    //add external Ids
+    for(let extId of patient.ids)
+      body.set(extId.idType, extId.idString)
 
     //send request
     return this.httpClient.post<Id[]>(this.patientList.url + "/patients?tokenId=" + tokenId, body, {

@@ -26,4 +26,9 @@ export class ErrorNotificationService {
     if(this.messages.length == 0)
       this.display = false
   }
+
+  clearMessages() {
+    this.messages = []
+    this.display = false
+  }
 }

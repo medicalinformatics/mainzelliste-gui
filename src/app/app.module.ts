@@ -78,8 +78,8 @@ function initializeAppFactory(service: AppConfigService, keycloak: KeycloakServi
       }
       throw new Error("Failed to connect to Keycloak." + reason);
     })
-    .then( isLoggedIn => { if(isLoggedIn) service.fetchMainzellisteIdTypes(); return isLoggedIn})
-    .then( isLoggedIn => { if(isLoggedIn) service.fetchMainzellisteFields()});
+    .then( isLoggedIn => isLoggedIn ? service.fetchMainzellisteIdGenerators() : [])
+    .then( idGenerators => idGenerators.length > 0? service.fetchMainzellisteFields() : []);
   });
 }
 
