@@ -7,6 +7,9 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {FormControl} from "@angular/forms";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {Title} from "@angular/platform-browser";
+import {AppComponent} from "../app.component";
+import {GlobalTitleService} from "../services/global-title.service";
 
 @Component({
   selector: 'app-patientlist-view',
@@ -43,9 +46,13 @@ export class PatientlistViewComponent implements OnInit {
   defaultPageSize: number = 10 as const;
   pageNumber: number = 100000;
 
-  constructor(patientService: PatientService) {
+  constructor(
+    patientService: PatientService,
+    private titleService: GlobalTitleService
+  ) {
     this.patientService = patientService;
     this.patientsMatTableData = new MatTableDataSource<Patient>([]);
+    this.titleService.setTitle("Patientenliste", true);
   }
 
   add(event: MatChipInputEvent): void {

@@ -3,6 +3,7 @@ import {Patient} from "../model/patient";
 import {Id, PatientListService} from "../services/patient-list.service";
 import {PatientService} from "../services/patient.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {GlobalTitleService} from "../services/global-title.service";
 
 @Component({
   selector: 'app-edit-patient',
@@ -19,7 +20,7 @@ export class EditPatientComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private patientListService: PatientListService,
-    private patientService: PatientService
+    private titleService: GlobalTitleService
   ) {
     activatedRoute.params.subscribe((params) => {
       if (params["idType"] !== undefined)
@@ -27,6 +28,7 @@ export class EditPatientComponent implements OnInit {
       if (params["idString"] !== undefined)
         this.idString = params["idString"]
     })
+    this.titleService.setTitle("Patienten bearbeiten", false, "edit")
   }
 
   ngOnInit() {

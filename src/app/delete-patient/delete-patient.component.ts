@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Patient} from "../model/patient";
 import {PatientService} from "../services/patient.service";
 import {Id, PatientListService} from "../services/patient-list.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {GlobalTitleService} from "../services/global-title.service";
 
 @Component({
   selector: 'app-delete-patient',
@@ -16,20 +17,22 @@ export class DeletePatientComponent implements OnInit {
   private idString: string = "";
   private idType: string = "";
 
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private patientListService: PatientListService,
+    private patientService: PatientService,
+    private titleService: GlobalTitleService
+  ) {
 
-  constructor(private activatedRoute: ActivatedRoute,
-              private router: Router,
-              private patientListService: PatientListService,
-              private patientService:PatientService
-  ){
-
-  activatedRoute.params.subscribe((params) => {
+    activatedRoute.params.subscribe((params) => {
       console.log(this.idType, this.idString); // kommt hier nicht rein
       if (params["idType"] !== undefined)
         this.idType = params["idType"]
       if (params["idString"] !== undefined)
         this.idString = params["idString"]
     })
+    this.titleService.setTitle("Patienten löschen", false, "delete")
   }
 
   ngOnInit() {

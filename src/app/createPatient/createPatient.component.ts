@@ -8,6 +8,7 @@ import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {ErrorNotificationService} from "../services/error-notification.service";
+import {GlobalTitleService} from "../services/global-title.service";
 
 interface IdTypSelection {
   idType: string,
@@ -20,7 +21,6 @@ interface IdTypSelection {
   styleUrls: ['./createPatient.component.css']
 })
 export class CreatePatientComponent {
-  title = "Patient einfügen";
   @Input() fields: Array<string> = [];
 
   internalIdTypesFormControl = new FormControl('', Validators.required);
@@ -38,13 +38,15 @@ export class CreatePatientComponent {
     patientService: PatientService,
     patientListService: PatientListService,
     public errorNotificationService: ErrorNotificationService,
-    private router: Router
+    private router: Router,
+    private titleService: GlobalTitleService
   ) {
     this.patientService = patientService;
     this.patientListService = patientListService;
     let mainIdType = patientListService.getMainIdType();
     this.internalIdTypesFormControl.setValue(mainIdType);
     this.selectedIdTypes.push(mainIdType);
+    this.titleService.setTitle("Personenidentifikator anfordern");
   }
 
   createNewPatient() {
