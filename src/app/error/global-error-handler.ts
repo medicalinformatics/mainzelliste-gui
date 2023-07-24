@@ -22,7 +22,7 @@ export class GlobalErrorHandler implements ErrorHandler {
 
     console.log("Global Error Handler: ", error)
     if(error instanceof MainzellisteError) {
-      this.errorNotificationService.addMessage(error.errorMessage.message_de, error.clean);
+      this.errorNotificationService.addMessage(error.errorMessage.getMessageDE(error.messageVariable));
     } else {
       this.zone.run(() =>
         this.errorDialogService.openDialog(errorMessage)

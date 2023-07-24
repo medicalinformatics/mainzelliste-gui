@@ -36,9 +36,16 @@ export class PatientListService {
 
   private patientList: PatientList;
   private mainzellisteHeaders: HttpHeaders
-  private addPatientConflictErrorMessages: ErrorMessage[] = [ErrorMessages.CREATE_PATIENT_CONFLICT_EXT_IDS,
-    ErrorMessages.CREATE_PATIENT_CONFLICT_IDAT, ErrorMessages.CREATE_PATIENT_CONFLICT_EXT_IDS_IDAT_MULTIPLE_MATCH,
-    ErrorMessages.CREATE_PATIENT_CONFLICT_EXT_IDS_MULTIPLE_MATCH, ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH];
+  private addPatientErrorMessages: ErrorMessage[] = [
+    ErrorMessages.CREATE_PATIENT_MISSING_FIELD,
+    ErrorMessages.CREATE_PATIENT_CONFLICT_EXT_IDS,
+    ErrorMessages.CREATE_PATIENT_CONFLICT_IDAT,
+    ErrorMessages.CREATE_PATIENT_CONFLICT_EXT_IDS_IDAT_MULTIPLE_MATCH,
+    ErrorMessages.CREATE_PATIENT_CONFLICT_EXT_IDS_MULTIPLE_MATCH,
+    ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH,
+    ErrorMessages.CREATE_PATIENT_INVALID_FIELD,
+    ErrorMessages.CREATE_PATIENT_INVALID_EXT_ID
+  ];
 
   constructor(
     private configService: AppConfigService,
@@ -175,21 +182,18 @@ export class PatientListService {
     })
     .pipe(
       catchError(e => {
-        if (e instanceof HttpErrorResponse) {
-          if (e.status == 400 && e.error == ErrorMessages.CREATE_PATIENT_MISSING_FIELD.message) {
-            return throwError(new MainzellisteError(ErrorMessages.CREATE_PATIENT_MISSING_FIELD));
-          } else if(e.status == 409){
-            let errorMessage = this.addPatientConflictErrorMessages.find( msg => msg.message == e.error )
-            if(errorMessage != undefined)
-              return throwError(new MainzellisteError(errorMessage));
-            else {
-              errorMessage = this.addPatientConflictErrorMessages.find( msg => msg.message == e.error.message )
-              if(errorMessage != undefined)
-                return throwError(new MainzellisteError(errorMessage));
-            }
+        let errorMessage;
+        if (e instanceof HttpErrorResponse && (e.status == 400 || e.status == 409)) {
+          errorMessage = this.addPatientErrorMessages.find(msg => msg.match(e))
+          if (errorMessage == ErrorMessages.CREATE_PATIENT_INVALID_FIELD) {
+            let fieldName: string = errorMessage.findVariables(e)[0];
+            let field = this.patientList.fields.find(f => f.mainzellisteField == fieldName);
+            return throwError(new MainzellisteError(errorMessage, field?.name));
+          } else if( errorMessage == ErrorMessages.CREATE_PATIENT_INVALID_EXT_ID) {
+            return throwError(new MainzellisteError(errorMessage, errorMessage.findVariables(e)[1]));
           }
         }
-        return throwError(e);
+        return throwError(errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
       }),
       map( ids => ids[0])
     )

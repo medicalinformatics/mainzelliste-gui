@@ -1,9 +1,31 @@
+import {HttpErrorResponse} from "@angular/common/http";
+
 export class ErrorMessage {
   constructor(
     public id: number,
-    public message: string,
+    public message: string | RegExp,
     public message_de: string,
   ) {
+  }
+
+  public match(errorResponse: HttpErrorResponse): boolean {
+    let errorMessage = !errorResponse.error.message ? errorResponse.error : errorResponse.error.message;
+    return this.message instanceof RegExp ? errorMessage.match(this.message) : this.message == errorMessage;
+  }
+
+  public findVariables(errorResponse: HttpErrorResponse): string[] {
+    let errorMessage = !errorResponse.error.message ? errorResponse.error : errorResponse.error.message;
+    let result: string[] = errorMessage.match(this.message);
+    if(result.length > 1)
+      result.shift();
+    return this.message instanceof RegExp? result : [];
+  }
+
+  public getMessageDE(messageVariable?:string) : string {
+    if(messageVariable != undefined && messageVariable.length > 0) {
+      return this.message_de.replace("${1}", messageVariable)
+    } else
+      return this.message_de
   }
 }
 
@@ -26,8 +48,14 @@ export class ErrorMessages {
     "Patient konnte nicht hinzugefügt werden, da der Anhand der eingegebenen externen ID gefundenen Patient bereit abweichende IDAT hat.");
   public static CREATE_PATIENT_CONFLICT_EXT_IDS_IDAT_MULTIPLE_MATCH: ErrorMessage = new ErrorMessage(1006,
   "External ID and IDAT match with different patients, respectively!",
-  "");
+  "Patient konnte nicht hinzugefügt werden, da die eingegebenen IDAT zu unterschiedlichen Patienten zugeordnet wurden");
   public static CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH: ErrorMessage = new ErrorMessage(1007,
   "Unable to definitely determined whether the data refers to an existing or to a new patient. Please check data or resubmit with sureness=true to get a tentative result. Please check documentation for details.",
   "Zu den eingegeben Daten wurde ein ähnlicher Patient gefunden, der aber nicht mit hinreichender Sicherheit zugeordnet werden kann. Um eine Verwechslung auszuschließen, überprüfen Sie bitte nochmals Ihre Eingabe");
+  public static CREATE_PATIENT_INVALID_FIELD: ErrorMessage = new ErrorMessage(1008,
+    /Field (\w+) does not conform to the required format/i,
+    "IDAT-Feld '${1}' ist ungültig");
+  public static CREATE_PATIENT_INVALID_EXT_ID: ErrorMessage = new ErrorMessage(1009,
+    /ID (.*) is invalid for type (\w+)/i,
+    "Externen ID '${1}' ist ungültig")
 }

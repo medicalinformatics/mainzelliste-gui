@@ -3,21 +3,14 @@ import {ErrorMessage} from "../error/error-messages";
 export class MainzellisteError extends Error {
 
   public errorMessage: ErrorMessage;
-  public clean: boolean = false
+  public messageVariable;
 
   constructor(
     message: ErrorMessage,
-    clean?: boolean
+    messageVariable?: string
   ) {
-    super(message.message);
+    super(message.message.toString());
     this.errorMessage = message;
-    this.clean = clean != undefined && clean;
-  }
-
-  public static createFrom(error: Error, clean:boolean): Error {
-    if(error instanceof MainzellisteError){
-      return new MainzellisteError(error.errorMessage, clean);
-    }
-    return error;
+    this.messageVariable = messageVariable
   }
 }

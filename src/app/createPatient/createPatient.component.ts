@@ -50,14 +50,11 @@ export class CreatePatientComponent {
   }
 
   createNewPatient() {
+    this.errorNotificationService.clearMessages();
     //create patient
     this.patientService.createPatient(this.patient, this.selectedIdTypes)
-    .catch(e => {
-      throw MainzellisteError.createFrom(e, true)
-    })
     .then(newId => {
       console.log(newId);
-      this.errorNotificationService.clearMessages();
       this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
     })
   }
