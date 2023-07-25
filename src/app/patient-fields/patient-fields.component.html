@@ -10,7 +10,7 @@
             <mat-label>{{field.name}}</mat-label>
             <input style="width: 90%; " [readonly]="readOnly" matInput (input)="fieldChanged()"
                    placeholder="{{field.hint}}" [(ngModel)]="fields[field.name]" [name]="field.name">
-            <mat-icon id="copyIcon" *ngIf="readOnly" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
+            <mat-icon id="copyIcon" *ngIf="readOnly" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}" matSuffix>file_copy</mat-icon>
           </mat-form-field>
           <mat-form-field *ngSwitchCase="'DATE'" class="inputField" appearance="outline">
             <mat-label>{{field.name}}</mat-label>
@@ -21,7 +21,7 @@
 <!--            <mat-hint>MM.DD.YYYY</mat-hint>-->
             <mat-datepicker-toggle *ngIf="!readOnly" matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker [disabled]="readOnly"></mat-datepicker>
-            <mat-icon *ngIf="readOnly" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
+            <mat-icon *ngIf="readOnly" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}" matSuffix>file_copy</mat-icon>
           </mat-form-field>
           <div *ngSwitchDefault></div>
         </div>
