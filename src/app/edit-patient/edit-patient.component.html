@@ -13,13 +13,21 @@
       <app-patient-pseudonyms [readOnly]=false [pseudonyms]="patient.ids"></app-patient-pseudonyms>
     </mat-card>
 
-    <div style="flex: 1 1 1%; display: flex;  flex-flow: column; justify-content: flex-end; align-self: flex-start; margin-right: 5%; ">
-        <button mat-raised-button (click)="sendChanges()" style="margin-bottom: 15px;" class="submit"  [routerLink]="['/patientlist']">Fertig</button>
-        <br>
-        <button mat-raised-button class="submitBreak" [routerLink]="['/patientlist']">Abbruch</button>
-    </div>
+    <section style="display: flex; flex: 1 1 1%; margin-left:2%; flex-flow: column;">
+      <button mat-fab [routerLink]="['/patientlist']" (click)="sendChanges()"
+              [state]="{patient: patient}" style="background-color:#053E6A; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">
+        <mat-icon matTooltip="Fertig">done</mat-icon>
+      </button>
+      <br><br>
+      <button mat-fab [routerLink]="['/patientlist']"
+              [state]="{patient: patient}" style="background-color:#888888; color:white;">
+        <mat-icon matTooltip="Abbruch">close</mat-icon>
+      </button>
+    </section>
+<!--    <div style="flex: 1 1 1%; display: flex;  flex-flow: column; justify-content: flex-end; align-self: flex-start; margin-right: 5%; ">-->
+<!--        <button mat-raised-button (click)="sendChanges()" style="margin-bottom: 15px;" class="submit"  [routerLink]="['/patientlist']">Fertig</button>-->
+<!--        <br>-->
+<!--        <button mat-raised-button class="submitBreak" [routerLink]="['/patientlist']">Abbruch</button>-->
+<!--    </div>-->
   </div>
-
-  <app-historie></app-historie>
-
 </div>
