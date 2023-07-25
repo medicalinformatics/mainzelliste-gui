@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {SessionService} from "./services/session.service";
+import {GlobalTitleService} from "./services/global-title.service";
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,8 @@ export class AppComponent {
   title = 'mainzelliste-gui';
 
   constructor(
-    public readonly sessionService: SessionService
+    public readonly sessionService: SessionService,
+    public readonly titleService: GlobalTitleService
   ) {
   }
 }
