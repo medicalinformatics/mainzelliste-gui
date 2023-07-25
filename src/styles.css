@@ -54,6 +54,7 @@ mat-form-field.inputField {
   width: 90%;
   margin: 0;
   padding-bottom: 0;
+  margin-bottom: -1.25em
 }
 
 #arrow{
