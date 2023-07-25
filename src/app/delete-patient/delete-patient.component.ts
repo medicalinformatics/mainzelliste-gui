@@ -4,6 +4,7 @@ import {PatientService} from "../services/patient.service";
 import {Id, PatientListService} from "../services/patient-list.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {GlobalTitleService} from "../services/global-title.service";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-delete-patient',
@@ -22,7 +23,8 @@ export class DeletePatientComponent implements OnInit {
     private router: Router,
     private patientListService: PatientListService,
     private patientService: PatientService,
-    private titleService: GlobalTitleService
+    private titleService: GlobalTitleService,
+    public dialog: MatDialog
   ) {
 
     activatedRoute.params.subscribe((params) => {
@@ -41,10 +43,34 @@ export class DeletePatientComponent implements OnInit {
     });
   }
 
-  async deletePatientenZeile(){
-    await this.patientService.deletePatient(this.patient);
-    this.router.navigate(['/patientlist']);
-
+  async deletePatient() {
+    await this.patientService.deletePatient(this.patient)
+    .then(() => this.router.navigate(['/patientlist']).then());
   }
 
+  openDeletePatientDialog(): void {
+    const dialogRef = this.dialog.open(DeletePatientDialog, {
+      data: {},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.deletePatient().then();
+    });
+  }
+}
+
+@Component({
+  selector: 'delete-patient-dialog',
+  templateUrl: 'delete-patient-dialog.html',
+})
+export class DeletePatientDialog {
+  constructor(
+    public dialogRef: MatDialogRef<DeletePatientDialog>
+  ) {
+  }
+
+  cancel(): void {
+    this.dialogRef.close();
+  }
 }

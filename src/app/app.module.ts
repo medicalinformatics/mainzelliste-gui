@@ -23,7 +23,10 @@ import {HistorieComponent} from './historie/historie.component';
 import {PatientFieldsComponent} from './patient-fields/patient-fields.component';
 import {MatInputModule} from "@angular/material/input";
 import {EditPatientComponent} from './edit-patient/edit-patient.component';
-import {DeletePatientComponent} from './delete-patient/delete-patient.component';
+import {
+  DeletePatientComponent,
+  DeletePatientDialog
+} from './delete-patient/delete-patient.component';
 import {PatientPseudonymsComponent} from './patient-pseudonyms/patient-pseudonyms.component';
 import {PatientDataComponent} from './patient-data/patient-data.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
@@ -109,7 +112,8 @@ function initializeAppFactory(service: AppConfigService, keycloak: KeycloakServi
     ErrorComponent,
     LogoutComponent,
     ErrorDialogComponent,
-    ErrorCardComponent
+    ErrorCardComponent,
+    DeletePatientDialog
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>Patient Löschen</h1>
+<div mat-dialog-content><h3 style="text-align: justify"> Möchten Sie den folgenden Patient
+  löschen? </h3><br><h4 style="font-weight: 100; text-align: justify">Die Patientendaten werden
+  vollständig gelöscht und können nicht wiederhergestellt werden.</h4></div>
+<div mat-dialog-actions>
+  <button mat-button (click)="cancel()">Abbruch</button>
+  <button mat-button [mat-dialog-close]="true">Löschen</button>
+</div>
