@@ -14,8 +14,7 @@
     </mat-card>
 
     <section style="display: flex; flex: 1 1 1%; margin-left:2%; flex-flow: column;">
-      <button mat-fab [routerLink]="['/patientlist']" (click)="sendChanges()"
-              [state]="{patient: patient}" style="background-color:#053E6A; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">
+      <button mat-fab (click)="editPatient()" style="background-color:#053E6A; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">
         <mat-icon matTooltip="Fertig">done</mat-icon>
       </button>
       <br><br>
@@ -24,10 +23,5 @@
         <mat-icon matTooltip="Abbruch">close</mat-icon>
       </button>
     </section>
-<!--    <div style="flex: 1 1 1%; display: flex;  flex-flow: column; justify-content: flex-end; align-self: flex-start; margin-right: 5%; ">-->
-<!--        <button mat-raised-button (click)="sendChanges()" style="margin-bottom: 15px;" class="submit"  [routerLink]="['/patientlist']">Fertig</button>-->
-<!--        <br>-->
-<!--        <button mat-raised-button class="submitBreak" [routerLink]="['/patientlist']">Abbruch</button>-->
-<!--    </div>-->
   </div>
 </div>

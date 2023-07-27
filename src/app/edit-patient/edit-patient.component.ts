@@ -4,6 +4,7 @@ import {Id, PatientListService} from "../services/patient-list.service";
 import {PatientService} from "../services/patient.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {GlobalTitleService} from "../services/global-title.service";
+import {ErrorNotificationService} from "../services/error-notification.service";
 
 @Component({
   selector: 'app-edit-patient',
@@ -19,6 +20,7 @@ export class EditPatientComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    public errorNotificationService: ErrorNotificationService,
     private patientListService: PatientListService,
     private titleService: GlobalTitleService
   ) {
@@ -41,8 +43,11 @@ export class EditPatientComponent implements OnInit {
     this.patient.fields = newFields;
   }
 
-  sendChanges() {
-    this.patientListService.editPatient(this.patient).then().catch(error => {console.log(error)});
+  editPatient() {
+    this.errorNotificationService.clearMessages();
+    this.patientListService.editPatient(this.patient).then( () =>
+      this.router.navigate(["/patientlist"]).then()
+    );
   }
 }
 

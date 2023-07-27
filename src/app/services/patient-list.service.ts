@@ -47,6 +47,20 @@ export class PatientListService {
     ErrorMessages.CREATE_PATIENT_INVALID_EXT_ID
   ];
 
+  private editPatientErrorMessages: ErrorMessage[] = [
+    ErrorMessages.EDIT_PATIENT_EMPTY_FIELD,
+    ErrorMessages.CREATE_PATIENT_MISSING_FIELD,
+    ErrorMessages.EDIT_PATIENT_CONFLICT_EXT_IDS,
+    ErrorMessages.EDIT_PATIENT_CONFLICT_IDAT,
+    ErrorMessages.EDIT_PATIENT_CONFLICT_EXT_IDS_IDAT_MULTIPLE_MATCH,
+    ErrorMessages.EDIT_PATIENT_CONFLICT_EXT_IDS_MULTIPLE_MATCH,
+    ErrorMessages.EDIT_PATIENT_CONFLICT_POSSIBLE_MATCH,
+    ErrorMessages.CREATE_PATIENT_INVALID_FIELD,
+    ErrorMessages.CREATE_PATIENT_INVALID_EXT_ID,
+    ErrorMessages.EDIT_PATIENT_NOT_FOUND,
+    ErrorMessages.EDIT_PATIENT_CONFLICT_MATCH
+  ];
+
   constructor(
     private configService: AppConfigService,
     private sessionService: SessionService,
@@ -211,17 +225,43 @@ export class PatientListService {
     return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + readToken.id).toPromise();
   }
 
-  editPatient(displayPatient: Patient) {
+  editPatient(patient: Patient) {
     return this.sessionService.createToken(
       "editPatient",
       new EditPatientTokenData(
-        {idType: displayPatient.ids[0].idType, idString: displayPatient.ids[0].idString},
+        {idType: patient.ids[0].idType, idString: patient.ids[0].idString},
         this.configService.getMainzellisteFields()
       )
-    ).toPromise().then(token => {
-        console.log("Edit Patient Token: " + token)
-        return this.httpClient.put(this.patientList.url + "/patients/tokenId/" + token.id, this.convertToPatient(displayPatient).fields).toPromise();
+    )
+    .pipe(
+      mergeMap(token => this.resolveEditPatientToken(token.id, patient))
+    ).toPromise();
+  }
+
+  resolveEditPatientToken(tokenId: string | undefined, patient: Patient): Observable<any> {
+    console.log("edit ids", patient.ids);
+    return this.httpClient.put(this.patientList.url + "/patients/tokenId/" + tokenId, this.convertToPatient(patient).fields, {
+      headers: new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('mainzellisteApiVersion', '3.2')
     })
+    .pipe(
+      catchError(e => {
+        let errorMessage;
+        if (e instanceof HttpErrorResponse && (e.status == 400 || e.status == 409)) {
+          errorMessage = this.editPatientErrorMessages.find(msg => msg.match(e))
+          // find error message arguments
+          if (errorMessage == ErrorMessages.CREATE_PATIENT_INVALID_FIELD || errorMessage == ErrorMessages.EDIT_PATIENT_EMPTY_FIELD) {
+            let fieldName: string = errorMessage.findVariables(e)[0];
+            let field = this.patientList.fields.find(f => f.mainzellisteField == fieldName);
+            return throwError(new MainzellisteError(errorMessage, field?.name));
+          } else if( errorMessage == ErrorMessages.CREATE_PATIENT_INVALID_EXT_ID) {
+            return throwError(new MainzellisteError(errorMessage, errorMessage.findVariables(e)[1]));
+          }
+        }
+        return throwError(errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
+      })
+    );
   }
 
   async deletePatient(patient: Patient): Promise<Object> {
