@@ -30,7 +30,10 @@ export class ErrorMessage {
 }
 
 export class ErrorMessages {
-  /* Create Patient Errors*/
+
+  ////
+  // ADD PATIENT ERRORS
+  //-------------------
   public static CREATE_PATIENT_MISSING_FIELD: ErrorMessage = new ErrorMessage(1001,
     "Neither complete IDAT nor an external ID has been given as input!",
     "Die Eingabe der Pflichtfelder sind erforderlich");
@@ -58,4 +61,34 @@ export class ErrorMessages {
   public static CREATE_PATIENT_INVALID_EXT_ID: ErrorMessage = new ErrorMessage(1009,
     /ID (.*) is invalid for type (\w+)/i,
     "Externen ID '${1}' ist ungültig")
+
+    ////
+    // EDIT PATIENT ERRORS
+    //---------------------
+  public static EDIT_PATIENT_EMPTY_FIELD: ErrorMessage = new ErrorMessage(2001,
+    /Field (\w+) must not be empty!/i,
+  "Die Eingabe der Pflichtfeld '${1}' ist erforderlich");
+  public static EDIT_PATIENT_NOT_FOUND: ErrorMessage = new ErrorMessage(2002,
+    "No patient found with ID (.*)",
+    "Der zu editierende Patient wurde inzwischen entfernt.");
+  public static EDIT_PATIENT_CONFLICT_EXT_IDS_MULTIPLE_MATCH: ErrorMessage = new ErrorMessage(2003,
+    "Multiple patients found with the given external IDs!",
+    "Patient konnte nicht editiert werden, da die eingegebenen externen Pseudonymen bereit zu unterschiedlichen Patienten zugeordnet wurden");
+  public static EDIT_PATIENT_CONFLICT_EXT_IDS: ErrorMessage = new ErrorMessage(2004,
+    "Found existing patient with matching IDAT but conflicting external ID(s).",
+    "Patient konnte nicht editiert werden, da der Anhand der eingegebenen IDATs gefundenen Patient bereit abweichenden externen IDs hat.");
+  public static EDIT_PATIENT_CONFLICT_IDAT: ErrorMessage = new ErrorMessage(2005,
+    "Found existing patient with matching external ID but conflicting IDAT!",
+    "Patient konnte nicht editiert werden, da der Anhand der eingegebenen externen ID gefundenen Patient bereit abweichende IDAT hat.");
+  public static EDIT_PATIENT_CONFLICT_EXT_IDS_IDAT_MULTIPLE_MATCH: ErrorMessage = new ErrorMessage(2006,
+    "External ID and IDAT match with different patients, respectively!",
+    "Patient konnte nicht editiert werden, da die eingegebenen IDAT zu unterschiedlichen Patienten zugeordnet wurden");
+  public static EDIT_PATIENT_CONFLICT_POSSIBLE_MATCH: ErrorMessage = new ErrorMessage(1007,
+    "Editting patient not possible because of tentative matching with the existing patient! Usesureness flag, if you are sure the data is correct and can be editted",
+    "Zu den eingegeben Daten wurde ein ähnlicher Patient gefunden, der aber nicht mit hinreichender Sicherheit zugeordnet werden kann. Um eine Verwechslung auszuschließen, überprüfen Sie bitte nochmals Ihre Eingabe");
+  public static EDIT_PATIENT_CONFLICT_MATCH: ErrorMessage = new ErrorMessage(1008,
+    "Editting patient not possible because of matching with the existing patient!",
+    "Zu den eingegeben Daten wurde ein Patient gefunden. Um eine Verwechslung auszuschließen, überprüfen Sie bitte nochmals Ihre Eingabe");
+
+
 }
