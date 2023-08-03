@@ -322,12 +322,12 @@ export class PatientService {
   }
 
   getDisplayPatients(filters: Array<{ field: string, searchCriteria: string, isIdType: boolean }>,
-                     displayEmpty: boolean, pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
+                     pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
     return this.patientListService.getPatients(filters, pageIndex + 1, pageSize).pipe(
       map((response: ReadPatientsResponse): ReadPatientsResponse => {
           let displayPatients: Patient[]
           if (response.patients.length == 0) {
-            displayPatients = displayEmpty ? [] : this.mockUpData;
+            displayPatients = this.patientListService.isDebugModeEnabled() ? this.mockUpData : [];
           } else {
             displayPatients = response.patients
             .filter(p => p.ids != undefined)

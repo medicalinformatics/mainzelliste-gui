@@ -66,6 +66,10 @@ export class AppConfigService {
     return this.mainzellisteFields;
   }
 
+  isDebugModeEnabled(): boolean {
+    return this.data[0].debug != undefined && this.data[0].debug;
+  }
+
   private validateBackendUrl(config: PatientList) {
     return this.httpClient.get<string>(config.url.toString())
     .pipe(map(_r => 'Mainzelliste is online'),
