@@ -23,7 +23,7 @@ export class PatientlistComponent implements OnInit{
   @Output() filterData = '';
 
   fields: string[];
-  columns: string[] = ["select"];
+  columns: string[] = [];
   showAllIds: boolean;
 
   configuredIdTypes: string[]=[];
@@ -62,24 +62,24 @@ export class PatientlistComponent implements OnInit{
     }
   };
 
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.patients.data.length;
-    return numSelected == numRows;
-  }
+  // isAllSelected() {
+  //   const numSelected = this.selection.selected.length;
+  //   const numRows = this.patients.data.length;
+  //   return numSelected == numRows;
+  // }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.patients.data.forEach(row => this.selection.select(row));
-    this.selectedPatients.emit(this.selection.selected);
-  }
-
-  selectedRow(event: MatCheckboxChange, row: Patient) {
-    event ? this.selection.toggle(row) : null;
-    this.selectedPatients.emit(this.selection.selected);
-  }
+  // /** Selects all rows if they are not all selected; otherwise clear selection. */
+  // masterToggle() {
+  //   this.isAllSelected() ?
+  //     this.selection.clear() :
+  //     this.patients.data.forEach(row => this.selection.select(row));
+  //   this.selectedPatients.emit(this.selection.selected);
+  // }
+  //
+  // selectedRow(event: MatCheckboxChange, row: Patient) {
+  //   event ? this.selection.toggle(row) : null;
+  //   this.selectedPatients.emit(this.selection.selected);
+  // }
 
   ngOnInit(): void {
     this.configuredIdTypes = this.patientListService.getIdTypes();
