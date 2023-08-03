@@ -1,6 +1,6 @@
 <form>
 <table class="patientField" cellspacing="0">
-  <tr *ngFor="let pseudonym of pseudonyms ">
+  <tr *ngFor="let pseudonym of getInternalIds() ">
     <td>
       <div style="width: 100%; flex-flow: row">
         <button *ngIf="side!='none'" style=" margin-top:4%; border:none; background:none;" [ngStyle]="{float:side}" (click)="slideData(fields[pseudonym.idType], pseudonym.idString)">
@@ -11,6 +11,55 @@
           <input style="width: 90%" matInput [readonly]="readOnly" value=" {{pseudonym.idString}}">
           <mat-icon id="copyIcon" *ngIf="readOnly" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}" matSuffix>file_copy</mat-icon>
         </mat-form-field>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <br>
+      <h4>Externe Pseudonyme:</h4>
+    </td>
+  </tr>
+  <!-- external id fields-->
+  <tr *ngFor="let externalId of getExternalIds() ">
+    <td style="width: 100%; flex-flow: row">
+        <div style="display: flex; flex-wrap: nowrap;">
+          <button *ngIf="side!='none'" style=" margin-top:4%; border:none; background:none;"
+                  [ngStyle]="{float:side}" (click)="slideData(fields[externalId.idType], externalId.idString)">
+            <mat-icon>arrow_circle_{{side}}</mat-icon>
+          </button>
+          <mat-form-field class="inputField">
+            <mat-label>{{externalId.idType}}</mat-label>
+            <input style="width: 90%"
+                   [(ngModel)]="externalId.idString" [name]="externalId.idType"
+                   matInput [readonly]="readOnly"
+                   value="{{externalId.idString}}">
+            <mat-icon *ngIf="readOnly" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}" matSuffix>file_copy</mat-icon>
+          </mat-form-field>
+          <button mat-icon-button color="primary" aria-label="Externes Pseudonym entfernen"
+                  (click)="this.removeExternalIdField(externalId.idType)"
+                  style="margin-top: 9px; margin-left: 8px">
+            <mat-icon>delete</mat-icon>
+          </button>
+      </div>
+    </td>
+  </tr>
+  <!-- external id types dropdown menu-->
+  <tr *ngIf="this.getExternalIdMatSelectData().length > 0">
+    <td>
+      <div style="display: flex; flex-wrap: nowrap;">
+        <mat-form-field class="inputField">
+          <mat-label>Pseudonymtyp</mat-label>
+          <mat-select [formControl]="externalIdTypesFormControl" required="false">
+            <mat-option *ngFor="let idType of this.getExternalIdMatSelectData()"
+                        [value]="idType">{{idType}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-icon-button color="primary" aria-label="Externes Pseudonym hinzufügen"
+                [disabled]="this.externalIdTypesFormControl.value == undefined || this.externalIdTypesFormControl.value.length < 1"
+                (click)="this.addExternalIdField()" style="margin-top: 9px; margin-left: 8px">
+          <mat-icon>add</mat-icon>
+        </button>
       </div>
     </td>
   </tr>

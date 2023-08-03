@@ -82,6 +82,10 @@ export class PatientListService {
     return this.configService.getMainzellisteIdGenerators();
   }
 
+  isExternalId(idType: string): boolean {
+    return this.getIdGenerators().some(g => g.isExternal && g.idType == idType);
+  }
+
   /**
    * @deprecated replace with getIdTypes
    */
@@ -230,7 +234,8 @@ export class PatientListService {
       "editPatient",
       new EditPatientTokenData(
         {idType: patient.ids[0].idType, idString: patient.ids[0].idString},
-        this.configService.getMainzellisteFields()
+        this.configService.getMainzellisteFields(),
+        this.configService.getMainzellisteExternalIdTypes()
       )
     )
     .pipe(
@@ -240,7 +245,13 @@ export class PatientListService {
 
   resolveEditPatientToken(tokenId: string | undefined, patient: Patient): Observable<any> {
     console.log("edit ids", patient.ids);
-    return this.httpClient.put(this.patientList.url + "/patients/tokenId/" + tokenId, this.convertToPatient(patient).fields, {
+    let fields: { [key: string]: string } =  this.convertToPatient(patient).fields;
+
+    // add external ids
+    patient.ids.filter(id => this.isExternalId(id.idType))
+    .forEach(id => fields[id.idType] = id.idString);
+
+    return this.httpClient.put(this.patientList.url + "/patients/tokenId/" + tokenId, fields, {
       headers: new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('mainzellisteApiVersion', '3.2')
