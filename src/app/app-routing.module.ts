@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 import {InfoComponent} from "./info/info.component";
-import {AudittrailComponent} from "./audittrail/audittrail.component";
+// import {AudittrailComponent} from "./audittrail/audittrail.component";
 import {IdcardComponent} from "./idcard/idcard.component";
 import {PatientlistViewComponent} from "./patientlist-view/patientlist-view.component";
 import {CreatePatientComponent} from "./createPatient/createPatient.component";
@@ -22,7 +22,7 @@ const routes: Routes = [
       {path: '', pathMatch: 'full', redirectTo: 'patientlist'},
       {path: 'add-new-patient', component: CreatePatientComponent},
       {path: 'info', component: InfoComponent},
-      {path: 'audittrail', component: AudittrailComponent},
+      // {path: 'audittrail', component: AudittrailComponent},
       {path: 'idcard/:idType/:idString', component: IdcardComponent},
       {path: 'merge-patients', component: MergePatientsComponent},
       {path: 'patientlist', component: PatientlistViewComponent},
@@ -43,4 +43,4 @@ const routes: Routes = [
 
 })
 export class AppRoutingModule{}
-export const routingComponents =[AudittrailComponent, IdcardComponent, MergePatientsComponent, PatientlistViewComponent, CreatePatientComponent,EditPatientComponent,DeletePatientComponent, DeleteMultiplePatientsComponent, InfoComponent]
+export const routingComponents =[IdcardComponent, MergePatientsComponent, PatientlistViewComponent, CreatePatientComponent,EditPatientComponent,DeletePatientComponent, DeleteMultiplePatientsComponent, InfoComponent]
