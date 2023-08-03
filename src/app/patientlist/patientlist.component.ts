@@ -40,27 +40,27 @@ export class PatientlistComponent implements OnInit{
     this.selection = new SelectionModel<Patient>(allowMultiSelect, initialSelection);
   }
 
-  openFilter(spalte: string): void{
-    console.log("opened filter");
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.autoFocus = true;
-    if (spalte == 'Pseudonym') {
-      this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container', data:{person:{name:'Simon',age:32,}},});
-      // this.dialog.open(PatientSearchComponent, {position: {top: '11%', left: '11%'}, minWidth:"20%",minHeight:"40%", data:{dialogtitle:"Pseudonym"}});
-    } else if (spalte == 'Nachname') {
-      this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
-      } else if (spalte == 'Geburtsname') {
-      this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
-    } else if (spalte == 'Vorname') {
-      this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
-    } else if (spalte == 'Geburtsdatum') {
-      this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
-    } else if (spalte == 'Wohnort') {
-      this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
-    } else if (spalte == 'PLZ') {
-      this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
-    }
-  };
+  // openFilter(spalte: string): void{
+  //   console.log("opened filter");
+  //   const dialogConfig = new MatDialogConfig();
+  //   dialogConfig.autoFocus = true;
+  //   if (spalte == 'Pseudonym') {
+  //     this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container', data:{person:{name:'Simon',age:32,}},});
+  //     // this.dialog.open(PatientSearchComponent, {position: {top: '11%', left: '11%'}, minWidth:"20%",minHeight:"40%", data:{dialogtitle:"Pseudonym"}});
+  //   } else if (spalte == 'Nachname') {
+  //     this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
+  //     } else if (spalte == 'Geburtsname') {
+  //     this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
+  //   } else if (spalte == 'Vorname') {
+  //     this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
+  //   } else if (spalte == 'Geburtsdatum') {
+  //     this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
+  //   } else if (spalte == 'Wohnort') {
+  //     this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
+  //   } else if (spalte == 'PLZ') {
+  //     this.dialog.open(PatientSearchComponent, { panelClass: 'custom-dialog-container'});
+  //   }
+  // };
 
   // isAllSelected() {
   //   const numSelected = this.selection.selected.length;

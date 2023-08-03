@@ -19,8 +19,8 @@
 
     <ng-container *ngFor="let idType of configuredIdTypes" matColumnDef="{{idType}}" style="flex-flow: row">
       <th mat-header-cell *matHeaderCellDef style="flex-flow: row"> {{idType}}
-        <button class= "filterbutton"><mat-icon matTooltip="Filter Pseudonym" style="transform: scale(0.7); float: right" (click)="openFilter(idType)">
-          arrow_circle_down</mat-icon></button>
+<!--        <button class= "filterbutton"><mat-icon matTooltip="Filter Pseudonym" style="transform: scale(0.7); float: right" (click)="openFilter(idType)">-->
+<!--          arrow_circle_down</mat-icon></button>-->
       </th>
       <td mat-cell *matCellDef="let element" [ngClass]="{'disabled': loading}"> {{element.getIdString(idType)}} </td>
       <!-- anhand von idType pseudonym finden -->
@@ -28,9 +28,9 @@
 
     <ng-container *ngFor="let field of fields" matColumnDef="{{field}}">
       <th mat-header-cell *matHeaderCellDef>{{field}}
-        <button class= "filterbutton">
-          <mat-icon matTooltip="Filter" style="transform: scale(0.7); float: right;" (click)="openFilter(field)">arrow_circle_down</mat-icon>
-        </button>
+<!--        <button class= "filterbutton">-->
+<!--          <mat-icon matTooltip="Filter" style="transform: scale(0.7); float: right;" (click)="openFilter(field)">arrow_circle_down</mat-icon>-->
+<!--        </button>-->
       </th>
       <td mat-cell *matCellDef="let element" [ngClass]="{'disabled': loading}"> {{element.fields[field]}} </td>
     </ng-container>
