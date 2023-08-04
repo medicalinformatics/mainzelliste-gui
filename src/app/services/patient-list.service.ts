@@ -44,7 +44,9 @@ export class PatientListService {
     ErrorMessages.CREATE_PATIENT_CONFLICT_EXT_IDS_MULTIPLE_MATCH,
     ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH,
     ErrorMessages.CREATE_PATIENT_INVALID_FIELD,
-    ErrorMessages.CREATE_PATIENT_INVALID_EXT_ID
+    ErrorMessages.CREATE_PATIENT_INVALID_EXT_ID,
+    ErrorMessages.CREATE_PATIENT_INVALID_DATE_1,
+    ErrorMessages.CREATE_PATIENT_INVALID_DATE_2
   ];
 
   private editPatientErrorMessages: ErrorMessage[] = [
@@ -58,7 +60,9 @@ export class PatientListService {
     ErrorMessages.CREATE_PATIENT_INVALID_FIELD,
     ErrorMessages.CREATE_PATIENT_INVALID_EXT_ID,
     ErrorMessages.EDIT_PATIENT_NOT_FOUND,
-    ErrorMessages.EDIT_PATIENT_CONFLICT_MATCH
+    ErrorMessages.EDIT_PATIENT_CONFLICT_MATCH,
+    ErrorMessages.CREATE_PATIENT_INVALID_DATE_1,
+    ErrorMessages.CREATE_PATIENT_INVALID_DATE_2
   ];
 
   constructor(

@@ -60,7 +60,13 @@ export class ErrorMessages {
     "IDAT-Feld '${1}' ist ungültig");
   public static CREATE_PATIENT_INVALID_EXT_ID: ErrorMessage = new ErrorMessage(1009,
     /ID (.*) is invalid for type (\w+)/i,
-    "Externen ID '${1}' ist ungültig")
+    "Externen ID '${1}' ist ungültig");
+  public static CREATE_PATIENT_INVALID_DATE_1: ErrorMessage = new ErrorMessage(1010,
+    /(.*) is not a valid date!/i,
+    "Geburtsdatum ist ungültig");
+  public static CREATE_PATIENT_INVALID_DATE_2: ErrorMessage = new ErrorMessage(1011,
+    /(.*) is in the future!/i,
+    "Geburtsdatum liegt in der Zukunft")
 
     ////
     // EDIT PATIENT ERRORS
