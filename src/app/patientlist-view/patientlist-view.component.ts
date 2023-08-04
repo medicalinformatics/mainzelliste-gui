@@ -63,7 +63,7 @@ export class PatientlistViewComponent implements OnInit {
      let filter:{ display:string, field: string, searchCriteria: string, isIdType: boolean, hidden: boolean } = JSON.parse(event.value);
       this.filters.push(filter);
       this.filterConfigs.filter(e => !e.isIdType && e.field == filter.field).forEach(e => e.hidden = true);
-      this.loadPatients(true, 0, this.paginator.pageSize).then();
+      this.loadPatients(0, this.paginator.pageSize).then();
     }
 
     // Clear the input value
@@ -76,7 +76,7 @@ export class PatientlistViewComponent implements OnInit {
 
     if (index >= 0) {
       this.filters.splice(index, 1);
-      this.loadPatients(true, 0, this.paginator.pageSize).then();
+      this.loadPatients(0, this.paginator.pageSize).then();
     }
   }
 
@@ -86,7 +86,7 @@ export class PatientlistViewComponent implements OnInit {
     this.selectedCriteria=(event.option.value);
     this.filterInput.nativeElement.value = '';
     this.filterCtrl.setValue(null);
-    this.loadPatients(true, 0, this.paginator.pageSize).then();
+    this.loadPatients(0, this.paginator.pageSize).then();
   }
 
   patientSelected(selectedPatients: Patient[]) {
@@ -101,13 +101,12 @@ export class PatientlistViewComponent implements OnInit {
     this.patientService.getConfiguredFields().forEach( fieldConfig => {
       this.filterConfigs.push({field: fieldConfig.mainzellisteField, display: fieldConfig.name, isIdType: false, hidden: false});
     })
-    await this.loadPatients(false, 0, this.defaultPageSize);
+    await this.loadPatients(0, this.defaultPageSize);
   }
 
-  async loadPatients(displayEmpty: boolean, pageIndex: number, pageSize: number) {
+  async loadPatients(pageIndex: number, pageSize: number) {
     this.loading = true;
-    this.patientService.getDisplayPatients(this.filters,
-      displayEmpty, pageIndex, pageSize).subscribe(
+    this.patientService.getDisplayPatients(this.filters, pageIndex, pageSize).subscribe(
       response => {
         this.patientsMatTableData.data = response.patients;
         this.pageNumber = parseInt(response.totalCount);
@@ -123,6 +122,6 @@ export class PatientlistViewComponent implements OnInit {
   }
 
   async handlePageEvent(event: PageEvent) {
-    await this.loadPatients(false, event.pageIndex, event.pageSize);
+    await this.loadPatients(event.pageIndex, event.pageSize);
   }
 }

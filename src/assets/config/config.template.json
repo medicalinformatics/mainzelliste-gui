@@ -20,7 +20,8 @@
         {"name":  "Geburtsdatum", "mainzellisteFields":  ["Geburtstag", "Geburtsmonat", "Geburtsjahr"], "type": "DATE", "required":  true, "validator":  ""},
         {"name":  "PLZ", "mainzellisteField":  "PLZ", "type": "TEXT", "required":  true, "validator":  ""},
         {"name":  "Wohnort", "mainzellisteField":  "Wohnort", "type": "TEXT", "required":  true, "validator":  ""}
-      ]
+      ],
+      "debug": true
     }
   ]
 }

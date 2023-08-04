@@ -16,7 +16,8 @@ export class PatientList {
       new Field("Wohnort", "Wohnort",[], FieldType.TEXT, true, "", "Musterstadt"),
       new Field("PLZ", "PLZ", [], FieldType.TEXT, true, "", "mind. 5 Zeichen")
     ],
-    public controlNumberGenerator?: ControlNumberGenerator
+    public controlNumberGenerator?: ControlNumberGenerator,
+    public debug?:boolean
   ) {}
 }
 

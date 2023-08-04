@@ -82,6 +82,10 @@ export class PatientListService {
     return this.configService.getMainzellisteIdGenerators();
   }
 
+  isDebugModeEnabled(): boolean {
+    return this.configService.isDebugModeEnabled();
+  }
+
   isExternalId(idType: string): boolean {
     return this.getIdGenerators().some(g => g.isExternal && g.idType == idType);
   }
