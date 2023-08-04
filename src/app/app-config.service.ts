@@ -54,6 +54,10 @@ export class AppConfigService {
     return this.mainzellisteIdTypes;
   }
 
+  getMainzellisteExternalIdTypes(): string[] {
+    return this.mainzellisteIdGenerators.filter( g => g.isExternal).map( g => g.idType);
+  }
+
   getMainzellisteIdGenerators(): IdGenerator[] {
     return this.mainzellisteIdGenerators;
   }

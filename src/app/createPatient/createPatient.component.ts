@@ -4,13 +4,12 @@ import {PatientService} from "../services/patient.service";
 import {Router} from "@angular/router";
 import {FormControl, Validators} from "@angular/forms";
 import {PatientListService} from "../services/patient-list.service";
-import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {ErrorNotificationService} from "../services/error-notification.service";
 import {GlobalTitleService} from "../services/global-title.service";
 
-interface IdTypSelection {
+export interface IdTypSelection {
   idType: string,
   added: boolean,
 }

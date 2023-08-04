@@ -14,7 +14,7 @@
   <div class="pseudonyme" style=" flex: 1 1 40%; display: flex; flex-flow:column; padding-top: 5%" >
     <mat-card-title style="color:dimgray; font-size: x-large; margin-left: -15%">Pseudonyme</mat-card-title>
     <div style="flex-flow: row">
-    <app-patient-pseudonyms style="width: 90%" [readOnly]=true [pseudonyms]="patients[0].ids" (slideFieldEvent)="updatePseudonymOfFinalPatient($event.name, $event.value)"></app-patient-pseudonyms>
+    <app-patient-pseudonyms style="width: 90%" [readOnly]=true [ids]="patients[0].ids" (slideFieldEvent)="updatePseudonymOfFinalPatient($event.name, $event.value)"></app-patient-pseudonyms>
   </div>
   </div>
 
@@ -31,7 +31,7 @@
     <mat-card-title style="color:dimgray; font-size: x-large; margin-left: -15%">Pseudonyme</mat-card-title>
 <!--  <div style="flex-flow: column; justify-content: flex-end ">-->
       <!-- WOHER SOLL DER FINALEPATIENT SEIN PSEUDONYM ERHALTEN? -->
-      <app-patient-pseudonyms  [readOnly]=true [pseudonyms]="patients[0].ids"></app-patient-pseudonyms> <!-- [pseudonyms]="patients[0].ids"  [pseudonyms]="emptyPatient.ids"  [pseudonyms]="finalPatient.ids"-->
+      <app-patient-pseudonyms  [readOnly]=true [ids]="patients[0].ids"></app-patient-pseudonyms> <!-- [pseudonyms]="patients[0].ids"  [pseudonyms]="emptyPatient.ids"  [pseudonyms]="finalPatient.ids"-->
 <!--   </div>-->
   </div>
 
@@ -49,7 +49,7 @@
       <mat-card-title style="color:dimgray; font-size: x-large; margin-left: -15%">Pseudonyme</mat-card-title>
       <!-- TODO: justify-content to flex-end & make pseudonym chooseable-->
         <div style="flex: 1 1 100%; display: flex; flex-flow: column; justify-content: flex-end; flow:right;">
-          <app-patient-pseudonyms [readOnly]=true [pseudonyms]="patients[1].ids" (slideFieldEvent)="updatePseudonymOfFinalPatient($event.name, $event.value)"></app-patient-pseudonyms> <!-- style="width:160%;"-->
+          <app-patient-pseudonyms [readOnly]=true [ids]="patients[1].ids" (slideFieldEvent)="updatePseudonymOfFinalPatient($event.name, $event.value)"></app-patient-pseudonyms> <!-- style="width:160%;"-->
         </div>
     </div>
 
