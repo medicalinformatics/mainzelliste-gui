@@ -14,7 +14,7 @@
       </div>
     </td>
   </tr>
-  <tr>
+  <tr *ngIf="readOnly && getExternalIds().length > 0 || !readOnly && getExternalIdTypes().length > 0">
     <td>
       <br>
       <h4>Externe Pseudonyme:</h4>
@@ -36,7 +36,7 @@
                    value="{{externalId.idString}}">
             <mat-icon *ngIf="readOnly" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}" matSuffix>file_copy</mat-icon>
           </mat-form-field>
-          <button mat-icon-button color="primary" aria-label="Externes Pseudonym entfernen"
+          <button *ngIf="!readOnly" mat-icon-button color="primary" aria-label="Externes Pseudonym entfernen"
                   (click)="this.removeExternalIdField(externalId.idType)"
                   style="margin-top: 9px; margin-left: 8px">
             <mat-icon>delete</mat-icon>
@@ -45,7 +45,7 @@
     </td>
   </tr>
   <!-- external id types dropdown menu-->
-  <tr *ngIf="this.getExternalIdMatSelectData().length > 0">
+  <tr *ngIf="this.getExternalIdMatSelectData().length > 0 && !readOnly">
     <td>
       <div style="display: flex; flex-wrap: nowrap;">
         <mat-form-field class="inputField">
