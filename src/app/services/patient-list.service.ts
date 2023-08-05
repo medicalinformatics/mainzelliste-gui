@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {SessionService} from "./session.service";
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {PatientList} from "../model/patientlist";
@@ -14,6 +14,8 @@ import {catchError, map, mergeMap} from "rxjs/operators";
 import {Observable, of, throwError} from "rxjs";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessage, ErrorMessages} from "../error/error-messages";
+import * as _moment from 'moment';
+import {MAT_DATE_LOCALE} from "@angular/material/core";
 
 export class Id {
   constructor(
@@ -68,10 +70,12 @@ export class PatientListService {
   constructor(
     private configService: AppConfigService,
     private sessionService: SessionService,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    @Inject(MAT_DATE_LOCALE) private _locale: string,
   ) {
     this.patientList = this.configService.data[0];
     this.mainzellisteHeaders = new HttpHeaders().set('mainzellisteApiVersion', '3.2')
+    _moment.locale(this._locale);
   }
 
   getConfiguredFields(): Array<Field> {
@@ -296,7 +300,7 @@ export class PatientListService {
   // Utils
   //-------
 
-  convertToDisplayPatient(patient: Patient): Patient {
+  convertToDisplayPatient(patient: Patient, convertToLocal?:boolean): Patient {
     let displayPatient = new Patient();
     displayPatient.ids = patient.ids;
     if(patient.fields == undefined){
@@ -316,7 +320,10 @@ export class PatientListService {
           let day = extractDate(fieldConfig.mainzellisteFields, patient.fields,  0, "00");
           let month = extractDate(fieldConfig.mainzellisteFields, patient.fields, 1, "00");
           let year = extractDate(fieldConfig.mainzellisteFields, patient.fields, 2, "0000");
-          displayPatient.fields[fieldConfig.name] = `${year}-${month}-${day}`;
+          let date = `${year}-${month}-${day}`;
+          console.log(patient.fields[fieldConfig.mainzellisteFields[2]]);
+          displayPatient.fields[fieldConfig.name] = convertToLocal ? _moment(date, "YYYY-MM-DD").format('L') : date;
+          console.log(displayPatient.fields[fieldConfig.name]);
           break;
         }
       }

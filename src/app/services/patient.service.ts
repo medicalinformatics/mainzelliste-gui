@@ -331,7 +331,7 @@ export class PatientService {
           } else {
             displayPatients = response.patients
             .filter(p => p.ids != undefined)
-            .map(patient => this.patientListService.convertToDisplayPatient(patient));
+            .map(patient => this.patientListService.convertToDisplayPatient(patient, true));
           }
           // override patients
           response.patients = displayPatients;

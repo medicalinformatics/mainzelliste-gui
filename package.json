@@ -17,11 +17,13 @@
     "@angular/core": "~13.4.0",
     "@angular/forms": "~13.4.0",
     "@angular/material": "^13.3.9",
+    "@angular/material-moment-adapter": "^13.3.9",
     "@angular/platform-browser": "~13.4.0",
     "@angular/platform-browser-dynamic": "~13.4.0",
     "@angular/router": "~13.4.0",
     "keycloak-angular": "^10.0.1",
     "keycloak-js": "^18.0.1",
+    "moment": "^2.29.4",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.4"

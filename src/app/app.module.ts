@@ -40,7 +40,12 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSelectModule} from "@angular/material/select";
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material/core';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+  MatNativeDateModule
+} from '@angular/material/core';
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {SessionComponent} from './user/session.component';
@@ -56,6 +61,10 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {GlobalErrorHandler} from "./error/global-error-handler";
 import {ErrorDialogComponent} from './error-dialog/error-dialog.component';
 import {ErrorCardComponent} from './component-error-card/error-card.component';
+import {
+  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+  MAT_MOMENT_DATE_FORMATS, MomentDateAdapter
+} from "@angular/material-moment-adapter";
 
 function initializeAppFactory(service: AppConfigService, keycloak: KeycloakService): () => Promise<any> {
   return () => service.load()
@@ -154,7 +163,10 @@ function initializeAppFactory(service: AppConfigService, keycloak: KeycloakServi
             deps: [ AppConfigService, KeycloakService ],
             multi: true
         },
-        {provide: ErrorHandler, useClass: GlobalErrorHandler}
+      {provide: ErrorHandler, useClass: GlobalErrorHandler},
+      {provide: MAT_DATE_LOCALE, useValue: 'de-DE'},
+      {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
+      {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]},
     ],
     bootstrap: [AppComponent]
 })

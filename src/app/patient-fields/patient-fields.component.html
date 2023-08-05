@@ -16,9 +16,8 @@
             <mat-label>{{field.name}}</mat-label>
             <input matInput style="width: 90%;" [readonly]="readOnly" [matDatepicker]="picker"
                    (input)="fieldChanged()"
-                   placeholder="{{field.hint}}"
+                   placeholder="{{field.hint}} TT.MM.JJJJ"
                    [(ngModel)]="fields[field.name]" [name]="field.name">
-<!--            <mat-hint>MM.DD.YYYY</mat-hint>-->
             <mat-datepicker-toggle *ngIf="!readOnly" matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker [disabled]="readOnly"></mat-datepicker>
             <mat-icon *ngIf="readOnly" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}" matSuffix>file_copy</mat-icon>
