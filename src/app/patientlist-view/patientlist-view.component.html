@@ -3,28 +3,25 @@
     <mat-form-field color="primary"  id="filterBoard" appearance="fill">
       <mat-label>Filter/Suche...</mat-label>
       <mat-chip-list #chipList aria-label="Fruit selection">
-        <mat-chip *ngFor="let fruit of filters"
+        <mat-chip *ngFor="let filter of filters"
                   [selectable]="selectable"
-                  [removable]="removable" (removed)="remove(fruit)" style="font-family: Tahoma;">
-          {{fruit.display}}: {{fruit.searchCriteria}}
+                  [removable]="removable" (removed)="remove(filter)" style="font-family: Tahoma;">
+          {{filter.display}}: {{filter.searchCriteria}}
           <mat-icon matChipRemove *ngIf="removable" style="color:#494949">cancel</mat-icon>
         </mat-chip>
-        <input #fruitInput
+        <input #filterInput
                [(ngModel)]="filterInputValue"
-               placeholder="Search..."
+               placeholder="Suche..."
                [matChipInputFor]="chipList"
                [formControl]="filterCtrl"
                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                [matAutocomplete]="auto"
                (matChipInputTokenEnd)="add($event)">
       </mat-chip-list>
-      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-        <mat-option style="height: auto" *ngFor="let filterItem of filterConfigs"
-                    [value]="{display:filterItem.display, field:filterItem.field, searchCriteria:filterInputValue, isIdType: filterItem.isIdType}">
-          <div [hidden]="filterItem.hidden"><span style="font-weight: bold">{{filterItem.display}}:</span> {{filterInputValue}}</div>
-<!--
-          <hr color="#888888" style=" width: 100%; justify-content: flex-start; justify-self: flex-start; justify-items: flex-start; text-align: left">
--->
+      <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)="selected($event)">
+        <mat-option style="height: auto" *ngFor="let filterItem of filteredFields | async"
+                    [value]="filterItem.field">
+          <div [hidden]="filterItem.hidden"><span style="font-weight: bold">{{filterItem.display}}</span></div>
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
