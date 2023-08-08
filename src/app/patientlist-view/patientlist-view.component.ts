@@ -7,9 +7,16 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {FormControl} from "@angular/forms";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {Title} from "@angular/platform-browser";
-import {AppComponent} from "../app.component";
+import {Observable, of} from "rxjs";
+import {map, startWith} from 'rxjs/operators';
 import {GlobalTitleService} from "../services/global-title.service";
+
+export interface FilterConfig {
+  display: string,
+  field: string,
+  isIdType: boolean,
+  hidden: boolean
+}
 
 @Component({
   selector: 'app-patientlist-view',
@@ -30,17 +37,18 @@ export class PatientlistViewComponent implements OnInit {
   separatorKeysCodes = [ENTER, COMMA] as const;
   filterCtrl = new FormControl();
 
-  filters: Array <{display:string, field:string, searchCriteria:string, isIdType: boolean}> = [];
-  filterConfigs: Array <{display:string, field:string, isIdType: boolean, hidden: boolean}> = [];
+  filters: Array<{ display: string, field: string, searchCriteria: string, isIdType: boolean }> = [];
+  filterConfigs: Array<FilterConfig> = [];
   loading: boolean = false;
 
   filterInputValue: string | undefined;
   selectedCriteria: any;
-  allPatientsToSearch: Array <string>=[];
+  allPatientsToSearch: Array<string> = [];
 
 
-  @ViewChild('fruitInput')
+  @ViewChild('filterInput')
   filterInput!: ElementRef<HTMLInputElement>;
+  filteredFields: Observable<FilterConfig[]> = of([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   defaultPageSize: number = 10 as const;
@@ -58,35 +66,52 @@ export class PatientlistViewComponent implements OnInit {
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
 
-    // Add our fruit
+    // Add filter
     if (value) {
-     let filter:{ display:string, field: string, searchCriteria: string, isIdType: boolean, hidden: boolean } = JSON.parse(event.value);
-      this.filters.push(filter);
-      this.filterConfigs.filter(e => !e.isIdType && e.field == filter.field).forEach(e => e.hidden = true);
-      this.loadPatients(0, this.paginator.pageSize).then();
+      // find filter
+      let filterConfig: FilterConfig | undefined = this.filterConfigs
+      .find(f => new RegExp('^\\s*' + f.display.toLowerCase() + '\\s*:.*$').test(value.toLowerCase().trim()));
+      if (filterConfig != undefined) {
+        let searchCriteria = value.substring(value.indexOf(':') + 1).trim();
+        if (searchCriteria.trim().length > 0) {
+          filterConfig.hidden = true;
+          this.filters.push({
+            display: filterConfig.display,
+            field: filterConfig.field,
+            searchCriteria: searchCriteria,
+            isIdType: filterConfig.isIdType
+          });
+          console.log("added ", this.filters);
+          this.filterInput.nativeElement.value = "";
+          // this.filterCtrl.setValue("");
+          this.loadPatients(0, this.paginator.pageSize).then();
+          // Clear the input value
+          event.chipInput!.clear();
+        }
+      }
     }
-
-    // Clear the input value
-    event.chipInput!.clear();
+    console.log("add status", this.filterConfigs, this.filters);
   }
 
   remove(filter: any): void {
     const index = this.filters.indexOf(filter);
-    this.filterConfigs.filter(e => !e.isIdType && e.field == filter.field).forEach(e => e.hidden = false);
+    this.filterConfigs.filter(e => e.field == filter.field).forEach(e => e.hidden = false);
 
     if (index >= 0) {
       this.filters.splice(index, 1);
       this.loadPatients(0, this.paginator.pageSize).then();
     }
+    this.filterCtrl.updateValueAndValidity({onlySelf: false, emitEvent: true});
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.filterConfigs.filter(e => !e.isIdType && e.field == event.option.value.field).forEach(e => e.hidden = true);
-    this.filters.push(event.option.value);
-    this.selectedCriteria=(event.option.value);
-    this.filterInput.nativeElement.value = '';
-    this.filterCtrl.setValue(null);
-    this.loadPatients(0, this.paginator.pageSize).then();
+    //hide selected filter
+    let filterConfig = this.filterConfigs.find(e => e.field == event.option.value);
+    if (filterConfig) {
+      this.selectedCriteria = (filterConfig.display);
+      this.filterInput.nativeElement.value = filterConfig.display + ":";
+      //this.filterCtrl.setValue(null);
+    }
   }
 
   patientSelected(selectedPatients: Patient[]) {
@@ -96,11 +121,32 @@ export class PatientlistViewComponent implements OnInit {
   async ngOnInit() {
     // init id types in auto complete list
     let configuredIdTypes = this.patientService.getConfigureIdTypes();
-    configuredIdTypes.forEach( idType => this.filterConfigs.push({field: idType, display: "Pseudonym (" + idType + ")", isIdType: true, hidden: false}));
-    // init. fields
-    this.patientService.getConfiguredFields().forEach( fieldConfig => {
-      this.filterConfigs.push({field: fieldConfig.mainzellisteField, display: fieldConfig.name, isIdType: false, hidden: false});
+    configuredIdTypes.forEach(idType => this.filterConfigs.push({
+      field: idType,
+      display: idType,
+      isIdType: true,
+      hidden: false
+    }));
+
+    // init. filterConfigs
+    this.patientService.getConfiguredFields().forEach(fieldConfig => {
+      this.filterConfigs.push({
+        field: fieldConfig.mainzellisteField,
+        display: fieldConfig.name,
+        isIdType: false,
+        hidden: false
+      });
     })
+
+    // init filters in autocomplete field
+    this.filteredFields = this.filterCtrl.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        let searchValue = typeof value === "string" ? value : value.searchCriteria;
+        return this.filterConfigs.filter(option => !option.hidden
+          && option.display.toLowerCase().includes(searchValue.toLowerCase()));
+      }),
+    );
     await this.loadPatients(0, this.defaultPageSize);
   }
 
