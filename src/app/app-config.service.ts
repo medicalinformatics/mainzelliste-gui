@@ -78,9 +78,9 @@ export class AppConfigService {
   }
 
   public fetchMainzellisteIdGenerators(): Promise<IdGenerator[]> {
-    return this.httpClient.get<IdGenerator[]>(this.data[0].url + "/configuration/idTypes", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
+    return this.httpClient.get<IdGenerator[]>(this.data[0].url + "/configuration/idGenerators", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
     .pipe(
-      catchError((e) => throwError(new Error("Can't init id types. Failed to connect to the backend Endpoint /configuration/idTypes"))),
+      catchError((e) => throwError(new Error("Can't init id types. Failed to connect to the backend Endpoint /configuration/idGenerators"))),
       map(idGenerators => {
         console.log(this.validateMainIdType(idGenerators))
         this.mainzellisteIdGenerators = idGenerators
