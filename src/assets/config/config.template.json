@@ -21,7 +21,7 @@
         {"name":  "PLZ", "mainzellisteField":  "PLZ", "type": "TEXT", "required":  true, "validator":  ""},
         {"name":  "Wohnort", "mainzellisteField":  "Wohnort", "type": "TEXT", "required":  true, "validator":  ""}
       ],
-      "debug": true
+      "debug": false
     }
   ]
 }
