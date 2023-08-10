@@ -9,7 +9,9 @@
         <mat-form-field class="inputField">
           <mat-label>{{pseudonym.idType}}</mat-label>
           <input style="width: 90%" matInput [readonly]="readOnly" value=" {{pseudonym.idString}}">
-          <mat-icon id="copyIcon" *ngIf="readOnly" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}" matSuffix>file_copy</mat-icon>
+          <button mat-icon-button *ngIf="readOnly" [cdkCopyToClipboard]="pseudonym.idString" matSuffix>
+            <mat-icon id="copyIcon" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
+          </button>
         </mat-form-field>
       </div>
     </td>
@@ -34,7 +36,9 @@
                    [(ngModel)]="externalId.idString" [name]="externalId.idType"
                    matInput [readonly]="readOnly"
                    value="{{externalId.idString}}">
-            <mat-icon *ngIf="readOnly" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}" matSuffix>file_copy</mat-icon>
+            <button mat-icon-button *ngIf="readOnly" [cdkCopyToClipboard]="externalId.idString" matSuffix>
+              <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
+            </button>
           </mat-form-field>
           <button *ngIf="!readOnly" mat-icon-button color="primary" aria-label="Externes Pseudonym entfernen"
                   (click)="this.removeExternalIdField(externalId.idType)"

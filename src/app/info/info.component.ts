@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {GlobalTitleService} from "../services/global-title.service";
 
 @Component({
   selector: 'app-info',
@@ -7,7 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InfoComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private titleService: GlobalTitleService
+  ) {
+    this.titleService.setTitle("Informationen und Hinweise zur Mainzelliste");
+  }
 
   ngOnInit(): void {
   }
