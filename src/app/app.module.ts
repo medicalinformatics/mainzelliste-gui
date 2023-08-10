@@ -65,6 +65,7 @@ import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
   MAT_MOMENT_DATE_FORMATS, MomentDateAdapter
 } from "@angular/material-moment-adapter";
+import {ClipboardModule} from "@angular/cdk/clipboard";
 
 function initializeAppFactory(service: AppConfigService, keycloak: KeycloakService): () => Promise<any> {
   return () => service.load()
@@ -154,7 +155,8 @@ function initializeAppFactory(service: AppConfigService, keycloak: KeycloakServi
     MatMenuModule,
     KeycloakAngularModule,
     MatProgressSpinnerModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    ClipboardModule
   ],
     providers: [
         { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
