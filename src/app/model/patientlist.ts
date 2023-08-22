@@ -12,7 +12,7 @@ export class PatientList {
       new Field("Vorname", "Vorname", [], FieldType.TEXT, true, "", "Max"),
       new Field("Nachname", "Nachname", [], FieldType.TEXT, true, "", "Mustermann"),
       new Field("Geburtsname", "Geburtsname",[], FieldType.TEXT, true, "", "falls vorhanden"),
-      new Field("Geburtsdatum", "", ["Geburtsname", "Geburtstag", "Geburtsmonat"], FieldType.DATE, true, "", "00.00.0000"),
+      new Field("Geburtsdatum", "", ["Geburtstag", "Geburtsmonat", "Geburtsjahr"], FieldType.DATE, true, "", "00.00.0000"),
       new Field("Wohnort", "Wohnort",[], FieldType.TEXT, true, "", "Musterstadt"),
       new Field("PLZ", "PLZ", [], FieldType.TEXT, true, "", "mind. 5 Zeichen")
     ],
