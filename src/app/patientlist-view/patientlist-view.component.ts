@@ -14,6 +14,7 @@ import {GlobalTitleService} from "../services/global-title.service";
 export interface FilterConfig {
   display: string,
   field: string,
+  fields: string[],
   isIdType: boolean,
   hidden: boolean
 }
@@ -31,18 +32,14 @@ export class PatientlistViewComponent implements OnInit {
   selectedPatients: Array<Patient> = [];
   patientsMatTableData: MatTableDataSource<Patient>;
 
-  selectable = true;
-  removable = true;
-  addOnBlur = true;
   separatorKeysCodes = [ENTER, COMMA] as const;
   filterCtrl = new FormControl();
 
-  filters: Array<{ display: string, field: string, searchCriteria: string, isIdType: boolean }> = [];
+  filters: Array<{ display: string, field: string, fields: string[], searchCriteria: string, isIdType: boolean }> = [];
   filterConfigs: Array<FilterConfig> = [];
   loading: boolean = false;
 
   filterInputValue: string | undefined;
-  selectedCriteria: any;
   allPatientsToSearch: Array<string> = [];
 
 
@@ -70,47 +67,51 @@ export class PatientlistViewComponent implements OnInit {
     if (value) {
       // find filter
       let filterConfig: FilterConfig | undefined = this.filterConfigs
-      .find(f => new RegExp('^\\s*' + f.display.toLowerCase() + '\\s*:.*$').test(value.toLowerCase().trim()));
+      .find(f => new RegExp('^\\s*' + f.display.toLowerCase() + '\\s*:.*$')
+      .test(value.toLowerCase().trim()));
+
       if (filterConfig != undefined) {
         let searchCriteria = value.substring(value.indexOf(':') + 1).trim();
         if (searchCriteria.trim().length > 0) {
           filterConfig.hidden = true;
+          // add filter to mat-chip
           this.filters.push({
             display: filterConfig.display,
             field: filterConfig.field,
+            fields: filterConfig.fields,
             searchCriteria: searchCriteria,
             isIdType: filterConfig.isIdType
           });
-          console.log("added ", this.filters);
           this.filterInput.nativeElement.value = "";
           // this.filterCtrl.setValue("");
+          // load patients
           this.loadPatients(0, this.paginator.pageSize).then();
           // Clear the input value
           event.chipInput!.clear();
         }
       }
     }
-    console.log("add status", this.filterConfigs, this.filters);
   }
 
   remove(filter: any): void {
-    const index = this.filters.indexOf(filter);
+    // show deleted filter in dropdown menu (autocomplete)
     this.filterConfigs.filter(e => e.field == filter.field).forEach(e => e.hidden = false);
 
+    const index = this.filters.indexOf(filter);
     if (index >= 0) {
+      // remove filter from mat-chip
       this.filters.splice(index, 1);
+      // load patients
       this.loadPatients(0, this.paginator.pageSize).then();
     }
     this.filterCtrl.updateValueAndValidity({onlySelf: false, emitEvent: true});
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    //hide selected filter
+    // set search input field with search key
     let filterConfig = this.filterConfigs.find(e => e.field == event.option.value);
     if (filterConfig) {
-      this.selectedCriteria = (filterConfig.display);
       this.filterInput.nativeElement.value = filterConfig.display + ":";
-      //this.filterCtrl.setValue(null);
     }
   }
 
@@ -119,19 +120,22 @@ export class PatientlistViewComponent implements OnInit {
   }
 
   async ngOnInit() {
-    // init id types in auto complete list
+    // init. filter data model with id types
     let configuredIdTypes = this.patientService.getConfigureIdTypes();
     configuredIdTypes.forEach(idType => this.filterConfigs.push({
       field: idType,
+      fields: [],
       display: idType,
       isIdType: true,
       hidden: false
     }));
 
-    // init. filterConfigs
+    // init. filter data model with fields
     this.patientService.getConfiguredFields().forEach(fieldConfig => {
+      let fieldName = fieldConfig.type+"" == 'DATE' ? "birthday" : fieldConfig.mainzellisteField;
       this.filterConfigs.push({
-        field: fieldConfig.mainzellisteField,
+        field: fieldName,
+        fields: fieldConfig.mainzellisteFields,
         display: fieldConfig.name,
         isIdType: false,
         hidden: false

@@ -321,7 +321,7 @@ export class PatientService {
   constructor(private patientListService: PatientListService) {
   }
 
-  getDisplayPatients(filters: Array<{ field: string, searchCriteria: string, isIdType: boolean }>,
+  getDisplayPatients(filters: Array<{ field: string, fields: string[], searchCriteria: string, isIdType: boolean }>,
                      pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
     return this.patientListService.getPatients(filters, pageIndex + 1, pageSize).pipe(
       map((response: ReadPatientsResponse): ReadPatientsResponse => {

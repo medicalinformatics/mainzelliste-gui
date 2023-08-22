@@ -142,7 +142,7 @@ export class PatientListService {
    * @param pageIndex page number
    * @param pageSize page limit
    */
-  getPatients(filters: Array<{ field: string, searchCriteria: string, isIdType: boolean }>,
+  getPatients(filters: Array<{ field: string, fields: string[], searchCriteria: string, isIdType: boolean }>,
               pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
     // find searchIds
     let searchIds: Array<Id> = [];
@@ -160,8 +160,7 @@ export class PatientListService {
       // resolve read patients token
       mergeMap(token => this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + token.id
         + "&page=" + pageIndex + "&limit=" + pageSize + "&"
-        + filters.filter(o => !o.isIdType)
-        .map(o => o.field + "=" + o.searchCriteria.trim()).join("&"), {observe: 'response'})
+        + this.convertFiltersToUrl(filters), {observe: 'response'})
       .pipe(
         map((response: HttpResponse<Patient[]>): ReadPatientsResponse => ({
             patients: response.body ?? [],
@@ -182,6 +181,22 @@ export class PatientListService {
             `[${error.status}] msg: ${error.message}`));
       })
     )
+  }
+
+  convertFiltersToUrl(filters: Array<{ field: string, fields: string[], searchCriteria: string, isIdType: boolean }>) : string{
+    return filters.filter(o => !o.isIdType)
+    .map(o => {
+      if(o.field == "birthday" && o.fields != undefined) {
+        let moment = _moment(o.searchCriteria.trim(), _moment().localeData().longDateFormat('L'));
+        if (moment.isValid()) {
+          let dateArray: number[] = [moment.date(), moment.month() + 1, moment.year()];
+          return o.fields.map((f,i) =>  f + "=" + dateArray[i]).join("&");
+        }else
+          return "";
+      }else {
+        return o.field + "=" + o.searchCriteria.trim()
+      }
+    }).join("&")
   }
 
   addPatient(patient: Patient, idTypes: string[]): Promise<Id> {
@@ -321,9 +336,7 @@ export class PatientListService {
           let month = extractDate(fieldConfig.mainzellisteFields, patient.fields, 1, "00");
           let year = extractDate(fieldConfig.mainzellisteFields, patient.fields, 2, "0000");
           let date = `${year}-${month}-${day}`;
-          console.log(patient.fields[fieldConfig.mainzellisteFields[2]]);
           displayPatient.fields[fieldConfig.name] = convertToLocal ? _moment(date, "YYYY-MM-DD").format('L') : date;
-          console.log(displayPatient.fields[fieldConfig.name]);
           break;
         }
       }
