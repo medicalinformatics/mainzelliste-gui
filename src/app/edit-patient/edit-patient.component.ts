@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Patient} from "../model/patient";
 import {Id, PatientListService} from "../services/patient-list.service";
-import {PatientService} from "../services/patient.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {GlobalTitleService} from "../services/global-title.service";
 import {ErrorNotificationService} from "../services/error-notification.service";
