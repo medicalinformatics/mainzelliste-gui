@@ -20,7 +20,10 @@ import {MatButtonModule} from "@angular/material/button";
 import {ScrollingModule} from "@angular/cdk/scrolling";
 import {PatientlistViewComponent} from './patientlist-view/patientlist-view.component';
 import {HistorieComponent} from './historie/historie.component';
-import {PatientFieldsComponent} from './patient-fields/patient-fields.component';
+import {
+  DirtyErrorStateMatcher,
+  PatientFieldsComponent
+} from './patient-fields/patient-fields.component';
 import {MatInputModule} from "@angular/material/input";
 import {EditPatientComponent} from './edit-patient/edit-patient.component';
 import {
@@ -34,7 +37,9 @@ import {MatBadgeModule} from "@angular/material/badge";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatIconModule} from "@angular/material/icon";
 import {MatCardModule} from "@angular/material/card";
-import { DeleteMultiplePatientsComponent } from './delete-multiple-patients/delete-multiple-patients.component';
+import {
+  DeleteMultiplePatientsComponent
+} from './delete-multiple-patients/delete-multiple-patients.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatToolbarModule} from "@angular/material/toolbar";
@@ -42,6 +47,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {
   DateAdapter,
+  ErrorStateMatcher,
   MAT_DATE_FORMATS,
   MAT_DATE_LOCALE,
   MatNativeDateModule
@@ -63,7 +69,8 @@ import {ErrorDialogComponent} from './error-dialog/error-dialog.component';
 import {ErrorCardComponent} from './component-error-card/error-card.component';
 import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
-  MAT_MOMENT_DATE_FORMATS, MomentDateAdapter
+  MAT_MOMENT_DATE_FORMATS,
+  MomentDateAdapter
 } from "@angular/material-moment-adapter";
 import {ClipboardModule} from "@angular/cdk/clipboard";
 
@@ -158,18 +165,24 @@ function initializeAppFactory(service: AppConfigService, keycloak: KeycloakServi
     MatProgressBarModule,
     ClipboardModule
   ],
-    providers: [
-        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
-        { provide: APP_INITIALIZER,
-            useFactory: initializeAppFactory,
-            deps: [ AppConfigService, KeycloakService ],
-            multi: true
-        },
-      {provide: ErrorHandler, useClass: GlobalErrorHandler},
-      {provide: MAT_DATE_LOCALE, useValue: 'de-DE'},
-      {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
-      {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]},
-    ],
+  providers: [
+    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeAppFactory,
+      deps: [AppConfigService, KeycloakService],
+      multi: true
+    },
+    {provide: ErrorHandler, useClass: GlobalErrorHandler},
+    {provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher},
+    {provide: MAT_DATE_LOCALE, useValue: 'de-DE'},
+    {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+    },
+  ],
     bootstrap: [AppComponent]
 })
 

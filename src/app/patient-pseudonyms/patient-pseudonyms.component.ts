@@ -1,12 +1,13 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {PatientListService} from "../services/patient-list.service";
 import {IdTypSelection} from "../createPatient/createPatient.component";
-import {FormControl} from "@angular/forms";
+import {ControlContainer, FormControl, NgForm} from "@angular/forms";
 
 @Component({
   selector: 'app-patient-pseudonyms',
   templateUrl: './patient-pseudonyms.component.html',
-  styleUrls: ['./patient-pseudonyms.component.css']
+  styleUrls: ['./patient-pseudonyms.component.css'],
+  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
 })
 
 export class PatientPseudonymsComponent {

@@ -4,6 +4,8 @@ import {OAuthConfig, PatientList} from "./model/patientlist";
 import {AppConfig} from "./app-config";
 import {catchError, map} from "rxjs/operators";
 import {throwError} from "rxjs";
+import {MainzellisteField, MainzellisteFieldType} from "./model/mainzelliste-field";
+import {Field} from "./model/field";
 
 
 export interface IdGenerator {
@@ -90,28 +92,34 @@ export class AppConfigService {
     ).toPromise();
   }
 
-  public fetchMainzellisteFields(): Promise<string[]> {
-    let fieldEndpointUrl = this.data[0].url + "/configuration/fieldKeys";
-    return this.httpClient.get<string[]>(fieldEndpointUrl, {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
+  public fetchMainzellisteFields(): Promise<MainzellisteField[]> {
+    let fieldEndpointUrl = this.data[0].url + "/configuration/fields";
+    return this.httpClient.get<MainzellisteField[]>(fieldEndpointUrl, {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
     .pipe(
       catchError(e => throwError(new Error("Can't validate field. Failed to connect to the backend Endpoint " + fieldEndpointUrl))),
-      map(fields => {
+      map(mlFields => {
         //validate fields
         for (let configuredField of this.data[0].fields) {
           if (configuredField.mainzellisteFields != undefined) {
             for (let currentField of configuredField.mainzellisteFields) {
-              if (!fields.includes(currentField))
-                throw new Error("Configured field '" + currentField + "' not defined in backend configuration")
+              this.initField(currentField, configuredField, mlFields)
             }
           } else {
-            if (!fields.includes(configuredField.mainzellisteField))
-              throw new Error("Configured field '" + configuredField.mainzellisteField + "' not defined in backend configuration")
+            this.initField(configuredField.mainzellisteField, configuredField,mlFields);
           }
         }
-        this.mainzellisteFields = fields;
-        return fields;
+        return mlFields;
       })
     ).toPromise();
+  }
+
+  private initField(fieldName: string, configuredField:Field, backendMlField: MainzellisteField[]) {
+    let mlField: MainzellisteField|undefined = backendMlField.find(f => f.name == fieldName);
+    if (mlField == undefined)
+      throw new Error("Configured field '" + fieldName + "' not defined in backend configuration")
+    configuredField.required = mlField.required;
+    configuredField.validator = mlField.validation != undefined ? mlField.validation : "";
+    this.mainzellisteFields.push(fieldName);
   }
 
   public validateMainIdType(idGenerators: IdGenerator[]) {

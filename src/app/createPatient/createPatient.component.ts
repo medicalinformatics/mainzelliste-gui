@@ -1,13 +1,15 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Patient} from "../model/patient";
 import {PatientService} from "../services/patient.service";
 import {Router} from "@angular/router";
-import {FormControl, Validators} from "@angular/forms";
+import {FormControl, NgModel} from "@angular/forms";
 import {PatientListService} from "../services/patient-list.service";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
-import {MatChipInputEvent} from "@angular/material/chips";
+import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
 import {ErrorNotificationService} from "../services/error-notification.service";
 import {GlobalTitleService} from "../services/global-title.service";
+import {Observable, of} from "rxjs";
+import {map, startWith} from "rxjs/operators";
 
 export interface IdTypSelection {
   idType: string,
@@ -19,18 +21,24 @@ export interface IdTypSelection {
   templateUrl: './createPatient.component.html',
   styleUrls: ['./createPatient.component.css']
 })
-export class CreatePatientComponent {
+export class CreatePatientComponent  implements OnInit{
   @Input() fields: Array<string> = [];
 
-  internalIdTypesFormControl = new FormControl('', Validators.required);
   externalIdTypesFormControl = new FormControl('');
+  @ViewChild('chipList') chipList!: MatChipList;
 
   patient: Patient = new Patient();
-  selectedIdTypes: string[] = [];
   patientService: PatientService;
   patientListService: PatientListService;
 
   internalIdTypes: IdTypSelection[] = [];
+  /** selected chip data model */
+  selectedInternalIdTypes: string[] = [];
+  /** autocomplete data model */
+  filteredInternalIdTypes: Observable<IdTypSelection[]> = of([]);
+  chipListInputCtrl = new FormControl();
+  chipListInputData:string = "";
+
   externalIdTypes: IdTypSelection[] = [];
 
   constructor(
@@ -42,16 +50,36 @@ export class CreatePatientComponent {
   ) {
     this.patientService = patientService;
     this.patientListService = patientListService;
-    let mainIdType = patientListService.getMainIdType();
-    this.internalIdTypesFormControl.setValue(mainIdType);
-    this.selectedIdTypes.push(mainIdType);
     this.titleService.setTitle("Personenidentifikator anfordern");
+  }
+
+  ngOnInit(): void {
+    this.selectedInternalIdTypes.push(this.patientListService.getMainIdType());
+
+    this.internalIdTypes = this.patientListService.getIdGenerators()
+    .filter(g => !g.isExternal)
+    .map(g => {
+      return {idType: g.idType, added: this.patientListService.getMainIdType() == g.idType}
+    });
+
+    this.filteredInternalIdTypes = this.chipListInputCtrl.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        let searchValue = value;
+        if(value == undefined)
+          searchValue = "";
+        else if (typeof searchValue !== "string")
+          searchValue = value.idType
+        return this.internalIdTypes
+        .filter(e => !e.added && e.idType.toLowerCase().includes(searchValue.toLowerCase()))
+      }),
+    );
   }
 
   createNewPatient() {
     this.errorNotificationService.clearMessages();
     //create patient
-    this.patientService.createPatient(this.patient, this.selectedIdTypes)
+    this.patientService.createPatient(this.patient, this.selectedInternalIdTypes)
     .then(newId => {
       console.log(newId);
       this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
@@ -60,19 +88,6 @@ export class CreatePatientComponent {
 
   fieldsChanged(newFields: { [p: string]: any }) {
     this.patient.fields = newFields;
-  }
-
-  getInternalIdTypes(added: boolean): IdTypSelection[] {
-    if (this.internalIdTypes.length == 0) {
-      //init.
-      this.internalIdTypes = this.patientListService.getIdGenerators()
-      .filter(g => !g.isExternal)
-      .map(g => {
-        return {idType: g.idType, added: this.patientListService.getMainIdType() == g.idType}
-      });
-    }
-
-    return this.internalIdTypes.filter(g => g.added == added);
   }
 
   getExternalIdTypes(added: boolean): IdTypSelection[] {
@@ -107,25 +122,27 @@ export class CreatePatientComponent {
 
   selectedInternalIdType(event: MatAutocompleteSelectedEvent): void {
     this.addInternalIdType(event.option.value);
-    this.internalIdTypesFormControl.setValue(null);
   }
 
-  findAndAddInternalIdType(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
+  findAndAddInternalIdType($event: MatChipInputEvent): void {
+    const value = ($event.value || '').trim();
     if (value) {
-      let foundIdTypeSelection = this.internalIdTypes.find(e => e.idType == value && !e.added);
-      if (foundIdTypeSelection) {
-        this.addInternalIdType(foundIdTypeSelection);
-      }
+        this.addInternalIdType(value);
     }
 
     // Clear the input value
-    event.chipInput!.clear();
+    $event.chipInput!.clear();
   }
 
-  addInternalIdType(idTypeSelection: IdTypSelection) {
-    this.selectedIdTypes.push(idTypeSelection.idType);
-    idTypeSelection.added = true;
+  private addInternalIdType(idType: string) {
+    let idTypeSelection = this.findIdType(idType);
+    if(idTypeSelection != undefined) {
+      this.selectedInternalIdTypes.push(idTypeSelection.idType);
+      idTypeSelection.added = true;
+      this.chipListInputCtrl.setValue(null);
+      this.chipList.errorState = false;
+      this.chipListInputCtrl.updateValueAndValidity({onlySelf: false, emitEvent: true});
+    }
   }
 
   removeInternalIdType(idType: string) {
@@ -137,9 +154,16 @@ export class CreatePatientComponent {
       e.added = false;
     })
 
-    // remove id type from model
-    let index = this.selectedIdTypes.findIndex(e => e == value);
-    if (index > -1)
-      this.selectedIdTypes.splice(index, 1);
+    // remove id type from selected id types
+    let index = this.selectedInternalIdTypes.findIndex(e => e == value);
+    if (index > -1) {
+      this.selectedInternalIdTypes.splice(index, 1);
+      this.chipList.errorState = this.selectedInternalIdTypes.length == 0;
+      this.chipListInputCtrl.updateValueAndValidity({onlySelf: false, emitEvent: true});
+    }
+  }
+
+  private findIdType(idType:string) : IdTypSelection | undefined {
+    return this.internalIdTypes.find(e => e.idType == idType && !e.added);
   }
 }
