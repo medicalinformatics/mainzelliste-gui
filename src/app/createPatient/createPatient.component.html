@@ -37,37 +37,45 @@
       </div>
     </div>
     <br>
-    <div style="width: 90%; margin-left: 5%; max-width: 700px;">
+    <div style="width: 90%; margin-left: 5%; max-width: 700px;" ngModelGroup="internalIdTypes"
+         #internalIdTypesModelGroup="ngModelGroup">
       <h4>Pseudonymtyp hinzufügen:</h4>
       <mat-form-field color="primary" style="width: 76.5%">
         <mat-label>Pseudonym-Typen</mat-label>
-        <mat-chip-list #chipList aria-label="Fruit selection">
-          <mat-chip *ngFor="let idType of this.selectedIdTypes"
+        <mat-chip-list #chipList aria-label="Fruit selection"
+                       name="internalIdTypesChipList"
+                       [ngModel]="this.selectedInternalIdTypes.join(',')"
+                       required>
+          <mat-chip *ngFor="let idType of this.selectedInternalIdTypes"
+                    [selectable]="true"
+                    [removable]="true"
                     (removed)="removeInternalIdType(idType)">
             {{idType}}
             <button matChipRemove>
               <mat-icon>cancel</mat-icon>
             </button>
           </mat-chip>
-          <input [formControl]="internalIdTypesFormControl"
+          <input [formControl]="chipListInputCtrl"
                  [matChipInputFor]="chipList"
                  [matAutocomplete]="auto"
-                 (matChipInputTokenEnd)="findAndAddInternalIdType($event)"
-                 [required]="true">
+                 [matChipInputAddOnBlur]="true"
+                 (matChipInputTokenEnd)="findAndAddInternalIdType($event)">
         </mat-chip-list>
+        <mat-error>Die Eingabe des Pseudonymtyps ist erforderlich</mat-error>
         <mat-autocomplete #auto="matAutocomplete"
                           (optionSelected)="selectedInternalIdType($event)">
-          <mat-option style="height: auto" *ngFor="let idType of this.getInternalIdTypes(false)"
-                      [value]="idType">
+          <mat-option style="height: auto" *ngFor="let idType of this.filteredInternalIdTypes | async"
+                      [value]="idType.idType">
             <div [hidden]="idType.added">{{idType.idType}}</div>
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
       <br>
     </div>
+    <br>
     <button mat-raised-button class="submit" style="margin-left: 5%; width: 20%; float: left;"
             [disabled]="!patientForm.form.valid"
-            (click)="createNewPatient()"> Anfordern
+            (click)="createNewPatient()">Anfordern
     </button>
   </div>
 </div>
