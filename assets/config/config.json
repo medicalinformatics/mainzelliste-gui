@@ -1,0 +1,27 @@
+{
+  "patientLists": [
+    {
+      "url": "http://localhost:8080",
+      "oAuthConfig": {
+        "url": "http://localhost:8082",
+        "realm": "mainzelliste",
+        "clientId": "mainzelliste-ui"
+      },
+      "controlNumberGenerator": {
+        "url": "${CONTROLNUMBERGENERATOR_URL}",
+        "apiKey": "${CONTROLNUMBERGENERATOR_API_KEY}"
+      },
+      "mainIdType": "pid",
+      "showAllIds": false,
+      "fields": [
+        {"name":  "Vorname", "mainzellisteField":  "Vorname", "type": "TEXT", "required":  true, "validator":  "^[A-Za-zäÄöÖüÜßéÉ\\\\.\\\\- ]*[A-Za-zäÄöÖüÜßéÉ]+[A-Za-zäÄöÖüÜßéÉ\\\\.\\\\- ]*$"},
+        {"name":  "Nachname", "mainzellisteField":  "Nachname", "type": "TEXT", "required":  true, "validator":  ""},
+        {"name":  "Geburtsname", "mainzellisteField":  "Geburtsname", "type": "TEXT", "required":  true, "validator":  ""},
+        {"name":  "Geburtsdatum", "mainzellisteFields":  ["Geburtstag", "Geburtsmonat", "Geburtsjahr"], "type": "DATE", "required":  true, "validator":  ""},
+        {"name":  "PLZ", "mainzellisteField":  "PLZ", "type": "TEXT", "required":  true, "validator":  ""},
+        {"name":  "Wohnort", "mainzellisteField":  "Wohnort", "type": "TEXT", "required":  true, "validator":  ""}
+      ],
+      "debug": false
+    }
+  ]
+}
