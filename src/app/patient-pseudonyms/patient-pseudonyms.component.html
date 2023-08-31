@@ -7,7 +7,7 @@
         </button>
         <mat-form-field class="inputField">
           <mat-label>{{pseudonym.idType}}</mat-label>
-          <input style="width: 90%" matInput [readonly]="readOnly" value=" {{pseudonym.idString}}">
+          <input style="width: 90%" matInput [readonly]="true" value=" {{pseudonym.idString}}">
           <button mat-icon-button *ngIf="readOnly" [cdkCopyToClipboard]="pseudonym.idString" matSuffix>
             <mat-icon id="copyIcon" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
           </button>
