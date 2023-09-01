@@ -8,7 +8,10 @@ import {PatientSearchComponent} from './patientSearch/patientSearch.component';
 import {AppRoutingModule, routingComponents} from './app-routing.module';
 import {IdcardComponent} from './idcard/idcard.component';
 import {FooterComponent} from './footer/footer.component';
-import {CreatePatientComponent} from "./createPatient/createPatient.component";
+import {
+  CreatePatientComponent,
+  CreatePatientTentativeDialog
+} from "./createPatient/createPatient.component";
 import {PatientlistComponent} from "./patientlist/patientlist.component";
 import {SimilarPatientComponent} from './similarPatient/similarPatient.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -130,7 +133,9 @@ function initializeAppFactory(service: AppConfigService, keycloak: KeycloakServi
     LogoutComponent,
     ErrorDialogComponent,
     ErrorCardComponent,
-    DeletePatientDialog
+    DeletePatientDialog,
+    CreatePatientTentativeDialog,
+    EditPatientTentativeDialog
   ],
   imports: [
     BrowserModule,

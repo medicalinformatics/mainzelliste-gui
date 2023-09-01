@@ -2,7 +2,7 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Patient} from "../model/patient";
 import {PatientService} from "../services/patient.service";
 import {Router} from "@angular/router";
-import {FormControl, NgModel} from "@angular/forms";
+import {FormControl} from "@angular/forms";
 import {PatientListService} from "../services/patient-list.service";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
@@ -10,6 +10,9 @@ import {ErrorNotificationService} from "../services/error-notification.service";
 import {GlobalTitleService} from "../services/global-title.service";
 import {Observable, of} from "rxjs";
 import {map, startWith} from "rxjs/operators";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MainzellisteError} from "../model/mainzelliste-error.model";
+import {ErrorMessages} from "../error/error-messages";
 
 export interface IdTypSelection {
   idType: string,
@@ -37,7 +40,7 @@ export class CreatePatientComponent  implements OnInit{
   /** autocomplete data model */
   filteredInternalIdTypes: Observable<IdTypSelection[]> = of([]);
   chipListInputCtrl = new FormControl();
-  chipListInputData:string = "";
+  chipListInputData: string = "";
 
   externalIdTypes: IdTypSelection[] = [];
 
@@ -46,7 +49,8 @@ export class CreatePatientComponent  implements OnInit{
     patientListService: PatientListService,
     public errorNotificationService: ErrorNotificationService,
     private router: Router,
-    private titleService: GlobalTitleService
+    private titleService: GlobalTitleService,
+    public dialog: MatDialog
   ) {
     this.patientService = patientService;
     this.patientListService = patientListService;
@@ -66,7 +70,7 @@ export class CreatePatientComponent  implements OnInit{
       startWith(''),
       map(value => {
         let searchValue = value;
-        if(value == undefined)
+        if (value == undefined)
           searchValue = "";
         else if (typeof searchValue !== "string")
           searchValue = value.idType
@@ -76,13 +80,17 @@ export class CreatePatientComponent  implements OnInit{
     );
   }
 
-  createNewPatient() {
+  createNewPatient(sureness: boolean) {
     this.errorNotificationService.clearMessages();
     //create patient
-    this.patientService.createPatient(this.patient, this.selectedInternalIdTypes)
+    this.patientService.createPatient(this.patient, this.selectedInternalIdTypes, sureness)
     .then(newId => {
       console.log(newId);
       this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
+    }).catch( e => {
+      if(e instanceof MainzellisteError && e.errorMessage == ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH){
+        this.openCreatePatientTentativeDialog()
+      }
     })
   }
 
@@ -127,7 +135,7 @@ export class CreatePatientComponent  implements OnInit{
   findAndAddInternalIdType($event: MatChipInputEvent): void {
     const value = ($event.value || '').trim();
     if (value) {
-        this.addInternalIdType(value);
+      this.addInternalIdType(value);
     }
 
     // Clear the input value
@@ -136,7 +144,7 @@ export class CreatePatientComponent  implements OnInit{
 
   private addInternalIdType(idType: string) {
     let idTypeSelection = this.findIdType(idType);
-    if(idTypeSelection != undefined) {
+    if (idTypeSelection != undefined) {
       this.selectedInternalIdTypes.push(idTypeSelection.idType);
       idTypeSelection.added = true;
       this.chipListInputCtrl.setValue(null);
@@ -163,7 +171,33 @@ export class CreatePatientComponent  implements OnInit{
     }
   }
 
-  private findIdType(idType:string) : IdTypSelection | undefined {
+  private findIdType(idType: string): IdTypSelection | undefined {
     return this.internalIdTypes.find(e => e.idType == idType && !e.added);
+  }
+
+  openCreatePatientTentativeDialog(): void {
+    const dialogRef = this.dialog.open(CreatePatientTentativeDialog, {
+      data: {},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.createNewPatient(true);
+    });
+  }
+}
+
+@Component({
+  selector: 'create-patient-tentative-dialog',
+  templateUrl: 'create-patient-tentative-dialog.html',
+})
+export class CreatePatientTentativeDialog {
+  constructor(
+    public dialogRef: MatDialogRef<CreatePatientTentativeDialog>
+  ) {
+  }
+
+  cancel(): void {
+    this.dialogRef.close();
   }
 }

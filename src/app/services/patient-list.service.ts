@@ -199,16 +199,16 @@ export class PatientListService {
     }).join("&")
   }
 
-  addPatient(patient: Patient, idTypes: string[]): Promise<Id> {
+  addPatient(patient: Patient, idTypes: string[], sureness: boolean): Promise<Id> {
     return this.sessionService.createToken(
       "addPatient", new AddPatientTokenData(idTypes)
     )
     .pipe(
-      mergeMap(token => this.resolveAddPatientToken(token.id, patient))
+      mergeMap(token => this.resolveAddPatientToken(token.id, patient, sureness))
     ).toPromise();
   }
 
-  resolveAddPatientToken(tokenId: string | undefined, patient: Patient): Observable<Id> {
+  resolveAddPatientToken(tokenId: string | undefined, patient: Patient, sureness: boolean): Observable<Id> {
     //prepare request body
     let body = new URLSearchParams();
     const convertedFields = this.convertToPatient(patient).fields
@@ -218,6 +218,10 @@ export class PatientListService {
     //add external Ids
     for(let extId of patient.ids)
       body.set(extId.idType, extId.idString)
+
+    // set sureness flag
+    if(sureness)
+      body.set("sureness", "true")
 
     //send request
     return this.httpClient.post<Id[]>(this.patientList.url + "/patients?tokenId=" + tokenId, body, {
