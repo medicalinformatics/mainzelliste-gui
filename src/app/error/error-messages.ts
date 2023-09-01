@@ -90,10 +90,10 @@ export class ErrorMessages {
     "External ID and IDAT match with different patients, respectively!",
     "Patient konnte nicht editiert werden, da die eingegebenen IDAT zu unterschiedlichen Patienten zugeordnet wurden");
   public static EDIT_PATIENT_CONFLICT_POSSIBLE_MATCH: ErrorMessage = new ErrorMessage(1007,
-    "Editting patient not possible because of tentative matching with the existing patient! Usesureness flag, if you are sure the data is correct and can be editted",
+    "Editing patient not possible because of tentative matching with the existing patient! Use sureness flag, if you are sure the data is correct and can be edited",
     "Zu den eingegeben Daten wurde ein ähnlicher Patient gefunden, der aber nicht mit hinreichender Sicherheit zugeordnet werden kann. Um eine Verwechslung auszuschließen, überprüfen Sie bitte nochmals Ihre Eingabe");
   public static EDIT_PATIENT_CONFLICT_MATCH: ErrorMessage = new ErrorMessage(1008,
-    "Editting patient not possible because of matching with the existing patient!",
+    "Editing patient not possible because of matching with the existing patient!",
     "Zu den eingegeben Daten wurde ein Patient gefunden. Um eine Verwechslung auszuschließen, überprüfen Sie bitte nochmals Ihre Eingabe");
 
 

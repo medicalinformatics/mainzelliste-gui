@@ -28,7 +28,10 @@ import {
   PatientFieldsComponent
 } from './patient-fields/patient-fields.component';
 import {MatInputModule} from "@angular/material/input";
-import {EditPatientComponent} from './edit-patient/edit-patient.component';
+import {
+  EditPatientComponent,
+  EditPatientTentativeDialog
+} from './edit-patient/edit-patient.component';
 import {
   DeletePatientComponent,
   DeletePatientDialog

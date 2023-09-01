@@ -260,7 +260,7 @@ export class PatientListService {
     return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + readToken.id).toPromise();
   }
 
-  editPatient(patient: Patient) {
+  editPatient(patient: Patient, sureness: boolean) {
     return this.sessionService.createToken(
       "editPatient",
       new EditPatientTokenData(
@@ -270,17 +270,21 @@ export class PatientListService {
       )
     )
     .pipe(
-      mergeMap(token => this.resolveEditPatientToken(token.id, patient))
+      mergeMap(token => this.resolveEditPatientToken(token.id, patient, sureness))
     ).toPromise();
   }
 
-  resolveEditPatientToken(tokenId: string | undefined, patient: Patient): Observable<any> {
+  resolveEditPatientToken(tokenId: string | undefined, patient: Patient, sureness: boolean): Observable<any> {
     console.log("edit ids", patient.ids);
     let fields: { [key: string]: string } =  this.convertToPatient(patient).fields;
 
     // add external ids
     patient.ids.filter(id => this.isExternalId(id.idType))
     .forEach(id => fields[id.idType] = id.idString);
+
+    // set sureness flag
+    if(sureness)
+      fields['sureness'] = "true";
 
     return this.httpClient.put(this.patientList.url + "/patients/tokenId/" + tokenId, fields, {
       headers: new HttpHeaders()
