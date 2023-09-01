@@ -38,24 +38,26 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef style="width: 170px"> Aktionen  <mat-icon style="transform: scale(0.7); float: right; color:#053E6A" >
         arrow_circle_down</mat-icon></th>
-      <td mat-cell *matCellDef="let element" style="display: flex; flex-flow: row; justify-content: space-evenly;">
-        <button mat-icon-button style="background: none;border:none;" [disabled]="loading"
-                [routerLink]="['/idcard', element.ids[0].idType, element.ids[0].idString]">
-            <mat-icon matTooltip="ID-Card">fact_check</mat-icon>
-        </button>
-<!--        <button mat-icon-button style="background: none;border:none;" [disabled]="loading">-->
-<!--          <a [routerLink]="['/similar-patient']" [state]="{patient: element, fields: fields}">-->
-<!--            <mat-icon matTooltip="Ähnliche Patienten">people</mat-icon>-->
-<!--          </a>-->
-<!--        </button>-->
-        <button mat-icon-button style="background: none;border:none;" [disabled]="loading"
-          [routerLink]="['/edit-patient', element.ids[0].idType, element.ids[0].idString]">
-            <mat-icon matTooltip="Edit">edit</mat-icon>
-        </button>
-        <button mat-icon-button style="background: none;border:none;" [disabled]="loading"
-                [routerLink]="['/delete-patient', element.ids[0].idType, element.ids[0].idString]">
-            <mat-icon matTooltip="Löschen">delete</mat-icon>
-        </button>
+      <td mat-cell *matCellDef="let element">
+        <div style="display: flex; flex-flow: row; justify-content: space-evenly;">
+          <button mat-icon-button style="background: none;border:none;" [disabled]="loading"
+                  [routerLink]="['/idcard', element.ids[0].idType, element.ids[0].idString]">
+              <mat-icon matTooltip="ID-Card">fact_check</mat-icon>
+          </button>
+  <!--        <button mat-icon-button style="background: none;border:none;" [disabled]="loading">-->
+  <!--          <a [routerLink]="['/similar-patient']" [state]="{patient: element, fields: fields}">-->
+  <!--            <mat-icon matTooltip="Ähnliche Patienten">people</mat-icon>-->
+  <!--          </a>-->
+  <!--        </button>-->
+          <button mat-icon-button style="background: none;border:none;" [disabled]="loading"
+            [routerLink]="['/edit-patient', element.ids[0].idType, element.ids[0].idString]">
+              <mat-icon matTooltip="Edit">edit</mat-icon>
+          </button>
+          <button mat-icon-button style="background: none;border:none;" [disabled]="loading"
+                  [routerLink]="['/delete-patient', element.ids[0].idType, element.ids[0].idString]">
+              <mat-icon matTooltip="Löschen">delete</mat-icon>
+          </button>
+        </div>
       </td>
     </ng-container>
     <ng-container matColumnDef="progress">
