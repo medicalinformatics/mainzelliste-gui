@@ -199,16 +199,16 @@ export class PatientListService {
     }).join("&")
   }
 
-  addPatient(patient: Patient, idTypes: string[]): Promise<Id> {
+  addPatient(patient: Patient, idTypes: string[], sureness: boolean): Promise<Id> {
     return this.sessionService.createToken(
       "addPatient", new AddPatientTokenData(idTypes)
     )
     .pipe(
-      mergeMap(token => this.resolveAddPatientToken(token.id, patient))
+      mergeMap(token => this.resolveAddPatientToken(token.id, patient, sureness))
     ).toPromise();
   }
 
-  resolveAddPatientToken(tokenId: string | undefined, patient: Patient): Observable<Id> {
+  resolveAddPatientToken(tokenId: string | undefined, patient: Patient, sureness: boolean): Observable<Id> {
     //prepare request body
     let body = new URLSearchParams();
     const convertedFields = this.convertToPatient(patient).fields
@@ -218,6 +218,10 @@ export class PatientListService {
     //add external Ids
     for(let extId of patient.ids)
       body.set(extId.idType, extId.idString)
+
+    // set sureness flag
+    if(sureness)
+      body.set("sureness", "true")
 
     //send request
     return this.httpClient.post<Id[]>(this.patientList.url + "/patients?tokenId=" + tokenId, body, {
@@ -256,7 +260,7 @@ export class PatientListService {
     return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + readToken.id).toPromise();
   }
 
-  editPatient(patient: Patient) {
+  editPatient(patient: Patient, sureness: boolean) {
     return this.sessionService.createToken(
       "editPatient",
       new EditPatientTokenData(
@@ -266,17 +270,21 @@ export class PatientListService {
       )
     )
     .pipe(
-      mergeMap(token => this.resolveEditPatientToken(token.id, patient))
+      mergeMap(token => this.resolveEditPatientToken(token.id, patient, sureness))
     ).toPromise();
   }
 
-  resolveEditPatientToken(tokenId: string | undefined, patient: Patient): Observable<any> {
+  resolveEditPatientToken(tokenId: string | undefined, patient: Patient, sureness: boolean): Observable<any> {
     console.log("edit ids", patient.ids);
     let fields: { [key: string]: string } =  this.convertToPatient(patient).fields;
 
     // add external ids
     patient.ids.filter(id => this.isExternalId(id.idType))
     .forEach(id => fields[id.idType] = id.idString);
+
+    // set sureness flag
+    if(sureness)
+      fields['sureness'] = "true";
 
     return this.httpClient.put(this.patientList.url + "/patients/tokenId/" + tokenId, fields, {
       headers: new HttpHeaders()

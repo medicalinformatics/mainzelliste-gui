@@ -15,7 +15,7 @@
     </mat-card>
 
     <section style="display: flex; flex: 1 1 1%; margin-left:2%; flex-flow: column;">
-      <button mat-fab (click)="editPatient()" color="submit"
+      <button mat-fab (click)="editPatient(false)" color="submit"
               style="margin-bottom: 15px;"
               aria-label="Example icon button with a delete icon"
               [disabled]="!patientForm.form.valid">
@@ -23,7 +23,7 @@
       </button>
       <br><br>
       <button mat-fab [routerLink]="['/patientlist']"
-              [state]="{patient: patient}" style="background-color:#888888; color:white;">
+              style="background-color:#888888; color:white;">
         <mat-icon matTooltip="Abbruch">close</mat-icon>
       </button>
     </section>
