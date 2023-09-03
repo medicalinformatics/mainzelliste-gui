@@ -54,6 +54,7 @@ mat-form-field.inputField {
   width: 90%;
   margin: 0;
   padding-bottom: 0;
+  margin-bottom: -1.25em
 }
 
 #arrow{
@@ -65,7 +66,7 @@ mat-form-field.inputField {
 
 /*following CSS-Design of all Submit-Buttons*/
 
-.submit{
+.mat-submit, .submit{
   background-color: #053E6A;
   color: white;
 }
@@ -80,7 +81,7 @@ mat-form-field.inputField {
 /*TODO from editComponent Header isnt working - margins are not reacting*/
 .title{
   font-family: Arial;
-  margin-bottom: 1%;
   text-align: left;
-
+  margin-left: 2%;
+  margin-bottom: 1.5%;
 }

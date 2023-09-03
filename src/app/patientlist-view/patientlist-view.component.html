@@ -1,58 +1,55 @@
-<div style="height: 100%; min-height: 10em; width: 100%;padding-bottom: 10%; padding-top: 3%">
+<div style="height: 100%; min-height: 10em; width: 100%;">
 
     <mat-form-field color="primary"  id="filterBoard" appearance="outline">
       <mat-label>Filter/Suche...</mat-label>
       <mat-chip-list #chipList aria-label="Fruit selection">
-        <mat-chip *ngFor="let fruit of filters"
-                  [selectable]="selectable"
-                  [removable]="removable" (removed)="remove(fruit)" style="font-family: Tahoma;">
-          {{fruit.display}}: {{fruit.searchCriteria}}
-          <mat-icon matChipRemove *ngIf="removable" style="color:#494949">cancel</mat-icon>
+        <mat-chip *ngFor="let filter of filters"
+                  [selectable]="true"
+                  [removable]="true" (removed)="remove(filter)" style="font-family: Tahoma;">
+          {{filter.display}}: {{filter.searchCriteria}}
+          <mat-icon matChipRemove style="color:#494949">cancel</mat-icon>
         </mat-chip>
-        <input #fruitInput
+        <input #filterInput
                [(ngModel)]="filterInputValue"
-               placeholder="Search..."
+               placeholder="Suche..."
                [matChipInputFor]="chipList"
                [formControl]="filterCtrl"
                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                [matAutocomplete]="auto"
                (matChipInputTokenEnd)="add($event)">
       </mat-chip-list>
-      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-        <mat-option style="height: auto" *ngFor="let filterItem of filterConfigs"
-                    [value]="{display:filterItem.display, field:filterItem.field, searchCriteria:filterInputValue, isIdType: filterItem.isIdType}">
-          <div [hidden]="filterItem.hidden"><span style="font-weight: bold">{{filterItem.display}}:</span> {{filterInputValue}}</div>
-<!--
-          <hr color="#888888" style=" width: 100%; justify-content: flex-start; justify-self: flex-start; justify-items: flex-start; text-align: left">
--->
+      <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)="selected($event)">
+        <mat-option style="height: auto" *ngFor="let filterItem of filteredFields | async"
+                    [value]="filterItem.field">
+          <div [hidden]="filterItem.hidden"><span style="font-weight: bold">{{filterItem.display}}</span></div>
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
 
-    <div>
-      <br>
-      <button mat-raised-button matBadgeColor="accent"
-              disabled="disabled"> <mat-icon>grid_view</mat-icon> Projekt Erstellen
-      </button>
-      <button mat-raised-button matBadgeColor="accent" [routerLink]="['/merge-patients']"
-              [state]="{patients: selectedPatients}"
-              [disabled]="selectedPatients.length!=2"
-              [matBadge]="selectedPatients.length"
-              [matBadgeHidden]="selectedPatients.length<1">
-        <mat-icon>merge_type</mat-icon>
-        Zusammenführen
-      </button>
+<!--    <div>-->
+<!--      <br>-->
+<!--      <button mat-raised-button matBadgeColor="accent"-->
+<!--              disabled="disabled"> <mat-icon>grid_view</mat-icon> Projekt Erstellen-->
+<!--      </button>-->
+<!--      <button mat-raised-button matBadgeColor="accent" [routerLink]="['/merge-patients']"-->
+<!--              [state]="{patients: selectedPatients}"-->
+<!--              [disabled]="selectedPatients.length!=2"-->
+<!--              [matBadge]="selectedPatients.length"-->
+<!--              [matBadgeHidden]="selectedPatients.length<1">-->
+<!--        <mat-icon>merge_type</mat-icon>-->
+<!--        Zusammenführen-->
+<!--      </button>-->
 
-      <button mat-raised-button matBadgeColor="accent" [routerLink]="['/delete-patients']"
-              [state]="{patients: selectedPatients}"
-              [disabled]="selectedPatients.length<2"
-              [matBadge]="selectedPatients.length"
-              [matBadgeHidden]="selectedPatients.length<1">
-        <mat-icon>delete_outline</mat-icon> Löschen
+<!--      <button mat-raised-button matBadgeColor="accent" [routerLink]="['/delete-patients']"-->
+<!--              [state]="{patients: selectedPatients}"-->
+<!--              [disabled]="selectedPatients.length<2"-->
+<!--              [matBadge]="selectedPatients.length"-->
+<!--              [matBadgeHidden]="selectedPatients.length<1">-->
+<!--        <mat-icon>delete_outline</mat-icon> Löschen-->
 
-      </button>
+<!--      </button>-->
 
-    </div>
+<!--    </div>-->
 
     <br><br>
   <app-patientlist (selectedPatients)="patientSelected($event)"

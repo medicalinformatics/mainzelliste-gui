@@ -1,26 +1,78 @@
+<form #patientForm="ngForm">
 <div style="height:100%;width:100%;">
-  <h1 class="title">Personenidentifikator anfordern</h1>
-
-  <div style="margin-bottom: 15%;width: 50%">
+  <div style=" width: 50%">
     <h4 style="margin-left: 5%">Patientendaten eingeben:</h4>
     <app-patient-fields (fieldEvent)="fieldsChanged($event)"
                         [fields]="patient.fields"></app-patient-fields>
-    <div>
-      <div style="margin-left: 5%">
-      <h4>Pseudonym-Typ auswählen:</h4>
-
-        <mat-form-field style="width: 76.5%">
-          <mat-label>Pseudonym-Typ</mat-label>
-          <mat-select #pseudonymSelection [formControl]="dataControll" required>
-            <mat-option *ngFor="let pseudonym of patientListPseudonyms | async"
-                        [value]="pseudonym">{{pseudonym}}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="dataControll.hasError('required')">Bitte wählen Sie ein Projekt
-          </mat-error>
-          <mat-hint>{{dataControll.value?.sound}}</mat-hint>
+    <br>
+    <div style="width: 90%; margin-left: 5%; max-width: 700px;">
+      <h4>Externes Pseudonym hinzufügen:</h4>
+      <div *ngFor="let externalId of this.patient.ids" style="display: flex; flex-wrap: nowrap;">
+        <mat-form-field class="inputField" style="width: 76.5%;">
+          <mat-label>{{externalId.idType}}</mat-label>
+          <input style="width: 90%; " matInput placeholder="{{externalId.idType}}"
+                 [(ngModel)]="externalId.idString"
+                 [name]="externalId.idType">
         </mat-form-field>
+        <button mat-icon-button color="primary" aria-label="Externes Pseudonym entfernen"
+                (click)="this.removeExternalIdField(externalId.idType)"
+                style="margin-top: 9px; margin-left: 8px">
+          <mat-icon>remove</mat-icon>
+        </button>
+      </div>
+      <div style="display: flex; flex-wrap: nowrap;"
+           *ngIf="this.getExternalIdTypes(false).length > 0">
+        <mat-form-field class="inputField" style="width: 76.5%">
+          <mat-label>Pseudonymtyp</mat-label>
+          <mat-select [formControl]="externalIdTypesFormControl" required="false">
+            <mat-option *ngFor="let idType of this.getExternalIdTypes(false)"
+                        [value]="idType">{{idType.idType}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-icon-button color="primary" aria-label="Externes Pseudonym hinzufügen"
+                [disabled]="this.externalIdTypesFormControl.value == undefined || this.externalIdTypesFormControl.value.length < 1"
+                (click)="this.addExternalIdField()" style="margin-top: 9px; margin-left: 8px">
+          <mat-icon>add</mat-icon>
+        </button>
       </div>
     </div>
+    <br>
+    <div style="width: 90%; margin-left: 5%; max-width: 700px;" ngModelGroup="internalIdTypes"
+         #internalIdTypesModelGroup="ngModelGroup">
+      <h4>Pseudonymtyp hinzufügen:</h4>
+      <mat-form-field color="primary" style="width: 76.5%">
+        <mat-label>Pseudonym-Typen</mat-label>
+        <mat-chip-list #chipList aria-label="Fruit selection"
+                       name="internalIdTypesChipList"
+                       [ngModel]="this.selectedInternalIdTypes.join(',')"
+                       required>
+          <mat-chip *ngFor="let idType of this.selectedInternalIdTypes"
+                    [selectable]="true"
+                    [removable]="true"
+                    (removed)="removeInternalIdType(idType)">
+            {{idType}}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+          <input [formControl]="chipListInputCtrl"
+                 [matChipInputFor]="chipList"
+                 [matAutocomplete]="auto"
+                 [matChipInputAddOnBlur]="true"
+                 (matChipInputTokenEnd)="findAndAddInternalIdType($event)">
+        </mat-chip-list>
+        <mat-error>Die Eingabe des Pseudonymtyps ist erforderlich</mat-error>
+        <mat-autocomplete #auto="matAutocomplete"
+                          (optionSelected)="selectedInternalIdType($event)">
+          <mat-option style="height: auto" *ngFor="let idType of this.filteredInternalIdTypes | async"
+                      [value]="idType.idType">
+            <div [hidden]="idType.added">{{idType.idType}}</div>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      <br>
+    </div>
+    <br>
     <div>
       <div style="margin-left: 5%;">
         <button *ngIf="!consent" style="float: left;" mat-raised-button (click)="openConsentDialog()">
@@ -31,10 +83,11 @@
         </button>
       </div>
     </div>
-
-    <br/><br/><br/>
+    <br>
     <button mat-raised-button class="submit" style="margin-left: 5%; width: 20%; float: left;"
-            (click)="createNewPatient()"> Anfordern
-    </button> <!--[state]="{patient: patient, fields: fields}"-->
+            [disabled]="!patientForm.form.valid"
+            (click)="createNewPatient(false)">Anfordern
+    </button>
   </div>
 </div>
+</form>

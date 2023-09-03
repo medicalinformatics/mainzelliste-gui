@@ -1,31 +1,37 @@
-<form>
-  <table class="patientField" cellspacing="0">
+<table class="patientField" cellspacing="0" ngModelGroup="fields">
     <tr *ngFor="let field of configuredFields | async">
       <td [ngSwitch]="field.type">
         <div style="width: 100%; flex-flow: row" >
           <button id="arrow" *ngIf="side!='none'" [ngStyle]="{float:side}" (click)="slideData(fields[field.name], field.name)">
             <mat-icon>arrow_circle_{{side}}</mat-icon>
           </button>
-          <mat-form-field *ngSwitchCase="'TEXT'"  class="inputField">
+          <mat-form-field *ngSwitchCase="'TEXT'"  class="inputField" [ngStyle]="{'margin-bottom': displayError(currentField) ? '0.25em' : '-1.25em' }">
             <mat-label>{{field.name}}</mat-label>
             <input style="width: 90%; " [readonly]="readOnly" matInput (input)="fieldChanged()"
-                   placeholder="{{field.hint}}" [(ngModel)]="fields[field.name]" [name]="field.name">
-            <mat-icon id="copyIcon" *ngIf="readOnly" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
+                   placeholder="{{field.hint}}" [(ngModel)]="fields[field.name]" [name]="field.name"
+                   [required]="field.required" pattern="{{field.validator}}" #currentField="ngModel">
+            <mat-error *ngIf="displayError(currentField)">
+              {{getFieldErrorMessage(field.name, currentField.errors)}}
+            </mat-error>
+            <button mat-icon-button *ngIf="readOnly" [cdkCopyToClipboard]="fields[field.name]" matSuffix>
+              <mat-icon id="copyIcon" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
+            </button>
           </mat-form-field>
           <mat-form-field *ngSwitchCase="'DATE'" class="inputField" appearance="outline">
             <mat-label>{{field.name}}</mat-label>
             <input matInput style="width: 90%;" [readonly]="readOnly" [matDatepicker]="picker"
                    (input)="fieldChanged()"
-                   placeholder="{{field.hint}}"
+                   [required]="field.required"
+                   placeholder="{{field.hint}} {{localDateFormat}}"
                    [(ngModel)]="fields[field.name]" [name]="field.name">
-            <mat-hint>MM.DD.YYYY</mat-hint>
             <mat-datepicker-toggle *ngIf="!readOnly" matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker [disabled]="readOnly"></mat-datepicker>
-            <mat-icon *ngIf="readOnly" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
+            <button mat-icon-button *ngIf="readOnly" [cdkCopyToClipboard]="fields[field.name]" matSuffix>
+              <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
+            </button>
           </mat-form-field>
           <div *ngSwitchDefault></div>
         </div>
       </td>
     </tr>
   </table>
-</form>

@@ -4,6 +4,8 @@ import {Id, PatientListService, ReadPatientsResponse} from "./patient-list.servi
 import {Field} from "../model/field";
 import {map} from "rxjs/operators";
 import {Observable} from "rxjs";
+import {MainzellisteError} from "../model/mainzelliste-error.model";
+import {ErrorMessages} from "../error/error-messages";
 
 @Injectable({
   providedIn: 'root'
@@ -322,17 +324,17 @@ export class PatientService {
   constructor(private patientListService: PatientListService) {
   }
 
-  getDisplayPatients(filters: Array<{ field: string, searchCriteria: string, isIdType: boolean }>,
-                     displayEmpty: boolean, pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
+  getDisplayPatients(filters: Array<{ field: string, fields: string[], searchCriteria: string, isIdType: boolean }>,
+                     pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
     return this.patientListService.getPatients(filters, pageIndex + 1, pageSize).pipe(
       map((response: ReadPatientsResponse): ReadPatientsResponse => {
           let displayPatients: Patient[]
           if (response.patients.length == 0) {
-            displayPatients = displayEmpty ? [] : this.mockUpData;
+            displayPatients = this.patientListService.isDebugModeEnabled() ? this.mockUpData : [];
           } else {
             displayPatients = response.patients
             .filter(p => p.ids != undefined)
-            .map(patient => this.patientListService.convertToDisplayPatient(patient));
+            .map(patient => this.patientListService.convertToDisplayPatient(patient, true));
           }
           // override patients
           response.patients = displayPatients;
@@ -342,14 +344,11 @@ export class PatientService {
     )
   }
 
-  async createPatient(tmpPatient: Patient, idType?: string): Promise<Id> {
-    // TODO: Create proper mainzelliste call for this and return that as result.
-    if (idType == undefined) {
-      idType = await this.patientListService.getPatientListMainIdType();
+   createPatient(patient: Patient, idTypes: string[], sureness: boolean): Promise<Id> {
+    if (idTypes == undefined || idTypes.length == 0) {
+      throw new MainzellisteError(ErrorMessages.CREATE_PATIENT_MISSING_ID_TYPE);
     }
-    let newId = await this.patientListService.addPatient(tmpPatient, idType);
-    return new Id(idType, newId.newId, newId.tentative);
-
+    return this.patientListService.addPatient(patient, idTypes, sureness);
   }
 
   async deletePatient(patient: Patient){
@@ -360,7 +359,7 @@ export class PatientService {
     return this.patientListService.getConfiguredFields();
   }
 
-  getConfigureIdTypes(): Observable<Array<string>> {
-    return this.patientListService.getConfiguredIdTypes();
+  getConfigureIdTypes(): Array<string> {
+    return this.patientListService.getIdTypes();
   }
 }
