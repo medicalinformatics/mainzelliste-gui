@@ -24,9 +24,9 @@ services:
     environment:
       TOMCAT_REVERSEPROXY_FQDN: ${HOST}
       TOMCAT_REVERSEPROXY_SSL: "false"
-      ML_API_KEY: changeThisApiKey
+      ML_API_KEY: pleaseChangeMeToo
       ML_DB_HOST: mainzelliste-db
-      ML_DB_PASS: mainzelliste
+      ML_DB_PASS: pleaseChangeMe
       ML_ALLOWED_ORIGINS: http://${HOST}
       ML_OIDC_ISS: http://${HOST}:8082/realms/mainzelliste
       ML_OIDC_INTERNAL_ISS_BASE_URL: http://keycloak:8080
@@ -39,7 +39,7 @@ services:
     environment:
       POSTGRES_DB: mainzelliste
       POSTGRES_USER: mainzelliste
-      POSTGRES_PASSWORD: mainzelliste
+      POSTGRES_PASSWORD: pleaseChangeMe
   keycloak:
     image: quay.io/keycloak/keycloak:20.0.1
     ports:

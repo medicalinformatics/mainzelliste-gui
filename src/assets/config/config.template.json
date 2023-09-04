@@ -14,12 +14,12 @@
       "mainIdType": "pid",
       "showAllIds": false,
       "fields": [
-        {"name":  "Vorname", "mainzellisteField":  "Vorname", "type": "TEXT", "required":  true, "validator":  ""},
-        {"name":  "Nachname", "mainzellisteField":  "Nachname", "type": "TEXT", "required":  true, "validator":  ""},
-        {"name":  "Geburtsname", "mainzellisteField":  "Geburtsname", "type": "TEXT", "required":  true, "validator":  ""},
-        {"name":  "Geburtsdatum", "mainzellisteFields":  ["Geburtstag", "Geburtsmonat", "Geburtsjahr"], "type": "DATE", "required":  true, "validator":  ""},
-        {"name":  "PLZ", "mainzellisteField":  "PLZ", "type": "TEXT", "required":  true, "validator":  ""},
-        {"name":  "Wohnort", "mainzellisteField":  "Wohnort", "type": "TEXT", "required":  true, "validator":  ""}
+        {"name":  "Vorname", "mainzellisteField":  "vorname", "type": "TEXT", "required":  true, "validator":  ""},
+        {"name":  "Nachname", "mainzellisteField":  "nachname", "type": "TEXT", "required":  true, "validator":  ""},
+        {"name":  "Geburtsname", "mainzellisteField":  "geburtsname", "type": "TEXT", "required":  true, "validator":  ""},
+        {"name":  "Geburtsdatum", "mainzellisteFields":  ["geburtstag", "geburtsmonat", "geburtsjahr"], "type": "DATE", "required":  true, "validator":  ""},
+        {"name":  "PLZ", "mainzellisteField":  "plz", "type": "TEXT", "required":  true, "validator":  ""},
+        {"name":  "Wohnort", "mainzellisteField":  "ort", "type": "TEXT", "required":  true, "validator":  ""}
       ],
       "debug": false
     }
