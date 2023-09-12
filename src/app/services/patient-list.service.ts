@@ -16,6 +16,7 @@ import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessage, ErrorMessages} from "../error/error-messages";
 import * as _moment from 'moment';
 import {MAT_DATE_LOCALE} from "@angular/material/core";
+import {getErrorMessageFrom} from "../error/error-utils";
 
 export class Id {
   constructor(
@@ -170,15 +171,13 @@ export class PatientListService {
       )),
       catchError( (error) => {
         if(error.status >= 400 && error.status < 500) {
-          if (error.status != 404)
-            console.log(error);
           return of({
             patients: [],
             totalCount: "0"
           });
-        } else
-          return throwError(() => new Error(`Service unavailable: cause status ` +
-            `[${error.status}] msg: ${error.message}`));
+        } else {
+          return throwError(new Error(`Failed to fetch patients. Cause: ${getErrorMessageFrom(error)}`));
+        }
       })
     )
   }
