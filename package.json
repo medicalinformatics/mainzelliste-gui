@@ -26,7 +26,6 @@
     "moment": "^2.29.4",
     "@types/fhir": "0.0.35",
     "fhir-kit-client": "^1.9.2",
-    "ng2-opd-popup": "^1.1.21",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.4"

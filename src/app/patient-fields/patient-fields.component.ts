@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FieldService} from "../services/field.service";
 import {Field} from "../model/field";
-import * as _moment from "moment";
+import _moment from "moment";
 import {
   ControlContainer, FormControl,
   FormGroupDirective,

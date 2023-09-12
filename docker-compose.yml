@@ -27,6 +27,7 @@ services:
       ML_API_KEY: pleaseChangeMeToo
       ML_DB_HOST: mainzelliste-db
       ML_DB_PASS: pleaseChangeMe
+      RELAXED_QUERY_CHARS: \|
       ML_ALLOWED_ORIGINS: http://${HOST}
       ML_OIDC_ISS: http://${HOST}:8082/realms/mainzelliste
       ML_OIDC_INTERNAL_ISS_BASE_URL: http://keycloak:8080

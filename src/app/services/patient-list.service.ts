@@ -14,7 +14,7 @@ import {catchError, map, mergeMap} from "rxjs/operators";
 import {Observable, of, throwError} from "rxjs";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessage, ErrorMessages} from "../error/error-messages";
-import * as _moment from 'moment';
+import _moment from 'moment';
 import {MAT_DATE_LOCALE} from "@angular/material/core";
 
 export class Id {
