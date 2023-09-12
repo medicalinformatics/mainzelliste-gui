@@ -12,13 +12,12 @@ import {DeleteMultiplePatientsComponent} from "./delete-multiple-patients/delete
 import {ErrorComponent} from "./error/error.component";
 import {LogoutComponent} from "./logout/logout.component";
 import {AuthGuard} from "./guards/auth-guard.service";
-import {SessionGuard} from "./guards/session-guard.service";
 
 
 const routes: Routes = [
   // TODO: All Paths should have english wording.
   {
-    path: '', canActivate: [AuthGuard], canActivateChild: [SessionGuard], children: [
+    path: '', canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
       {path: '', pathMatch: 'full', redirectTo: 'patientlist'},
       {path: 'add-new-patient', component: CreatePatientComponent},
       {path: 'info', component: InfoComponent},

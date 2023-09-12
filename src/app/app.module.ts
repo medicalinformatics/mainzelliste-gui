@@ -79,10 +79,13 @@ import {
   MomentDateAdapter
 } from "@angular/material-moment-adapter";
 import {ClipboardModule} from "@angular/cdk/clipboard";
+import {from} from "rxjs";
+import {UserAuthService} from "./services/user-auth.service";
 
-function initializeAppFactory(service: AppConfigService, keycloak: KeycloakService): () => Promise<any> {
+function initializeAppFactory(service: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService): () => Promise<any> {
   return () => service.load()
   .then(config => {
+    from(keycloak.keycloakEvents$).subscribe( event => userAuthService.notify(event));
     return keycloak.init({
       config: {
         url: config[0].oAuthConfig?.url ?? "",
@@ -178,7 +181,7 @@ function initializeAppFactory(service: AppConfigService, keycloak: KeycloakServi
     {
       provide: APP_INITIALIZER,
       useFactory: initializeAppFactory,
-      deps: [AppConfigService, KeycloakService],
+      deps: [AppConfigService, KeycloakService, UserAuthService],
       multi: true
     },
     {provide: ErrorHandler, useClass: GlobalErrorHandler},

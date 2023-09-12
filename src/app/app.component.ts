@@ -5,6 +5,7 @@ import {ErrorNotificationService} from "./services/error-notification.service";
 import {NavigationStart, Router} from "@angular/router";
 import {Observable} from "rxjs";
 import {filter} from 'rxjs/operators';
+import {UserAuthService} from "./services/user-auth.service";
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,7 @@ export class AppComponent {
     public readonly sessionService: SessionService,
     public readonly titleService: GlobalTitleService,
     public readonly errorNotificationService: ErrorNotificationService,
+    protected readonly userAuthService: UserAuthService,
     public router: Router
   ) {
     (router.events.pipe(
@@ -25,5 +27,9 @@ export class AppComponent {
     ) as Observable<NavigationStart>).subscribe(() =>
       this.errorNotificationService.clearMessages()
     );
+  }
+
+  isLoggedIn(): boolean {
+    return this.userAuthService.isLoggedIn();
   }
 }
