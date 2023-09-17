@@ -1,95 +1,94 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {BehaviorSubject, Observable, of, throwError} from 'rxjs';
 import {Session} from '../model/session';
 import {Token, TokenType} from '../model/token';
 import {TokenData} from '../model/token-data';
 import {AppConfigService} from "../app-config.service";
-import {catchError, map} from "rxjs/operators";
+import {catchError, map, mergeMap} from "rxjs/operators";
 import {Router} from "@angular/router";
+import {getErrorMessageFrom} from "../error/error-utils";
 
 @Injectable({
   providedIn: 'root'
 })
 export class SessionService {
 
+  readonly LS_SESSION_ITEM: string = "mainzellisteSession"
   private sessionSubject: BehaviorSubject<Session>;
-  public session: Observable<Session>;
 
   constructor(
     private httpClient: HttpClient,
     private router: Router,
     private appConfigService: AppConfigService
   ) {
-    const cachedSession = localStorage.getItem("mainzellisteSession")
-    if (cachedSession !== null) {
-      this.sessionSubject = new BehaviorSubject<Session>(JSON.parse(cachedSession));
-    } else {
-      this.sessionSubject = new BehaviorSubject<Session>(new Session());
-    }
-    this.session = this.sessionSubject.asObservable()
+    const cachedSession = localStorage.getItem(this.LS_SESSION_ITEM)
+    this.sessionSubject = new BehaviorSubject<Session>(cachedSession !== null ? JSON.parse(cachedSession) : new Session());
   }
 
-  public get sessionValue(): Session {
-    return this.sessionSubject.value
+  public get sessionId(): string | undefined {
+    return this.sessionSubject.value.sessionId
   }
 
-  login () {
-    return this.createSession().pipe(
+  createSession() {
+    return this.httpClient.post<Session>(this.appConfigService.data[0].url + '/sessions', {}, {
+      headers: new HttpHeaders().append('mainzellisteApiVersion', '3.2')
+    })
+    .pipe(
       map(session => {
-        localStorage.setItem("mainzellisteSession", JSON.stringify(session));
+        localStorage.setItem(this.LS_SESSION_ITEM, JSON.stringify(session));
         this.sessionSubject.next(session);
         return session;
-      })
+      }),
+      catchError((error) => SessionService.handleFailedRequest("Failed to create a mainzelliste session", error))
     )
   }
 
-  logout () {
-    localStorage.removeItem("mainzellisteSession");
-    let oldSessionId = this.sessionSubject.value.sessionId;
+  createSessionIfNotValid(): Observable<boolean> {
+    console.log("createSessionIfNotValid")
+    return this.isSessionValid().pipe(
+      mergeMap((isValid) => isValid ?
+        of(true) : this.createSession().pipe(map(() => true))
+      ))
+  }
+
+  deleteSession(): Observable<boolean> {
+    localStorage.removeItem(this.LS_SESSION_ITEM);
+    let oldSessionId = this.sessionId;
     this.sessionSubject.next(new Session());
-    this.httpClient.delete<Session>(
+
+    if (oldSessionId == undefined)
+      return of(true);
+
+    return this.httpClient.delete<Session>(
       this.appConfigService.data[0].url + '/sessions/' + oldSessionId)
-    .pipe(map(() => true),
-      catchError( (error) => {
-        console.log("can't delete session id " + error.status);
-        if (error.status == 404)
-          return of(false)
-        else
-          throw new Error("Mainzelliste Intenal System Error : " + error.message);
-      })
+    .pipe(
+      map(() => true),
+      catchError((error) => SessionService.handleFailedRequest("Failed to delete a mainzelliste session", error))
     );
   }
 
   public isSessionValid(): Observable<boolean> {
-    if (this.sessionSubject.value.sessionId == undefined) {
+    if (!this.isSessionCreated()) {
       return of(false);
     }
     return this.httpClient.get<Session>(
-      this.appConfigService.data[0].url + '/sessions/' + this.sessionSubject.value.sessionId)
-    .pipe(map(() => {
-        return true;
-      }), catchError( (error) => {
-        // invalid session id
-        if (error.status == 404)
-          return of(false)
-        else
-          throw new Error("Mainzelliste Intenal System Error: - status [" + error.status
-            + "] - message [" + error.message + "]");
-      })
+      this.appConfigService.data[0].url + '/sessions/' + this.sessionId)
+    .pipe(
+      map(() => true),
+      catchError((error) => SessionService.handleFailedRequest("Failed to read a mainzelliste session", error))
     );
   }
 
-  public isLoggedIn(): boolean {
-    return this.sessionValue.sessionId !== undefined;
+  private static handleFailedRequest(errorMessage: string, error?: any) {
+    if (error.status == 404)
+      return of(false)
+    else
+      throw throwError(new Error(`${errorMessage}. Cause: ${getErrorMessageFrom(error)}`));
   }
-  /**
-   * Create a new session, that allows us to create Tokens
-   */
-  private createSession(): Observable<Session> {
-    return this.httpClient.post<Session>(this.appConfigService.data[0].url + '/sessions', {}, {
-      headers: new HttpHeaders().append('mainzellisteApiVersion', '3.2')
-    });
+
+  public isSessionCreated(): boolean {
+    return this.sessionId !== undefined;
   }
 
   /**
@@ -99,12 +98,11 @@ export class SessionService {
    */
   createToken(tokenType: TokenType, tokenData: TokenData): Observable<Token> {
     return this.httpClient.post<Token>(this.appConfigService.data[0].url + '/sessions/'
-      + this.sessionValue.sessionId + '/tokens', {
+      + this.sessionId + '/tokens', {
       type: tokenType,
       data: tokenData
     }, {
       headers: new HttpHeaders().append('mainzellisteApiVersion', '3.2')
     });
   }
-
 }

@@ -79,6 +79,8 @@ import {
   MomentDateAdapter
 } from "@angular/material-moment-adapter";
 import {ClipboardModule} from "@angular/cdk/clipboard";
+import {from} from "rxjs";
+import {UserAuthService} from "./services/user-auth.service";
 import { ConsentComponent } from './consent/consent.component';
 import {DemoMaterialModule} from "./patientlist/material-module";
 import { ConsentDialogComponent } from './consent-dialog/consent-dialog.component';
@@ -86,9 +88,10 @@ import { ConsentDetailComponent } from './consent-detail/consent-detail.componen
 import { AddConsentComponent } from './add-consent/add-consent.component';
 import { EditConsentComponent } from './edit-consent/edit-consent.component';
 
-function initializeAppFactory(service: AppConfigService, keycloak: KeycloakService): () => Promise<any> {
+function initializeAppFactory(service: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService): () => Promise<any> {
   return () => service.load()
   .then(config => {
+    from(keycloak.keycloakEvents$).subscribe( event => userAuthService.notifyKeycloakEvent(event));
     return keycloak.init({
       config: {
         url: config[0].oAuthConfig?.url ?? "",
@@ -190,7 +193,7 @@ function initializeAppFactory(service: AppConfigService, keycloak: KeycloakServi
     {
       provide: APP_INITIALIZER,
       useFactory: initializeAppFactory,
-      deps: [AppConfigService, KeycloakService],
+      deps: [AppConfigService, KeycloakService, UserAuthService],
       multi: true
     },
     {provide: ErrorHandler, useClass: GlobalErrorHandler},

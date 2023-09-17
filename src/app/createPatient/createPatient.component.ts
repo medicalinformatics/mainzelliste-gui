@@ -8,11 +8,12 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
 import {ErrorNotificationService} from "../services/error-notification.service";
 import {GlobalTitleService} from "../services/global-title.service";
-import {Observable, of} from "rxjs";
-import {map, startWith} from "rxjs/operators";
+import {from, Observable, of, throwError} from "rxjs";
+import {catchError, concatMap, map, retry, retryWhen, startWith, takeWhile} from "rxjs/operators";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessages} from "../error/error-messages";
+import {UserAuthService} from "../services/user-auth.service";
 import {ConsentDialogComponent} from "../consent-dialog/consent-dialog.component";
 import {ConsentService} from "../consent.service";
 import {Consent} from "../model/consent";
@@ -27,7 +28,7 @@ export interface IdTypSelection {
   templateUrl: './createPatient.component.html',
   styleUrls: ['./createPatient.component.css']
 })
-export class CreatePatientComponent  implements OnInit{
+export class CreatePatientComponent  implements OnInit {
   @Input() fields: Array<string> = [];
 
   externalIdTypesFormControl = new FormControl('');
@@ -36,6 +37,7 @@ export class CreatePatientComponent  implements OnInit{
   patient: Patient = new Patient();
   patientService: PatientService;
   patientListService: PatientListService;
+  userAuthService : UserAuthService;
   consent?: Consent;
 
   internalIdTypes: IdTypSelection[] = [];
@@ -52,14 +54,16 @@ export class CreatePatientComponent  implements OnInit{
     public consentDialog: MatDialog,
     patientService: PatientService,
     patientListService: PatientListService,
+    userAuthService : UserAuthService,
     public errorNotificationService: ErrorNotificationService,
     private router: Router,
     private titleService: GlobalTitleService,
-    public dialog: MatDialog,
+    public tentativeDialog: MatDialog,
     private consentService: ConsentService
   ) {
     this.patientService = patientService;
     this.patientListService = patientListService;
+    this.userAuthService = userAuthService;
     this.titleService.setTitle("Personenidentifikator anfordern");
   }
 
@@ -89,19 +93,30 @@ export class CreatePatientComponent  implements OnInit{
   createNewPatient(sureness: boolean) {
     this.errorNotificationService.clearMessages();
     //create patient
-    this.patientService.createPatient(this.patient, this.selectedInternalIdTypes, sureness)
-    .then(newId => {
-      console.log(newId);
-      if(this.consent){
-        this.consent.patientId = newId;
-        this.consentService.addConsent(this.consent).then();
-      }
+    of(this.patient).pipe(
+      concatMap(p => this.patientService.createPatient(p, this.selectedInternalIdTypes, sureness)),
+      catchError((e, caught) => {
+        if (e instanceof MainzellisteError) {
+          switch (e.errorMessage) {
+            case ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH:
+              this.openCreatePatientTentativeDialog();
+              break;
+            case ErrorMessages.ML_SESSION_NOT_FOUND:
+              // first try to login again
+              return from(this.userAuthService.retryLogin(this.router.url)).pipe(concatMap(() => throwError(e)))
+          }
+        }
+        return caught;
+      }),
+      retry(1)
+    ).toPromise().then(newId => {
+        if(this.consent){
+          this.consent.patientId = newId;
+          this.consentService.addConsent(this.consent).then();
+        }
       this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
-    }).catch( e => {
-      if(e instanceof MainzellisteError && e.errorMessage == ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH){
-        this.openCreatePatientTentativeDialog()
-      }
-    })
+    }
+    )
   }
 
   fieldsChanged(newFields: { [p: string]: any }) {
@@ -186,7 +201,7 @@ export class CreatePatientComponent  implements OnInit{
   }
 
   openCreatePatientTentativeDialog(): void {
-    const dialogRef = this.dialog.open(CreatePatientTentativeDialog, {
+    const dialogRef = this.tentativeDialog.open(CreatePatientTentativeDialog, {
       data: {},
     });
 

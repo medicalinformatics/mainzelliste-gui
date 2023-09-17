@@ -1,7 +1,5 @@
 import {Component} from '@angular/core';
-import {SessionService} from "../services/session.service";
-import {Router} from "@angular/router";
-import {KeycloakService} from "keycloak-angular";
+import {UserAuthService} from "../services/user-auth.service";
 
 @Component({
   selector: 'app-session',
@@ -10,18 +8,7 @@ import {KeycloakService} from "keycloak-angular";
 })
 export class SessionComponent {
   constructor(
-    public sessionService: SessionService,
-    protected readonly keycloak: KeycloakService,
-    public router: Router
+    public userAuthService: UserAuthService
   ) {
-  }
-
-  public logout() {
-    this.keycloak.logout();
-    this.sessionService.logout();
-  }
-
-  public getUserName(): string {
-    return this.keycloak.getUsername();
   }
 }
