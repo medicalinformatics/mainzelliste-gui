@@ -32,6 +32,13 @@ export class ErrorMessage {
 export class ErrorMessages {
 
   ////
+  // General ERRORS
+  //-------------------
+  public static ML_SESSION_NOT_FOUND: ErrorMessage = new ErrorMessage(101,
+    /Session-ID (.*) unknown./i,
+  "Session ist ungültig");
+
+  ////
   // ADD PATIENT ERRORS
   //-------------------
   public static CREATE_PATIENT_MISSING_FIELD: ErrorMessage = new ErrorMessage(1001,

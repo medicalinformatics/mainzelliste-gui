@@ -16,6 +16,7 @@ import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessage, ErrorMessages} from "../error/error-messages";
 import * as _moment from 'moment';
 import {MAT_DATE_LOCALE} from "@angular/material/core";
+import {getErrorMessageFrom} from "../error/error-utils";
 
 export class Id {
   constructor(
@@ -103,7 +104,6 @@ export class PatientListService {
    */
   getConfiguredIdTypes(): Observable<Array<string>> {
     //TODO remove observable
-    console.log("getConfiguredIdTypes " + this.configService.getMainzellisteIdTypes())
     return of(this.configService.getMainzellisteIdTypes());
   }
 
@@ -170,15 +170,13 @@ export class PatientListService {
       )),
       catchError( (error) => {
         if(error.status >= 400 && error.status < 500) {
-          if (error.status != 404)
-            console.log(error);
           return of({
             patients: [],
             totalCount: "0"
           });
-        } else
-          return throwError(() => new Error(`Service unavailable: cause status ` +
-            `[${error.status}] msg: ${error.message}`));
+        } else {
+          return throwError(new Error(`Failed to fetch patients. Cause: ${getErrorMessageFrom(error)}`));
+        }
       })
     )
   }
@@ -199,13 +197,19 @@ export class PatientListService {
     }).join("&")
   }
 
-  addPatient(patient: Patient, idTypes: string[], sureness: boolean): Promise<Id> {
+  addPatient(patient: Patient, idTypes: string[], sureness: boolean): Observable<Id> {
     return this.sessionService.createToken(
       "addPatient", new AddPatientTokenData(idTypes)
     )
     .pipe(
-      mergeMap(token => this.resolveAddPatientToken(token.id, patient, sureness))
-    ).toPromise();
+      mergeMap(token => this.resolveAddPatientToken(token.id, patient, sureness)),
+      catchError(e => {
+        let isSessionNotFoundError = e instanceof HttpErrorResponse &&
+          (e.status == 404) && ErrorMessages.ML_SESSION_NOT_FOUND.match(e);
+        return throwError(isSessionNotFoundError ? new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND) :
+          new Error(`Failed to create Mainzelliste Token. Cause: ${getErrorMessageFrom(e)}`));
+      })
+    );
   }
 
   resolveAddPatientToken(tokenId: string | undefined, patient: Patient, sureness: boolean): Observable<Id> {
@@ -249,7 +253,6 @@ export class PatientListService {
   }
 
   async readPatient(id: Id): Promise<Patient[]> {
-    console.log(id);
     let readToken = await this.sessionService.createToken(
       "readPatients",
       new ReadPatientsTokenData(
@@ -275,7 +278,6 @@ export class PatientListService {
   }
 
   resolveEditPatientToken(tokenId: string | undefined, patient: Patient, sureness: boolean): Observable<any> {
-    console.log("edit ids", patient.ids);
     let fields: { [key: string]: string } =  this.convertToPatient(patient).fields;
 
     // add external ids
