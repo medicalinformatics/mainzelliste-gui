@@ -13,7 +13,6 @@ import {catchError, concatMap, map, retry, retryWhen, startWith, takeWhile} from
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessages} from "../error/error-messages";
-import {LoginAgainDialog} from "../shared/login-again/login-again.dialog";
 import {UserAuthService} from "../services/user-auth.service";
 
 export interface IdTypSelection {
@@ -54,8 +53,7 @@ export class CreatePatientComponent  implements OnInit {
     public errorNotificationService: ErrorNotificationService,
     private router: Router,
     private titleService: GlobalTitleService,
-    public tentativeDialog: MatDialog,
-    public loginAgainDialog: MatDialog
+    public tentativeDialog: MatDialog
   ) {
     this.patientService = patientService;
     this.patientListService = patientListService;
@@ -199,17 +197,6 @@ export class CreatePatientComponent  implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result)
         this.createNewPatient(true);
-    });
-  }
-
-  openLoginAgainDialog(): void {
-    const dialogRef = this.loginAgainDialog.open(LoginAgainDialog, {
-      data: {}
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result)
-        window.location.reload()
     });
   }
 }
