@@ -5,7 +5,7 @@ import {Session} from '../model/session';
 import {Token, TokenType} from '../model/token';
 import {TokenData} from '../model/token-data';
 import {AppConfigService} from "../app-config.service";
-import {catchError, map} from "rxjs/operators";
+import {catchError, map, mergeMap} from "rxjs/operators";
 import {Router} from "@angular/router";
 import {getErrorMessageFrom} from "../error/error-utils";
 
@@ -39,8 +39,17 @@ export class SessionService {
         localStorage.setItem(this.LS_SESSION_ITEM, JSON.stringify(session));
         this.sessionSubject.next(session);
         return session;
-      })
+      }),
+      catchError((error) => SessionService.handleFailedRequest("Failed to create a mainzelliste session", error))
     )
+  }
+
+  createSessionIfNotValid(): Observable<boolean> {
+    console.log("createSessionIfNotValid")
+    return this.isSessionValid().pipe(
+      mergeMap((isValid) => isValid ?
+        of(true) : this.createSession().pipe(map(() => true))
+      ))
   }
 
   deleteSession(): Observable<boolean> {

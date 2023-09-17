@@ -81,11 +81,12 @@ import {
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {from} from "rxjs";
 import {UserAuthService} from "./services/user-auth.service";
+import { LoginAgainDialog } from './shared/login-again/login-again.dialog';
 
 function initializeAppFactory(service: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService): () => Promise<any> {
   return () => service.load()
   .then(config => {
-    from(keycloak.keycloakEvents$).subscribe( event => userAuthService.notify(event));
+    from(keycloak.keycloakEvents$).subscribe( event => userAuthService.notifyKeycloakEvent(event));
     return keycloak.init({
       config: {
         url: config[0].oAuthConfig?.url ?? "",
@@ -141,7 +142,8 @@ function initializeAppFactory(service: AppConfigService, keycloak: KeycloakServi
     ErrorCardComponent,
     DeletePatientDialog,
     CreatePatientTentativeDialog,
-    EditPatientTentativeDialog
+    EditPatientTentativeDialog,
+    LoginAgainDialog
   ],
   imports: [
     BrowserModule,

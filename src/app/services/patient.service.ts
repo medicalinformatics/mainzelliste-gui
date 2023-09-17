@@ -341,7 +341,7 @@ export class PatientService {
     )
   }
 
-   createPatient(patient: Patient, idTypes: string[], sureness: boolean): Promise<Id> {
+   createPatient(patient: Patient, idTypes: string[], sureness: boolean): Observable<Id> {
     if (idTypes == undefined || idTypes.length == 0) {
       throw new MainzellisteError(ErrorMessages.CREATE_PATIENT_MISSING_ID_TYPE);
     }
