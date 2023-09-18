@@ -82,8 +82,8 @@ import {ClipboardModule} from "@angular/cdk/clipboard";
 import {from} from "rxjs";
 import {UserAuthService} from "./services/user-auth.service";
 
-function initializeAppFactory(service: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService): () => Promise<any> {
-  return () => service.load()
+function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService): () => Promise<any> {
+  return () => configService.init()
   .then(config => {
     from(keycloak.keycloakEvents$).subscribe( event => userAuthService.notifyKeycloakEvent(event));
     return keycloak.init({
@@ -102,13 +102,13 @@ function initializeAppFactory(service: AppConfigService, keycloak: KeycloakServi
     .catch(error => {
       // find error reason
       let reason = "";
-      if (!!error) {
+      if (error) {
         reason = error.error?.length > 0 ? " Reason: " + error.error : "";
       }
       throw new Error("Failed to connect to Keycloak." + reason);
     })
-    .then( isLoggedIn => isLoggedIn ? service.fetchMainzellisteIdGenerators() : [])
-    .then( idGenerators => idGenerators.length > 0? service.fetchMainzellisteFields() : []);
+    .then( isLoggedIn => isLoggedIn ? configService.fetchMainzellisteIdGenerators() : [])
+    .then( idGenerators => idGenerators.length > 0? configService.fetchMainzellisteFields() : []);
   });
 }
 

@@ -15,6 +15,9 @@ services:
       KEYCLOAK_URL: http://${HOST}:8082
       KEYCLOAK_REALM: mainzelliste
       KEYCLOAK_CLIENT_ID: mainzelliste-ui
+      ML_UI_MAIN_ID_TYPE: pid
+      ML_UI_SHOW_ALL_IDS: false
+      ML_UI_DEBUG_MODE: false
     depends_on:
       - mainzelliste
   mainzelliste:
@@ -29,6 +32,7 @@ services:
       ML_DB_PASS: pleaseChangeMe
       ML_ALLOWED_ORIGINS: http://${HOST}
       ML_OIDC_ISS: http://${HOST}:8082/realms/mainzelliste
+      # can be removed, if the HOST env variable not referring to the local computer (localhost or 127.0.0.1)
       ML_OIDC_INTERNAL_ISS_BASE_URL: http://keycloak:8080
     depends_on:
       - mainzelliste-db

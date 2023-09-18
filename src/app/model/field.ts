@@ -1,6 +1,6 @@
 export enum FieldType {
-  TEXT,
-  DATE
+  TEXT = "TEXT",
+  DATE = "DATE"
 }
 export class Field {
   constructor(

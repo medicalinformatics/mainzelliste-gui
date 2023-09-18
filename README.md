@@ -5,8 +5,21 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ## Running on Linux
 1. copy the file `.env.default` to `.env` and set the environment variable `HOST` to the server name
 2. You can either set up you keycloak configuration manually or just run the shell initialization file ``./init-keycloak.sh`` to do this task for you.
-  1. before running the shell initialization file ``./init-keycloak.sh`` just make sure that all the docker container are down and the `keycloakDB` volume doesn't exist.
-3. ``docker-compose up -d``
+   1. before running the shell initialization file ``./init-keycloak.sh`` just make sure that all the docker container are down and the `keycloakDB` volume doesn't exist.
+3. run ``docker-compose up -d``
+
+## How to configure the ui
+the docker image of the ui uses several environment variables :
+
+| Environment Variable | Description                                                               | Required ? | Default Value                                                                                       |
+|----------------------|---------------------------------------------------------------------------|------------|-----------------------------------------------------------------------------------------------------|
+| MAINZELLISTE_URL     | the mainzelliste backend url                                              | Yes        | -                                                                                                   |
+| ML_UI_MAIN_ID_TYPE   | default selected ID in create new patient page                            | no         | the backend default id type (is the first id type in the mainzelliste `idgenerators` configutation) |
+| ML_UI_SHOW_ALL_IDS   | show all id in patient list view                                          | no         | false                                                                                               |
+| ML_UI_DEBUG_MODE     | activate debug mode will initialize the patient list view with dummy data | no         | false                                                                                               |
+| KEYCLOAK_URL         | Keycloak base url                                                         | Yes        | -                                                                                                   |
+| KEYCLOAK_REALM       | Realm ID                                                                  | Yes        | -                                                                                                   |
+| KEYCLOAK_CLIENT_ID   | Client ID                                                                 | Yes        | -                                                                                                   |
 
 ## Developer Guide 
 ### Running locally
