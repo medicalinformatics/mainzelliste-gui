@@ -8,7 +8,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
    1. before running the shell initialization file ``./init-keycloak.sh`` just make sure that all the docker container are down and the `keycloakDB` volume doesn't exist.
 3. run ``docker-compose up -d``
 
-## How to configure the ui
+## How to configure
 the docker image of the ui uses several environment variables :
 
 | Environment Variable | Description                                                               | Required ? | Default Value                                                                                       |
