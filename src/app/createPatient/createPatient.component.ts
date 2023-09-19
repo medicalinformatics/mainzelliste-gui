@@ -8,8 +8,8 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
 import {ErrorNotificationService} from "../services/error-notification.service";
 import {GlobalTitleService} from "../services/global-title.service";
-import {from, Observable, of, throwError} from "rxjs";
-import {catchError, concatMap, map, retry, retryWhen, startWith, takeWhile} from "rxjs/operators";
+import {Observable, of} from "rxjs";
+import {concatMap, map, retryWhen, startWith, switchMap} from "rxjs/operators";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessages} from "../error/error-messages";
@@ -89,22 +89,26 @@ export class CreatePatientComponent  implements OnInit {
     //create patient
     of(this.patient).pipe(
       concatMap(p => this.patientService.createPatient(p, this.selectedInternalIdTypes, sureness)),
-      catchError((e, caught) => {
-        if (e instanceof MainzellisteError) {
-          switch (e.errorMessage) {
-            case ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH:
-              this.openCreatePatientTentativeDialog();
-              break;
-            case ErrorMessages.ML_SESSION_NOT_FOUND:
-              // first try to login again
-              return from(this.userAuthService.retryLogin(this.router.url)).pipe(concatMap(() => throwError(e)))
-          }
-        }
-        return caught;
-      }),
-      retry(1)
-    ).toPromise().then(newId =>
-      this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
+      retryWhen(
+        error => error.pipe(
+          switchMap( (e) => {
+            if(e instanceof MainzellisteError) {
+              // handle session timeout
+              if( e.errorMessage == ErrorMessages.ML_SESSION_NOT_FOUND)
+                return this.userAuthService.retryLogin(this.router.url)
+              // handle tentative
+              else if (e.errorMessage == ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH) {
+                this.openCreatePatientTentativeDialog();
+                // do not emit any value in order to send a complete notification on subscription
+                return of();
+              }
+            }
+            throw e;
+          })
+        )
+      )
+    ).toPromise().then(
+      newId => this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
     )
   }
 

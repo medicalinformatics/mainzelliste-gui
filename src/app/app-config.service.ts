@@ -130,7 +130,6 @@ export class AppConfigService {
 
     configuredField.required = mlField.required;
     configuredField.validator = mlField.validation ?? "";
-    console.log(this.data[0].fields)
     this.mainzellisteFields.push(fieldName);
   }
 

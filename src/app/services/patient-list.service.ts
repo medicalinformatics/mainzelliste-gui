@@ -17,6 +17,7 @@ import {ErrorMessage, ErrorMessages} from "../error/error-messages";
 import * as _moment from 'moment';
 import {MAT_DATE_LOCALE} from "@angular/material/core";
 import {getErrorMessageFrom} from "../error/error-utils";
+import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 
 export class Id {
   constructor(
@@ -204,10 +205,12 @@ export class PatientListService {
     .pipe(
       mergeMap(token => this.resolveAddPatientToken(token.id, patient, sureness)),
       catchError(e => {
-        let isSessionNotFoundError = e instanceof HttpErrorResponse &&
-          (e.status == 404) && ErrorMessages.ML_SESSION_NOT_FOUND.match(e);
-        return throwError(isSessionNotFoundError ? new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND) :
-          new Error(`Failed to create Mainzelliste Token. Cause: ${getErrorMessageFrom(e)}`));
+        // handle failed token creation
+        if (e instanceof HttpErrorResponse && (e.status == 404) && ErrorMessages.ML_SESSION_NOT_FOUND.match(e))
+          return throwError(new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND))
+        else if (!(e instanceof MainzellisteError) && !(e instanceof MainzellisteUnknownError))
+          return throwError(new MainzellisteUnknownError("Failed to create AddPatientToken", e))
+        return throwError(e)
       })
     );
   }
@@ -235,18 +238,18 @@ export class PatientListService {
     })
     .pipe(
       catchError(e => {
-        let errorMessage;
         if (e instanceof HttpErrorResponse && (e.status == 400 || e.status == 409)) {
-          errorMessage = this.addPatientErrorMessages.find(msg => msg.match(e))
+          let errorMessage = this.addPatientErrorMessages.find(msg => msg.match(e))
           if (errorMessage == ErrorMessages.CREATE_PATIENT_INVALID_FIELD) {
             let fieldName: string = errorMessage.findVariables(e)[0];
             let field = this.patientList.fields.find(f => f.mainzellisteField == fieldName);
             return throwError(new MainzellisteError(errorMessage, field?.name));
           } else if( errorMessage == ErrorMessages.CREATE_PATIENT_INVALID_EXT_ID) {
             return throwError(new MainzellisteError(errorMessage, errorMessage.findVariables(e)[1]));
-          }
+          } if(errorMessage != undefined)
+            return throwError(new MainzellisteError(errorMessage));
         }
-        return throwError(errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
+        return throwError(new MainzellisteUnknownError("Failed to resolve AddPatientToken", e))
       }),
       map( ids => ids[0])
     )
