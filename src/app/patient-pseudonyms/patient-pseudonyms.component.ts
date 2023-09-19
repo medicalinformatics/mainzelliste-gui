@@ -79,7 +79,7 @@ export class PatientPseudonymsComponent {
 
   getExternalIdMatSelectData(): string[] {
     return this.getExternalIdTypes().filter(idType => !this.ids.some( id => id.idType == idType)
-      || this.deletedExternalIds.some(idType => idType == idType));
+      || this.deletedExternalIds.some(dIdType => idType == dIdType));
   }
 
   /**
