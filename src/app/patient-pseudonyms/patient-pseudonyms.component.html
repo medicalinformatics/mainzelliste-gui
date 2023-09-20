@@ -53,14 +53,14 @@
       <div style="display: flex; flex-wrap: nowrap;">
         <mat-form-field class="inputField">
           <mat-label>Pseudonymtyp</mat-label>
-          <mat-select [formControl]="externalIdTypesFormControl" required="false">
+          <mat-select #selectedExternalIdType required="false">
             <mat-option *ngFor="let idType of this.getExternalIdMatSelectData()"
                         [value]="idType">{{idType}}</mat-option>
           </mat-select>
         </mat-form-field>
         <button mat-icon-button color="primary" aria-label="Externes Pseudonym hinzufügen"
-                [disabled]="this.externalIdTypesFormControl.value == undefined || this.externalIdTypesFormControl.value.length < 1"
-                (click)="this.addExternalIdField()" style="margin-top: 9px; margin-left: 8px">
+                [disabled]="this.disableAddExternalIdField(selectedExternalIdType)"
+                (click)="this.addExternalIdField(selectedExternalIdType)" style="margin-top: 9px; margin-left: 8px">
           <mat-icon>add</mat-icon>
         </button>
       </div>

@@ -1,7 +1,10 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {PatientListService} from "../services/patient-list.service";
 import {IdTypSelection} from "../createPatient/createPatient.component";
-import {ControlContainer, FormControl, NgForm} from "@angular/forms";
+import {ControlContainer, NgForm} from "@angular/forms";
+import {MatSelect} from "@angular/material/select";
+import {addIfNotExist} from "../utils/array-utils";
+import {Id} from "../model/id";
 
 @Component({
   selector: 'app-patient-pseudonyms',
@@ -10,9 +13,9 @@ import {ControlContainer, FormControl, NgForm} from "@angular/forms";
   viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
 })
 
-export class PatientPseudonymsComponent {
+export class PatientPseudonymsComponent implements OnChanges{
   private patientListService: PatientListService;
-  @Input() ids: Array<{ idType: string, idString: string }> = [];
+  @Input() ids: Array<Id> = [];
 
   @Input() fields: { [key: string]: any } = {};
   @Input() readOnly: boolean = false;
@@ -21,33 +24,44 @@ export class PatientPseudonymsComponent {
   @Output() slideFieldEvent = new EventEmitter<{ name: string, value: string }>();
   @Output() pseudonymEvent = new EventEmitter<{ name: string, value: string }>();
 
-  externalIdTypesFormControl = new FormControl('');
-
   internalIdTypes: IdTypSelection[] = [];
-  externalIdTypes: string[] = [];
-  deletedExternalIds: string[] = [];
+  externalIdTypes: IdTypSelection[] = [];
 
   constructor(patientListService: PatientListService) {
     this.patientListService = patientListService;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    const change = changes["ids"]
+    if(change.currentValue != undefined && change.currentValue.length > 0)
+      this.getExternalIdTypes()
+      .filter( e => change.currentValue.some( (id: any) => e.idType == id.idType))
+      .forEach(e => e.added = true);
+
   }
 
   slideData(value: string, name: string): void {
     this.slideFieldEvent.emit({value: value, name: name});
   }
 
-  addExternalIdField() {
+  addExternalIdField(selectedExternalIdType: MatSelect) {
     //add external id to patient model
-    this.ids.push({idType: this.externalIdTypesFormControl.value, idString: ''})
+    addIfNotExist(new Id(selectedExternalIdType.value, ''), this.ids, e => e.idType == selectedExternalIdType.value);
 
-    let index = this.deletedExternalIds.findIndex(idType => idType == this.externalIdTypesFormControl.value);
-    if (index > -1) {
-      this.deletedExternalIds.splice(index, 1);
-    }
+    this.externalIdTypes.filter( t => t.idType == selectedExternalIdType.value )
+    .forEach( t => t.added = true);
+    selectedExternalIdType.value = undefined
   }
 
   removeExternalIdField(idType: string) {
     this.ids.filter(id => id.idType == idType).forEach(id => id.idString = "");
-    this.deletedExternalIds.push(idType);
+
+    this.externalIdTypes.filter( t => t.idType == idType)
+    .forEach( t => t.added = false);
+  }
+
+  disableAddExternalIdField(selectedExternalIdType: MatSelect): boolean {
+    return selectedExternalIdType.value == undefined || selectedExternalIdType.value.length < 1;
   }
 
   getInternalIdTypes(): IdTypSelection[] {
@@ -62,33 +76,33 @@ export class PatientPseudonymsComponent {
     return this.internalIdTypes;
   }
 
-  getInternalIds(): { idType: string, idString: string }[] {
+  getInternalIds(): Id[] {
     this.getInternalIdTypes();
     return this.ids.filter(id => this.getInternalIdTypes().some(t => t.idType == id.idType))
   }
 
-  getExternalIdTypes(): string[] {
+  getExternalIdTypes(): IdTypSelection[] {
     //init.
     if (this.externalIdTypes.length == 0) {
       this.externalIdTypes = this.patientListService.getIdGenerators()
       .filter(g => g.isExternal)
-      .map(g =>  g.idType);
+      .map(g => {
+        return {idType: g.idType, added: false}
+      });
     }
     return this.externalIdTypes;
   }
 
   getExternalIdMatSelectData(): string[] {
-    return this.getExternalIdTypes().filter(idType => !this.ids.some( id => id.idType == idType)
-      || this.deletedExternalIds.some(dIdType => idType == dIdType));
+    return this.getExternalIdTypes().filter( t => !t.added).map( t => t.idType);
   }
 
   /**
    * get patient external ids
    */
-  getExternalIds(): { idType: string, idString: string }[] {
+  getExternalIds(): Id[] {
     return this.ids.filter(id =>
-      this.getExternalIdTypes().some( idType => idType == id.idType)
-      && !this.deletedExternalIds.some(idType => idType == id.idType)
+      this.getExternalIdTypes().some( t => t.idType == id.idType && t.added)
     );
   }
 }
