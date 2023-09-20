@@ -14,7 +14,6 @@ import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessages} from "../error/error-messages";
 import {UserAuthService} from "../services/user-auth.service";
-import { Id } from '../model/id';
 
 export interface IdTypSelection {
   idType: string,
@@ -115,36 +114,6 @@ export class CreatePatientComponent  implements OnInit {
 
   fieldsChanged(newFields: { [p: string]: any }) {
     this.patient.fields = newFields;
-  }
-
-  getExternalIdTypes(added: boolean): IdTypSelection[] {
-    if (this.externalIdTypes.length == 0)
-      //init.
-      this.externalIdTypes = this.patientListService.getIdGenerators()
-      .filter(g => g.isExternal)
-      .map(g => {
-        return {idType: g.idType, added: false}
-      });
-    return this.externalIdTypes.filter(g => g.added == added);
-  }
-
-  addExternalIdField() {
-    //add external id to patient model
-    this.patient.ids.push(new Id(this.externalIdTypesFormControl.value.idType, ''))
-    this.externalIdTypesFormControl.value.added = true;
-  }
-
-  removeExternalIdField(idType: string) {
-    this.externalIdTypes
-    .filter(e => e.idType == idType)
-    .forEach(e => {
-      e.added = false;
-    })
-
-    // remove external id from model
-    let index = this.patient.ids.findIndex(id => id.idType == idType);
-    if (index > -1)
-      this.patient.ids.splice(index, 1);
   }
 
   selectedInternalIdType(event: MatAutocompleteSelectedEvent): void {

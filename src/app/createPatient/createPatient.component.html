@@ -7,34 +7,7 @@
     <br>
     <div style="width: 90%; margin-left: 5%; max-width: 700px;">
       <h4>Externes Pseudonym hinzufügen:</h4>
-      <div *ngFor="let externalId of this.patient.ids" style="display: flex; flex-wrap: nowrap;">
-        <mat-form-field class="inputField" style="width: 76.5%;">
-          <mat-label>{{externalId.idType}}</mat-label>
-          <input style="width: 90%; " matInput placeholder="{{externalId.idType}}"
-                 [(ngModel)]="externalId.idString"
-                 [name]="externalId.idType">
-        </mat-form-field>
-        <button mat-icon-button color="primary" aria-label="Externes Pseudonym entfernen"
-                (click)="this.removeExternalIdField(externalId.idType)"
-                style="margin-top: 9px; margin-left: 8px">
-          <mat-icon>remove</mat-icon>
-        </button>
-      </div>
-      <div style="display: flex; flex-wrap: nowrap;"
-           *ngIf="this.getExternalIdTypes(false).length > 0">
-        <mat-form-field class="inputField" style="width: 76.5%">
-          <mat-label>Pseudonymtyp</mat-label>
-          <mat-select [formControl]="externalIdTypesFormControl" required="false">
-            <mat-option *ngFor="let idType of this.getExternalIdTypes(false)"
-                        [value]="idType">{{idType.idType}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <button mat-icon-button color="primary" aria-label="Externes Pseudonym hinzufügen"
-                [disabled]="this.externalIdTypesFormControl.value == undefined || this.externalIdTypesFormControl.value.length < 1"
-                (click)="this.addExternalIdField()" style="margin-top: 9px; margin-left: 8px">
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
+      <app-external-pseudonyms [readOnly]="false" [ids]="this.patient.ids" [removeEmptyId]="true"></app-external-pseudonyms>
     </div>
     <br>
     <div style="width: 90%; margin-left: 5%; max-width: 700px;" ngModelGroup="internalIdTypes"

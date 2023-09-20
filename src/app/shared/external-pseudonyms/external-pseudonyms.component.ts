@@ -2,7 +2,7 @@ import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Id} from "../../model/id";
 import {IdTypSelection} from "../../createPatient/createPatient.component";
 import {MatSelect} from "@angular/material/select";
-import {addIfNotExist} from "../../utils/array-utils";
+import {addIfNotExist, removeFrom} from "../../utils/array-utils";
 import {PatientListService} from "../../services/patient-list.service";
 
 @Component({
@@ -14,6 +14,7 @@ export class ExternalPseudonymsComponent implements OnChanges {
 
   @Input() ids: Array<Id> = [];
   @Input() readOnly: boolean = false;
+  @Input() removeEmptyId: boolean = false;
   @Input() side: string = "none";
 
   externalIdTypes: IdTypSelection[] = [];
@@ -40,7 +41,10 @@ export class ExternalPseudonymsComponent implements OnChanges {
   }
 
   removeExternalIdField(idType: string) {
-    this.ids.filter(id => id.idType == idType).forEach(id => id.idString = "");
+    if(this.removeEmptyId)
+      removeFrom(id => id.idType == idType, this.ids);
+    else
+      this.ids.filter(id => id.idType == idType).forEach(id => id.idString = "");
 
     this.externalIdTypes.filter(t => t.idType == idType)
     .forEach(t => t.added = false);
