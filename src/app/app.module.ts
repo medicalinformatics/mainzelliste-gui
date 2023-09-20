@@ -81,6 +81,7 @@ import {
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {from} from "rxjs";
 import {UserAuthService} from "./services/user-auth.service";
+import { ExternalPseudonymsComponent } from './shared/external-pseudonyms/external-pseudonyms.component';
 import { ConsentComponent } from './consent/consent.component';
 import {DemoMaterialModule} from "./patientlist/material-module";
 import { ConsentDialogComponent } from './consent-dialog/consent-dialog.component';
@@ -88,8 +89,8 @@ import { ConsentDetailComponent } from './consent-detail/consent-detail.componen
 import { AddConsentComponent } from './add-consent/add-consent.component';
 import { EditConsentComponent } from './edit-consent/edit-consent.component';
 
-function initializeAppFactory(service: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService): () => Promise<any> {
-  return () => service.load()
+function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService): () => Promise<any> {
+  return () => configService.init()
   .then(config => {
     from(keycloak.keycloakEvents$).subscribe( event => userAuthService.notifyKeycloakEvent(event));
     return keycloak.init({
@@ -108,13 +109,13 @@ function initializeAppFactory(service: AppConfigService, keycloak: KeycloakServi
     .catch(error => {
       // find error reason
       let reason = "";
-      if (!!error) {
+      if (error) {
         reason = error.error?.length > 0 ? " Reason: " + error.error : "";
       }
       throw new Error("Failed to connect to Keycloak." + reason);
     })
-    .then( isLoggedIn => isLoggedIn ? service.fetchMainzellisteIdGenerators() : [])
-    .then( idGenerators => idGenerators.length > 0? service.fetchMainzellisteFields() : []);
+    .then( isLoggedIn => isLoggedIn ? configService.fetchMainzellisteIdGenerators() : [])
+    .then( idGenerators => idGenerators.length > 0? configService.fetchMainzellisteFields() : []);
   });
 }
 
@@ -148,6 +149,7 @@ function initializeAppFactory(service: AppConfigService, keycloak: KeycloakServi
     DeletePatientDialog,
     CreatePatientTentativeDialog,
     EditPatientTentativeDialog,
+    ExternalPseudonymsComponent,
     ConsentComponent,
     ConsentDialogComponent,
     ConsentDetailComponent,

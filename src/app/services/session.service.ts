@@ -45,7 +45,6 @@ export class SessionService {
   }
 
   createSessionIfNotValid(): Observable<boolean> {
-    console.log("createSessionIfNotValid")
     return this.isSessionValid().pipe(
       mergeMap((isValid) => isValid ?
         of(true) : this.createSession().pipe(map(() => true))

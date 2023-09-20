@@ -5,7 +5,7 @@ import {AppConfig} from "./app-config";
 import {catchError, map} from "rxjs/operators";
 import {throwError} from "rxjs";
 import {MainzellisteField, MainzellisteFieldType} from "./model/mainzelliste-field";
-import {Field} from "./model/field";
+import {Field, FieldType} from "./model/field";
 
 
 export interface IdGenerator {
@@ -29,7 +29,7 @@ export class AppConfigService {
   /**
    * read and validate the configuration file
    */
-  load(): Promise<PatientList[]> {
+  init(): Promise<PatientList[]> {
     //TODO cache backend configurations
     return new Promise<PatientList[]>((resolve, reject) => {
       this.httpClient.get<AppConfig>('assets/config/config.json')
@@ -100,12 +100,14 @@ export class AppConfigService {
       map(mlFields => {
         //validate fields
         for (let configuredField of this.data[0].fields) {
+          // init date field
           if (configuredField.mainzellisteFields != undefined) {
+            configuredField.type = FieldType.DATE;
             for (let currentField of configuredField.mainzellisteFields) {
-              this.initField(currentField, configuredField, mlFields)
+              this.initField(currentField, configuredField, mlFields, true)
             }
-          } else {
-            this.initField(configuredField.mainzellisteField, configuredField,mlFields);
+          } else { // init other fields
+            this.initField(configuredField.mainzellisteField, configuredField, mlFields);
           }
         }
         return mlFields;
@@ -113,12 +115,21 @@ export class AppConfigService {
     ).toPromise();
   }
 
-  private initField(fieldName: string, configuredField:Field, backendMlField: MainzellisteField[]) {
+  private initField(fieldName: string, configuredField:Field, backendMlField: MainzellisteField[], isDateType?: boolean) {
+    // find backend field configuration
     let mlField: MainzellisteField|undefined = backendMlField.find(f => f.name == fieldName);
     if (mlField == undefined)
       throw new Error("Configured field '" + fieldName + "' not defined in backend configuration")
+
+    // set type
+    if(!isDateType) {
+      if (mlField.type != MainzellisteFieldType.PlainTextField)
+        throw new Error("Configured field '" + fieldName + "' type '" + mlField.type + "' not supported yet")
+      configuredField.type = FieldType.TEXT
+    }
+
     configuredField.required = mlField.required;
-    configuredField.validator = mlField.validation != undefined ? mlField.validation : "";
+    configuredField.validator = mlField.validation ?? "";
     this.mainzellisteFields.push(fieldName);
   }
 

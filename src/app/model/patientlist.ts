@@ -1,11 +1,9 @@
-import {ControlNumberGenerator} from "./control-number-generator";
 import {Field, FieldType} from "./field";
 
 export class PatientList {
   constructor(
     public url: URL,
     public oAuthConfig?: OAuthConfig,
-    // wenn nicht gesetzt automatisch erste id die von mainzelliste angeben wird
     public mainIdType?: string,
     public showAllIds?: boolean,
     public fields: Array<Field> = [
@@ -16,7 +14,6 @@ export class PatientList {
       new Field("Wohnort", "Wohnort",[], FieldType.TEXT, true, "", "Musterstadt"),
       new Field("PLZ", "PLZ", [], FieldType.TEXT, true, "", "mind. 5 Zeichen")
     ],
-    public controlNumberGenerator?: ControlNumberGenerator,
     public debug?:boolean
   ) {}
 }

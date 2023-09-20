@@ -1,8 +1,8 @@
 export enum MainzellisteFieldType {
-  IntegerField,
-  PlainTextField,
-  HashedField,
-  ControlNumberField
+  IntegerField = "IntegerField",
+  PlainTextField = "PlainTextField",
+  HashedField = "HashedField",
+  ControlNumberField = "ControlNumberField"
 }
 export class MainzellisteField {
   constructor(

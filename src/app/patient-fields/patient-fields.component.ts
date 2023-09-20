@@ -55,6 +55,7 @@ export class PatientFieldsComponent implements OnInit {
   }
 
   displayError(field: NgModel){
+    //let isFieldsEmpty = !Object.keys(this.fields).length || !Object.entries(this.fields).some( (e) => e[1].length > 0);
     return field.invalid &&
       (field.dirty || field.touched) &&
       (field.errors?.['pattern'] || field.errors?.['required']);

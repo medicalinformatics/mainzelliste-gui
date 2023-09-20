@@ -2,14 +2,14 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Patient} from "../model/patient";
 import {PatientService} from "../services/patient.service";
 import {Router} from "@angular/router";
-import {FormControl} from "@angular/forms";
+import {FormControl, NgForm} from "@angular/forms";
 import {PatientListService} from "../services/patient-list.service";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
 import {ErrorNotificationService} from "../services/error-notification.service";
 import {GlobalTitleService} from "../services/global-title.service";
-import {from, Observable, of, throwError} from "rxjs";
-import {catchError, concatMap, map, retry, retryWhen, startWith, takeWhile} from "rxjs/operators";
+import {Observable, of} from "rxjs";
+import {concatMap, map, retryWhen, startWith, switchMap} from "rxjs/operators";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessages} from "../error/error-messages";
@@ -95,62 +95,34 @@ export class CreatePatientComponent  implements OnInit {
     //create patient
     of(this.patient).pipe(
       concatMap(p => this.patientService.createPatient(p, this.selectedInternalIdTypes, sureness)),
-      catchError((e, caught) => {
-        if (e instanceof MainzellisteError) {
-          switch (e.errorMessage) {
-            case ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH:
-              this.openCreatePatientTentativeDialog();
-              break;
-            case ErrorMessages.ML_SESSION_NOT_FOUND:
-              // first try to login again
-              return from(this.userAuthService.retryLogin(this.router.url)).pipe(concatMap(() => throwError(e)))
-          }
-        }
-        return caught;
-      }),
-      retry(1)
+      retryWhen(
+        error => error.pipe(
+          switchMap( (e) => {
+            if(e instanceof MainzellisteError) {
+              // handle session timeout
+              if( e.errorMessage == ErrorMessages.ML_SESSION_NOT_FOUND)
+                return this.userAuthService.retryLogin(this.router.url)
+              // handle tentative
+              else if (e.errorMessage == ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH) {
+                this.openCreatePatientTentativeDialog();
+                // do not emit any value in order to send a complete notification on subscription
+                return of();
+              }
+            }
+            throw e;
+          })
+        )
+      )
     ).toPromise().then(newId => {
-        if(this.consent){
-          this.consent.patientId = newId;
-          this.consentService.addConsent(this.consent).then();
-        }
-      this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
-    }
-    )
+      if(this.consent){
+        this.consent.patientId = newId;
+        this.consentService.addConsent(this.consent).then();
+      } this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
+    })
   }
 
   fieldsChanged(newFields: { [p: string]: any }) {
     this.patient.fields = newFields;
-  }
-
-  getExternalIdTypes(added: boolean): IdTypSelection[] {
-    if (this.externalIdTypes.length == 0)
-      //init.
-      this.externalIdTypes = this.patientListService.getIdGenerators()
-      .filter(g => g.isExternal)
-      .map(g => {
-        return {idType: g.idType, added: false}
-      });
-    return this.externalIdTypes.filter(g => g.added == added);
-  }
-
-  addExternalIdField() {
-    //add external id to patient model
-    this.patient.ids.push({idType: this.externalIdTypesFormControl.value.idType, idString: ''})
-    this.externalIdTypesFormControl.value.added = true;
-  }
-
-  removeExternalIdField(idType: string) {
-    this.externalIdTypes
-    .filter(e => e.idType == idType)
-    .forEach(e => {
-      e.added = false;
-    })
-
-    // remove external id from model
-    let index = this.patient.ids.findIndex(id => id.idType == idType);
-    if (index > -1)
-      this.patient.ids.splice(index, 1);
   }
 
   selectedInternalIdType(event: MatAutocompleteSelectedEvent): void {
@@ -209,6 +181,13 @@ export class CreatePatientComponent  implements OnInit {
       if (result)
         this.createNewPatient(true);
     });
+  }
+
+  disable(patientForm: NgForm): boolean {
+    let emptyFields = !Object.keys(this.patient.fields).length;
+    let emptyIds = !this.patient.ids.some(id => id.idString.length > 0);
+    let isIdsValid = patientForm.form.get('externalIds')?.valid ?? true;
+    return !emptyFields && !patientForm.form.valid || emptyFields && (emptyIds || !isIdsValid);
   }
 
   openConsentDialog() {

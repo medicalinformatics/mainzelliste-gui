@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {Patient} from "../model/patient";
 import {PatientService} from "../services/patient.service";
-import {Id, PatientListService} from "../services/patient-list.service";
+import {PatientListService} from "../services/patient-list.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {GlobalTitleService} from "../services/global-title.service";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {Id} from "../model/id";
 
 @Component({
   selector: 'app-delete-patient',

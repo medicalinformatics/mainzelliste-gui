@@ -1,7 +1,21 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {PatientListService} from "../services/patient-list.service";
 import {IdTypSelection} from "../createPatient/createPatient.component";
-import {ControlContainer, FormControl, NgForm} from "@angular/forms";
+import {ControlContainer, NgForm} from "@angular/forms";
+import {MatSelect} from "@angular/material/select";
+import {addIfNotExist} from "../utils/array-utils";
+import {Id} from "../model/id";
+import {
+  ExternalPseudonymsComponent
+} from "../shared/external-pseudonyms/external-pseudonyms.component";
 
 @Component({
   selector: 'app-patient-pseudonyms',
@@ -10,9 +24,9 @@ import {ControlContainer, FormControl, NgForm} from "@angular/forms";
   viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
 })
 
-export class PatientPseudonymsComponent {
+export class PatientPseudonymsComponent{
   private patientListService: PatientListService;
-  @Input() ids: Array<{ idType: string, idString: string }> = [];
+  @Input() ids: Array<Id> = [];
 
   @Input() fields: { [key: string]: any } = {};
   @Input() readOnly: boolean = false;
@@ -21,11 +35,10 @@ export class PatientPseudonymsComponent {
   @Output() slideFieldEvent = new EventEmitter<{ name: string, value: string }>();
   @Output() pseudonymEvent = new EventEmitter<{ name: string, value: string }>();
 
-  externalIdTypesFormControl = new FormControl('');
+  @ViewChild(ExternalPseudonymsComponent) externalPseudonymsComponent!: ExternalPseudonymsComponent
 
   internalIdTypes: IdTypSelection[] = [];
   externalIdTypes: string[] = [];
-  deletedExternalIds: string[] = [];
 
   constructor(patientListService: PatientListService) {
     this.patientListService = patientListService;
@@ -33,21 +46,6 @@ export class PatientPseudonymsComponent {
 
   slideData(value: string, name: string): void {
     this.slideFieldEvent.emit({value: value, name: name});
-  }
-
-  addExternalIdField() {
-    //add external id to patient model
-    this.ids.push({idType: this.externalIdTypesFormControl.value, idString: ''})
-
-    let index = this.deletedExternalIds.findIndex(idType => idType == this.externalIdTypesFormControl.value);
-    if (index > -1) {
-      this.deletedExternalIds.splice(index, 1);
-    }
-  }
-
-  removeExternalIdField(idType: string) {
-    this.ids.filter(id => id.idType == idType).forEach(id => id.idString = "");
-    this.deletedExternalIds.push(idType);
   }
 
   getInternalIdTypes(): IdTypSelection[] {
@@ -62,7 +60,7 @@ export class PatientPseudonymsComponent {
     return this.internalIdTypes;
   }
 
-  getInternalIds(): { idType: string, idString: string }[] {
+  getInternalIds(): Id[] {
     this.getInternalIdTypes();
     return this.ids.filter(id => this.getInternalIdTypes().some(t => t.idType == id.idType))
   }
@@ -72,23 +70,14 @@ export class PatientPseudonymsComponent {
     if (this.externalIdTypes.length == 0) {
       this.externalIdTypes = this.patientListService.getIdGenerators()
       .filter(g => g.isExternal)
-      .map(g =>  g.idType);
+      .map(g => g.idType);
     }
     return this.externalIdTypes;
   }
 
-  getExternalIdMatSelectData(): string[] {
-    return this.getExternalIdTypes().filter(idType => !this.ids.some( id => id.idType == idType)
-      || this.deletedExternalIds.some(idType => idType == idType));
-  }
-
-  /**
-   * get patient external ids
-   */
-  getExternalIds(): { idType: string, idString: string }[] {
+  getExternalIds(): Id[] {
     return this.ids.filter(id =>
-      this.getExternalIdTypes().some( idType => idType == id.idType)
-      && !this.deletedExternalIds.some(idType => idType == id.idType)
+      this.getExternalIdTypes().some(idType => idType == id.idType)
     );
   }
 }

@@ -1,8 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {Id, PatientListService} from "../services/patient-list.service";
+import {PatientListService} from "../services/patient-list.service";
 import {Patient} from "../model/patient";
 import {GlobalTitleService} from "../services/global-title.service";
+import {Id} from "../model/id";
 import {ConsentService} from "../consent.service";
 import {MatTable} from "@angular/material/table";
 
