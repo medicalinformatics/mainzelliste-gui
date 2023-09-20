@@ -18,15 +18,7 @@ import * as _moment from 'moment';
 import {MAT_DATE_LOCALE} from "@angular/material/core";
 import {getErrorMessageFrom} from "../error/error-utils";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
-
-export class Id {
-  constructor(
-    public idType: string,
-    public idString: string,
-    public tentative: boolean = false,
-    public uri?: URL
-  ) {}
-}
+import {Id} from "../model/id";
 
 export interface ReadPatientsResponse {
   patients: Patient[];

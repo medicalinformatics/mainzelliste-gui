@@ -21,7 +21,7 @@ export class MergePatientsComponent implements OnInit {
 
   constructor(patientService: PatientService) {
     this.patientService = patientService;
-    this.emptyPatient.ids=[{idType: "Pseudonym", idString: " "}];
+    this.emptyPatient.ids=[{idType: "Pseudonym", idString: " ", tentative: false}];
 
   }
 

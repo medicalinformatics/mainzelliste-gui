@@ -14,6 +14,7 @@ import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessages} from "../error/error-messages";
 import {UserAuthService} from "../services/user-auth.service";
+import { Id } from '../model/id';
 
 export interface IdTypSelection {
   idType: string,
@@ -129,7 +130,7 @@ export class CreatePatientComponent  implements OnInit {
 
   addExternalIdField() {
     //add external id to patient model
-    this.patient.ids.push({idType: this.externalIdTypesFormControl.value.idType, idString: ''})
+    this.patient.ids.push(new Id(this.externalIdTypesFormControl.value.idType, ''))
     this.externalIdTypesFormControl.value.added = true;
   }
 
