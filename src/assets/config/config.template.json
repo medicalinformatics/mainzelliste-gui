@@ -17,7 +17,10 @@
         {"name":  "PLZ", "mainzellisteField":  "plz"},
         {"name":  "Wohnort", "mainzellisteField":  "ort"}
       ],
-      "debug": ${ML_UI_DEBUG_MODE}
+      "debug": ${ML_UI_DEBUG_MODE},
+      "betaFeatures": {
+        "consent": false
+      }
     }
   ]
 }

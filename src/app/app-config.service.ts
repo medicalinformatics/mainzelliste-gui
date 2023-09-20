@@ -23,6 +23,8 @@ export class AppConfigService {
   private mainzellisteIdTypes: string[] = [];
   private mainzellisteFields: string[] = [];
 
+  private consentEnabled: boolean = false;
+
   constructor(private httpClient: HttpClient) {
   }
 
@@ -39,6 +41,9 @@ export class AppConfigService {
           // set configuration
           this.data = r;
 
+          // init feature toggle
+          this.consentEnabled = this.data[0].betaFeatures?.consent ?? false;
+
           //start validation
           this.validateBackendUrl(this.data[0])
           .subscribe(
@@ -50,6 +55,10 @@ export class AppConfigService {
         _e => reject(new Error("UI configuration file not found"))
       );
     });
+  }
+
+  isConsentEnabled(): boolean {
+    return this.consentEnabled;
   }
 
   getMainzellisteIdTypes(): string[] {

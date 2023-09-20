@@ -59,7 +59,7 @@ export class CreatePatientComponent  implements OnInit {
     private router: Router,
     private titleService: GlobalTitleService,
     public tentativeDialog: MatDialog,
-    private consentService: ConsentService
+    public consentService: ConsentService
   ) {
     this.patientService = patientService;
     this.patientListService = patientListService;

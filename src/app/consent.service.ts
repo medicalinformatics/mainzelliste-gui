@@ -21,6 +21,10 @@ export class ConsentService {
     this.client = new Client({baseUrl: this.mainzellisteBaseUrl + "/fhir"});
   }
 
+  public isServiceEnabled(): boolean {
+    return this.appConfigService.isConsentEnabled();
+  }
+
   /**
    * serialize ui change in consent fhir resource
    * @param dataModel
