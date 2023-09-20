@@ -4,11 +4,13 @@ import {IdTypSelection} from "../../createPatient/createPatient.component";
 import {MatSelect} from "@angular/material/select";
 import {addIfNotExist, removeFrom} from "../../utils/array-utils";
 import {PatientListService} from "../../services/patient-list.service";
+import {ControlContainer, NgForm} from "@angular/forms";
 
 @Component({
   selector: 'app-external-pseudonyms',
   templateUrl: './external-pseudonyms.component.html',
-  styleUrls: ['./external-pseudonyms.component.css']
+  styleUrls: ['./external-pseudonyms.component.css'],
+  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
 })
 export class ExternalPseudonymsComponent implements OnChanges {
 

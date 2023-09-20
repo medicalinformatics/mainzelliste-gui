@@ -2,7 +2,7 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Patient} from "../model/patient";
 import {PatientService} from "../services/patient.service";
 import {Router} from "@angular/router";
-import {FormControl} from "@angular/forms";
+import {FormControl, NgForm} from "@angular/forms";
 import {PatientListService} from "../services/patient-list.service";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
@@ -172,6 +172,13 @@ export class CreatePatientComponent  implements OnInit {
       if (result)
         this.createNewPatient(true);
     });
+  }
+
+  disable(patientForm: NgForm): boolean {
+    let emptyFields = !Object.keys(this.patient.fields).length;
+    let emptyIds = !this.patient.ids.some(id => id.idString.length > 0);
+    let isIdsValid = patientForm.form.get('externalIds')?.valid ?? true;
+    return !emptyFields && !patientForm.form.valid || emptyFields && (emptyIds || !isIdsValid);
   }
 }
 
