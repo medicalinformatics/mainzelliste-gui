@@ -81,6 +81,7 @@ import {
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {from} from "rxjs";
 import {UserAuthService} from "./services/user-auth.service";
+import { ExternalPseudonymsComponent } from './shared/external-pseudonyms/external-pseudonyms.component';
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService): () => Promise<any> {
   return () => configService.init()
@@ -141,7 +142,8 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     ErrorCardComponent,
     DeletePatientDialog,
     CreatePatientTentativeDialog,
-    EditPatientTentativeDialog
+    EditPatientTentativeDialog,
+    ExternalPseudonymsComponent
   ],
   imports: [
     BrowserModule,
