@@ -1,14 +1,14 @@
-<div style="height:100%;width:90%; padding-left:3%; padding-top:3%">
-
-  <h1 class="title">Einwilligung Editieren</h1>
-  <div style="margin-bottom: 15%;width: 75%">
+<div style="height:100%; width:100%;">
+  <div style="margin-bottom: 15%;width: 75%; margin-left: 2.5%">
     <app-consent-detail [(dataModel)]="dataModel" [edit]="true"></app-consent-detail>
-    <br/><br/><br/>
-    <button mat-raised-button class="submitBreak" *ngIf="dataModel" (click)="cancel()"
-            style="margin-right: 20px;">Zurück
-    </button>
-    <button mat-raised-button class="submit" *ngIf="dataModel"
-            (click)="editConsent()">Speichen
-    </button>
+    <br/>
+    <div style="width: 90%; max-width: 700px; float: left">
+      <button mat-raised-button class="submitBreak" *ngIf="dataModel" (click)="cancel()"
+              style="margin-right: 20px;">Abbrechen
+      </button>
+      <button mat-raised-button class="submit" *ngIf="dataModel"
+              (click)="editConsent()">Speichen
+      </button>
+    </div>
   </div>
 </div>

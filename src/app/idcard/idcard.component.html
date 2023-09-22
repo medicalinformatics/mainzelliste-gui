@@ -37,7 +37,7 @@
     </section>
   </div>
   <mat-card *ngIf="this.consentService.isServiceEnabled" id="consents">
-    <mat-card-title>Einwilligungen</mat-card-title>
+    <mat-card-title style="float: left; margin-left: 2.5%;">Einwilligungen</mat-card-title>
       <table #consentTable mat-table [dataSource]="consents" class="mat-elevation-z8">
 
         <ng-container matColumnDef="date">

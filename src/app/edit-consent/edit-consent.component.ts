@@ -3,6 +3,7 @@ import {ConsentDetailComponent} from "../consent-detail/consent-detail.component
 import {ConsentService} from "../consent.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Consent} from "../model/consent";
+import {GlobalTitleService} from "../services/global-title.service";
 
 @Component({
   selector: 'app-edit-consent',
@@ -20,7 +21,10 @@ export class EditConsentComponent implements OnInit {
 
   constructor(private consentService: ConsentService,
               private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private titleService: GlobalTitleService
+  ) {
+    this.titleService.setTitle("Einwilligung Editieren", false, "assignment_turned_in");
   }
 
   ngOnInit(): void {
