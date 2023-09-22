@@ -21,23 +21,21 @@
   padding-bottom: 2%;
 }
 
-table {
-  width: 100%;
+#consents table {
+  margin: 0 2.5%;
+  width: 95%;
 }
 
-.IDCardAnsichtButton {
-  float:right;
-  margin-right: 5%;
-}
-
-mat-card-title{
+#consents mat-card-title{
   transform: scale(0.9);
+  float: left;
+  margin-left: 2.5%;
   padding-top: 1%;
   padding-bottom: 2%;
   font-family: Arial;
 }
 
-.mat-row:hover {
+.consent-row:hover {
   background-color: #dddddd;
   cursor: pointer;
 }

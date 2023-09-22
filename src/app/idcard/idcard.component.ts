@@ -22,13 +22,14 @@ export class IdcardComponent implements OnInit {
   public displayedConsentColumns: string[] = ['date', 'title', 'period', 'version'];
   public consents: ConsentRow[] = [];
   @ViewChild('consentTable') consentTable!: MatTable<ConsentRow>;
+  public loading: boolean = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private patientListService: PatientListService,
     private titleService: GlobalTitleService,
-    private consentService: ConsentService
+    public consentService: ConsentService
   ) {
     activatedRoute.params.subscribe((params) => {
       if (params["idType"] !== undefined)
@@ -45,24 +46,28 @@ export class IdcardComponent implements OnInit {
     });
 
     //load consent list
-    this.consentService.getConsents(this.idType, this.idString).then(dataModels =>
-      dataModels.forEach(m => {
-        //map period
-        let period = "unbegrenzt";
-        if (m.validUntil) {
-          period = (!m.validFrom ? "??" : new Date(m.validFrom).toLocaleDateString()) + " - "
-            + new Date(m.validUntil).toLocaleDateString();
-        }
+    this.loading = true;
+    this.consentService.getConsents(this.idType, this.idString).then(dataModels => {
+        dataModels.forEach(m => {
+          //map period
+          let period = "unbegrenzt";
+          if (m.validUntil) {
+            period = (!m.validFrom ? "??" : new Date(m.validFrom).toLocaleDateString()) + " - "
+              + new Date(m.validUntil).toLocaleDateString();
+          }
 
-        this.consents.push({
-          id: m.id!,
-          date: new Date(m.createdAt).toLocaleDateString(),
-          title: m.title,
-          period: period,
-          version: m.version
-        });
-        this.consentTable.renderRows();
-      }));
+          this.consents.push({
+            id: m.id!,
+            date: new Date(m.createdAt).toLocaleDateString(),
+            title: m.title,
+            period: period,
+            version: m.version
+          });
+          this.consentTable.renderRows();
+        })
+        this.loading = false;
+      },
+      error => this.loading = false);
   }
 
   async editConsent(row: ConsentRow) {
