@@ -30,13 +30,13 @@
         <mat-icon matTooltip="Löschen">delete</mat-icon>
       </button>
       <br><br>
-      <button *ngIf="this.consentService.isServiceEnabled" mat-fab (click)="openConsentDialog()"
+      <button *ngIf="this.consentService.isServiceEnabled()" mat-fab (click)="openConsentDialog()"
               style="background-color:#053E6A; color:white;">
         <mat-icon matTooltip="Einwilligung hinzufügen">assignment_turned_in</mat-icon>
       </button>
     </section>
   </div>
-  <mat-card *ngIf="this.consentService.isServiceEnabled" id="consents">
+  <mat-card *ngIf="this.consentService.isServiceEnabled()" id="consents">
     <mat-card-title style="float: left; margin-left: 2.5%;">Einwilligungen</mat-card-title>
       <table #consentTable mat-table [dataSource]="consents" class="mat-elevation-z8">
 
@@ -73,7 +73,7 @@
         <tr mat-header-row  style="height: 0; border: 0;" *matHeaderRowDef="['progress']"></tr>
         <tr class="mat-row" *matNoDataRow>
           <td *ngIf="!loadingConsents" class="mat-cell" [attr.colspan]="4" style="text-align: center">
-            Keine Einwilligung gefunden.
+            Keine Einwilligung.
           </td>
         </tr>
       </table>
