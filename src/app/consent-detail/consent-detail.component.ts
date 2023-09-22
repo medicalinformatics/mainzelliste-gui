@@ -1,9 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {MatSelect} from "@angular/material/select";
 import {ConsentService} from "../consent.service";
-import {MatOption} from "@angular/material/core";
+import {MAT_DATE_LOCALE, MatOption} from "@angular/material/core";
 import {ConsentTemplate} from "../model/consent-template";
 import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "../model/consent";
+import _moment, {Moment} from "moment";
 
 @Component({
   selector: 'app-consent-detail',
@@ -17,9 +18,15 @@ export class ConsentDetailComponent implements OnInit {
   consentTemplates: Map<string, ConsentTemplate>;
   @ViewChild('templateSelection') templateSelection!: MatSelect;
   @Input() edit: boolean = false;
+  localDateFormat:string;
+  validFrom:Moment
 
-  constructor(private consentService: ConsentService) {
+  constructor(private consentService: ConsentService,
+  @Inject(MAT_DATE_LOCALE) private _locale: string) {
+    _moment.locale(this._locale);
     this.consentTemplates = new Map();
+    this.localDateFormat = _moment().localeData().longDateFormat('L');
+    this.validFrom = _moment();
   }
 
   ngOnInit(): void {
@@ -51,9 +58,11 @@ export class ConsentDetailComponent implements OnInit {
   }
 
   getConsentExpiration(): string {
+    let period = this.dataModel.period;
+    this.dataModel.validFrom = this.validFrom.toDate();
     return this.dataModel.period == 0 ? " für einen unbegrenzten Zeit-Raum" :
       ` bis ${new Date((this.dataModel.validFrom?.getTime() || 0)
-        + this.dataModel.period).toLocaleDateString()}`;
+        + period).toLocaleDateString()}`;
   }
 
   /** Utils Method **/

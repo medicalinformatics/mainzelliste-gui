@@ -6,6 +6,8 @@ import {GlobalTitleService} from "../services/global-title.service";
 import {Id} from "../model/id";
 import {ConsentService} from "../consent.service";
 import {MatTable} from "@angular/material/table";
+import {MatDialog} from "@angular/material/dialog";
+import {ConsentDialogComponent} from "../consent-dialog/consent-dialog.component";
 
 export interface ConsentRow {id: string, date:string, title: string, period:string, version?:string}
 
@@ -22,16 +24,17 @@ export class IdcardComponent implements OnInit {
   public displayedConsentColumns: string[] = ['date', 'title', 'period', 'version'];
   public consents: ConsentRow[] = [];
   @ViewChild('consentTable') consentTable!: MatTable<ConsentRow>;
-  public loading: boolean = false;
+  public loadingConsents: boolean = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private patientListService: PatientListService,
     private titleService: GlobalTitleService,
+    public consentDialog: MatDialog,
     public consentService: ConsentService
   ) {
-    activatedRoute.params.subscribe((params) => {
+    this.activatedRoute.params.subscribe((params) => {
       if (params["idType"] !== undefined)
         this.idType = params["idType"]
       if (params["idString"] !== undefined)
@@ -46,31 +49,50 @@ export class IdcardComponent implements OnInit {
     });
 
     //load consent list
-    this.loading = true;
-    this.consentService.getConsents(this.idType, this.idString).then(dataModels => {
-        dataModels.forEach(m => {
-          //map period
-          let period = "unbegrenzt";
-          if (m.validUntil) {
-            period = (!m.validFrom ? "??" : new Date(m.validFrom).toLocaleDateString()) + " - "
-              + new Date(m.validUntil).toLocaleDateString();
-          }
+    if(this.consentService.isServiceEnabled())
+      this.loadConsents();
+  }
 
-          this.consents.push({
-            id: m.id!,
-            date: new Date(m.createdAt).toLocaleDateString(),
-            title: m.title,
-            period: period,
-            version: m.version
-          });
-          this.consentTable.renderRows();
-        })
-        this.loading = false;
-      },
-      error => this.loading = false);
+  private loadConsents() {
+    this.loadingConsents = true;
+    this.consents = []
+    this.consentService.getConsents(this.idType, this.idString).then(dataModels => {
+          dataModels.forEach(m => {
+            //map period
+            let period = "unbegrenzt";
+            if (m.validUntil) {
+              period = (!m.validFrom ? "??" : new Date(m.validFrom).toLocaleDateString()) + " - "
+                  + new Date(m.validUntil).toLocaleDateString();
+            }
+
+            this.consents.push({
+              id: m.id!,
+              date: new Date(m.createdAt).toLocaleDateString(),
+              title: m.title,
+              period: period,
+              version: m.version
+            });
+            this.consentTable.renderRows();
+          })
+          this.loadingConsents = false;
+        },
+        error => this.loadingConsents = false);
   }
 
   async editConsent(row: ConsentRow) {
     await this.router.navigate(["patient", this.idType, this.idString, 'edit-consent', row.id]);
+  }
+
+  openConsentDialog() {
+    const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
+      width: '900px'
+    });
+
+    dialogRef.afterClosed().subscribe(consent => {
+      if (consent) {
+        consent.patientId = {idType: this.idType, idString: this.idString};
+        this.consentService.addConsent(consent).then(e => this.loadConsents());
+      }
+    });
   }
 }

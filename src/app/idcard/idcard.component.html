@@ -30,8 +30,8 @@
         <mat-icon matTooltip="Löschen">delete</mat-icon>
       </button>
       <br><br>
-      <button mat-fab [routerLink]="['/consent', idType, idString]"
-              [state]="{patient: patient}" style="background-color:#053E6A; color:white;">
+      <button *ngIf="this.consentService.isServiceEnabled" mat-fab (click)="openConsentDialog()"
+              style="background-color:#053E6A; color:white;">
         <mat-icon matTooltip="Einwilligung hinzufügen">assignment_turned_in</mat-icon>
       </button>
     </section>
@@ -63,7 +63,7 @@
         <ng-container matColumnDef="progress">
           <th mat-header-cell *matHeaderCellDef [attr.colspan]="4"
               style="padding: 0;">
-            <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+            <mat-progress-bar *ngIf="loadingConsents" mode="indeterminate"></mat-progress-bar>
           </th>
           <td mat-cell></td>
         </ng-container>
@@ -72,7 +72,7 @@
         <tr mat-row class="consent-row" (click)="editConsent(row)" *matRowDef="let row; columns: displayedConsentColumns;"></tr>
         <tr mat-header-row  style="height: 0; border: 0;" *matHeaderRowDef="['progress']"></tr>
         <tr class="mat-row" *matNoDataRow>
-          <td *ngIf="!loading" class="mat-cell" [attr.colspan]="4" style="text-align: center">
+          <td *ngIf="!loadingConsents" class="mat-cell" [attr.colspan]="4" style="text-align: center">
             Keine Einwilligung gefunden.
           </td>
         </tr>
