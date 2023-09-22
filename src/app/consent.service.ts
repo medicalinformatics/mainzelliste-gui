@@ -273,7 +273,7 @@ export class ConsentService {
     let result: Consent[] = [];
     return this.client.search({
       resourceType: 'Consent',
-      searchParams: {'patient:identifier': 'http://localhost/id/' + idType + '|' + idString},
+      searchParams: {'patient:identifier': this.appConfigService.getMainzellisteUrl() + '/id/' + idType + '|' + idString},
       options: {
         headers: {'Authorization': 'MainzellisteToken ' + token.id}
       }

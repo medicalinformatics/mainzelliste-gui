@@ -77,6 +77,10 @@ export class AppConfigService {
     return this.mainzellisteFields;
   }
 
+  getMainzellisteUrl(): string {
+    return this.data[0].url.toString();
+  }
+
   isDebugModeEnabled(): boolean {
     return this.data[0].debug != undefined && this.data[0].debug;
   }
