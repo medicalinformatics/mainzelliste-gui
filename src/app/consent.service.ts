@@ -274,7 +274,9 @@ export class ConsentService {
     return this.client.search({
       resourceType: 'Consent',
       searchParams: {'patient:identifier': 'http://localhost/id/' + idType + '|' + idString},
-      headers: {'Authorization': 'MainzellisteToken ' + token.id}
+      options: {
+        headers: {'Authorization': 'MainzellisteToken ' + token.id}
+      }
     })
     .then(resource => {
       let bundle: fhir4.Bundle<fhir4.Consent> = resource as fhir4.Bundle<fhir4.Consent>
