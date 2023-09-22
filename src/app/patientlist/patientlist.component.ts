@@ -1,12 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {PatientSearchComponent} from "../patientSearch/patientSearch.component";
+import {MatDialog} from "@angular/material/dialog";
 import {Patient} from "../model/patient";
 import {SelectionModel} from "@angular/cdk/collections";
 import {MatTableDataSource} from "@angular/material/table";
-import {MatCheckboxChange} from "@angular/material/checkbox";
 import {PatientListService} from "../services/patient-list.service";
 import {AppConfigService} from "../app-config.service";
+import {ConsentService} from "../consent.service";
 
 @Component({
   selector: 'app-patientlist',
@@ -29,7 +28,12 @@ export class PatientlistComponent implements OnInit{
   configuredIdTypes: string[]=[];
   private patientListService: PatientListService;
 
-  constructor(public dialog: MatDialog, patientListService: PatientListService, configService: AppConfigService) {
+  constructor(
+    public dialog: MatDialog,
+    patientListService: PatientListService,
+    configService: AppConfigService,
+    public consentService: ConsentService
+  ) {
     this.patientListService = patientListService;
     this.patients = new MatTableDataSource<Patient>([]);
     this.fields = configService.data[0].fields.map(f => f.name);

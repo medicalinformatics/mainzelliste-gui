@@ -82,6 +82,12 @@ import {ClipboardModule} from "@angular/cdk/clipboard";
 import {from} from "rxjs";
 import {UserAuthService} from "./services/user-auth.service";
 import { ExternalPseudonymsComponent } from './shared/external-pseudonyms/external-pseudonyms.component';
+import { ConsentComponent } from './consent/consent.component';
+import {DemoMaterialModule} from "./patientlist/material-module";
+import { ConsentDialogComponent } from './consent-dialog/consent-dialog.component';
+import { ConsentDetailComponent } from './consent-detail/consent-detail.component';
+import { AddConsentComponent } from './add-consent/add-consent.component';
+import { EditConsentComponent } from './edit-consent/edit-consent.component';
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService): () => Promise<any> {
   return () => configService.init()
@@ -143,7 +149,12 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     DeletePatientDialog,
     CreatePatientTentativeDialog,
     EditPatientTentativeDialog,
-    ExternalPseudonymsComponent
+    ExternalPseudonymsComponent,
+    ConsentComponent,
+    ConsentDialogComponent,
+    ConsentDetailComponent,
+    AddConsentComponent,
+    EditConsentComponent
   ],
   imports: [
     BrowserModule,
@@ -176,7 +187,8 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     KeycloakAngularModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
-    ClipboardModule
+    ClipboardModule,
+    DemoMaterialModule
   ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},

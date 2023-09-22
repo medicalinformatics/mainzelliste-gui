@@ -17,17 +17,17 @@
   background-color: #ADDFFF;
 }
 
-.mat-header-cell{
+#patientlist .mat-header-cell{
   background-color: #053E6A;
   color: white;
   font-size: inherit
 }
 
-.mat-header-cell .mat-checkbox-frame {
+#patientlist .mat-header-cell .mat-checkbox-frame {
   border-color: white;
 }
 
-.mat-header-cell .mat-checkbox-frame.mat-checkbox-indeterminate{
+#patientlist .mat-header-cell .mat-checkbox-frame.mat-checkbox-indeterminate{
   border-color: #053E6A;
 }
 

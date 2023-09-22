@@ -1,0 +1,86 @@
+<div style="height:100%;width:90%; padding-left:3%; padding-top:3%">
+
+  <h1 class="title"> {{title}}</h1>
+
+  <h3 style="font-weight: normal;">Folgendem Patient eine Einwilligung hinzufügen</h3>
+  <br/>
+  <!--<h4>Name</h4>
+    <app-patient-fields [readOnly]=true [fields]="patient.fields"></app-patient-fields>
+    <h4>Pseudonyme</h4>-->
+<!--    <app-patient-pseudonyms [readOnly]=false [pseudonyms]="patient.ids"></app-patient-pseudonyms>-->
+<br/><br/> <hr width="90%" align="center">
+  <br/><br/>
+  <h1 style="font-weight: normal;">Angaben zur Einwilligung</h1><br/>
+  <div style="margin-bottom: 15%;width: 50%">
+
+<!--<h3 style="font-weight: normal; padding-bottom: 2%">* Status</h3>
+    <mat-form-field appearance="outline" style="width:75%">
+      <mat-label>Status wählen</mat-label>
+      <mat-select >
+        <mat-option *ngFor="let status of statuses" [value]="status.value">
+          {{status.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br/>-->
+    <h3 style="font-weight: normal; padding-bottom: 2%">* Datum wählen</h3>
+      <div style="padding-left: 10%">
+        <mat-form-field appearance="outline" style="width:75%" (change)="changedDate(date)">
+      <mat-label>DD/MM/YYYY</mat-label>
+      <input matInput placeholder="Title" [ngModel]="date" >
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+        </div>
+    <br/>
+    <h3 style="font-weight: normal; padding-bottom: 2%">* Provisions</h3>
+    <div style="padding-left: 10%" >
+  <!--      <div style="padding-bottom: 5%" >
+          <h4 style="font-weight: lighter;">{{pov.toString()}}</h4>
+          <mat-radio-group style id="{{i}}" style="display:flex; gap:40px" >
+            <mat-radio-button value="1" name="{{i}}" >Ja </mat-radio-button>
+            <mat-radio-button value="2" name="{{i+1}}" checked="true">Nein</mat-radio-button>
+          </mat-radio-group>
+        </div>-->
+       <div style="padding-bottom: 5%">
+          <h4 style="font-weight: lighter;">{{provisions[0].toString()}}</h4>
+          <mat-radio-group style ="display:flex; gap:40px" id="secProv">
+            <mat-radio-button value="3" name="secProv" >Ja</mat-radio-button>
+            <mat-radio-button value="4" name="secProv" checked="true">Nein</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div style="padding-bottom: 5%">
+          <h4 style="font-weight: lighter;">{{provisions[1].toString()}}</h4>
+          <mat-radio-group style ="display:flex; gap:40px" id="thirdProv">
+            <mat-radio-button value="5" name="thirdPov">Ja</mat-radio-button>
+            <mat-radio-button value="6" name="thirdPov" checked="true">Nein</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div style="padding-bottom: 5%">
+          <h4 style="font-weight: lighter;">{{provisions[2].toString()}}</h4>
+          <mat-radio-group style ="display:flex; gap:40px" id="fourthProv" >
+            <mat-radio-button value="7" name="fourthProv" >Ja</mat-radio-button>
+            <mat-radio-button value="8" name="fourthProv" checked="true">Nein</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div style="padding-bottom: 5%">
+          <h4 style="font-weight: lighter;">{{provisions[3].toString()}}</h4>
+          <mat-radio-group style ="display:flex; gap:40px" id="fifthProv">
+            <mat-radio-button value="9" name="fifthProv">Ja</mat-radio-button>
+            <mat-radio-button value="10" name="fifthProv" checked="true">Nein</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div style="padding-bottom: 5%">
+          <h4 style="font-weight: lighter;">{{provisions[4].toString()}}</h4>
+          <mat-radio-group style ="display:flex; gap:40px" id="sixthProv">
+            <mat-radio-button name="sixthProv" value="11">Ja</mat-radio-button>
+            <mat-radio-button name="sixthProv" value="12" checked="true">Nein</mat-radio-button>
+          </mat-radio-group>
+        </div>
+  </div>
+    <h5>* Diese Felder müssen ausgefüllt werden.</h5>
+    <br/><br/><br/>
+    <button mat-raised-button class="submit">Einwilligung hinzufügen</button>
+  </div>
+
+</div>

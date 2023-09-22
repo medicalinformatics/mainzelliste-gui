@@ -45,11 +45,20 @@
       </mat-form-field>
       <br>
     </div>
+    <div *ngIf="this.consentService.isServiceEnabled()" style="width: 90%; margin-left: 5%; max-width: 700px;">
+      <button style="float: left; margin-bottom: 40px" mat-raised-button
+              (click)="openConsentDialog()">
+        <mat-icon>{{!consent ? 'add' : 'edit'}}</mat-icon>
+        {{!consent ? "Einwilligung Hinzufügen" : this.consent?.title}}
+      </button>
+    </div>
     <br>
-    <button mat-raised-button class="submit" style="margin-left: 5%; width: 20%; float: left;"
-            [disabled]="this.disable(patientForm)"
-            (click)="createNewPatient(false)">Anfordern
-    </button>
+    <div style="width: 90%; margin-left: 5%; max-width: 700px;">
+      <button mat-raised-button class="submit" style="clear: both; float: left; width: 20%;"
+              [disabled]="this.disable(patientForm)"
+              (click)="createNewPatient(false)">Anfordern
+      </button>
+    </div>
   </div>
 </div>
 </form>

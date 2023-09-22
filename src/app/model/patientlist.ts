@@ -14,7 +14,8 @@ export class PatientList {
       new Field("Wohnort", "Wohnort",[], FieldType.TEXT, true, "", "Musterstadt"),
       new Field("PLZ", "PLZ", [], FieldType.TEXT, true, "", "mind. 5 Zeichen")
     ],
-    public debug?:boolean
+    public debug?:boolean,
+    public betaFeatures?: BetaFeatures
   ) {}
 }
 
@@ -22,5 +23,9 @@ export interface OAuthConfig {
   url?: string;
   realm: string;
   clientId: string;
+}
+
+export interface BetaFeatures {
+  consent?: boolean;
 }
 

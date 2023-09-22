@@ -14,6 +14,9 @@ import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessages} from "../error/error-messages";
 import {UserAuthService} from "../services/user-auth.service";
+import {ConsentDialogComponent} from "../consent-dialog/consent-dialog.component";
+import {ConsentService} from "../consent.service";
+import {Consent} from "../model/consent";
 
 export interface IdTypSelection {
   idType: string,
@@ -35,6 +38,7 @@ export class CreatePatientComponent  implements OnInit {
   patientService: PatientService;
   patientListService: PatientListService;
   userAuthService : UserAuthService;
+  consent?: Consent;
 
   internalIdTypes: IdTypSelection[] = [];
   /** selected chip data model */
@@ -47,13 +51,15 @@ export class CreatePatientComponent  implements OnInit {
   externalIdTypes: IdTypSelection[] = [];
 
   constructor(
+    public consentDialog: MatDialog,
     patientService: PatientService,
     patientListService: PatientListService,
     userAuthService : UserAuthService,
     public errorNotificationService: ErrorNotificationService,
     private router: Router,
     private titleService: GlobalTitleService,
-    public tentativeDialog: MatDialog
+    public tentativeDialog: MatDialog,
+    public consentService: ConsentService
   ) {
     this.patientService = patientService;
     this.patientListService = patientListService;
@@ -107,9 +113,12 @@ export class CreatePatientComponent  implements OnInit {
           })
         )
       )
-    ).toPromise().then(
-      newId => this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
-    )
+    ).toPromise().then(newId => {
+      if(this.consent){
+        this.consent.patientId = newId;
+        this.consentService.addConsent(this.consent).then();
+      } this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
+    })
   }
 
   fieldsChanged(newFields: { [p: string]: any }) {
@@ -179,6 +188,17 @@ export class CreatePatientComponent  implements OnInit {
     let emptyIds = !this.patient.ids.some(id => id.idString.length > 0);
     let isIdsValid = patientForm.form.get('externalIds')?.valid ?? true;
     return !emptyFields && !patientForm.form.valid || emptyFields && (emptyIds || !isIdsValid);
+  }
+
+  openConsentDialog() {
+    const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
+      width: '900px',
+      data: this.consent
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.consent = result;
+    });
   }
 }
 
