@@ -4,7 +4,7 @@ COPY package.json package-lock.json ./
 RUN npm install
 COPY ./angular.json ./tsconfig.json ./tsconfig.app.json ./
 COPY ./src ./src
-RUN npm run build
+RUN npm run build --outputHashing=all
 
 FROM nginx:1.21
 ENV NGINX_PORT=80 NGINX_DEPLOYMENT_CONTEXT=/
