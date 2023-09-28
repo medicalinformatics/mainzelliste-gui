@@ -19,17 +19,14 @@
 <!--      <button mat-fab style="background-color:#053E6A; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">-->
 <!--        <mat-icon matTooltip="ID hinzufügen">subtitles</mat-icon>-->
 <!--      </button>-->
-      <br><br>
       <button mat-fab [routerLink]="['/edit-patient', idType, idString]"
               [state]="{patient: patient}" style="background-color:#ffd60a; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">
         <mat-icon matTooltip="Edit">edit</mat-icon>
       </button>
-      <br><br>
       <button mat-fab [routerLink]="['/delete-patient', idType, idString]"
               [state]="{patient: patient}" style="background-color:#da1e37; color:white; margin-bottom: 15px" aria-label="Example icon button with a delete icon">
         <mat-icon matTooltip="Löschen">delete</mat-icon>
       </button>
-      <br><br>
       <button *ngIf="this.consentService.isServiceEnabled()" mat-fab (click)="openConsentDialog()"
               style="background-color:#053E6A; color:white;">
         <mat-icon matTooltip="Einwilligung hinzufügen">assignment_turned_in</mat-icon>
