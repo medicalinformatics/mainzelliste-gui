@@ -87,7 +87,7 @@ export class AppConfigService {
 
   private validateBackendUrl(config: PatientList) {
     // if the url contains a path and no slash at the end, the backend responses with a 302 redirect, which is not possible in XHR request
-    let urlSuffix  = new URL("http://blala.com/mainzelliste/").pathname.endsWith('/') ?"":"/";
+    let urlSuffix  = new URL(config.url.toString()).pathname.endsWith('/') ?"":"/";
     return this.httpClient.get<string>(config.url.toString() + urlSuffix)
     .pipe(map(_r => 'Mainzelliste is online'),
       catchError(_e => throwError(new Error("Mainzelliste backend is offline")))
