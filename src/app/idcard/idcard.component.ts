@@ -8,6 +8,8 @@ import {ConsentService} from "../consent.service";
 import {MatTable} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
 import {ConsentDialogComponent} from "../consent-dialog/consent-dialog.component";
+import {PatientService} from "../services/patient.service";
+import {DeletePatientDialog} from "./dialogs/delete-patient-dialog";
 
 export interface ConsentRow {id: string, date:string, title: string, period:string, version?:string}
 
@@ -30,8 +32,10 @@ export class IdcardComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private patientListService: PatientListService,
+    private patientService: PatientService,
     private titleService: GlobalTitleService,
     public consentDialog: MatDialog,
+    public deleteDialog: MatDialog,
     public consentService: ConsentService
   ) {
     this.activatedRoute.params.subscribe((params) => {
@@ -83,6 +87,11 @@ export class IdcardComponent implements OnInit {
     await this.router.navigate(["patient", this.idType, this.idString, 'edit-consent', row.id]);
   }
 
+  async deletePatient() {
+    await this.patientService.deletePatient(this.patient)
+    .then(() => this.router.navigate(['/patientlist']).then());
+  }
+
   openConsentDialog() {
     const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
       width: '900px'
@@ -93,6 +102,17 @@ export class IdcardComponent implements OnInit {
         consent.patientId = {idType: this.idType, idString: this.idString};
         this.consentService.addConsent(consent).then(e => this.loadConsents());
       }
+    });
+  }
+
+  openDeletePatientDialog(): void {
+    const dialogRef = this.deleteDialog.open(DeletePatientDialog, {
+      data: {},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.deletePatient().then();
     });
   }
 }

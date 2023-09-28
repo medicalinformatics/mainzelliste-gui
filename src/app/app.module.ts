@@ -32,10 +32,7 @@ import {
   EditPatientComponent,
   EditPatientTentativeDialog
 } from './edit-patient/edit-patient.component';
-import {
-  DeletePatientComponent,
-  DeletePatientDialog
-} from './delete-patient/delete-patient.component';
+import {DeletePatientComponent} from './delete-patient/delete-patient.component';
 import {PatientPseudonymsComponent} from './patient-pseudonyms/patient-pseudonyms.component';
 import {PatientDataComponent} from './patient-data/patient-data.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
@@ -81,13 +78,16 @@ import {
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {from} from "rxjs";
 import {UserAuthService} from "./services/user-auth.service";
-import { ExternalPseudonymsComponent } from './shared/external-pseudonyms/external-pseudonyms.component';
-import { ConsentComponent } from './consent/consent.component';
+import {
+  ExternalPseudonymsComponent
+} from './shared/external-pseudonyms/external-pseudonyms.component';
+import {ConsentComponent} from './consent/consent.component';
 import {DemoMaterialModule} from "./patientlist/material-module";
-import { ConsentDialogComponent } from './consent-dialog/consent-dialog.component';
-import { ConsentDetailComponent } from './consent-detail/consent-detail.component';
-import { AddConsentComponent } from './add-consent/add-consent.component';
-import { EditConsentComponent } from './edit-consent/edit-consent.component';
+import {ConsentDialogComponent} from './consent-dialog/consent-dialog.component';
+import {ConsentDetailComponent} from './consent-detail/consent-detail.component';
+import {AddConsentComponent} from './add-consent/add-consent.component';
+import {EditConsentComponent} from './edit-consent/edit-consent.component';
+import {DeletePatientDialog} from "./idcard/dialogs/delete-patient-dialog";
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService): () => Promise<any> {
   return () => configService.init()

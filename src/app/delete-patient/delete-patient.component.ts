@@ -4,8 +4,9 @@ import {PatientService} from "../services/patient.service";
 import {PatientListService} from "../services/patient-list.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {GlobalTitleService} from "../services/global-title.service";
-import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {Id} from "../model/id";
+import {DeletePatientDialog} from "../idcard/dialogs/delete-patient-dialog";
 
 @Component({
   selector: 'app-delete-patient',
@@ -58,20 +59,5 @@ export class DeletePatientComponent implements OnInit {
       if (result)
         this.deletePatient().then();
     });
-  }
-}
-
-@Component({
-  selector: 'delete-patient-dialog',
-  templateUrl: 'delete-patient-dialog.html',
-})
-export class DeletePatientDialog {
-  constructor(
-    public dialogRef: MatDialogRef<DeletePatientDialog>
-  ) {
-  }
-
-  cancel(): void {
-    this.dialogRef.close();
   }
 }
