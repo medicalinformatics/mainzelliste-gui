@@ -3,6 +3,7 @@ import {ConsentDetailComponent} from "../consent-detail/consent-detail.component
 import {ConsentService} from "../consent.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Consent} from "../model/consent";
+import {GlobalTitleService} from "../services/global-title.service";
 
 @Component({
   selector: 'app-add-consent',
@@ -17,9 +18,13 @@ export class AddConsentComponent implements OnInit {
   idType!: string;
   idString!: string;
 
-  constructor(private consentService: ConsentService,
-              private route: ActivatedRoute,
-              private router: Router) {
+  constructor(
+    private consentService: ConsentService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private titleService: GlobalTitleService
+  ) {
+    this.titleService.setTitle("Einwilligung Hinzufügen", false, "assignment_turned_in");
   }
 
   ngOnInit(): void {

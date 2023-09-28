@@ -1,5 +1,6 @@
 <div *ngIf="!edit">
-  <div style="margin-left: 5%;">
+  <h4>Einwilligungsvorlage auswählen:</h4>
+  <div>
     <mat-form-field style="width: 400px">
       <mat-label>Einwilligungsvorlage</mat-label>
       <mat-select #templateSelection
@@ -10,6 +11,7 @@
       </mat-select>
     </mat-form-field>
   </div>
+<!--  <mat-divider *ngIf="dataModel" style="margin-bottom: 1.34375em;  width: 430px"></mat-divider>-->
 </div>
 <mat-card *ngIf="dataModel">
   <h2 style="text-align: center">{{dataModel.title | uppercase}}</h2>
