@@ -33,8 +33,8 @@ ALTER ROLE admin WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION BY
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.12
--- Dumped by pg_dump version 13.12
+-- Dumped from database version 13.11
+-- Dumped by pg_dump version 13.11
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -59,8 +59,8 @@ SET row_security = off;
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.12
--- Dumped by pg_dump version 13.12
+-- Dumped from database version 13.11
+-- Dumped by pg_dump version 13.11
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -104,18 +104,18 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.admin_event_entity (
-                                         id character varying(36) NOT NULL,
-                                         admin_event_time bigint,
-                                         realm_id character varying(255),
-                                         operation_type character varying(255),
-                                         auth_realm_id character varying(255),
-                                         auth_client_id character varying(255),
-                                         auth_user_id character varying(255),
-                                         ip_address character varying(255),
-                                         resource_path character varying(2550),
-                                         representation text,
-                                         error character varying(255),
-                                         resource_type character varying(64)
+    id character varying(36) NOT NULL,
+    admin_event_time bigint,
+    realm_id character varying(255),
+    operation_type character varying(255),
+    auth_realm_id character varying(255),
+    auth_client_id character varying(255),
+    auth_user_id character varying(255),
+    ip_address character varying(255),
+    resource_path character varying(2550),
+    representation text,
+    error character varying(255),
+    resource_type character varying(64)
 );
 
 
@@ -126,8 +126,8 @@ ALTER TABLE public.admin_event_entity OWNER TO admin;
 --
 
 CREATE TABLE public.associated_policy (
-                                        policy_id character varying(36) NOT NULL,
-                                        associated_policy_id character varying(36) NOT NULL
+    policy_id character varying(36) NOT NULL,
+    associated_policy_id character varying(36) NOT NULL
 );
 
 
@@ -138,16 +138,16 @@ ALTER TABLE public.associated_policy OWNER TO admin;
 --
 
 CREATE TABLE public.authentication_execution (
-                                               id character varying(36) NOT NULL,
-                                               alias character varying(255),
-                                               authenticator character varying(36),
-                                               realm_id character varying(36),
-                                               flow_id character varying(36),
-                                               requirement integer,
-                                               priority integer,
-                                               authenticator_flow boolean DEFAULT false NOT NULL,
-                                               auth_flow_id character varying(36),
-                                               auth_config character varying(36)
+    id character varying(36) NOT NULL,
+    alias character varying(255),
+    authenticator character varying(36),
+    realm_id character varying(36),
+    flow_id character varying(36),
+    requirement integer,
+    priority integer,
+    authenticator_flow boolean DEFAULT false NOT NULL,
+    auth_flow_id character varying(36),
+    auth_config character varying(36)
 );
 
 
@@ -158,13 +158,13 @@ ALTER TABLE public.authentication_execution OWNER TO admin;
 --
 
 CREATE TABLE public.authentication_flow (
-                                          id character varying(36) NOT NULL,
-                                          alias character varying(255),
-                                          description character varying(255),
-                                          realm_id character varying(36),
-                                          provider_id character varying(36) DEFAULT 'basic-flow'::character varying NOT NULL,
-                                          top_level boolean DEFAULT false NOT NULL,
-                                          built_in boolean DEFAULT false NOT NULL
+    id character varying(36) NOT NULL,
+    alias character varying(255),
+    description character varying(255),
+    realm_id character varying(36),
+    provider_id character varying(36) DEFAULT 'basic-flow'::character varying NOT NULL,
+    top_level boolean DEFAULT false NOT NULL,
+    built_in boolean DEFAULT false NOT NULL
 );
 
 
@@ -175,9 +175,9 @@ ALTER TABLE public.authentication_flow OWNER TO admin;
 --
 
 CREATE TABLE public.authenticator_config (
-                                           id character varying(36) NOT NULL,
-                                           alias character varying(255),
-                                           realm_id character varying(36)
+    id character varying(36) NOT NULL,
+    alias character varying(255),
+    realm_id character varying(36)
 );
 
 
@@ -188,9 +188,9 @@ ALTER TABLE public.authenticator_config OWNER TO admin;
 --
 
 CREATE TABLE public.authenticator_config_entry (
-                                                 authenticator_id character varying(36) NOT NULL,
-                                                 value text,
-                                                 name character varying(255) NOT NULL
+    authenticator_id character varying(36) NOT NULL,
+    value text,
+    name character varying(255) NOT NULL
 );
 
 
@@ -201,13 +201,13 @@ ALTER TABLE public.authenticator_config_entry OWNER TO admin;
 --
 
 CREATE TABLE public.broker_link (
-                                  identity_provider character varying(255) NOT NULL,
-                                  storage_provider_id character varying(255),
-                                  realm_id character varying(36) NOT NULL,
-                                  broker_user_id character varying(255),
-                                  broker_username character varying(255),
-                                  token text,
-                                  user_id character varying(255) NOT NULL
+    identity_provider character varying(255) NOT NULL,
+    storage_provider_id character varying(255),
+    realm_id character varying(36) NOT NULL,
+    broker_user_id character varying(255),
+    broker_username character varying(255),
+    token text,
+    user_id character varying(255) NOT NULL
 );
 
 
@@ -218,32 +218,32 @@ ALTER TABLE public.broker_link OWNER TO admin;
 --
 
 CREATE TABLE public.client (
-                             id character varying(36) NOT NULL,
-                             enabled boolean DEFAULT false NOT NULL,
-                             full_scope_allowed boolean DEFAULT false NOT NULL,
-                             client_id character varying(255),
-                             not_before integer,
-                             public_client boolean DEFAULT false NOT NULL,
-                             secret character varying(255),
-                             base_url character varying(255),
-                             bearer_only boolean DEFAULT false NOT NULL,
-                             management_url character varying(255),
-                             surrogate_auth_required boolean DEFAULT false NOT NULL,
-                             realm_id character varying(36),
-                             protocol character varying(255),
-                             node_rereg_timeout integer DEFAULT 0,
-                             frontchannel_logout boolean DEFAULT false NOT NULL,
-                             consent_required boolean DEFAULT false NOT NULL,
-                             name character varying(255),
-                             service_accounts_enabled boolean DEFAULT false NOT NULL,
-                             client_authenticator_type character varying(255),
-                             root_url character varying(255),
-                             description character varying(255),
-                             registration_token character varying(255),
-                             standard_flow_enabled boolean DEFAULT true NOT NULL,
-                             implicit_flow_enabled boolean DEFAULT false NOT NULL,
-                             direct_access_grants_enabled boolean DEFAULT false NOT NULL,
-                             always_display_in_console boolean DEFAULT false NOT NULL
+    id character varying(36) NOT NULL,
+    enabled boolean DEFAULT false NOT NULL,
+    full_scope_allowed boolean DEFAULT false NOT NULL,
+    client_id character varying(255),
+    not_before integer,
+    public_client boolean DEFAULT false NOT NULL,
+    secret character varying(255),
+    base_url character varying(255),
+    bearer_only boolean DEFAULT false NOT NULL,
+    management_url character varying(255),
+    surrogate_auth_required boolean DEFAULT false NOT NULL,
+    realm_id character varying(36),
+    protocol character varying(255),
+    node_rereg_timeout integer DEFAULT 0,
+    frontchannel_logout boolean DEFAULT false NOT NULL,
+    consent_required boolean DEFAULT false NOT NULL,
+    name character varying(255),
+    service_accounts_enabled boolean DEFAULT false NOT NULL,
+    client_authenticator_type character varying(255),
+    root_url character varying(255),
+    description character varying(255),
+    registration_token character varying(255),
+    standard_flow_enabled boolean DEFAULT true NOT NULL,
+    implicit_flow_enabled boolean DEFAULT false NOT NULL,
+    direct_access_grants_enabled boolean DEFAULT false NOT NULL,
+    always_display_in_console boolean DEFAULT false NOT NULL
 );
 
 
@@ -254,9 +254,9 @@ ALTER TABLE public.client OWNER TO admin;
 --
 
 CREATE TABLE public.client_attributes (
-                                        client_id character varying(36) NOT NULL,
-                                        name character varying(255) NOT NULL,
-                                        value text
+    client_id character varying(36) NOT NULL,
+    name character varying(255) NOT NULL,
+    value text
 );
 
 
@@ -267,9 +267,9 @@ ALTER TABLE public.client_attributes OWNER TO admin;
 --
 
 CREATE TABLE public.client_auth_flow_bindings (
-                                                client_id character varying(36) NOT NULL,
-                                                flow_id character varying(36),
-                                                binding_name character varying(255) NOT NULL
+    client_id character varying(36) NOT NULL,
+    flow_id character varying(36),
+    binding_name character varying(255) NOT NULL
 );
 
 
@@ -280,12 +280,12 @@ ALTER TABLE public.client_auth_flow_bindings OWNER TO admin;
 --
 
 CREATE TABLE public.client_initial_access (
-                                            id character varying(36) NOT NULL,
-                                            realm_id character varying(36) NOT NULL,
-                                            "timestamp" integer,
-                                            expiration integer,
-                                            count integer,
-                                            remaining_count integer
+    id character varying(36) NOT NULL,
+    realm_id character varying(36) NOT NULL,
+    "timestamp" integer,
+    expiration integer,
+    count integer,
+    remaining_count integer
 );
 
 
@@ -296,9 +296,9 @@ ALTER TABLE public.client_initial_access OWNER TO admin;
 --
 
 CREATE TABLE public.client_node_registrations (
-                                                client_id character varying(36) NOT NULL,
-                                                value integer,
-                                                name character varying(255) NOT NULL
+    client_id character varying(36) NOT NULL,
+    value integer,
+    name character varying(255) NOT NULL
 );
 
 
@@ -309,11 +309,11 @@ ALTER TABLE public.client_node_registrations OWNER TO admin;
 --
 
 CREATE TABLE public.client_scope (
-                                   id character varying(36) NOT NULL,
-                                   name character varying(255),
-                                   realm_id character varying(36),
-                                   description character varying(255),
-                                   protocol character varying(255)
+    id character varying(36) NOT NULL,
+    name character varying(255),
+    realm_id character varying(36),
+    description character varying(255),
+    protocol character varying(255)
 );
 
 
@@ -324,9 +324,9 @@ ALTER TABLE public.client_scope OWNER TO admin;
 --
 
 CREATE TABLE public.client_scope_attributes (
-                                              scope_id character varying(36) NOT NULL,
-                                              value character varying(2048),
-                                              name character varying(255) NOT NULL
+    scope_id character varying(36) NOT NULL,
+    value character varying(2048),
+    name character varying(255) NOT NULL
 );
 
 
@@ -337,9 +337,9 @@ ALTER TABLE public.client_scope_attributes OWNER TO admin;
 --
 
 CREATE TABLE public.client_scope_client (
-                                          client_id character varying(255) NOT NULL,
-                                          scope_id character varying(255) NOT NULL,
-                                          default_scope boolean DEFAULT false NOT NULL
+    client_id character varying(255) NOT NULL,
+    scope_id character varying(255) NOT NULL,
+    default_scope boolean DEFAULT false NOT NULL
 );
 
 
@@ -350,8 +350,8 @@ ALTER TABLE public.client_scope_client OWNER TO admin;
 --
 
 CREATE TABLE public.client_scope_role_mapping (
-                                                scope_id character varying(36) NOT NULL,
-                                                role_id character varying(36) NOT NULL
+    scope_id character varying(36) NOT NULL,
+    role_id character varying(36) NOT NULL
 );
 
 
@@ -362,16 +362,16 @@ ALTER TABLE public.client_scope_role_mapping OWNER TO admin;
 --
 
 CREATE TABLE public.client_session (
-                                     id character varying(36) NOT NULL,
-                                     client_id character varying(36),
-                                     redirect_uri character varying(255),
-                                     state character varying(255),
-                                     "timestamp" integer,
-                                     session_id character varying(36),
-                                     auth_method character varying(255),
-                                     realm_id character varying(255),
-                                     auth_user_id character varying(36),
-                                     current_action character varying(36)
+    id character varying(36) NOT NULL,
+    client_id character varying(36),
+    redirect_uri character varying(255),
+    state character varying(255),
+    "timestamp" integer,
+    session_id character varying(36),
+    auth_method character varying(255),
+    realm_id character varying(255),
+    auth_user_id character varying(36),
+    current_action character varying(36)
 );
 
 
@@ -382,9 +382,9 @@ ALTER TABLE public.client_session OWNER TO admin;
 --
 
 CREATE TABLE public.client_session_auth_status (
-                                                 authenticator character varying(36) NOT NULL,
-                                                 status integer,
-                                                 client_session character varying(36) NOT NULL
+    authenticator character varying(36) NOT NULL,
+    status integer,
+    client_session character varying(36) NOT NULL
 );
 
 
@@ -395,9 +395,9 @@ ALTER TABLE public.client_session_auth_status OWNER TO admin;
 --
 
 CREATE TABLE public.client_session_note (
-                                          name character varying(255) NOT NULL,
-                                          value character varying(255),
-                                          client_session character varying(36) NOT NULL
+    name character varying(255) NOT NULL,
+    value character varying(255),
+    client_session character varying(36) NOT NULL
 );
 
 
@@ -408,8 +408,8 @@ ALTER TABLE public.client_session_note OWNER TO admin;
 --
 
 CREATE TABLE public.client_session_prot_mapper (
-                                                 protocol_mapper_id character varying(36) NOT NULL,
-                                                 client_session character varying(36) NOT NULL
+    protocol_mapper_id character varying(36) NOT NULL,
+    client_session character varying(36) NOT NULL
 );
 
 
@@ -420,8 +420,8 @@ ALTER TABLE public.client_session_prot_mapper OWNER TO admin;
 --
 
 CREATE TABLE public.client_session_role (
-                                          role_id character varying(255) NOT NULL,
-                                          client_session character varying(36) NOT NULL
+    role_id character varying(255) NOT NULL,
+    client_session character varying(36) NOT NULL
 );
 
 
@@ -432,9 +432,9 @@ ALTER TABLE public.client_session_role OWNER TO admin;
 --
 
 CREATE TABLE public.client_user_session_note (
-                                               name character varying(255) NOT NULL,
-                                               value character varying(2048),
-                                               client_session character varying(36) NOT NULL
+    name character varying(255) NOT NULL,
+    value character varying(2048),
+    client_session character varying(36) NOT NULL
 );
 
 
@@ -445,13 +445,13 @@ ALTER TABLE public.client_user_session_note OWNER TO admin;
 --
 
 CREATE TABLE public.component (
-                                id character varying(36) NOT NULL,
-                                name character varying(255),
-                                parent_id character varying(36),
-                                provider_id character varying(36),
-                                provider_type character varying(255),
-                                realm_id character varying(36),
-                                sub_type character varying(255)
+    id character varying(36) NOT NULL,
+    name character varying(255),
+    parent_id character varying(36),
+    provider_id character varying(36),
+    provider_type character varying(255),
+    realm_id character varying(36),
+    sub_type character varying(255)
 );
 
 
@@ -462,10 +462,10 @@ ALTER TABLE public.component OWNER TO admin;
 --
 
 CREATE TABLE public.component_config (
-                                       id character varying(36) NOT NULL,
-                                       component_id character varying(36) NOT NULL,
-                                       name character varying(255) NOT NULL,
-                                       value character varying(4000)
+    id character varying(36) NOT NULL,
+    component_id character varying(36) NOT NULL,
+    name character varying(255) NOT NULL,
+    value character varying(4000)
 );
 
 
@@ -476,8 +476,8 @@ ALTER TABLE public.component_config OWNER TO admin;
 --
 
 CREATE TABLE public.composite_role (
-                                     composite character varying(36) NOT NULL,
-                                     child_role character varying(36) NOT NULL
+    composite character varying(36) NOT NULL,
+    child_role character varying(36) NOT NULL
 );
 
 
@@ -488,15 +488,15 @@ ALTER TABLE public.composite_role OWNER TO admin;
 --
 
 CREATE TABLE public.credential (
-                                 id character varying(36) NOT NULL,
-                                 salt bytea,
-                                 type character varying(255),
-                                 user_id character varying(36),
-                                 created_date bigint,
-                                 user_label character varying(255),
-                                 secret_data text,
-                                 credential_data text,
-                                 priority integer
+    id character varying(36) NOT NULL,
+    salt bytea,
+    type character varying(255),
+    user_id character varying(36),
+    created_date bigint,
+    user_label character varying(255),
+    secret_data text,
+    credential_data text,
+    priority integer
 );
 
 
@@ -507,20 +507,20 @@ ALTER TABLE public.credential OWNER TO admin;
 --
 
 CREATE TABLE public.databasechangelog (
-                                        id character varying(255) NOT NULL,
-                                        author character varying(255) NOT NULL,
-                                        filename character varying(255) NOT NULL,
-                                        dateexecuted timestamp without time zone NOT NULL,
-                                        orderexecuted integer NOT NULL,
-                                        exectype character varying(10) NOT NULL,
-                                        md5sum character varying(35),
-                                        description character varying(255),
-                                        comments character varying(255),
-                                        tag character varying(255),
-                                        liquibase character varying(20),
-                                        contexts character varying(255),
-                                        labels character varying(255),
-                                        deployment_id character varying(10)
+    id character varying(255) NOT NULL,
+    author character varying(255) NOT NULL,
+    filename character varying(255) NOT NULL,
+    dateexecuted timestamp without time zone NOT NULL,
+    orderexecuted integer NOT NULL,
+    exectype character varying(10) NOT NULL,
+    md5sum character varying(35),
+    description character varying(255),
+    comments character varying(255),
+    tag character varying(255),
+    liquibase character varying(20),
+    contexts character varying(255),
+    labels character varying(255),
+    deployment_id character varying(10)
 );
 
 
@@ -531,10 +531,10 @@ ALTER TABLE public.databasechangelog OWNER TO admin;
 --
 
 CREATE TABLE public.databasechangeloglock (
-                                            id integer NOT NULL,
-                                            locked boolean NOT NULL,
-                                            lockgranted timestamp without time zone,
-                                            lockedby character varying(255)
+    id integer NOT NULL,
+    locked boolean NOT NULL,
+    lockgranted timestamp without time zone,
+    lockedby character varying(255)
 );
 
 
@@ -545,9 +545,9 @@ ALTER TABLE public.databasechangeloglock OWNER TO admin;
 --
 
 CREATE TABLE public.default_client_scope (
-                                           realm_id character varying(36) NOT NULL,
-                                           scope_id character varying(36) NOT NULL,
-                                           default_scope boolean DEFAULT false NOT NULL
+    realm_id character varying(36) NOT NULL,
+    scope_id character varying(36) NOT NULL,
+    default_scope boolean DEFAULT false NOT NULL
 );
 
 
@@ -558,16 +558,16 @@ ALTER TABLE public.default_client_scope OWNER TO admin;
 --
 
 CREATE TABLE public.event_entity (
-                                   id character varying(36) NOT NULL,
-                                   client_id character varying(255),
-                                   details_json character varying(2550),
-                                   error character varying(255),
-                                   ip_address character varying(255),
-                                   realm_id character varying(255),
-                                   session_id character varying(255),
-                                   event_time bigint,
-                                   type character varying(255),
-                                   user_id character varying(255)
+    id character varying(36) NOT NULL,
+    client_id character varying(255),
+    details_json character varying(2550),
+    error character varying(255),
+    ip_address character varying(255),
+    realm_id character varying(255),
+    session_id character varying(255),
+    event_time bigint,
+    type character varying(255),
+    user_id character varying(255)
 );
 
 
@@ -578,12 +578,12 @@ ALTER TABLE public.event_entity OWNER TO admin;
 --
 
 CREATE TABLE public.fed_user_attribute (
-                                         id character varying(36) NOT NULL,
-                                         name character varying(255) NOT NULL,
-                                         user_id character varying(255) NOT NULL,
-                                         realm_id character varying(36) NOT NULL,
-                                         storage_provider_id character varying(36),
-                                         value character varying(2024)
+    id character varying(36) NOT NULL,
+    name character varying(255) NOT NULL,
+    user_id character varying(255) NOT NULL,
+    realm_id character varying(36) NOT NULL,
+    storage_provider_id character varying(36),
+    value character varying(2024)
 );
 
 
@@ -594,15 +594,15 @@ ALTER TABLE public.fed_user_attribute OWNER TO admin;
 --
 
 CREATE TABLE public.fed_user_consent (
-                                       id character varying(36) NOT NULL,
-                                       client_id character varying(255),
-                                       user_id character varying(255) NOT NULL,
-                                       realm_id character varying(36) NOT NULL,
-                                       storage_provider_id character varying(36),
-                                       created_date bigint,
-                                       last_updated_date bigint,
-                                       client_storage_provider character varying(36),
-                                       external_client_id character varying(255)
+    id character varying(36) NOT NULL,
+    client_id character varying(255),
+    user_id character varying(255) NOT NULL,
+    realm_id character varying(36) NOT NULL,
+    storage_provider_id character varying(36),
+    created_date bigint,
+    last_updated_date bigint,
+    client_storage_provider character varying(36),
+    external_client_id character varying(255)
 );
 
 
@@ -613,8 +613,8 @@ ALTER TABLE public.fed_user_consent OWNER TO admin;
 --
 
 CREATE TABLE public.fed_user_consent_cl_scope (
-                                                user_consent_id character varying(36) NOT NULL,
-                                                scope_id character varying(36) NOT NULL
+    user_consent_id character varying(36) NOT NULL,
+    scope_id character varying(36) NOT NULL
 );
 
 
@@ -625,17 +625,17 @@ ALTER TABLE public.fed_user_consent_cl_scope OWNER TO admin;
 --
 
 CREATE TABLE public.fed_user_credential (
-                                          id character varying(36) NOT NULL,
-                                          salt bytea,
-                                          type character varying(255),
-                                          created_date bigint,
-                                          user_id character varying(255) NOT NULL,
-                                          realm_id character varying(36) NOT NULL,
-                                          storage_provider_id character varying(36),
-                                          user_label character varying(255),
-                                          secret_data text,
-                                          credential_data text,
-                                          priority integer
+    id character varying(36) NOT NULL,
+    salt bytea,
+    type character varying(255),
+    created_date bigint,
+    user_id character varying(255) NOT NULL,
+    realm_id character varying(36) NOT NULL,
+    storage_provider_id character varying(36),
+    user_label character varying(255),
+    secret_data text,
+    credential_data text,
+    priority integer
 );
 
 
@@ -646,10 +646,10 @@ ALTER TABLE public.fed_user_credential OWNER TO admin;
 --
 
 CREATE TABLE public.fed_user_group_membership (
-                                                group_id character varying(36) NOT NULL,
-                                                user_id character varying(255) NOT NULL,
-                                                realm_id character varying(36) NOT NULL,
-                                                storage_provider_id character varying(36)
+    group_id character varying(36) NOT NULL,
+    user_id character varying(255) NOT NULL,
+    realm_id character varying(36) NOT NULL,
+    storage_provider_id character varying(36)
 );
 
 
@@ -660,10 +660,10 @@ ALTER TABLE public.fed_user_group_membership OWNER TO admin;
 --
 
 CREATE TABLE public.fed_user_required_action (
-                                               required_action character varying(255) DEFAULT ' '::character varying NOT NULL,
-                                               user_id character varying(255) NOT NULL,
-                                               realm_id character varying(36) NOT NULL,
-                                               storage_provider_id character varying(36)
+    required_action character varying(255) DEFAULT ' '::character varying NOT NULL,
+    user_id character varying(255) NOT NULL,
+    realm_id character varying(36) NOT NULL,
+    storage_provider_id character varying(36)
 );
 
 
@@ -674,10 +674,10 @@ ALTER TABLE public.fed_user_required_action OWNER TO admin;
 --
 
 CREATE TABLE public.fed_user_role_mapping (
-                                            role_id character varying(36) NOT NULL,
-                                            user_id character varying(255) NOT NULL,
-                                            realm_id character varying(36) NOT NULL,
-                                            storage_provider_id character varying(36)
+    role_id character varying(36) NOT NULL,
+    user_id character varying(255) NOT NULL,
+    realm_id character varying(36) NOT NULL,
+    storage_provider_id character varying(36)
 );
 
 
@@ -688,12 +688,12 @@ ALTER TABLE public.fed_user_role_mapping OWNER TO admin;
 --
 
 CREATE TABLE public.federated_identity (
-                                         identity_provider character varying(255) NOT NULL,
-                                         realm_id character varying(36),
-                                         federated_user_id character varying(255),
-                                         federated_username character varying(255),
-                                         token text,
-                                         user_id character varying(36) NOT NULL
+    identity_provider character varying(255) NOT NULL,
+    realm_id character varying(36),
+    federated_user_id character varying(255),
+    federated_username character varying(255),
+    token text,
+    user_id character varying(36) NOT NULL
 );
 
 
@@ -704,9 +704,9 @@ ALTER TABLE public.federated_identity OWNER TO admin;
 --
 
 CREATE TABLE public.federated_user (
-                                     id character varying(255) NOT NULL,
-                                     storage_provider_id character varying(255),
-                                     realm_id character varying(36) NOT NULL
+    id character varying(255) NOT NULL,
+    storage_provider_id character varying(255),
+    realm_id character varying(36) NOT NULL
 );
 
 
@@ -717,10 +717,10 @@ ALTER TABLE public.federated_user OWNER TO admin;
 --
 
 CREATE TABLE public.group_attribute (
-                                      id character varying(36) DEFAULT 'sybase-needs-something-here'::character varying NOT NULL,
-                                      name character varying(255) NOT NULL,
-                                      value character varying(255),
-                                      group_id character varying(36) NOT NULL
+    id character varying(36) DEFAULT 'sybase-needs-something-here'::character varying NOT NULL,
+    name character varying(255) NOT NULL,
+    value character varying(255),
+    group_id character varying(36) NOT NULL
 );
 
 
@@ -731,8 +731,8 @@ ALTER TABLE public.group_attribute OWNER TO admin;
 --
 
 CREATE TABLE public.group_role_mapping (
-                                         role_id character varying(36) NOT NULL,
-                                         group_id character varying(36) NOT NULL
+    role_id character varying(36) NOT NULL,
+    group_id character varying(36) NOT NULL
 );
 
 
@@ -743,19 +743,19 @@ ALTER TABLE public.group_role_mapping OWNER TO admin;
 --
 
 CREATE TABLE public.identity_provider (
-                                        internal_id character varying(36) NOT NULL,
-                                        enabled boolean DEFAULT false NOT NULL,
-                                        provider_alias character varying(255),
-                                        provider_id character varying(255),
-                                        store_token boolean DEFAULT false NOT NULL,
-                                        authenticate_by_default boolean DEFAULT false NOT NULL,
-                                        realm_id character varying(36),
-                                        add_token_role boolean DEFAULT true NOT NULL,
-                                        trust_email boolean DEFAULT false NOT NULL,
-                                        first_broker_login_flow_id character varying(36),
-                                        post_broker_login_flow_id character varying(36),
-                                        provider_display_name character varying(255),
-                                        link_only boolean DEFAULT false NOT NULL
+    internal_id character varying(36) NOT NULL,
+    enabled boolean DEFAULT false NOT NULL,
+    provider_alias character varying(255),
+    provider_id character varying(255),
+    store_token boolean DEFAULT false NOT NULL,
+    authenticate_by_default boolean DEFAULT false NOT NULL,
+    realm_id character varying(36),
+    add_token_role boolean DEFAULT true NOT NULL,
+    trust_email boolean DEFAULT false NOT NULL,
+    first_broker_login_flow_id character varying(36),
+    post_broker_login_flow_id character varying(36),
+    provider_display_name character varying(255),
+    link_only boolean DEFAULT false NOT NULL
 );
 
 
@@ -766,9 +766,9 @@ ALTER TABLE public.identity_provider OWNER TO admin;
 --
 
 CREATE TABLE public.identity_provider_config (
-                                               identity_provider_id character varying(36) NOT NULL,
-                                               value text,
-                                               name character varying(255) NOT NULL
+    identity_provider_id character varying(36) NOT NULL,
+    value text,
+    name character varying(255) NOT NULL
 );
 
 
@@ -779,11 +779,11 @@ ALTER TABLE public.identity_provider_config OWNER TO admin;
 --
 
 CREATE TABLE public.identity_provider_mapper (
-                                               id character varying(36) NOT NULL,
-                                               name character varying(255) NOT NULL,
-                                               idp_alias character varying(255) NOT NULL,
-                                               idp_mapper_name character varying(255) NOT NULL,
-                                               realm_id character varying(36) NOT NULL
+    id character varying(36) NOT NULL,
+    name character varying(255) NOT NULL,
+    idp_alias character varying(255) NOT NULL,
+    idp_mapper_name character varying(255) NOT NULL,
+    realm_id character varying(36) NOT NULL
 );
 
 
@@ -794,9 +794,9 @@ ALTER TABLE public.identity_provider_mapper OWNER TO admin;
 --
 
 CREATE TABLE public.idp_mapper_config (
-                                        idp_mapper_id character varying(36) NOT NULL,
-                                        value text,
-                                        name character varying(255) NOT NULL
+    idp_mapper_id character varying(36) NOT NULL,
+    value text,
+    name character varying(255) NOT NULL
 );
 
 
@@ -807,10 +807,10 @@ ALTER TABLE public.idp_mapper_config OWNER TO admin;
 --
 
 CREATE TABLE public.keycloak_group (
-                                     id character varying(36) NOT NULL,
-                                     name character varying(255),
-                                     parent_group character varying(36) NOT NULL,
-                                     realm_id character varying(36)
+    id character varying(36) NOT NULL,
+    name character varying(255),
+    parent_group character varying(36) NOT NULL,
+    realm_id character varying(36)
 );
 
 
@@ -821,14 +821,14 @@ ALTER TABLE public.keycloak_group OWNER TO admin;
 --
 
 CREATE TABLE public.keycloak_role (
-                                    id character varying(36) NOT NULL,
-                                    client_realm_constraint character varying(255),
-                                    client_role boolean DEFAULT false NOT NULL,
-                                    description character varying(255),
-                                    name character varying(255),
-                                    realm_id character varying(255),
-                                    client character varying(36),
-                                    realm character varying(36)
+    id character varying(36) NOT NULL,
+    client_realm_constraint character varying(255),
+    client_role boolean DEFAULT false NOT NULL,
+    description character varying(255),
+    name character varying(255),
+    realm_id character varying(255),
+    client character varying(36),
+    realm character varying(36)
 );
 
 
@@ -839,9 +839,9 @@ ALTER TABLE public.keycloak_role OWNER TO admin;
 --
 
 CREATE TABLE public.migration_model (
-                                      id character varying(36) NOT NULL,
-                                      version character varying(36),
-                                      update_time bigint DEFAULT 0 NOT NULL
+    id character varying(36) NOT NULL,
+    version character varying(36),
+    update_time bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -852,13 +852,13 @@ ALTER TABLE public.migration_model OWNER TO admin;
 --
 
 CREATE TABLE public.offline_client_session (
-                                             user_session_id character varying(36) NOT NULL,
-                                             client_id character varying(255) NOT NULL,
-                                             offline_flag character varying(4) NOT NULL,
-                                             "timestamp" integer,
-                                             data text,
-                                             client_storage_provider character varying(36) DEFAULT 'local'::character varying NOT NULL,
-                                             external_client_id character varying(255) DEFAULT 'local'::character varying NOT NULL
+    user_session_id character varying(36) NOT NULL,
+    client_id character varying(255) NOT NULL,
+    offline_flag character varying(4) NOT NULL,
+    "timestamp" integer,
+    data text,
+    client_storage_provider character varying(36) DEFAULT 'local'::character varying NOT NULL,
+    external_client_id character varying(255) DEFAULT 'local'::character varying NOT NULL
 );
 
 
@@ -869,13 +869,13 @@ ALTER TABLE public.offline_client_session OWNER TO admin;
 --
 
 CREATE TABLE public.offline_user_session (
-                                           user_session_id character varying(36) NOT NULL,
-                                           user_id character varying(255) NOT NULL,
-                                           realm_id character varying(36) NOT NULL,
-                                           created_on integer NOT NULL,
-                                           offline_flag character varying(4) NOT NULL,
-                                           data text,
-                                           last_session_refresh integer DEFAULT 0 NOT NULL
+    user_session_id character varying(36) NOT NULL,
+    user_id character varying(255) NOT NULL,
+    realm_id character varying(36) NOT NULL,
+    created_on integer NOT NULL,
+    offline_flag character varying(4) NOT NULL,
+    data text,
+    last_session_refresh integer DEFAULT 0 NOT NULL
 );
 
 
@@ -886,9 +886,9 @@ ALTER TABLE public.offline_user_session OWNER TO admin;
 --
 
 CREATE TABLE public.policy_config (
-                                    policy_id character varying(36) NOT NULL,
-                                    name character varying(255) NOT NULL,
-                                    value text
+    policy_id character varying(36) NOT NULL,
+    name character varying(255) NOT NULL,
+    value text
 );
 
 
@@ -899,12 +899,12 @@ ALTER TABLE public.policy_config OWNER TO admin;
 --
 
 CREATE TABLE public.protocol_mapper (
-                                      id character varying(36) NOT NULL,
-                                      name character varying(255) NOT NULL,
-                                      protocol character varying(255) NOT NULL,
-                                      protocol_mapper_name character varying(255) NOT NULL,
-                                      client_id character varying(36),
-                                      client_scope_id character varying(36)
+    id character varying(36) NOT NULL,
+    name character varying(255) NOT NULL,
+    protocol character varying(255) NOT NULL,
+    protocol_mapper_name character varying(255) NOT NULL,
+    client_id character varying(36),
+    client_scope_id character varying(36)
 );
 
 
@@ -915,9 +915,9 @@ ALTER TABLE public.protocol_mapper OWNER TO admin;
 --
 
 CREATE TABLE public.protocol_mapper_config (
-                                             protocol_mapper_id character varying(36) NOT NULL,
-                                             value text,
-                                             name character varying(255) NOT NULL
+    protocol_mapper_id character varying(36) NOT NULL,
+    value text,
+    name character varying(255) NOT NULL
 );
 
 
@@ -928,59 +928,59 @@ ALTER TABLE public.protocol_mapper_config OWNER TO admin;
 --
 
 CREATE TABLE public.realm (
-                            id character varying(36) NOT NULL,
-                            access_code_lifespan integer,
-                            user_action_lifespan integer,
-                            access_token_lifespan integer,
-                            account_theme character varying(255),
-                            admin_theme character varying(255),
-                            email_theme character varying(255),
-                            enabled boolean DEFAULT false NOT NULL,
-                            events_enabled boolean DEFAULT false NOT NULL,
-                            events_expiration bigint,
-                            login_theme character varying(255),
-                            name character varying(255),
-                            not_before integer,
-                            password_policy character varying(2550),
-                            registration_allowed boolean DEFAULT false NOT NULL,
-                            remember_me boolean DEFAULT false NOT NULL,
-                            reset_password_allowed boolean DEFAULT false NOT NULL,
-                            social boolean DEFAULT false NOT NULL,
-                            ssl_required character varying(255),
-                            sso_idle_timeout integer,
-                            sso_max_lifespan integer,
-                            update_profile_on_soc_login boolean DEFAULT false NOT NULL,
-                            verify_email boolean DEFAULT false NOT NULL,
-                            master_admin_client character varying(36),
-                            login_lifespan integer,
-                            internationalization_enabled boolean DEFAULT false NOT NULL,
-                            default_locale character varying(255),
-                            reg_email_as_username boolean DEFAULT false NOT NULL,
-                            admin_events_enabled boolean DEFAULT false NOT NULL,
-                            admin_events_details_enabled boolean DEFAULT false NOT NULL,
-                            edit_username_allowed boolean DEFAULT false NOT NULL,
-                            otp_policy_counter integer DEFAULT 0,
-                            otp_policy_window integer DEFAULT 1,
-                            otp_policy_period integer DEFAULT 30,
-                            otp_policy_digits integer DEFAULT 6,
-                            otp_policy_alg character varying(36) DEFAULT 'HmacSHA1'::character varying,
-                            otp_policy_type character varying(36) DEFAULT 'totp'::character varying,
-                            browser_flow character varying(36),
-                            registration_flow character varying(36),
-                            direct_grant_flow character varying(36),
-                            reset_credentials_flow character varying(36),
-                            client_auth_flow character varying(36),
-                            offline_session_idle_timeout integer DEFAULT 0,
-                            revoke_refresh_token boolean DEFAULT false NOT NULL,
-                            access_token_life_implicit integer DEFAULT 0,
-                            login_with_email_allowed boolean DEFAULT true NOT NULL,
-                            duplicate_emails_allowed boolean DEFAULT false NOT NULL,
-                            docker_auth_flow character varying(36),
-                            refresh_token_max_reuse integer DEFAULT 0,
-                            allow_user_managed_access boolean DEFAULT false NOT NULL,
-                            sso_max_lifespan_remember_me integer DEFAULT 0 NOT NULL,
-                            sso_idle_timeout_remember_me integer DEFAULT 0 NOT NULL,
-                            default_role character varying(255)
+    id character varying(36) NOT NULL,
+    access_code_lifespan integer,
+    user_action_lifespan integer,
+    access_token_lifespan integer,
+    account_theme character varying(255),
+    admin_theme character varying(255),
+    email_theme character varying(255),
+    enabled boolean DEFAULT false NOT NULL,
+    events_enabled boolean DEFAULT false NOT NULL,
+    events_expiration bigint,
+    login_theme character varying(255),
+    name character varying(255),
+    not_before integer,
+    password_policy character varying(2550),
+    registration_allowed boolean DEFAULT false NOT NULL,
+    remember_me boolean DEFAULT false NOT NULL,
+    reset_password_allowed boolean DEFAULT false NOT NULL,
+    social boolean DEFAULT false NOT NULL,
+    ssl_required character varying(255),
+    sso_idle_timeout integer,
+    sso_max_lifespan integer,
+    update_profile_on_soc_login boolean DEFAULT false NOT NULL,
+    verify_email boolean DEFAULT false NOT NULL,
+    master_admin_client character varying(36),
+    login_lifespan integer,
+    internationalization_enabled boolean DEFAULT false NOT NULL,
+    default_locale character varying(255),
+    reg_email_as_username boolean DEFAULT false NOT NULL,
+    admin_events_enabled boolean DEFAULT false NOT NULL,
+    admin_events_details_enabled boolean DEFAULT false NOT NULL,
+    edit_username_allowed boolean DEFAULT false NOT NULL,
+    otp_policy_counter integer DEFAULT 0,
+    otp_policy_window integer DEFAULT 1,
+    otp_policy_period integer DEFAULT 30,
+    otp_policy_digits integer DEFAULT 6,
+    otp_policy_alg character varying(36) DEFAULT 'HmacSHA1'::character varying,
+    otp_policy_type character varying(36) DEFAULT 'totp'::character varying,
+    browser_flow character varying(36),
+    registration_flow character varying(36),
+    direct_grant_flow character varying(36),
+    reset_credentials_flow character varying(36),
+    client_auth_flow character varying(36),
+    offline_session_idle_timeout integer DEFAULT 0,
+    revoke_refresh_token boolean DEFAULT false NOT NULL,
+    access_token_life_implicit integer DEFAULT 0,
+    login_with_email_allowed boolean DEFAULT true NOT NULL,
+    duplicate_emails_allowed boolean DEFAULT false NOT NULL,
+    docker_auth_flow character varying(36),
+    refresh_token_max_reuse integer DEFAULT 0,
+    allow_user_managed_access boolean DEFAULT false NOT NULL,
+    sso_max_lifespan_remember_me integer DEFAULT 0 NOT NULL,
+    sso_idle_timeout_remember_me integer DEFAULT 0 NOT NULL,
+    default_role character varying(255)
 );
 
 
@@ -991,9 +991,9 @@ ALTER TABLE public.realm OWNER TO admin;
 --
 
 CREATE TABLE public.realm_attribute (
-                                      name character varying(255) NOT NULL,
-                                      realm_id character varying(36) NOT NULL,
-                                      value text
+    name character varying(255) NOT NULL,
+    realm_id character varying(36) NOT NULL,
+    value text
 );
 
 
@@ -1004,8 +1004,8 @@ ALTER TABLE public.realm_attribute OWNER TO admin;
 --
 
 CREATE TABLE public.realm_default_groups (
-                                           realm_id character varying(36) NOT NULL,
-                                           group_id character varying(36) NOT NULL
+    realm_id character varying(36) NOT NULL,
+    group_id character varying(36) NOT NULL
 );
 
 
@@ -1016,8 +1016,8 @@ ALTER TABLE public.realm_default_groups OWNER TO admin;
 --
 
 CREATE TABLE public.realm_enabled_event_types (
-                                                realm_id character varying(36) NOT NULL,
-                                                value character varying(255) NOT NULL
+    realm_id character varying(36) NOT NULL,
+    value character varying(255) NOT NULL
 );
 
 
@@ -1028,8 +1028,8 @@ ALTER TABLE public.realm_enabled_event_types OWNER TO admin;
 --
 
 CREATE TABLE public.realm_events_listeners (
-                                             realm_id character varying(36) NOT NULL,
-                                             value character varying(255) NOT NULL
+    realm_id character varying(36) NOT NULL,
+    value character varying(255) NOT NULL
 );
 
 
@@ -1040,9 +1040,9 @@ ALTER TABLE public.realm_events_listeners OWNER TO admin;
 --
 
 CREATE TABLE public.realm_localizations (
-                                          realm_id character varying(255) NOT NULL,
-                                          locale character varying(255) NOT NULL,
-                                          texts text NOT NULL
+    realm_id character varying(255) NOT NULL,
+    locale character varying(255) NOT NULL,
+    texts text NOT NULL
 );
 
 
@@ -1053,11 +1053,11 @@ ALTER TABLE public.realm_localizations OWNER TO admin;
 --
 
 CREATE TABLE public.realm_required_credential (
-                                                type character varying(255) NOT NULL,
-                                                form_label character varying(255),
-                                                input boolean DEFAULT false NOT NULL,
-                                                secret boolean DEFAULT false NOT NULL,
-                                                realm_id character varying(36) NOT NULL
+    type character varying(255) NOT NULL,
+    form_label character varying(255),
+    input boolean DEFAULT false NOT NULL,
+    secret boolean DEFAULT false NOT NULL,
+    realm_id character varying(36) NOT NULL
 );
 
 
@@ -1068,9 +1068,9 @@ ALTER TABLE public.realm_required_credential OWNER TO admin;
 --
 
 CREATE TABLE public.realm_smtp_config (
-                                        realm_id character varying(36) NOT NULL,
-                                        value character varying(255),
-                                        name character varying(255) NOT NULL
+    realm_id character varying(36) NOT NULL,
+    value character varying(255),
+    name character varying(255) NOT NULL
 );
 
 
@@ -1081,8 +1081,8 @@ ALTER TABLE public.realm_smtp_config OWNER TO admin;
 --
 
 CREATE TABLE public.realm_supported_locales (
-                                              realm_id character varying(36) NOT NULL,
-                                              value character varying(255) NOT NULL
+    realm_id character varying(36) NOT NULL,
+    value character varying(255) NOT NULL
 );
 
 
@@ -1093,8 +1093,8 @@ ALTER TABLE public.realm_supported_locales OWNER TO admin;
 --
 
 CREATE TABLE public.redirect_uris (
-                                    client_id character varying(36) NOT NULL,
-                                    value character varying(255) NOT NULL
+    client_id character varying(36) NOT NULL,
+    value character varying(255) NOT NULL
 );
 
 
@@ -1105,9 +1105,9 @@ ALTER TABLE public.redirect_uris OWNER TO admin;
 --
 
 CREATE TABLE public.required_action_config (
-                                             required_action_id character varying(36) NOT NULL,
-                                             value text,
-                                             name character varying(255) NOT NULL
+    required_action_id character varying(36) NOT NULL,
+    value text,
+    name character varying(255) NOT NULL
 );
 
 
@@ -1118,14 +1118,14 @@ ALTER TABLE public.required_action_config OWNER TO admin;
 --
 
 CREATE TABLE public.required_action_provider (
-                                               id character varying(36) NOT NULL,
-                                               alias character varying(255),
-                                               name character varying(255),
-                                               realm_id character varying(36),
-                                               enabled boolean DEFAULT false NOT NULL,
-                                               default_action boolean DEFAULT false NOT NULL,
-                                               provider_id character varying(255),
-                                               priority integer
+    id character varying(36) NOT NULL,
+    alias character varying(255),
+    name character varying(255),
+    realm_id character varying(36),
+    enabled boolean DEFAULT false NOT NULL,
+    default_action boolean DEFAULT false NOT NULL,
+    provider_id character varying(255),
+    priority integer
 );
 
 
@@ -1136,10 +1136,10 @@ ALTER TABLE public.required_action_provider OWNER TO admin;
 --
 
 CREATE TABLE public.resource_attribute (
-                                         id character varying(36) DEFAULT 'sybase-needs-something-here'::character varying NOT NULL,
-                                         name character varying(255) NOT NULL,
-                                         value character varying(255),
-                                         resource_id character varying(36) NOT NULL
+    id character varying(36) DEFAULT 'sybase-needs-something-here'::character varying NOT NULL,
+    name character varying(255) NOT NULL,
+    value character varying(255),
+    resource_id character varying(36) NOT NULL
 );
 
 
@@ -1150,8 +1150,8 @@ ALTER TABLE public.resource_attribute OWNER TO admin;
 --
 
 CREATE TABLE public.resource_policy (
-                                      resource_id character varying(36) NOT NULL,
-                                      policy_id character varying(36) NOT NULL
+    resource_id character varying(36) NOT NULL,
+    policy_id character varying(36) NOT NULL
 );
 
 
@@ -1162,8 +1162,8 @@ ALTER TABLE public.resource_policy OWNER TO admin;
 --
 
 CREATE TABLE public.resource_scope (
-                                     resource_id character varying(36) NOT NULL,
-                                     scope_id character varying(36) NOT NULL
+    resource_id character varying(36) NOT NULL,
+    scope_id character varying(36) NOT NULL
 );
 
 
@@ -1174,10 +1174,10 @@ ALTER TABLE public.resource_scope OWNER TO admin;
 --
 
 CREATE TABLE public.resource_server (
-                                      id character varying(36) NOT NULL,
-                                      allow_rs_remote_mgmt boolean DEFAULT false NOT NULL,
-                                      policy_enforce_mode character varying(15) NOT NULL,
-                                      decision_strategy smallint DEFAULT 1 NOT NULL
+    id character varying(36) NOT NULL,
+    allow_rs_remote_mgmt boolean DEFAULT false NOT NULL,
+    policy_enforce_mode character varying(15) NOT NULL,
+    decision_strategy smallint DEFAULT 1 NOT NULL
 );
 
 
@@ -1188,15 +1188,15 @@ ALTER TABLE public.resource_server OWNER TO admin;
 --
 
 CREATE TABLE public.resource_server_perm_ticket (
-                                                  id character varying(36) NOT NULL,
-                                                  owner character varying(255) NOT NULL,
-                                                  requester character varying(255) NOT NULL,
-                                                  created_timestamp bigint NOT NULL,
-                                                  granted_timestamp bigint,
-                                                  resource_id character varying(36) NOT NULL,
-                                                  scope_id character varying(36),
-                                                  resource_server_id character varying(36) NOT NULL,
-                                                  policy_id character varying(36)
+    id character varying(36) NOT NULL,
+    owner character varying(255) NOT NULL,
+    requester character varying(255) NOT NULL,
+    created_timestamp bigint NOT NULL,
+    granted_timestamp bigint,
+    resource_id character varying(36) NOT NULL,
+    scope_id character varying(36),
+    resource_server_id character varying(36) NOT NULL,
+    policy_id character varying(36)
 );
 
 
@@ -1207,14 +1207,14 @@ ALTER TABLE public.resource_server_perm_ticket OWNER TO admin;
 --
 
 CREATE TABLE public.resource_server_policy (
-                                             id character varying(36) NOT NULL,
-                                             name character varying(255) NOT NULL,
-                                             description character varying(255),
-                                             type character varying(255) NOT NULL,
-                                             decision_strategy character varying(20),
-                                             logic character varying(20),
-                                             resource_server_id character varying(36) NOT NULL,
-                                             owner character varying(255)
+    id character varying(36) NOT NULL,
+    name character varying(255) NOT NULL,
+    description character varying(255),
+    type character varying(255) NOT NULL,
+    decision_strategy character varying(20),
+    logic character varying(20),
+    resource_server_id character varying(36) NOT NULL,
+    owner character varying(255)
 );
 
 
@@ -1225,14 +1225,14 @@ ALTER TABLE public.resource_server_policy OWNER TO admin;
 --
 
 CREATE TABLE public.resource_server_resource (
-                                               id character varying(36) NOT NULL,
-                                               name character varying(255) NOT NULL,
-                                               type character varying(255),
-                                               icon_uri character varying(255),
-                                               owner character varying(255) NOT NULL,
-                                               resource_server_id character varying(36) NOT NULL,
-                                               owner_managed_access boolean DEFAULT false NOT NULL,
-                                               display_name character varying(255)
+    id character varying(36) NOT NULL,
+    name character varying(255) NOT NULL,
+    type character varying(255),
+    icon_uri character varying(255),
+    owner character varying(255) NOT NULL,
+    resource_server_id character varying(36) NOT NULL,
+    owner_managed_access boolean DEFAULT false NOT NULL,
+    display_name character varying(255)
 );
 
 
@@ -1243,11 +1243,11 @@ ALTER TABLE public.resource_server_resource OWNER TO admin;
 --
 
 CREATE TABLE public.resource_server_scope (
-                                            id character varying(36) NOT NULL,
-                                            name character varying(255) NOT NULL,
-                                            icon_uri character varying(255),
-                                            resource_server_id character varying(36) NOT NULL,
-                                            display_name character varying(255)
+    id character varying(36) NOT NULL,
+    name character varying(255) NOT NULL,
+    icon_uri character varying(255),
+    resource_server_id character varying(36) NOT NULL,
+    display_name character varying(255)
 );
 
 
@@ -1258,8 +1258,8 @@ ALTER TABLE public.resource_server_scope OWNER TO admin;
 --
 
 CREATE TABLE public.resource_uris (
-                                    resource_id character varying(36) NOT NULL,
-                                    value character varying(255) NOT NULL
+    resource_id character varying(36) NOT NULL,
+    value character varying(255) NOT NULL
 );
 
 
@@ -1270,10 +1270,10 @@ ALTER TABLE public.resource_uris OWNER TO admin;
 --
 
 CREATE TABLE public.role_attribute (
-                                     id character varying(36) NOT NULL,
-                                     role_id character varying(36) NOT NULL,
-                                     name character varying(255) NOT NULL,
-                                     value character varying(255)
+    id character varying(36) NOT NULL,
+    role_id character varying(36) NOT NULL,
+    name character varying(255) NOT NULL,
+    value character varying(255)
 );
 
 
@@ -1284,8 +1284,8 @@ ALTER TABLE public.role_attribute OWNER TO admin;
 --
 
 CREATE TABLE public.scope_mapping (
-                                    client_id character varying(36) NOT NULL,
-                                    role_id character varying(36) NOT NULL
+    client_id character varying(36) NOT NULL,
+    role_id character varying(36) NOT NULL
 );
 
 
@@ -1296,8 +1296,8 @@ ALTER TABLE public.scope_mapping OWNER TO admin;
 --
 
 CREATE TABLE public.scope_policy (
-                                   scope_id character varying(36) NOT NULL,
-                                   policy_id character varying(36) NOT NULL
+    scope_id character varying(36) NOT NULL,
+    policy_id character varying(36) NOT NULL
 );
 
 
@@ -1308,10 +1308,10 @@ ALTER TABLE public.scope_policy OWNER TO admin;
 --
 
 CREATE TABLE public.user_attribute (
-                                     name character varying(255) NOT NULL,
-                                     value character varying(255),
-                                     user_id character varying(36) NOT NULL,
-                                     id character varying(36) DEFAULT 'sybase-needs-something-here'::character varying NOT NULL
+    name character varying(255) NOT NULL,
+    value character varying(255),
+    user_id character varying(36) NOT NULL,
+    id character varying(36) DEFAULT 'sybase-needs-something-here'::character varying NOT NULL
 );
 
 
@@ -1322,13 +1322,13 @@ ALTER TABLE public.user_attribute OWNER TO admin;
 --
 
 CREATE TABLE public.user_consent (
-                                   id character varying(36) NOT NULL,
-                                   client_id character varying(255),
-                                   user_id character varying(36) NOT NULL,
-                                   created_date bigint,
-                                   last_updated_date bigint,
-                                   client_storage_provider character varying(36),
-                                   external_client_id character varying(255)
+    id character varying(36) NOT NULL,
+    client_id character varying(255),
+    user_id character varying(36) NOT NULL,
+    created_date bigint,
+    last_updated_date bigint,
+    client_storage_provider character varying(36),
+    external_client_id character varying(255)
 );
 
 
@@ -1339,8 +1339,8 @@ ALTER TABLE public.user_consent OWNER TO admin;
 --
 
 CREATE TABLE public.user_consent_client_scope (
-                                                user_consent_id character varying(36) NOT NULL,
-                                                scope_id character varying(36) NOT NULL
+    user_consent_id character varying(36) NOT NULL,
+    scope_id character varying(36) NOT NULL
 );
 
 
@@ -1351,19 +1351,19 @@ ALTER TABLE public.user_consent_client_scope OWNER TO admin;
 --
 
 CREATE TABLE public.user_entity (
-                                  id character varying(36) NOT NULL,
-                                  email character varying(255),
-                                  email_constraint character varying(255),
-                                  email_verified boolean DEFAULT false NOT NULL,
-                                  enabled boolean DEFAULT false NOT NULL,
-                                  federation_link character varying(255),
-                                  first_name character varying(255),
-                                  last_name character varying(255),
-                                  realm_id character varying(255),
-                                  username character varying(255),
-                                  created_timestamp bigint,
-                                  service_account_client_link character varying(255),
-                                  not_before integer DEFAULT 0 NOT NULL
+    id character varying(36) NOT NULL,
+    email character varying(255),
+    email_constraint character varying(255),
+    email_verified boolean DEFAULT false NOT NULL,
+    enabled boolean DEFAULT false NOT NULL,
+    federation_link character varying(255),
+    first_name character varying(255),
+    last_name character varying(255),
+    realm_id character varying(255),
+    username character varying(255),
+    created_timestamp bigint,
+    service_account_client_link character varying(255),
+    not_before integer DEFAULT 0 NOT NULL
 );
 
 
@@ -1374,9 +1374,9 @@ ALTER TABLE public.user_entity OWNER TO admin;
 --
 
 CREATE TABLE public.user_federation_config (
-                                             user_federation_provider_id character varying(36) NOT NULL,
-                                             value character varying(255),
-                                             name character varying(255) NOT NULL
+    user_federation_provider_id character varying(36) NOT NULL,
+    value character varying(255),
+    name character varying(255) NOT NULL
 );
 
 
@@ -1387,11 +1387,11 @@ ALTER TABLE public.user_federation_config OWNER TO admin;
 --
 
 CREATE TABLE public.user_federation_mapper (
-                                             id character varying(36) NOT NULL,
-                                             name character varying(255) NOT NULL,
-                                             federation_provider_id character varying(36) NOT NULL,
-                                             federation_mapper_type character varying(255) NOT NULL,
-                                             realm_id character varying(36) NOT NULL
+    id character varying(36) NOT NULL,
+    name character varying(255) NOT NULL,
+    federation_provider_id character varying(36) NOT NULL,
+    federation_mapper_type character varying(255) NOT NULL,
+    realm_id character varying(36) NOT NULL
 );
 
 
@@ -1402,9 +1402,9 @@ ALTER TABLE public.user_federation_mapper OWNER TO admin;
 --
 
 CREATE TABLE public.user_federation_mapper_config (
-                                                    user_federation_mapper_id character varying(36) NOT NULL,
-                                                    value character varying(255),
-                                                    name character varying(255) NOT NULL
+    user_federation_mapper_id character varying(36) NOT NULL,
+    value character varying(255),
+    name character varying(255) NOT NULL
 );
 
 
@@ -1415,14 +1415,14 @@ ALTER TABLE public.user_federation_mapper_config OWNER TO admin;
 --
 
 CREATE TABLE public.user_federation_provider (
-                                               id character varying(36) NOT NULL,
-                                               changed_sync_period integer,
-                                               display_name character varying(255),
-                                               full_sync_period integer,
-                                               last_sync integer,
-                                               priority integer,
-                                               provider_name character varying(255),
-                                               realm_id character varying(36)
+    id character varying(36) NOT NULL,
+    changed_sync_period integer,
+    display_name character varying(255),
+    full_sync_period integer,
+    last_sync integer,
+    priority integer,
+    provider_name character varying(255),
+    realm_id character varying(36)
 );
 
 
@@ -1433,8 +1433,8 @@ ALTER TABLE public.user_federation_provider OWNER TO admin;
 --
 
 CREATE TABLE public.user_group_membership (
-                                            group_id character varying(36) NOT NULL,
-                                            user_id character varying(36) NOT NULL
+    group_id character varying(36) NOT NULL,
+    user_id character varying(36) NOT NULL
 );
 
 
@@ -1445,8 +1445,8 @@ ALTER TABLE public.user_group_membership OWNER TO admin;
 --
 
 CREATE TABLE public.user_required_action (
-                                           user_id character varying(36) NOT NULL,
-                                           required_action character varying(255) DEFAULT ' '::character varying NOT NULL
+    user_id character varying(36) NOT NULL,
+    required_action character varying(255) DEFAULT ' '::character varying NOT NULL
 );
 
 
@@ -1457,8 +1457,8 @@ ALTER TABLE public.user_required_action OWNER TO admin;
 --
 
 CREATE TABLE public.user_role_mapping (
-                                        role_id character varying(255) NOT NULL,
-                                        user_id character varying(36) NOT NULL
+    role_id character varying(255) NOT NULL,
+    user_id character varying(36) NOT NULL
 );
 
 
@@ -1469,18 +1469,18 @@ ALTER TABLE public.user_role_mapping OWNER TO admin;
 --
 
 CREATE TABLE public.user_session (
-                                   id character varying(36) NOT NULL,
-                                   auth_method character varying(255),
-                                   ip_address character varying(255),
-                                   last_session_refresh integer,
-                                   login_username character varying(255),
-                                   realm_id character varying(255),
-                                   remember_me boolean DEFAULT false NOT NULL,
-                                   started integer,
-                                   user_id character varying(255),
-                                   user_session_state integer,
-                                   broker_session_id character varying(255),
-                                   broker_user_id character varying(255)
+    id character varying(36) NOT NULL,
+    auth_method character varying(255),
+    ip_address character varying(255),
+    last_session_refresh integer,
+    login_username character varying(255),
+    realm_id character varying(255),
+    remember_me boolean DEFAULT false NOT NULL,
+    started integer,
+    user_id character varying(255),
+    user_session_state integer,
+    broker_session_id character varying(255),
+    broker_user_id character varying(255)
 );
 
 
@@ -1491,9 +1491,9 @@ ALTER TABLE public.user_session OWNER TO admin;
 --
 
 CREATE TABLE public.user_session_note (
-                                        user_session character varying(36) NOT NULL,
-                                        name character varying(255) NOT NULL,
-                                        value character varying(2048)
+    user_session character varying(36) NOT NULL,
+    name character varying(255) NOT NULL,
+    value character varying(2048)
 );
 
 
@@ -1504,12 +1504,12 @@ ALTER TABLE public.user_session_note OWNER TO admin;
 --
 
 CREATE TABLE public.username_login_failure (
-                                             realm_id character varying(36) NOT NULL,
-                                             username character varying(255) NOT NULL,
-                                             failed_login_not_before integer,
-                                             last_failure bigint,
-                                             last_ip_failure character varying(255),
-                                             num_failures integer
+    realm_id character varying(36) NOT NULL,
+    username character varying(255) NOT NULL,
+    failed_login_not_before integer,
+    last_failure bigint,
+    last_ip_failure character varying(255),
+    num_failures integer
 );
 
 
@@ -1520,8 +1520,8 @@ ALTER TABLE public.username_login_failure OWNER TO admin;
 --
 
 CREATE TABLE public.web_origins (
-                                  client_id character varying(36) NOT NULL,
-                                  value character varying(255) NOT NULL
+    client_id character varying(36) NOT NULL,
+    value character varying(255) NOT NULL
 );
 
 
@@ -1710,18 +1710,14 @@ d4361dbf-d270-4560-9b7a-210914285dd7	review profile config	94ce22c3-7f74-4f86-84
 --
 
 COPY public.authenticator_config_entry (authenticator_id, value, name) FROM stdin;
-10d9857d-1c7b-40f8-994b-93a9666e1ec4	false	require.password.update.after.registration
-205981f7-3055-45f4-8d69-3b3e19d3b664	missing	update.profile.on.first.login
-                                                         36de875c-56fd-4ed4-9fff-ff3c9a979596	false	require.password.update.after.registration
-                                                         d4361dbf-d270-4560-9b7a-210914285dd7	missing	update.profile.on.first.login
-                                                                                                          \.
+\.
 
 
 --
 -- Data for Name: broker_link; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
-                                                                                                          COPY public.broker_link (identity_provider, storage_provider_id, realm_id, broker_user_id, broker_username, token, user_id) FROM stdin;
+COPY public.broker_link (identity_provider, storage_provider_id, realm_id, broker_user_id, broker_username, token, user_id) FROM stdin;
 \.
 
 
@@ -1743,7 +1739,7 @@ f95ce717-e6e3-45da-9312-22644eceb667	t	f	account-console	0	t	\N	/realms/mainzell
 4df2fd4c-f1d3-49cd-832a-2981aabcc3be	t	f	broker	0	f	\N	\N	t	\N	f	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	openid-connect	0	f	f	${client_broker}	f	client-secret	\N	\N	\N	t	f	f	f
 6ee2693c-ffcb-4d4d-bcd9-08759f08cf06	t	f	security-admin-console	0	t	\N	/admin/mainzelliste/console/	f	\N	f	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	openid-connect	0	f	f	${client_security-admin-console}	f	client-secret	${authAdminUrl}	\N	\N	t	f	f	f
 40b2864c-d64d-42a6-8703-38bdf1c379e4	t	f	admin-cli	0	t	\N	\N	f	\N	f	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	openid-connect	0	f	f	${client_admin-cli}	f	client-secret	\N	\N	\N	f	f	t	f
-28e7349b-8356-490d-8630-bd9aad26f316	t	t	mainzelliste-ui	0	t	\N	http://localhost	f		f	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	openid-connect	-1	t	f		f	client-secret	http://localhost		\N	t	f	t	f
+28e7349b-8356-490d-8630-bd9aad26f316	t	t	mainzelliste-ui	0	t	\N	http://localhost:4200	f		f	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	openid-connect	-1	t	f		f	client-secret	http://localhost:4200		\N	t	f	t	f
 \.
 
 
@@ -1768,7 +1764,7 @@ f95ce717-e6e3-45da-9312-22644eceb667	pkce.code.challenge.method	S256
 28e7349b-8356-490d-8630-bd9aad26f316	backchannel.logout.revoke.offline.tokens	false
 28e7349b-8356-490d-8630-bd9aad26f316	login_theme	mainzelliste
 28e7349b-8356-490d-8630-bd9aad26f316	display.on.consent.screen	false
-28e7349b-8356-490d-8630-bd9aad26f316	post.logout.redirect.uris	http://localhost/*
+28e7349b-8356-490d-8630-bd9aad26f316	post.logout.redirect.uris	http://localhost:4200/*
 \.
 
 
@@ -2096,7 +2092,6 @@ bffd7558-9c30-4727-a4da-442cacf10a57	Full Scope Disabled	94ce22c3-7f74-4f86-84eb
 c566be95-eaf4-4a64-9e60-3f3fc78ecd8b	Allowed Client Scopes	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	allowed-client-templates	org.keycloak.services.clientregistration.policy.ClientRegistrationPolicy	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	anonymous
 0940bd58-6822-462e-9567-3e6ed49b3877	Allowed Protocol Mapper Types	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	allowed-protocol-mappers	org.keycloak.services.clientregistration.policy.ClientRegistrationPolicy	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	authenticated
 575176be-7eab-457f-993c-5225db1a103a	Allowed Client Scopes	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	allowed-client-templates	org.keycloak.services.clientregistration.policy.ClientRegistrationPolicy	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	authenticated
-e50e2428-85bc-43ff-98b9-87b8d37ed993	\N	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	declarative-user-profile	org.keycloak.userprofile.UserProfileProvider	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	\N
 \.
 
 
@@ -3074,57 +3069,46 @@ cb657751-60e1-4583-91be-f6ae0b5826d5	60	300	60	\N	\N	\N	t	f	0	\N	master	0	\N	f	f
 --
 
 COPY public.realm_attribute (name, realm_id, value) FROM stdin;
-_browser_header.contentSecurityPolicyReportOnly	cb657751-60e1-4583-91be-f6ae0b5826d5
-_browser_header.xContentTypeOptions	cb657751-60e1-4583-91be-f6ae0b5826d5	nosniff
-_browser_header.xRobotsTag	cb657751-60e1-4583-91be-f6ae0b5826d5	none
-_browser_header.xFrameOptions	cb657751-60e1-4583-91be-f6ae0b5826d5	SAMEORIGIN
-_browser_header.contentSecurityPolicy	cb657751-60e1-4583-91be-f6ae0b5826d5	frame-src 'self'; frame-ancestors 'self'; object-src 'none';
-_browser_header.xXSSProtection	cb657751-60e1-4583-91be-f6ae0b5826d5	1; mode=block
-_browser_header.strictTransportSecurity	cb657751-60e1-4583-91be-f6ae0b5826d5	max-age=31536000; includeSubDomains
-bruteForceProtected	cb657751-60e1-4583-91be-f6ae0b5826d5	false
-permanentLockout	cb657751-60e1-4583-91be-f6ae0b5826d5	false
-maxFailureWaitSeconds	cb657751-60e1-4583-91be-f6ae0b5826d5	900
-minimumQuickLoginWaitSeconds	cb657751-60e1-4583-91be-f6ae0b5826d5	60
-waitIncrementSeconds	cb657751-60e1-4583-91be-f6ae0b5826d5	60
-quickLoginCheckMilliSeconds	cb657751-60e1-4583-91be-f6ae0b5826d5	1000
-maxDeltaTimeSeconds	cb657751-60e1-4583-91be-f6ae0b5826d5	43200
-failureFactor	cb657751-60e1-4583-91be-f6ae0b5826d5	30
-realmReusableOtpCode	cb657751-60e1-4583-91be-f6ae0b5826d5	false
-displayName	cb657751-60e1-4583-91be-f6ae0b5826d5	Keycloak
-displayNameHtml	cb657751-60e1-4583-91be-f6ae0b5826d5	<div class="kc-logo-text"><span>Keycloak</span></div>
-defaultSignatureAlgorithm	cb657751-60e1-4583-91be-f6ae0b5826d5	RS256
-offlineSessionMaxLifespanEnabled	cb657751-60e1-4583-91be-f6ae0b5826d5	false
-offlineSessionMaxLifespan	cb657751-60e1-4583-91be-f6ae0b5826d5	5184000
-displayName	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf
+acr.loa.map	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	{}
+cibaBackchannelTokenDeliveryMode	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	poll
+cibaExpiresIn	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	120
+cibaAuthRequestedUserHint	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	login_hint
+parRequestUriLifespan	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	60
+cibaInterval	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	5
+frontendUrl	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	
+oauth2DeviceCodeLifespan	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	600
+oauth2DevicePollingInterval	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	5
+clientSessionIdleTimeout	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	0
+clientSessionMaxLifespan	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	0
+clientOfflineSessionIdleTimeout	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	0
+clientOfflineSessionMaxLifespan	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	0
+realmReusableOtpCode	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	false
+displayName	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	
 displayNameHtml	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	<div class="kc-logo-text"><span></span></div>
 bruteForceProtected	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	false
 permanentLockout	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	false
-maxFailureWaitSeconds	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	900
-minimumQuickLoginWaitSeconds	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	60
-waitIncrementSeconds	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	60
-quickLoginCheckMilliSeconds	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	1000
-maxDeltaTimeSeconds	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	43200
-failureFactor	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	30
+maxFailureWaitSeconds	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	0
+minimumQuickLoginWaitSeconds	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	0
+waitIncrementSeconds	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	0
+quickLoginCheckMilliSeconds	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	0
+maxDeltaTimeSeconds	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	0
+failureFactor	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	0
 actionTokenGeneratedByAdminLifespan	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	43200
 actionTokenGeneratedByUserLifespan	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	300
-defaultSignatureAlgorithm	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	RS256
 offlineSessionMaxLifespanEnabled	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	false
 offlineSessionMaxLifespan	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	5184000
-realmReusableOtpCode	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	false
 webAuthnPolicyRpEntityName	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	keycloak
 webAuthnPolicySignatureAlgorithms	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	ES256
-webAuthnPolicyRpId	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf
+webAuthnPolicyRpId	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	
 webAuthnPolicyAttestationConveyancePreference	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	not specified
 webAuthnPolicyAuthenticatorAttachment	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	not specified
-oauth2DeviceCodeLifespan	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	600
-oauth2DevicePollingInterval	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	5
 webAuthnPolicyRequireResidentKey	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	not specified
 webAuthnPolicyUserVerificationRequirement	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	not specified
 webAuthnPolicyCreateTimeout	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	0
 webAuthnPolicyAvoidSameAuthenticatorRegister	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	false
 webAuthnPolicyRpEntityNamePasswordless	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	keycloak
 webAuthnPolicySignatureAlgorithmsPasswordless	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	ES256
-webAuthnPolicyRpIdPasswordless	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf
+webAuthnPolicyRpIdPasswordless	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	
 webAuthnPolicyAttestationConveyancePreferencePasswordless	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	not specified
 webAuthnPolicyAuthenticatorAttachmentPasswordless	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	not specified
 webAuthnPolicyRequireResidentKeyPasswordless	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	not specified
@@ -3133,24 +3117,6 @@ webAuthnPolicyCreateTimeoutPasswordless	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	0
 webAuthnPolicyAvoidSameAuthenticatorRegisterPasswordless	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	false
 client-policies.profiles	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	{"profiles":[]}
 client-policies.policies	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	{"policies":[]}
-_browser_header.contentSecurityPolicyReportOnly	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf
-_browser_header.xContentTypeOptions	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	nosniff
-_browser_header.xRobotsTag	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	none
-cibaBackchannelTokenDeliveryMode	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	poll
-cibaExpiresIn	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	120
-cibaInterval	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	5
-cibaAuthRequestedUserHint	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	login_hint
-parRequestUriLifespan	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	60
-acr.loa.map	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	{}
-frontendUrl	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf
-_browser_header.xFrameOptions	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	SAMEORIGIN
-_browser_header.contentSecurityPolicy	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	frame-src 'self'; frame-ancestors 'self'; object-src 'none';
-_browser_header.xXSSProtection	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	1; mode=block
-_browser_header.strictTransportSecurity	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	max-age=31536000; includeSubDomains
-clientSessionIdleTimeout	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	0
-clientSessionMaxLifespan	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	0
-clientOfflineSessionIdleTimeout	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	0
-clientOfflineSessionMaxLifespan	94ce22c3-7f74-4f86-84eb-d1d89d0e0ddf	0
 \.
 
 
@@ -3225,7 +3191,7 @@ COPY public.redirect_uris (client_id, value) FROM stdin;
 2ef8ef9a-6b19-45db-99ba-819589ddda1e	/realms/mainzelliste/account/*
 f95ce717-e6e3-45da-9312-22644eceb667	/realms/mainzelliste/account/*
 6ee2693c-ffcb-4d4d-bcd9-08759f08cf06	/admin/mainzelliste/console/*
-28e7349b-8356-490d-8630-bd9aad26f316	http://localhost/*
+28e7349b-8356-490d-8630-bd9aad26f316	http://localhost:4200/*
 \.
 
 
@@ -3504,7 +3470,7 @@ COPY public.username_login_failure (realm_id, username, failed_login_not_before,
 COPY public.web_origins (client_id, value) FROM stdin;
 3d3eb837-6d2b-4f86-8162-bb8c2b0cd113	+
 6ee2693c-ffcb-4d4d-bcd9-08759f08cf06	+
-28e7349b-8356-490d-8630-bd9aad26f316	http://localhost
+28e7349b-8356-490d-8630-bd9aad26f316	http://localhost:4200
 \.
 
 
@@ -5535,8 +5501,8 @@ ALTER TABLE ONLY public.identity_provider_config
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.12
--- Dumped by pg_dump version 13.12
+-- Dumped from database version 13.11
+-- Dumped by pg_dump version 13.11
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;

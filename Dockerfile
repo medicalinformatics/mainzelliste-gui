@@ -6,7 +6,7 @@ COPY ./angular.json ./tsconfig.json ./tsconfig.app.json ./
 COPY ./src ./src
 RUN npm run build --outputHashing=all
 
-FROM nginx:1.21
+FROM nginx:1.25
 ENV NGINX_PORT=80 NGINX_DEPLOYMENT_CONTEXT=/
 COPY nginx.conf /etc/nginx/templates/mainzelliste-gui.nginx.conf.template
 COPY --from=build /usr/src/app/dist/mainzelliste-gui /usr/share/nginx/html

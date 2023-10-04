@@ -3,8 +3,8 @@
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.1.3.
 
 ## Running on Linux
-1. copy the file `.env.default` to `.env` and set the environment variable `HOST` to the server name
-2. You can either set up you keycloak configuration manually or just run the shell initialization file ``./init-keycloak.sh`` to do this task for you.
+1. copy the file `.env.default` to `.env` and set the environment variable `HOST` to the server name. As Developer running the docker compose locally please set the Host value with the computer name. 
+2. You can either set up you keycloak configuration manually or just run the shell initialization script ``./init-keycloak.sh {ui hostname + path}`` to do this task for you. The default value of `{ui hostname + path}` is `localhost:4200`
    1. before running the shell initialization file ``./init-keycloak.sh`` just make sure that all the docker container are down and the `keycloakDB` volume doesn't exist.
 3. run ``docker-compose up -d``
 

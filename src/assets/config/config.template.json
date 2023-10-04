@@ -19,7 +19,7 @@
       ],
       "debug": ${ML_UI_DEBUG_MODE},
       "betaFeatures": {
-        "consent": false
+        "consent": ${ML_UI_ENABLE_CONSENT}
       }
     }
   ]
