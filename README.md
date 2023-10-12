@@ -30,7 +30,7 @@ the docker image of the ui uses several environment variables :
 1. copy the file `.env.default` to `.env` and set the environment variable `HOST` to `localhost`
 2. You can either set up you keycloak configuration manually or just run the shell initialization file `./init-keycloak.sh` to do this task for you.
    1. before running the shell initialization file `./init-keycloak.sh` just make sure that all the docker container are down and the `keycloakDB` volume doesn't exist.
-3. `docker-compose up mainzelliste mainzelliste-db keycloak keycloak-db`
+3. `docker-compose up mainzelliste mainzelliste-db keycloak keycloak-db -d`
 4. Run `ng serve` for a dev server. Navigate to `http://localhost`. The app will automatically reload if you change any of the source files.
    1. if the error "Could not find the '@angular-devkit/build-angular:dev-server' builder's node package." shows up,
       try `npm install -g @angular/cli`and `npm install` in your project directory.
