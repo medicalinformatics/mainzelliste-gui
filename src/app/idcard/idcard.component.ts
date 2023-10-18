@@ -10,6 +10,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ConsentDialogComponent} from "../consent-dialog/consent-dialog.component";
 import {PatientService} from "../services/patient.service";
 import {DeletePatientDialog} from "./dialogs/delete-patient-dialog";
+import { NewIdDialog } from './dialogs/new-id-dialog';
 
 export interface ConsentRow {id: string, date:string, title: string, period:string, version?:string}
 
@@ -36,8 +37,12 @@ export class IdcardComponent implements OnInit {
     private titleService: GlobalTitleService,
     public consentDialog: MatDialog,
     public deleteDialog: MatDialog,
+    public newIdDialog: MatDialog,
     public consentService: ConsentService
   ) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => {
+      return false;
+    };
     this.activatedRoute.params.subscribe((params) => {
       if (params["idType"] !== undefined)
         this.idType = params["idType"]
@@ -92,6 +97,11 @@ export class IdcardComponent implements OnInit {
     .then(() => this.router.navigate(['/patientlist']).then());
   }
 
+  async generateId(newIdType: string) {
+    await this.patientListService.generateId(this.idType, this.idString, newIdType)
+    .then(() => this.router.navigate(['/idcard/' + this.idType + '/' + this.idString]).then());
+  }
+
   openConsentDialog() {
     const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
       width: '900px'
@@ -103,6 +113,19 @@ export class IdcardComponent implements OnInit {
         this.consentService.addConsent(consent).then(e => this.loadConsents());
       }
     });
+  }
+
+  openNewIdDialog(): void {
+    
+    const dialogRef = this.newIdDialog.open(NewIdDialog, {
+      data: this.patientListService.getNewIdType(this.patient)
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result != null) {
+        this.generateId(result.value).then();
+      }
+    })
   }
 
   openDeletePatientDialog(): void {
