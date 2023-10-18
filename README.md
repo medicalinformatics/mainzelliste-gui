@@ -27,20 +27,39 @@ the docker image of the ui uses several environment variables :
 
 ### Running locally
 
-1. copy the file `.env.default` to `.env` and set the environment variable `HOST` to `localhost`
-2. You can either set up you keycloak configuration manually or just run the shell initialization file `./init-keycloak.sh` to do this task for you.
-   1. before running the shell initialization file `./init-keycloak.sh` just make sure that all the docker container are down and the `keycloakDB` volume doesn't exist.
-3. `docker-compose up mainzelliste mainzelliste-db keycloak keycloak-db -d`
-4. Run `ng serve` for a dev server. Navigate to `http://localhost`. The app will automatically reload if you change any of the source files.
-   1. if the error "Could not find the '@angular-devkit/build-angular:dev-server' builder's node package." shows up,
-      try `npm install -g @angular/cli`and `npm install` in your project directory.
-5. copy the file `config.template.json` in src/assets/config to `config.json`.
-   1. change the first url to "http://localhost:8080"
-   2. change the second url to "http://localhost:8082"
-   3. change the realm to "mainzelliste"
-   4. change the clientId to "mainzelliste-ui"
-   5. change the mainIdType to "pid"
-   6. change showAllIds, debug and consent to "false"
+1. Run `npm install -g @angular/cli` and `npm install` in the terminal in your project directory.
+2. copy the file `.env.default` to `.env` and set the environment variable `HOST` to `localhost`.
+3. You can either set up you keycloak configuration manually or just run the shell initialization file `./init-keycloak.sh` to do this task for you.
+   !! before running the shell initialization file `./init-keycloak.sh` just make sure that all the docker container are down and the `keycloakDB` volume doesn't exist.
+4. `docker-compose up mainzelliste mainzelliste-db keycloak keycloak-db -d`
+5. copy the file `config.template.json` in src/assets/config to `config.json` and replace the content with the following code:
+{
+  "patientLists": [
+    {
+      "url": "http://localhost:8080",
+      "oAuthConfig": {
+        "url": "http://localhost:8082",
+        "realm": "mainzelliste",
+        "clientId": "mainzelliste-ui"
+      },
+      "mainIdType": "pid",
+      "showAllIds": false,
+      "fields": [
+        {"name":  "Vorname", "mainzellisteField":  "vorname"},
+        {"name":  "Nachname", "mainzellisteField":  "nachname"},
+        {"name":  "Geburtsname", "mainzellisteField":  "geburtsname"},
+        {"name":  "Geburtsdatum", "mainzellisteFields":  ["geburtstag", "geburtsmonat", "geburtsjahr"]},
+        {"name":  "PLZ", "mainzellisteField":  "plz"},
+        {"name":  "Wohnort", "mainzellisteField":  "ort"}
+      ],
+      "debug": false,
+      "betaFeatures": {
+        "consent": false
+      }
+    }
+  ]
+}
+6. Run `ng serve` for a dev server. Navigate to `http://localhost:4200`. The app will automatically reload if you change any of the source files.
 
 #### Setup keycloak configuration manually
 
