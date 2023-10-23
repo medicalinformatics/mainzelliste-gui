@@ -1,0 +1,13 @@
+{
+	"idcard.button_add_consent": "Add consent",
+	"idcard.button_delete": "Delete",
+	"idcard.button_edit": "Edit",
+	"idcard.consent_created": "Created",
+	"idcard.consent_no_consent": "No consent.",
+	"idcard.consent_template": "Template",
+	"idcard.consent_title": "Consents",
+	"idcard.consent_validity_period": "Validity period",
+	"idcard.consent_version": "Version",
+	"idcard.patient_data_title": "Patient data",
+	"idcard.pseudonyms_title": "Pseudonyms"
+}

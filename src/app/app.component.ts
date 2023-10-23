@@ -6,6 +6,8 @@ import {NavigationStart, Router} from "@angular/router";
 import {Observable} from "rxjs";
 import {filter} from 'rxjs/operators';
 import {UserAuthService} from "./services/user-auth.service";
+import { TranslateService } from '@ngx-translate/core';
+
 
 @Component({
   selector: 'app-root',
@@ -16,12 +18,16 @@ export class AppComponent {
   title = 'mainzelliste-gui';
 
   constructor(
+    translate: TranslateService,
     public readonly sessionService: SessionService,
     public readonly titleService: GlobalTitleService,
     public readonly errorNotificationService: ErrorNotificationService,
     protected readonly userAuthService: UserAuthService,
     public router: Router
   ) {
+    translate.addLangs(['en', 'de']);
+    translate.setDefaultLang('de');
+    translate.use('de');
     (router.events.pipe(
       filter(evt => evt instanceof NavigationStart)
     ) as Observable<NavigationStart>).subscribe(() =>
