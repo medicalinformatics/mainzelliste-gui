@@ -1,7 +1,7 @@
 <form #patientForm="ngForm">
 <div style="width: 100%; height: 100%">
   <div style=" background:none; margin-top:0.5%; flex: 1 1 70%; display: flex; flex-flow: row; justify-content: space-around; align-items: stretch; justify-content: space-around; gap: 0 1%">
-    <mat-card id="patientendaten" style="; flex: 1 1 25%; display: flex;  flex-flow: column">
+    <mat-card id="patientendaten" style="flex: 1 1 25%; display: flex;  flex-flow: column">
       <mat-card-title>Patientendaten</mat-card-title>
       <app-patient-fields [readOnly]=true [fields]="patient.fields"></app-patient-fields>
     </mat-card>
@@ -21,13 +21,13 @@
 <!--      </button>-->
       <button mat-fab [routerLink]="['/edit-patient', idType, idString]"
               [state]="{patient: patient}" style="background-color:#ffd60a; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">
-        <mat-icon matTooltip="Edit">edit</mat-icon>
+        <mat-icon matTooltip="Bearbeiten">edit</mat-icon>
       </button>
       <button mat-fab (click)="openDeletePatientDialog()" style="background-color:#da1e37; color:white; margin-bottom: 15px" aria-label="Example icon button with a delete icon">
-        <mat-icon matTooltip="Delete">delete</mat-icon>
+        <mat-icon matTooltip="Löschen">delete</mat-icon>
       </button>
       <button mat-fab (click)="openNewIdDialog()" style="background-color: #60d7fb; color:black; margin-bottom: 15px" aria-label="Example icon button with a fiber_new icon">
-        <mat-icon matTooltip="Generate new Id">fiber_new</mat-icon>
+        <mat-icon matTooltip="Neue Id">fiber_new</mat-icon>
       </button>
       <button *ngIf="this.consentService.isServiceEnabled()" mat-fab (click)="openConsentDialog()"
               style="background-color:#053E6A; color:white;">
