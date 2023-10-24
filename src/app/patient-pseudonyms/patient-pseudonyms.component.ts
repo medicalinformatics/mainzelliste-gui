@@ -61,7 +61,6 @@ export class PatientPseudonymsComponent{
   }
 
   getInternalIds(): Id[] {
-    this.getInternalIdTypes();
     return this.ids.filter(id => this.getInternalIdTypes().some(t => t.idType == id.idType))
   }
 

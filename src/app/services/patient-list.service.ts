@@ -195,7 +195,7 @@ export class PatientListService {
     }).join("&")
   }
 
-  async generateId(idType: string, idString: string, newIdType: string) {
+  generateId(idType: string, idString: string, newIdType: string) {
     return this.sessionService.createToken("createIds", new CreateIdsTokenData([{idType, idString}]))
       .pipe(mergeMap(
         token => this.resolveCreateIdsToken(token.id, newIdType)
@@ -203,11 +203,11 @@ export class PatientListService {
       catchError(e => {
         // handle failed token creation
         if (e instanceof HttpErrorResponse && (e.status == 404) && ErrorMessages.ML_SESSION_NOT_FOUND.match(e))
-          return throwError(new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND))
+          return throwError(new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND));
         else if (!(e instanceof MainzellisteError) && !(e instanceof MainzellisteUnknownError))
-          return throwError(new MainzellisteUnknownError("Failed to create CreateIdsToken", e))
-        return throwError(e)
-      })).toPromise();
+          return throwError(new MainzellisteUnknownError("Failed to create CreateIdsToken", e));
+        return throwError(e);
+      }));
   }
 
   resolveCreateIdsToken(tokenId: string | undefined, newIdType: string): Observable<any> {
