@@ -21,6 +21,7 @@ export interface ConsentRow {id: string, date:string, title: string, period:stri
 })
 
 export class IdcardComponent implements OnInit {
+
   public idString: string = "";
   public idType: string = "";
   public patient: Patient = new Patient();
@@ -53,13 +54,17 @@ export class IdcardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.patientListService.readPatient(new Id(this.idType, this.idString)).then(patients => {
-      this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
-    });
+    this.loadPatient();
 
     //load consent list
     if(this.consentService.isServiceEnabled())
       this.loadConsents();
+  }
+
+  private loadPatient() {
+    this.patientListService.readPatient(new Id(this.idType, this.idString)).then(patients => {
+      this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
+    });
   }
 
   private loadConsents() {
@@ -97,9 +102,8 @@ export class IdcardComponent implements OnInit {
     .then(() => this.router.navigate(['/patientlist']).then());
   }
 
-  async generateId(newIdType: string) {
-    await this.patientListService.generateId(this.idType, this.idString, newIdType)
-    .then(() => this.router.navigate(['/idcard/' + this.idType + '/' + this.idString]).then());
+  generateId(newIdType: string) {
+    this.patientListService.generateId(this.idType, this.idString, newIdType).subscribe(() => this.loadPatient());
   }
 
   openConsentDialog() {
@@ -123,7 +127,7 @@ export class IdcardComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result != null) {
-        this.generateId(result.value).then();
+        this.generateId(result.value);
       }
     })
   }
