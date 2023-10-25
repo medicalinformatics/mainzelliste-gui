@@ -3,12 +3,14 @@
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.1.3.
 
 ## Running on Linux
+
 1. copy the file `.env.default` to `.env` and set the environment variable `HOST` to the server name. As Developer running the docker compose locally please set the Host value with the computer name. 
 2. You can either set up you keycloak configuration manually or just run the shell initialization script ``./init-keycloak.sh {ui hostname + path}`` to do this task for you. The default value of `{ui hostname + path}` is `localhost:4200`
    1. before running the shell initialization file ``./init-keycloak.sh`` just make sure that all the docker container are down and the `keycloakDB` volume doesn't exist.
 3. run ``docker-compose up -d``
 
 ## How to configure
+
 the docker image of the ui uses several environment variables :
 
 | Environment Variable | Description                                                               | Required ? | Default Value                                                                                       |
@@ -22,14 +24,47 @@ the docker image of the ui uses several environment variables :
 | KEYCLOAK_CLIENT_ID   | Client ID                                                                 | Yes        | -                                                                                                   |
 
 ## Developer Guide 
+
 ### Running locally
-1. copy the file `.env.default` to `.env` and set the environment variable `HOST` to ``localhost`` 
-2. You can either set up you keycloak configuration manually or just run the shell initialization file ``./init-keycloak.sh`` to do this task for you.
-   1. before running the shell initialization file ``./init-keycloak.sh`` just make sure that all the docker container are down and the `keycloakDB` volume doesn't exist.
-3. ``docker-compose up mainzelliste mainzelliste-db keycloak keycloak-db``
-4. Run `ng serve --port=80` for a dev server. Navigate to `http://localhost`. The app will automatically reload if you change any of the source files.
+
+1. Run `npm install -g @angular/cli` and `npm install` in the terminal in your project directory.
+2. copy the file `.env.default` to `.env` and set the environment variable `HOST` to `localhost`.
+3. You can either set up you keycloak configuration manually or just run the shell initialization file `./init-keycloak.sh` to do this task for you.
+   !! before running the shell initialization file `./init-keycloak.sh` just make sure that all the docker container are down and the `keycloakDB` volume doesn't exist.
+4. `docker-compose up mainzelliste mainzelliste-db keycloak keycloak-db -d`
+5. copy the file `config.template.json` in src/assets/config to `config.json` and replace the content with the following code:
+```json
+{
+  "patientLists": [
+    {
+      "url": "http://localhost:8080",
+      "oAuthConfig": {
+        "url": "http://localhost:8082",
+        "realm": "mainzelliste",
+        "clientId": "mainzelliste-ui"
+      },
+      "mainIdType": "pid",
+      "showAllIds": false,
+      "fields": [
+        {"name":  "Vorname", "mainzellisteField":  "vorname"},
+        {"name":  "Nachname", "mainzellisteField":  "nachname"},
+        {"name":  "Geburtsname", "mainzellisteField":  "geburtsname"},
+        {"name":  "Geburtsdatum", "mainzellisteFields":  ["geburtstag", "geburtsmonat", "geburtsjahr"]},
+        {"name":  "PLZ", "mainzellisteField":  "plz"},
+        {"name":  "Wohnort", "mainzellisteField":  "ort"}
+      ],
+      "debug": false,
+      "betaFeatures": {
+        "consent": false
+      }
+    }
+  ]
+}
+```
+6. Run `ng serve` for a dev server. Navigate to `http://localhost:4200`. The app will automatically reload if you change any of the source files.
 
 #### Setup keycloak configuration manually
+
 1. create new realm **mainzelliste**
    1. go to tab **General** and set **Html display name**: `<div class="kc-logo-text"><span></span></div>`
    2. go to tab **Themes** and choose login theme mainzelliste
@@ -41,14 +76,17 @@ the docker image of the ui uses several environment variables :
    1. go to Credentials tab and add password
 
 ### Code scaffolding
+
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
 ### Build
 
 #### Angular Project
+
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
 #### Docker Image
+
 ``docker build -t medicalinformatics/mainzelliste-gui:develop .``
 
 ### Running unit tests
