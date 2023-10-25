@@ -1,6 +1,4 @@
-import { PAUSE } from '@angular/cdk/keycodes';
 import { Component, OnInit, Renderer2, RendererFactory2 } from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-navigation',
@@ -13,17 +11,11 @@ export class NavigationComponent implements OnInit {
 
   constructor(
     rendererFactory: RendererFactory2,
-    private translate :TranslateService
     ) {
       this.renderer = rendererFactory.createRenderer(null, null);
-      this.translate = translate;
     }
 
   ngOnInit(): void {
-  }
-
-  useLanguage(language: string): void {
-    this.translate.use(language);
   }
 
   chBackground(event: any):void {

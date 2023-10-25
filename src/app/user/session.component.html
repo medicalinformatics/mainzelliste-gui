@@ -1,13 +1,21 @@
 <div>
-  <button class="loginButton" mat-button [matMenuTriggerFor]="logoutDropDown">
+  <button class="profileButton" mat-button [matMenuTriggerFor]="profileDropDown">
     <mat-icon>account_circle</mat-icon>
     {{this.userAuthService.getUserName()}}
     <mat-icon>arrow_drop_down</mat-icon>
   </button>
-  <mat-menu #logoutDropDown xPosition="before">
+  <mat-menu #profileDropDown="matMenu" xPosition="before">
+    <button mat-menu-item [matMenuTriggerFor]="languages">
+      <mat-icon>language</mat-icon>
+      <span>Language</span>
+    </button>
     <button mat-menu-item (click)="this.userAuthService.logout()">
       <mat-icon>logout</mat-icon>
       <span>Logout</span>
     </button>
+  </mat-menu>
+  <mat-menu #languages="matMenu">
+    <button *ngIf="this.translate.currentLang != 'de'" mat-menu-item (click)="useLanguage('de')">Deutsch</button>
+    <button *ngIf="this.translate.currentLang != 'en'" mat-menu-item (click)="useLanguage('en')">Englisch</button>
   </mat-menu>
 </div>
