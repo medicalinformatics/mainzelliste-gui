@@ -33,6 +33,7 @@ the docker image of the ui uses several environment variables :
    !! before running the shell initialization file `./init-keycloak.sh` just make sure that all the docker container are down and the `keycloakDB` volume doesn't exist.
 4. `docker-compose up mainzelliste mainzelliste-db keycloak keycloak-db -d`
 5. copy the file `config.template.json` in src/assets/config to `config.json` and replace the content with the following code:
+```json
 {
   "patientLists": [
     {
@@ -59,6 +60,7 @@ the docker image of the ui uses several environment variables :
     }
   ]
 }
+```
 6. Run `ng serve` for a dev server. Navigate to `http://localhost:4200`. The app will automatically reload if you change any of the source files.
 
 #### Setup keycloak configuration manually
