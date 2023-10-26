@@ -1,7 +1,7 @@
 <div style="height: 100%; min-height: 10em; width: 100%;">
 
-    <mat-form-field color="primary"  id="filterBoard" appearance="outline">
-      <mat-label>Filter/Suche...</mat-label>
+    <mat-form-field color="primary" id="filterBoard" appearance="outline">
+      <mat-label>{{'patientlist.filter_search' | translate}}</mat-label>
       <mat-chip-list #chipList aria-label="Fruit selection">
         <mat-chip *ngFor="let filter of filters"
                   [selectable]="true"
@@ -11,7 +11,7 @@
         </mat-chip>
         <input #filterInput
                [(ngModel)]="filterInputValue"
-               placeholder="Suche..."
+               placeholder="{{'patientlist.search_placeholder' | translate}}"
                [matChipInputFor]="chipList"
                [formControl]="filterCtrl"
                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"

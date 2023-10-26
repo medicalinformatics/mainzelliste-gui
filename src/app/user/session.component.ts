@@ -12,7 +12,7 @@ export class SessionComponent {
     public userAuthService: UserAuthService,
     public translate :TranslateService
   ) {
-    this.translate = translate
+    this.translate = translate;
   }
 
   useLanguage(language: string): void {
