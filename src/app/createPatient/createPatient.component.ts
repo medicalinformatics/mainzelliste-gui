@@ -17,6 +17,7 @@ import {UserAuthService} from "../services/user-auth.service";
 import {ConsentDialogComponent} from "../consent-dialog/consent-dialog.component";
 import {ConsentService} from "../consent.service";
 import {Consent} from "../model/consent";
+import { TranslateService } from '@ngx-translate/core';
 
 export interface IdTypSelection {
   idType: string,
@@ -49,8 +50,10 @@ export class CreatePatientComponent  implements OnInit {
   chipListInputData: string = "";
 
   externalIdTypes: IdTypSelection[] = [];
+  translate: TranslateService;
 
   constructor(
+    translate: TranslateService,
     public consentDialog: MatDialog,
     patientService: PatientService,
     patientListService: PatientListService,
@@ -64,7 +67,12 @@ export class CreatePatientComponent  implements OnInit {
     this.patientService = patientService;
     this.patientListService = patientListService;
     this.userAuthService = userAuthService;
-    this.titleService.setTitle("Personenidentifikator anfordern");
+    this.translate = translate;
+    this.changeTitle();
+  }
+
+  changeTitle() {
+    this.titleService.setTitle(this.translate.instant('createPatient.request_personal_identifier'));
   }
 
   ngOnInit(): void {
@@ -88,6 +96,10 @@ export class CreatePatientComponent  implements OnInit {
         .filter(e => !e.added && e.idType.toLowerCase().includes(searchValue.toLowerCase()))
       }),
     );
+
+    this.translate.onLangChange.subscribe(() => {
+      this.changeTitle();
+    })
   }
 
   createNewPatient(sureness: boolean) {

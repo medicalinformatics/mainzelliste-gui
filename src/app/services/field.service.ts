@@ -12,10 +12,8 @@ export class FieldService {
     this.fields = this.configService.data[0].fields;
   }
 
-  getFields(): Promise<Array<Field>> {
+  getFields(): Array<Field> {
     // TODO: Create proper method to get all fields from a mainzelliste instance
-    return new Promise((resolve, reject) => {
-      resolve(this.fields);
-    });
+    return this.fields;
   }
 }

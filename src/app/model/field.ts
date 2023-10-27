@@ -4,6 +4,7 @@ export enum FieldType {
 }
 export class Field {
   constructor(
+    public i18n: string,
     public name: string,
     public mainzellisteField: string,
     public mainzellisteFields: string[],

@@ -25,12 +25,14 @@ export class PatientFieldsComponent implements OnInit {
   @Output() consentEvent = new EventEmitter<boolean>();
   @Output() slideFieldEvent = new EventEmitter<{name:string,value:string}>();
 
-  configuredFields: Promise<Array<Field>>;
+  configuredFields: Field[];
   @Input() readOnly: boolean= false;
   @Input() side: string="none";
-  localDateFormat:string;
+  localDateFormat: string;
 
-  constructor(fieldService: FieldService) {
+  constructor(
+    fieldService: FieldService
+    ) {
     this.configuredFields = fieldService.getFields();
     this.localDateFormat = _moment().localeData().longDateFormat('L');
   }

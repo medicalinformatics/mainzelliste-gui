@@ -15,7 +15,7 @@
     </button>
   </mat-menu>
   <mat-menu #languages="matMenu">
-    <button *ngIf="this.translate.currentLang != 'de'" mat-menu-item (click)="useLanguage('de')">{{'session.language_german' | translate}}</button>
-    <button *ngIf="this.translate.currentLang != 'en'" mat-menu-item (click)="useLanguage('en')">{{'session.language_english' | translate}}</button>
+    <button *ngIf="this.translate.currentLang != 'de-DE'" mat-menu-item (click)="useLanguage('de-DE')">{{'session.language_german' | translate}}</button>
+    <button *ngIf="this.translate.currentLang != 'en-US'" mat-menu-item (click)="useLanguage('en-US')">{{'session.language_english' | translate}}</button>
   </mat-menu>
 </div>

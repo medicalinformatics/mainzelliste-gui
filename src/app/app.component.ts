@@ -25,9 +25,9 @@ export class AppComponent {
     protected readonly userAuthService: UserAuthService,
     public router: Router
   ) {
-    translate.addLangs(['en', 'de']);
-    translate.setDefaultLang('de');
-    translate.use('de');
+    translate.addLangs(['en-US', 'de-DE']);
+    translate.setDefaultLang('de-DE');
+    translate.use('de-DE');
     (router.events.pipe(
       filter(evt => evt instanceof NavigationStart)
     ) as Observable<NavigationStart>).subscribe(() =>
