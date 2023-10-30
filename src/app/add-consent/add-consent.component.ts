@@ -4,6 +4,7 @@ import {ConsentService} from "../consent.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Consent} from "../model/consent";
 import {GlobalTitleService} from "../services/global-title.service";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-add-consent',
@@ -17,19 +18,29 @@ export class AddConsentComponent implements OnInit {
   dataModel!: Consent;
   idType!: string;
   idString!: string;
+  translate: TranslateService;
 
   constructor(
+    translate: TranslateService,
     private consentService: ConsentService,
     private route: ActivatedRoute,
     private router: Router,
     private titleService: GlobalTitleService
   ) {
-    this.titleService.setTitle("Einwilligung Hinzufügen", false, "assignment_turned_in");
+    this.translate = translate;
+    this.changeTitle();
   }
 
   ngOnInit(): void {
     this.idType = this.route.snapshot.paramMap.get('idType') ?? "";
     this.idString = this.route.snapshot.paramMap.get('idString') ?? "";
+    this.translate.onLangChange.subscribe(() => {
+      this.changeTitle();
+    })
+  }
+
+  changeTitle() {
+    this.titleService.setTitle(this.translate.instant('addConsent.title_add_consent'), false, "assignment_turned_in");
   }
 
   async addConsent() {

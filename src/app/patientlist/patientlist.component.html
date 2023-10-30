@@ -42,7 +42,7 @@
         <div style="display: flex; flex-flow: row; justify-content: space-evenly;">
           <button mat-icon-button style="background: none;border:none;" [disabled]="loading"
                   [routerLink]="['/idcard', element.ids[0].idType, element.ids[0].idString]">
-              <mat-icon matTooltip="{{'patientlist.button_id_card' | translate}}">fact_check</mat-icon>
+              <mat-icon matTooltip="{{'button_id_card' | translate}}">fact_check</mat-icon>
           </button>
   <!--        <button mat-icon-button style="background: none;border:none;" [disabled]="loading">-->
   <!--          <a [routerLink]="['/similar-patient']" [state]="{patient: element, fields: fields}">-->
@@ -51,11 +51,11 @@
   <!--        </button>-->
           <button mat-icon-button style="background: none;border:none;" [disabled]="loading"
             [routerLink]="['/edit-patient', element.ids[0].idType, element.ids[0].idString]">
-              <mat-icon matTooltip="{{'patientlist.button_edit_patient' | translate}}">edit</mat-icon>
+              <mat-icon matTooltip="{{'button_edit_patient' | translate}}">edit</mat-icon>
           </button>
           <button *ngIf="this.consentService.isServiceEnabled()" mat-icon-button style="background: none;border:none;" [disabled]="loading"
             [routerLink]="['/patient', element.ids[0].idType, element.ids[0].idString, 'add-consent']">
-              <mat-icon matTooltip="{{'patientlist.button_add_consent' | translate}}">assignment_turned_in</mat-icon>
+              <mat-icon matTooltip="{{'button_add_consent' | translate}}">assignment_turned_in</mat-icon>
           </button>
         </div>
       </td>

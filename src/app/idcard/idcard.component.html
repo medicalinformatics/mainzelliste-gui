@@ -21,14 +21,14 @@
 <!--      </button>-->
       <button mat-fab [routerLink]="['/edit-patient', idType, idString]"
               [state]="{patient: patient}" style="background-color:#ffd60a; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">
-        <mat-icon matTooltip="{{'idcard.button_edit' | translate}}">edit</mat-icon>
+        <mat-icon matTooltip="{{'button_edit' | translate}}">edit</mat-icon>
       </button>
       <button mat-fab (click)="openDeletePatientDialog()" style="background-color:#da1e37; color:white; margin-bottom: 15px" aria-label="Example icon button with a delete icon">
-        <mat-icon matTooltip="{{'idcard.button_delete' | translate}}">delete</mat-icon>
+        <mat-icon matTooltip="{{'button_delete' | translate}}">delete</mat-icon>
       </button>
       <button *ngIf="this.consentService.isServiceEnabled()" mat-fab (click)="openConsentDialog()"
               style="background-color:#053E6A; color:white;">
-        <mat-icon matTooltip="{{'idcard.button_add_consent' | translate}}">assignment_turned_in</mat-icon>
+        <mat-icon matTooltip="{{'button_add_consent' | translate}}">assignment_turned_in</mat-icon>
       </button>
     </section>
   </div>

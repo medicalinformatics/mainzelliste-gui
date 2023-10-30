@@ -33,7 +33,7 @@
     <td>
       <div style="display: flex; flex-wrap: nowrap;">
         <mat-form-field class="inputField">
-          <mat-label>Pseudonymtyp</mat-label>
+          <mat-label>{{'createPatient.pseudonym_type' | translate}}</mat-label>
           <mat-select #selectedExternalIdType required="false">
             <mat-option *ngFor="let idType of this.getExternalIdMatSelectData()"
                         [value]="idType">{{idType}}</mat-option>
