@@ -80,5 +80,9 @@
 	"info.audit_trail_text4": "Patients who have been deleted",
 	"info.audit_trail_text5": "Patients who have been merged together",
 	"info.audit_trail_text6": "are recorded in the audit trail. The time of the action is recorded and stated. The folder symbol takes you to the patient's ID card for further details about the campaign.",
-	"patientPseudonyms.external": "External pseudonyms:"
+	"patientPseudonyms.external": "External pseudonyms:",
+	"patientFields.error_value_text1": "The value for the field",
+	"patientFields.error_value_text2": "is invalid",
+	"patientFields.error_mandatory_text1": "Entering the field",
+	"patientFields.error_mandatory_text2": "is mandatory"
 }

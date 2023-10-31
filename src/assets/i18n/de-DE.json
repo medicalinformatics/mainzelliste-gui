@@ -80,5 +80,9 @@
 	"info.audit_trail_text4": "Patienten die gelöscht worden sind",
 	"info.audit_trail_text5": "Patienten die zusammen gemergt worden sind",
 	"info.audit_trail_text6": "werden im Audit-Trail aufgezeichnet. Dabei wird Zeitpunkt der Aktion aufgezeichnet und angegeben. Über den Folder-Symbol gelangt man zur ID-Card des Patienten für weitere Details über die Aktion.",
-	"patientPseudonyms.external": "Externe Pseudonyme:"
+	"patientPseudonyms.external": "Externe Pseudonyme:",
+	"patientFields.error_value_text1": "Der Wert für das Feld",
+	"patientFields.error_value_text2": "ist ungültig",
+	"patientFields.error_mandatory_text1": "Die Eingabe des Feldes",
+	"patientFields.error_mandatory_text2": "ist erforderlich"
 }

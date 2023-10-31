@@ -6,6 +6,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {PatientListService} from "../services/patient-list.service";
 import {AppConfigService} from "../app-config.service";
 import {ConsentService} from "../consent.service";
+import { Field } from '../model/field';
 
 @Component({
   selector: 'app-patientlist',
@@ -21,7 +22,8 @@ export class PatientlistComponent implements OnInit{
   @Output() selectedPatients: EventEmitter<Patient[]> = new EventEmitter<Patient[]>();
   @Output() filterData = '';
 
-  fields: string[];
+  fields: Field[];
+  fieldNames: string[];
   columns: string[] = [];
   showAllIds: boolean;
 
@@ -36,7 +38,8 @@ export class PatientlistComponent implements OnInit{
   ) {
     this.patientListService = patientListService;
     this.patients = new MatTableDataSource<Patient>([]);
-    this.fields = configService.data[0].fields.map(f => f.i18n);
+    this.fields = configService.data[0].fields;
+    this.fieldNames = configService.data[0].fields.map(f => f.name);
     this.showAllIds = configService.data[0].showAllIds != undefined && configService.data[0].showAllIds;
 
     const initialSelection: Patient[] = [];
@@ -88,6 +91,6 @@ export class PatientlistComponent implements OnInit{
   ngOnInit(): void {
     this.configuredIdTypes = this.patientListService.getIdTypes();
     let displayIdTypes = this.showAllIds ? this.configuredIdTypes : [this.patientListService.findDefaultIdType(this.configuredIdTypes)];
-    this.columns = this.columns.concat(displayIdTypes).concat(this.fields).concat(["actions"]);
+    this.columns = this.columns.concat(displayIdTypes).concat(this.fieldNames).concat(["actions"]);
   }
 }
