@@ -21,7 +21,7 @@
       <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)="selected($event)">
         <mat-option style="height: auto" *ngFor="let filterItem of filteredFields | async"
                     [value]="filterItem.field">
-          <div [hidden]="filterItem.hidden"><span style="font-weight: bold">{{filterItem.display}}</span></div>
+          <div [hidden]="filterItem.hidden"><span style="font-weight: bold">{{filterItem.display | translate}}</span></div>
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
