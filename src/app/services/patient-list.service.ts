@@ -311,7 +311,7 @@ export class PatientListService {
     let token = await this.sessionService.createToken(
       "deletePatient",
       new DeletePatientTokenData(
-        {idType: "pid", idString: patient.ids[0].idString}
+        {idType: patient.ids[0].idType, idString: patient.ids[0].idString}
       )
     ).toPromise();
       return this.httpClient.delete(this.patientList.url + "/patients?tokenId=" + token.id).toPromise();
