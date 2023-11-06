@@ -13,11 +13,6 @@
     </mat-select>
   </mat-form-field>
 </div>
-<div *ngIf="data.length==0" style="color: red;">
-  <h4>
-    The patient already has all generatable Ids
-  </h4>
-</div>
 <div mat-dialog-actions style="margin-top: 10%;">
   <button mat-raised-button class="submitBreak" (click)="onCancel()">
     Cancel

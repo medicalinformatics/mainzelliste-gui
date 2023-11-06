@@ -26,7 +26,7 @@
       <button mat-fab (click)="openDeletePatientDialog()" style="background-color:#da1e37; color:white; margin-bottom: 15px" aria-label="Example icon button with a delete icon">
         <mat-icon matTooltip="Löschen">delete</mat-icon>
       </button>
-      <button mat-fab (click)="openNewIdDialog()" style="background-color: #60d7fb; color:black; margin-bottom: 15px" aria-label="Example icon button with a fiber_new icon">
+      <button *ngIf="!this.hasAllIds()" mat-fab (click)="openNewIdDialog()" style="background-color: #60d7fb; color:black; margin-bottom: 15px" aria-label="Example icon button with a fiber_new icon">
         <mat-icon matTooltip="Neue Id">fiber_new</mat-icon>
       </button>
       <ng-container *ngIf="this.consentService.isServiceEnabled()">

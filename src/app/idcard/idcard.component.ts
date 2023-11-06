@@ -119,8 +119,11 @@ export class IdcardComponent implements OnInit {
     });
   }
 
+hasAllIds(): boolean {
+  return this.patientListService.getNewIdType(this.patient).length == 0;
+}
+
   openNewIdDialog(): void {
-    
     const dialogRef = this.newIdDialog.open(NewIdDialog, {
       data: this.patientListService.getNewIdType(this.patient)
     });
