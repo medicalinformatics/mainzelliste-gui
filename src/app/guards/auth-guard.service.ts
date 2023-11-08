@@ -7,9 +7,10 @@ import {
   UrlTree
 } from '@angular/router';
 import {KeycloakAuthGuard, KeycloakService} from 'keycloak-angular';
-import {SessionService} from "../services/session.service";
 import {Observable} from "rxjs";
 import {UserAuthService} from "../services/user-auth.service";
+import {AuthorizationService} from "../services/authorization.service";
+import {Permission} from "../model/patientlist";
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class AuthGuard extends KeycloakAuthGuard implements CanActivateChild {
   constructor(
     protected readonly router: Router,
     protected readonly keycloak: KeycloakService,
-    private sessionService: SessionService,
+    private authorizationService: AuthorizationService,
     private userAuthService: UserAuthService
   ) {
     super(router, keycloak);
@@ -30,14 +31,12 @@ export class AuthGuard extends KeycloakAuthGuard implements CanActivateChild {
   ) {
     return this.userAuthService.login(this.authenticated, state.url)
     .then(
-      isSessionCreated => isSessionCreated && this.checkRoles(route.data.roles)
+      isSessionCreated => isSessionCreated && this.checkPermission(route.data.permission)
     );
   }
 
-  checkRoles(requiredRoles: any): boolean {
-    return !(requiredRoles instanceof Array)
-      || requiredRoles.length === 0
-      || requiredRoles.every((role) => this.roles.includes(role))
+  checkPermission(permission: Permission): boolean {
+    return permission == undefined || this.authorizationService.hasPermission(permission);
   }
 
   canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot):
