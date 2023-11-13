@@ -19,6 +19,7 @@ import {MAT_DATE_LOCALE} from "@angular/material/core";
 import {getErrorMessageFrom} from "../error/error-utils";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {Id} from "../model/id";
+import { CreateIdsTokenData } from '../model/create-ids-token-data';
 
 export interface ReadPatientsResponse {
   patients: Patient[];
@@ -59,6 +60,10 @@ export class PatientListService {
     ErrorMessages.EDIT_PATIENT_CONFLICT_MATCH,
     ErrorMessages.CREATE_PATIENT_INVALID_DATE_1,
     ErrorMessages.CREATE_PATIENT_INVALID_DATE_2
+  ];
+  
+  private createIdsErrorMessages: ErrorMessage[] = [
+    ErrorMessages.CREATE_IDS_ERROR
   ];
 
   constructor(
@@ -188,6 +193,56 @@ export class PatientListService {
         return o.field + "=" + o.searchCriteria.trim()
       }
     }).join("&")
+  }
+
+  generateId(idType: string, idString: string, newIdType: string) {
+    return this.sessionService.createToken("createIds", new CreateIdsTokenData([{idType, idString}]))
+      .pipe(mergeMap(
+        token => this.resolveCreateIdsToken(token.id, newIdType)
+        ),
+      catchError(e => {
+        // handle failed token creation
+        if (e instanceof HttpErrorResponse && (e.status == 404) && ErrorMessages.ML_SESSION_NOT_FOUND.match(e))
+          return throwError(new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND));
+        else if (!(e instanceof MainzellisteError) && !(e instanceof MainzellisteUnknownError))
+          return throwError(new MainzellisteUnknownError("Failed to create CreateIdsToken", e));
+        return throwError(e);
+      }));
+  }
+
+  resolveCreateIdsToken(tokenId: string | undefined, newIdType: string): Observable<any> {
+    return this.httpClient.post<Id[]>(this.patientList.url + "/ids/" + newIdType + "?tokenId=" + tokenId, {}, {
+      headers: new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('mainzellisteApiVersion', '3.2')
+    })
+    .pipe(
+      catchError(e => {
+        if (e instanceof HttpErrorResponse && (e.status == 400 || e.status == 409)) {
+          // TODO: Complete Error Handling
+          let errorMessage = ErrorMessages.CREATE_IDS_ERROR;
+          return throwError(new MainzellisteError(errorMessage));
+        }
+        return throwError(new MainzellisteUnknownError("Failed to resolve CreateIdsToken", e))
+      })
+      )
+  }
+
+  getNewIdType(patient: Patient): string[] {
+    let temp: string[] = [];
+    let bool: boolean;
+    for (let allId of this.getIdGenerators()) {
+      bool = true;
+      for (let id of patient.ids) {
+        if (allId.idType == id.idType) {
+          bool = false;
+        }
+      }
+      if (bool == true && !allId.isExternal) {
+        temp.push(allId.idType);
+      }
+    }
+    return temp;
   }
 
   addPatient(patient: Patient, idTypes: string[], sureness: boolean): Observable<Id> {

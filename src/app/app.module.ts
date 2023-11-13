@@ -89,6 +89,7 @@ import {AddConsentComponent} from './add-consent/add-consent.component';
 import {EditConsentComponent} from './edit-consent/edit-consent.component';
 import {DeletePatientDialog} from "./idcard/dialogs/delete-patient-dialog";
 import { HasPermissionDirective } from './directives/has-permission.directive';
+import { NewIdDialog } from './idcard/dialogs/new-id-dialog';
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService): () => Promise<any> {
   return () => configService.init()
@@ -148,6 +149,7 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     ErrorDialogComponent,
     ErrorCardComponent,
     DeletePatientDialog,
+    NewIdDialog,
     CreatePatientTentativeDialog,
     EditPatientTentativeDialog,
     ExternalPseudonymsComponent,

@@ -36,3 +36,8 @@ mat-card-title{
   background-color: #dddddd;
   cursor: pointer;
 }
+
+.idcard-button.mat-fab.mat-accent {
+  background-color: #053E6A;
+  color:white;
+}

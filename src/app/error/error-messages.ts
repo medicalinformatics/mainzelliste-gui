@@ -103,5 +103,10 @@ export class ErrorMessages {
     "Editing patient not possible because of matching with the existing patient!",
     "Zu den eingegeben Daten wurde ein Patient gefunden. Um eine Verwechslung auszuschließen, überprüfen Sie bitte nochmals Ihre Eingabe");
 
-
+    ////
+    // CREATE IDS ERRORS
+    //---------------------
+  public static CREATE_IDS_ERROR: ErrorMessage = new ErrorMessage(3001,
+    "ResolveCreateIdTokenError",
+  "ResolveCreateIdTokenError");
 }
