@@ -10,6 +10,7 @@ import {
   ValidationErrors
 } from "@angular/forms";
 import {ErrorStateMatcher} from "@angular/material/core";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-patient-fields',
@@ -25,14 +26,19 @@ export class PatientFieldsComponent implements OnInit {
   @Output() consentEvent = new EventEmitter<boolean>();
   @Output() slideFieldEvent = new EventEmitter<{name:string,value:string}>();
 
-  configuredFields: Promise<Array<Field>>;
+  configuredFields: Field[];
   @Input() readOnly: boolean= false;
   @Input() side: string="none";
-  localDateFormat:string;
+  localDateFormat: string;
+  translate: TranslateService;
 
-  constructor(fieldService: FieldService) {
+  constructor(
+    fieldService: FieldService,
+    translate: TranslateService
+    ) {
     this.configuredFields = fieldService.getFields();
     this.localDateFormat = _moment().localeData().longDateFormat('L');
+    this.translate = translate;
   }
 
   ngOnInit(): void {}
@@ -47,9 +53,9 @@ export class PatientFieldsComponent implements OnInit {
 
   public getFieldErrorMessage(fieldName: string, errors: ValidationErrors | null): string {
     if (errors?.['pattern'])
-      return "Der Wert für das Feld \"" + fieldName + "\" ist ungültig"
+      return this.translate.instant('patientFields.error_value_text1') + " \"" + fieldName + "\" " + this.translate.instant('patientFields.error_value_text2');
     else if (errors?.['required'])
-      return "Die Eingabe des Feldes \"" + fieldName + "\"  ist erforderlich"
+      return this.translate.instant('patientFields.error_mandatory_text1') + " \"" + fieldName + "\" " +  this.translate.instant('patientFields.error_mandatory_text2');
     else
       return "fehler";
   }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {GlobalTitleService} from "../services/global-title.service";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-info',
@@ -8,13 +9,24 @@ import {GlobalTitleService} from "../services/global-title.service";
 })
 export class InfoComponent implements OnInit {
 
+  translate: TranslateService;
+
   constructor(
+    translate: TranslateService,
     private titleService: GlobalTitleService
   ) {
-    this.titleService.setTitle("Informationen und Hinweise zur Mainzelliste");
+    this.translate = translate;
+    this.changeTitle();
+  }
+
+  changeTitle() {
+    this.titleService.setTitle(this.translate.instant('info.title'));
   }
 
   ngOnInit(): void {
+    this.translate.onLangChange.subscribe(() => {
+      this.changeTitle();
+    })
   }
 
 }

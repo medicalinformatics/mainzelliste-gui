@@ -7,9 +7,10 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {FormControl} from "@angular/forms";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {Observable, of} from "rxjs";
+import {EMPTY, Observable, of} from "rxjs";
 import {map, startWith} from 'rxjs/operators';
 import {GlobalTitleService} from "../services/global-title.service";
+import { TranslateService } from '@ngx-translate/core';
 
 export interface FilterConfig {
   display: string,
@@ -25,6 +26,7 @@ export interface FilterConfig {
   styleUrls: ['./patientlist-view.component.css']
 })
 export class PatientlistViewComponent implements OnInit {
+
   title = "Patientenliste";
   patientService: PatientService;
   patient: Patient = new Patient();
@@ -42,6 +44,7 @@ export class PatientlistViewComponent implements OnInit {
   filterInputValue: string | undefined;
   allPatientsToSearch: Array<string> = [];
 
+  translate: TranslateService;
 
   @ViewChild('filterInput')
   filterInput!: ElementRef<HTMLInputElement>;
@@ -52,12 +55,18 @@ export class PatientlistViewComponent implements OnInit {
   pageNumber: number = 100000;
 
   constructor(
+    translate: TranslateService,
     patientService: PatientService,
     private titleService: GlobalTitleService
   ) {
     this.patientService = patientService;
     this.patientsMatTableData = new MatTableDataSource<Patient>([]);
-    this.titleService.setTitle("Patientenliste", true);
+    this.translate = translate;
+    this.changeTitle();
+  }
+
+  changeTitle() {
+    this.titleService.setTitle(this.translate.instant('patientlistView.title'), false);
   }
 
   add(event: MatChipInputEvent): void {
@@ -67,7 +76,7 @@ export class PatientlistViewComponent implements OnInit {
     if (value) {
       // find filter
       let filterConfig: FilterConfig | undefined = this.filterConfigs
-      .find(f => new RegExp('^\\s*' + f.display.toLowerCase() + '\\s*:.*$')
+      .find(f => new RegExp('^\\s*' + this.translate.instant(f.display).toLowerCase() + '\\s*:.*$')
       .test(value.toLowerCase().trim()));
 
       if (filterConfig != undefined) {
@@ -111,7 +120,7 @@ export class PatientlistViewComponent implements OnInit {
     // set search input field with search key
     let filterConfig = this.filterConfigs.find(e => e.field == event.option.value);
     if (filterConfig) {
-      this.filterInput.nativeElement.value = filterConfig.display + ":";
+      this.filterInput.nativeElement.value = this.translate.instant(filterConfig.display) + ":";
     }
   }
 
@@ -120,6 +129,10 @@ export class PatientlistViewComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.translate.onLangChange.subscribe(() => {
+      this.changeTitle();
+      this.filterInput.nativeElement.value = '';
+    })
     // init. filter data model with id types
     let configuredIdTypes = this.patientService.getConfigureIdTypes();
     configuredIdTypes.forEach(idType => this.filterConfigs.push({
@@ -136,7 +149,7 @@ export class PatientlistViewComponent implements OnInit {
       this.filterConfigs.push({
         field: fieldName,
         fields: fieldConfig.mainzellisteFields,
-        display: fieldConfig.name,
+        display: fieldConfig.i18n,
         isIdType: false,
         hidden: false
       });
@@ -148,7 +161,7 @@ export class PatientlistViewComponent implements OnInit {
       map(value => {
         let searchValue = typeof value === "string" ? value : value.searchCriteria;
         return this.filterConfigs.filter(option => !option.hidden
-          && option.display.toLowerCase().includes(searchValue.toLowerCase()));
+          && this.translate.instant(option.display).toLowerCase().includes(searchValue.toLowerCase()));
       }),
     );
     await this.loadPatients(0, this.defaultPageSize);

@@ -4,13 +4,13 @@
     style=" background:none; margin-top:0.5%; flex: 1 1 70%; display: flex; flex-flow: row; justify-content: space-around; align-items: stretch; justify-content: space-around; gap: 0 1%">
     <mat-card class="patientendatenMatCard"
               style="flex: 1 1 25%; display: flex;  flex-flow: column">
-      <mat-card-title>Patientendaten</mat-card-title>
+      <mat-card-title>{{'deletePatient.title_patient_data' | translate}}</mat-card-title>
       <app-patient-fields [readOnly]=true [fields]="patient.fields"></app-patient-fields>
     </mat-card>
 
     <mat-card id="pseudonyme"
               style="flex: 1 1 25%; display: flex;  flex-flow: column">
-      <mat-card-title>Pseudonyme</mat-card-title>
+      <mat-card-title>{{'deletePatient.title_pseudonyms' | translate}}</mat-card-title>
       <app-patient-pseudonyms [readOnly]=true [ids]="patient.ids"></app-patient-pseudonyms>
     </mat-card>
 
@@ -18,11 +18,11 @@
       <button mat-fab (click)="openDeletePatientDialog()" color="submit"
               style="margin-bottom: 15px;"
               aria-label="Example icon button with a delete icon">
-        <mat-icon matTooltip="Löschen">delete</mat-icon>
+        <mat-icon matTooltip="{{'button_delete' | translate}}">delete</mat-icon>
       </button>
       <button mat-fab [routerLink]="['/patientlist']"
               style="background-color:#888888; color:white;">
-        <mat-icon matTooltip="Abbruch">close</mat-icon>
+        <mat-icon matTooltip="{{'button_cancel' | translate}}">close</mat-icon>
       </button>
     </section>
   </div>

@@ -58,7 +58,7 @@ import {
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {SessionComponent} from './user/session.component';
-import {HttpClientModule} from "@angular/common/http";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {AppConfigService} from "./app-config.service";
 import {ErrorComponent} from './error/error.component';
@@ -90,6 +90,12 @@ import {EditConsentComponent} from './edit-consent/edit-consent.component';
 import {DeletePatientDialog} from "./idcard/dialogs/delete-patient-dialog";
 import { HasPermissionDirective } from './directives/has-permission.directive';
 import { NewIdDialog } from './idcard/dialogs/new-id-dialog';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService): () => Promise<any> {
   return () => configService.init()
@@ -187,6 +193,13 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     MatCheckboxModule,
     MatTooltipModule,
     HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
     MatMenuModule,
     KeycloakAngularModule,
     MatProgressSpinnerModule,

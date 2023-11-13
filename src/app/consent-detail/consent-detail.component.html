@@ -1,8 +1,8 @@
 <div *ngIf="!edit">
-  <h4>Einwilligungsvorlage auswählen:</h4>
+  <h4>{{'consentDetail.select_consent_template' | translate}}</h4>
   <div>
     <mat-form-field style="width: 400px">
-      <mat-label>Einwilligungsvorlage</mat-label>
+      <mat-label>{{'consentDetail.consent_template' | translate}}</mat-label>
       <mat-select #templateSelection
                   (selectionChange)="initDataModel(templateSelection.value)"
                   [value]="getSelectedTemplate()" required>
