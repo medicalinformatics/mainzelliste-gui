@@ -1,5 +1,6 @@
 {
 	"button_add_consent": "Einwilligung hinzufügen",
+  "button_generate_id": "Neue ID generieren",
 	"button_delete": "Löschen",
 	"button_edit": "Bearbeiten",
 	"idcard.consent_created": "Erstellt",

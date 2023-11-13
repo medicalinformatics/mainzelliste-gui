@@ -28,12 +28,12 @@
       </button>
       <button [disabled]="this.hasAllIds()" mat-fab (click)="openNewIdDialog()"
               [ngClass]="this.hasAllIds() ? '': 'idcard-button'" style="margin-bottom: 15px">
-        <mat-icon matTooltip="{{'button_add_consent' | translate}}">add_box</mat-icon>
+        <mat-icon matTooltip="{{'button_generate_id' | translate}}">add_box</mat-icon>
       </button>
       <ng-container *ngIf="this.consentService.isServiceEnabled()">
         <button mat-fab *appHasPermission="'addConsent'" (click)="openConsentDialog()"
                 class="idcard-button">
-          <mat-icon matTooltip="Einwilligung hinzufügen">assignment_turned_in</mat-icon>
+          <mat-icon matTooltip="{{'button_add_consent' | translate}}">assignment_turned_in</mat-icon>
         </button>
       </ng-container>
     </section>
