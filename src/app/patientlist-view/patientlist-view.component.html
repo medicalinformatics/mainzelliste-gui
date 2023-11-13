@@ -6,7 +6,7 @@
         <mat-chip *ngFor="let filter of filters"
                   [selectable]="true"
                   [removable]="true" (removed)="remove(filter)" style="font-family: Tahoma;">
-          {{filter.display}}: {{filter.searchCriteria}}
+          {{filter.display | translate}}: {{filter.searchCriteria}}
           <mat-icon matChipRemove style="color:#494949">cancel</mat-icon>
         </mat-chip>
         <input #filterInput

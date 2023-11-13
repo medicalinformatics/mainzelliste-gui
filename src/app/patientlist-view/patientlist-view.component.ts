@@ -76,7 +76,7 @@ export class PatientlistViewComponent implements OnInit {
     if (value) {
       // find filter
       let filterConfig: FilterConfig | undefined = this.filterConfigs
-      .find(f => new RegExp('^\\s*' + f.display.toLowerCase() + '\\s*:.*$')
+      .find(f => new RegExp('^\\s*' + this.translate.instant(f.display).toLowerCase() + '\\s*:.*$')
       .test(value.toLowerCase().trim()));
 
       if (filterConfig != undefined) {
@@ -161,7 +161,7 @@ export class PatientlistViewComponent implements OnInit {
       map(value => {
         let searchValue = typeof value === "string" ? value : value.searchCriteria;
         return this.filterConfigs.filter(option => !option.hidden
-          && option.display.toLowerCase().includes(searchValue.toLowerCase()));
+          && this.translate.instant(option.display).toLowerCase().includes(searchValue.toLowerCase()));
       }),
     );
     await this.loadPatients(0, this.defaultPageSize);
