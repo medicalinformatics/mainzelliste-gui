@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {OAuthConfig, PatientList} from "./model/patientlist";
+import {OAuthConfig, PatientList, Role} from "./model/patientlist";
 import {AppConfig} from "./app-config";
 import {catchError, map} from "rxjs/operators";
 import {throwError} from "rxjs";
@@ -83,6 +83,10 @@ export class AppConfigService {
 
   isDebugModeEnabled(): boolean {
     return this.data[0].debug != undefined && this.data[0].debug;
+  }
+
+  getRolesWithPermissions(): Role[]{
+    return this.data[0].roles
   }
 
   private validateBackendUrl(config: PatientList) {

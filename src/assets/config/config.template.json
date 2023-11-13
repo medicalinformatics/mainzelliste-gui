@@ -7,6 +7,16 @@
         "realm": "${KEYCLOAK_REALM}",
         "clientId": "${KEYCLOAK_CLIENT_ID}"
       },
+      "roles" : [
+        {
+          "name": "admin",
+          "permissions": ["addPatient","readPatients","editPatient","deletePatient","addConsent","searchConsents","readConsent", "editConsent"]
+        },
+        {
+          "name": "study-nurse",
+          "permissions": ["addPatient","readPatients","addConsent","searchConsents","readConsent"]
+        }
+      ],
       "mainIdType": "${ML_UI_MAIN_ID_TYPE}",
       "showAllIds": ${ML_UI_SHOW_ALL_IDS},
       "fields": [

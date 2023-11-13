@@ -1,0 +1,31 @@
+<h1 mat-dialog-title>Generate new ID</h1>
+<div mat-dialog-content>
+  <br />
+  <h4 style="font-weight: 100; text-align: justify">
+    A new ID will be generated for the selected type
+  </h4>
+  <mat-form-field appearance="fill">
+    <mat-label>Id type</mat-label>
+    <mat-select (selectionChange)="dataModel = $event;">
+      <mat-option *ngFor="let idType of data" [value]="idType"
+        >{{idType}}</mat-option
+      >
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions style="margin-top: 10%;">
+  <button mat-raised-button class="submitBreak" (click)="onCancel()">
+    Cancel
+  </button>
+  <button
+    *ngIf="dataModel!=null"
+    mat-raised-button
+    class="submit"
+    type="submit"
+    (click)="onSave()"
+    [disabled]="!dataModel"
+  >
+    Save new ID
+  </button>
+</div>
+

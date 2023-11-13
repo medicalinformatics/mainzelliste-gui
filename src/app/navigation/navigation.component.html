@@ -1,8 +1,8 @@
-<button mat-button [routerLink]="['/patientlist']" class="sidenav-menu-item">
+<button mat-button *appHasPermission="'readPatients'" [routerLink]="['/patientlist']" class="sidenav-menu-item">
   <mat-icon>list</mat-icon>
   <span>{{'navigation.patientlist' | translate}}</span>
 </button>
-<button mat-button [routerLink]="['/add-new-patient']" class="sidenav-menu-item">
+<button mat-button *appHasPermission="'addPatient'" [routerLink]="['/add-new-patient']" class="sidenav-menu-item">
   <mat-icon>person_add_alt</mat-icon>
   <span>{{'navigation.new_patient' | translate}}</span>
 </button>

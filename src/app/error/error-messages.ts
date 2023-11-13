@@ -38,7 +38,7 @@ export class ErrorMessage {
 export class ErrorMessages {
 
   static translate: TranslateService;
-  
+
   constructor(
     translate: TranslateService
   ) {
@@ -116,4 +116,10 @@ export class ErrorMessages {
     "Editing patient not possible because of matching with the existing patient!",
     "error.edit_patient_conflict_match", ErrorMessages.translate);
 
+    ////
+    // CREATE IDS ERRORS
+    //---------------------
+  public static CREATE_IDS_ERROR: ErrorMessage = new ErrorMessage(3001,
+    "ResolveCreateIdTokenError",
+  "ResolveCreateIdTokenError", ErrorMessages.translate);
 }

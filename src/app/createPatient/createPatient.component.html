@@ -45,13 +45,15 @@
       </mat-form-field>
       <br>
     </div>
-    <div *ngIf="this.consentService.isServiceEnabled()" style="width: 90%; margin-left: 5%; max-width: 700px;">
-      <button style="float: left; margin-bottom: 40px" mat-raised-button
-              (click)="openConsentDialog()">
-        <mat-icon>{{!consent ? 'add' : 'edit'}}</mat-icon>
-        {{!consent ? this.translate.instant('button_add_consent') : this.consent.title}}
-      </button>
-    </div>
+    <ng-container *ngIf="this.consentService.isServiceEnabled()">
+      <div *appHasPermission="'addConsent'" style="width: 90%; margin-left: 5%; max-width: 700px;">
+        <button style="float: left; margin-bottom: 40px" mat-raised-button
+                (click)="openConsentDialog()">
+          <mat-icon>{{!consent ? 'add' : 'edit'}}</mat-icon>
+          {{!consent ? this.translate.instant('button_add_consent') : this.consent?.title}}
+        </button>
+      </div>
+    </ng-container>
     <br>
     <div style="width: 90%; margin-left: 5%; max-width: 700px;">
       <button mat-raised-button class="submit" style="clear: both; float: left; width: 20%;"

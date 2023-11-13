@@ -88,6 +88,8 @@ import {ConsentDetailComponent} from './consent-detail/consent-detail.component'
 import {AddConsentComponent} from './add-consent/add-consent.component';
 import {EditConsentComponent} from './edit-consent/edit-consent.component';
 import {DeletePatientDialog} from "./idcard/dialogs/delete-patient-dialog";
+import { HasPermissionDirective } from './directives/has-permission.directive';
+import { NewIdDialog } from './idcard/dialogs/new-id-dialog';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
@@ -153,6 +155,7 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     ErrorDialogComponent,
     ErrorCardComponent,
     DeletePatientDialog,
+    NewIdDialog,
     CreatePatientTentativeDialog,
     EditPatientTentativeDialog,
     ExternalPseudonymsComponent,
@@ -160,7 +163,8 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     ConsentDialogComponent,
     ConsentDetailComponent,
     AddConsentComponent,
-    EditConsentComponent
+    EditConsentComponent,
+    HasPermissionDirective
   ],
   imports: [
     BrowserModule,

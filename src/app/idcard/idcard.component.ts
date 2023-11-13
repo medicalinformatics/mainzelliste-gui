@@ -10,6 +10,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ConsentDialogComponent} from "../consent-dialog/consent-dialog.component";
 import {PatientService} from "../services/patient.service";
 import {DeletePatientDialog} from "./dialogs/delete-patient-dialog";
+import { NewIdDialog } from './dialogs/new-id-dialog';
 import { TranslateService } from '@ngx-translate/core';
 
 export interface ConsentRow {id: string, date:string, title: string, period:string, version?:string}
@@ -21,6 +22,7 @@ export interface ConsentRow {id: string, date:string, title: string, period:stri
 })
 
 export class IdcardComponent implements OnInit {
+
   public idString: string = "";
   public idType: string = "";
   public patient: Patient = new Patient();
@@ -39,6 +41,7 @@ export class IdcardComponent implements OnInit {
     private titleService: GlobalTitleService,
     public consentDialog: MatDialog,
     public deleteDialog: MatDialog,
+    public newIdDialog: MatDialog,
     public consentService: ConsentService
   ) {
     this.activatedRoute.params.subscribe((params) => {
@@ -52,9 +55,7 @@ export class IdcardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.patientListService.readPatient(new Id(this.idType, this.idString)).then(patients => {
-      this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
-    });
+    this.loadPatient();
     this.translate.onLangChange.subscribe(() => {
       this.changeTitle();
     });
@@ -66,6 +67,12 @@ export class IdcardComponent implements OnInit {
 
   changeTitle() {
     this.titleService.setTitle(this.translate.instant('idcard.title_id_card'), false, "badge");
+  }
+
+  private loadPatient() {
+    this.patientListService.readPatient(new Id(this.idType, this.idString)).then(patients => {
+      this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
+    });
   }
 
   private loadConsents() {
@@ -103,6 +110,10 @@ export class IdcardComponent implements OnInit {
     .then(() => this.router.navigate(['/patientlist']).then());
   }
 
+  generateId(newIdType: string) {
+    this.patientListService.generateId(this.idType, this.idString, newIdType).subscribe(() => this.loadPatient());
+  }
+
   openConsentDialog() {
     const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
       width: '900px'
@@ -114,6 +125,22 @@ export class IdcardComponent implements OnInit {
         this.consentService.addConsent(consent).then(e => this.loadConsents());
       }
     });
+  }
+
+hasAllIds(): boolean {
+  return this.patientListService.getNewIdType(this.patient).length == 0;
+}
+
+  openNewIdDialog(): void {
+    const dialogRef = this.newIdDialog.open(NewIdDialog, {
+      data: this.patientListService.getNewIdType(this.patient)
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result != null) {
+        this.generateId(result.value);
+      }
+    })
   }
 
   openDeletePatientDialog(): void {
