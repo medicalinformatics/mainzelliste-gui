@@ -26,12 +26,13 @@
       <button mat-fab (click)="openDeletePatientDialog()" style="background-color:#da1e37; color:white; margin-bottom: 15px" aria-label="Example icon button with a delete icon">
         <mat-icon matTooltip="Löschen">delete</mat-icon>
       </button>
-      <button *ngIf="!this.hasAllIds()" mat-fab (click)="openNewIdDialog()" style="background-color: #60d7fb; color:black; margin-bottom: 15px" aria-label="Example icon button with a fiber_new icon">
-        <mat-icon matTooltip="Neue Id">fiber_new</mat-icon>
+      <button [disabled]="this.hasAllIds()" mat-fab (click)="openNewIdDialog()"
+              [ngClass]="this.hasAllIds() ? '': 'idcard-button'" style="margin-bottom: 15px">
+        <mat-icon matTooltip="ID Generieren">add_box</mat-icon>
       </button>
       <ng-container *ngIf="this.consentService.isServiceEnabled()">
         <button mat-fab *appHasPermission="'addConsent'" (click)="openConsentDialog()"
-                style="background-color:#053E6A; color:white;">
+                class="idcard-button">
           <mat-icon matTooltip="Einwilligung hinzufügen">assignment_turned_in</mat-icon>
         </button>
       </ng-container>
