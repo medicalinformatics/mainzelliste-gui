@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Id} from "../../model/id";
-import {IdTypSelection} from "../../createPatient/createPatient.component";
+import {IdTypSelection} from "../../create-patient/create-patient.component";
 import {MatSelect} from "@angular/material/select";
 import {addIfNotExist, removeFrom} from "../../utils/array-utils";
 import {PatientListService} from "../../services/patient-list.service";

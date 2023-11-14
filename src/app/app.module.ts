@@ -5,7 +5,7 @@ import {AppComponent} from './app.component';
 import {PatientSearchComponent} from './patientSearch/patientSearch.component';
 import {AppRoutingModule, routingComponents} from './app-routing.module';
 import {IdcardComponent} from './idcard/idcard.component';
-import {CreatePatientComponent, CreatePatientTentativeDialog} from "./createPatient/createPatient.component";
+import {CreatePatientComponent, CreatePatientTentativeDialog} from "././create-patient/create-patient.component";
 import {PatientlistComponent} from "./patientlist/patientlist.component";
 // import {SimilarPatientComponent} from './similarPatient/similarPatient.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';

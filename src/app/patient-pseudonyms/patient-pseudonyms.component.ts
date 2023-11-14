@@ -1,21 +1,9 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {PatientListService} from "../services/patient-list.service";
-import {IdTypSelection} from "../createPatient/createPatient.component";
+import {IdTypSelection} from "../create-patient/create-patient.component";
 import {ControlContainer, NgForm} from "@angular/forms";
-import {MatSelect} from "@angular/material/select";
-import {addIfNotExist} from "../utils/array-utils";
 import {Id} from "../model/id";
-import {
-  ExternalPseudonymsComponent
-} from "../shared/external-pseudonyms/external-pseudonyms.component";
+import {ExternalPseudonymsComponent} from "../shared/external-pseudonyms/external-pseudonyms.component";
 
 @Component({
   selector: 'app-patient-pseudonyms',

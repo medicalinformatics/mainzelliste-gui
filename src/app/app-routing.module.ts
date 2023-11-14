@@ -4,7 +4,7 @@ import {InfoComponent} from "./info/info.component";
 // import {AudittrailComponent} from "./audittrail/audittrail.component";
 import {IdcardComponent} from "./idcard/idcard.component";
 import {PatientlistViewComponent} from "./patientlist-view/patientlist-view.component";
-import {CreatePatientComponent} from "./createPatient/createPatient.component";
+import {CreatePatientComponent} from "././create-patient/create-patient.component";
 // import {MergePatientsComponent} from "./mergePatients/mergePatients.component";
 import {EditPatientComponent} from "./edit-patient/edit-patient.component";
 import {DeletePatientComponent} from "./delete-patient/delete-patient.component";
