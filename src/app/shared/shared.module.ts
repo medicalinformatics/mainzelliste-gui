@@ -14,6 +14,8 @@ import {MatCardModule} from "@angular/material/card";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatInputModule} from "@angular/material/input";
 import {MatDialogModule} from "@angular/material/dialog";
+import {ErrorCardComponent} from "./components/error-card/error-card.component";
+import {MatIconModule} from "@angular/material/icon";
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http);
@@ -31,6 +33,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         MatCardModule,
         MatRadioModule,
         MatDialogModule,
+        MatIconModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -38,8 +41,8 @@ export function HttpLoaderFactory(http: HttpClient) {
                 deps: [HttpClient]
             }
         })],
-    declarations: [HasPermissionDirective, ErrorDialogComponent],
-    exports: [HasPermissionDirective, ErrorDialogComponent,
+    declarations: [HasPermissionDirective, ErrorDialogComponent, ErrorCardComponent],
+    exports: [HasPermissionDirective, ErrorDialogComponent, ErrorCardComponent,
         CommonModule,
         FormsModule,
         MatFormFieldModule,
@@ -50,6 +53,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         MatCardModule,
         MatRadioModule,
         MatDialogModule,
+        MatIconModule,
         TranslateModule]
 })
 export class SharedModule {

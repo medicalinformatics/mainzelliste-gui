@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ErrorNotificationService} from "../services/error-notification.service";
+import {ErrorNotificationService} from "../../../services/error-notification.service";
 
 @Component({
   selector: 'app-error-card',

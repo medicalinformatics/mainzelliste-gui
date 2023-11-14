@@ -51,7 +51,6 @@ import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {GlobalErrorHandler} from "./error/global-error-handler";
-import {ErrorCardComponent} from './component-error-card/error-card.component';
 import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
   MAT_MOMENT_DATE_FORMATS,
@@ -121,7 +120,6 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     SessionComponent,
     ErrorComponent,
     LogoutComponent,
-    ErrorCardComponent,
     DeletePatientDialog,
     NewIdDialog,
     CreatePatientTentativeDialog,
@@ -131,13 +129,13 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
   imports: [
     SharedModule,
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
     ScrollingModule,
     MatSidenavModule,
     MatBadgeModule,
     MatChipsModule,
-    MatIconModule,
     MatAutocompleteModule,
     MatPaginatorModule,
     ReactiveFormsModule,
