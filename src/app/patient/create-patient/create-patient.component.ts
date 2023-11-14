@@ -1,23 +1,23 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {Patient} from "../model/patient";
-import {PatientService} from "../services/patient.service";
+import {Patient} from "../../model/patient";
+import {PatientService} from "../../services/patient.service";
 import {Router} from "@angular/router";
 import {FormControl, NgForm} from "@angular/forms";
-import {PatientListService} from "../services/patient-list.service";
+import {PatientListService} from "../../services/patient-list.service";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
-import {ErrorNotificationService} from "../services/error-notification.service";
-import {GlobalTitleService} from "../services/global-title.service";
+import {ErrorNotificationService} from "../../services/error-notification.service";
+import {GlobalTitleService} from "../../services/global-title.service";
 import {Observable, of} from "rxjs";
 import {concatMap, map, retryWhen, startWith, switchMap} from "rxjs/operators";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {MainzellisteError} from "../model/mainzelliste-error.model";
-import {ErrorMessages} from "../error/error-messages";
-import {UserAuthService} from "../services/user-auth.service";
+import {MainzellisteError} from "../../model/mainzelliste-error.model";
+import {ErrorMessages} from "../../error/error-messages";
+import {UserAuthService} from "../../services/user-auth.service";
 import { TranslateService } from '@ngx-translate/core';
-import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.component";
-import {Consent} from "../consent/consent.model";
-import {ConsentService} from "../consent/consent.service";
+import {ConsentDialogComponent} from "../../consent/consent-dialog/consent-dialog.component";
+import {Consent} from "../../consent/consent.model";
+import {ConsentService} from "../../consent/consent.service";
 
 export interface IdTypSelection {
   idType: string,

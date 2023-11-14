@@ -2,27 +2,17 @@ import {APP_INITIALIZER, ErrorHandler, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent} from './app.component';
 // import {AudittrailComponent} from './audittrail/audittrail.component';
-import {PatientSearchComponent} from './patientSearch/patientSearch.component';
 import {AppRoutingModule, routingComponents} from './app-routing.module';
 import {IdcardComponent} from './idcard/idcard.component';
-import {CreatePatientComponent, CreatePatientTentativeDialog} from "././create-patient/create-patient.component";
 import {PatientlistComponent} from "./patientlist/patientlist.component";
 // import {SimilarPatientComponent} from './similarPatient/similarPatient.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormsModule} from "@angular/forms";
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
-import {PatientComponent} from './patient/patient.component';
 import {ScrollingModule} from "@angular/cdk/scrolling";
 import {PatientlistViewComponent} from './patientlist-view/patientlist-view.component';
-import {DirtyErrorStateMatcher, PatientFieldsComponent} from './patient-fields/patient-fields.component';
-import {EditPatientComponent, EditPatientTentativeDialog} from './edit-patient/edit-patient.component';
-import {DeletePatientComponent} from './delete-patient/delete-patient.component';
-import {PatientPseudonymsComponent} from './patient-pseudonyms/patient-pseudonyms.component';
-import {PatientDataComponent} from './patient-data/patient-data.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatBadgeModule} from "@angular/material/badge";
-import {MatChipsModule} from "@angular/material/chips";
-import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {
   DateAdapter,
@@ -50,12 +40,12 @@ import {
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {from} from "rxjs";
 import {UserAuthService} from "./services/user-auth.service";
-import {ExternalPseudonymsComponent} from './shared/external-pseudonyms/external-pseudonyms.component';
-import {DeletePatientDialog} from "./idcard/dialogs/delete-patient-dialog";
 import {NewIdDialog} from './idcard/dialogs/new-id-dialog';
 import {SharedModule} from "./shared/shared.module";
 import {ConsentModule} from "./consent/consent.module";
 import {MainLayoutModule} from "./main-layout/main-layout.module";
+import {PatientModule} from "./patient/patient.module";
+import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.component";
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService): () => Promise<any> {
   return () => configService.init()
@@ -91,28 +81,17 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
   declarations: [
     AppComponent,
     PatientlistComponent,
-    PatientSearchComponent,
     routingComponents,
     IdcardComponent,
-    PatientComponent,
     PatientlistViewComponent,
-    CreatePatientComponent,
-    PatientFieldsComponent,
-    EditPatientComponent,
-    DeletePatientComponent,
-    PatientPseudonymsComponent,
-    PatientDataComponent,
     ErrorComponent,
     LogoutComponent,
-    DeletePatientDialog,
-    NewIdDialog,
-    CreatePatientTentativeDialog,
-    EditPatientTentativeDialog,
-    ExternalPseudonymsComponent
+    NewIdDialog
   ],
   imports: [
     SharedModule,
     MainLayoutModule,
+    PatientModule,
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
@@ -120,10 +99,7 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     ScrollingModule,
     MatSidenavModule,
     MatBadgeModule,
-    MatChipsModule,
-    MatAutocompleteModule,
     MatPaginatorModule,
-    ReactiveFormsModule,
     MatNativeDateModule,
     MatTableModule,
     MatCheckboxModule,
@@ -153,10 +129,6 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
       useClass: MomentDateAdapter,
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
     },
-  ],
-  exports: [
-    PatientPseudonymsComponent,
-    PatientFieldsComponent
   ],
   bootstrap: [AppComponent]
 })
