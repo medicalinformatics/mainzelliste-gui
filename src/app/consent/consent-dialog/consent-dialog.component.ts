@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {ConsentDetailComponent} from "../consent-detail/consent-detail.component";
-import {Consent} from "../../model/consent";
+import {Consent} from "../consent.model";
 
 @Component({
   selector: 'app-consent-dialog',

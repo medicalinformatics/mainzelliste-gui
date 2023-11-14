@@ -1,8 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ConsentDetailComponent} from "../consent-detail/consent-detail.component";
-import {ConsentService} from "../../consent.service";
+import {ConsentService} from "../consent.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {Consent} from "../../model/consent";
+import {Consent} from "../consent.model";
 import {GlobalTitleService} from "../../services/global-title.service";
 
 @Component({

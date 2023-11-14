@@ -14,10 +14,10 @@ import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessages} from "../error/error-messages";
 import {UserAuthService} from "../services/user-auth.service";
-import {ConsentService} from "../consent.service";
-import {Consent} from "../model/consent";
 import { TranslateService } from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.component";
+import {Consent} from "../consent/consent.model";
+import {ConsentService} from "../consent/consent.service";
 
 export interface IdTypSelection {
   idType: string,

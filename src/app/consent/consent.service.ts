@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import Client from 'fhir-kit-client'
-import {SessionService} from "./services/session.service";
+import {SessionService} from "../services/session.service";
 import {DatePipe} from "@angular/common";
-import {AppConfigService} from "./app-config.service";
-import {ConsentTemplate} from "./model/consent-template";
-import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "./model/consent";
+import {AppConfigService} from "../app-config.service";
+import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "./consent.model";
+import {ConsentTemplate} from "./consent-template.model";
 
 @Injectable({
   providedIn: 'root'

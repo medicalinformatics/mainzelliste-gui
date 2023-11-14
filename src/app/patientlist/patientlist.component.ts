@@ -5,7 +5,7 @@ import {SelectionModel} from "@angular/cdk/collections";
 import {MatTableDataSource} from "@angular/material/table";
 import {PatientListService} from "../services/patient-list.service";
 import {AppConfigService} from "../app-config.service";
-import {ConsentService} from "../consent.service";
+import {ConsentService} from "../consent/consent.service";
 import { Field } from '../model/field';
 
 @Component({

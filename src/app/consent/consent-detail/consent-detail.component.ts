@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {MatSelect} from "@angular/material/select";
-import {ConsentService} from "../../consent.service";
+import {ConsentService} from "../consent.service";
 import {MAT_DATE_LOCALE, MatOption} from "@angular/material/core";
-import {ConsentTemplate} from "../../model/consent-template";
-import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "../../model/consent";
+import {ConsentTemplate} from "../consent-template.model";
+import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "../consent.model";
 import _moment, {Moment} from "moment";
 
 @Component({
