@@ -3,7 +3,7 @@ import {UserAuthService} from "../../services/user-auth.service";
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-session',
+  selector: 'app-user-menu',
   templateUrl: './user-menu.component.html',
   styleUrls: ['./user-menu.component.css']
 })
