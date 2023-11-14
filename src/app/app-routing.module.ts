@@ -13,10 +13,6 @@ import {ErrorComponent} from "./error/error.component";
 import {LogoutComponent} from "./logout/logout.component";
 import {AuthGuard} from "./guards/auth-guard.service";
 
-import {ConsentComponent} from "./consent/consent.component";
-import {AddConsentComponent} from "./add-consent/add-consent.component";
-import {EditConsentComponent} from "./edit-consent/edit-consent.component";
-
 const routes: Routes = [
   // TODO: All Paths should have english wording.
   {
@@ -30,10 +26,7 @@ const routes: Routes = [
       {path: 'patientlist', component: PatientlistViewComponent, data : { permission: 'readPatients' }},
       {path: 'edit-patient/:idType/:idString', component: EditPatientComponent, data : { permission: 'editPatient'}},
       {path: 'delete-patient/:idType/:idString', component: DeletePatientComponent, data : { permission: 'deletePatient' }},
-      {path: 'delete-patients', component: DeleteMultiplePatientsComponent, data : { permission: 'deletePatient' }},
-      {path: 'consent/:idType/:idString', component:ConsentComponent, data : { permission: 'readConsent' }},
-      {path: 'patient/:idType/:idString/add-consent', component:AddConsentComponent, data : { permission: 'addConsent' }},
-      {path: 'patient/:idType/:idString/edit-consent/:id', component:EditConsentComponent, data : { permission: 'editConsent' }}
+      {path: 'delete-patients', component: DeleteMultiplePatientsComponent, data : { permission: 'deletePatient' }}
     ]
   },
 
@@ -48,4 +41,4 @@ const routes: Routes = [
 
 })
 export class AppRoutingModule{}
-export const routingComponents =[IdcardComponent, PatientlistViewComponent, CreatePatientComponent,EditPatientComponent,DeletePatientComponent, DeleteMultiplePatientsComponent, InfoComponent, ConsentComponent]
+export const routingComponents =[IdcardComponent, PatientlistViewComponent, CreatePatientComponent,EditPatientComponent,DeletePatientComponent, DeleteMultiplePatientsComponent, InfoComponent]

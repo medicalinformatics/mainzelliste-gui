@@ -7,11 +7,11 @@ import {Id} from "../model/id";
 import {ConsentService} from "../consent.service";
 import {MatTable} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
-import {ConsentDialogComponent} from "../consent-dialog/consent-dialog.component";
 import {PatientService} from "../services/patient.service";
 import {DeletePatientDialog} from "./dialogs/delete-patient-dialog";
 import { NewIdDialog } from './dialogs/new-id-dialog';
 import { TranslateService } from '@ngx-translate/core';
+import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.component";
 
 export interface ConsentRow {id: string, date:string, title: string, period:string, version?:string}
 
