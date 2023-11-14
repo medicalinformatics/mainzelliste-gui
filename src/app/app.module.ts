@@ -68,7 +68,6 @@ import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {GlobalErrorHandler} from "./error/global-error-handler";
-import {ErrorDialogComponent} from './error-dialog/error-dialog.component';
 import {ErrorCardComponent} from './component-error-card/error-card.component';
 import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
@@ -88,8 +87,8 @@ import {ConsentDetailComponent} from './consent-detail/consent-detail.component'
 import {AddConsentComponent} from './add-consent/add-consent.component';
 import {EditConsentComponent} from './edit-consent/edit-consent.component';
 import {DeletePatientDialog} from "./idcard/dialogs/delete-patient-dialog";
-import { HasPermissionDirective } from './directives/has-permission.directive';
 import { NewIdDialog } from './idcard/dialogs/new-id-dialog';
+import {SharedModule} from "./shared/shared.module";
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
@@ -152,7 +151,6 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     SessionComponent,
     ErrorComponent,
     LogoutComponent,
-    ErrorDialogComponent,
     ErrorCardComponent,
     DeletePatientDialog,
     NewIdDialog,
@@ -163,10 +161,10 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     ConsentDialogComponent,
     ConsentDetailComponent,
     AddConsentComponent,
-    EditConsentComponent,
-    HasPermissionDirective
+    EditConsentComponent
   ],
   imports: [
+    SharedModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
