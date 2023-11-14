@@ -8,7 +8,6 @@ import {CreatePatientComponent} from "./createPatient/createPatient.component";
 // import {MergePatientsComponent} from "./mergePatients/mergePatients.component";
 import {EditPatientComponent} from "./edit-patient/edit-patient.component";
 import {DeletePatientComponent} from "./delete-patient/delete-patient.component";
-import {DeleteMultiplePatientsComponent} from "./delete-multiple-patients/delete-multiple-patients.component";
 import {ErrorComponent} from "./error/error.component";
 import {LogoutComponent} from "./logout/logout.component";
 import {AuthGuard} from "./guards/auth-guard.service";
@@ -25,8 +24,8 @@ const routes: Routes = [
       // {path: 'merge-patients', component: MergePatientsComponent},
       {path: 'patientlist', component: PatientlistViewComponent, data : { permission: 'readPatients' }},
       {path: 'edit-patient/:idType/:idString', component: EditPatientComponent, data : { permission: 'editPatient'}},
-      {path: 'delete-patient/:idType/:idString', component: DeletePatientComponent, data : { permission: 'deletePatient' }},
-      {path: 'delete-patients', component: DeleteMultiplePatientsComponent, data : { permission: 'deletePatient' }}
+      {path: 'delete-patient/:idType/:idString', component: DeletePatientComponent, data : { permission: 'deletePatient' }}
+      // {path: 'delete-patients', component: DeleteMultiplePatientsComponent, data : { permission: 'deletePatient' }}
     ]
   },
 
@@ -41,4 +40,4 @@ const routes: Routes = [
 
 })
 export class AppRoutingModule{}
-export const routingComponents =[IdcardComponent, PatientlistViewComponent, CreatePatientComponent,EditPatientComponent,DeletePatientComponent, DeleteMultiplePatientsComponent, InfoComponent]
+export const routingComponents =[IdcardComponent, PatientlistViewComponent, CreatePatientComponent,EditPatientComponent,DeletePatientComponent, InfoComponent]
