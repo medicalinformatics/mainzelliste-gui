@@ -23,20 +23,21 @@ const routes: Routes = [
   {
     path: '', canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
       {path: '', pathMatch: 'full', redirectTo: 'patientlist'},
-      {path: 'add-new-patient', component: CreatePatientComponent},
+      {path: 'add-new-patient', component: CreatePatientComponent, data : { permission: 'addPatient' }},
       {path: 'projekt-id', component: ProjektIdComponent},
       {path: 'info', component: InfoComponent},
       // {path: 'audittrail', component: AudittrailComponent},
-      {path: 'idcard/:idType/:idString', component: IdcardComponent},
+      {path: 'idcard/:idType/:idString', component: IdcardComponent, data : { permission: 'readPatients' }},
       // {path: 'merge-patients', component: MergePatientsComponent},
-      {path: 'patientlist', component: PatientlistViewComponent},
-      {path: 'edit-patient/:idType/:idString', component: EditPatientComponent},
-      {path: 'delete-patient/:idType/:idString', component: DeletePatientComponent},
-      {path: 'delete-patients', component: DeleteMultiplePatientsComponent},
-      {path: 'consent/:idType/:idString', component:ConsentComponent},
-      {path: 'patient/:idType/:idString/add-consent', component:AddConsentComponent},
-      {path: 'patient/:idType/:idString/edit-consent/:id', component:EditConsentComponent}
-    ]},
+      {path: 'patientlist', component: PatientlistViewComponent, data : { permission: 'readPatients' }},
+      {path: 'edit-patient/:idType/:idString', component: EditPatientComponent, data : { permission: 'editPatient'}},
+      {path: 'delete-patient/:idType/:idString', component: DeletePatientComponent, data : { permission: 'deletePatient' }},
+      {path: 'delete-patients', component: DeleteMultiplePatientsComponent, data : { permission: 'deletePatient' }},
+      {path: 'consent/:idType/:idString', component:ConsentComponent, data : { permission: 'readConsent' }},
+      {path: 'patient/:idType/:idString/add-consent', component:AddConsentComponent, data : { permission: 'addConsent' }},
+      {path: 'patient/:idType/:idString/edit-consent/:id', component:EditConsentComponent, data : { permission: 'editConsent' }}
+    ]
+  },
 
   // Needs to be outside, because we want message why user couldn't authenticate
   {path: 'error', component: ErrorComponent},

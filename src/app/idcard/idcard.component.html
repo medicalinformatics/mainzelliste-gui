@@ -19,63 +19,68 @@
 <!--      <button mat-fab style="background-color:#053E6A; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">-->
 <!--        <mat-icon matTooltip="ID hinzufügen">subtitles</mat-icon>-->
 <!--      </button>-->
-      <button mat-fab [routerLink]="['/edit-patient', idType, idString]"
+      <button mat-fab *appHasPermission="'editPatient'" [routerLink]="['/edit-patient', idType, idString]"
               [state]="{patient: patient}" style="background-color:#ffd60a; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">
         <mat-icon matTooltip="Bearbeiten">edit</mat-icon>
       </button>
       <button mat-fab (click)="openDeletePatientDialog()" style="background-color:#da1e37; color:white; margin-bottom: 15px" aria-label="Example icon button with a delete icon">
         <mat-icon matTooltip="Löschen">delete</mat-icon>
       </button>
-      <button *ngIf="!this.hasAllIds()" mat-fab (click)="openNewIdDialog()" style="background-color: #60d7fb; color:black; margin-bottom: 15px" aria-label="Example icon button with a fiber_new icon">
-        <mat-icon matTooltip="Neue Id">fiber_new</mat-icon>
+      <button [disabled]="this.hasAllIds()" mat-fab (click)="openNewIdDialog()"
+              [ngClass]="this.hasAllIds() ? '': 'idcard-button'" style="margin-bottom: 15px">
+        <mat-icon matTooltip="ID Generieren">add_box</mat-icon>
       </button>
-      <button *ngIf="this.consentService.isServiceEnabled()" mat-fab (click)="openConsentDialog()"
-              style="background-color:#053E6A; color:white;">
-        <mat-icon matTooltip="Einwilligung hinzufügen">assignment_turned_in</mat-icon>
-      </button>
+      <ng-container *ngIf="this.consentService.isServiceEnabled()">
+        <button mat-fab *appHasPermission="'addConsent'" (click)="openConsentDialog()"
+                class="idcard-button">
+          <mat-icon matTooltip="Einwilligung hinzufügen">assignment_turned_in</mat-icon>
+        </button>
+      </ng-container>
     </section>
   </div>
-  <mat-card *ngIf="this.consentService.isServiceEnabled()" id="consents">
-    <mat-card-title style="float: left; margin-left: 2.5%;">Einwilligungen</mat-card-title>
-      <table #consentTable mat-table [dataSource]="consents" class="mat-elevation-z8">
+  <ng-container *ngIf="this.consentService.isServiceEnabled()">
+    <mat-card *appHasPermission="'searchConsents'" id="consents">
+      <mat-card-title style="float: left; margin-left: 2.5%;">Einwilligungen</mat-card-title>
+        <table #consentTable mat-table [dataSource]="consents" class="mat-elevation-z8">
 
-        <ng-container matColumnDef="date">
-          <th mat-header-cell *matHeaderCellDef> Erstellt </th>
-          <td mat-cell *matCellDef="let element"> {{element.date}} </td>
-        </ng-container>
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef> Erstellt </th>
+            <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+          </ng-container>
 
-        <ng-container matColumnDef="title">
-          <th mat-header-cell *matHeaderCellDef> Vorlage </th>
-          <td mat-cell *matCellDef="let element"> {{element.title}} </td>
-        </ng-container>
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef> Vorlage </th>
+            <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+          </ng-container>
 
-        <ng-container matColumnDef="period">
-          <th mat-header-cell *matHeaderCellDef> Gültigkeitszeitraum </th>
-          <td mat-cell *matCellDef="let element"> {{element.period}} </td>
-        </ng-container>
+          <ng-container matColumnDef="period">
+            <th mat-header-cell *matHeaderCellDef> Gültigkeitszeitraum </th>
+            <td mat-cell *matCellDef="let element"> {{element.period}} </td>
+          </ng-container>
 
-        <ng-container matColumnDef="version">
-          <th mat-header-cell *matHeaderCellDef> Version </th>
-          <td mat-cell *matCellDef="let element"> {{element.version}} </td>
-        </ng-container>
+          <ng-container matColumnDef="version">
+            <th mat-header-cell *matHeaderCellDef> Version </th>
+            <td mat-cell *matCellDef="let element"> {{element.version}} </td>
+          </ng-container>
 
-        <ng-container matColumnDef="progress">
-          <th mat-header-cell *matHeaderCellDef [attr.colspan]="4"
-              style="padding: 0;">
-            <mat-progress-bar *ngIf="loadingConsents" mode="indeterminate"></mat-progress-bar>
-          </th>
-          <td mat-cell></td>
-        </ng-container>
+          <ng-container matColumnDef="progress">
+            <th mat-header-cell *matHeaderCellDef [attr.colspan]="4"
+                style="padding: 0;">
+              <mat-progress-bar *ngIf="loadingConsents" mode="indeterminate"></mat-progress-bar>
+            </th>
+            <td mat-cell></td>
+          </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedConsentColumns"></tr>
-        <tr mat-row class="consent-row" (click)="editConsent(row)" *matRowDef="let row; columns: displayedConsentColumns;"></tr>
-        <tr mat-header-row  style="height: 0; border: 0;" *matHeaderRowDef="['progress']"></tr>
-        <tr class="mat-row" *matNoDataRow>
-          <td *ngIf="!loadingConsents" class="mat-cell" [attr.colspan]="4" style="text-align: center">
-            Keine Einwilligung.
-          </td>
-        </tr>
-      </table>
-  </mat-card>
+          <tr mat-header-row *matHeaderRowDef="displayedConsentColumns"></tr>
+          <tr mat-row class="consent-row" (click)="editConsent(row)" *matRowDef="let row; columns: displayedConsentColumns;"></tr>
+          <tr mat-header-row  style="height: 0; border: 0;" *matHeaderRowDef="['progress']"></tr>
+          <tr class="mat-row" *matNoDataRow>
+            <td *ngIf="!loadingConsents" class="mat-cell" [attr.colspan]="4" style="text-align: center">
+              Keine Einwilligung.
+            </td>
+          </tr>
+        </table>
+    </mat-card>
+  </ng-container>
 </div>
 </form>

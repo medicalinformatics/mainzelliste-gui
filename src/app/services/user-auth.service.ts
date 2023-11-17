@@ -54,4 +54,8 @@ export class UserAuthService {
   public isLoggedIn(): boolean {
     return this.isLoggedInKeycloak && this.sessionService.isSessionCreated();
   }
+
+  getRoles() {
+    return this.keycloak.getUserRoles(true);
+  }
 }

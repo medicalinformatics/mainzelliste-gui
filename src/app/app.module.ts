@@ -92,6 +92,7 @@ import { NewIdDialog } from './idcard/dialogs/new-id-dialog';
 import { NgxCsvParserModule } from 'ngx-csv-parser';
 import { ProjektIdComponent } from './projekt-id/projekt-id.component';
 import { FileSaverModule } from 'ngx-filesaver';
+import { HasPermissionDirective } from './directives/has-permission.directive';
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService): () => Promise<any> {
   return () => configService.init()
@@ -160,6 +161,7 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     ConsentDetailComponent,
     AddConsentComponent,
     EditConsentComponent,
+    HasPermissionDirective,
     ProjektIdComponent
   ],
   imports: [
