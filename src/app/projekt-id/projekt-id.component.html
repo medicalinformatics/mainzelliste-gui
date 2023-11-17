@@ -1,0 +1,58 @@
+<ng-container style="width: 100%; height: 100%;">
+<div class="csv-file-chooser" style="margin-left: 3%;">
+    <label>CSV File hochladen:&nbsp;</label>
+    <input
+    type="file"
+    #fileImportInput
+    name="File Upload"
+    id="csvFileUpload"
+    (change)="fileChangeListener($event)"
+    accept=".csv"
+    data-testid="importCSV"/>
+    <p><span id="error" *ngIf="show == 0" style="color: red;">Bitte wählen sie eine gültige Datei aus!</span></p>
+</div>
+<table *ngIf="show == 1" id="projectId">
+    <ng-container *ngFor="let csvData of csvRecords; let i = index;" matColumnDef="ids" style="flex-flow: row;">
+        <tr *ngIf="i == 0">
+            <th *ngFor="let data of csvData">
+                {{data}}
+            </th>
+        </tr>
+        
+        <tr *ngIf="i != 0">
+            <td *ngFor="let data of csvData">
+                {{data}}
+            </td>
+        </tr>
+    </ng-container>
+</table>
+<ng-container *ngIf="show == 1">
+    <mat-form-field *ngIf="generated == false">
+        <mat-label>Id Typ</mat-label>
+        <mat-select (selectionChange)="dataModel = $event.value">
+            <mat-option *ngFor="let idType of patientListService.getNewIdType([this.idType])" [value]="idType">
+                {{idType}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <button
+    *ngIf="!generated"
+    mat-raised-button
+    class="submit"
+    type="submit"
+    (click)="generateNewIds(dataModel)"
+    [disabled]="dataModel == ''"
+    >
+    Generate new Ids
+    </button>
+    <button
+    *ngIf="generated"
+    mat-raised-button
+    class="download"
+    type="button"
+    (click)="downloadCSV()"
+    >
+    CSV Datei erstellen
+    </button>
+</ng-container>
+</ng-container>

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
+import {Observable, lastValueFrom, of} from 'rxjs';
 import Client from 'fhir-kit-client'
 import {SessionService} from "./services/session.service";
 import {DatePipe} from "@angular/common";
@@ -191,9 +191,9 @@ export class ConsentService {
     this.serializeConsentDataModelToFhir(dataModel);
 
     // create token
-    let token = await this.sessionService.createToken(
+    let token = await lastValueFrom(this.sessionService.createToken(
       "addConsent", {}
-    ).toPromise();
+    ));
 
     return this.client.create({
       resourceType: 'Consent', body: dataModel.fhirResource,
@@ -213,9 +213,9 @@ export class ConsentService {
     this.serializeConsentDataModelToFhir(dataModel);
 
     // create token
-    let token = await this.sessionService.createToken(
+    let token = await lastValueFrom(this.sessionService.createToken(
       "editConsent", {}
-    ).toPromise();
+    ));
 
     return this.client.update({
       resourceType: 'Consent', id: dataModel.fhirResource.id, body: dataModel.fhirResource,
@@ -241,9 +241,9 @@ export class ConsentService {
     let consentTemplates: Map<string, fhir4.Questionnaire> = await this.getConsentTemplatesResources();
 
     // create token
-    let token = await this.sessionService.createToken(
+    let token = await lastValueFrom(this.sessionService.createToken(
       "readConsent", {}
-    ).toPromise();
+    ));
 
     let consentDataModel: Consent;
     return this.client.read({
@@ -266,9 +266,9 @@ export class ConsentService {
     let consentTemplates: Map<string, fhir4.Questionnaire> = await this.getConsentTemplatesResources();
 
     // create token
-    let token = await this.sessionService.createToken(
+    let token = await lastValueFrom(this.sessionService.createToken(
       "searchConsents", {}
-    ).toPromise();
+    ));
 
     let result: Consent[] = [];
     return this.client.search({

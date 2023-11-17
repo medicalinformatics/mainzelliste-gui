@@ -11,7 +11,7 @@ import {DeletePatientTokenData} from "../model/delete-patient-token-data";
 import {Field} from "../model/field";
 import {DatePipe} from "@angular/common";
 import {catchError, map, mergeMap} from "rxjs/operators";
-import {Observable, of, throwError} from "rxjs";
+import {Observable, lastValueFrom, of, throwError} from "rxjs";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessage, ErrorMessages} from "../error/error-messages";
 import _moment from 'moment';
@@ -109,6 +109,16 @@ export class PatientListService {
     return this.patientList.mainIdType == undefined ? this.getIdTypes()[0] : this.patientList.mainIdType;
   }
 
+  getInternalIdTypes(): string[] {
+    let temp: string[] = [];
+    for (let allId of this.getIdGenerators()) {
+      if (!allId.isExternal) {
+        temp.push(allId.idType);
+      }
+    }
+    return temp;
+  }
+
   /**
    * @deprecated replace with getMainIdType
    */
@@ -126,12 +136,12 @@ export class PatientListService {
 
   //TODO Refactor: replace with getConfiguredIdTypes
   getPatientListIdTypes(): Promise<Array<string>> {
-    return this.getConfiguredIdTypes().toPromise();
+    return lastValueFrom(this.getConfiguredIdTypes());
   }
 
   //TODO Refactor: replace with getConfiguredDefaultIdType
   async getPatientListMainIdType(): Promise<string> {
-    return this.getConfiguredDefaultIdType().toPromise();
+    return lastValueFrom(this.getConfiguredDefaultIdType());
   }
 
   /**
@@ -196,7 +206,20 @@ export class PatientListService {
   }
 
   generateId(idType: string, idString: string, newIdType: string) {
-    return this.sessionService.createToken("createIds", new CreateIdsTokenData([{idType, idString}]))
+    return this.generateIdArray(idType, [idString], newIdType);
+  }
+
+  generateIdArray(idType: string, idString: string[], newIdType: string): Observable<[{idType: string, idString: string}]> {
+    if(idString.length == 0) {
+      throw new Error("idString cant be empty");
+    }
+    
+    let array: [{idType: string; idString: string}] = [{idType: idType, idString: idString[0]}];
+    for(let i = 1; i < idString.length; i++) {
+      array.push({idType: idType,idString: idString[i]})
+    }
+
+    return this.sessionService.createToken("createIds", new CreateIdsTokenData(array))
       .pipe(mergeMap(
         token => this.resolveCreateIdsToken(token.id, newIdType)
         ),
@@ -228,13 +251,13 @@ export class PatientListService {
       )
   }
 
-  getNewIdType(patient: Patient): string[] {
+  getNewIdType(ids: string[]): string[] {
     let temp: string[] = [];
     let bool: boolean;
     for (let allId of this.getIdGenerators()) {
       bool = true;
-      for (let id of patient.ids) {
-        if (allId.idType == id.idType) {
+      for (let id of ids) {
+        if (allId.idType == id) {
           bool = false;
         }
       }
@@ -303,14 +326,14 @@ export class PatientListService {
   }
 
   async readPatient(id: Id): Promise<Patient[]> {
-    let readToken = await this.sessionService.createToken(
+    let readToken = await lastValueFrom(this.sessionService.createToken(
       "readPatients",
       new ReadPatientsTokenData(
         [{idType: id.idType, idString: id.idString}],
         this.configService.getMainzellisteFields(),
         await this.getPatientListIdTypes()
-      )).toPromise();
-    return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + readToken.id).toPromise();
+      )));
+    return lastValueFrom(this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + readToken.id));
   }
 
   editPatient(patient: Patient, sureness: boolean) {
@@ -363,13 +386,13 @@ export class PatientListService {
   }
 
   async deletePatient(patient: Patient): Promise<Object> {
-    let token = await this.sessionService.createToken(
+    let token = await lastValueFrom(this.sessionService.createToken(
       "deletePatient",
       new DeletePatientTokenData(
         {idType: "pid", idString: patient.ids[0].idString}
       )
-    ).toPromise();
-      return this.httpClient.delete(this.patientList.url + "/patients?tokenId=" + token.id).toPromise();
+    ));
+      return lastValueFrom(this.httpClient.delete(this.patientList.url + "/patients?tokenId=" + token.id));
   }
 
   // Utils

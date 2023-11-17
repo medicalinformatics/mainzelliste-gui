@@ -16,6 +16,7 @@ import {AuthGuard} from "./guards/auth-guard.service";
 import {ConsentComponent} from "./consent/consent.component";
 import {AddConsentComponent} from "./add-consent/add-consent.component";
 import {EditConsentComponent} from "./edit-consent/edit-consent.component";
+import { ProjektIdComponent } from './projekt-id/projekt-id.component';
 
 const routes: Routes = [
   // TODO: All Paths should have english wording.
@@ -23,6 +24,7 @@ const routes: Routes = [
     path: '', canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
       {path: '', pathMatch: 'full', redirectTo: 'patientlist'},
       {path: 'add-new-patient', component: CreatePatientComponent},
+      {path: 'projekt-id', component: ProjektIdComponent},
       {path: 'info', component: InfoComponent},
       // {path: 'audittrail', component: AudittrailComponent},
       {path: 'idcard/:idType/:idString', component: IdcardComponent},

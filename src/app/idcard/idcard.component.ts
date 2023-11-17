@@ -120,12 +120,12 @@ export class IdcardComponent implements OnInit {
   }
 
 hasAllIds(): boolean {
-  return this.patientListService.getNewIdType(this.patient).length == 0;
+  return this.patientListService.getNewIdType(this.patient.ids.map(id => id.idType)).length == 0;
 }
 
   openNewIdDialog(): void {
     const dialogRef = this.newIdDialog.open(NewIdDialog, {
-      data: this.patientListService.getNewIdType(this.patient)
+      data: this.patientListService.getNewIdType(this.patient.ids.map(id => id.idType))
     });
 
     dialogRef.afterClosed().subscribe(result => {

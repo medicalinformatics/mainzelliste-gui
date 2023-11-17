@@ -89,6 +89,9 @@ import {AddConsentComponent} from './add-consent/add-consent.component';
 import {EditConsentComponent} from './edit-consent/edit-consent.component';
 import {DeletePatientDialog} from "./idcard/dialogs/delete-patient-dialog";
 import { NewIdDialog } from './idcard/dialogs/new-id-dialog';
+import { NgxCsvParserModule } from 'ngx-csv-parser';
+import { ProjektIdComponent } from './projekt-id/projekt-id.component';
+import { FileSaverModule } from 'ngx-filesaver';
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService): () => Promise<any> {
   return () => configService.init()
@@ -156,7 +159,8 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     ConsentDialogComponent,
     ConsentDetailComponent,
     AddConsentComponent,
-    EditConsentComponent
+    EditConsentComponent,
+    ProjektIdComponent
   ],
   imports: [
     BrowserModule,
@@ -190,7 +194,9 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     MatProgressSpinnerModule,
     MatProgressBarModule,
     ClipboardModule,
-    DemoMaterialModule
+    DemoMaterialModule,
+    NgxCsvParserModule,
+    FileSaverModule
   ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},

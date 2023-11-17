@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {OAuthConfig, PatientList} from "./model/patientlist";
 import {AppConfig} from "./app-config";
 import {catchError, map} from "rxjs/operators";
-import {throwError} from "rxjs";
+import {throwError, lastValueFrom} from "rxjs";
 import {MainzellisteField, MainzellisteFieldType} from "./model/mainzelliste-field";
 import {Field, FieldType} from "./model/field";
 
@@ -95,7 +95,7 @@ export class AppConfigService {
   }
 
   public fetchMainzellisteIdGenerators(): Promise<IdGenerator[]> {
-    return this.httpClient.get<IdGenerator[]>(this.data[0].url + "/configuration/idGenerators", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
+    return lastValueFrom(this.httpClient.get<IdGenerator[]>(this.data[0].url + "/configuration/idGenerators", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
     .pipe(
       catchError((e) => throwError(new Error("Can't init id types. Failed to connect to the backend Endpoint /configuration/idGenerators"))),
       map(idGenerators => {
@@ -104,12 +104,12 @@ export class AppConfigService {
         this.mainzellisteIdTypes = idGenerators.map( g => g.idType);
         return idGenerators;
       })
-    ).toPromise();
+    ));
   }
 
   public fetchMainzellisteFields(): Promise<MainzellisteField[]> {
     let fieldEndpointUrl = this.data[0].url + "/configuration/fields";
-    return this.httpClient.get<MainzellisteField[]>(fieldEndpointUrl, {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
+    return lastValueFrom(this.httpClient.get<MainzellisteField[]>(fieldEndpointUrl, {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
     .pipe(
       catchError(e => throwError(new Error("Can't validate field. Failed to connect to the backend Endpoint " + fieldEndpointUrl))),
       map(mlFields => {
@@ -127,7 +127,7 @@ export class AppConfigService {
         }
         return mlFields;
       })
-    ).toPromise();
+    ));
   }
 
   private initField(fieldName: string, configuredField:Field, backendMlField: MainzellisteField[], isDateType?: boolean) {

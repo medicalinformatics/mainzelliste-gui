@@ -8,7 +8,7 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
 import {ErrorNotificationService} from "../services/error-notification.service";
 import {GlobalTitleService} from "../services/global-title.service";
-import {Observable, of} from "rxjs";
+import {Observable, lastValueFrom, of} from "rxjs";
 import {concatMap, map, retryWhen, startWith, switchMap} from "rxjs/operators";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
@@ -93,7 +93,7 @@ export class CreatePatientComponent  implements OnInit {
   createNewPatient(sureness: boolean) {
     this.errorNotificationService.clearMessages();
     //create patient
-    of(this.patient).pipe(
+    lastValueFrom(of(this.patient).pipe(
       concatMap(p => this.patientService.createPatient(p, this.selectedInternalIdTypes, sureness)),
       retryWhen(
         error => error.pipe(
@@ -113,7 +113,7 @@ export class CreatePatientComponent  implements OnInit {
           })
         )
       )
-    ).toPromise().then(newId => {
+    )).then(newId => {
       if(this.consent){
         this.consent.patientId = newId;
         this.consentService.addConsent(this.consent).then();
