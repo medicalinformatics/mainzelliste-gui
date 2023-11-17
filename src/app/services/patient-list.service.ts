@@ -61,7 +61,7 @@ export class PatientListService {
     ErrorMessages.CREATE_PATIENT_INVALID_DATE_1,
     ErrorMessages.CREATE_PATIENT_INVALID_DATE_2
   ];
-  
+
   private createIdsErrorMessages: ErrorMessage[] = [
     ErrorMessages.CREATE_IDS_ERROR
   ];
@@ -144,9 +144,9 @@ export class PatientListService {
               pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
     // find searchIds
     let searchIds: Array<Id> = [];
-    let defaultIdType = this.findDefaultIdType(this.getIdTypes());
+    //let defaultIdType = this.findDefaultIdType(this.getIdTypes());
     if (filters.every(f => !f.isIdType)) {
-      searchIds = [{idType: defaultIdType, idString: "*", tentative: false}];
+      searchIds = [{idType: "*", idString: "*", tentative: false}];
     } else {
       filters.filter(f => f.isIdType).forEach(f =>
         searchIds.push({idType: f.field, idString: f.searchCriteria.trim(), tentative: false}));
