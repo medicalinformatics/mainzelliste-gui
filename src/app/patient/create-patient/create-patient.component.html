@@ -1,0 +1,66 @@
+<form #patientForm="ngForm">
+<div style="height:100%;width:100%;">
+  <div style=" width: 50%">
+    <h4 style="margin-left: 5%">{{'createPatient.enter_patient_data' | translate}}</h4>
+    <app-patient-fields (fieldEvent)="fieldsChanged($event)"
+                        [fields]="patient.fields"></app-patient-fields>
+    <br>
+    <div style="width: 90%; margin-left: 5%; max-width: 700px;">
+      <h4>{{'createPatient.add_external_pseudonym' | translate}}</h4>
+      <app-external-pseudonyms [readOnly]="false" [ids]="this.patient.ids" [removeEmptyId]="true"></app-external-pseudonyms>
+    </div>
+    <br>
+    <div style="width: 90%; margin-left: 5%; max-width: 700px;" ngModelGroup="internalIdTypes"
+         #internalIdTypesModelGroup="ngModelGroup">
+      <h4>{{'createPatient.add_pseudonym_type' | translate}}</h4>
+      <mat-form-field color="primary" style="width: 76.5%">
+        <mat-label>{{'createPatient.pseudonym_types' | translate}}</mat-label>
+        <mat-chip-list #chipList aria-label="Fruit selection"
+                       name="internalIdTypesChipList"
+                       [ngModel]="this.selectedInternalIdTypes.join(',')"
+                       required>
+          <mat-chip *ngFor="let idType of this.selectedInternalIdTypes"
+                    [selectable]="true"
+                    [removable]="true"
+                    (removed)="removeInternalIdType(idType)">
+            {{idType}}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+          <input [formControl]="chipListInputCtrl"
+                 [matChipInputFor]="chipList"
+                 [matAutocomplete]="auto"
+                 [matChipInputAddOnBlur]="true"
+                 (matChipInputTokenEnd)="findAndAddInternalIdType($event)">
+        </mat-chip-list>
+        <mat-error>{{'createPatient.no_pseudonym_type_error' | translate}}</mat-error>
+        <mat-autocomplete #auto="matAutocomplete"
+                          (optionSelected)="selectedInternalIdType($event)">
+          <mat-option style="height: auto" *ngFor="let idType of this.filteredInternalIdTypes | async"
+                      [value]="idType.idType">
+            <div [hidden]="idType.added">{{idType.idType}}</div>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      <br>
+    </div>
+    <ng-container *ngIf="this.consentService.isServiceEnabled()">
+      <div *appHasPermission="'addConsent'" style="width: 90%; margin-left: 5%; max-width: 700px;">
+        <button style="float: left; margin-bottom: 40px" mat-raised-button
+                (click)="openConsentDialog()">
+          <mat-icon>{{!consent ? 'add' : 'edit'}}</mat-icon>
+          {{!consent ? this.translate.instant('button_add_consent') : this.consent?.title}}
+        </button>
+      </div>
+    </ng-container>
+    <br>
+    <div style="width: 90%; margin-left: 5%; max-width: 700px;">
+      <button mat-raised-button class="submit" style="clear: both; float: left; width: 20%;"
+              [disabled]="this.disable(patientForm)"
+              (click)="createNewPatient(false)">{{'button_request' | translate}}
+      </button>
+    </div>
+  </div>
+</div>
+</form>

@@ -1,0 +1,42 @@
+
+.titleicon{
+  margin-left: 3%;
+  font-family: Arial;
+  margin-top: 2.5%;
+  margin-bottom: 1%;
+}
+
+.DeletePatientFragestellung{
+  font-family: Arial;
+  padding-bottom: 30px;
+  padding-left: 5%;
+  line-height: 150%;
+}
+
+.DeletePatientButtonLöschen {
+  background-color: #ADDFFF;
+  color: white;
+  width: 35%;
+}
+
+.DeletePatientButtonAbbruch {
+  background-color: #888888;
+  color: white;
+  width: 35%;
+}
+
+mat-card-title{
+  transform: scale(0.9);
+  padding-top: 5%;
+  padding-bottom: 1%;
+  font-family: Arial;
+}
+
+#deletePatient1{
+  background-color: white;
+  margin-left: 3%;
+  padding-bottom: 5%;
+  margin-bottom: 10%;
+  border: solid thin lightgray;
+
+}
