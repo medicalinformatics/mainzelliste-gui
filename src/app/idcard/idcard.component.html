@@ -23,10 +23,10 @@
               [state]="{patient: patient}" style="background-color:#ffd60a; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">
         <mat-icon matTooltip="{{'button_edit' | translate}}">edit</mat-icon>
       </button>
-      <button mat-fab (click)="openDeletePatientDialog()" style="background-color:#da1e37; color:white; margin-bottom: 15px" aria-label="Example icon button with a delete icon">
+      <button mat-fab *appHasPermission="'deletePatient'" (click)="openDeletePatientDialog()" style="background-color:#da1e37; color:white; margin-bottom: 15px" aria-label="Example icon button with a delete icon">
         <mat-icon matTooltip="{{'button_delete' | translate}}">delete</mat-icon>
       </button>
-      <button [disabled]="this.hasAllIds()" mat-fab (click)="openNewIdDialog()"
+      <button *appHasPermission="'createIds'" [disabled]="this.hasAllIds()" mat-fab (click)="openNewIdDialog()"
               [ngClass]="this.hasAllIds() ? '': 'idcard-button'" style="margin-bottom: 15px">
         <mat-icon matTooltip="{{'button_generate_id' | translate}}">add_box</mat-icon>
       </button>
