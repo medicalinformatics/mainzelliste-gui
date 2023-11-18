@@ -1,7 +1,10 @@
-# Mainzelliste Gui
+![Mainzelliste Logo](./src/assets/images/mainzelliste-logo-650.png)
 
-## Deployment
+With the Mainzelliste UI your can easily manage your patient list, creating new ID, editing patient fields or deleting patient.   
+
+## Installation Guidelines
 ### How to configure
+Most of the configuration can be set using docker environment variables
 #### Docker compose environment Variables
 the docker image of the ui uses several environment variables :
 
@@ -17,13 +20,22 @@ the docker image of the ui uses several environment variables :
 
 ### Running on Linux
 
-1. copy the file `.env.default` to `.env` and set the environment variable `HOST` to the server name. As Developer running the docker compose locally please set the Host value with the computer name. 
-2. You can either set up you keycloak configuration manually or just run the shell initialization script ``./init-keycloak.sh {ui hostname + path}`` to do this task for you. The default value of `{ui hostname + path}` is `localhost:4200`
-   1. before running the shell initialization file ``./init-keycloak.sh`` just make sure that all the docker container are down and the `keycloakDB` volume doesn't exist.
+1. copy the file `.env.default` to `.env` and set the environment variable `HOST` to the server name. 
+2. You can either set up you keycloak configuration manually or just run the shell initialization script ``./prepare-keycloak-import-file.sh {ui hostname and path}`` to do this task for you. The default value of `{ui hostname and path}` is `localhost:4200`
 3. run ``docker-compose up -d``
 
 ### Override the default configuration file
-TODO
+For more configuration eg. defining new user roles, your can override the [default configuration file](./src/assets/config/config.template.json) using the docker secret ``mainzelliste-gui.docker.conf``
+```yaml
+services: 
+  mainzelliste-gui:
+    secrets:
+    - mainzelliste-gui.docker.conf
+ 
+secrets:
+  mainzelliste-gui.docker.conf:
+    file: ./configs/mainzelliste-gui.docker.conf
+```
 
 ## Developer Guide 
 
@@ -110,3 +122,12 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ### Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## License
+Copyright 2021 - 2023 Federated Information Systems Team from DKFZ Heidelberg
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.

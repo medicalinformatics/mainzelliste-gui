@@ -10,11 +10,11 @@
       "roles" : [
         {
           "name": "admin",
-          "permissions": ["addPatient","readPatients","editPatient","deletePatient","addConsent","searchConsents","readConsent", "editConsent"]
+          "permissions": ["addPatient","readPatients","editPatient","deletePatient","createIds","addConsent","searchConsents","readConsent", "editConsent"]
         },
         {
           "name": "study-nurse",
-          "permissions": ["addPatient","readPatients","addConsent","searchConsents","readConsent"]
+          "permissions": ["addPatient","readPatients","createIds","addConsent","searchConsents","readConsent"]
         }
       ],
       "mainIdType": "${ML_UI_MAIN_ID_TYPE}",
