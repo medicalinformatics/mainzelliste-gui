@@ -1,5 +1,5 @@
 import {Directive, Input, TemplateRef, ViewContainerRef} from '@angular/core';
-import {Permission} from "../../model/patientlist";
+import {PermissionName} from "../../model/patientlist";
 import {AuthorizationService} from "../../services/authorization.service";
 
 @Directive({
@@ -14,8 +14,8 @@ export class HasPermissionDirective {
   ) {
   }
 
-  @Input() set appHasPermission(permission: Permission) {
-    if (this.authorizationService.hasPermission(permission)) {
+  @Input() set appHasPermission(permissionName: PermissionName) {
+    if (this.authorizationService.hasPermission(permissionName)) {
       this.viewContainer.createEmbeddedView(this.templateRef);
     } else {
       this.viewContainer.clear();

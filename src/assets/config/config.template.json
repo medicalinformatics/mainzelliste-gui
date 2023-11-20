@@ -7,14 +7,76 @@
         "realm": "${KEYCLOAK_REALM}",
         "clientId": "${KEYCLOAK_CLIENT_ID}"
       },
-      "roles" : [
+      "roles": [
         {
           "name": "admin",
-          "permissions": ["addPatient","readPatients","editPatient","deletePatient","createIds","addConsent","searchConsents","readConsent", "editConsent"]
+          "permissions": [
+            {
+              "name": "addPatient"
+            },
+            {
+              "name": "readPatients"
+            },
+            {
+              "name": "editPatient"
+            },
+            {
+              "name": "deletePatient"
+            },
+            {
+              "name": "createIds"
+            },
+            {
+              "name": "addConsent"
+            },
+            {
+              "name": "searchConsents"
+            },
+            {
+              "name": "readConsent"
+            },
+            {
+              "name": "editConsent"
+            }
+          ]
         },
         {
           "name": "study-nurse",
-          "permissions": ["addPatient","readPatients","createIds","addConsent","searchConsents","readConsent"]
+          "permissions": [
+            {
+              "name": "addPatient",
+              "refined": {
+                "idTypes": [
+                  "projectId", "clinicExtId"
+                ]
+              }
+            },
+            {
+              "name": "readPatients",
+              "refined": {
+                "idTypes": [
+                  "projectId", "clinicExtId"
+                ]
+              }
+            },
+            {
+              "name": "createIds",
+              "refined": {
+                "idTypes": [
+                  "projectId"
+                ]
+              }
+            },
+            {
+              "name": "addConsent"
+            },
+            {
+              "name": "searchConsents"
+            },
+            {
+              "name": "readConsent"
+            }
+          ]
         }
       ],
       "mainIdType": "${ML_UI_MAIN_ID_TYPE}",

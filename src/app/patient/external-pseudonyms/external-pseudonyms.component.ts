@@ -1,10 +1,11 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Id} from "../../model/id";
-import {IdTypSelection} from "../../patient/create-patient/create-patient.component";
+import {IdTypSelection} from "../create-patient/create-patient.component";
 import {MatSelect} from "@angular/material/select";
 import {addIfNotExist, removeFrom} from "../../utils/array-utils";
 import {PatientListService} from "../../services/patient-list.service";
 import {ControlContainer, NgForm} from "@angular/forms";
+import {PermissionName} from "../../model/patientlist";
 
 @Component({
   selector: 'app-external-pseudonyms',
@@ -18,6 +19,7 @@ export class ExternalPseudonymsComponent implements OnChanges {
   @Input() readOnly: boolean = false;
   @Input() removeEmptyId: boolean = false;
   @Input() side: string = "none";
+  @Input() permissionName?: PermissionName;
 
   externalIdTypes: IdTypSelection[] = [];
 
@@ -59,7 +61,7 @@ export class ExternalPseudonymsComponent implements OnChanges {
   getExternalIdTypes(): IdTypSelection[] {
     //init.
     if (this.externalIdTypes.length == 0) {
-      this.externalIdTypes = this.patientListService.getIdGenerators()
+      this.externalIdTypes = this.patientListService.getIdGenerators(this.permissionName)
       .filter(g => g.isExternal)
       .map(g => {
         return {idType: g.idType, added: false}

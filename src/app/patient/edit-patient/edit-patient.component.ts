@@ -46,7 +46,7 @@ export class EditPatientComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.patientListService.readPatient(new Id(this.idType, this.idString)).then(patients => {
+    this.patientListService.readPatient(new Id(this.idType, this.idString), "readPatients").then(patients => {
       this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
     });
     this.translate.onLangChange.subscribe(() => {
@@ -60,7 +60,7 @@ export class EditPatientComponent implements OnInit {
 
   editPatient(sureness: boolean) {
     this.errorNotificationService.clearMessages();
-    this.patientListService.editPatient(this.patient, sureness).then( () =>
+    this.patientListService.editPatient(new Id(this.idType, this.idString), this.patient, sureness).then( () =>
       this.router.navigate(["/patientlist"]).then()
     )
     .catch( e => {

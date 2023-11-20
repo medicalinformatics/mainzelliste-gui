@@ -8,7 +8,7 @@
 
     <mat-card id="pseudonyme" style="flex: 1 1 25%; display: flex;  flex-flow: column">
       <mat-card-title>{{'idcard.pseudonyms_title' | translate}}</mat-card-title>
-      <app-patient-pseudonyms [readOnly]=true [ids]="patient.ids"></app-patient-pseudonyms>
+      <app-patient-pseudonyms [readOnly]=true [ids]="patient.ids" [permissionName]="'readPatients'"></app-patient-pseudonyms>
     </mat-card>
 
     <section style="display: flex; flex: 1 1 1%; margin-left:2%; flex-flow: column;">

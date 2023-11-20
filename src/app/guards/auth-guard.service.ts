@@ -1,16 +1,10 @@
 import {Injectable} from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivateChild,
-  Router,
-  RouterStateSnapshot,
-  UrlTree
-} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivateChild, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {KeycloakAuthGuard, KeycloakService} from 'keycloak-angular';
 import {Observable} from "rxjs";
 import {UserAuthService} from "../services/user-auth.service";
 import {AuthorizationService} from "../services/authorization.service";
-import {Permission} from "../model/patientlist";
+import {PermissionName} from "../model/patientlist";
 
 @Injectable({
   providedIn: 'root'
@@ -35,8 +29,8 @@ export class AuthGuard extends KeycloakAuthGuard implements CanActivateChild {
     );
   }
 
-  checkPermission(permission: Permission): boolean {
-    return permission == undefined || this.authorizationService.hasPermission(permission);
+  checkPermission(permissionName: PermissionName): boolean {
+    return permissionName == undefined || this.authorizationService.hasPermission(permissionName);
   }
 
   canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot):

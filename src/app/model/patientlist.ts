@@ -31,7 +31,16 @@ export interface Role {
   permissions: Permission[];
 }
 
-export type Permission = "addPatient" | "readPatients" | "editPatient" | "deletePatient" | "createIds" | "addConsent" | "searchConsents" | "readConsent" |  "editConsent";
+export interface Permission {
+  name: PermissionName,
+  refined?: Refined
+}
+
+export interface Refined {
+  idTypes: string[]
+}
+
+export type PermissionName = "addPatient" | "readPatients" | "editPatient" | "deletePatient" | "createIds" | "addConsent" | "searchConsents" | "readConsent" |  "editConsent";
 
 
 export interface BetaFeatures {

@@ -41,7 +41,7 @@ export class CreatePatientComponent  implements OnInit {
   userAuthService : UserAuthService;
   consent?: Consent;
 
-  internalIdTypes: IdTypSelection[] = [];
+  internalIdTypeSelection: IdTypSelection[] = [];
   /** selected chip data model */
   selectedInternalIdTypes: string[] = [];
   /** autocomplete data model */
@@ -76,12 +76,14 @@ export class CreatePatientComponent  implements OnInit {
   }
 
   ngOnInit(): void {
-    this.selectedInternalIdTypes.push(this.patientListService.getMainIdType());
+    let internalIdTypes  = this.patientListService.getIdGenerators('addPatient')
+      .filter(g => !g.isExternal).map( g => g.idType)
+    let mainIdType = this.patientListService.findDefaultIdType(internalIdTypes);
+    this.selectedInternalIdTypes.push(mainIdType);
 
-    this.internalIdTypes = this.patientListService.getIdGenerators()
-    .filter(g => !g.isExternal)
-    .map(g => {
-      return {idType: g.idType, added: this.patientListService.getMainIdType() == g.idType}
+    this.internalIdTypeSelection = internalIdTypes
+    .map(t => {
+      return {idType: t, added: mainIdType == t}
     });
 
     this.filteredInternalIdTypes = this.chipListInputCtrl.valueChanges.pipe(
@@ -92,7 +94,7 @@ export class CreatePatientComponent  implements OnInit {
           searchValue = "";
         else if (typeof searchValue !== "string")
           searchValue = value.idType
-        return this.internalIdTypes
+        return this.internalIdTypeSelection
         .filter(e => !e.added && e.idType.toLowerCase().includes(searchValue.toLowerCase()))
       }),
     );
@@ -165,7 +167,7 @@ export class CreatePatientComponent  implements OnInit {
   removeInternalIdType(idType: string) {
     const value = (idType || '').trim();
 
-    this.internalIdTypes
+    this.internalIdTypeSelection
     .filter(e => e.idType == value)
     .forEach(e => {
       e.added = false;
@@ -181,7 +183,7 @@ export class CreatePatientComponent  implements OnInit {
   }
 
   private findIdType(idType: string): IdTypSelection | undefined {
-    return this.internalIdTypes.find(e => e.idType == idType && !e.added);
+    return this.internalIdTypeSelection.find(e => e.idType == idType && !e.added);
   }
 
   openCreatePatientTentativeDialog(): void {

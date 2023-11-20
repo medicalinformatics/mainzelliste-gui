@@ -70,7 +70,7 @@ export class IdcardComponent implements OnInit {
   }
 
   private loadPatient() {
-    this.patientListService.readPatient(new Id(this.idType, this.idString)).then(patients => {
+    this.patientListService.readPatient(new Id(this.idType, this.idString), "readPatients").then(patients => {
       this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
     });
   }
