@@ -4,10 +4,10 @@
     <br/>
     <div style="width: 90%; max-width: 700px; float: left">
       <button mat-raised-button class="submitBreak" *ngIf="dataModel" (click)="cancel()"
-              style="margin-right: 20px;">Abbrechen
+              style="margin-right: 20px;">{{'button_cancel' | translate}}
       </button>
       <button mat-raised-button class="submit" *ngIf="dataModel"
-              (click)="editConsent()">Speichen
+              (click)="editConsent()">{{'button_save' | translate}}
       </button>
     </div>
   </div>

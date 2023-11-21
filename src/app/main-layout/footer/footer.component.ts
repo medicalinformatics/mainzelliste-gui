@@ -10,7 +10,12 @@ export class FooterComponent implements OnInit {
   dkfzLogo: string = "assets/images/dkfzLogo-small.png";
   ummLogo: string = "assets/images/umm-logo.png";
   medmaLogo: string = "assets/images/medma-logo.png";
-  constructor() { }
+  year: number;
+  startYear: string = " 2021 - ";
+
+  constructor() {
+    this.year = new Date().getFullYear();
+  }
 
   ngOnInit(): void {
   }

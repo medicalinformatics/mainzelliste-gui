@@ -9,13 +9,10 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class InfoComponent implements OnInit {
 
-  translate: TranslateService;
-
   constructor(
-    translate: TranslateService,
+    private translate: TranslateService,
     private titleService: GlobalTitleService
   ) {
-    this.translate = translate;
     this.changeTitle();
   }
 

@@ -27,8 +27,8 @@
                              name="question-{{i}}"
                              style ="display:flex; gap:40px"
             color="primary">
-              <mat-radio-button value="permit">Ja</mat-radio-button>
-              <mat-radio-button value="deny">Nein</mat-radio-button>
+              <mat-radio-button value="permit">{{'radio_button_yes' | translate}}</mat-radio-button>
+              <mat-radio-button value="deny">{{'radio_button_no' | translate}}</mat-radio-button>
             </mat-radio-group>
           </mat-card>
         </div>
@@ -38,9 +38,9 @@
   </div>
   <br>
   <div class="form-group">
-    <label>Gültig ab </label>
+    <label>{{'consentDetail.validity_label' | translate}}</label>
     <mat-form-field appearance="fill">
-      <mat-label>Gültigkeitsdatum auswählen</mat-label>
+      <mat-label>{{'consentDetail.validity_date_label' | translate}}</mat-label>
       <input matInput [matDatepicker]="picker"
              placeholder="{{localDateFormat}}"
              [(ngModel)]="this.validFrom" name="date">

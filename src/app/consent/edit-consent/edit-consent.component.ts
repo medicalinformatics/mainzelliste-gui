@@ -4,6 +4,7 @@ import {ConsentService} from "../consent.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Consent} from "../consent.model";
 import {GlobalTitleService} from "../../services/global-title.service";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-edit-consent',
@@ -19,15 +20,24 @@ export class EditConsentComponent implements OnInit {
   idType!: string;
   idString!: string;
 
-  constructor(private consentService: ConsentService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private titleService: GlobalTitleService
+  constructor(
+    private consentService: ConsentService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private titleService: GlobalTitleService,
+    private translate: TranslateService
   ) {
-    this.titleService.setTitle("Einwilligung Editieren", false, "assignment_turned_in");
+    this.changeTitle();
+  }
+
+  changeTitle() {
+    this.titleService.setTitle(this.translate.instant('editConsent.title_edit_consent'), false, "assignment_turned_in");
   }
 
   ngOnInit(): void {
+    this.translate.onLangChange.subscribe(() => {
+      this.changeTitle();
+    });
     this.idType = this.route.snapshot.paramMap.get('idType') ?? "";
     this.idString = this.route.snapshot.paramMap.get('idString') ?? "";
     this.consentId = this.route.snapshot.paramMap.get('id') ?? "";

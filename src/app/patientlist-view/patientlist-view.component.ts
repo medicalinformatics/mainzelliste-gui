@@ -27,7 +27,6 @@ export interface FilterConfig {
 })
 export class PatientlistViewComponent implements OnInit {
 
-  title = "Patientenliste";
   patientService: PatientService;
   patient: Patient = new Patient();
   fields: Array<string> = [];
@@ -44,8 +43,6 @@ export class PatientlistViewComponent implements OnInit {
   filterInputValue: string | undefined;
   allPatientsToSearch: Array<string> = [];
 
-  translate: TranslateService;
-
   @ViewChild('filterInput')
   filterInput!: ElementRef<HTMLInputElement>;
   filteredFields: Observable<FilterConfig[]> = of([]);
@@ -55,13 +52,12 @@ export class PatientlistViewComponent implements OnInit {
   pageNumber: number = 100000;
 
   constructor(
-    translate: TranslateService,
+    private translate: TranslateService,
     patientService: PatientService,
     private titleService: GlobalTitleService
   ) {
     this.patientService = patientService;
     this.patientsMatTableData = new MatTableDataSource<Patient>([]);
-    this.translate = translate;
     this.changeTitle();
   }
 
