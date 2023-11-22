@@ -18,12 +18,11 @@
     Cancel
   </button>
   <button
-    *ngIf="dataModel!=null"
     mat-raised-button
     class="submit"
     type="submit"
     (click)="onSave()"
-    [disabled]="!dataModel"
+    [disabled]="dataModel == null"
   >
     Save new ID
   </button>
