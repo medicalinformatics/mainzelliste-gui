@@ -34,11 +34,7 @@ export class ErrorMessages {
 
   static translate: TranslateService;
 
-  constructor(
-    translate: TranslateService
-  ) {
-    translate = translate;
-  }
+  constructor() {}
   ////
   // General ERRORS
   //-------------------
@@ -116,5 +112,5 @@ export class ErrorMessages {
     //---------------------
   public static CREATE_IDS_ERROR: ErrorMessage = new ErrorMessage(3001,
     "ResolveCreateIdTokenError",
-  "ResolveCreateIdTokenError");
+    'error.resolve_create_id_token');
 }

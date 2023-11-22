@@ -20,10 +20,9 @@ export class EditPatientComponent implements OnInit {
   patient: Patient = new Patient();
   private idString: string = "";
   private idType: string = "";
-  translate: TranslateService;
 
   constructor(
-    translate: TranslateService,
+    private translate: TranslateService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     public errorNotificationService: ErrorNotificationService,
@@ -31,7 +30,6 @@ export class EditPatientComponent implements OnInit {
     private titleService: GlobalTitleService,
     public dialog: MatDialog
   ) {
-    this.translate = translate;
     activatedRoute.params.subscribe((params) => {
       if (params["idType"] !== undefined)
         this.idType = params["idType"]

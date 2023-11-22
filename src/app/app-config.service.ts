@@ -6,6 +6,7 @@ import {catchError, map} from "rxjs/operators";
 import {throwError} from "rxjs";
 import {MainzellisteField, MainzellisteFieldType} from "./model/mainzelliste-field";
 import {Field, FieldType} from "./model/field";
+import { TranslateService } from '@ngx-translate/core';
 
 
 export interface IdGenerator {
@@ -25,8 +26,10 @@ export class AppConfigService {
 
   private consentEnabled: boolean = false;
 
-  constructor(private httpClient: HttpClient) {
-  }
+  constructor(
+    private translate: TranslateService,
+    private httpClient: HttpClient
+    ) {}
 
   /**
    * read and validate the configuration file
@@ -52,7 +55,7 @@ export class AppConfigService {
             () => resolve(this.data)
           )
         },
-        _e => reject(new Error("UI configuration file not found"))
+        _e => reject(new Error(this.translate.instant('error.app_config_service_config_not_found')))
       );
     });
   }
@@ -93,15 +96,15 @@ export class AppConfigService {
     // if the url contains a path and no slash at the end, the backend responses with a 302 redirect, which is not possible in XHR request
     let urlSuffix  = new URL(config.url.toString()).pathname.endsWith('/') ?"":"/";
     return this.httpClient.get<string>(config.url.toString() + urlSuffix)
-    .pipe(map(_r => 'Mainzelliste is online'),
-      catchError(_e => throwError(new Error("Mainzelliste backend is offline")))
+    .pipe(map(_r => this.translate.instant('appConfigService.backend_online')),
+      catchError(_e => throwError(new Error(this.translate.instant('error.app_config_service_backend_offline'))))
     )
   }
 
   public fetchMainzellisteIdGenerators(): Promise<IdGenerator[]> {
     return this.httpClient.get<IdGenerator[]>(this.data[0].url + "/configuration/idGenerators", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
     .pipe(
-      catchError((e) => throwError(new Error("Can't init id types. Failed to connect to the backend Endpoint /configuration/idGenerators"))),
+      catchError((e) => throwError(new Error(this.translate.instant('error.app_config_service_fetch_id_generators')))),
       map(idGenerators => {
         console.log(this.validateMainIdType(idGenerators))
         this.mainzellisteIdGenerators = idGenerators
@@ -115,7 +118,7 @@ export class AppConfigService {
     let fieldEndpointUrl = this.data[0].url + "/configuration/fields";
     return this.httpClient.get<MainzellisteField[]>(fieldEndpointUrl, {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
     .pipe(
-      catchError(e => throwError(new Error("Can't validate field. Failed to connect to the backend Endpoint " + fieldEndpointUrl))),
+      catchError(e => throwError(new Error(this.translate.instant('error.app_config_service_fetch_fields') + fieldEndpointUrl))),
       map(mlFields => {
         //validate fields
         for (let configuredField of this.data[0].fields) {
@@ -138,12 +141,12 @@ export class AppConfigService {
     // find backend field configuration
     let mlField: MainzellisteField|undefined = backendMlField.find(f => f.name == fieldName);
     if (mlField == undefined)
-      throw new Error("Configured field '" + fieldName + "' not defined in backend configuration")
+      throw new Error(this.translate.instant('error.app_config_service_field_not_defined_text1') + fieldName + this.translate.instant('error.app_config_service_field_not_defined_text2'))
 
     // set type
     if(!isDateType) {
       if (mlField.type != MainzellisteFieldType.PlainTextField)
-        throw new Error("Configured field '" + fieldName + "' type '" + mlField.type + "' not supported yet")
+        throw new Error(this.translate.instant('error.app_config_service_type_not_supported_text1') + fieldName + this.translate.instant('error.app_config_service_type_not_supported_text2') + mlField.type + this.translate.instant('error.app_config_service_type_not_supported_text3'))
       configuredField.type = FieldType.TEXT
     }
 
@@ -160,9 +163,9 @@ export class AppConfigService {
     if (AppConfigService.isStringEmpty(config.mainIdType)) {
       config.mainIdType = idType;
     } else if (config.mainIdType?.trim() != idType.trim()) {
-      throw new Error("The backend default id type '" + idType + "' and the configured main id type '" + config.mainIdType + "' are different")
+      throw new Error(this.translate.instant('error.app_config_service_id_type_mismatch_text1') + idType + this.translate.instant('error.app_config_service_id_type_mismatch_text2') + config.mainIdType + this.translate.instant('error.app_config_service_id_type_mismatch_text3'))
     }
-    return "Main id type is valid";
+    return this.translate.instant('appConfigService.main_id_type_valid');
   }
 
   private static validateOAuthConfig(config: OAuthConfig | undefined): boolean {

@@ -30,15 +30,13 @@ export class PatientFieldsComponent implements OnInit {
   @Input() readOnly: boolean= false;
   @Input() side: string="none";
   localDateFormat: string;
-  translate: TranslateService;
 
   constructor(
     fieldService: FieldService,
-    translate: TranslateService
+    private translate: TranslateService
     ) {
     this.configuredFields = fieldService.getFields();
     this.localDateFormat = _moment().localeData().longDateFormat('L');
-    this.translate = translate;
   }
 
   ngOnInit(): void {}

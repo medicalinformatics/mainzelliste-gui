@@ -8,6 +8,7 @@ import {AppConfigService} from "../app-config.service";
 import {catchError, map, mergeMap} from "rxjs/operators";
 import {Router} from "@angular/router";
 import {getErrorMessageFrom} from "../error/error-utils";
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +17,15 @@ export class SessionService {
 
   readonly LS_SESSION_ITEM: string = "mainzellisteSession"
   private sessionSubject: BehaviorSubject<Session>;
+  static translate: TranslateService;
 
   constructor(
+    translate: TranslateService,
     private httpClient: HttpClient,
     private router: Router,
     private appConfigService: AppConfigService
   ) {
+    SessionService.translate = translate;
     const cachedSession = localStorage.getItem(this.LS_SESSION_ITEM)
     this.sessionSubject = new BehaviorSubject<Session>(cachedSession !== null ? JSON.parse(cachedSession) : new Session());
   }
@@ -40,7 +44,7 @@ export class SessionService {
         this.sessionSubject.next(session);
         return session;
       }),
-      catchError((error) => SessionService.handleFailedRequest("Failed to create a mainzelliste session", error))
+      catchError((error) => SessionService.handleFailedRequest(SessionService.translate.instant('error.session_service_create_session'), error))
     )
   }
 
@@ -63,7 +67,7 @@ export class SessionService {
       this.appConfigService.data[0].url + '/sessions/' + oldSessionId)
     .pipe(
       map(() => true),
-      catchError((error) => SessionService.handleFailedRequest("Failed to delete a mainzelliste session", error))
+      catchError((error) => SessionService.handleFailedRequest(SessionService.translate.instant('error.session_service_delete_session'), error))
     );
   }
 
@@ -75,7 +79,7 @@ export class SessionService {
       this.appConfigService.data[0].url + '/sessions/' + this.sessionId)
     .pipe(
       map(() => true),
-      catchError((error) => SessionService.handleFailedRequest("Failed to read a mainzelliste session", error))
+      catchError((error) => SessionService.handleFailedRequest(SessionService.translate.instant('error.session_service_is_session_valid'), error))
     );
   }
 
@@ -83,7 +87,7 @@ export class SessionService {
     if (error.status == 404)
       return of(false)
     else
-      throw throwError(new Error(`${errorMessage}. Cause: ${getErrorMessageFrom(error)}`));
+      throw throwError(new Error(`${errorMessage}` + SessionService.translate.instant('error.session_service_handle_failed_request') + `${getErrorMessageFrom(error, SessionService.translate)}`));
   }
 
   public isSessionCreated(): boolean {

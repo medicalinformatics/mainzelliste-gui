@@ -6,6 +6,7 @@ import {DatePipe} from "@angular/common";
 import {AppConfigService} from "../app-config.service";
 import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "./consent.model";
 import {ConsentTemplate} from "./consent-template.model";
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,11 @@ export class ConsentService {
   private readonly mainzellisteBaseUrl: string;
   private client: Client;
 
-  constructor(private sessionService: SessionService,
-              private appConfigService: AppConfigService) {
+  constructor(
+    private sessionService: SessionService,
+    private appConfigService: AppConfigService,
+    private translate: TranslateService       
+  ) {
     this.mainzellisteBaseUrl = this.appConfigService.data[0].url.toString();
     this.client = new Client({baseUrl: this.mainzellisteBaseUrl + "/fhir"});
   }
@@ -55,7 +59,7 @@ export class ConsentService {
       dataModel.items.filter(i => i instanceof ConsentChoiceItem)
       .map(i => i as ConsentChoiceItem).forEach(i => {
         if (!dataModel.fhirResource?.provision) {
-          this.handleError<fhir4.QuestionnaireResponse>('contained fhir consent template contain no provisions')
+          this.handleError<fhir4.QuestionnaireResponse>(this.translate.instant('error.consent_service_fhir_consent_template'))
         } else if (dataModel.fhirResource.provision.provision) {
           // find provision with the given linkedId
           let provision = dataModel.fhirResource.provision.provision.find(p => {
@@ -86,7 +90,7 @@ export class ConsentService {
    */
   private deserializeConsentDataModelFrom(questionnaire: fhir4.Questionnaire | undefined, fhirConsent: fhir4.Consent | undefined): Consent {
     if (questionnaire == undefined) {
-      this.handleError<any>("questionnaire not found");
+      this.handleError<any>(this.translate.instant('error.consent_service_questionnaire_not_found'));
       return {
         id: "",
         title: "NOT FOUND",
@@ -101,7 +105,7 @@ export class ConsentService {
     if (!fhirConsent) {
       if (questionnaire.contained == undefined || questionnaire.contained.length > 1
         || questionnaire.contained.length == 0) {
-        this.handleError<any>("contained consent resource not found");
+        this.handleError<any>(this.translate.instant('error.consent_service_consent_resource_not_found'));
       } else {
         fhirConsent = questionnaire.contained[0] as fhir4.Consent;
         //init date
@@ -135,7 +139,7 @@ export class ConsentService {
         let choiceItem: ConsentChoiceItem = new ConsentChoiceItem(item.linkId, item.text || "", answer)
         items.push(choiceItem);
       } else {
-        this.handleError<any>(`questionnaire item type [${item.type}] not support yet`);
+        this.handleError<any>(this.translate.instant('error.consent_service_questionnaire_item_type1') + ' [${item.type}] ' + this.translate.instant('error.consent_service_questionnaire_item_type2'));
       }
     })
 
@@ -167,7 +171,7 @@ export class ConsentService {
   public async addConsent(dataModel: Consent) {
 
     if (dataModel.fhirResource == undefined) {
-      this.handleError<any>("fhir consent resource not found");
+      this.handleError<any>(this.translate.instant('error.consent_service_fhir_consent_not_found'));
       return {id: "", title: "NOT FOUND", date: new Date(), items: []};
     }
 
@@ -206,7 +210,7 @@ export class ConsentService {
   public async editConsent(dataModel: Consent) {
 
     if (dataModel.fhirResource == undefined) {
-      this.handleError<any>("fhir consent resource not found");
+      this.handleError<any>(this.translate.instant('error.consent_service_fhir_consent_not_found'));
       return {id: "", title: "NOT FOUND", date: new Date(), items: []};
     }
 
@@ -227,7 +231,7 @@ export class ConsentService {
 
   public async readConsent(id: string): Promise<Consent> {
     if (id == undefined) {
-      this.handleError<any>("fhir consent resource not found");
+      this.handleError<any>(this.translate.instant('error.consent_service_fhir_consent_not_found'));
       return {
         id: "",
         title: "NOT FOUND",
