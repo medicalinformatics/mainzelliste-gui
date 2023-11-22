@@ -11,9 +11,7 @@ export class UserMenuComponent {
   constructor(
     public userAuthService: UserAuthService,
     public translate :TranslateService
-  ) {
-    this.translate = translate;
-  }
+  ) {}
 
   useLanguage(language: string): void {
     this.translate.use(language);

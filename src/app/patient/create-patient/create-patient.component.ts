@@ -50,10 +50,9 @@ export class CreatePatientComponent  implements OnInit {
   chipListInputData: string = "";
 
   externalIdTypes: IdTypSelection[] = [];
-  translate: TranslateService;
 
   constructor(
-    translate: TranslateService,
+    public translate: TranslateService,
     public consentDialog: MatDialog,
     patientService: PatientService,
     patientListService: PatientListService,
@@ -67,7 +66,6 @@ export class CreatePatientComponent  implements OnInit {
     this.patientService = patientService;
     this.patientListService = patientListService;
     this.userAuthService = userAuthService;
-    this.translate = translate;
     this.changeTitle();
   }
 

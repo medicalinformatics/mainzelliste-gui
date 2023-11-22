@@ -18,16 +18,14 @@ export class AddConsentComponent implements OnInit {
   dataModel!: Consent;
   idType!: string;
   idString!: string;
-  translate: TranslateService;
 
   constructor(
-    translate: TranslateService,
+    private translate: TranslateService,
     private consentService: ConsentService,
     private route: ActivatedRoute,
     private router: Router,
     private titleService: GlobalTitleService
   ) {
-    this.translate = translate;
     this.changeTitle();
   }
 

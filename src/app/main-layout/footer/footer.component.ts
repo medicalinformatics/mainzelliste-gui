@@ -12,11 +12,14 @@ export class FooterComponent implements OnInit {
   ummLogo: string = "assets/images/umm-logo.png";
   medmaLogo: string = "assets/images/medma-logo.png";
   version: string = "";
+  year: number;
+  startYear: string = " 2021 - ";
 
   constructor(
     appConfig: AppConfigService
   ) {
     this.version = appConfig.getVersion();
+    this.year = new Date().getFullYear();
   }
 
   ngOnInit(): void {
