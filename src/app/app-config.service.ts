@@ -1,11 +1,15 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {OAuthConfig, PatientList, Role} from "./model/patientlist";
 import {AppConfig} from "./app-config";
 import {catchError, map} from "rxjs/operators";
-import {throwError} from "rxjs";
+import {Observable, throwError} from "rxjs";
 import {MainzellisteField, MainzellisteFieldType} from "./model/mainzelliste-field";
 import {Field, FieldType} from "./model/field";
+import { ErrorMessages } from './error/error-messages';
+import { MainzellisteError } from './model/mainzelliste-error.model';
+import { MainzellisteUnknownError } from './model/mainzelliste-unknown-error';
+import { TranslateService } from '@ngx-translate/core';
 
 
 export interface IdGenerator {
@@ -22,10 +26,14 @@ export class AppConfigService {
   private mainzellisteIdGenerators: IdGenerator[] = [];
   private mainzellisteIdTypes: string[] = [];
   private mainzellisteFields: string[] = [];
-
+  private version: string = "";
   private consentEnabled: boolean = false;
 
-  constructor(private httpClient: HttpClient) {
+  constructor(
+    private httpClient: HttpClient,
+    private translate: TranslateService
+    ) {
+      this.setVersion().subscribe(output => this.version = output.version);
   }
 
   /**
@@ -87,6 +95,26 @@ export class AppConfigService {
 
   getRolesWithPermissions(): Role[]{
     return this.data[0].roles
+  }
+  
+  getVersion(): string {
+    return this.version;
+  }
+
+  private setVersion(): Observable<{distname: string, version: string}> {
+    return this.httpClient.get<{distname: string, version: string}>("http://localhost:8080/", {
+      headers: new HttpHeaders()
+      .set('Accept', 'application/json')
+    }).pipe(
+      catchError(e => {
+        if (e instanceof HttpErrorResponse && (e.status == 400 || e.status == 409)) {
+          // TODO: Complete Error Handling
+          let errorMessage = ErrorMessages.CREATE_IDS_ERROR;
+          return throwError(new MainzellisteError(errorMessage));
+        }
+        return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_get_version'), e))
+      })
+    );
   }
 
   private validateBackendUrl(config: PatientList) {

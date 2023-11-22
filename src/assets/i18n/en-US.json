@@ -106,5 +106,8 @@
 	"error.edit_patient_conflict_ext_ids_idat_multiple_match": "Patient could not be edited because the IDAT entered was assigned to different patients",
 	"error.edit_patient_conflict_possible_match": "A similar patient was found for the data entered, but he cannot be assigned with sufficient certainty. To avoid any confusion, please check your entry again",
 	"error.edit_patient_conflict_match": "A patient was found for the data entered. To avoid any confusion, please check your entry again",
+	
+	"error.patient_list_service_get_version": "Failed to get Mainzelliste version",
+
 	"patientlistView.title": "Patient list"
 }

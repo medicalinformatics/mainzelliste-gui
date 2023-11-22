@@ -106,5 +106,8 @@
 	"error.edit_patient_conflict_ext_ids_idat_multiple_match": "Patient konnte nicht editiert werden, da die eingegebenen IDAT zu unterschiedlichen Patienten zugeordnet wurden",
 	"error.edit_patient_conflict_possible_match": "Zu den eingegeben Daten wurde ein ähnlicher Patient gefunden, der aber nicht mit hinreichender Sicherheit zugeordnet werden kann. Um eine Verwechslung auszuschließen, überprüfen Sie bitte nochmals Ihre Eingabe",
 	"error.edit_patient_conflict_match": "Zu den eingegeben Daten wurde ein Patient gefunden. Um eine Verwechslung auszuschließen, überprüfen Sie bitte nochmals Ihre Eingabe",
+
+	"error.patient_list_service_get_version": "Mainzelliste-Version konnte nicht abgerufen werden",
+
 	"patientlistView.title": "Patientenliste"
 }
