@@ -159,6 +159,7 @@
 	"error.patient_list_service_resolve_create_ids_token": "Failed to resolve CreateIdsToken",
 	"error.patient_list_service_create_add_patient_token": "Failed to create AddPatientToken",
 	"error.patient_list_service_resolve_add_patient_token": "Failed to resolve AddPatientToken",
+	"error.patient_list_service_get_version": "Failed to get Mainzelliste version",
 	"error.session_service_create_session": "Failed to create a mainzelliste session",
 	"error.session_service_delete_session": "Failed to delete a mainzelliste session",
 	"error.session_service_is_session_valid": "Failed to read a mainzelliste session",

@@ -1,11 +1,14 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {OAuthConfig, PatientList, Role} from "./model/patientlist";
 import {AppConfig} from "./app-config";
 import {catchError, map} from "rxjs/operators";
-import {throwError} from "rxjs";
+import {Observable, throwError} from "rxjs";
 import {MainzellisteField, MainzellisteFieldType} from "./model/mainzelliste-field";
 import {Field, FieldType} from "./model/field";
+import { ErrorMessages } from './error/error-messages';
+import { MainzellisteError } from './model/mainzelliste-error.model';
+import { MainzellisteUnknownError } from './model/mainzelliste-unknown-error';
 import { TranslateService } from '@ngx-translate/core';
 
 
@@ -23,13 +26,14 @@ export class AppConfigService {
   private mainzellisteIdGenerators: IdGenerator[] = [];
   private mainzellisteIdTypes: string[] = [];
   private mainzellisteFields: string[] = [];
-
+  private version: string = "";
   private consentEnabled: boolean = false;
 
   constructor(
-    private translate: TranslateService,
-    private httpClient: HttpClient
-    ) {}
+    private httpClient: HttpClient,
+    private translate: TranslateService
+  ) {
+  }
 
   /**
    * read and validate the configuration file
@@ -90,6 +94,25 @@ export class AppConfigService {
 
   getRolesWithPermissions(): Role[]{
     return this.data[0].roles
+  }
+
+  getVersion(): string {
+    return this.version;
+  }
+
+  public fetchVersion(): Promise<{distname: string, version: string}> {
+    return this.httpClient.get<{distname: string, version: string}>(this.data[0].url + "/", {
+      headers: new HttpHeaders()
+      .set('Accept', 'application/json')
+    }).pipe(
+      catchError(e => {
+        return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_get_version'), e, this.translate))
+      }),
+      map( info => {
+        this.version = info.version
+        return info;
+      })
+    ).toPromise();
   }
 
   private validateBackendUrl(config: PatientList) {

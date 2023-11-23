@@ -159,6 +159,7 @@
 	"error.patient_list_service_resolve_create_ids_token": "CreateIdsToken konnte nicht aufgelöst werden",
 	"error.patient_list_service_create_add_patient_token": "AddPatientToken konnte nicht erstellt werden",
 	"error.patient_list_service_resolve_add_patient_token": "AddPatientToken konnte nicht aufgelöst werden",
+	"error.patient_list_service_get_version": "Mainzelliste-Version konnte nicht abgerufen werden",
 	"error.session_service_create_session": "Mainzelliste-Sitzung konnte nicht erstellt werden",
 	"error.session_service_delete_session": "Mainzelliste-Sitzung konnte nicht gelöscht werden",
 	"error.session_service_is_session_valid": "Mainzelliste-Sitzung konnte nicht gelesen werden",
