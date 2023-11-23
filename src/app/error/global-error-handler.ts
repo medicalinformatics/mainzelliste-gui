@@ -17,11 +17,15 @@ export class GlobalErrorHandler implements ErrorHandler {
 
   handleError(error: any): void {
     console.log("Global Error Handler: ", error)
+    //unwrapping uncaught promise rejection
+    if(error.promise && error.rejection){
+      error = error.rejection;
+    }
     if(error instanceof MainzellisteError) {
-      this.errorNotificationService.addMessage(error.errorMessage.getMessageDE(error.messageVariable));
+      this.errorNotificationService.addMessage(error.errorMessage.getMessage(this.translate, error.messageVariable));
     } else {
       this.zone.run(() =>
-        this.errorDialogService.openDialog(getErrorMessageFrom(error, this.translate))
+        this.errorDialogService.openDialog(error?.message || this.translate.instant('error.get_error_message_from_undefined_error'))
       );
     }
   }

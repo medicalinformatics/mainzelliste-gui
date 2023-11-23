@@ -22,17 +22,15 @@ export class ErrorMessage {
     return this.message instanceof RegExp? result : [];
   }
 
-  public getMessageDE(messageVariable?:string) : string {
+  public getMessage(translate:TranslateService, messageVariable?:string) : string {
     if(messageVariable != undefined && messageVariable.length > 0) {
-      return ErrorMessages.translate.instant(this.i18n).replace("${1}", messageVariable);
+      return translate.instant(this.i18n).replace("${1}", messageVariable);
     } else
-      return ErrorMessages.translate.instant(this.i18n);
+      return translate.instant(this.i18n);
   }
 }
 
 export class ErrorMessages {
-
-  static translate: TranslateService;
 
   constructor() {}
   ////
