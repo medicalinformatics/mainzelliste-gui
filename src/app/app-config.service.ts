@@ -112,7 +112,7 @@ export class AppConfigService {
           let errorMessage = ErrorMessages.CREATE_IDS_ERROR;
           return throwError(new MainzellisteError(errorMessage));
         }
-        return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_get_version'), e))
+        return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_get_version'), e, this.translate))
       })
     );
   }
