@@ -1,6 +1,6 @@
 {
 	"button_add_consent": "Add consent",
-  	"button_generate_id": "Generate new ID",
+  "button_generate_id": "Generate",
 	"button_delete": "Delete",
 	"button_edit": "Edit",
 	"button_request": "Request",
@@ -67,7 +67,7 @@
 	"createPatient.pseudonym_type": "Pseudonym type",
 
 	"consentDialog.title_consent": "Consent information",
-	
+
 	"consentDetail.select_consent_template": "Select consent template:",
 	"consentDetail.consent_template": "Consent template",
 	"consentDetail.validity_label": "Valid from",
@@ -80,7 +80,7 @@
 	"deletePatientDialog.title_delete_patient": "Delete patient",
 	"deletePatientDialog.delete_patient_question": "Do you want to delete the following patient?",
 	"deletePatientDialog.delete_patient_warning": "The patient data will be completely deleted and cannot be restored.",
-	
+
 	"addConsent.title_add_consent": "Add consent",
 	"editConsent.title_edit_consent": "Edit Consent",
 
@@ -116,7 +116,7 @@
 	"info.audit_trail_text4": "Patients who have been deleted",
 	"info.audit_trail_text5": "Patients who have been merged together",
 	"info.audit_trail_text6": "are recorded in the audit trail. The time of the action is recorded and stated. The folder symbol takes you to the patient's ID card for further details about the campaign.",
-	
+
 	"patientPseudonyms.external": "External pseudonyms:",
 
 	"patientFields.error_value_text1": "The value for the field",
@@ -188,6 +188,9 @@
 
 	"appConfigService.backend_online": "Mainzelliste is online",
 	"appConfigService.main_id_type_valid": "Main id type is valid",
+
+  "access_denied.title": "Access Denied",
+  "access_denied.message": "you do not have permission to view this page",
 
 	"patientlistView.title": "Patient list",
 

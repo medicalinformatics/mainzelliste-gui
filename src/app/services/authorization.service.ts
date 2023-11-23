@@ -29,7 +29,7 @@ export class AuthorizationService {
     let role: Role | undefined = permissions.find(r => this.userRoles.some(ur => ur == r.name))
     if(role == undefined)
       throw new Error(this.translate.instant('error.authorization_service') + `${this.userRoles}`)
-    // console.log("has permission " + (role.permissions || []).some( p => p == permission) + " for " + permission );
+    console.log("has permission " + (role.permissions || []).some( p => p == permission) + " for " + permission );
     // console.log("user permissions" + role.permissions)
     return (role.permissions || []).some( p => p == permission);
 
