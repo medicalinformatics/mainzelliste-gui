@@ -5,21 +5,21 @@ import {CreatePatientComponent, CreatePatientTentativeDialog} from "./create-pat
 import {EditPatientComponent, EditPatientTentativeDialog} from "./edit-patient/edit-patient.component";
 import {DeletePatientComponent} from "./delete-patient/delete-patient.component";
 import {DeletePatientDialog} from "../idcard/dialogs/delete-patient-dialog";
-import {PatientRoutingModule} from "./patient-routing.module";
 import {PatientFieldsComponent} from "./patient-fields/patient-fields.component";
 import {PatientPseudonymsComponent} from "./patient-pseudonyms/patient-pseudonyms.component";
 import {ExternalPseudonymsComponent} from "./external-pseudonyms/external-pseudonyms.component";
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {FormsModule} from "@angular/forms";
+import {RouterModule} from "@angular/router";
 
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    PatientRoutingModule,
     SharedModule,
-    ClipboardModule
+    ClipboardModule,
+    RouterModule
   ],
   exports: [
     PatientFieldsComponent,

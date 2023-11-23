@@ -7,7 +7,7 @@ import {
   UrlTree
 } from '@angular/router';
 import {KeycloakAuthGuard, KeycloakService} from 'keycloak-angular';
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {UserAuthService} from "../services/user-auth.service";
 import {AuthorizationService} from "../services/authorization.service";
 import {Permission} from "../model/patientlist";
@@ -35,8 +35,8 @@ export class AuthGuard extends KeycloakAuthGuard implements CanActivateChild {
     );
   }
 
-  checkPermission(permission: Permission): boolean {
-    return permission == undefined || this.authorizationService.hasPermission(permission);
+  checkPermission(permission: Permission): boolean | UrlTree {
+    return permission == undefined || this.authorizationService.hasPermission(permission) || this.router.createUrlTree(['access-denied']);
   }
 
   canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot):

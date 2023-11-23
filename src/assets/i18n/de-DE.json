@@ -1,6 +1,6 @@
 {
 	"button_add_consent": "Einwilligung hinzufügen",
-  	"button_generate_id": "Neue ID generieren",
+  "button_generate_id": "Generieren",
 	"button_delete": "Löschen",
 	"button_edit": "Bearbeiten",
 	"button_request": "Anfordern",
@@ -47,7 +47,7 @@
 	"navigation.info": "Info",
 	"navigation.new_patient": "Neuer Patient",
 	"navigation.patientlist": "Patientenliste",
-	
+
 	"patientlist.filter_search": "Filter/Suche...",
 	"patientlist.headers_actions": "Aktionen",
 	"patientlist.no_patient_found": "Kein Patient gefunden.",
@@ -116,7 +116,7 @@
 	"info.audit_trail_text4": "Patienten die gelöscht worden sind",
 	"info.audit_trail_text5": "Patienten die zusammen gemergt worden sind",
 	"info.audit_trail_text6": "werden im Audit-Trail aufgezeichnet. Dabei wird Zeitpunkt der Aktion aufgezeichnet und angegeben. Über den Folder-Symbol gelangt man zur ID-Card des Patienten für weitere Details über die Aktion.",
-	
+
 	"patientPseudonyms.external": "Externe Pseudonyme:",
 
 	"patientFields.error_value_text1": "Der Wert für das Feld",
@@ -188,6 +188,9 @@
 
 	"appConfigService.backend_online": "Mainzelliste ist online",
 	"appConfigService.main_id_type_valid": "Haupt-Id-Typ ist gültig",
+
+  "access_denied.title": "Zugriff verweigert",
+  "access_denied.message": "Sie haben keine Berechtigung zum Anzeigen dieser Seite",
 
 	"patientlistView.title": "Patientenliste",
 
