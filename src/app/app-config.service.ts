@@ -32,8 +32,7 @@ export class AppConfigService {
   constructor(
     private httpClient: HttpClient,
     private translate: TranslateService
-    ) {
-      this.setVersion().subscribe(output => this.version = output.version);
+  ) {
   }
 
   /**
@@ -96,25 +95,24 @@ export class AppConfigService {
   getRolesWithPermissions(): Role[]{
     return this.data[0].roles
   }
-  
+
   getVersion(): string {
     return this.version;
   }
 
-  private setVersion(): Observable<{distname: string, version: string}> {
-    return this.httpClient.get<{distname: string, version: string}>("http://localhost:8080/", {
+  public fetchVersion(): Promise<{distname: string, version: string}> {
+    return this.httpClient.get<{distname: string, version: string}>(this.data[0].url + "/", {
       headers: new HttpHeaders()
       .set('Accept', 'application/json')
     }).pipe(
       catchError(e => {
-        if (e instanceof HttpErrorResponse && (e.status == 400 || e.status == 409)) {
-          // TODO: Complete Error Handling
-          let errorMessage = ErrorMessages.CREATE_IDS_ERROR;
-          return throwError(new MainzellisteError(errorMessage));
-        }
         return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_get_version'), e, this.translate))
+      }),
+      map( info => {
+        this.version = info.version
+        return info;
       })
-    );
+    ).toPromise();
   }
 
   private validateBackendUrl(config: PatientList) {
