@@ -1,0 +1,36 @@
+{
+  "patientLists": [
+    {
+      "url": "${MAINZELLISTE_URL}",
+      "oAuthConfig": {
+        "url": "${KEYCLOAK_URL}",
+        "realm": "${KEYCLOAK_REALM}",
+        "clientId": "${KEYCLOAK_CLIENT_ID}"
+      },
+      "roles" : [
+        {
+          "name": "admin",
+          "permissions": ["addPatient","readPatients","editPatient","deletePatient","createIds","addConsent","searchConsents","readConsent", "editConsent"]
+        },
+        {
+          "name": "study-nurse",
+          "permissions": ["addPatient","readPatients","createIds","addConsent","searchConsents","readConsent"]
+        }
+      ],
+      "mainIdType": "${ML_UI_MAIN_ID_TYPE}",
+      "showAllIds": ${ML_UI_SHOW_ALL_IDS},
+      "fields": [
+        { "i18n": "first_name_text", "name": "Vorname", "mainzellisteField": "vorname"},
+        { "i18n": "last_name_text", "name": "Nachname", "mainzellisteField": "nachname"},
+        { "i18n": "birth_name_text", "name": "Geburtsname", "mainzellisteField": "geburtsname"},
+        { "i18n": "birth_date_text", "name": "Geburtdatum", "mainzellisteFields": ["geburtstag", "geburtsmonat", "geburtsjahr"]},
+        { "i18n": "residence_text", "name": "Wohnort", "mainzellisteField": "plz"},
+        { "i18n": "zip_code_text", "name": "PLZ", "mainzellisteField": "ort"}
+      ],
+      "debug": ${ML_UI_DEBUG_MODE},
+      "betaFeatures": {
+        "consent": ${ML_UI_ENABLE_CONSENT}
+      }
+    }
+  ]
+}

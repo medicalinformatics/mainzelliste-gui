@@ -1,0 +1,353 @@
+curl --location --request POST 'localhost:8080/fhir/Questionnaire' \
+--header 'Content-Type: application/fhir+json' \
+--header 'Accept: application/fhir+json' \
+--data-raw '{
+  "resourceType" : "Questionnaire",
+  "id" : "1011",
+  "contained" : [
+    {
+        "resourceType": "Consent",
+        "id": "1011",
+        "meta": {
+            "profile": [
+                "http://fhir.de/ConsentManagement/StructureDefinition/Consent"
+            ]
+        },
+        "extension": [
+            {
+                "url": "http://fhir.de/ConsentManagement/StructureDefinition/DomainReference",
+                "extension": [
+                    {
+                        "url": "domain",
+                        "valueReference": {
+                            "reference": "ResearchStudy/d7a65ce8-2810-401a-b0db-70782a7b19a6"
+                        }
+                    },
+                    {
+                        "url": "status",
+                        "valueCoding": {
+                            "system": "http://hl7.org/fhir/publication-status",
+                            "code": "active"
+                        }
+                    }
+                ]
+            }
+        ],
+        "status": "active",
+        "scope": {
+            "coding": [
+                {
+                    "system": "http://terminology.hl7.org/CodeSystem/consentscope",
+                    "code": "research"
+                }
+            ]
+        },
+        "category": [
+            {
+                "coding": [
+                    {
+                        "system": "http://loinc.org",
+                        "code": "59284-0"
+                    }
+                ]
+            },
+            {
+                "coding": [
+                    {
+                        "code": "2.16.840.1.113883.3.1937.777.24.2.184"
+                    }
+                ]
+            }
+        ],
+        "patient": {
+            "reference": "Patient/101"
+        },
+        "dateTime": "2020-09-01",
+        "organization": [
+            {
+                "display": "Klinikum Musterstadt"
+            }
+        ],
+        "policy": [
+            {
+                "uri": "/Questionnaire/Consent-Hki"
+            }
+        ],
+        "policyRule": {
+            "extension": [
+                {
+                    "url": "http://fhir.de/ConsentManagement/StructureDefinition/Xacml",
+                    "valueBase64Binary": "TUlJIEJDIEV4YW1wbGUgWEFDTUw="
+                }
+            ],
+            "text": "siehe eingebettetes XACML"
+        },
+        "provision": {
+            "type": "deny",
+            "period": {
+                "start": "2020-09-01",
+                "end": "2050-08-31"
+            },
+            "provision": [
+                {
+                    "type": "deny",
+                    "period": {
+                        "start": "2020-09-01",
+                        "end": "2025-08-31"
+                    },
+                    "code": [
+                        {
+                            "coding": [
+                                {
+                                    "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
+                                    "code": "2.16.840.1.113883.3.1937.777.24.5.3.1",
+                                    "display": "PATDAT_erheben_speichern_nutzen"
+                                }
+                            ]
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/originalText",
+                            "valueString": "p1"
+                        }
+                    ]
+                },
+                {
+                    "type": "deny",
+                    "period": {
+                        "start": "2020-09-01",
+                        "end": "2050-08-31"
+                    },
+                    "code": [
+                        {
+                            "coding": [
+                                {
+                                    "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
+                                    "code": "2.16.840.1.113883.3.1937.777.24.5.3.10",
+                                    "display": "KKDAT_retrospektiv_uebertragen_speichern_nutzen"
+                                }
+                            ]
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/originalText",
+                            "valueString": "p2"
+                        }
+                    ]
+                },
+                {
+                    "type": "deny",
+                    "period": {
+                        "start": "2020-09-01",
+                        "end": "2050-08-31"
+                    },
+                    "code": [
+                        {
+                            "coding": [
+                                {
+                                    "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
+                                    "code": "2.16.840.1.113883.3.1937.777.24.5.3.14",
+                                    "display": "KKDAT_prospektiv_uebertragen_speichern_nutzen"
+                                }
+                            ]
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/originalText",
+                            "valueString": "p3"
+                        }
+                    ]
+                },
+                {
+                    "type": "deny",
+                    "period": {
+                        "start": "2020-09-01",
+                        "end": "2025-08-31"
+                    },
+                    "code": [
+                        {
+                            "coding": [
+                                {
+                                    "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
+                                    "code": "2.16.840.1.113883.3.1937.777.24.5.3.18",
+                                    "display": "BIOMAT_erheben_lagern_nutzen"
+                                }
+                            ]
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/originalText",
+                            "valueString": "p4"
+                        }
+                    ]
+                },
+                {
+                    "type": "deny",
+                    "period": {
+                        "start": "2020-09-01",
+                        "end": "2050-08-31"
+                    },
+                    "code": [
+                        {
+                            "coding": [
+                                {
+                                    "system": "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3",
+                                    "code": "2.16.840.1.113883.3.1937.777.24.5.3.24",
+                                    "display": "BIOMAT_Zusatzentnahme"
+                                }
+                            ]
+                        }
+                    ],
+                    "extension": [
+                        {
+                            "url": "http://hl7.org/fhir/StructureDefinition/originalText",
+                            "valueString": "p5"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+  ],
+  "version" : "1.0.0",
+  "name" : "Consent-Hki",
+  "title" : "Einwilligungserklärung - Hektor Institut",
+  "status" : "draft",
+  "experimental" : true,
+  "subjectType" : [
+    "Consent"
+  ],
+  "date" : "2022-10-28T05:09:13+00:00",
+  "item" : [
+    {
+      "linkId" : "d1",
+      "text" : "<p><strong>1. Erhebung, Verarbeitung und wissenschaftliche Nutzung meiner Patientendaten, wie in der Patienteninformation beschrieben; dies umfasst</strong><br /><strong>1.1</strong> die Verarbeitung und Nutzung meiner Patientendaten f&uuml;r die medizinische Forschung ausschlie&szlig;lich wie in der Patienteninformation beschrieben und mit getrennter Verwaltung des Namens und anderer direkt identifizierender Daten (Codierung). Unter der Adresse www.medizininformatikinitiative.de/datennutzung kann ich mich f&uuml;r einen E-Mail-Verteiler registrieren, der per E-Mail &uuml;ber alle neuen Studien, die mit den Patientendaten durchgef&uuml;hrt werden, vor deren Durchf&uuml;hrung informiert (siehe Punkte 1.1, 1.2 und 1.3 der Patienteninformation).<br /><strong>1.2</strong> die wissenschaftliche Analyse und Nutzung meiner codierten Patientendaten durch Dritte wie z.B. durch andere Universit&auml;ten/Institute/forschende Unternehmen; dies kann auch eine Weitergabe f&uuml;r Forschungsprojekte im Ausland umfassen, wenn in diesen europ&auml;isches Datenschutzrecht gilt oder die Europ&auml;ische Kommission ein angemessenes Datenschutzniveau best&auml;tigt hat. An einem etwaigen kommerziellen Nutzen aus der Forschung werde ich nicht beteiligt. Vor einer Weitergabe an Forscher au&szlig;erhalb meiner behandelnden Einrichtung erfolgt zudem eine weitere Ersetzung des internen Kennzeichens durch eine neue Zeichenkombination.<br /><strong>1.3</strong> die M&ouml;glichkeit einer Zusammenf&uuml;hrung meiner Patientendaten mit Daten in Datenbanken anderer Forschungspartner. Voraussetzung ist, dass ich dieser Nutzung bei den entsprechenden Forschungspartnern auch zugestimmt habe.</p>",
+      "type" : "display"
+    },
+    {
+        "linkId" : "p1",
+        "definition": "#1011",
+        "text" : "<p>Ich willige ein in die Erhebung, Verarbeitung, Speicherung und wissenschaftliche Nutzung meiner <strong>Patientendaten </strong>wie in Punkt 1.1 bis 1.3 der Einwilligungserkl&auml;rung und Punkt 1 der Patienteninformation beschrieben.</p>",
+        "type": "choice",
+        "answerOption": [
+            {
+                "valueCoding": {
+                    "system": "http://hl7.org/fhir/consent-provision-type",
+                    "code": "permit",
+                    "display": "Ja"
+                }
+            },
+            {
+                "valueCoding": {
+                    "system": "http://hl7.org/fhir/consent-provision-type",
+                    "code": "deny",
+                    "display": "Nein"
+                }
+            }
+        ]
+    },
+    {
+      "linkId" : "d2",
+      "text" : "<p><strong>2. Übertragung und wissenschaftliche Nutzung meiner Krankenkassendaten</strong><br />Hiermit ermächtige ich meine Krankenkasse auf Anforderung durch [zuständige Stelle] Daten über von mir in Anspruch genommene ärztliche Leistungen in der ambulanten Versorgung und bei stationären Aufenthalten, über verordnete Heil- und Hilfsmittel sowie Arzneimittel und Angaben zum Bereich Pflege an [Name der behandelnden Einrichtung] so wie in der Patienteninformation beschrieben, zu übermitteln, und zwar:</p><p><strong>2.1 </strong></p>",
+      "type" : "display"
+    },
+    {
+        "linkId" : "p2",
+        "text" : "<p>Einmalig <strong>rückwirkend für die Daten der vergangenen 5 Kalenderjahre</strong>. Mit der dafür nötigen Übermittlung meiner Krankenversicherungs-Nummer an [zuständige Stelle] bin ich einverstanden</p>",
+        "type": "choice",
+        "answerOption": [
+            {
+                "valueCoding": {
+                    "system": "http://hl7.org/fhir/consent-provision-type",
+                    "code": "permit",
+                    "display": "Ja"
+                }
+            },
+            {
+                "valueCoding": {
+                    "system": "http://hl7.org/fhir/consent-provision-type",
+                    "code": "deny",
+                    "display": "Nein"
+                }
+            }
+        ]
+    },
+    {
+      "linkId" : "d3",
+      "text" : "<p><strong>2.2 </strong></p>",
+      "type" : "display"
+    },
+    {
+        "linkId" : "p3",
+        "text" : "<p>Für Daten <strong>ab dem Datum meiner Unterschrift über einen Zeitraum von 5 Jahren</strong>. Mit der dafür nötigen Übermittlung meiner Krankenversicherungs-Nr. an [zuständige Stelle] bin ich einverstanden</p>",
+        "type": "choice",
+        "answerOption": [
+            {
+                "valueCoding": {
+                    "system": "http://hl7.org/fhir/consent-provision-type",
+                    "code": "permit",
+                    "display": "Ja"
+                }
+            },
+            {
+                "valueCoding": {
+                    "system": "http://hl7.org/fhir/consent-provision-type",
+                    "code": "deny",
+                    "display": "Nein"
+                }
+            }
+        ]
+    },
+    {
+      "linkId" : "d4",
+      "text" : "<p><strong>3. Gewinnung, Lagerung und wissenschaftliche Nutzung meiner Biomaterialien (Gewebe und Körperflüssigkeiten), wie in der Patienteninformation beschrieben; dies umfasst<br />3.1</strong> die Lagerung und Verarbeitung meiner Biomaterialien in [der/dem Träger der Biobank(en) bzw. Archive] für medizinische Forschungszwecke ausschließlich wie in der Patienteninformation beschrieben und mit getrennter Verwaltung des Namens und anderer direkt identifizierender Daten (Codierung, siehe Punkte 3.1 bis 3.3).<br /><strong>3.2</strong> die wissenschaftliche Analyse meiner codierten Biomaterialien sowie deren Weitergabe und Nutzung durch Dritte z.B. Universitäten/Institute/forschende Unternehmen für genauer bestimmte und beantragte medizinische Forschungszwecke; dies kann auch eine Weitergabe für Forschungsprojekte im Ausland umfassen, wenn in diesen europäisches Datenschutzrecht gilt oder die Europäische Kommission ein angemessenes Datenschutzniveau bestätigt hat. Vor einer Weitergabe an Forscher außerhalb meiner behandelnden Einrichtung erfolgt zudem eine weitere Ersetzung des internen Kennzeichens durch eine neue Zeichenkombination. Ebenso willige ich in die Möglichkeit einer Zusammenführung von Analyse-Daten meiner Biomaterialien mit Analyse-Daten in Datenbanken anderer Forschungspartner ein. Voraussetzung ist, dass ich dieser Nutzung bei den entsprechenden Forschungspartnern auch zugestimmt habe.<br /><strong>3.3</strong> Das Eigentum an meinen Biomaterialien übertrage ich an [den/die/das Träger der Biobank(en) bzw. Archive]. Mein Recht, über die Verarbeitung meiner dem Biomaterial zu entnehmenden personenbezogenen Daten selbst zu bestimmen, bleibt von der Eigentumsübertragung unberühr</p>",
+      "type" : "display"
+    },
+    {
+        "linkId" : "p4",
+        "text" : "Ich willige ein in die Gewinnung, Lagerung und wissenschaftliche Nutzung meiner Biomaterialien (Gewebe und Körperflüssigkeiten), wie in Punkt 3.1 bis 3.3 der Einwilligungserklärung und Punkt 3 der Patienteninformation beschrieben.",
+        "type": "choice",
+        "answerOption": [
+            {
+                "valueCoding": {
+                    "system": "http://hl7.org/fhir/consent-provision-type",
+                    "code": "permit",
+                    "display": "Ja"
+                }
+            },
+            {
+                "valueCoding": {
+                    "system": "http://hl7.org/fhir/consent-provision-type",
+                    "code": "deny",
+                    "display": "Nein"
+                }
+            }
+        ]
+    },
+    {
+        "linkId" : "p5",
+        "text" : "Meine Einwilligung umfasst auch die Entnahme geringer zusätzlicher Mengen von Biomaterial bei einer sowieso stattfindenden Routine-Blutentnahme oder -Punktion in den unter Punkt 3.2 der Patienteninformation beschriebenen Grenzen.",
+        "type": "choice",
+        "answerOption": [
+            {
+                "valueCoding": {
+                    "system": "http://hl7.org/fhir/consent-provision-type",
+                    "code": "permit",
+                    "display": "Ja"
+                }
+            },
+            {
+                "valueCoding": {
+                    "system": "http://hl7.org/fhir/consent-provision-type",
+                    "code": "deny",
+                    "display": "Nein"
+                }
+            }
+        ]
+    }
+  ]
+}'

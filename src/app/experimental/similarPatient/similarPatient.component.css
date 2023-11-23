@@ -1,0 +1,66 @@
+.titleicon{
+  margin-left: 3%;
+  font-family: Arial;
+  margin-top: 1.5%;
+  margin-bottom: 1%;
+}
+
+#patientendaten{
+  margin-left: 2%;
+  width: 30%;
+}
+
+#pseudonyme{
+  width: 30%;
+}
+
+#historie{
+  width: 91%;
+  margin-bottom: 10%;
+  margin-top: 1%;
+  margin-left: 2%;
+  padding-bottom: 2%;
+}
+
+
+.IDCardAnsichtButton {
+  background-color: #3895D0;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin-left: 10px;
+  border-radius: 15px;
+  position: absolute;
+  left: 85%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#pDaten{
+  line-height: 120%;
+  margin-left: 5%;
+  margin-top: 4%;
+}
+
+#pPseudonyme{
+  line-height: 120%;
+  margin-left: 5%;
+  margin-top: 4%;
+}
+
+.historieInput{
+  width: 95%;
+  margin: 0% 2% ;
+  color: black;
+  height: 20%;
+  margin-bottom: 5%;
+}
+
+mat-card-title{
+  transform: scale(0.95);
+  padding-top: 1%;
+  padding-bottom: 1%;
+  font-family: Arial;
+}

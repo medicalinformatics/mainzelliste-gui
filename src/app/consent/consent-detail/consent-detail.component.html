@@ -1,0 +1,52 @@
+<div *ngIf="!edit">
+  <h4>{{'consentDetail.select_consent_template' | translate}}</h4>
+  <div>
+    <mat-form-field style="width: 400px">
+      <mat-label>{{'consentDetail.consent_template' | translate}}</mat-label>
+      <mat-select #templateSelection
+                  (selectionChange)="initDataModel(templateSelection.value)"
+                  [value]="getSelectedTemplate()" required>
+        <mat-option *ngFor="let consentTemplate of consentTemplates | keyvalue "
+                    [value]="consentTemplate.key">{{consentTemplate.value.title}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+<!--  <mat-divider *ngIf="dataModel" style="margin-bottom: 1.34375em;  width: 430px"></mat-divider>-->
+</div>
+<mat-card *ngIf="dataModel">
+  <h2 style="text-align: center">{{dataModel.title | uppercase}}</h2>
+  <div *ngFor="let item of dataModel.items; index as i">
+    <div [ngSwitch]="getTypeOf(item)">
+      <div class="form-group">
+        <div *ngSwitchCase="'ConsentDisplayItem'" [innerHTML]="item.text"></div>
+        <div style="padding-bottom: 10px" *ngSwitchCase="'ConsentChoiceItem'">
+          <mat-card>
+            <div [innerHTML]="item.text"></div>
+            <mat-radio-group [(ngModel)]="toChoiceItem(item).answer"
+                             aria-label="Select an option" id="question-{{i}}"
+                             name="question-{{i}}"
+                             style ="display:flex; gap:40px"
+            color="primary">
+              <mat-radio-button value="permit">{{'radio_button_yes' | translate}}</mat-radio-button>
+              <mat-radio-button value="deny">{{'radio_button_no' | translate}}</mat-radio-button>
+            </mat-radio-group>
+          </mat-card>
+        </div>
+        <div *ngSwitchDefault></div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="form-group">
+    <label>{{'consentDetail.validity_label' | translate}}</label>
+    <mat-form-field appearance="fill">
+      <mat-label>{{'consentDetail.validity_date_label' | translate}}</mat-label>
+      <input matInput [matDatepicker]="picker"
+             placeholder="{{localDateFormat}}"
+             [(ngModel)]="this.validFrom" name="date">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <label><strong>{{getConsentExpiration()}}</strong></label>
+  </div>
+</mat-card>

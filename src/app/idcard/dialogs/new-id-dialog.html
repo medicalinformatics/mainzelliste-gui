@@ -1,0 +1,30 @@
+<h1 mat-dialog-title>{{'newIdDialog.mat_title' | translate}}</h1>
+<div mat-dialog-content>
+  <br />
+  <h4 style="font-weight: 100; text-align: justify">
+    {{'newIdDialog.sub_title' | translate}}
+  </h4>
+  <mat-form-field appearance="fill">
+    <mat-label>{{'newIdDialog.id_types' | translate}}</mat-label>
+    <mat-select (selectionChange)="dataModel = $event;">
+      <mat-option *ngFor="let idType of data" [value]="idType"
+        >{{idType}}</mat-option
+      >
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions style="margin-top: 10%;">
+  <button mat-raised-button class="submitBreak" (click)="onCancel()">
+    {{'button_cancel' | translate}}
+  </button>
+  <button
+    mat-raised-button
+    class="submit"
+    type="submit"
+    (click)="onSave()"
+    [disabled]="dataModel == null"
+  >
+    {{'button_save_new_id' | translate}}
+  </button>
+</div>
+

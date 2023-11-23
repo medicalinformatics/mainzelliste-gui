@@ -1,0 +1,87 @@
+/* You can add global styles to this file, and also import other style files */
+
+.button {border-radius: 12px;}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.navbar-logo {
+  background-repeat:no-repeat;
+  max-height:89px;
+  max-width:330px
+}
+
+.load-page-logo {
+  max-height:135px;
+  max-width:500px;
+  padding-top: 10%;
+}
+
+/*following CSS-Design of all mat-cards (specially for iD-Card-, editcomponent and deleteComponent and mergeComponent)*/
+
+mat-card {
+  border: solid thin lightgray;
+}
+
+mat-card-title{
+  transform: scale(0.9);
+  padding-top: 1%;
+  padding-bottom: 2%;
+  font-family: Arial;
+}
+
+.patientendatenMatCard{
+  margin-left: 2%;
+  width: 30%;
+}
+
+.pseudonymeMatCard{
+  width: 30%;
+}
+
+/*following: CSS-design of Patientfield- and PatientPseudonymComponent*/
+
+.patientField{
+  width: 90%;
+  margin: 0% 5% ;
+  max-width: 700px;
+}
+
+mat-form-field.inputField {
+  width: 90%;
+  margin: 0;
+  padding-bottom: 0;
+  margin-bottom: -1.25em
+}
+
+#arrow{
+  margin-top:4%;
+  border:none;
+  background:none;
+  color: #4b4b4b
+}
+
+/*following CSS-Design of all Submit-Buttons*/
+
+.mat-submit, .submit{
+  background-color: #053E6A;
+  color: white;
+}
+
+.submitBreak{
+  background-color: #888888;
+  color: white;
+}
+
+
+/*following CSS-Design for Header of all Components*/
+/*TODO from editComponent Header isnt working - margins are not reacting*/
+.title{
+  font-family: Arial;
+  text-align: left;
+  margin-left: 2%;
+  margin-bottom: 1.5%;
+}

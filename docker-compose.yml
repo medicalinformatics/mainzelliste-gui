@@ -1,0 +1,77 @@
+version: "3.8"
+secrets:
+  mainzelliste.docker.conf:
+    file: ./mainzelliste.docker.conf
+volumes:
+  keycloakDB:
+services:
+  mainzelliste-gui:
+    image: medicalinformatics/mainzelliste-gui:develop
+    ports:
+      - "4200:80"
+    environment:
+      NGINX_SERVER_NAME: ${HOST}
+      #NGINX_PORT: 4200
+      MAINZELLISTE_URL: http://${HOST}:8080
+      KEYCLOAK_URL: http://${HOST}:8082
+      KEYCLOAK_REALM: mainzelliste
+      KEYCLOAK_CLIENT_ID: mainzelliste-ui
+      ML_UI_MAIN_ID_TYPE: pid
+      ML_UI_SHOW_ALL_IDS: false
+      ML_UI_DEBUG_MODE: false
+      # ML_UI_ENABLE_CONSENT: true
+    depends_on:
+      - mainzelliste
+  mainzelliste:
+    image: medicalinformatics/mainzelliste:develop
+    ports:
+      - "8080:8080"
+    environment:
+      TOMCAT_REVERSEPROXY_FQDN: ${HOST}
+      TOMCAT_REVERSEPROXY_SSL: "false"
+      ML_API_KEY: pleaseChangeMeToo
+      ML_DB_HOST: mainzelliste-db
+      ML_DB_PASS: pleaseChangeMe
+      RELAXED_QUERY_CHARS: \|
+      ML_ALLOWED_ORIGINS: http://${HOST}:4200
+      ML_OIDC_ISS: http://${HOST}:8082/realms/mainzelliste
+      # can be removed, if the HOST env variable not referring to the local computer (localhost or 127.0.0.1)
+      # Note: set KC_HOSTNAME_URL in keycloak service to the frontend url e.g. http://${HOST}:8082
+      ML_OIDC_INTERNAL_ISS_BASE_URL: http://keycloak:8080
+    depends_on:
+      - mainzelliste-db
+    secrets:
+      - mainzelliste.docker.conf
+  mainzelliste-db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: mainzelliste
+      POSTGRES_USER: mainzelliste
+      POSTGRES_PASSWORD: pleaseChangeMe
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0
+    ports:
+      - "8082:8080"
+    command: ["start-dev --import-realm"]
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: admin
+      KC_DB_URL: jdbc:postgresql://keycloak-db/keycloak
+      KC_FEATURES: token-exchange
+      KC_HOSTNAME_STRICT_BACKCHANNEL: false
+      # Note: only in development mode
+      KC_HOSTNAME_URL: http://${HOST}:8082
+    volumes:
+      - ./resources/keycloak/themes/mainzelliste.jar:/opt/keycloak/providers/mainzelliste.jar
+      - ./resources/keycloak/import/:/opt/keycloak/data/import/
+  keycloak-db:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - keycloakDB:/var/lib/postgresql/data
