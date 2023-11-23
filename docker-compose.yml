@@ -6,7 +6,7 @@ volumes:
   keycloakDB:
 services:
   mainzelliste-gui:
-    image: medicalinformatics/mainzelliste-gui:develop
+    image: medicalinformatics/mainzelliste-gui:main
     ports:
       - "4200:80"
     environment:

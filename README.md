@@ -43,8 +43,9 @@ secrets:
 
 1. Run `npm install -g @angular/cli` and `npm install` in the terminal in your project directory.
 2. copy the file `.env.default` to `.env` and set the environment variable `HOST` to `localhost`.
-3. `docker-compose up mainzelliste mainzelliste-db keycloak keycloak-db -d`
-4. copy the file `config.template.json` in src/assets/config to `config.json` and replace the content with the following code:
+3. (optional) populate the mainzelliste database with 100k patients `./init-mainzelliste.sh`
+4. `docker-compose up mainzelliste mainzelliste-db keycloak keycloak-db -d`
+5. copy the file `config.template.json` in src/assets/config to `config.json` and replace the content with the following code:
 ```json
 {
   "patientLists": [
@@ -83,7 +84,7 @@ secrets:
   ]
 }
 ```
-5. Run `ng serve` for a dev server. Navigate to `http://localhost:4200`. The app will automatically reload if you change any of the source files.
+6. Run `ng serve` for a dev server. Navigate to `http://localhost:4200`. The app will automatically reload if you change any of the source files.
 
 #### Setup keycloak configuration manually
 
