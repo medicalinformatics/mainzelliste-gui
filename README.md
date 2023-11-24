@@ -43,7 +43,7 @@ secrets:
 
 1. Run `npm install -g @angular/cli` and `npm install` in the terminal in your project directory.
 2. copy the file `.env.default` to `.env` and set the environment variable `HOST` to `localhost`.
-3. (optional) populate the mainzelliste database with 100k patients `./init-mainzelliste.sh`
+3. (optional) populate the mainzelliste database with 100k patients `./init-demodata.sh`
 4. `docker-compose up mainzelliste mainzelliste-db keycloak keycloak-db -d`
 5. copy the file `config.template.json` in src/assets/config to `config.json` and replace the content with the following code:
 ```json
