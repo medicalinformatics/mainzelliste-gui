@@ -6,7 +6,7 @@ sleep 2
 for i in $(seq -s ' ' 20); do
   if [ "$( docker container inspect -f '{{.State.Status}}' mainzelliste-gui-mainzelliste-db-1 )" = "running" ]; then
       echo "init. mainzelliste db with 100k patient"
-      cat ./resources/mainzelliste.sql | docker exec -i  mainzelliste-gui-mainzelliste-db-1 psql -U mainzelliste -d mainzelliste
+      cat ./resources/demodata.sql | docker exec -i  mainzelliste-gui-mainzelliste-db-1 psql -U mainzelliste -d mainzelliste
       #docker compose down
       break
   else
