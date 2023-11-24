@@ -6,7 +6,7 @@ import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {FormControl} from "@angular/forms";
 import {MatTableDataSource} from "@angular/material/table";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {PageEvent} from "@angular/material/paginator";
 import {Observable, of} from "rxjs";
 import {map, startWith} from 'rxjs/operators';
 import {GlobalTitleService} from "../services/global-title.service";
@@ -47,12 +47,12 @@ export class PatientlistViewComponent implements OnInit {
   filterInput!: ElementRef<HTMLInputElement>;
   filteredFields: Observable<FilterConfig[]> = of([]);
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
   defaultPageSize: number = 10 as const;
+  pageSize: number = 10;
   pageNumber: number = 100000;
 
   constructor(
-    private translate: TranslateService,
+    public translate: TranslateService,
     patientService: PatientService,
     private titleService: GlobalTitleService
   ) {
@@ -90,7 +90,7 @@ export class PatientlistViewComponent implements OnInit {
           this.filterInput.nativeElement.value = "";
           // this.filterCtrl.setValue("");
           // load patients
-          this.loadPatients(0, this.paginator.pageSize).then();
+          this.loadPatients(0, this.pageSize).then();
           // Clear the input value
           event.chipInput!.clear();
         }
@@ -107,7 +107,7 @@ export class PatientlistViewComponent implements OnInit {
       // remove filter from mat-chip
       this.filters.splice(index, 1);
       // load patients
-      this.loadPatients(0, this.paginator.pageSize).then();
+      this.loadPatients(0, this.pageSize).then();
     }
     this.filterCtrl.updateValueAndValidity({onlySelf: false, emitEvent: true});
   }
@@ -181,6 +181,7 @@ export class PatientlistViewComponent implements OnInit {
   }
 
   async handlePageEvent(event: PageEvent) {
+    this.pageSize = event.pageSize;
     await this.loadPatients(event.pageIndex, event.pageSize);
   }
 }
