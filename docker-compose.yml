@@ -35,8 +35,8 @@ services:
       RELAXED_QUERY_CHARS: \|
       ML_ALLOWED_ORIGINS: http://${HOST}:4200
       ML_OIDC_ISS: http://${HOST}:8082/realms/mainzelliste
-      # can be removed, if the HOST env variable not referring to the local computer (localhost or 127.0.0.1)
-      # Note: set KC_HOSTNAME_URL in keycloak service to the frontend url e.g. http://${HOST}:8082
+      # Note: can be removed, if the HOST env variable not referring to the local computer (localhost or 127.0.0.1).
+      # Set KC_HOSTNAME_URL in keycloak service to the keycloak frontend url e.g. http://${HOST}:8082
       ML_OIDC_INTERNAL_ISS_BASE_URL: http://keycloak:8080
     depends_on:
       - mainzelliste-db
@@ -61,9 +61,12 @@ services:
       KC_DB_PASSWORD: admin
       KC_DB_URL: jdbc:postgresql://keycloak-db/keycloak
       KC_FEATURES: token-exchange
-      KC_HOSTNAME_STRICT_BACKCHANNEL: false
-      # Note: only in development mode
       KC_HOSTNAME_URL: http://${HOST}:8082
+      # Note: replace 'KC_HOSTNAME_URL' with the following env. variables, if you want to run keycloak
+      # behind a reverse proxy, which forwards to a subdirectory '/keycloack'.
+      # KC_PROXY: edge
+      # KC_HOSTNAME: ${HOST}
+      # KC_HTTP_RELATIVE_PATH: /keycloak
     volumes:
       - ./resources/keycloak/themes/mainzelliste.jar:/opt/keycloak/providers/mainzelliste.jar
       - ./resources/keycloak/import/:/opt/keycloak/data/import/
