@@ -20,9 +20,23 @@ the docker image of the ui uses several environment variables :
 
 ### Running on Linux
 
-1. copy the file `.env.default` to `.env` and set the environment variable `HOST` to the server name. 
-2. You can either set up you keycloak configuration manually or just run the shell initialization script ``./prepare-keycloak-import-file.sh {ui hostname and path}`` to do this task for you. The default value of `{ui hostname and path}` is `localhost:4200`
-3. run ``docker-compose up -d``
+1. copy the file `.env.default` to `.env` and set the environment variable `HOST` to the server name or ip address.
+2. run ``docker-compose up -d``
+
+### Running in production mode behind a reverse proxy
+Adjust your docker compose file, depending on the configuration of the reverse proxy:
+   1. in `keycloak` service:
+      1. change the `command` to `command: ["start"]`
+      2. replace the environment variable `KC_HOSTNAME_URL` with :
+```yml
+      KC_PROXY: edge
+      KC_HOSTNAME: ${HOST}
+      KC_HTTP_RELATIVE_PATH: /keycloak
+```
+  2. in `mainzelliste` service:
+     1. adjust both env. variables `ML_ALLOWED_ORIGINS` and `ML_OIDC_ISS`
+  3. in `mainzelliste-gui` service:
+     1. adjust both env. variables `KEYCLOAK_URL` and `MAINZELLISTE_URL`
 
 ### Override the default configuration file
 For more configuration eg. defining new user roles, your can override the [default configuration file](./src/assets/config/config.template.json) using the docker secret ``mainzelliste-gui.docker.conf``
@@ -43,7 +57,10 @@ secrets:
 
 1. Run `npm install -g @angular/cli` and `npm install` in the terminal in your project directory.
 2. copy the file `.env.default` to `.env` and set the environment variable `HOST` to `localhost`.
-3. (optional) populate the mainzelliste database with 100k patients `./init-demodata.sh`
+3. **(optional)** populate the mainzelliste database with 100k patients `./init-demodata.sh`<br>
+   *Note: `./rousource/demodata.sql` contains idat data set compiled from a lists of first and last names 
+   provided by [Eli Finer in Gist](https://gist.github.com/elifiner/cc90fdd387449158829515782936a9a4)*, 
+   randomly generated birthdate and german city and zip codes.
 4. `docker-compose up mainzelliste mainzelliste-db keycloak keycloak-db -d`
 5. copy the file `config.template.json` in src/assets/config to `config.json` and replace the content with the following code:
 ```json
@@ -85,6 +102,7 @@ secrets:
 }
 ```
 6. Run `ng serve` for a dev server. Navigate to `http://localhost:4200`. The app will automatically reload if you change any of the source files.
+7. You can now login with an admin user `username:demo and password:demo` or with other user e.g study nurse `username: study-nurse and password:demo` with restricted privileges
 
 #### Setup keycloak configuration manually
 
