@@ -60,12 +60,3 @@ export class PatientlistPaginatorComponent {
   @Input() patientListView!: PatientlistViewComponent;
   @Input() translation!: TranslateService;
 }
-
-
-@NgModule({
-  imports: [MatPaginatorModule],
-  declarations: [PatientlistPaginatorComponent],
-  exports: [PatientlistPaginatorComponent],
-  providers: [{provide: MatPaginatorIntl, useClass: CustomPatientlistPaginator}],
-})
-export class PatientlistPaginatorComponentModule {}
