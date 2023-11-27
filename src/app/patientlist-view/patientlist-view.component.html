@@ -56,14 +56,13 @@
                    [patients]="patientsMatTableData"
                    [loading]="loading"></app-patientlist>
 
-  <app-patientlist-paginator [length]="pageNumber"
-                      [pageSize]="10"
-                      [pageSizeOptions]="[5,10,20,50,100]"
-                      arialabel="Select page"
-                      [disabled]="loading"
-                      [patientListView]="this"
-                      [translation]="translate"
-                      >
-  </app-patientlist-paginator>
-
+  <mat-paginator 
+    [length]="pageNumber"
+    [pageSize]="10"
+    [pageSizeOptions]="[5,10,20,50,100]"
+    arialabel="Select page"
+    [disabled]="loading"                
+    (page)="handlePageEvent($event)"
+    >
+  </mat-paginator>
 </div>

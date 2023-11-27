@@ -48,7 +48,7 @@ import {PatientModule} from "./patient/patient.module";
 import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.component";
 import { TranslateService } from '@ngx-translate/core';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
-import { CustomPatientlistPaginator, PatientlistPaginatorComponent} from './patientlist-paginator/patientlist-paginator.component';
+import { CustomPatientlistPaginator } from './shared/components/paginator/patientlist-paginator';
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
   return () => configService.init()
@@ -83,7 +83,6 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
 
 @NgModule({
   declarations: [
-    PatientlistPaginatorComponent,
     AppComponent,
     PatientlistComponent,
     routingComponents,

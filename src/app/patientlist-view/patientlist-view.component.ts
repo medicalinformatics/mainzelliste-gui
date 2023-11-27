@@ -6,7 +6,7 @@ import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {FormControl} from "@angular/forms";
 import {MatTableDataSource} from "@angular/material/table";
-import {PageEvent} from "@angular/material/paginator";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {Observable, of} from "rxjs";
 import {map, startWith} from 'rxjs/operators';
 import {GlobalTitleService} from "../services/global-title.service";
@@ -47,6 +47,8 @@ export class PatientlistViewComponent implements OnInit {
   filterInput!: ElementRef<HTMLInputElement>;
   filteredFields: Observable<FilterConfig[]> = of([]);
 
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
   defaultPageSize: number = 10 as const;
   pageSize: number = 10;
   pageNumber: number = 100000;

@@ -1,8 +1,7 @@
-import { Component, Injectable, Input, NgModule } from '@angular/core';
-import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
+import { Injectable } from '@angular/core';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 import { Subject } from 'rxjs';
 import { TranslateService } from "@ngx-translate/core";
-import { PatientlistViewComponent } from '../patientlist-view/patientlist-view.component';
 
 @Injectable()
 export class CustomPatientlistPaginator implements MatPaginatorIntl {
@@ -46,17 +45,3 @@ export class CustomPatientlistPaginator implements MatPaginatorIntl {
   }
 }
 
-@Component({
-  selector: 'app-patientlist-paginator',
-  templateUrl: './patientlist-paginator.component.html',
-  styleUrls: ['./patientlist-paginator.component.css'],
-})
-export class PatientlistPaginatorComponent {
-  @Input() disabled: boolean = false;
-  @Input() length: number = 5;
-  @Input() pageSizeOptions: number[] = [5];
-  @Input() pageSize: number = 10;
-  @Input() arialabel: string = "";
-  @Input() patientListView!: PatientlistViewComponent;
-  @Input() translation!: TranslateService;
-}
