@@ -1,0 +1,21 @@
+<div>
+  <button class="profileButton" mat-button [matMenuTriggerFor]="profileDropDown">
+    <mat-icon>account_circle</mat-icon>
+    {{this.userAuthService.getUserName()}}
+    <mat-icon>arrow_drop_down</mat-icon>
+  </button>
+  <mat-menu #profileDropDown="matMenu" xPosition="before">
+    <button mat-menu-item [matMenuTriggerFor]="languages">
+      <mat-icon>language</mat-icon>
+      <span>{{'session.menu_language' | translate}}</span>
+    </button>
+    <button mat-menu-item (click)="this.userAuthService.logout()">
+      <mat-icon>logout</mat-icon>
+      <span>{{'session.menu_logout' | translate}}</span>
+    </button>
+  </mat-menu>
+  <mat-menu #languages="matMenu">
+    <button *ngIf="this.translate.currentLang != 'de-DE'" mat-menu-item (click)="useLanguage('de-DE')">{{'session.language_german' | translate}}</button>
+    <button *ngIf="this.translate.currentLang != 'en-US'" mat-menu-item (click)="useLanguage('en-US')">{{'session.language_english' | translate}}</button>
+  </mat-menu>
+</div>

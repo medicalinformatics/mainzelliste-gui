@@ -1,0 +1,7 @@
+<h1 mat-dialog-title>{{'errorDialogComponent.title' | translate}}</h1>
+<div mat-dialog-content>
+  <p>{{'errorDialogComponent.text1' | translate}}{{!data.messages || data.messages.length == 1 ? "an error" : "several errors"}}{{'errorDialogComponent.text1' | translate}}</p>
+  <p *ngFor="let message of data?.messages" class="error-message">
+    {{ message }}
+  </p>
+</div>

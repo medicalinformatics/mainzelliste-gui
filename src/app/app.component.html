@@ -6,7 +6,7 @@
   </div>
 
   <!--HEADER AND CONTENT AS COLUMN-->
-  <app-head style="flex: 0 0; height: 75px" *ngIf="isLoggedIn()"></app-head>
+  <app-header style="flex: 0 0; height: 75px" *ngIf="isLoggedIn()"></app-header>
   <!-- NAVIGATION AND CONTENT NEXT TO EACH OTHER sessionService.isLoggedIn() -->
   <mat-sidenav-container *ngIf="isLoggedIn()" style="height: 100%" autosize>
     <mat-sidenav mode="side" class="sidenav-menu" opened>

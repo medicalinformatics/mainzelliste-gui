@@ -1,7 +1,0 @@
-<h1 mat-dialog-title>Oups! Something went wrong!</h1>
-<div mat-dialog-content>
-  <p>We encountered {{!data?.messages || data.messages.length == 1 ? "an error" : "several errors"}} while trying to load the application</p>
-  <p *ngFor="let message of data?.messages" class="error-message">
-    {{ message }}
-  </p>
-</div>

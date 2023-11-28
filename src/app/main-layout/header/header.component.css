@@ -1,0 +1,15 @@
+mat-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.2%;
+  padding-top: 0.2%;
+}
+
+h1 {
+  margin-left: 10rem;
+  float: left;
+  color: #053E6A;
+  font-family: Tahoma;
+}
+

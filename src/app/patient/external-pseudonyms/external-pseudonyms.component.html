@@ -1,0 +1,51 @@
+<table style="width: 100%; max-width: 700px;" ngModelGroup="externalIds">
+  <tr *ngFor="let externalId of getExternalIds() ">
+    <td style="width: 100%; flex-flow: row">
+      <div style="display: flex; flex-wrap: nowrap;">
+        <button *ngIf="side!='none'" style=" margin-top:4%; border:none; background:none;"
+                [ngStyle]="{float:side}">
+<!--                (click)="slideData(fields[externalId.idType], externalId.idString)">-->
+          <mat-icon>arrow_circle_{{side}}</mat-icon>
+        </button>
+        <mat-form-field class="inputField">
+          <mat-label>{{externalId.idType}}</mat-label>
+          <input style="width: 90%"
+                 [(ngModel)]="externalId.idString" [name]="externalId.idType"
+                 matInput [readonly]="readOnly"
+                 value="{{externalId.idString}}">
+          <button mat-icon-button *ngIf="readOnly" [cdkCopyToClipboard]="externalId.idString"
+                  matSuffix>
+            <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy
+            </mat-icon>
+          </button>
+        </mat-form-field>
+        <button *ngIf="!readOnly" mat-icon-button color="primary"
+                aria-label="Externes Pseudonym entfernen"
+                (click)="this.removeExternalIdField(externalId.idType)"
+                style="margin-top: 9px; margin-left: 8px">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </td>
+  </tr>
+  <!-- external id types dropdown menu-->
+  <tr *ngIf="this.getExternalIdMatSelectData().length > 0 && !readOnly">
+    <td>
+      <div style="display: flex; flex-wrap: nowrap;">
+        <mat-form-field class="inputField">
+          <mat-label>{{'createPatient.pseudonym_type' | translate}}</mat-label>
+          <mat-select #selectedExternalIdType required="false">
+            <mat-option *ngFor="let idType of this.getExternalIdMatSelectData()"
+                        [value]="idType">{{idType}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-icon-button color="primary" aria-label="Externes Pseudonym hinzufügen"
+                [disabled]="this.disableAddExternalIdField(selectedExternalIdType)"
+                (click)="this.addExternalIdField(selectedExternalIdType)"
+                style="margin-top: 9px; margin-left: 8px">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </td>
+  </tr>
+</table>

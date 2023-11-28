@@ -1,8 +1,20 @@
-<h1 mat-dialog-title>Patient Löschen</h1>
-<div mat-dialog-content><h3 style="text-align: justify"> Möchten Sie den folgenden Patient
-  löschen? </h3><br><h4 style="font-weight: 100; text-align: justify">Die Patientendaten werden
-  vollständig gelöscht und können nicht wiederhergestellt werden.</h4></div>
+<h1 mat-dialog-title>
+  {{'deletePatientDialog.title_delete_patient' | translate}}
+</h1>
+<div mat-dialog-content>
+  <h3 style="text-align: justify">
+    {{'deletePatientDialog.delete_patient_question' | translate}}
+  </h3>
+  <br />
+  <h4 style="font-weight: 100; text-align: justify">
+    {{'deletePatientDialog.delete_patient_warning' | translate}}
+  </h4>
+</div>
 <div mat-dialog-actions>
-  <button mat-raised-button class="submitBreak" (click)="cancel()">Abbruch</button>
-  <button mat-raised-button class="submit" [mat-dialog-close]="true">Löschen</button>
+  <button mat-raised-button class="submitBreak" (click)="cancel()">
+    {{'button_cancel' | translate}}
+  </button>
+  <button mat-raised-button class="submit" [mat-dialog-close]="true">
+    {{'button_delete' | translate}}
+  </button>
 </div>

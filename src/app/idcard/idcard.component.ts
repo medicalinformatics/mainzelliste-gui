@@ -4,13 +4,14 @@ import {PatientListService} from "../services/patient-list.service";
 import {Patient} from "../model/patient";
 import {GlobalTitleService} from "../services/global-title.service";
 import {Id} from "../model/id";
-import {ConsentService} from "../consent.service";
 import {MatTable} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
-import {ConsentDialogComponent} from "../consent-dialog/consent-dialog.component";
 import {PatientService} from "../services/patient.service";
 import {DeletePatientDialog} from "./dialogs/delete-patient-dialog";
-import { NewIdDialog } from './dialogs/new-id-dialog';
+import {NewIdDialog} from './dialogs/new-id-dialog';
+import {TranslateService} from '@ngx-translate/core';
+import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.component";
+import {ConsentService} from "../consent/consent.service";
 
 export interface ConsentRow {id: string, date:string, title: string, period:string, version?:string}
 
@@ -31,6 +32,7 @@ export class IdcardComponent implements OnInit {
   public loadingConsents: boolean = false;
 
   constructor(
+    private translate: TranslateService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private patientListService: PatientListService,
@@ -50,15 +52,22 @@ export class IdcardComponent implements OnInit {
       if (params["idString"] !== undefined)
         this.idString = params["idString"]
     });
-    this.titleService.setTitle("ID Card", false, "badge")
+    this.changeTitle();
   }
 
   ngOnInit() {
     this.loadPatient();
+    this.translate.onLangChange.subscribe(() => {
+      this.changeTitle();
+    });
 
     //load consent list
     if(this.consentService.isServiceEnabled())
       this.loadConsents();
+  }
+
+  changeTitle() {
+    this.titleService.setTitle(this.translate.instant('idcard.title_id_card'), false, "badge");
   }
 
   private loadPatient() {
