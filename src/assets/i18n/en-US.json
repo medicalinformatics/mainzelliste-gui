@@ -12,6 +12,10 @@
 	"button_save_new_id": "Save new ID",
 	"button_correct": "Correct",
 	"button_confirm": "Confirm",
+	"button_stepper_next": "Next",
+	"button_stepper_generate_ids": "Generate new Ids",
+	"button_stepper_reset": "Reset",
+	"button_stepper_download_csv": "Download csv-file",
 
 	"radio_button_yes": "Yes",
 	"radio_button_no": "No",
@@ -45,8 +49,9 @@
 	"idcard.title_id_card": "ID Card",
 
 	"navigation.info": "Info",
-	"navigation.new_patient": "New Patient",
+	"navigation.new_patient": "New patient",
 	"navigation.patientlist": "Patient list",
+	"navigation.project_id": "Project-Ids",
 
 	"patientlist.filter_search": "Filter/Search...",
 	"patientlist.headers_actions": "Actions",
@@ -201,5 +206,12 @@
 	"logout.message": "You are now logged out!",
 
 	"footer.version": "Version ",
-	"footer.info": " Mainzelliste - Powered by Team Federated Information Systems from DKFZ Heidelberg"
+	"footer.info": " Mainzelliste - Powered by Team Federated Information Systems from DKFZ Heidelberg",
+
+	"project_id.title": "Generate project Ids",
+	"project_id.upload_label": "Upload csv-file",
+	"project_id.upload_error": "Please select a valid file!",
+	"project_id.download_label": "Download csv-file",
+	"project_id.generate_id_label": "Generate new Ids",
+	"project_id.id_type_label": "Id Type"
 }

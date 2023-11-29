@@ -10,17 +10,19 @@ import {EditPatientComponent} from "./patient/edit-patient/edit-patient.componen
 import {AccessDeniedComponent} from "./access-denied/access-denied.component";
 import {AddConsentComponent} from "./consent/add-consent/add-consent.component";
 import {EditConsentComponent} from "./consent/edit-consent/edit-consent.component";
-import { ProjektIdComponent } from './projekt-id/projekt-id.component';
+import { ProjectIdComponent } from './project-id/project-id.component';
+import { CreatePatientComponent } from './patient/create-patient/create-patient.component';
 
 const routes: Routes = [
   // TODO: All Paths should have english wording.
   {
     path: '', canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
       {path: '', pathMatch: 'full', redirectTo: 'patientlist'},
-      {path: 'projekt-id', component: ProjektIdComponent},
+      {path: 'project-id', component: ProjectIdComponent},
       {path: 'info', component: InfoComponent},
       {path: 'idcard/:idType/:idString', component: IdcardComponent, data : { permission: 'readPatients' }},
-      // {path: 'merge-patients', component: MergePatientsComponent},
+      {path: 'add-new-patient', component: CreatePatientComponent, data: {permission: 'addPatient'}},
+      {path: 'edit-patient/:idType/:idString', component: EditPatientComponent, data: {permission: 'editPatient'}},
       {path: 'patientlist', component: PatientlistViewComponent, data : { permission: 'readPatients' }},
       {path: 'patient/:idType/:idString/add-consent', component: AddConsentComponent, data: {permission: 'addConsent'}},
       // TODO support multiple permissions 'readConsent'

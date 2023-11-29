@@ -29,7 +29,7 @@ export interface IdTypSelection {
   templateUrl: './create-patient.component.html',
   styleUrls: ['./create-patient.component.css']
 })
-export class CreatePatientComponent  implements OnInit {
+export class CreatePatientComponent implements OnInit {
   @Input() fields: Array<string> = [];
 
   externalIdTypesFormControl = new FormControl('');

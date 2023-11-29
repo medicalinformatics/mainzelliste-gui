@@ -1,15 +1,18 @@
-import { Component, ViewChild } from '@angular/core';
-import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
+import { Component, OnInit } from '@angular/core';
+import { NgxCsvParser } from 'ngx-csv-parser';
 import { PatientListService } from '../services/patient-list.service';
 import { Patient } from '../model/patient';
 import { saveAs } from 'file-saver';
+import { FormControl, Validators } from '@angular/forms';
+import { GlobalTitleService } from '../services/global-title.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-projekt-id',
-  templateUrl: './projekt-id.component.html',
-  styleUrls: ['./projekt-id.component.css']
+  selector: 'app-project-id',
+  templateUrl: './project-id.component.html',
+  styleUrls: ['./project-id.component.css']
 })
-export class ProjektIdComponent {
+export class ProjectIdComponent implements OnInit {
 
   csvRecords: string[][] = [];
   displayedColumns: string[] = ['ids'];
@@ -20,19 +23,45 @@ export class ProjektIdComponent {
   idStrings: string[] = [];
   patients: Patient[] = [];
   data: string = "";
+  accept: string = '.csv';
+  multiple: boolean = false;
+  placeholder: string = 'name.csv';
+  csvUpload: FormControl;
+  public file: any;
+  validFile: boolean = false;
+  isLinear: boolean = true;
 
   constructor(
+    private titleService: GlobalTitleService,
     private ngxCsvParser: NgxCsvParser,
-    public patientListService: PatientListService
-    ) {}
+    public patientListService: PatientListService,
+    private translate: TranslateService
+    ) {
+      this.csvUpload = new FormControl(this.file, [
+        Validators.required
+      ]);
+      this.changeTitle();
+    }
+  
+    changeTitle() {
+      this.titleService.setTitle(this.translate.instant('project_id.title'));
+    }
 
-  @ViewChild('fileImportInput') fileImportInput: any;
+    ngOnInit(): void {
+      this.translate.onLangChange.subscribe(() => {
+        this.changeTitle();
+      });
+      this.csvUpload.valueChanges.subscribe((file: any) => {
+        this.file = file;
+        this.fileChangeListener(this.file);
+      });
+    }
 
-  fileChangeListener($event: any): void {
-    const files = $event.srcElement.files;
+  fileChangeListener(file: any): void {
+    let files: any[] = [file];
     let tempRecords: any;
-   
     if(files != null && files[0] != undefined && files[0].type == "text/csv") {
+      this.validFile = true;
       this.ngxCsvParser.parse(files[0], { header: false, delimiter: ';', encoding: 'utf8' })
       .pipe().subscribe({
         next: (result): void => {
@@ -58,13 +87,14 @@ export class ProjektIdComponent {
           }
         },
         error: (): void => {
-          console.log('Error');
+          console.log('Error1');
           this.show = 0;
         }
       });
     } else {
-      console.log('Error');
+      console.log('Error2');
       this.show = 0;
+      this.validFile = false;
     }
   }
 
@@ -98,5 +128,10 @@ export class ProjektIdComponent {
       }
     } 
   }
-
+  
+  reset() {
+    this.csvRecords = [];
+    this.csvUpload.reset();
+    this.validFile = false;
+  }
 }

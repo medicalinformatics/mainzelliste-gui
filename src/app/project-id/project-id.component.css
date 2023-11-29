@@ -15,4 +15,16 @@
     background-color: #053E6A;
     color: white;
     font-size: inherit
-  }
+}
+
+button {
+    border: 1px solid grey;
+}
+
+#reset {
+    margin-left: 1%;
+}
+
+::ng-deep .mat-horizontal-stepper-header {
+    pointer-events: none !important;
+}

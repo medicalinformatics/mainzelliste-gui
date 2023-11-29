@@ -1,0 +1,64 @@
+<mat-horizontal-stepper [linear]="isLinear" #stepper>
+    <mat-step>
+        <ng-template matStepLabel>{{'project_id.upload_label' | translate}}</ng-template>
+        <mat-form-field appearance="fill">
+            <ngx-mat-file-input
+                #fileInput
+                [multiple]="multiple"
+                [formControl]="csvUpload"
+                [placeholder]="placeholder"
+                [accept]="accept"
+                ></ngx-mat-file-input>
+        </mat-form-field>
+        <p><span id="error" *ngIf="show == 0" style="color: red;">{{'project_id.upload_error' | translate}}</span></p>
+        <div>
+            <button mat-button [disabled]="fileInput.empty || !validFile"  matStepperNext>{{'button_stepper_next' | translate}}</button>
+        </div>
+    </mat-step>
+    <mat-step>
+        <ng-template matStepLabel>{{'project_id.generate_id_label' | translate}}</ng-template>
+        <mat-form-field>
+            <mat-label>{{'project_id.id_type_label' | translate}}</mat-label>
+            <mat-select (selectionChange)="dataModel = $event.value">
+                <mat-option *ngFor="let idType of patientListService.getNewIdType([this.idType])" [value]="idType">
+                    {{idType}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div>
+            <button
+                mat-button
+                matStepperNext
+                (click)="generateNewIds(dataModel)"
+                [disabled]="dataModel == ''">
+                {{'button_stepper_generate_ids' | translate}}
+            </button>
+            <button id="reset" mat-button (click)="stepper.reset(); reset()">{{'button_stepper_reset' | translate}}</button>
+        </div>
+    </mat-step>
+    <mat-step>
+        <ng-template matStepLabel>{{'project_id.download_label' | translate}}</ng-template>
+        <button
+            mat-button
+            (click)="downloadCSV()">
+            {{'button_stepper_download_csv' | translate}}
+        </button>
+        <button id="reset" mat-button (click)="stepper.reset(); reset()">{{'button_stepper_reset' | translate}}</button>
+    </mat-step>
+</mat-horizontal-stepper>
+
+<table *ngIf="show == 1" id="projectId">
+    <ng-container *ngFor="let csvData of csvRecords; let i = index;" matColumnDef="ids" style="flex-flow: row;">
+        <tr *ngIf="i == 0">
+            <th *ngFor="let data of csvData">
+                {{data}}
+            </th>
+        </tr>
+        
+        <tr *ngIf="i != 0">
+            <td *ngFor="let data of csvData">
+                {{data}}
+            </td>
+        </tr>
+    </ng-container>
+</table>

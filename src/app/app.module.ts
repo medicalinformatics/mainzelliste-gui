@@ -42,7 +42,7 @@ import {from} from "rxjs";
 import {UserAuthService} from "./services/user-auth.service";
 import {NewIdDialog} from './idcard/dialogs/new-id-dialog';
 import { NgxCsvParserModule } from 'ngx-csv-parser';
-import { ProjektIdComponent } from './projekt-id/projekt-id.component';
+import { ProjectIdComponent } from './project-id/project-id.component';
 import { FileSaverModule } from 'ngx-filesaver';
 import {SharedModule} from "./shared/shared.module";
 import {ConsentModule} from "./consent/consent.module";
@@ -51,6 +51,8 @@ import {PatientModule} from "./patient/patient.module";
 import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.component";
 import { TranslateService } from '@ngx-translate/core';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
+import { NgxMatFileInputModule } from '@angular-material-components/file-input';
+import { MatStepperModule } from '@angular/material/stepper';
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
   return () => configService.init()
@@ -94,7 +96,7 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     LogoutComponent,
     NewIdDialog,
     AccessDeniedComponent,
-    ProjektIdComponent
+    ProjectIdComponent
   ],
   imports: [
     SharedModule,
@@ -120,7 +122,9 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     ClipboardModule,
     ConsentModule,
     NgxCsvParserModule,
-    FileSaverModule
+    FileSaverModule,
+    NgxMatFileInputModule,
+    MatStepperModule
   ],
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
