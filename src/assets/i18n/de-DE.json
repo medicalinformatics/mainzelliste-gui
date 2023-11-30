@@ -1,6 +1,7 @@
 {
+	"EMPTY": "",
 	"button_add_consent": "Einwilligung hinzufügen",
-  "button_generate_id": "Generieren",
+  	"button_generate_id": "Generieren",
 	"button_delete": "Löschen",
 	"button_edit": "Bearbeiten",
 	"button_request": "Anfordern",
@@ -52,6 +53,14 @@
 	"patientlist.headers_actions": "Aktionen",
 	"patientlist.no_patient_found": "Kein Patient gefunden.",
 	"patientlist.search_placeholder": "Suche...",
+
+	"patientlist_view.paginator_current_page_label_text1": "Seite",
+	"patientlist_view.paginator_current_page_label_text2": "von",
+	"patientlist_view.paginator_item_number_label": "Einträge pro Seite",
+	"patientlist_view.paginator_next_page_label": "Nächste Seite",
+	"patientlist_view.paginator_previous_page_label": "Vorherige Seite",
+	"patientlist_view.paginator_first_page_label": "Erste Seite",
+	"patientlist_view.paginator_last_page_label": "Letzte Seite",
 
 	"session.language_english": "Englisch",
 	"session.language_german": "Deutsch",

@@ -13,7 +13,7 @@ import {ScrollingModule} from "@angular/cdk/scrolling";
 import {PatientlistViewComponent} from './patientlist-view/patientlist-view.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatBadgeModule} from "@angular/material/badge";
-import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatPaginatorIntl, MatPaginatorModule} from "@angular/material/paginator";
 import {
   DateAdapter,
   ErrorStateMatcher,
@@ -48,6 +48,7 @@ import {PatientModule} from "./patient/patient.module";
 import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.component";
 import { TranslateService } from '@ngx-translate/core';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
+import {InternationalizedMatPaginatorIntl} from "./shared/components/paginator/internationalized-mat-paginator-intl";
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
   return () => configService.init()
@@ -107,7 +108,6 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     MatNativeDateModule,
     MatTableModule,
     MatCheckboxModule,
-    MatCheckboxModule,
     MatTooltipModule,
     HttpClientModule,
     KeycloakAngularModule,
@@ -117,6 +117,7 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     ConsentModule
   ],
   providers: [
+    {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
     {
       provide: APP_INITIALIZER,
