@@ -21,6 +21,7 @@ import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {Id} from "../model/id";
 import { CreateIdsTokenData } from '../model/create-ids-token-data';
 import {AuthorizationService} from "./authorization.service";
+import { TranslateService } from '@ngx-translate/core';
 
 export interface ReadPatientsResponse {
   patients: Patient[];
@@ -68,6 +69,7 @@ export class PatientListService {
   ];
 
   constructor(
+    private translate: TranslateService,
     private configService: AppConfigService,
     private authorizationService: AuthorizationService,
     private sessionService: SessionService,
@@ -184,7 +186,7 @@ export class PatientListService {
             totalCount: "0"
           });
         } else {
-          return throwError(new Error(`Failed to fetch patients. Cause: ${getErrorMessageFrom(error)}`));
+          return throwError(new Error(this.translate.instant('error.patient_list_service_get_patients') + `${getErrorMessageFrom(error, this.translate)}`));
         }
       })
     )
@@ -216,7 +218,7 @@ export class PatientListService {
         if (e instanceof HttpErrorResponse && (e.status == 404) && ErrorMessages.ML_SESSION_NOT_FOUND.match(e))
           return throwError(new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND));
         else if (!(e instanceof MainzellisteError) && !(e instanceof MainzellisteUnknownError))
-          return throwError(new MainzellisteUnknownError("Failed to create CreateIdsToken", e));
+          return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_create_create_ids_token'), e, this.translate));
         return throwError(e);
       }));
   }
@@ -234,7 +236,7 @@ export class PatientListService {
           let errorMessage = ErrorMessages.CREATE_IDS_ERROR;
           return throwError(new MainzellisteError(errorMessage));
         }
-        return throwError(new MainzellisteUnknownError("Failed to resolve CreateIdsToken", e))
+        return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_create_ids_token'), e, this.translate))
       })
       )
   }
@@ -267,7 +269,7 @@ export class PatientListService {
         if (e instanceof HttpErrorResponse && (e.status == 404) && ErrorMessages.ML_SESSION_NOT_FOUND.match(e))
           return throwError(new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND))
         else if (!(e instanceof MainzellisteError) && !(e instanceof MainzellisteUnknownError))
-          return throwError(new MainzellisteUnknownError("Failed to create AddPatientToken", e))
+          return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_create_add_patient_token'), e, this.translate))
         return throwError(e)
       })
     );
@@ -307,7 +309,7 @@ export class PatientListService {
           } if(errorMessage != undefined)
             return throwError(new MainzellisteError(errorMessage));
         }
-        return throwError(new MainzellisteUnknownError("Failed to resolve AddPatientToken", e))
+        return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_add_patient_token'), e, this.translate))
       }),
       map( ids => ids[0])
     )

@@ -7,6 +7,7 @@ import {GlobalTitleService} from "../../services/global-title.service";
 import {MatDialog} from "@angular/material/dialog";
 import {Id} from "../../model/id";
 import {DeletePatientDialog} from "../../idcard/dialogs/delete-patient-dialog";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-delete-patient',
@@ -21,6 +22,7 @@ export class DeletePatientComponent implements OnInit {
   private idType: string = "";
 
   constructor(
+    private translate: TranslateService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private patientListService: PatientListService,
@@ -36,13 +38,20 @@ export class DeletePatientComponent implements OnInit {
       if (params["idString"] !== undefined)
         this.idString = params["idString"]
     })
-    this.titleService.setTitle("Patienten löschen", false, "delete")
+    this.changeTitle();
   }
 
   ngOnInit() {
+    this.translate.onLangChange.subscribe(() => {
+      this.changeTitle();
+    });
     this.patientListService.readPatient(new Id(this.idType, this.idString), "R").then(patients => {
       this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
     });
+  }
+
+  changeTitle() {
+    this.titleService.setTitle(this.translate.instant('deletePatient.title'), false, "delete");
   }
 
   async deletePatient() {

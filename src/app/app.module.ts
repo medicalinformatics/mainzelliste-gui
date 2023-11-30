@@ -46,8 +46,10 @@ import {ConsentModule} from "./consent/consent.module";
 import {MainLayoutModule} from "./main-layout/main-layout.module";
 import {PatientModule} from "./patient/patient.module";
 import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.component";
+import { TranslateService } from '@ngx-translate/core';
+import { AccessDeniedComponent } from './access-denied/access-denied.component';
 
-function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService): () => Promise<any> {
+function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
   return () => configService.init()
   .then(config => {
     from(keycloak.keycloakEvents$).subscribe( event => userAuthService.notifyKeycloakEvent(event));
@@ -70,10 +72,11 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
       if (error) {
         reason = error.error?.length > 0 ? " Reason: " + error.error : "";
       }
-      throw new Error("Failed to connect to Keycloak." + reason);
+      throw new Error(translate.instant('error.app_module_connect_keycloak') + reason);
     })
     .then( isLoggedIn => isLoggedIn ? configService.fetchMainzellisteIdGenerators() : [])
-    .then( idGenerators => idGenerators.length > 0? configService.fetchMainzellisteFields() : []);
+    .then( idGenerators => idGenerators.length > 0? configService.fetchMainzellisteFields() : [])
+      .then(fields => fields.length > 0 ? configService.fetchVersion() : {});
   });
 }
 
@@ -86,7 +89,8 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     PatientlistViewComponent,
     ErrorComponent,
     LogoutComponent,
-    NewIdDialog
+    NewIdDialog,
+    AccessDeniedComponent
   ],
   imports: [
     SharedModule,

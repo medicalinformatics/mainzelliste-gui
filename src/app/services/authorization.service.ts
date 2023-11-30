@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {AppConfigService} from "../app-config.service";
 import {Operation, PatientPermissionsContent, Permissions} from "../model/patientlist";
 import {UserAuthService} from "./user-auth.service";
-import {SinglePermission, PermissionType, Role} from "../model/role";
-import {Permission} from "../model/permission";
+import {TranslateService} from '@ngx-translate/core';
+import {PermissionType, Role, SinglePermission} from "../model/role";
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,7 @@ export class AuthorizationService {
   private crudOperations: Operation[] = ["C", "R", "U", "D"];
 
   constructor(
+    private translate: TranslateService,
     private configService: AppConfigService,
     private authentication: UserAuthService
   ) {
@@ -65,15 +66,15 @@ export class AuthorizationService {
   }
 
   hasPermission(name: PermissionType, type: Operation): boolean {
-    console.log("permissionType " + name);
+    // console.log("permissionType " + name);
     // return true, if user role not configured in the ui
     if (this.configuredRoles == undefined)
       return true;
     //check permission
     let roles: Role[] = this.configuredRoles.filter(r => this.userRoles.includes(r.name))
     if (roles.length == 0)
-      throw new Error(`access denied for ${this.userRoles}`)
-    console.log("user permissions", roles)
+      throw new Error(this.translate.instant('error.authorization_service') + `${this.userRoles}`)
+    // console.log("has permission " + (role.permissions || []).some( p => p == permission) + " for " + permission );
     return roles.some(role => this.checkPermission(role.permissions, name, type));
   }
 
@@ -88,10 +89,5 @@ export class AuthorizationService {
       .map(r => r.permissions.patient.contents?.ids?.filter( i=> i.operations.includes(operation))
         .map(i => i.type) || [])
       .reduce((accumulator, currentValue) => accumulator.concat(currentValue), []);
-    // return this.configService.getRolesWithPermissions()
-    //   .filter(r => this.userRoles.some(ur => ur == r.name))
-    //   .map(r => r.permissions.find(p => p.type == permissionName))
-    //   .map(p => p?.refined?.idTypes || [])
-    //   .reduce((accumulator, currentValue) => accumulator.concat(currentValue), []);
   }
 }

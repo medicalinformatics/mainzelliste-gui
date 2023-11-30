@@ -29,8 +29,9 @@ export class AuthGuard extends KeycloakAuthGuard implements CanActivateChild {
     );
   }
 
-  checkPermission(permission: Permission): boolean {
-    return permission == undefined || this.authorizationService.hasPermission(permission.type, permission.operation);
+  checkPermission(permission: Permission): boolean | UrlTree {
+    return permission == undefined || this.authorizationService.hasPermission(permission.type, permission.operation)
+      || this.router.createUrlTree(['access-denied']);
   }
 
   canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot):

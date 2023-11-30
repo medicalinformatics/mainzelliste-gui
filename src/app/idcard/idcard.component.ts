@@ -32,10 +32,9 @@ export class IdcardComponent implements OnInit {
   public consents: ConsentRow[] = [];
   @ViewChild('consentTable') consentTable!: MatTable<ConsentRow>;
   public loadingConsents: boolean = false;
-  translate: TranslateService;
 
   constructor(
-    translate: TranslateService,
+    private translate: TranslateService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private patientListService: PatientListService,
@@ -52,7 +51,6 @@ export class IdcardComponent implements OnInit {
       if (params["idString"] !== undefined)
         this.idString = params["idString"]
     });
-    this.translate = translate;
     this.changeTitle();
   }
 

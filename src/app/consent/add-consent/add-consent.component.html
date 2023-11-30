@@ -3,7 +3,7 @@
     <app-consent-detail [(dataModel)]="dataModel"></app-consent-detail>
     <br/><br/>
     <button mat-raised-button class="submit" *ngIf="dataModel"
-            (click)="addConsent()">hinzufügen
+            (click)="addConsent()">{{'button_add' | translate}}
     </button>
   </div>
 </div>
