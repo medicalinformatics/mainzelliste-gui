@@ -18,6 +18,7 @@ import { TranslateService } from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../../consent/consent-dialog/consent-dialog.component";
 import {Consent} from "../../consent/consent.model";
 import {ConsentService} from "../../consent/consent.service";
+import {Permission} from "../../model/permission";
 
 export interface IdTypSelection {
   idType: string,
@@ -30,6 +31,7 @@ export interface IdTypSelection {
   styleUrls: ['./create-patient.component.css']
 })
 export class CreatePatientComponent  implements OnInit {
+  public readonly Permission = Permission;
   @Input() fields: Array<string> = [];
 
   externalIdTypesFormControl = new FormControl('');
@@ -76,7 +78,7 @@ export class CreatePatientComponent  implements OnInit {
   }
 
   ngOnInit(): void {
-    let internalIdTypes  = this.patientListService.getIdGenerators('addPatient')
+    let internalIdTypes  = this.patientListService.getIdGenerators("C")
       .filter(g => !g.isExternal).map( g => g.idType)
     let mainIdType = this.patientListService.findDefaultIdType(internalIdTypes);
     this.selectedInternalIdTypes.push(mainIdType);

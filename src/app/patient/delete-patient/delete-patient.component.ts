@@ -40,7 +40,7 @@ export class DeletePatientComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.patientListService.readPatient(new Id(this.idType, this.idString), "readPatients").then(patients => {
+    this.patientListService.readPatient(new Id(this.idType, this.idString), "R").then(patients => {
       this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
     });
   }

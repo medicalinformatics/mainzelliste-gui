@@ -4,7 +4,7 @@ import {KeycloakAuthGuard, KeycloakService} from 'keycloak-angular';
 import {Observable} from "rxjs";
 import {UserAuthService} from "../services/user-auth.service";
 import {AuthorizationService} from "../services/authorization.service";
-import {PermissionName} from "../model/patientlist";
+import {Permission} from "../model/permission";
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +29,8 @@ export class AuthGuard extends KeycloakAuthGuard implements CanActivateChild {
     );
   }
 
-  checkPermission(permissionName: PermissionName): boolean {
-    return permissionName == undefined || this.authorizationService.hasPermission(permissionName);
+  checkPermission(permission: Permission): boolean {
+    return permission == undefined || this.authorizationService.hasPermission(permission.type, permission.operation);
   }
 
   canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot):

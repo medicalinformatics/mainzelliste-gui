@@ -1,7 +1,7 @@
 import {Inject, Injectable, Optional} from '@angular/core';
 import {SessionService} from "./session.service";
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from "@angular/common/http";
-import {PatientList, PermissionName} from "../model/patientlist";
+import {Operation, PatientList} from "../model/patientlist";
 import {Patient} from "../model/patient";
 import {AppConfigService, IdGenerator} from "../app-config.service";
 import {ReadPatientsTokenData} from "../model/read-patients-token-data";
@@ -83,13 +83,13 @@ export class PatientListService {
     return this.patientList.fields;
   }
 
-  getIdTypes(permissionName?: PermissionName): Array<string> {
-    let allowedIdTypes = permissionName != undefined ? this.authorizationService.getAllowedIdTypes(permissionName) : [];
+  getIdTypes(operation?: Operation): Array<string> {
+    let allowedIdTypes = operation != undefined ? this.authorizationService.getAllowedIdTypes(operation) : [];
     return allowedIdTypes.length == 0  ? this.configService.getMainzellisteIdTypes() : allowedIdTypes;
   }
 
-  getIdGenerators(permissionName?: PermissionName): Array<IdGenerator> {
-    let allowedIdTypes = permissionName != undefined ? this.authorizationService.getAllowedIdTypes(permissionName) : [];
+  getIdGenerators(operation?: Operation): Array<IdGenerator> {
+    let allowedIdTypes = operation != undefined ? this.authorizationService.getAllowedIdTypes(operation) : [];
     return this.configService.getMainzellisteIdGenerators()
       .filter(g => allowedIdTypes.length == 0 || allowedIdTypes.some(t => t == g.idType));
   }
@@ -153,7 +153,7 @@ export class PatientListService {
     //let defaultIdType = this.findDefaultIdType(this.getIdTypes());
     if (filters.every(f => !f.isIdType)) {
       // get permitted idTypes
-      allowedIdTypes = this.authorizationService.getAllowedIdTypes("readPatients");
+      allowedIdTypes = this.authorizationService.getAllowedIdTypes("R");
       if(allowedIdTypes.length > 0)
         searchIds = allowedIdTypes.map(type => ({idType: type, idString: "*"}));
       else
@@ -164,7 +164,7 @@ export class PatientListService {
     }
     // create read patients token
     return this.sessionService.createToken("readPatients",
-      new ReadPatientsTokenData(searchIds, this.configService.getMainzellisteFields(), this.getIdTypes("readPatients")))
+      new ReadPatientsTokenData(searchIds, this.configService.getMainzellisteFields(), this.getIdTypes("R")))
     .pipe(
       // resolve read patients token
       mergeMap(token => this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + token.id
@@ -242,7 +242,7 @@ export class PatientListService {
   getNewIdType(patient: Patient): string[] {
     let temp: string[] = [];
     let bool: boolean;
-    for (let allId of this.getIdGenerators("addPatient")) {
+    for (let allId of this.getIdGenerators("C")) {
       bool = true;
       for (let id of patient.ids) {
         if (allId.idType == id.idType) {
@@ -313,13 +313,13 @@ export class PatientListService {
     )
   }
 
-  async readPatient(id: Id, permissionName?: PermissionName): Promise<Patient[]> {
+  async readPatient(id: Id, operation?: Operation): Promise<Patient[]> {
     let readToken = await this.sessionService.createToken(
       "readPatients",
       new ReadPatientsTokenData(
         [{idType: id.idType, idString: id.idString}],
         this.configService.getMainzellisteFields(),
-        this.getIdTypes(permissionName)
+        this.getIdTypes(operation)
       )).toPromise();
     return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + readToken.id).toPromise();
   }
@@ -330,7 +330,7 @@ export class PatientListService {
       new EditPatientTokenData(
         {idType: id.idType, idString: id.idString},
         this.configService.getMainzellisteFields(),
-        this.getIdGenerators('editPatient').filter( g => g.isExternal).map( g => g.idType)
+        this.getIdGenerators("U").filter( g => g.isExternal).map( g => g.idType)
       )
     )
     .pipe(

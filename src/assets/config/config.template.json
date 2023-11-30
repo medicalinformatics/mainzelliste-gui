@@ -10,73 +10,37 @@
       "roles": [
         {
           "name": "admin",
-          "permissions": [
-            {
-              "name": "addPatient"
+          "permissions": {
+            "patient": {
+              "operations": [ "C", "R", "U", "D" ]
             },
-            {
-              "name": "readPatients"
-            },
-            {
-              "name": "editPatient"
-            },
-            {
-              "name": "deletePatient"
-            },
-            {
-              "name": "createIds"
-            },
-            {
-              "name": "addConsent"
-            },
-            {
-              "name": "searchConsents"
-            },
-            {
-              "name": "readConsent"
-            },
-            {
-              "name": "editConsent"
+            "consent": {
+              "operations": [ "C", "R", "U" ]
             }
-          ]
+          }
         },
         {
           "name": "study-nurse",
-          "permissions": [
-            {
-              "name": "addPatient",
-              "refined": {
-                "idTypes": [
-                  "projectId", "clinicExtId"
+          "permissions": {
+            "patient": {
+              "operations": [ "C", "R" ],
+              "contents": {
+                "ids": [
+                  {
+                    "type": "projectId",
+                    "operations": [ "C", "R" ]
+                  },
+                  {
+                    "type": "clinicExtId",
+                    "operations": [ "C", "R", "U" ]
+                  }
                 ]
               }
             },
-            {
-              "name": "readPatients",
-              "refined": {
-                "idTypes": [
-                  "projectId", "clinicExtId"
-                ]
-              }
-            },
-            {
-              "name": "createIds",
-              "refined": {
-                "idTypes": [
-                  "projectId"
-                ]
-              }
-            },
-            {
-              "name": "addConsent"
-            },
-            {
-              "name": "searchConsents"
-            },
-            {
-              "name": "readConsent"
+            "consent": {
+              "operations": [ "C", "R"]
             }
-          ]
+          }
         }
       ],
       "mainIdType": "${ML_UI_MAIN_ID_TYPE}",

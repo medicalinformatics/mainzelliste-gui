@@ -7,6 +7,7 @@ import {PatientListService} from "../services/patient-list.service";
 import {AppConfigService} from "../app-config.service";
 import {ConsentService} from "../consent/consent.service";
 import { Field } from '../model/field';
+import {Permission} from "../model/permission";
 
 @Component({
   selector: 'app-patientlist',
@@ -16,6 +17,7 @@ import { Field } from '../model/field';
 })
 
 export class PatientlistComponent implements OnInit{
+  public readonly Permission = Permission;
   @Input() patients: MatTableDataSource<Patient>;
   @Input() loading: boolean = false;
   selection: SelectionModel<Patient>;
@@ -89,7 +91,7 @@ export class PatientlistComponent implements OnInit{
   // }
 
   ngOnInit(): void {
-    this.configuredIdTypes = this.patientListService.getIdTypes("readPatients");
+    this.configuredIdTypes = this.patientListService.getIdTypes("R");
     let displayIdTypes = this.showAllIds ? this.configuredIdTypes : [this.patientListService.findDefaultIdType(this.configuredIdTypes)];
     this.columns = this.columns.concat(displayIdTypes).concat(this.fieldNames).concat(["actions"]);
   }

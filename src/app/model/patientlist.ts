@@ -4,7 +4,7 @@ export class PatientList {
   constructor(
     public url: URL,
     public oAuthConfig?: OAuthConfig,
-    public roles: Role[] = [],
+    public roles: ConfigRole[] = [],
     public mainIdType?: string,
     public showAllIds?: boolean,
     public fields: Array<Field> = [
@@ -26,22 +26,35 @@ export interface OAuthConfig {
   clientId: string;
 }
 
-export interface Role {
+export interface ConfigRole {
   name: string,
-  permissions: Permission[];
+  permissions: Permissions;
+}
+export interface Permissions {
+  patient: PatientPermissions
+  consent: ConsentPermissions
 }
 
-export interface Permission {
-  name: PermissionName,
-  refined?: Refined
+export interface PatientPermissions {
+  operations: Operation[],
+  contents?: PatientPermissionsContents
 }
 
-export interface Refined {
-  idTypes: string[]
+export interface PatientPermissionsContents {
+  ids?: PatientPermissionsContent[]
+  fields?: PatientPermissionsContent[]
 }
 
-export type PermissionName = "addPatient" | "readPatients" | "editPatient" | "deletePatient" | "createIds" | "addConsent" | "searchConsents" | "readConsent" |  "editConsent";
+export interface PatientPermissionsContent {
+  type: string
+  operations: Operation[]
+}
 
+export interface ConsentPermissions {
+  operations: Operation[]
+}
+
+export type Operation = "C" | "R" | "U" | "D";
 
 export interface BetaFeatures {
   consent?: boolean;

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {OAuthConfig, PatientList, Role} from "./model/patientlist";
+import {OAuthConfig, PatientList, ConfigRole} from "./model/patientlist";
 import {AppConfig} from "./app-config";
 import {catchError, map} from "rxjs/operators";
 import {throwError} from "rxjs";
@@ -85,7 +85,7 @@ export class AppConfigService {
     return this.data[0].debug != undefined && this.data[0].debug;
   }
 
-  getRolesWithPermissions(): Role[]{
+  getRolesWithPermissions(): ConfigRole[]{
     return this.data[0].roles
   }
 

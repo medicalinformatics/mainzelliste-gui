@@ -58,11 +58,31 @@ secrets:
       "roles" : [
         {
           "name": "admin",
-          "permissions": ["addPatient","readPatients","editPatient","deletePatient","addConsent","searchConsents","readConsent", "editConsent"]
+          "permissions": {
+            "patient": {
+              "operations": [ "C", "R", "U", "D" ]
+            }
+          }
         },
         {
           "name": "study-nurse",
-          "permissions": ["addPatient","readPatients","addConsent","searchConsents","readConsent"]
+          "permissions": {
+            "patient": {
+              "operations": [ "C", "R" ],
+              "contents": {
+                "ids": [
+                  {
+                    "type": "projectId",
+                    "operations": [ "C", "R" ]
+                  },
+                  {
+                    "type": "clinicExtId",
+                    "operations": [ "C", "R", "U" ]
+                  }
+                ]
+              }
+            }
+          }
         }
       ],
       "mainIdType": "pid",
