@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AppConfigService} from "../app-config.service";
-import {PermissionName, Role} from "../model/patientlist";
+import {PermissionName, PermissionType, Role} from "../model/patientlist";
 import {UserAuthService} from "./user-auth.service";
 
 @Injectable({
@@ -17,19 +17,19 @@ export class AuthorizationService {
     this.userRoles = authentication.getRoles();
   }
 
-  hasPermission(permissionName: PermissionName) {
+  hasPermission(name: PermissionName) {
     // console.log("user roles " + this.userRoles);
-    let roles = this.configService.getRolesWithPermissions()
+    let configuredRoles = this.configService.getRolesWithPermissions()
     // return true, if user role not configured in the ui
-    if(roles == undefined)
+    if(configuredRoles == undefined)
       return true;
     //check permission
-    let role: Role | undefined = roles.find(r => this.userRoles.some(ur => ur == r.name))
-    if(role == undefined)
+    let roles: Role[] = configuredRoles.filter(r => this.userRoles.some(ur => ur == r.name))
+    if(roles.length == 0)
       throw new Error(`access denied for ${this.userRoles}`)
     // console.log("has permission " + (role.permissions || []).some( p => p == permission) + " for " + permission );
     // console.log("user permissions" + role.permissions)
-    return (role.permissions || []).some( p => p.name == permissionName);
+    return roles.some(role => (role.permissions || []).some( p => p.name == name));
   }
 
   getAllowedIdTypes(permissionName: PermissionName): string[] {
