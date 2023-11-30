@@ -4,8 +4,8 @@ import { Subject } from 'rxjs';
 import { TranslateService } from "@ngx-translate/core";
 
 @Injectable()
-export class CustomPatientlistPaginator implements MatPaginatorIntl {
-  
+export class InternationalizedMatPaginatorIntl implements MatPaginatorIntl {
+
   firstPageLabel = "";
   itemsPerPageLabel = "";
   lastPageLabel = "";

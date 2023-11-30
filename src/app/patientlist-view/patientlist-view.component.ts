@@ -50,7 +50,6 @@ export class PatientlistViewComponent implements OnInit {
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
   defaultPageSize: number = 10 as const;
-  pageSize: number = 10;
   pageNumber: number = 100000;
 
   constructor(
@@ -92,7 +91,7 @@ export class PatientlistViewComponent implements OnInit {
           this.filterInput.nativeElement.value = "";
           // this.filterCtrl.setValue("");
           // load patients
-          this.loadPatients(0, this.pageSize).then();
+          this.loadPatients(0, this.paginator.pageSize).then();
           // Clear the input value
           event.chipInput!.clear();
         }
@@ -109,7 +108,7 @@ export class PatientlistViewComponent implements OnInit {
       // remove filter from mat-chip
       this.filters.splice(index, 1);
       // load patients
-      this.loadPatients(0, this.pageSize).then();
+      this.loadPatients(0, this.paginator.pageSize).then();
     }
     this.filterCtrl.updateValueAndValidity({onlySelf: false, emitEvent: true});
   }
@@ -183,7 +182,6 @@ export class PatientlistViewComponent implements OnInit {
   }
 
   async handlePageEvent(event: PageEvent) {
-    this.pageSize = event.pageSize;
     await this.loadPatients(event.pageIndex, event.pageSize);
   }
 }

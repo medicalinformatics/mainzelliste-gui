@@ -48,7 +48,7 @@ import {PatientModule} from "./patient/patient.module";
 import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.component";
 import { TranslateService } from '@ngx-translate/core';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
-import { CustomPatientlistPaginator } from './shared/components/paginator/patientlist-paginator';
+import {InternationalizedMatPaginatorIntl} from "./shared/components/paginator/internationalized-mat-paginator-intl";
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
   return () => configService.init()
@@ -117,7 +117,7 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     ConsentModule
   ],
   providers: [
-    {provide: MatPaginatorIntl, useClass: CustomPatientlistPaginator},
+    {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
     {
       provide: APP_INITIALIZER,
