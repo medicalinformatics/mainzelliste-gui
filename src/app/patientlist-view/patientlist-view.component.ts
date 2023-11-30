@@ -47,12 +47,13 @@ export class PatientlistViewComponent implements OnInit {
   filterInput!: ElementRef<HTMLInputElement>;
   filteredFields: Observable<FilterConfig[]> = of([]);
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
   defaultPageSize: number = 10 as const;
   pageNumber: number = 100000;
 
   constructor(
-    private translate: TranslateService,
+    public translate: TranslateService,
     patientService: PatientService,
     private titleService: GlobalTitleService
   ) {
