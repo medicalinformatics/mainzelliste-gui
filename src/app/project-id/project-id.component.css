@@ -1,22 +1,3 @@
-#projectId {
-    width: 96%;
-    margin-right: 2%;
-    margin-left: 2%;
-}
-
-#projectId td {
-    border: 1px solid #ddd;
-    padding: 0 10px 0 10px;
-}
-
-#projectId th{
-    border: 1px solid #ddd;
-    padding: 0 10px 0 10px;
-    background-color: #053E6A;
-    color: white;
-    font-size: inherit
-}
-
 button {
     border: 1px solid grey;
 }

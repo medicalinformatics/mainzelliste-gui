@@ -1,0 +1,34 @@
+#table {
+    max-width: 1040px;
+    margin: 0 auto;
+}
+
+#header {
+    margin-top: 3%;
+    border-collapse: collapse;
+}
+
+#projectId {
+    height: 600px;
+    overflow-y: scroll;
+    display: block;
+    border-collapse: collapse;
+}
+
+#projectId td {
+    padding: 6px 0 3px 10px;
+    border: 1px solid #ddd;
+    width: 500px;
+    height: 25px;
+    font-size: medium;
+}
+
+#header th {
+    padding: 4px 0 4px 10px;
+    border: 1px solid #ddd;
+    background-color: #053E6A;
+    color: white;
+    width: 500px;
+    height: 30px;
+    font-size: large;
+}

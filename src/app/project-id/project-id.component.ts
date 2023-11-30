@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgxCsvParser } from 'ngx-csv-parser';
 import { PatientListService } from '../services/patient-list.service';
 import { Patient } from '../model/patient';
@@ -6,6 +6,8 @@ import { saveAs } from 'file-saver';
 import { FormControl, Validators } from '@angular/forms';
 import { GlobalTitleService } from '../services/global-title.service';
 import { TranslateService } from '@ngx-translate/core';
+import { MatStepper } from '@angular/material/stepper';
+import { MatSelect } from '@angular/material/select';
 
 @Component({
   selector: 'app-project-id',
@@ -15,7 +17,6 @@ import { TranslateService } from '@ngx-translate/core';
 export class ProjectIdComponent implements OnInit {
 
   csvRecords: string[][] = [];
-  displayedColumns: string[] = ['ids'];
   show: number = 2;
   generated = false;
   dataModel: string = "";
@@ -28,9 +29,12 @@ export class ProjectIdComponent implements OnInit {
   placeholder: string = 'name.csv';
   csvUpload: FormControl;
   public file: any;
-  validFile: boolean = false;
   isLinear: boolean = true;
 
+  @ViewChild("stepper", { static: false }) stepper!: MatStepper;
+
+  @ViewChild("select", { static: false }) select!: MatSelect;
+      
   constructor(
     private titleService: GlobalTitleService,
     private ngxCsvParser: NgxCsvParser,
@@ -54,6 +58,7 @@ export class ProjectIdComponent implements OnInit {
       this.csvUpload.valueChanges.subscribe((file: any) => {
         this.file = file;
         this.fileChangeListener(this.file);
+        this.isValidFile();
       });
     }
 
@@ -61,7 +66,6 @@ export class ProjectIdComponent implements OnInit {
     let files: any[] = [file];
     let tempRecords: any;
     if(files != null && files[0] != undefined && files[0].type == "text/csv") {
-      this.validFile = true;
       this.ngxCsvParser.parse(files[0], { header: false, delimiter: ';', encoding: 'utf8' })
       .pipe().subscribe({
         next: (result): void => {
@@ -94,7 +98,6 @@ export class ProjectIdComponent implements OnInit {
     } else {
       console.log('Error2');
       this.show = 0;
-      this.validFile = false;
     }
   }
 
@@ -128,10 +131,18 @@ export class ProjectIdComponent implements OnInit {
       }
     } 
   }
+
+  isValidFile() {
+    if(this.file !=undefined && this.file.type == "text/csv") {
+      this.stepper.next();
+    }
+  }
   
   reset() {
     this.csvRecords = [];
     this.csvUpload.reset();
-    this.validFile = false;
+    this.file = undefined;
+    this.stepper.reset();
+    this.select.value = '';
   }
 }
