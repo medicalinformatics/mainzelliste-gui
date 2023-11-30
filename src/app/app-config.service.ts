@@ -1,15 +1,13 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
-import {OAuthConfig, PatientList, Role} from "./model/patientlist";
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {ConfigRole, OAuthConfig, PatientList} from "./model/patientlist";
 import {AppConfig} from "./app-config";
 import {catchError, map} from "rxjs/operators";
-import {Observable, throwError} from "rxjs";
+import {throwError} from "rxjs";
 import {MainzellisteField, MainzellisteFieldType} from "./model/mainzelliste-field";
 import {Field, FieldType} from "./model/field";
-import { ErrorMessages } from './error/error-messages';
-import { MainzellisteError } from './model/mainzelliste-error.model';
-import { MainzellisteUnknownError } from './model/mainzelliste-unknown-error';
-import { TranslateService } from '@ngx-translate/core';
+import {MainzellisteUnknownError} from './model/mainzelliste-unknown-error';
+import {TranslateService} from '@ngx-translate/core';
 
 
 export interface IdGenerator {
@@ -92,7 +90,7 @@ export class AppConfigService {
     return this.data[0].debug != undefined && this.data[0].debug;
   }
 
-  getRolesWithPermissions(): Role[]{
+  getRolesWithPermissions(): ConfigRole[]{
     return this.data[0].roles
   }
 

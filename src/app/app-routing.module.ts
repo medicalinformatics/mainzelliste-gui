@@ -6,6 +6,7 @@ import {PatientlistViewComponent} from "./patientlist-view/patientlist-view.comp
 import {ErrorComponent} from "./error/error.component";
 import {LogoutComponent} from "./logout/logout.component";
 import {AuthGuard} from "./guards/auth-guard.service";
+import {Permission} from "./model/permission";
 import {CreatePatientComponent} from "./patient/create-patient/create-patient.component";
 import {EditPatientComponent} from "./patient/edit-patient/edit-patient.component";
 import {AccessDeniedComponent} from "./access-denied/access-denied.component";
@@ -18,13 +19,13 @@ const routes: Routes = [
     path: '', canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
       {path: '', pathMatch: 'full', redirectTo: 'patientlist'},
       {path: 'info', component: InfoComponent},
-      {path: 'idcard/:idType/:idString', component: IdcardComponent, data : { permission: 'readPatients' }},
-      {path: 'add-new-patient', component: CreatePatientComponent, data: {permission: 'addPatient'}},
-      {path: 'edit-patient/:idType/:idString', component: EditPatientComponent, data: {permission: 'editPatient'}},
-      {path: 'patientlist', component: PatientlistViewComponent, data : { permission: 'readPatients' }},
-      {path: 'patient/:idType/:idString/add-consent', component: AddConsentComponent, data: {permission: 'addConsent'}},
+      {path: 'idcard/:idType/:idString', component: IdcardComponent, data : { permission: Permission.READ_PATIENT }},
+      {path: 'add-new-patient', component: CreatePatientComponent, data: { permission: Permission.CREATE_PATIENT }},
+      {path: 'edit-patient/:idType/:idString', component: EditPatientComponent, data: { permission: Permission.EDIT_PATIENT }},
+      {path: 'patientlist', component: PatientlistViewComponent, data : { permission: Permission.READ_PATIENT }},
+      {path: 'patient/:idType/:idString/add-consent', component: AddConsentComponent, data: { permission: Permission.CREATE_CONSENT}},
       // TODO support multiple permissions 'readConsent'
-      {path: 'patient/:idType/:idString/edit-consent/:id', component: EditConsentComponent, data: {permission: 'editConsent'}}
+      {path: 'patient/:idType/:idString/edit-consent/:id', component: EditConsentComponent, data: { permission: Permission.EDIT_CONSENT}}
       // {path: 'delete-patient/:idType/:idString', pathMatch: 'full', redirectTo:  ''},
       // {path: 'merge-patients', component: MergePatientsComponent},
       // {path: 'audittrail', component: AudittrailComponent},

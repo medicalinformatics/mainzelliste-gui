@@ -4,6 +4,7 @@ import {IdTypSelection} from "../create-patient/create-patient.component";
 import {ControlContainer, NgForm} from "@angular/forms";
 import {Id} from "../../model/id";
 import {ExternalPseudonymsComponent} from "../external-pseudonyms/external-pseudonyms.component";
+import {Operation} from "../../model/patientlist";
 
 @Component({
   selector: 'app-patient-pseudonyms',
@@ -19,6 +20,7 @@ export class PatientPseudonymsComponent{
   @Input() fields: { [key: string]: any } = {};
   @Input() readOnly: boolean = false;
   @Input() side: string = "none";
+  @Input() permittedOperation?: Operation;
 
   @Output() slideFieldEvent = new EventEmitter<{ name: string, value: string }>();
   @Output() pseudonymEvent = new EventEmitter<{ name: string, value: string }>();
@@ -39,7 +41,7 @@ export class PatientPseudonymsComponent{
   getInternalIdTypes(): IdTypSelection[] {
     if (this.internalIdTypes.length == 0) {
       //init.
-      this.internalIdTypes = this.patientListService.getIdGenerators()
+      this.internalIdTypes = this.patientListService.getIdGenerators("R")
       .filter(g => !g.isExternal)
       .map(g => {
         return {idType: g.idType, added: false}
@@ -55,7 +57,7 @@ export class PatientPseudonymsComponent{
   getExternalIdTypes(): string[] {
     //init.
     if (this.externalIdTypes.length == 0) {
-      this.externalIdTypes = this.patientListService.getIdGenerators()
+      this.externalIdTypes = this.patientListService.getIdGenerators("R")
       .filter(g => g.isExternal)
       .map(g => g.idType);
     }

@@ -45,7 +45,7 @@ export class DeletePatientComponent implements OnInit {
     this.translate.onLangChange.subscribe(() => {
       this.changeTitle();
     });
-    this.patientListService.readPatient(new Id(this.idType, this.idString)).then(patients => {
+    this.patientListService.readPatient(new Id(this.idType, this.idString), "R").then(patients => {
       this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
     });
   }

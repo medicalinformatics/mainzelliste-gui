@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {Permission} from "../../model/permission";
 
 @Component({
   selector: 'app-navigation',
@@ -6,6 +7,8 @@ import {Component} from '@angular/core';
   styleUrls: ['./navigation.component.css']
 })
 export class NavigationComponent {
+
+  public readonly Permission = Permission;
 
   constructor() {
   }

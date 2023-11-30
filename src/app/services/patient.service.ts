@@ -358,6 +358,6 @@ export class PatientService {
   }
 
   getConfigureIdTypes(): Array<string> {
-    return this.patientListService.getIdTypes();
+    return this.patientListService.getIdTypes("R");
   }
 }

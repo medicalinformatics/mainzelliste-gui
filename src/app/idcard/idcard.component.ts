@@ -12,6 +12,7 @@ import {NewIdDialog} from './dialogs/new-id-dialog';
 import {TranslateService} from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.component";
 import {ConsentService} from "../consent/consent.service";
+import {Permission} from "../model/permission";
 
 export interface ConsentRow {id: string, date:string, title: string, period:string, version?:string}
 
@@ -22,6 +23,7 @@ export interface ConsentRow {id: string, date:string, title: string, period:stri
 })
 
 export class IdcardComponent implements OnInit {
+  public readonly Permission = Permission;
 
   public idString: string = "";
   public idType: string = "";
@@ -68,7 +70,7 @@ export class IdcardComponent implements OnInit {
   }
 
   private loadPatient() {
-    this.patientListService.readPatient(new Id(this.idType, this.idString)).then(patients => {
+    this.patientListService.readPatient(new Id(this.idType, this.idString), "R").then(patients => {
       this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
     });
   }

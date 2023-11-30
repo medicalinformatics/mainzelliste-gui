@@ -1,7 +1,7 @@
-import {Inject, Injectable} from '@angular/core';
+import {Inject, Injectable, Optional} from '@angular/core';
 import {SessionService} from "./session.service";
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from "@angular/common/http";
-import {PatientList} from "../model/patientlist";
+import {Operation, PatientList} from "../model/patientlist";
 import {Patient} from "../model/patient";
 import {AppConfigService, IdGenerator} from "../app-config.service";
 import {ReadPatientsTokenData} from "../model/read-patients-token-data";
@@ -20,6 +20,7 @@ import {getErrorMessageFrom} from "../error/error-utils";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {Id} from "../model/id";
 import { CreateIdsTokenData } from '../model/create-ids-token-data';
+import {AuthorizationService} from "./authorization.service";
 import { TranslateService } from '@ngx-translate/core';
 
 export interface ReadPatientsResponse {
@@ -70,6 +71,7 @@ export class PatientListService {
   constructor(
     private translate: TranslateService,
     private configService: AppConfigService,
+    private authorizationService: AuthorizationService,
     private sessionService: SessionService,
     private httpClient: HttpClient,
     @Inject(MAT_DATE_LOCALE) private _locale: string,
@@ -83,12 +85,15 @@ export class PatientListService {
     return this.patientList.fields;
   }
 
-  getIdTypes(): Array<string> {
-    return this.configService.getMainzellisteIdTypes();
+  getIdTypes(operation?: Operation): Array<string> {
+    let allowedIdTypes = operation != undefined ? this.authorizationService.getAllowedIdTypes(operation) : [];
+    return allowedIdTypes.length == 0  ? this.configService.getMainzellisteIdTypes() : allowedIdTypes;
   }
 
-  getIdGenerators(): Array<IdGenerator> {
-    return this.configService.getMainzellisteIdGenerators();
+  getIdGenerators(operation?: Operation): Array<IdGenerator> {
+    let allowedIdTypes = operation != undefined ? this.authorizationService.getAllowedIdTypes(operation) : [];
+    return this.configService.getMainzellisteIdGenerators()
+      .filter(g => allowedIdTypes.length == 0 || allowedIdTypes.some(t => t == g.idType));
   }
 
   isDebugModeEnabled(): boolean {
@@ -123,7 +128,7 @@ export class PatientListService {
   }
 
   findDefaultIdType(configuredIdTypes: string[]): string {
-    return this.patientList.mainIdType != undefined ? this.patientList.mainIdType : configuredIdTypes[0];
+    return this.patientList.mainIdType != undefined && configuredIdTypes.some(t => t == this.patientList.mainIdType)? this.patientList.mainIdType : configuredIdTypes[0];
   }
 
   //TODO Refactor: replace with getConfiguredIdTypes
@@ -145,17 +150,23 @@ export class PatientListService {
   getPatients(filters: Array<{ field: string, fields: string[], searchCriteria: string, isIdType: boolean }>,
               pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
     // find searchIds
-    let searchIds: Array<Id> = [];
+    let searchIds: Array<{idType: string, idString: string}> = [];
+    let allowedIdTypes: string[] = [];
     //let defaultIdType = this.findDefaultIdType(this.getIdTypes());
     if (filters.every(f => !f.isIdType)) {
-      searchIds = [{idType: "*", idString: "*", tentative: false}];
+      // get permitted idTypes
+      allowedIdTypes = this.authorizationService.getAllowedIdTypes("R");
+      if(allowedIdTypes.length > 0)
+        searchIds = allowedIdTypes.map(type => ({idType: type, idString: "*"}));
+      else
+        searchIds = [{idType: "*", idString: "*"}];
     } else {
       filters.filter(f => f.isIdType).forEach(f =>
-        searchIds.push({idType: f.field, idString: f.searchCriteria.trim(), tentative: false}));
+        searchIds.push({idType: f.field, idString: f.searchCriteria.trim()}));
     }
     // create read patients token
     return this.sessionService.createToken("readPatients",
-      new ReadPatientsTokenData(searchIds, this.configService.getMainzellisteFields(), this.getIdTypes()))
+      new ReadPatientsTokenData(searchIds, this.configService.getMainzellisteFields(), this.getIdTypes("R")))
     .pipe(
       // resolve read patients token
       mergeMap(token => this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + token.id
@@ -233,7 +244,7 @@ export class PatientListService {
   getNewIdType(patient: Patient): string[] {
     let temp: string[] = [];
     let bool: boolean;
-    for (let allId of this.getIdGenerators()) {
+    for (let allId of this.getIdGenerators("C")) {
       bool = true;
       for (let id of patient.ids) {
         if (allId.idType == id.idType) {
@@ -304,24 +315,24 @@ export class PatientListService {
     )
   }
 
-  async readPatient(id: Id): Promise<Patient[]> {
+  async readPatient(id: Id, operation?: Operation): Promise<Patient[]> {
     let readToken = await this.sessionService.createToken(
       "readPatients",
       new ReadPatientsTokenData(
         [{idType: id.idType, idString: id.idString}],
         this.configService.getMainzellisteFields(),
-        await this.getPatientListIdTypes()
+        this.getIdTypes(operation)
       )).toPromise();
     return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + readToken.id).toPromise();
   }
 
-  editPatient(patient: Patient, sureness: boolean) {
+  editPatient(id:Id, patient: Patient, sureness: boolean) {
     return this.sessionService.createToken(
       "editPatient",
       new EditPatientTokenData(
-        {idType: patient.ids[0].idType, idString: patient.ids[0].idString},
+        {idType: id.idType, idString: id.idString},
         this.configService.getMainzellisteFields(),
-        this.configService.getMainzellisteExternalIdTypes()
+        this.getIdGenerators("U").filter( g => g.isExternal).map( g => g.idType)
       )
     )
     .pipe(
