@@ -79,7 +79,6 @@ export class AuthorizationService {
   }
 
   private checkPermission(permissions: SinglePermission[], type: PermissionType, operation: Operation): boolean {
-    console.log("user permissions " + type + " type " + operation, permissions)
     return (permissions || []).some(p => p.type == type && p.operations.includes(operation))
   }
 

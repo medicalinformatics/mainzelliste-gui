@@ -1,7 +1,7 @@
 {
 	"EMPTY": "",
 	"button_add_consent": "Einwilligung hinzufügen",
-  	"button_generate_id": "Generieren",
+  "button_generate_id": "Generieren",
 	"button_delete": "Löschen",
 	"button_edit": "Bearbeiten",
 	"button_request": "Anfordern",
@@ -10,7 +10,7 @@
 	"button_edit_patient": "Patientendaten bearbeiten",
 	"button_id_card": "ID Karte",
 	"button_add": "Hinzufügen",
-	"button_save_new_id": "Neue ID speichern",
+	"button_save_new_id": "Generieren",
 	"button_correct": "Korrigieren",
 	"button_confirm": "Bestätigen",
 

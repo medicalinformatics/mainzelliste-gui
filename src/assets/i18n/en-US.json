@@ -1,7 +1,7 @@
 {
 	"EMPTY": "",
 	"button_add_consent": "Add consent",
-  	"button_generate_id": "Generate",
+  "button_generate_id": "Generate",
 	"button_delete": "Delete",
 	"button_edit": "Edit",
 	"button_request": "Request",
@@ -10,7 +10,7 @@
 	"button_edit_patient": "Edit patient data",
 	"button_id_card": "ID Card",
 	"button_add": "Add",
-	"button_save_new_id": "Save new ID",
+	"button_save_new_id": "Generate",
 	"button_correct": "Correct",
 	"button_confirm": "Confirm",
 
