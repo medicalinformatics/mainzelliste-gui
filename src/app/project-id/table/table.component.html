@@ -1,21 +1,11 @@
-<div id="table">
-<table id="header">
-    <ng-container >
-        <tr>
-            <th *ngFor="let data of csvRecords[0]">
-                {{data}}
-            </th>
-        </tr>
-    </ng-container>
-</table>
+<ng-container>
+    <table mat-table id="projectId" [dataSource]="displayRecords" class="mat-elevation-z8">
+        <ng-container [matColumnDef]="id" *ngFor="let id of ids; let i = index">
+            <th mat-header-cell *matHeaderCellDef>{{idTypes[i]}}</th>
+            <td mat-cell *matCellDef="let e">{{e[i]}}</td>
+        </ng-container>
 
-<table id="projectId">
-    <ng-container *ngFor="let csvData of csvRecords; let i = index;">
-        <tr *ngIf="i != 0">
-            <td *ngFor="let data of csvData">
-                {{data}}
-            </td>
-        </tr>
-    </ng-container>
-</table>
-</div>
+        <tr mat-header-row *matHeaderRowDef="ids; sticky: true;"></tr>
+        <tr mat-row *matRowDef="let erow; columns: ids;"></tr>
+    </table>
+</ng-container>

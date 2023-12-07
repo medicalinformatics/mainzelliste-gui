@@ -14,7 +14,7 @@
 	"button_confirm": "Confirm",
 	"button_stepper_next": "Next",
 	"button_stepper_generate_ids": "Generate new Ids",
-	"button_stepper_reset": "Reset",
+	"button_stepper_back": "Back",
 	"button_stepper_download_csv": "Download csv-file",
 
 	"radio_button_yes": "Yes",

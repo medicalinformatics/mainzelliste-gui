@@ -9,3 +9,9 @@ button {
 ::ng-deep .mat-horizontal-stepper-header {
     pointer-events: none !important;
 }
+
+#stepper {
+    width: 1400px;
+    margin: 0 auto;
+    background-color: #FAFAFA;
+}

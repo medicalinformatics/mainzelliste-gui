@@ -17,7 +17,7 @@ import { MatSelect } from '@angular/material/select';
 export class ProjectIdComponent implements OnInit {
 
   csvRecords: string[][] = [];
-  show: number = 2;
+  step: number = 3;
   generated = false;
   dataModel: string = "";
   idType: string = "";
@@ -85,19 +85,19 @@ export class ProjectIdComponent implements OnInit {
             for(let i = 1; i < this.csvRecords.length; i++) {
               this.idStrings[i-1] = this.csvRecords[i][0];
             }
-            this.show = 1;  
+            this.step = 1;  
           } else {
-            this.show = 0;
+            this.step = 0;
           }
         },
         error: (): void => {
           console.log('Error1');
-          this.show = 0;
+          this.step = 0;
         }
       });
     } else {
       console.log('Error2');
-      this.show = 0;
+      this.step = 0;
     }
   }
 
@@ -106,6 +106,7 @@ export class ProjectIdComponent implements OnInit {
     this.patientListService.generateIdArray(this.idType, this.idStrings, idT).subscribe(ids => {
       this.newEntrys(ids);
       this.generated = true;
+      this.step = 2;
     });
   }
 
@@ -138,11 +139,21 @@ export class ProjectIdComponent implements OnInit {
     }
   }
   
-  reset() {
-    this.csvRecords = [];
+  backToFirst() {
     this.csvUpload.reset();
     this.file = undefined;
-    this.stepper.reset();
+    this.reset();
+  }
+  
+  backToSecond() {
+    this.reset();
+    this.fileChangeListener(this.file);
+  }
+
+  private reset() {
+    this.csvRecords = [];
+    this.stepper.previous();
     this.select.value = '';
+    this.dataModel = '';
   }
 }
