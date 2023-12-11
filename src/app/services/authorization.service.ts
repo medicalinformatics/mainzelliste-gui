@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {AppConfigService} from "../app-config.service";
-import {Operation, PatientPermissionsContent, Permissions} from "../model/patientlist";
+import {Operation, PatientPermissionsContent, Permissions, Realm, ResourcesPermissions} from "../model/patientlist";
 import {UserAuthService} from "./user-auth.service";
 import {TranslateService} from '@ngx-translate/core';
-import {PermissionType, Role, SinglePermission} from "../model/role";
+import {PermissionType, RealmIdFilter, Role, SinglePermission} from "../model/role";
 
 @Injectable({
   providedIn: 'root'
@@ -22,11 +22,15 @@ export class AuthorizationService {
     this.userRoles = authentication.getRoles();
     this.configuredRoles = this.configService.getRolesWithPermissions()
       .map(e => {
-        return new Role(e.name, this.convertConfigPermissions(e.permissions))
+        return new Role(e.name, this.convertRealm(e.permissions.realm), this.convertConfigPermissions(e.permissions.resources))
       })
   }
 
-  private convertConfigPermissions(configuredPermissions: Permissions): SinglePermission[] {
+  private convertRealm(realm: Realm | undefined): RealmIdFilter {
+    return {idTypes: (realm?.criteria.ids || [])};
+  }
+
+  private convertConfigPermissions(configuredPermissions: ResourcesPermissions): SinglePermission[] {
     let permissions: SinglePermission[] = [];
     if (configuredPermissions.patient != undefined) {
       permissions.push({
@@ -79,15 +83,20 @@ export class AuthorizationService {
   }
 
   private checkPermission(permissions: SinglePermission[], type: PermissionType, operation: Operation): boolean {
-    console.log("user permissions " + type + " type " + operation, permissions)
     return (permissions || []).some(p => p.type == type && p.operations.includes(operation))
   }
 
   getAllowedIdTypes(operation: Operation): string[] {
     return this.configService.getRolesWithPermissions()
       .filter(r => this.userRoles.includes(r.name))
-      .map(r => r.permissions.patient.contents?.ids?.filter( i=> i.operations.includes(operation))
+      .map(r => r.permissions.resources.patient.contents?.ids?.filter( i=> i.operations.includes(operation))
         .map(i => i.type) || [])
-      .reduce((accumulator, currentValue) => accumulator.concat(currentValue), []);
+      .reduce((accumulator, currentValue) => accumulator.concat(currentValue.filter(e => !accumulator.includes(e))), []);
+  }
+
+  getRealmIdTypes(): string[] {
+    return this.configuredRoles.filter(r => this.userRoles.includes(r.name))
+      .map(r => r.realmFilter.idTypes)
+      .reduce((accumulator, currentValue) => accumulator.concat(currentValue.filter(e => !accumulator.includes(e))), []);
   }
 }

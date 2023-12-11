@@ -3,11 +3,15 @@ import {Operation} from "./patientlist";
 export class Role {
   constructor(
     public name: string,
+    public realmFilter: RealmIdFilter,
     public permissions: SinglePermission[]
   ) {
   }
 }
 
+export interface RealmIdFilter {
+  idTypes: string[]
+}
 
 export interface SinglePermission {
   type: PermissionType,

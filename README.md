@@ -59,27 +59,37 @@ secrets:
         {
           "name": "admin",
           "permissions": {
-            "patient": {
-              "operations": [ "C", "R", "U", "D" ]
+            "resources": {
+              "patient": {
+                "operations": [ "C", "R", "U", "D" ]
+              }
             }
           }
         },
         {
           "name": "study-nurse",
           "permissions": {
-            "patient": {
-              "operations": [ "C", "R" ],
-              "contents": {
-                "ids": [
-                  {
-                    "type": "projectId",
-                    "operations": [ "C", "R" ]
-                  },
-                  {
-                    "type": "clinicExtId",
-                    "operations": [ "C", "R", "U" ]
-                  }
-                ]
+            "realm": {
+              "name": "project",
+              "criteria": {
+                "ids": ["projectId"]
+              }
+            },
+            "resources": {
+              "patient": {
+                "operations": [ "C", "R" ],
+                "contents": {
+                  "ids": [
+                    {
+                      "type": "projectId",
+                      "operations": [ "C", "R" ]
+                    },
+                    {
+                      "type": "clinicExtId",
+                      "operations": [ "C", "R", "U" ]
+                    }
+                  ]
+                }
               }
             }
           }
