@@ -1,7 +1,12 @@
 <mat-horizontal-stepper [linear]="isLinear" #stepper id="stepper">
     <mat-step>
         <ng-template matStepLabel>{{'project_id.upload_label' | translate}}</ng-template>
-        <div style="margin-top: 1.5%">
+        <div style="margin-top: 1%">{{'project_id.upload_info_text1' | translate}}
+            <br />
+            {{'project_id.upload_info_text2' | translate}}
+            <br />
+            {{'project_id.upload_info_text3' | translate}}</div>
+        <div style="margin-top: 1%">
             <mat-form-field appearance="fill">
                 <ngx-mat-file-input
                     #fileInput
@@ -30,7 +35,6 @@
             <button
                 style="margin-left: 40px"
                 mat-button
-                matStepperNext
                 (click)="generateNewIds(dataModel)"
                 [disabled]="dataModel == ''">
                 {{'button_stepper_generate_ids' | translate}}

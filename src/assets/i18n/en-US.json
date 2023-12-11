@@ -1,6 +1,6 @@
 {
 	"button_add_consent": "Add consent",
-  "button_generate_id": "Generate",
+  	"button_generate_id": "Generate",
 	"button_delete": "Delete",
 	"button_edit": "Edit",
 	"button_request": "Request",
@@ -16,6 +16,7 @@
 	"button_stepper_generate_ids": "Generate new Ids",
 	"button_stepper_back": "Back",
 	"button_stepper_download_csv": "Download csv-file",
+	"button_okay": "Okay",
 
 	"radio_button_yes": "Yes",
 	"radio_button_no": "No",
@@ -213,5 +214,11 @@
 	"project_id.upload_error": "Please select a valid file!",
 	"project_id.download_label": "Download csv-file",
 	"project_id.generate_id_label": "Generate new Ids",
-	"project_id.id_type_label": "Id Type"
+	"project_id.id_type_label": "Id Type",
+	"project_id.upload_info_text1": "Please select a csv-file with the patient Ids.",
+	"project_id.upload_info_text2": "The file must contain the Id type as the first line and the patient Ids in the remaining lines.",
+	"project_id.upload_info_text3": "Empty lines can lead to errors!",
+
+	"projectIdEmptyFieldsDialog.text1": " patients were not found.",
+	"projectIdEmptyFieldsDialog.text2": "No new Ids were generated for patients not found."
 }

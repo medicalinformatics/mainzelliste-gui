@@ -8,6 +8,8 @@ import { GlobalTitleService } from '../services/global-title.service';
 import { TranslateService } from '@ngx-translate/core';
 import { MatStepper } from '@angular/material/stepper';
 import { MatSelect } from '@angular/material/select';
+import { MatDialog } from '@angular/material/dialog';
+import { ProjectIdEmptyFieldsDialog } from './dialog/project-id-empty-fields-dialog';
 
 @Component({
   selector: 'app-project-id',
@@ -30,12 +32,14 @@ export class ProjectIdComponent implements OnInit {
   csvUpload: FormControl;
   public file: any;
   isLinear: boolean = true;
+  emptyFields: number = 0;
 
   @ViewChild("stepper", { static: false }) stepper!: MatStepper;
 
   @ViewChild("select", { static: false }) select!: MatSelect;
       
   constructor(
+    public dialog: MatDialog,
     private titleService: GlobalTitleService,
     private ngxCsvParser: NgxCsvParser,
     public patientListService: PatientListService,
@@ -105,8 +109,13 @@ export class ProjectIdComponent implements OnInit {
     this.csvRecords[0][1] = idT;
     this.patientListService.generateIdArray(this.idType, this.idStrings, idT).subscribe(ids => {
       this.newEntrys(ids);
-      this.generated = true;
-      this.step = 2;
+      if(this.emptyFields == 0) {
+        this.generated = true;
+        this.step = 2;
+        this.stepper.next();
+      } else {
+        this.openDialog();
+      }
     });
   }
 
@@ -124,9 +133,11 @@ export class ProjectIdComponent implements OnInit {
   }
 
   private newEntrys(newIds: [{idType: string, idString: string}]) {
+    this.emptyFields = 0;
     for(let i = 1; i < this.csvRecords.length; i++) {
       if(newIds[i-1].idString == undefined) {
         this.csvRecords[i][1] = "";
+        this.emptyFields++;
       } else {
         this.csvRecords[i][1] = newIds[i-1].idString;
       }
@@ -137,6 +148,14 @@ export class ProjectIdComponent implements OnInit {
     if(this.file !=undefined && this.file.type == "text/csv") {
       this.stepper.next();
     }
+  }
+
+  private openDialog() {
+    this.dialog.open(ProjectIdEmptyFieldsDialog, {data: this.emptyFields}).afterClosed().subscribe(() => {
+      this.generated = true;
+      this.step = 2;
+      this.stepper.next();
+    });
   }
   
   backToFirst() {

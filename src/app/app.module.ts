@@ -54,6 +54,7 @@ import { AccessDeniedComponent } from './access-denied/access-denied.component';
 import { NgxMatFileInputModule } from '@angular-material-components/file-input';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ProjectIdTableComponent } from './project-id/table/table.component';
+import { ProjectIdEmptyFieldsDialog } from './project-id/dialog/project-id-empty-fields-dialog';
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
   return () => configService.init()
@@ -98,7 +99,8 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     NewIdDialog,
     AccessDeniedComponent,
     ProjectIdComponent,
-    ProjectIdTableComponent
+    ProjectIdTableComponent,
+    ProjectIdEmptyFieldsDialog
   ],
   imports: [
     SharedModule,

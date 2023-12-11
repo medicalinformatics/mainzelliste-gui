@@ -1,6 +1,6 @@
 {
 	"button_add_consent": "Einwilligung hinzufügen",
-  "button_generate_id": "Generieren",
+  	"button_generate_id": "Generieren",
 	"button_delete": "Löschen",
 	"button_edit": "Bearbeiten",
 	"button_request": "Anfordern",
@@ -16,6 +16,7 @@
 	"button_stepper_generate_ids": "Neue Ids generieren",
 	"button_stepper_back": "Zurück",
 	"button_stepper_download_csv": "CSV Datei herunterladen",
+	"button_okay": "Okay",
 
 	"radio_button_yes": "Ja",
 	"radio_button_no": "Nein",
@@ -213,5 +214,11 @@
 	"project_id.upload_error": "Bitte wählen sie eine gültige Datei aus!",
 	"project_id.download_label": "CSV Datei herunterladen",
 	"project_id.generate_id_label": "Neue Ids generieren",
-	"project_id.id_type_label": "Id Typ"
+	"project_id.id_type_label": "Id Typ",
+	"project_id.upload_info_text1": "Bitte wählen sie eine CSV-Datei mit den PatientenIds aus.",
+	"project_id.upload_info_text2": "Die Datei muss den IdTyp als erste Zeile und die Patienten-Ids in den weiteren Zeilen enthalten.",
+	"project_id.upload_info_text3": "Leere Zeilen können zu Fehlern führen!",
+
+	"projectIdEmptyFieldsDialog.text1": " Patienten konnten nicht gefunden werden.",
+	"projectIdEmptyFieldsDialog.text2": "Für nicht gefundene Patienten wurden keine neuen Ids generiert."
 }
