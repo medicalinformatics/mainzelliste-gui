@@ -155,7 +155,7 @@ export class PatientListService {
     //let defaultIdType = this.findDefaultIdType(this.getIdTypes());
     if (filters.every(f => !f.isIdType)) {
       // get permitted idTypes
-      allowedIdTypes = this.authorizationService.getAllowedIdTypes("R");
+      allowedIdTypes = this.authorizationService.getRealmIdTypes();
       if(allowedIdTypes.length > 0)
         searchIds = allowedIdTypes.map(type => ({idType: type, idString: "*"}));
       else
