@@ -11,34 +11,44 @@
         {
           "name": "admin",
           "permissions": {
-            "patient": {
-              "operations": [ "C", "R", "U", "D" ]
-            },
-            "consent": {
-              "operations": [ "C", "R", "U" ]
+            "resources": {
+              "patient": {
+                "operations": [ "C", "R", "U", "D" ]
+              },
+              "consent": {
+                "operations": [ "C", "R", "U" ]
+              }
             }
           }
         },
         {
           "name": "study-nurse",
           "permissions": {
-            "patient": {
-              "operations": [ "C", "R" ],
-              "contents": {
-                "ids": [
-                  {
-                    "type": "projectId",
-                    "operations": [ "C", "R" ]
-                  },
-                  {
-                    "type": "clinicExtId",
-                    "operations": [ "C", "R", "U" ]
-                  }
-                ]
+            "realm": {
+              "name": "project",
+              "criteria": {
+                "ids": ["projectId"]
               }
             },
-            "consent": {
-              "operations": [ "C", "R"]
+            "resources": {
+              "patient": {
+                "operations": [ "C", "R" ],
+                "contents": {
+                  "ids": [
+                    {
+                      "type": "projectId",
+                      "operations": [ "C", "R" ]
+                    },
+                    {
+                      "type": "clinicExtId",
+                      "operations": [ "C", "R", "U" ]
+                    }
+                  ]
+                }
+              },
+              "consent": {
+                "operations": [ "C", "R"]
+              }
             }
           }
         }

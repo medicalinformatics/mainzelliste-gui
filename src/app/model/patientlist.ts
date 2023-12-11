@@ -31,6 +31,20 @@ export interface ConfigRole {
   permissions: Permissions;
 }
 export interface Permissions {
+  realm?: Realm
+  resources: ResourcesPermissions
+}
+
+export interface Realm {
+  name: string
+  criteria: RealmCriteria
+}
+
+export interface RealmCriteria {
+  ids: string[]
+}
+
+export interface ResourcesPermissions {
   patient: PatientPermissions
   consent: ConsentPermissions
 }
