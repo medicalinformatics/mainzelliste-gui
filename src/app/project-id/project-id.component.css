@@ -2,8 +2,29 @@ button {
     border: 1px solid grey;
 }
 
-#reset {
-    margin-left: 1%;
+#back {
+    width: 75px;
+    color: #646464;
+    border-color: #646464;
+}
+
+#downloadFile {
+    margin-left: 10px;
+    width: 187px;
+    color: #0b1ece;
+    border-color: #0b1ece;
+}
+
+#generateId {
+    margin-left: 10px;
+    width: 160px;
+    color: #0b1ece;
+    border-color: #0b1ece;
+}
+
+#generateId[disabled] {
+    color: #b4b4b4;
+    border-color: #b4b4b4;
 }
 
 ::ng-deep .mat-horizontal-stepper-header {
@@ -11,7 +32,19 @@ button {
 }
 
 #stepper {
-    width: 1400px;
+    width: 1200px;
     margin: 0 auto;
     background-color: #FAFAFA;
+}
+
+.float-table {
+    width: 700px;
+    padding: 40px;
+    float: left;
+}
+
+.float-content {
+    width: 280px;
+    padding: 40px;
+    float: left;
 }

@@ -21,37 +21,51 @@
     </mat-step>
     <mat-step #stepTwo>
         <ng-template matStepLabel>{{'project_id.generate_id_label' | translate}}</ng-template>
-        <project-id-table *ngIf="step == 1" [csvRecords]="csvRecords"></project-id-table>
-        <div style="text-align: center; margin-top: 2.5%;">
-            <button style="float: left; margin-top: 13px" id="reset" mat-button (click)="backToFirst(); stepTwo.reset()">{{'button_stepper_back' | translate}}</button>
-            <mat-form-field>
-                <mat-label>{{'project_id.id_type_label' | translate}}</mat-label>
-                <mat-select #select (selectionChange)="dataModel = $event.value">
-                    <mat-option *ngFor="let idType of patientListService.getNewIdType([this.idType])" [value]="idType">
-                        {{idType}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <button
-                style="margin-left: 40px"
-                mat-button
-                (click)="generateNewIds(dataModel)"
-                [disabled]="dataModel == ''">
-                {{'button_stepper_generate_ids' | translate}}
-            </button>
+        <div class="float-container">
+            <div class="float-table">
+                <div><project-id-table *ngIf="step == 1" [csvRecords]="csvRecords"></project-id-table></div>
+            </div>
+            <div class="float-content">
+                <div>
+                <mat-form-field style="width: 245px;">
+                    <mat-label>{{'project_id.id_type_label' | translate}}</mat-label>
+                    <mat-select #select (selectionChange)="dataModel = $event.value">
+                        <mat-option *ngFor="let idType of patientListService.getNewIdType([this.idType])" [value]="idType">
+                            {{idType}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                </div>
+                <div>
+                <button id="back" mat-button (click)="backToFirst(); stepTwo.reset()">{{'button_stepper_back' | translate}}</button>
+                <button
+                    id="generateId"
+                    mat-button
+                    (click)="generateNewIds(dataModel)"
+                    [disabled]="dataModel == ''">
+                    {{'button_stepper_generate_ids' | translate}}
+                </button>
+                </div>
+            </div>
         </div>
     </mat-step>
     <mat-step #stepThree>
         <ng-template matStepLabel>{{'project_id.download_label' | translate}}</ng-template>
-        <project-id-table *ngIf="step == 2" [csvRecords]="csvRecords"></project-id-table>
-        <div  style="margin-top: 1.5%;">
-            <button style="float: left;" id="reset" mat-button (click)="backToSecond(); stepThree.reset()">{{'button_stepper_back' | translate}}</button>
-            <button
-                style="margin-left: 485px;"
+        <div class="float-container">
+            <div class="float-table">
+                <div><project-id-table *ngIf="step == 2" [csvRecords]="csvRecords"></project-id-table></div>
+            </div>
+            <div class="float-content">
+                <div>
+                <button id="back" mat-button (click)="backToSecond(); stepThree.reset()">{{'button_stepper_back' | translate}}</button>
+                <button
+                id="downloadFile"
                 mat-button
                 (click)="downloadCSV()">
                 {{'button_stepper_download_csv' | translate}}
             </button>
+            </div>
+            </div>
         </div>
     </mat-step>
 </mat-horizontal-stepper>

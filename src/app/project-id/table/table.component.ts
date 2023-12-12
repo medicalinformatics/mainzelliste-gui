@@ -9,8 +9,8 @@ export class ProjectIdTableComponent implements OnInit{
 
     @Input() csvRecords!: string[][];
 
-    ids: string[] = ["firstId", "secondId"];
-    idTypes: string [] = ["", ""];
+    ids: string[] = ["index", "firstId", "secondId"];
+    idTypes: string [] = ["#", "", ""];
     displayRecords: string[][] = [];
 
     ngOnInit(): void {
@@ -19,14 +19,14 @@ export class ProjectIdTableComponent implements OnInit{
 
     private setupTableData() {
         this.copyToDisplay();
-        this.idTypes[0] = this.displayRecords[0][0];
+        this.idTypes[1] = this.displayRecords[0][1];
         for(let i = 1; i < this.displayRecords.length; i++) {
-            this.displayRecords[i - 1][0] = this.displayRecords[i][0];
+            this.displayRecords[i - 1][1] = this.displayRecords[i][1];
         }
-        if(this.displayRecords[0].length == 2) {
-            this.idTypes[1] = this.displayRecords[0][1];
+        if(this.displayRecords[0].length == 3) {
+            this.idTypes[2] = this.displayRecords[0][2];
             for(let i = 1; i < this.displayRecords.length; i++) {
-                this.displayRecords[i - 1][1] = this.displayRecords[i][1];
+                this.displayRecords[i - 1][2] = this.displayRecords[i][2];
             }
         }
         if(this.displayRecords.length > 1) {
@@ -35,12 +35,15 @@ export class ProjectIdTableComponent implements OnInit{
     }
 
     private copyToDisplay() {
+        let i: number = 1;
         this.csvRecords.forEach(csvRow => {
             let data: string[] = [];
+            data.push(i.toString());
             csvRow.forEach(csvData => {
                 data.push(csvData);
             });
-            this.displayRecords.push(data); 
+            this.displayRecords.push(data);
+            i++;
         });
     }
 }

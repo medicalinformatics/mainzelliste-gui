@@ -1,12 +1,11 @@
 #projectId {
-    width: 800px;
-    max-height: 700px;
+    width: fit-content;
+    max-height: 500px;
     margin: 0 auto;
     overflow-y: auto;
     display: block;
     border-collapse: separate;
     border-spacing: 0;
-    margin-top: 2%;
 }
 
 #projectId tr:nth-child(even){
@@ -14,7 +13,9 @@
 }
 
 #projectId td {
-    padding: 2px 0 2px 15px;
+    padding: 2px 0 2px 0;
+    text-align: center;
+    padding: 0 5px 0 5px;
     border: 1px solid #ddd;
     max-height: 450px;
     font-size: medium;
@@ -29,14 +30,19 @@
     font-size: large;
 }
 
+.mat-column-index {
+    flex: none;
+    width: auto;
+}
+
 .mat-column-firstId {
     flex: none;
-    width: 400px;
+    width: 300px;
 }
 
 .mat-column-secondId {
     flex: none;
-    width: 400px;
+    width: 300px;
 }
 
 tr.mat-row {
