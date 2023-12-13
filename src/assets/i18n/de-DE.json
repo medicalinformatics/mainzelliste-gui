@@ -220,5 +220,7 @@
 	"project_id.upload_info_text3": "Leere Zeilen können zu Fehlern führen!",
 
 	"projectIdEmptyFieldsDialog.text1": " Patienten konnten nicht gefunden werden.",
-	"projectIdEmptyFieldsDialog.text2": "Für nicht gefundene Patienten wurden keine neuen Ids generiert."
+	"projectIdEmptyFieldsDialog.text2": "Für nicht gefundene Patienten wurden keine neuen Ids generiert.",
+	"projectIdEmptyFieldsDialog.error_text1": "Es wurde kein Patient gefunden.",
+	"projectIdEmptyFieldsDialog.error_text2": "Bitte wählen sie eine gültige Datei aus."
 }

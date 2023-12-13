@@ -220,5 +220,7 @@
 	"project_id.upload_info_text3": "Empty lines can lead to errors!",
 
 	"projectIdEmptyFieldsDialog.text1": " patients were not found.",
-	"projectIdEmptyFieldsDialog.text2": "No new Ids were generated for patients not found."
+	"projectIdEmptyFieldsDialog.text2": "No new Ids were generated for patients not found.",
+	"projectIdEmptyFieldsDialog.error_text1": "No patient was found.",
+	"projectIdEmptyFieldsDialog.error_text2": "Please select a valid file."
 }

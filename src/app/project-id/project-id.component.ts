@@ -6,7 +6,7 @@ import { saveAs } from 'file-saver';
 import { FormControl, Validators } from '@angular/forms';
 import { GlobalTitleService } from '../services/global-title.service';
 import { TranslateService } from '@ngx-translate/core';
-import { MatStepper } from '@angular/material/stepper';
+import { MatStep, MatStepper } from '@angular/material/stepper';
 import { MatSelect } from '@angular/material/select';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectIdEmptyFieldsDialog } from './dialog/project-id-empty-fields-dialog';
@@ -35,7 +35,8 @@ export class ProjectIdComponent implements OnInit {
   emptyFields: number = 0;
 
   @ViewChild("stepper", { static: false }) stepper!: MatStepper;
-
+  @ViewChild("stepTwo", { static: false }) stepTwo!: MatStep;
+  @ViewChild("stepThree", { static: false }) stepThree!: MatStep;
   @ViewChild("select", { static: false }) select!: MatSelect;
       
   constructor(
@@ -113,8 +114,10 @@ export class ProjectIdComponent implements OnInit {
         this.generated = true;
         this.step = 2;
         this.stepper.next();
+      } else if(this.emptyFields + 1 == this.csvRecords.length) {
+        this.openDialog(true);
       } else {
-        this.openDialog();
+        this.openDialog(false);
       }
     });
   }
@@ -150,11 +153,15 @@ export class ProjectIdComponent implements OnInit {
     }
   }
 
-  private openDialog() {
-    this.dialog.open(ProjectIdEmptyFieldsDialog, {data: this.emptyFields}).afterClosed().subscribe(() => {
-      this.generated = true;
-      this.step = 2;
-      this.stepper.next();
+  private openDialog(error: boolean) {
+    this.dialog.open(ProjectIdEmptyFieldsDialog, {data: [this.emptyFields, error]}).afterClosed().subscribe(() => {
+      if(error) {
+        this.backToFirst();
+      } else {
+        this.generated = true;
+        this.step = 2;
+        this.stepper.next();
+      }
     });
   }
   
@@ -162,11 +169,13 @@ export class ProjectIdComponent implements OnInit {
     this.csvUpload.reset();
     this.file = undefined;
     this.reset();
+    this.stepTwo.reset();
   }
   
   backToSecond() {
     this.reset();
     this.fileChangeListener(this.file);
+    this.stepThree.reset();
   }
 
   private reset() {

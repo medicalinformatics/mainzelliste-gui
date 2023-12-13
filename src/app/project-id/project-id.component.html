@@ -37,7 +37,7 @@
                 </mat-form-field>
                 </div>
                 <div>
-                <button id="back" mat-button (click)="backToFirst(); stepTwo.reset()">{{'button_stepper_back' | translate}}</button>
+                <button id="back" mat-button (click)="backToFirst()">{{'button_stepper_back' | translate}}</button>
                 <button
                     id="generateId"
                     mat-button
@@ -57,7 +57,7 @@
             </div>
             <div class="float-content">
                 <div>
-                <button id="back" mat-button (click)="backToSecond(); stepThree.reset()">{{'button_stepper_back' | translate}}</button>
+                <button id="back" mat-button (click)="backToSecond()">{{'button_stepper_back' | translate}}</button>
                 <button
                 id="downloadFile"
                 mat-button
