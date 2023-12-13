@@ -1,7 +1,12 @@
-![Mainzelliste Logo](./src/assets/images/mainzelliste-logo-650.png)
+![Mainzelliste Logo](./doc/images/mainzelliste-logo-670.png)
+
+
+[![Build](https://github.com/medicalinformatics/mainzelliste-gui/actions/workflows/build.yml/badge.svg)](https://github.com/medicalinformatics/mainzelliste-gui/actions/workflows/build.yml)
+[![Docker Pulls](https://img.shields.io/docker/pulls/medicalinformatics/mainzelliste-gui.svg)](https://hub.docker.com/r/medicalinformatics/mainzelliste-gui/)
 
 With the Mainzelliste UI your can easily manage your patient list, creating new ID, editing patient fields or deleting patient.   
 
+![Mainzelliste UI Screenshot](./doc/images/mainzelliste-ui-screenshot-browser.png)
 ## Installation Guidelines
 ### How to configure
 Most of the configuration can be set using docker environment variables
