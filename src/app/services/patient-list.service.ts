@@ -198,7 +198,7 @@ export class PatientListService {
   }
 
   generateId(idType: string, idString: string, newIdType: string) {
-    return this.sessionService.createToken("createIds", new CreateIdsTokenData([{idType, idString}]))
+    return this.sessionService.createToken("createIds", new CreateIdsTokenData([{idType, idString}], [newIdType]))
       .pipe(mergeMap(
         token => this.resolveCreateIdsToken(token.id, newIdType)
         ),
