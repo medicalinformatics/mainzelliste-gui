@@ -9,6 +9,7 @@ import {ConsentTemplate} from "./consent-template.model";
 import {TranslateService} from '@ngx-translate/core';
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessages} from "../error/error-messages";
+import _moment from "moment";
 
 @Injectable({
   providedIn: 'root'
@@ -45,15 +46,15 @@ export class ConsentService {
       let period = dataModel.fhirResource?.provision?.period;
       if (period == undefined || !period.end || period.end.trim().length < 1) {
         dataModel.fhirResource.provision!.period = {
-          start: datePipe.transform(dataModel.validFrom, 'yyyy-MM-dd') || undefined
+          start: datePipe.transform(dataModel.validFrom?.toDate(), 'yyyy-MM-dd') || undefined
         }
       } else {
         let periodAsDate = 0;
         if ((period.start && period.start.trim().length > 0))
           periodAsDate = new Date(period.end).getTime() - new Date(period.start).getTime();
         dataModel.fhirResource.provision!.period = {
-          start: datePipe.transform(dataModel.validFrom, 'yyyy-MM-dd') || undefined,
-          end: datePipe.transform(new Date((dataModel.validFrom?.getTime() || 0) + periodAsDate), 'yyyy-MM-dd') || undefined
+          start: datePipe.transform(dataModel.validFrom?.toDate(), 'yyyy-MM-dd') || undefined,
+          end: datePipe.transform(new Date((dataModel.validFrom?.toDate().getTime() || 0) + periodAsDate), 'yyyy-MM-dd') || undefined
         }
       }
 
@@ -113,7 +114,7 @@ export class ConsentService {
         id: "",
         title: "NOT FOUND",
         createdAt: new Date(),
-        validFrom: new Date(),
+        validFrom: _moment(),
         period: 0,
         items: [],
         status: "active"
@@ -165,14 +166,14 @@ export class ConsentService {
     // calculate period from consent resource
     let fhirPeriod = fhirConsent?.provision?.period;
     let period;
-    let validFrom = new Date();
+    let validFrom = _moment();
     if (fhirPeriod == undefined || !fhirPeriod.end || fhirPeriod.end.trim().length < 1) {
       period = 0;
     } else if ((!fhirPeriod.start || fhirPeriod.start.trim().length < 1)) {
-      period = new Date(fhirPeriod.end).getTime() - validFrom.getTime();
+      period = new Date(fhirPeriod.end).getTime() - validFrom.toDate().getTime();
     } else {
-      validFrom = !initNewDataModel ? new Date(fhirPeriod.start) : validFrom;
-      period = new Date(fhirPeriod.end).getTime() - validFrom.getTime();
+      validFrom = !initNewDataModel ? _moment(fhirPeriod.start) : validFrom;
+      period = new Date(fhirPeriod.end).getTime() - validFrom.toDate().getTime();
     }
 
     return {
@@ -256,7 +257,7 @@ export class ConsentService {
         id: "",
         title: "NOT FOUND",
         createdAt: new Date(),
-        validFrom: new Date(),
+        validFrom: _moment(),
         period: 0,
         items: [],
         status: "active"
@@ -314,7 +315,7 @@ export class ConsentService {
           id: r.resource?.id,
           title: template[1]?.title || "",
           createdAt: new Date(r.resource?.dateTime || ""),
-          validFrom: startDate && startDate.trim().length > 0 ? new Date(startDate) : undefined,
+          validFrom: startDate && startDate.trim().length > 0 ? _moment(startDate) : undefined,
           validUntil: endDate && endDate.trim().length > 0 ? new Date(endDate) : undefined,
           status: r.resource?.status || "active",
           period: 0,

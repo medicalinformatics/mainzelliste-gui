@@ -1,4 +1,5 @@
 import {Questionnaire} from "fhir/r4";
+import {Moment} from "moment/moment";
 
 export class Consent {
   constructor(
@@ -9,7 +10,7 @@ export class Consent {
     public status: ConsentStatus,
     public id?: string,
     public version?: string,
-    public validFrom?: Date,
+    public validFrom?: Moment,
     public validUntil?: Date,
     public patientId?: { idType: string, idString: string },
     public fhirResource?: fhir4.Consent,

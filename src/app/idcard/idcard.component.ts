@@ -84,7 +84,7 @@ export class IdcardComponent implements OnInit {
             //map period
             let period = "unbegrenzt";
             if (m.validUntil) {
-              period = (!m.validFrom ? "??" : new Date(m.validFrom).toLocaleDateString()) + " - "
+              period = (!m.validFrom ? "??" : m.validFrom.toDate().toLocaleDateString()) + " - "
                   + new Date(m.validUntil).toLocaleDateString();
             }
 
