@@ -6,6 +6,7 @@ export class Consent {
     public createdAt: Date,
     public period: number,
     public items: ConsentItem[],
+    public status: ConsentStatus,
     public id?: string,
     public version?: string,
     public validFrom?: Date,
@@ -13,10 +14,12 @@ export class Consent {
     public patientId?: { idType: string, idString: string },
     public fhirResource?: fhir4.Consent,
     public templateName?: string,
-    public template?: Questionnaire
+    public template?: Questionnaire,
   ) {
   }
 }
+
+export type ConsentStatus = "draft" | "proposed" | "active" | "rejected" | "inactive" | "entered-in-error";
 
 export interface ConsentItem {
   type?: string

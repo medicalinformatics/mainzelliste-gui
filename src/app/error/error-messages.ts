@@ -111,4 +111,14 @@ export class ErrorMessages {
   public static CREATE_IDS_ERROR: ErrorMessage = new ErrorMessage(3001,
     "ResolveCreateIdTokenError",
     'error.resolve_create_id_token');
+
+  ////
+  // CREATE/EDIT CONSENT
+  //---------------------
+  public static CREATE_CONSENT_REJECTED: ErrorMessage = new ErrorMessage(4001,
+    "ConsentRejected",
+    'error.create_consent_rejected');
+  public static CREATE_CONSENT_INACTIVE: ErrorMessage = new ErrorMessage(4002,
+    "ConsentInactivated",
+    'error.create_consent_inactivated');
 }

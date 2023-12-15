@@ -41,9 +41,20 @@
 	"idcard.consent_title": "Einwilligungen",
 	"idcard.consent_validity_period": "Gültigkeitszeitraum",
 	"idcard.consent_version": "Version",
+  "idcard.consent_status": "Status",
 	"idcard.title_patient_data": "Patientendaten",
 	"idcard.title_pseudonyms": "Pseudonyme",
 	"idcard.title_id_card": "ID Karte",
+
+  "consent_status.draft": "Entwurf",
+  "consent_status.proposed": "Entwurf",
+  "consent_status.active": "Aktiv",
+  "consent_status.rejected": "Wiederruft",
+  "consent_status.inactive": "Inaktiv",
+  "consent_status.entered-in-error": "Fehlerhaft",
+
+  "add_consent.rejected-dialog-text": "Alle Einwilligungsmodule wurden abgelehnt. Der Einwilligungsstatus wird automatische als Wiederrufen gesetzt",
+  "add_consent.inactivated-dialog-text": "Gültigkeitsende der Einwilligung liegt in der Vergangenheit. Der Einwilligungstatus wird automatische als Inaktive gesetzt",
 
 	"navigation.info": "Info",
 	"navigation.new_patient": "Neuer Patient",

@@ -41,11 +41,22 @@
 	"idcard.consent_title": "Consents",
 	"idcard.consent_validity_period": "Validity period",
 	"idcard.consent_version": "Version",
+  "idcard.consent_status": "Status",
 	"idcard.title_patient_data": "Patient data",
 	"idcard.title_pseudonyms": "Pseudonyms",
 	"idcard.title_id_card": "ID Card",
 
-	"navigation.info": "Info",
+  "consent_status.draft": "Draft",
+  "consent_status.proposed": "Proposed",
+  "consent_status.active": "Active",
+  "consent_status.rejected": "Rejected",
+  "consent_status.inactive": "Inactive",
+  "consent_status.entered-in-error": "Error",
+
+  "add_consent.rejected-dialog-text": "All consent modules were rejected. The consent status is automatically set as Rejected",
+  "add_consent.inactivated-dialog-text": "The end of the Timeframe of this consent is in the past. The consent status is automatically set as Inactive",
+
+  "navigation.info": "Info",
 	"navigation.new_patient": "New Patient",
 	"navigation.patientlist": "Patient list",
 
