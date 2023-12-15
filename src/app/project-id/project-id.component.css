@@ -28,7 +28,12 @@ button {
 }
 
 ::ng-deep .mat-horizontal-stepper-header {
-    pointer-events: none !important;
+    pointer-events: none;
+
+}
+
+::ng-deep .mat-horizontal-stepper-header[aria-selected="true"] {
+    background-color: #FAFAFA;
 }
 
 #stepper {
