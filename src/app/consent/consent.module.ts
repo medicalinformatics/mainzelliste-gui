@@ -10,6 +10,7 @@ import {SharedModule} from "../shared/shared.module";
 import {ConsentService} from "./consent.service";
 import {ConsentRejectedDialog} from "./dialog/consent-rejected-dialog";
 import {ConsentInactivatedDialog} from "./dialog/consent-inactivated-dialog";
+import {ConsentTemplateValidityPeriodDialog} from "./create-consent-template/consent-template-validity-period-dialog";
 
 
 @NgModule({
@@ -18,7 +19,7 @@ import {ConsentInactivatedDialog} from "./dialog/consent-inactivated-dialog";
     SharedModule
   ],
   declarations: [ConsentDetailComponent, ConsentDialogComponent, AddConsentComponent, EditConsentComponent,
-    ConsentRejectedDialog, ConsentInactivatedDialog],
+    ConsentRejectedDialog, ConsentInactivatedDialog, ConsentTemplateValidityPeriodDialog],
   providers: [ConsentService]
 })
 export class ConsentModule {

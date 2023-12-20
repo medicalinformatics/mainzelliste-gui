@@ -12,6 +12,7 @@ import {EditPatientComponent} from "./patient/edit-patient/edit-patient.componen
 import {AccessDeniedComponent} from "./access-denied/access-denied.component";
 import {AddConsentComponent} from "./consent/add-consent/add-consent.component";
 import {EditConsentComponent} from "./consent/edit-consent/edit-consent.component";
+import {CreateConsentTemplateComponent} from "./consent/create-consent-template/create-consent-template.component";
 
 const routes: Routes = [
   // TODO: All Paths should have english wording.
@@ -25,11 +26,12 @@ const routes: Routes = [
       {path: 'patientlist', component: PatientlistViewComponent, data : { permission: Permission.READ_PATIENT }},
       {path: 'patient/:idType/:idString/add-consent', component: AddConsentComponent, data: { permission: Permission.CREATE_CONSENT}},
       // TODO support multiple permissions 'readConsent'
-      {path: 'patient/:idType/:idString/edit-consent/:id', component: EditConsentComponent, data: { permission: Permission.EDIT_CONSENT}}
+      {path: 'patient/:idType/:idString/edit-consent/:id', component: EditConsentComponent, data: { permission: Permission.EDIT_CONSENT}},
       // {path: 'delete-patient/:idType/:idString', pathMatch: 'full', redirectTo:  ''},
       // {path: 'merge-patients', component: MergePatientsComponent},
       // {path: 'audittrail', component: AudittrailComponent},
       // {path: 'delete-patients', component: DeleteMultiplePatientsComponent, data : { permission: 'deletePatient' }}
+      {path: 'create-consent-template', component: CreateConsentTemplateComponent, data: { permission: Permission.CREATE_CONSENT}}
     ]
   },
   {path: 'access-denied', component: AccessDeniedComponent},

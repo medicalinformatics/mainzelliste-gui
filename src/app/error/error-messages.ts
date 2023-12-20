@@ -121,4 +121,11 @@ export class ErrorMessages {
   public static CREATE_CONSENT_INACTIVE: ErrorMessage = new ErrorMessage(4002,
     "ConsentInactivated",
     'error.create_consent_inactivated');
+
+  ////
+  // CREATE/EDIT CONSENT TEMPLATE
+  //-----------------------------
+  public static CREATE_CONSENT_TEMPLATE_REJECTED: ErrorMessage = new ErrorMessage(5001,
+    "ConsentTemplateRejected",
+    'error.create_consent_template_rejected');
 }

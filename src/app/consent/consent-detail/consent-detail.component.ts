@@ -2,9 +2,9 @@ import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild} from 
 import {MatSelect} from "@angular/material/select";
 import {ConsentService} from "../consent.service";
 import {MAT_DATE_LOCALE, MatOption} from "@angular/material/core";
-import {ConsentTemplate} from "../consent-template.model";
 import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "../consent.model";
 import _moment, {Moment} from "moment";
+import {ConsentTemplateFhirWrapper} from "../../model/consent-template-fhir-wrapper";
 
 @Component({
   selector: 'app-consent-detail',
@@ -15,7 +15,7 @@ export class ConsentDetailComponent implements OnInit {
 
   @Input() dataModel!: Consent;
   @Output() dataModelChange = new EventEmitter<Consent>();
-  consentTemplates: Map<string, ConsentTemplate>;
+  consentTemplates: Map<string, ConsentTemplateFhirWrapper>;
   @ViewChild('templateSelection') templateSelection!: MatSelect;
   @Input() edit: boolean = false;
   localDateFormat:string;

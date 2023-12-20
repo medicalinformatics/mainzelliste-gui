@@ -53,6 +53,17 @@
   "consent_status.inactive": "Inaktiv",
   "consent_status.entered-in-error": "Fehlerhaft",
 
+  "consent_template.name": "Name",
+  "consent_template.title": "Titel",
+  "consent_template.organization": "Verantwortliche Einrichtung",
+  "consent_template.research_study": "Forschungsprojekt",
+  "consent_template.name.based_on_mii_broad_consent": "basiert auf MII Broad Consent",
+  "consent_template.name.mii_broad_consent_version": "Version des MII Broad Consent",
+  "consent_template.validityPeriod": "Gültigkeitsdauer",
+  "consent_template.validity_year": "Jahren",
+  "consent_template.validity_month": "Monaten",
+  "consent_template.validity_day": "Tage",
+
   "add_consent.rejected-dialog-text": "Alle Einwilligungsmodule wurden abgelehnt. Der Einwilligungsstatus wird automatische als Wiederrufen gesetzt",
   "add_consent.inactivated-dialog-text": "Gültigkeitsende der Einwilligung liegt in der Vergangenheit. Der Einwilligungstatus wird automatische als Inaktive gesetzt",
 
@@ -197,6 +208,7 @@
 	"error.app_config_service_id_type_mismatch_text2": "' und der konfigurierte Haupt-ID-Typ '",
 	"error.app_config_service_id_type_mismatch_text3": "' sind unterschiedlich",
 	"error.app_module_connect_keycloak": "Verbindung zu Keycloak konnte nicht hergestellt werden.",
+  "error.create_consent_template_rejected": "Einwilligungsvorlage konnte nicht erstellt werden. Ursache: '${1}'",
 
 	"errorComponent.error": "Error",
 	"errorComponent.message": "Information",

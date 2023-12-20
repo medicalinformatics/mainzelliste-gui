@@ -53,6 +53,17 @@
   "consent_status.inactive": "Inactive",
   "consent_status.entered-in-error": "Error",
 
+  "consent_template.name": "Name",
+  "consent_template.title": "Titel",
+  "consent_template.organization": "Organization",
+  "consent_template.research_study": "Research study",
+  "consent_template.name.based_on_mii_broad_consent": "based on MII Broad Consent",
+  "consent_template.name.mii_broad_consent_version": "Version of MII Broad Consent",
+  "consent_template.validityPeriod": "Validity period",
+  "consent_template.validity_year": "Years",
+  "consent_template.validity_month": "Months",
+  "consent_template.validity_day": "Days",
+
   "add_consent.rejected-dialog-text": "All consent modules were rejected. The consent status is automatically set as Rejected",
   "add_consent.inactivated-dialog-text": "The end of the Timeframe of this consent is in the past. The consent status is automatically set as Inactive",
 
@@ -197,6 +208,7 @@
 	"error.app_config_service_id_type_mismatch_text2": "' and the configured main id type '",
 	"error.app_config_service_id_type_mismatch_text3": "' are different",
 	"error.app_module_connect_keycloak": "Failed to connect to Keycloak.",
+  "error.create_consent_template_rejected": "Failed to create consent template. Cause: '${1}'",
 
 	"errorComponent.error": "Error",
 	"errorComponent.message": "Message",

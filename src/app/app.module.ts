@@ -46,9 +46,13 @@ import {ConsentModule} from "./consent/consent.module";
 import {MainLayoutModule} from "./main-layout/main-layout.module";
 import {PatientModule} from "./patient/patient.module";
 import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.component";
-import { TranslateService } from '@ngx-translate/core';
-import { AccessDeniedComponent } from './access-denied/access-denied.component';
+import {TranslateService} from '@ngx-translate/core';
+import {AccessDeniedComponent} from './access-denied/access-denied.component';
 import {InternationalizedMatPaginatorIntl} from "./shared/components/paginator/internationalized-mat-paginator-intl";
+import {ConsentTemplatesComponent} from './consent/consent-templates/consent-templates.component';
+import {CreateConsentTemplateComponent} from './consent/create-consent-template/create-consent-template.component';
+import {EditConsentTemplateComponent} from './consent/edit-consent-template/edit-consent-template.component';
+import {ConsentTemplateComponent} from "./consent/consent-template/consent-template.component";
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
   return () => configService.init()
@@ -91,7 +95,11 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     ErrorComponent,
     LogoutComponent,
     NewIdDialog,
-    AccessDeniedComponent
+    AccessDeniedComponent,
+    ConsentTemplatesComponent,
+    CreateConsentTemplateComponent,
+    EditConsentTemplateComponent,
+    ConsentTemplateComponent
   ],
   imports: [
     SharedModule,

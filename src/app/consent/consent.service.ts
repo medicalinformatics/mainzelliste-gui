@@ -5,11 +5,12 @@ import {SessionService} from "../services/session.service";
 import {DatePipe} from "@angular/common";
 import {AppConfigService} from "../app-config.service";
 import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "./consent.model";
-import {ConsentTemplate} from "./consent-template.model";
 import {TranslateService} from '@ngx-translate/core';
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessages} from "../error/error-messages";
 import _moment from "moment";
+import {ConsentTemplateFhirWrapper} from "../model/consent-template-fhir-wrapper";
+import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 
 @Injectable({
   providedIn: 'root'
@@ -98,7 +99,7 @@ export class ConsentService {
    * deserialize consent template (fhir Questionnaire resource) to ui data model
    * @param template ui template data model
    */
-  public getNewConsentDataModelFromTemplate(template: ConsentTemplate | undefined): Consent {
+  public getNewConsentDataModelFromTemplate(template: ConsentTemplateFhirWrapper | undefined): Consent {
     return this.deserializeConsentDataModelFrom(template?.definition, undefined);
   }
 
@@ -350,9 +351,9 @@ export class ConsentService {
     return results;
   }
 
-  public getConsentTemplates(): Promise<Map<string, ConsentTemplate>> {
+  public getConsentTemplates(): Promise<Map<string, ConsentTemplateFhirWrapper>> {
     return this.getConsentTemplatesResources().then(entries => {
-      let result: Map<string, ConsentTemplate> = new Map();
+      let result: Map<string, ConsentTemplateFhirWrapper> = new Map();
       entries.forEach((v, k) => {
         result.set(k, {
           id: v.id || "",
@@ -376,6 +377,28 @@ export class ConsentService {
       return bundle.entry?.forEach(r => result.set(r.resource?.name, r.resource!)) || result;
     })
     .catch(error => this.handleException(error, result));
+  }
+
+  public addConsentTemplate(consentTemplate: fhir4.Questionnaire): Promise<fhir4.FhirResource | fhir4.Questionnaire> {
+    return this.resolveAddConsentTemplateToken("", consentTemplate);
+  }
+
+  resolveAddConsentTemplateToken(tokenId: string | undefined, consentTemplate: fhir4.Questionnaire): Promise<fhir4.FhirResource | fhir4.Questionnaire> {
+    return this.client.create({
+      resourceType: 'Questionnaire', body: consentTemplate
+    })
+      .then(resource => resource as fhir4.Consent)
+      .catch(e => {
+        if(e.response != undefined && e.response.data != undefined) {
+          let errorMessage = "";
+          for(const issue of (e.response.data as fhir4.OperationOutcome).issue) {
+            if(issue.severity == 'error')
+              errorMessage += issue.diagnostics
+          }
+          throw new MainzellisteError(ErrorMessages.CREATE_CONSENT_TEMPLATE_REJECTED, errorMessage);
+        } else
+          throw new MainzellisteUnknownError("Failed to create consent template", e, this.translate);
+      })
   }
 
   //////////////////////////////
