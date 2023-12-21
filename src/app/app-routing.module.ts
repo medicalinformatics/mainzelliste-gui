@@ -13,6 +13,7 @@ import {AccessDeniedComponent} from "./access-denied/access-denied.component";
 import {AddConsentComponent} from "./consent/add-consent/add-consent.component";
 import {EditConsentComponent} from "./consent/edit-consent/edit-consent.component";
 import {CreateConsentTemplateComponent} from "./consent/create-consent-template/create-consent-template.component";
+import {ConsentTemplatesComponent} from "./consent/consent-templates/consent-templates.component";
 
 const routes: Routes = [
   // TODO: All Paths should have english wording.
@@ -30,7 +31,8 @@ const routes: Routes = [
       // {path: 'delete-patient/:idType/:idString', pathMatch: 'full', redirectTo:  ''},
       // {path: 'merge-patients', component: MergePatientsComponent},
       // {path: 'audittrail', component: AudittrailComponent},
-      // {path: 'delete-patients', component: DeleteMultiplePatientsComponent, data : { permission: 'deletePatient' }}
+      // {path: 'delete-patients', component: DeleteMultiplePatientsComponent, data : { permission: 'deletePatient' }},
+      {path: 'consent-templates', component: ConsentTemplatesComponent, data: { permission: Permission.READ_CONSENT}},
       {path: 'create-consent-template', component: CreateConsentTemplateComponent, data: { permission: Permission.CREATE_CONSENT}}
     ]
   },

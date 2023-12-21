@@ -1,12 +1,13 @@
 export class ConsentTemplate {
   name?: string;
   title?: string;
-  status?: string;
+  status: "draft" | "active" | "retired" | "unknown" = "draft";
   validity: Validity = {month: 0, day: 0};
   organization?: string;
   researchStudy?: string;
   policy?: string
   items: Item[] = [];
+  isMiiFhirConsentConform?: boolean = false;
 }
 
 export interface Item {

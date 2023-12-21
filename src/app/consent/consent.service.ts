@@ -11,6 +11,7 @@ import {ErrorMessages} from "../error/error-messages";
 import _moment from "moment";
 import {ConsentTemplateFhirWrapper} from "../model/consent-template-fhir-wrapper";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
+import {ChoiceItem, ConsentTemplate, DisplayItem, Validity} from "./consent-template.model";
 
 @Injectable({
   providedIn: 'root'
@@ -379,8 +380,8 @@ export class ConsentService {
     .catch(error => this.handleException(error, result));
   }
 
-  public addConsentTemplate(consentTemplate: fhir4.Questionnaire): Promise<fhir4.FhirResource | fhir4.Questionnaire> {
-    return this.resolveAddConsentTemplateToken("", consentTemplate);
+  public addConsentTemplate(consentTemplate: ConsentTemplate): Promise<fhir4.FhirResource | fhir4.Questionnaire> {
+    return this.resolveAddConsentTemplateToken("", this.mapConsentTemplate(consentTemplate));
   }
 
   resolveAddConsentTemplateToken(tokenId: string | undefined, consentTemplate: fhir4.Questionnaire): Promise<fhir4.FhirResource | fhir4.Questionnaire> {
@@ -389,7 +390,7 @@ export class ConsentService {
     })
       .then(resource => resource as fhir4.Consent)
       .catch(e => {
-        if(e.response != undefined && e.response.data != undefined) {
+        if(e.response?.data != undefined) {
           let errorMessage = "";
           for(const issue of (e.response.data as fhir4.OperationOutcome).issue) {
             if(issue.severity == 'error')
@@ -399,6 +400,200 @@ export class ConsentService {
         } else
           throw new MainzellisteUnknownError("Failed to create consent template", e, this.translate);
       })
+  }
+
+  public mapConsentTemplate(template:ConsentTemplate): fhir4.Questionnaire {
+
+    let fhirConsent: fhir4.Consent = {
+      resourceType: "Consent",
+      id: "100",
+      status: "active",
+      scope: {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/consentscope",
+            "code": "research"
+          }
+        ]
+      },
+      category: [
+        {
+          coding: [
+            {
+              "system": "http://loinc.org",
+              "code": "57016-8"
+            }
+          ]
+        }
+      ],
+      patient: {
+        "reference": "Patient/101"
+      },
+      dateTime: "2020-09-01",
+      policy: [
+        {
+          uri: `/Questionnaire/${template.name}`
+        }
+      ],
+      provision: {
+        type: "deny",
+        period: {
+          start: _moment().format("YYYY-MM-DD"),
+          end: this.mapValidityToDate(template.validity)
+        },
+        provision: template.items.filter(i => i instanceof ChoiceItem)
+          .map(i => this.mapChoiceItemToProvision((i as ChoiceItem), template.validity))
+      }
+    };
+
+    // set organization
+    if (template.organization != undefined && template.organization.trim().length > 0) {
+      fhirConsent.organization = [{
+        display: template.organization
+      }]
+    }
+
+    // set research study
+    if (template.researchStudy != undefined && template.researchStudy.trim().length > 0) {
+      fhirConsent.extension = [
+        {
+          url: "http://fhir.de/ConsentManagement/StructureDefinition/DomainReference",
+          extension: [
+            {
+              url: "domain",
+              valueReference: {
+                reference: "ResearchStudy/d7a65ce8-2810-401a-b0db-70782a7b19a6",
+                display: template.researchStudy
+              }
+            },
+            {
+              url: "status",
+              valueCoding: {
+                system: "http://hl7.org/fhir/publication-status",
+                code: "active"
+              }
+            }
+          ]
+        }
+      ]
+    }
+
+    // set mii specific elements
+    if (template.isMiiFhirConsentConform) {
+      fhirConsent.meta = {
+        profile: [
+          "https://www.medizininformatik-initiative.de/fhir/modul-consent/StructureDefinition/mii-pr-consent-einwilligung"
+        ]
+      };
+      //TODO scope must be always : (Code=research) (System=http://terminology.hl7.org/CodeSystem/consentscope)
+      fhirConsent.category.push({
+        coding: [
+          {
+            "system": "https://www.medizininformatik-initiative.de/fhir/modul-consent/CodeSystem/mii-cs-consent-consent_category",
+            "code": "2.16.840.1.113883.3.1937.777.24.2.184"
+          }
+        ]
+      });
+      fhirConsent.policy?.push({
+        uri: template.policy
+      })
+    } else {
+      //set default profile: de.einwilligungsmanagement 1.0.2
+      fhirConsent.meta = {
+        profile: [
+          "http://fhir.de/ConsentManagement/StructureDefinition/Consent"
+        ]
+      }
+    }
+
+    //TODO if publish -> status: "active" otherwise status is draft
+    return {
+      resourceType: "Questionnaire",
+      status: template.status,
+      extension: [
+        {
+          url: "http://hl7.org/fhir/StructureDefinition/artifact-url",
+          valueUri: "#100"
+        }
+      ],
+      contained: [fhirConsent],
+      name: template.name,
+      title: template.title,
+      subjectType: ["Consent"],
+      item: template.items.map(i => {
+        if (i instanceof DisplayItem)
+          return this.mapDisplayItem(i);
+        else if (i instanceof ChoiceItem)
+          return this.mapChoiceItemToQuestionnaireItem(i);
+        else {
+          console.log(i);
+          throw new Error("item no supported" + i)
+        }
+      })
+    };
+  }
+
+  private mapChoiceItemToProvision(item: ChoiceItem, validity:Validity): fhir4.ConsentProvision {
+    return {
+      type: "permit",
+      period: {
+        start: _moment().format("YYYY-MM-DD"),
+        end: this.mapValidityToDate(validity)
+      },
+      code: !item.fhirCoding ? [] : [
+        {
+          coding: [
+            item.fhirCoding
+          ]
+        }
+      ],
+      extension: [
+        {
+          url: "http://hl7.org/fhir/StructureDefinition/originalText",
+          valueString: `${item.id}`
+        }
+      ]
+    };
+  }
+
+  private mapChoiceItemToQuestionnaireItem(item: ChoiceItem): fhir4.QuestionnaireItem {
+    return {
+      linkId: `${item.id}`,
+      type: `${item.type}`,
+      text: item.text,
+      answerOption: [
+        {
+          valueCoding: {
+            system: "http://hl7.org/fhir/consent-provision-type",
+            code: "permit",
+            display: "Ja"
+          }
+        },
+        {
+          valueCoding: {
+            system: "http://hl7.org/fhir/consent-provision-type",
+            code: "deny",
+            display: "Nein"
+          }
+        }
+      ]
+    };
+  }
+
+  private mapDisplayItem(item: DisplayItem): fhir4.QuestionnaireItem {
+    return {
+      linkId: `${item.id}`,
+      type: `${item.type}`,
+      text: item.text
+    };
+  }
+
+  mapValidityToDate(validityPeriod: Validity): string {
+    let now = _moment();
+    return now.add(validityPeriod.day || 0, 'days')
+      .add(validityPeriod.month || 0, 'months')
+      .add(validityPeriod.year || 0, 'years')
+      .format("YYYY-MM-DD")
   }
 
   //////////////////////////////

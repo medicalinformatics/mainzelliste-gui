@@ -1,21 +1,23 @@
-import {Component, OnInit} from '@angular/core';
-import {GlobalTitleService} from "../../services/global-title.service";
-import {NgForm, NgModel, ValidationErrors} from "@angular/forms";
-import {ConsentService} from "../consent.service";
+import {Component, Input, OnInit} from '@angular/core';
+import {ControlContainer, NgForm, NgModel, ValidationErrors} from "@angular/forms";
 import {ChoiceItem, ConsentTemplate, DisplayItem, Item, Validity} from "../consent-template.model";
-import {TranslateService} from "@ngx-translate/core";
-import {MatDialog} from "@angular/material/dialog";
-import {ConsentTemplateValidityPeriodDialog} from "./consent-template-validity-period-dialog";
-import _moment from "moment/moment";
+import {ConsentTemplateValidityPeriodDialog} from "../create-consent-template/consent-template-validity-period-dialog";
 import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
+import {ConsentService} from "../consent.service";
+import {GlobalTitleService} from "../../services/global-title.service";
+import {MatDialog} from "@angular/material/dialog";
 import {Router} from "@angular/router";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
-  selector: 'app-create-consent-template',
-  templateUrl: './create-consent-template.component.html',
-  styleUrls: ['./create-consent-template.component.css']
+  selector: 'app-consent-template-detail',
+  templateUrl: './consent-template-detail.component.html',
+  styleUrls: ['./consent-template-detail.component.css'],
+  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
 })
-export class CreateConsentTemplateComponent implements OnInit {
+export class ConsentTemplateDetailComponent implements OnInit {
+
+  @Input() template!: ConsentTemplate;
 
   public miiFhirBroadConsentVersions = [
     {name: "1.6d", code: "2.16.840.1.113883.3.1937.777.24.2.1790"},
@@ -23,8 +25,7 @@ export class CreateConsentTemplateComponent implements OnInit {
     {name: "1.7.2", code:  "2.16.840.1.113883.3.1937.777.24.2.2079"}
   ]
 
-  public template: ConsentTemplate = {items: [], validity: {day: 0, month: 0, year: 0}, status: "draft", policy: "2.16.840.1.113883.3.1937.777.24.2.1790"};
-  public templateValidityPeriod: string = this.getValidityPeriodText(this.template.validity);
+  public templateValidityPeriod: string = this.getValidityPeriodText({day: 0, month: 0, year: 0});
   // MII CS Consent Policy https://simplifier.net/medizininformatikinitiative-modulconsent/2.16.840.1.113883.3.1937.777.24.5.3--20210423105554
   public fhirChoiceItemCodings: fhir4.Coding[] = [
     {
@@ -255,8 +256,6 @@ export class CreateConsentTemplateComponent implements OnInit {
   ]
   public consentPolicySets: Map<String, fhir4.Coding[]> = new Map<String, fhir4.Coding[]>();
 
-  public isMiiFhirConsent: boolean = false;
-
   //TODO dropDow for Scope http://terminology.hl7.org/CodeSystem/consentscope
   //TODO dropDow for category: http://hl7.org/fhir/R4/valueset-consent-category.html
 
@@ -274,8 +273,6 @@ export class CreateConsentTemplateComponent implements OnInit {
     }
   ]
   public currentModule: Item = new DisplayItem(1, 'display');
-
-
   constructor(
     public consentService: ConsentService,
     private titleService: GlobalTitleService,
@@ -309,229 +306,12 @@ export class CreateConsentTemplateComponent implements OnInit {
     return  validityPeriod.year + ' Jahren - ' + validityPeriod.month + ' Monaten - ' + validityPeriod.day  + ' Tagen';
   }
 
-  protected readonly Array = Array;
-
   createModule(selectedModuleType: "choice" | "display") {
     this.template.items = this.template.items || [];
     let item = selectedModuleType == "choice" ?
       new ChoiceItem(this.template.items.length, selectedModuleType, "permit") :
       new DisplayItem(this.template.items.length, selectedModuleType)
     this.template.items.push(item);
-  }
-
-  /*** Mapper **/
-
-  private mapConsentTemplate(template: ConsentTemplate): fhir4.Questionnaire {
-
-    let fhirConsent: fhir4.Consent = {
-      resourceType: "Consent",
-      id: "100",
-      status: "active",
-      scope: {
-        "coding": [
-          {
-            "system": "http://terminology.hl7.org/CodeSystem/consentscope",
-            "code": "research"
-          }
-        ]
-      },
-      category: [
-        {
-          coding: [
-            {
-              "system": "http://loinc.org",
-              "code": "57016-8"
-            }
-          ]
-        }
-      ],
-      patient: {
-        "reference": "Patient/101"
-      },
-      dateTime: "2020-09-01",
-      policy: [
-        {
-          uri: `/Questionnaire/${template.name}`
-        }
-      ],
-      provision: {
-        type: "deny",
-        period: {
-          start: _moment().format("YYYY-MM-DD"),
-          end: this.mapValidityToDate(this.template.validity)
-        },
-        provision: template.items.filter(i => i instanceof ChoiceItem)
-            .map(i => this.mapChoiceItemToProvision(i as ChoiceItem))
-      }
-    };
-
-    // set organization
-    if (this.template.organization != undefined && this.template.organization.trim().length > 0) {
-      fhirConsent.organization = [{
-        display: this.template.organization
-      }]
-    }
-
-    // set research study
-    if (this.template.researchStudy != undefined && this.template.researchStudy.trim().length > 0) {
-      fhirConsent.extension = [
-        {
-          url: "http://fhir.de/ConsentManagement/StructureDefinition/DomainReference",
-          extension: [
-            {
-              url: "domain",
-              valueReference: {
-                reference: "ResearchStudy/d7a65ce8-2810-401a-b0db-70782a7b19a6",
-                display: this.template.researchStudy
-              }
-            },
-            {
-              url: "status",
-              valueCoding: {
-                system: "http://hl7.org/fhir/publication-status",
-                code: "active"
-              }
-            }
-          ]
-        }
-      ]
-    }
-
-    // set mii specific elements
-    if (this.isMiiFhirConsent) {
-      fhirConsent.meta = {
-        profile: [
-          "https://www.medizininformatik-initiative.de/fhir/modul-consent/StructureDefinition/mii-pr-consent-einwilligung"
-        ]
-      };
-      //TODO scope must be always : (Code=research) (System=http://terminology.hl7.org/CodeSystem/consentscope)
-      fhirConsent.category.push({
-        coding: [
-          {
-            "system": "https://www.medizininformatik-initiative.de/fhir/modul-consent/CodeSystem/mii-cs-consent-consent_category",
-            "code": "2.16.840.1.113883.3.1937.777.24.2.184"
-          }
-        ]
-      });
-      fhirConsent.policy?.push({
-        uri: this.template.policy
-      })
-    } else {
-      //set default profile: de.einwilligungsmanagement 1.0.2
-      fhirConsent.meta = {
-        profile: [
-          "http://fhir.de/ConsentManagement/StructureDefinition/Consent"
-        ]
-      }
-    }
-
-    //TODO if publish -> status: "active" otherwise status is draft
-    return {
-      resourceType: "Questionnaire",
-      status: "active",
-      extension: [
-        {
-          url: "http://hl7.org/fhir/StructureDefinition/artifact-url",
-          valueUri: "#100"
-        }
-      ],
-      contained: [fhirConsent],
-      name: template.name,
-      title: template.title,
-      subjectType: ["Consent"],
-      item: template.items.map(i => {
-        if (i instanceof DisplayItem)
-          return this.mapDisplayItem(i);
-        else if (i instanceof ChoiceItem)
-          return this.mapChoiceItemToQuestionnaireItem(i);
-        else {
-          console.log(i);
-          throw new Error("item no supported" + i)
-        }
-      })
-    };
-  }
-  private mapChoiceItemToProvision(item: ChoiceItem): fhir4.ConsentProvision {
-    return {
-      type: "permit",
-      period: {
-        start: _moment().format("YYYY-MM-DD"),
-        end: this.mapValidityToDate(this.template.validity)
-      },
-      code: !item.fhirCoding ? [] : [
-        {
-          coding: [
-            item.fhirCoding
-          ]
-        }
-      ],
-      extension: [
-        {
-          url: "http://hl7.org/fhir/StructureDefinition/originalText",
-          valueString: `${item.id}`
-        }
-      ]
-    };
-  }
-
-  private mapChoiceItemToQuestionnaireItem(item: ChoiceItem): fhir4.QuestionnaireItem {
-    return {
-      linkId: `${item.id}`,
-      type: `${item.type}`,
-      text: item.text,
-      answerOption: [
-        {
-          valueCoding: {
-            system: "http://hl7.org/fhir/consent-provision-type",
-            code: "permit",
-            display: "Ja"
-          }
-        },
-        {
-          valueCoding: {
-            system: "http://hl7.org/fhir/consent-provision-type",
-            code: "deny",
-            display: "Nein"
-          }
-        }
-      ]
-    };
-  }
-
-  private mapDisplayItem(item: DisplayItem): fhir4.QuestionnaireItem {
-    return {
-      linkId: `${item.id}`,
-      type: `${item.type}`,
-      text: item.text
-    };
-  }
-
-  private numberToString(n: number) {
-    return (n > 9 ? "" : "0") + n;
-  }
-
-  mapValidityToDate(validityPeriod: Validity): string {
-    let now = _moment();
-    return now.add(validityPeriod.day || 0, 'days')
-      .add(validityPeriod.month || 0, 'months')
-      .add(validityPeriod.year || 0, 'years')
-      .format("YYYY-MM-DD")
-  }
-
-  disable(consentTemplateForm: NgForm): boolean {
-    return (!consentTemplateForm.valid  ||
-      (!this.template.validity.year || this.template.validity.year <= 0) &&
-      (!this.template.validity.month || this.template.validity.month == 0) &&
-      (!this.template.validity.day || this.template.validity.day == 0)) ||
-      !this.template.items.some(e => e.type == 'choice') ||
-      this.template.items.some( e => e.type == 'display' && (e.text == undefined || e.text.trim().length == 0) ||
-        e.type == 'choice' && this.toChoiceItem(e).fhirCoding == undefined);
-  }
-
-  createTemplate() {
-    this.consentService.addConsentTemplate(this.template).then( t =>
-      this.router.navigate(["/patientlist"]).then()
-    )
   }
 
   openValidityPeriodDialog() {
@@ -544,18 +324,6 @@ export class CreateConsentTemplateComponent implements OnInit {
         this.templateValidityPeriod = this.getValidityPeriodText(validityPeriod);
       }
     });
-  }
-
-  public toChoiceItem(item: Item): ChoiceItem {
-    return item as ChoiceItem;
-  }
-
-  getPolicies(module: Item | undefined) {
-    if (module == undefined)
-      return []
-    return this.consentPolicySets.get(this.toChoiceItem(module).policySet || "")?.filter(p =>
-      !this.template.items.filter(i => i != module).some(i => i.type == 'choice' && this.toChoiceItem(i).fhirCoding?.code == p.code)
-    )
   }
 
   dropModule(event: CdkDragDrop<any, any>) {
@@ -600,5 +368,27 @@ export class CreateConsentTemplateComponent implements OnInit {
 
   cancelEditModule(module: Item){
     module.editing = false;
+  }
+
+  getPolicies(module: Item | undefined) {
+    if (module == undefined)
+      return []
+    return this.consentPolicySets.get(this.toChoiceItem(module).policySet || "")?.filter(p =>
+      !this.template.items.filter(i => i != module).some(i => i.type == 'choice' && this.toChoiceItem(i).fhirCoding?.code == p.code)
+    )
+  }
+
+  public toChoiceItem(item: Item): ChoiceItem {
+    return item as ChoiceItem;
+  }
+
+  public isValid(consentTemplateForm: NgForm): boolean {
+    return (!consentTemplateForm.valid  ||
+        (!this.template.validity.year || this.template.validity.year <= 0) &&
+        (!this.template.validity.month || this.template.validity.month == 0) &&
+        (!this.template.validity.day || this.template.validity.day == 0)) ||
+      !this.template.items.some(e => e.type == 'choice') ||
+      this.template.items.some( e => e.type == 'display' && (e.text == undefined || e.text.trim().length == 0) ||
+        e.type == 'choice' && (e as ChoiceItem).fhirCoding == undefined);
   }
 }

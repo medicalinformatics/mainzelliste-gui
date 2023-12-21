@@ -11,15 +11,19 @@ import {ConsentService} from "./consent.service";
 import {ConsentRejectedDialog} from "./dialog/consent-rejected-dialog";
 import {ConsentInactivatedDialog} from "./dialog/consent-inactivated-dialog";
 import {ConsentTemplateValidityPeriodDialog} from "./create-consent-template/consent-template-validity-period-dialog";
+import { ConsentTemplateDialogComponent } from './consent-template-dialog/consent-template-dialog.component';
+import { ConsentTemplateDetailComponent } from './consent-template-detail/consent-template-detail.component';
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 
 @NgModule({
   imports: [
     CommonModule,
-    SharedModule
+    SharedModule,
+    MatProgressSpinnerModule
   ],
   declarations: [ConsentDetailComponent, ConsentDialogComponent, AddConsentComponent, EditConsentComponent,
-    ConsentRejectedDialog, ConsentInactivatedDialog, ConsentTemplateValidityPeriodDialog],
+    ConsentRejectedDialog, ConsentInactivatedDialog, ConsentTemplateValidityPeriodDialog, ConsentTemplateDialogComponent, ConsentTemplateDetailComponent],
   providers: [ConsentService]
 })
 export class ConsentModule {
