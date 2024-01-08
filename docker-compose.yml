@@ -19,7 +19,7 @@ services:
       ML_UI_MAIN_ID_TYPE: pid
       ML_UI_SHOW_ALL_IDS: false
       ML_UI_DEBUG_MODE: false
-      # ML_UI_ENABLE_CONSENT: true
+      ML_UI_ENABLE_CONSENT: false
     depends_on:
       - mainzelliste
   mainzelliste:
