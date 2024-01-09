@@ -1,13 +1,13 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ControlContainer, NgForm, NgModel, ValidationErrors} from "@angular/forms";
 import {ChoiceItem, ConsentTemplate, DisplayItem, Item, Validity} from "../consent-template.model";
-import {ConsentTemplateValidityPeriodDialog} from "../create-consent-template/consent-template-validity-period-dialog";
 import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
 import {ConsentService} from "../consent.service";
 import {GlobalTitleService} from "../../services/global-title.service";
 import {MatDialog} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {TranslateService} from "@ngx-translate/core";
+import {ConsentTemplateValidityPeriodDialog} from "./consent-template-validity-period-dialog";
 
 @Component({
   selector: 'app-consent-template-detail',

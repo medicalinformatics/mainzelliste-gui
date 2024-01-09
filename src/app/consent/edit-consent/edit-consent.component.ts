@@ -8,8 +8,8 @@ import {TranslateService} from '@ngx-translate/core';
 import {MainzellisteError} from "../../model/mainzelliste-error.model";
 import {ErrorMessages} from "../../error/error-messages";
 import {MatDialog} from "@angular/material/dialog";
-import {ConsentRejectedDialog} from "../dialog/consent-rejected-dialog";
-import {ConsentInactivatedDialog} from "../dialog/consent-inactivated-dialog";
+import {ConsentRejectedDialog} from ".././dialogs/consent-rejected-dialog";
+import {ConsentInactivatedDialog} from ".././dialogs/consent-inactivated-dialog";
 
 @Component({
   selector: 'app-edit-consent',

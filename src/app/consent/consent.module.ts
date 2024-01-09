@@ -8,12 +8,12 @@ import {
 } from "./edit-consent/edit-consent.component";
 import {SharedModule} from "../shared/shared.module";
 import {ConsentService} from "./consent.service";
-import {ConsentRejectedDialog} from "./dialog/consent-rejected-dialog";
-import {ConsentInactivatedDialog} from "./dialog/consent-inactivated-dialog";
-import {ConsentTemplateValidityPeriodDialog} from "./create-consent-template/consent-template-validity-period-dialog";
+import {ConsentRejectedDialog} from "././dialogs/consent-rejected-dialog";
+import {ConsentInactivatedDialog} from "././dialogs/consent-inactivated-dialog";
 import { ConsentTemplateDialogComponent } from './consent-template-dialog/consent-template-dialog.component';
 import { ConsentTemplateDetailComponent } from './consent-template-detail/consent-template-detail.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {ConsentTemplateValidityPeriodDialog} from "./consent-template-detail/consent-template-validity-period-dialog";
 
 
 @NgModule({
