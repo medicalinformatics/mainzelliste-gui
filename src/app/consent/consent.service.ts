@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
+import {Observable, of, throwError} from 'rxjs';
 import Client from 'fhir-kit-client'
 import {SessionService} from "../services/session.service";
 import {DatePipe} from "@angular/common";
@@ -12,6 +12,7 @@ import _moment from "moment";
 import {ConsentTemplateFhirWrapper} from "../model/consent-template-fhir-wrapper";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {ChoiceItem, ConsentTemplate, DisplayItem, Validity} from "./consent-template.model";
+import {catchError, mergeMap} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -371,22 +372,59 @@ export class ConsentService {
    * return a map of content templates
    */
   private getConsentTemplatesResources(): Promise<Map<string, fhir4.Questionnaire>> {
+
+    return this.sessionService.createToken(
+      "searchConsentTemplates", {}
+    )
+      .pipe(
+        mergeMap(token => this.resolveSearchConsentTemplatesToken(token.id)),
+        catchError(e => {
+          // handle failed token creation
+          return throwError(e)
+        })
+      ).toPromise();
+  }
+
+  resolveSearchConsentTemplatesToken(tokenId: string | undefined): Promise<Map<string, fhir4.Questionnaire>> {
     let result = new Map();
-    return this.client.search({resourceType: 'Questionnaire'})
-    .then(resource => {
-      let bundle: fhir4.Bundle<fhir4.Questionnaire> = resource as fhir4.Bundle<fhir4.Questionnaire>
-      return bundle.entry?.forEach(r => result.set(r.resource?.name, r.resource!)) || result;
-    })
-    .catch(error => this.handleException(error, result));
+    return this.client.search({
+        resourceType: 'Questionnaire',
+        headers: {'Authorization': 'MainzellisteToken ' + tokenId}
+      }
+    ).then(resource => {
+        let bundle: fhir4.Bundle<fhir4.Questionnaire> = resource as fhir4.Bundle<fhir4.Questionnaire>
+        return bundle.entry?.forEach(r => result.set(r.resource?.name, r.resource!)) || result;
+      })
+      .catch(e => {
+        if(e.response?.data != undefined) {
+          let errorMessage = "";
+          for(const issue of (e.response.data as fhir4.OperationOutcome).issue) {
+            if(issue.severity == 'error')
+              errorMessage += issue.diagnostics
+          }
+          throw new MainzellisteError(ErrorMessages.SEARCH_CONSENT_TEMPLATES_FAILED, errorMessage);
+        } else
+          throw new MainzellisteUnknownError("Failed to find consent templates", e, this.translate);
+      })
   }
 
   public addConsentTemplate(consentTemplate: ConsentTemplate): Promise<fhir4.FhirResource | fhir4.Questionnaire> {
-    return this.resolveAddConsentTemplateToken("", this.mapConsentTemplate(consentTemplate));
+    return this.sessionService.createToken(
+      "addConsentTemplate", {}
+    )
+    .pipe(
+      mergeMap(token => this.resolveAddConsentTemplateToken(token.id, this.mapConsentTemplate(consentTemplate))),
+      catchError(e => {
+        // handle failed token creation
+        return throwError(e)
+      })
+    ).toPromise();
   }
 
   resolveAddConsentTemplateToken(tokenId: string | undefined, consentTemplate: fhir4.Questionnaire): Promise<fhir4.FhirResource | fhir4.Questionnaire> {
     return this.client.create({
-      resourceType: 'Questionnaire', body: consentTemplate
+      resourceType: 'Questionnaire', body: consentTemplate,
+      headers: {'Authorization': 'MainzellisteToken ' + tokenId}
     })
       .then(resource => resource as fhir4.Consent)
       .catch(e => {
