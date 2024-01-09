@@ -47,6 +47,7 @@ export interface RealmCriteria {
 export interface ResourcesPermissions {
   patient: PatientPermissions
   consent: ConsentPermissions
+  consentTemplate: ConsentTemplatePermissions
 }
 
 export interface PatientPermissions {
@@ -66,6 +67,10 @@ export interface PatientPermissionsContent {
 
 export interface ConsentPermissions {
   operations: Operation[]
+}
+
+export interface ConsentTemplatePermissions {
+    operations: Operation[]
 }
 
 export type Operation = "C" | "R" | "U" | "D";

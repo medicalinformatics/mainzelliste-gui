@@ -18,4 +18,4 @@ export interface SinglePermission {
   operations: Operation[]
 }
 
-export type PermissionType = "patient" | "consent" | "ids" | "fields";
+export type PermissionType = "patient" | "consent" | "consentTemplate" | "ids" | "fields";

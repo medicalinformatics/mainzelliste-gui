@@ -17,6 +17,9 @@
               },
               "consent": {
                 "operations": [ "C", "R", "U" ]
+              },
+              "consentTemplate": {
+                "operations": [ "C", "R"]
               }
             }
           }

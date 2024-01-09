@@ -10,7 +10,7 @@
 <!--  <mat-icon>list_alt</mat-icon>-->
 <!--  <span>Audit-Trail</span>-->
 <!--</button>-->
-<button mat-button [routerLink]="['/consent-templates']" class="sidenav-menu-item">
+<button *ngIf="this.appConfigService.isConsentEnabled()" mat-button [routerLink]="['/consent-templates']" class="sidenav-menu-item">
   <mat-icon>assignment</mat-icon>
   <span>Einwilligungsvorlagen</span>
 </button>

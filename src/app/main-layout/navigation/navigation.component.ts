@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {Permission} from "../../model/permission";
+import {AppConfigService} from "../../app-config.service";
 
 @Component({
   selector: 'app-navigation',
@@ -10,7 +11,9 @@ export class NavigationComponent {
 
   public readonly Permission = Permission;
 
-  constructor() {
+  constructor(
+      public appConfigService: AppConfigService
+  ) {
   }
 }
 

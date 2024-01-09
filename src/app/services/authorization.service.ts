@@ -49,10 +49,17 @@ export class AuthorizationService {
       })
     }
 
-    if (configuredPermissions.consent != undefined) {
+    if (this.configService.isConsentEnabled() && configuredPermissions.consent != undefined) {
       permissions.push({
         type: 'consent',
         operations: configuredPermissions.consent.operations
+      })
+    }
+
+    if (this.configService.isConsentEnabled() && configuredPermissions.consentTemplate != undefined) {
+      permissions.push({
+        type: 'consentTemplate',
+        operations: configuredPermissions.consentTemplate.operations
       })
     }
     return permissions;
