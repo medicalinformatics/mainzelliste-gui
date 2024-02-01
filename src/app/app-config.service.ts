@@ -183,8 +183,8 @@ export class AppConfigService {
     //set main id type if the configured value is empty
     if (AppConfigService.isStringEmpty(config.mainIdType)) {
       config.mainIdType = idType;
-    } else if (config.mainIdType?.trim() != idType.trim()) {
-      throw new Error(this.translate.instant('error.app_config_service_id_type_mismatch_text1') + idType + this.translate.instant('error.app_config_service_id_type_mismatch_text2') + config.mainIdType + this.translate.instant('error.app_config_service_id_type_mismatch_text3'))
+    } else if (!idGenerators.some( g => g.idType == config.mainIdType?.trim())) {
+      throw new Error("mainIdType '" + config.mainIdType + "'not configured in the backend, please check your ui configuration");
     }
     return this.translate.instant('appConfigService.main_id_type_valid');
   }

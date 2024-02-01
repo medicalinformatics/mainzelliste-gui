@@ -19,6 +19,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatChip, MatChipsModule} from "@angular/material/chips";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {HasAnyPermissionsDirective} from "./directives/has-any-permissions.directive";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -48,8 +49,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       }
     })],
-  declarations: [HasPermissionDirective, ErrorDialogComponent, ErrorCardComponent],
-  exports: [HasPermissionDirective, ErrorDialogComponent, ErrorCardComponent,
+  declarations: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent],
+  exports: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,

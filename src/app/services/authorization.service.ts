@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {AppConfigService} from "../app-config.service";
-import {Operation, PatientPermissionsContent, Permissions, Realm, ResourcesPermissions} from "../model/patientlist";
+import {Operation, PatientPermissionsContent, Realm, ResourcesPermissions} from "../model/patientlist";
 import {UserAuthService} from "./user-auth.service";
 import {TranslateService} from '@ngx-translate/core';
-import {PermissionType, RealmIdFilter, Role, SinglePermission} from "../model/role";
+import {RealmIdFilter, Role, SinglePermission} from "../model/role";
+import {Permission} from "../model/permission";
 
 @Injectable({
   providedIn: 'root'
@@ -40,12 +41,14 @@ export class AuthorizationService {
       // ids permissions
       permissions.push({
         type: 'ids',
-        operations: this.extractOperationsFromPatientPermissionsContent(configuredPermissions.patient.contents?.ids || [])
+        operations: this.extractOperationsFromPatientPermissionsContent(configuredPermissions.patient.contents?.ids || [],
+          configuredPermissions.patient.operations)
       })
       // fields permissions
       permissions.push({
         type: 'fields',
-        operations: this.extractOperationsFromPatientPermissionsContent(configuredPermissions.patient.contents?.fields || [])
+        operations: this.extractOperationsFromPatientPermissionsContent(configuredPermissions.patient.contents?.fields || [],
+          configuredPermissions.patient.operations)
       })
     }
 
@@ -58,7 +61,8 @@ export class AuthorizationService {
     return permissions;
   }
 
-  private extractOperationsFromPatientPermissionsContent(permissionsContents: PatientPermissionsContent[]) {
+  private extractOperationsFromPatientPermissionsContent(permissionsContents: PatientPermissionsContent[],
+                                                         patientOperations: Operation[] ) {
     let operations: Operation[] = []
     for (let permissionsContent of permissionsContents) {
       this.crudOperations.filter(o => permissionsContent.operations.includes(o) && !operations.includes(o))
@@ -66,11 +70,14 @@ export class AuthorizationService {
       if (operations.length == 4)
         break
     }
-    return operations.length == 0 ? this.crudOperations : operations;
+    return operations.length == 0 ? patientOperations : operations;
   }
 
-  hasPermission(name: PermissionType, type: Operation): boolean {
-    // console.log("permissionType " + name);
+  hasPermission(permission: Permission): boolean {
+    return this.hasAnyPermissions([permission]);
+  }
+
+  hasAnyPermissions(permissions: Permission[]): boolean {
     // return true, if user role not configured in the ui
     if (this.configuredRoles == undefined)
       return true;
@@ -78,12 +85,12 @@ export class AuthorizationService {
     let roles: Role[] = this.configuredRoles.filter(r => this.userRoles.includes(r.name))
     if (roles.length == 0)
       throw new Error(this.translate.instant('error.authorization_service') + `${this.userRoles}`)
-    // console.log("has permission " + (role.permissions || []).some( p => p == permission) + " for " + permission );
-    return roles.some(role => this.checkPermission(role.permissions, name, type));
+    return roles.some(role => permissions.some( p => this.checkPermission(role.permissions, p)));
   }
 
-  private checkPermission(permissions: SinglePermission[], type: PermissionType, operation: Operation): boolean {
-    return (permissions || []).some(p => p.type == type && p.operations.includes(operation))
+  private checkPermission(permissions: SinglePermission[], permission: Permission): boolean {
+    return (permissions || []).some(p => p.type == permission.type
+      && p.operations.includes(permission.operation))
   }
 
   getAllowedIdTypes(operation: Operation): string[] {

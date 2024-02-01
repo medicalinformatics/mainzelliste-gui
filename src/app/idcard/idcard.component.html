@@ -19,7 +19,7 @@
 <!--      <button mat-fab style="background-color:#053E6A; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">-->
 <!--        <mat-icon matTooltip="ID hinzufügen">subtitles</mat-icon>-->
 <!--      </button>-->
-      <button mat-fab *appHasPermission="Permission.EDIT_PATIENT" [routerLink]="['/edit-patient', idType, idString]"
+      <button mat-fab *appHasAnyPermissions="[Permission.EDIT_PATIENT, Permission.EDIT_IDS, Permission.EDIT_FIELDS]" [routerLink]="['/edit-patient', idType, idString]"
               [state]="{patient: patient}" style="background-color:#ffd60a; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">
         <mat-icon matTooltip="{{'button_edit' | translate}}">edit</mat-icon>
       </button>

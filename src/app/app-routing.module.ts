@@ -21,7 +21,7 @@ const routes: Routes = [
       {path: 'info', component: InfoComponent},
       {path: 'idcard/:idType/:idString', component: IdcardComponent, data : { permission: Permission.READ_PATIENT }},
       {path: 'add-new-patient', component: CreatePatientComponent, data: { permission: Permission.CREATE_PATIENT }},
-      {path: 'edit-patient/:idType/:idString', component: EditPatientComponent, data: { permission: Permission.EDIT_PATIENT }},
+      {path: 'edit-patient/:idType/:idString', component: EditPatientComponent, data: { anyPermissions: [Permission.EDIT_PATIENT, Permission.EDIT_IDS]}},
       {path: 'patientlist', component: PatientlistViewComponent, data : { permission: Permission.READ_PATIENT }},
       {path: 'patient/:idType/:idString/add-consent', component: AddConsentComponent, data: { permission: Permission.CREATE_CONSENT}},
       // TODO support multiple permissions 'readConsent'
