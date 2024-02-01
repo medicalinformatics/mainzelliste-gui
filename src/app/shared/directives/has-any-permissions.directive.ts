@@ -3,9 +3,9 @@ import {AuthorizationService} from "../../services/authorization.service";
 import {Permission} from "../../model/permission";
 
 @Directive({
-  selector: '[appHasPermission]'
+  selector: '[appHasAnyPermissions]'
 })
-export class HasPermissionDirective {
+export class HasAnyPermissionsDirective {
 
   constructor(
     private templateRef: TemplateRef<any>,
@@ -14,8 +14,8 @@ export class HasPermissionDirective {
   ) {
   }
 
-  @Input() set appHasPermission(permission: Permission) {
-    if (this.authorizationService.hasPermission(permission)) {
+  @Input() set appHasAnyPermissions(permissions: Permission[]) {
+    if (this.authorizationService.hasAnyPermissions(permissions)) {
       this.viewContainer.createEmbeddedView(this.templateRef);
     } else {
       this.viewContainer.clear();

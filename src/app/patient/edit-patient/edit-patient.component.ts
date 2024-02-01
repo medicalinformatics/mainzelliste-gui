@@ -9,6 +9,8 @@ import {MainzellisteError} from "../../model/mainzelliste-error.model";
 import {ErrorMessages} from "../../error/error-messages";
 import {Id} from "../../model/id";
 import { TranslateService } from '@ngx-translate/core';
+import {AuthorizationService} from "../../services/authorization.service";
+import {Permission} from "../../model/permission";
 
 @Component({
   selector: 'app-edit-patient',
@@ -16,6 +18,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./edit-patient.component.css']
 })
 export class EditPatientComponent implements OnInit {
+  public readonly Permission = Permission;
 
   patient: Patient = new Patient();
   private idString: string = "";
@@ -28,9 +31,10 @@ export class EditPatientComponent implements OnInit {
     public errorNotificationService: ErrorNotificationService,
     private patientListService: PatientListService,
     private titleService: GlobalTitleService,
+    public authorizationService: AuthorizationService,
     public dialog: MatDialog
   ) {
-    activatedRoute.params.subscribe((params) => {
+    this.activatedRoute.params.subscribe((params) => {
       if (params["idType"] !== undefined)
         this.idType = params["idType"]
       if (params["idString"] !== undefined)
