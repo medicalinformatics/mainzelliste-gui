@@ -49,6 +49,7 @@ import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.co
 import { TranslateService } from '@ngx-translate/core';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
 import {InternationalizedMatPaginatorIntl} from "./shared/components/paginator/internationalized-mat-paginator-intl";
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
   return () => configService.init()
@@ -91,7 +92,8 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     ErrorComponent,
     LogoutComponent,
     NewIdDialog,
-    AccessDeniedComponent
+    AccessDeniedComponent,
+    PageNotFoundComponent
   ],
   imports: [
     SharedModule,
