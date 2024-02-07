@@ -40,7 +40,7 @@ import {
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {from} from "rxjs";
 import {UserAuthService} from "./services/user-auth.service";
-import {NewIdDialog} from './idcard/dialogs/new-id-dialog';
+import {NewUniqueIdDialog} from './idcard/dialogs/new-unique-id-dialog';
 import {SharedModule} from "./shared/shared.module";
 import {ConsentModule} from "./consent/consent.module";
 import {MainLayoutModule} from "./main-layout/main-layout.module";
@@ -49,6 +49,8 @@ import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.co
 import { TranslateService } from '@ngx-translate/core';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
 import {InternationalizedMatPaginatorIntl} from "./shared/components/paginator/internationalized-mat-paginator-intl";
+import { NewIdDialog } from './idcard/dialogs/new-id-dialog';
+import { NewAssociatedIdDialog } from './idcard/dialogs/new-associated-id-dialog'
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
   return () => configService.init()
@@ -91,6 +93,8 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     ErrorComponent,
     LogoutComponent,
     NewIdDialog,
+    NewUniqueIdDialog,
+    NewAssociatedIdDialog,
     AccessDeniedComponent
   ],
   imports: [

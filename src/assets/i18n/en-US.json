@@ -13,6 +13,8 @@
 	"button_save_new_id": "Generate",
 	"button_correct": "Correct",
 	"button_confirm": "Confirm",
+	"button_generate_new_unique_id": "Unique ID",
+	"button_generate_new_associated_id": "Associated ID",
 
 	"radio_button_yes": "Yes",
 	"radio_button_no": "No",

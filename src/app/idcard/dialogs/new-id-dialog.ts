@@ -10,13 +10,9 @@ import { IdcardComponent } from '../idcard.component';
 
 export class NewIdDialog implements OnInit {
 
-    @ViewChild(IdcardComponent) newId!: IdcardComponent;
-
     constructor(
-        public dialogRef: MatDialogRef<NewIdDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: String[],
-        @Inject(MAT_DIALOG_DATA) public dataModel: any
-    ) {this.dataModel = null}
+        public dialogRef: MatDialogRef<NewIdDialog>
+    ) {}
 
     ngOnInit(): void {}
 
@@ -24,7 +20,7 @@ export class NewIdDialog implements OnInit {
       this.dialogRef.close();
     }
   
-    onSave() {
-      this.dialogRef.close(this.dataModel);
+    onSave(x: number) {
+      this.dialogRef.close(x);
     }
   }

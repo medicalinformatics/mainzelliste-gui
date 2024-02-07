@@ -8,12 +8,14 @@ import {MatTable} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
 import {PatientService} from "../services/patient.service";
 import {DeletePatientDialog} from "./dialogs/delete-patient-dialog";
-import {NewIdDialog} from './dialogs/new-id-dialog';
+import {NewUniqueIdDialog} from './dialogs/new-unique-id-dialog';
 import {TranslateService} from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.component";
 import {ConsentService} from "../consent/consent.service";
 import {Permission} from "../model/permission";
 import {ConsentStatus} from "../consent/consent.model";
+import { NewIdDialog } from './dialogs/new-id-dialog';
+import { NewAssociatedIdDialog } from './dialogs/new-associated-id-dialog';
 
 export interface ConsentRow {id: string, date:string, title: string, period:string, version?:string, status: string}
 
@@ -43,7 +45,9 @@ export class IdcardComponent implements OnInit {
     private titleService: GlobalTitleService,
     public consentDialog: MatDialog,
     public deleteDialog: MatDialog,
+    public newUniqueIdDialog: MatDialog,
     public newIdDialog: MatDialog,
+    public newAssociatedIdDialog: MatDialog,
     public consentService: ConsentService
   ) {
     this.activatedRoute.params.subscribe((params) => {
@@ -121,6 +125,10 @@ export class IdcardComponent implements OnInit {
     this.patientListService.generateId(this.idType, this.idString, newIdType).subscribe(() => this.loadPatient());
   }
 
+  generateAssociatedId(newIdType: string) {
+
+  }
+
   openConsentDialog() {
     const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
       width: '900px'
@@ -139,13 +147,42 @@ export class IdcardComponent implements OnInit {
   }
 
   openNewIdDialog(): void {
-    const dialogRef = this.newIdDialog.open(NewIdDialog, {
+    const dialogRef = this.newIdDialog.open(NewIdDialog);
+
+    dialogRef.afterClosed().subscribe((result: number) => {
+      switch (result) {
+        case 1: 
+          this.openNewUniqueIdDialog();
+          break;
+        case 2:
+          this.openNewAssociatedIdDialog();
+          break;
+        default:
+          break;
+      }
+    })
+  }
+
+  openNewUniqueIdDialog(): void {
+    const dialogRef = this.newUniqueIdDialog.open(NewUniqueIdDialog, {
       data: this.patientListService.getNewIdType(this.patient)
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result != null) {
         this.generateId(result.value);
+      }
+    })
+  }
+
+  openNewAssociatedIdDialog(): void {
+    const dialogRef = this.newAssociatedIdDialog.open(NewAssociatedIdDialog, {
+      data: this.patientListService.getAssociatedIdGenerators(this.patient)
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result != null) {
+        this.generateAssociatedId(result.value);
       }
     })
   }

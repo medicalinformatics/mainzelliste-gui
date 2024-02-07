@@ -9,7 +9,6 @@ import {Field, FieldType} from "./model/field";
 import {MainzellisteUnknownError} from './model/mainzelliste-unknown-error';
 import {TranslateService} from '@ngx-translate/core';
 
-
 export interface IdGenerator {
   name: string,
   idType: string,

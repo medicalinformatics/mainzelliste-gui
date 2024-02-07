@@ -1,8 +1,10 @@
+import { AssociatedIdsGenerator } from "./associated-ids-generator";
 import {Field, FieldType} from "./field";
 
 export class PatientList {
   constructor(
     public url: URL,
+    public associatedIdsGenerators: AssociatedIdsGenerator[],
     public oAuthConfig?: OAuthConfig,
     public roles: ConfigRole[] = [],
     public mainIdType?: string,

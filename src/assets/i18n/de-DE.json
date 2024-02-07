@@ -13,6 +13,8 @@
 	"button_save_new_id": "Generieren",
 	"button_correct": "Korrigieren",
 	"button_confirm": "Bestätigen",
+	"button_generate_new_unique_id": "Eindeutige ID",
+	"button_generate_new_associated_id": "Zugehörige ID",
 
 	"radio_button_yes": "Ja",
 	"radio_button_no": "Nein",
