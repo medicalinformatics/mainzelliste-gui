@@ -11,6 +11,7 @@
     class="submit"
     type="submit"
     (click)="onSave(1)"
+    [disabled]="this.data.hasAllIds()"
   >
     {{'button_generate_new_unique_id' | translate}}
   </button>

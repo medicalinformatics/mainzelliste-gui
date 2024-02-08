@@ -147,7 +147,9 @@ export class IdcardComponent implements OnInit {
   }
 
   openNewIdDialog(): void {
-    const dialogRef = this.newIdDialog.open(NewIdDialog);
+    const dialogRef = this.newIdDialog.open(NewIdDialog, {
+      data: this
+    });
 
     dialogRef.afterClosed().subscribe((result: number) => {
       switch (result) {

@@ -1,6 +1,5 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef, } from "@angular/material/dialog";
-import { IdcardComponent } from '../idcard.component';
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 
 @Component({
@@ -9,8 +8,6 @@ import { IdcardComponent } from '../idcard.component';
 })
 
 export class NewUniqueIdDialog implements OnInit {
-
-    @ViewChild(IdcardComponent) newId!: IdcardComponent;
 
     constructor(
         public dialogRef: MatDialogRef<NewUniqueIdDialog>,

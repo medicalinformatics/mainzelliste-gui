@@ -1,6 +1,6 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef, } from "@angular/material/dialog";
-import { IdcardComponent } from '../idcard.component';
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { AssociatedIdsGenerator } from 'src/app/model/associated-ids-generator';
 
 
 @Component({
@@ -10,11 +10,9 @@ import { IdcardComponent } from '../idcard.component';
 
 export class NewAssociatedIdDialog implements OnInit {
 
-    @ViewChild(IdcardComponent) newId!: IdcardComponent;
-
     constructor(
         public dialogRef: MatDialogRef<NewAssociatedIdDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: String[],
+        @Inject(MAT_DIALOG_DATA) public data: AssociatedIdsGenerator[],
         @Inject(MAT_DIALOG_DATA) public dataModel: any
     ) {this.dataModel = null}
 
