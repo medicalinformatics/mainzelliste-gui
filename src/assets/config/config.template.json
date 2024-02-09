@@ -65,7 +65,9 @@
       ],
       "debug": ${ML_UI_DEBUG_MODE},
       "betaFeatures": {
-        "consent": ${ML_UI_ENABLE_CONSENT}
+        "consent": ${ML_UI_ENABLE_CONSENT},
+        "copyConcatenatedId": false,
+        "copyId": true
       }
     }
   ]

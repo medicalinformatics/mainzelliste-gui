@@ -6,6 +6,7 @@ import {addIfNotExist, removeFrom} from "../../utils/array-utils";
 import {PatientListService} from "../../services/patient-list.service";
 import {ControlContainer, NgForm} from "@angular/forms";
 import {Operation} from "../../model/patientlist";
+import {AppConfigService} from "../../app-config.service";
 
 @Component({
   selector: 'app-external-pseudonyms',
@@ -23,7 +24,10 @@ export class ExternalPseudonymsComponent implements OnChanges {
 
   externalIdTypes: IdTypSelection[] = [];
 
-  constructor(public patientListService: PatientListService) {
+  constructor(
+    private patientListService: PatientListService,
+    public config: AppConfigService
+  ) {
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -78,5 +82,9 @@ export class ExternalPseudonymsComponent implements OnChanges {
     return this.ids.filter(id =>
       this.getExternalIdTypes().some(t => t.idType == id.idType && t.added)
     );
+  }
+
+  public getConcatenated(id: Id): string {
+    return id.idType + "." + id.idString;
   }
 }
