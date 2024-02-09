@@ -4,6 +4,7 @@ import {IdTypSelection} from "../create-patient/create-patient.component";
 import {ControlContainer, NgForm} from "@angular/forms";
 import {Id} from "../../model/id";
 import {ExternalPseudonymsComponent} from "../external-pseudonyms/external-pseudonyms.component";
+import {AppConfigService} from "../../app-config.service";
 
 @Component({
   selector: 'app-patient-pseudonyms',
@@ -13,7 +14,6 @@ import {ExternalPseudonymsComponent} from "../external-pseudonyms/external-pseud
 })
 
 export class PatientPseudonymsComponent{
-  private patientListService: PatientListService;
   @Input() ids: Array<Id> = [];
 
   @Input() fields: { [key: string]: any } = {};
@@ -28,8 +28,10 @@ export class PatientPseudonymsComponent{
   internalIdTypes: IdTypSelection[] = [];
   externalIdTypes: string[] = [];
 
-  constructor(patientListService: PatientListService) {
-    this.patientListService = patientListService;
+  constructor(
+    private patientListService: PatientListService,
+    public config: AppConfigService
+  ) {
   }
 
   slideData(value: string, name: string): void {
@@ -66,5 +68,9 @@ export class PatientPseudonymsComponent{
     return this.ids.filter(id =>
       this.getExternalIdTypes().some(idType => idType == id.idType)
     );
+  }
+
+  public getConcatenated(id: Id): string {
+    return id.idType + "." + id.idString;
   }
 }
