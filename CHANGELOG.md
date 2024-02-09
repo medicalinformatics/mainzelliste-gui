@@ -1,4 +1,8 @@
 # Changelog
+## [0.0.4] - 2024-02-09
+### Feature
+- 404 page not found
+- A button to copy all id contents in the idcard
 ## [0.0.3] - 2023-12-12
 ### Fix
 - support idtypes array in CreateIds token

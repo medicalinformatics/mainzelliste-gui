@@ -36,5 +36,7 @@ export type Permission = "addPatient" | "readPatients" | "editPatient" | "delete
 
 export interface BetaFeatures {
   consent?: boolean;
+  copyConcatenatedId?: boolean
+  copyId?: boolean
 }
 

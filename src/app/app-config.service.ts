@@ -28,6 +28,8 @@ export class AppConfigService {
   private mainzellisteFields: string[] = [];
   private version: string = "";
   private consentEnabled: boolean = false;
+  private copyConcatenatedIdEnabled: boolean = false;
+  private copyIdEnabled: boolean = false;
 
   constructor(
     private httpClient: HttpClient,
@@ -50,6 +52,8 @@ export class AppConfigService {
 
           // init feature toggle
           this.consentEnabled = this.data[0].betaFeatures?.consent ?? false;
+          this.copyConcatenatedIdEnabled = this.data[0].betaFeatures?.copyConcatenatedId ?? false;
+          this.copyIdEnabled = this.data[0].betaFeatures?.copyId ?? false;
 
           //start validation
           this.validateBackendUrl(this.data[0])
@@ -66,6 +70,14 @@ export class AppConfigService {
 
   isConsentEnabled(): boolean {
     return this.consentEnabled;
+  }
+
+  isCopyConcatenatedIdEnabled(): boolean {
+    return this.copyConcatenatedIdEnabled;
+  }
+
+  isCopyIdEnabled(): boolean {
+    return this.copyIdEnabled;
   }
 
   getMainzellisteIdTypes(): string[] {
