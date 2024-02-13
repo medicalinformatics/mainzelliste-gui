@@ -49,8 +49,8 @@ import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.co
 import { TranslateService } from '@ngx-translate/core';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
 import {InternationalizedMatPaginatorIntl} from "./shared/components/paginator/internationalized-mat-paginator-intl";
-import { NewIdDialog } from './idcard/dialogs/new-id-dialog';
-import { NewAssociatedIdDialog } from './idcard/dialogs/new-associated-id-dialog'
+import { NewAssociatedIdDialog } from './idcard/dialogs/new-associated-id-dialog';
+import { AssociatedIdsDialog } from './idcard/dialogs/associated-ids-dialog';
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
   return () => configService.init()
@@ -92,8 +92,8 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     PatientlistViewComponent,
     ErrorComponent,
     LogoutComponent,
-    NewIdDialog,
     NewUniqueIdDialog,
+    AssociatedIdsDialog,
     NewAssociatedIdDialog,
     AccessDeniedComponent
   ],

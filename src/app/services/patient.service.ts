@@ -7,6 +7,7 @@ import {Observable} from "rxjs";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessages} from "../error/error-messages";
 import {Id} from "../model/id";
+import { AssociatedId } from '../model/associated-id';
 
 @Injectable({
   providedIn: 'root'
@@ -360,4 +361,17 @@ export class PatientService {
   getConfigureIdTypes(): Array<string> {
     return this.patientListService.getIdTypes("R");
   }
+
+  addNewAssociatedId(patient: Patient, associatedIdType: string) {
+    patient.associatedIds.push(new AssociatedId(patient.getLowestId() + 1, associatedIdType, "test-id", ""));
+  }
+
+  generateInternalId(patient: Patient, uniqueId: number) {
+    if (patient.findAssociatedId(uniqueId) != null) {
+      patient.findAssociatedId(uniqueId)!.internalId = "test-id";
+    } else {
+      console.log("error: associated id not found");
+    }
+  }
+
 }

@@ -14,8 +14,8 @@ import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.c
 import {ConsentService} from "../consent/consent.service";
 import {Permission} from "../model/permission";
 import {ConsentStatus} from "../consent/consent.model";
-import { NewIdDialog } from './dialogs/new-id-dialog';
 import { NewAssociatedIdDialog } from './dialogs/new-associated-id-dialog';
+import { AssociatedIdsDialog } from './dialogs/associated-ids-dialog';
 
 export interface ConsentRow {id: string, date:string, title: string, period:string, version?:string, status: string}
 
@@ -46,7 +46,7 @@ export class IdcardComponent implements OnInit {
     public consentDialog: MatDialog,
     public deleteDialog: MatDialog,
     public newUniqueIdDialog: MatDialog,
-    public newIdDialog: MatDialog,
+    public associatedIdsDialog: MatDialog,
     public newAssociatedIdDialog: MatDialog,
     public consentService: ConsentService
   ) {
@@ -125,8 +125,8 @@ export class IdcardComponent implements OnInit {
     this.patientListService.generateId(this.idType, this.idString, newIdType).subscribe(() => this.loadPatient());
   }
 
-  generateAssociatedId(newIdType: string) {
-
+  generateAssociatedId(idType: string) {
+    this.patientService.addNewAssociatedId(this.patient, idType);
   }
 
   openConsentDialog() {
@@ -146,21 +146,14 @@ export class IdcardComponent implements OnInit {
     return this.patientListService.getNewIdType(this.patient).length == 0;
   }
 
-  openNewIdDialog(): void {
-    const dialogRef = this.newIdDialog.open(NewIdDialog, {
-      data: this
+  openAssociateIdsDialog(): void {
+    const dialogRef = this.associatedIdsDialog.open(AssociatedIdsDialog, {
+      data: this.patient.associatedIds
     });
 
-    dialogRef.afterClosed().subscribe((result: number) => {
-      switch (result) {
-        case 1: 
-          this.openNewUniqueIdDialog();
-          break;
-        case 2:
-          this.openNewAssociatedIdDialog();
-          break;
-        default:
-          break;
+    dialogRef.afterClosed().subscribe(result => {
+      if (result != null) {
+        this.openNewAssociatedIdDialog();
       }
     })
   }
@@ -185,6 +178,7 @@ export class IdcardComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result != null) {
         this.generateAssociatedId(result.value);
+        this.openAssociateIdsDialog();
       }
     })
   }
