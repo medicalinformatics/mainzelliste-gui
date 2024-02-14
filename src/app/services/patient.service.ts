@@ -363,15 +363,20 @@ export class PatientService {
   }
 
   addNewAssociatedId(patient: Patient, associatedIdType: string) {
-    patient.associatedIds.push(new AssociatedId(patient.getLowestId() + 1, associatedIdType, "test-id", ""));
+    patient.associatedIds.push(new AssociatedId(associatedIdType, patient.generateNewIntId(), ""));
   }
 
-  generateInternalId(patient: Patient, uniqueId: number) {
-    if (patient.findAssociatedId(uniqueId) != null) {
-      patient.findAssociatedId(uniqueId)!.internalId = "test-id";
+  generateInternalId(patient: Patient, extId: string) {
+    let id: AssociatedId | undefined = patient.findAssociatedId(extId);
+    if (id != undefined) {
+      id.externalId = patient.generateNewIntId();
     } else {
       console.log("error: associated id not found");
     }
+  }
+
+  tESTaddNewExtId(patient: Patient, associatedIdType: string) {
+    patient.associatedIds.push(new AssociatedId(associatedIdType, patient.generateNewIntId(), ""));
   }
 
 }
