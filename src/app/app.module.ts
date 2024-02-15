@@ -51,6 +51,7 @@ import { AccessDeniedComponent } from './access-denied/access-denied.component';
 import {InternationalizedMatPaginatorIntl} from "./shared/components/paginator/internationalized-mat-paginator-intl";
 import { NewAssociatedIdDialog } from './idcard/dialogs/new-associated-id-dialog';
 import { AssociatedIdsDialog } from './idcard/dialogs/associated-ids-dialog';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
   return () => configService.init()
@@ -95,7 +96,8 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     NewUniqueIdDialog,
     AssociatedIdsDialog,
     NewAssociatedIdDialog,
-    AccessDeniedComponent
+    AccessDeniedComponent,
+    PageNotFoundComponent
   ],
   imports: [
     SharedModule,

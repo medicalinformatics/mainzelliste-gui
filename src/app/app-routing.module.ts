@@ -12,6 +12,7 @@ import {EditPatientComponent} from "./patient/edit-patient/edit-patient.componen
 import {AccessDeniedComponent} from "./access-denied/access-denied.component";
 import {AddConsentComponent} from "./consent/add-consent/add-consent.component";
 import {EditConsentComponent} from "./consent/edit-consent/edit-consent.component";
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 const routes: Routes = [
   // TODO: All Paths should have english wording.
@@ -35,7 +36,10 @@ const routes: Routes = [
   {path: 'access-denied', component: AccessDeniedComponent},
   // Needs to be outside, because we want message why user couldn't authenticate
   {path: 'error', component: ErrorComponent},
-  {path: 'logout', component: LogoutComponent}
+  {path: 'logout', component: LogoutComponent},
+  //Wild Card Route for 404 request 
+  { path: '**', pathMatch: 'full',  
+  component: PageNotFoundComponent }
 ];
 
 @NgModule({

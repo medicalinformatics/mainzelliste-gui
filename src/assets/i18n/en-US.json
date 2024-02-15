@@ -211,8 +211,11 @@
 	"appConfigService.backend_online": "Mainzelliste is online",
 	"appConfigService.main_id_type_valid": "Main id type is valid",
 
-  "access_denied.title": "Access Denied",
-  "access_denied.message": "you do not have permission to view this page",
+  	"access_denied.title": "Access Denied",
+  	"access_denied.message": "you do not have permission to view this page",
+
+  	"page_not_found.title": "Page not found",
+  	"page_not_found.message": "The page you were looking for could not be found",
 
 	"patientlistView.title": "Patient list",
 

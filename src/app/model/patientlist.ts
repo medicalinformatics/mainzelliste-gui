@@ -74,5 +74,7 @@ export type Operation = "C" | "R" | "U" | "D";
 
 export interface BetaFeatures {
   consent?: boolean;
+  copyConcatenatedId?: boolean
+  copyId?: boolean
 }
 

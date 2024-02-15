@@ -13,11 +13,19 @@
                  [(ngModel)]="externalId.idString" [name]="externalId.idType"
                  matInput [readonly]="readOnly"
                  value="{{externalId.idString}}">
-          <button mat-icon-button *ngIf="readOnly" [cdkCopyToClipboard]="externalId.idString"
-                  matSuffix>
-            <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy
-            </mat-icon>
-          </button>
+          <span matSuffix style="display:flex; flex-flow: row; justify-content:flex-end; column-gap:6px; row-gap: 0px">
+            <button mat-icon-button *ngIf="readOnly && this.config.isCopyIdEnabled()" [cdkCopyToClipboard]="externalId.idString"
+                    [ngStyle]="{'width': '24px', 'height': '24px'}"
+                    [matTooltip]="externalId.idString" matSuffix>
+              <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
+            </button>
+            <button mat-icon-button *ngIf="readOnly && this.config.isCopyConcatenatedIdEnabled()"
+                    [cdkCopyToClipboard]="this.getConcatenated(externalId)"
+                    [ngStyle]="{'width': '24px', 'height': '24px'}"
+                    [matTooltip]="this.getConcatenated(externalId)" matSuffix>
+              <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">copy_all</mat-icon>
+            </button>
+          </span>
         </mat-form-field>
         <button *ngIf="!readOnly" mat-icon-button color="primary"
                 aria-label="Externes Pseudonym entfernen"
