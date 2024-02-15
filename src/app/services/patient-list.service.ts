@@ -22,7 +22,6 @@ import {Id} from "../model/id";
 import { CreateIdsTokenData } from '../model/create-ids-token-data';
 import {AuthorizationService} from "./authorization.service";
 import { TranslateService } from '@ngx-translate/core';
-import { AssociatedIdsGenerator } from '../model/associated-ids-generator';
 
 export interface ReadPatientsResponse {
   patients: Patient[];
@@ -95,10 +94,6 @@ export class PatientListService {
     let allowedIdTypes = operation != undefined ? this.authorizationService.getAllowedIdTypes(operation) : [];
     return this.configService.getMainzellisteIdGenerators()
       .filter(g => allowedIdTypes.length == 0 || allowedIdTypes.some(t => t == g.idType));
-  }
-
-  getAssociatedIdGenerators(patient?: Patient): AssociatedIdsGenerator[] {
-    return this.patientList.associatedIdsGenerators;
   }
 
   isDebugModeEnabled(): boolean {

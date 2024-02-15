@@ -6,11 +6,7 @@
   </h4>
   <mat-form-field appearance="fill">
     <mat-label>{{'' | translate}}</mat-label>
-    <mat-select (selectionChange)="dataModel = $event;">
-      <mat-option *ngFor="let aId of data" [value]="aId.name"
-        >{{aId.name}}</mat-option
-      >
-    </mat-select>
+    <input matInput (keyup)="this.dataModel = input.value" placeholder="idType" #input>
   </mat-form-field>
 </div>
 <div mat-dialog-actions style="margin-top: 10%;">
@@ -22,7 +18,7 @@
     class="submit"
     type="submit"
     (click)="onSave()"
-    [disabled]="dataModel == null"
+    [disabled]="this.dataModel === ''"
   >
     {{'button_save_new_id' | translate}}
   </button>

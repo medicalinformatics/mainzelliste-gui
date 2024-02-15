@@ -171,13 +171,11 @@ export class IdcardComponent implements OnInit {
   }
 
   openNewAssociatedIdDialog(): void {
-    const dialogRef = this.newAssociatedIdDialog.open(NewAssociatedIdDialog, {
-      data: this.patientListService.getAssociatedIdGenerators(this.patient)
-    });
+    const dialogRef = this.newAssociatedIdDialog.open(NewAssociatedIdDialog);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result != null) {
-        this.generateAssociatedId(result.value);
+        this.generateAssociatedId(result);
         this.openAssociateIdsDialog();
       }
     })

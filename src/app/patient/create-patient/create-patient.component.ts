@@ -101,7 +101,7 @@ export class CreatePatientComponent  implements OnInit {
 
     this.translate.onLangChange.subscribe(() => {
       this.changeTitle();
-    })
+    });
   }
 
   createNewPatient(sureness: boolean) {

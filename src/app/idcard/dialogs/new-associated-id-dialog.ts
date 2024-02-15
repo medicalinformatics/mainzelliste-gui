@@ -1,6 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import { AssociatedIdsGenerator } from 'src/app/model/associated-ids-generator';
 
 
 @Component({
@@ -12,9 +11,8 @@ export class NewAssociatedIdDialog implements OnInit {
 
     constructor(
         public dialogRef: MatDialogRef<NewAssociatedIdDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: AssociatedIdsGenerator[],
-        @Inject(MAT_DIALOG_DATA) public dataModel: any
-    ) {this.dataModel = null}
+        @Inject(MAT_DIALOG_DATA) public dataModel: string
+    ) {this.dataModel = ""}
 
     ngOnInit(): void {}
 
