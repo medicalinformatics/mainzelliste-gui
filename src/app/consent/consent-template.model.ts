@@ -1,3 +1,6 @@
+import {ConsentPolicySet} from "../model/consent-policy-set";
+import {ConsentPolicy} from "../model/consent-policy";
+
 export class ConsentTemplate {
   name?: string;
   title?: string;
@@ -14,7 +17,9 @@ export interface Item {
   id: number,
   type: ItemType,
   text: string,
-  editing: boolean
+  editing: boolean,
+  isLoading: boolean
+  clone():Item;
 }
 
 export class DisplayItem implements Item {
@@ -22,6 +27,7 @@ export class DisplayItem implements Item {
   type: ItemType;
   text: string = "";
   editing: boolean = false;
+  isLoading: boolean = false;
 
   constructor(
       id: number,
@@ -30,6 +36,13 @@ export class DisplayItem implements Item {
     this.id = id;
     this.type = type;
   }
+
+  clone(): DisplayItem {
+    let item = new DisplayItem(this.id, this.type);
+    item.text = this.text;
+    item.editing = this.editing;
+    return item;
+  }
 }
 
 export class ChoiceItem implements Item {
@@ -37,9 +50,10 @@ export class ChoiceItem implements Item {
   type: ItemType;
   text: string = "";
   editing: boolean = false;
+  isLoading: boolean = false;
   answer: ChoiceItemAnswer;
-  policySet?: string;
-  fhirCoding?: fhir4.Coding;
+  policySet?: ConsentPolicySet;
+  policy?: ConsentPolicy;
 
   constructor(
       id: number,
@@ -49,6 +63,15 @@ export class ChoiceItem implements Item {
     this.id = id;
     this.type = type;
     this.answer = answer;
+  }
+
+  clone(): ChoiceItem {
+    let item = new ChoiceItem(this.id, this.type, this.answer);
+    item.text = this.text;
+    item.editing = this.editing;
+    item.policySet = this.policySet;
+    item.policy = this.policy;
+    return item;
   }
 }
 

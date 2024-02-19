@@ -12,7 +12,13 @@ import _moment from "moment";
 import {ConsentTemplateFhirWrapper} from "../model/consent-template-fhir-wrapper";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {ChoiceItem, ConsentTemplate, DisplayItem, Validity} from "./consent-template.model";
-import {catchError, mergeMap} from "rxjs/operators";
+import {catchError, map, mergeMap} from "rxjs/operators";
+import {ConsentPolicySet} from "../model/consent-policy-set";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {ConsentPolicy} from "../model/consent-policy";
+import {getErrorMessageFrom} from "../error/error-utils";
+import {TokenType} from "../model/token";
+import {TokenData} from "../model/token-data";
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +31,8 @@ export class ConsentService {
   constructor(
     private sessionService: SessionService,
     private appConfigService: AppConfigService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private httpClient: HttpClient
   ) {
     this.mainzellisteBaseUrl = this.appConfigService.data[0].url.toString();
     this.client = new Client({baseUrl: this.mainzellisteBaseUrl + "/fhir"});
@@ -38,6 +45,7 @@ export class ConsentService {
   /**
    * serialize ui change in consent fhir resource
    * @param dataModel
+   * @param force
    */
   public serializeConsentDataModelToFhir(dataModel: Consent, force: boolean) {
     if (dataModel.fhirResource) {
@@ -465,12 +473,12 @@ export class ConsentService {
         }
       ],
       patient: {
-        "reference": "Patient/101"
+        "reference": "/fhir/Patient/101"
       },
       dateTime: "2020-09-01",
       policy: [
         {
-          uri: `/Questionnaire/${template.name}`
+          uri: `/fhir/Questionnaire/${template.name}`
         }
       ],
       provision: {
@@ -578,10 +586,13 @@ export class ConsentService {
         start: _moment().format("YYYY-MM-DD"),
         end: this.mapValidityToDate(validity)
       },
-      code: !item.fhirCoding ? [] : [
+      code: !item.policy ? [] : [
         {
           coding: [
-            item.fhirCoding
+            {
+              code: item.policy.code,
+              system: item.policySet?.externalId || `/consent-policies/${item.policySet?.id}`
+            }
           ]
         }
       ],
@@ -632,6 +643,47 @@ export class ConsentService {
       .add(validityPeriod.month || 0, 'months')
       .add(validityPeriod.year || 0, 'years')
       .format("YYYY-MM-DD")
+  }
+
+  //////////////////////////////
+  ////    Policies
+  //////////////////////////////
+
+  public getPolicySets(): Observable<ConsentPolicySet[]> {
+    return this.getData<ConsentPolicySet>("searchConsentPolicySets", {}, "consent-policies");
+  }
+
+  public getPolicies(policySetId: string): Observable<ConsentPolicy[]> {
+    return this.getData<ConsentPolicy>("searchConsentPolicies", {},   `consent-policies/${policySetId}/policy`);
+  }
+
+  public getData<T>(tokenType: TokenType, tokenData: TokenData, path : string) {
+    return this.sessionService.createToken( tokenType, tokenData)
+      .pipe(
+        mergeMap(token => this.resolveToken<T>(token.id, path)),
+        catchError((error) => {
+          if (error.status >= 400 && error.status < 500) {
+            return of([]);
+          } else {
+            return throwError(new Error(`Failed to fetch data from ${path}. Cause: ${getErrorMessageFrom(error, this.translate)}`));
+          }
+        })
+      )
+  }
+
+  resolveToken<T>(tokenId: string | undefined, path : string): Observable<T[]> {
+    return this.httpClient.get<{
+      total: number,
+      result: T[]
+    }>(this.mainzellisteBaseUrl + "/" + path, {
+      headers: new HttpHeaders()
+        .set('Content-Type', 'application/json')
+        .set('mainzellisteApiVersion', '3.2')
+        .set('Authorization', 'MainzellisteToken ' + tokenId)
+    })
+      .pipe(
+        map(response => response.result)
+      )
   }
 
   //////////////////////////////

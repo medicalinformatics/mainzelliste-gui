@@ -92,7 +92,7 @@
           <mat-card-content style="margin-bottom: 2px" [ngSwitch]="module.constructor.name">
             <!-- display mode -->
             <div *ngIf="!this.module.editing">
-              <h3 *ngIf=" this.module.type == 'choice'"><b>{{$any(module).fhirCoding?.display}}</b></h3>
+              <h3 *ngIf=" this.module.type == 'choice'"><b>{{$any(module).policy?.text}}</b></h3>
               <p [innerHTML]="module.text" style="margin-bottom: 20px;margin-top: 5px;"></p>
               <div style="padding-bottom: 10px" *ngIf=" this.module.type == 'choice'">
                 <mat-radio-group value="permit" style ="display:flex; gap:40px" #question color="primary" [disabled]="true">
@@ -114,7 +114,7 @@
               </mat-form-field>
               <mat-form-field *ngIf="this.currentModule.type == 'choice'" class="templateInputField">
                 <mat-label>Einwilligungspolicy</mat-label>
-                <mat-select [(value)]="$any(currentModule).fhirCoding" [required]="true" [disabled]="$any(currentModule).policySet == undefined">
+                <mat-select [(value)]="$any(currentModule).policy" [required]="true" [disabled]="$any(currentModule).policySet == undefined">
                   <mat-option *ngFor="let policy of this.getPolicies(currentModule) || []" [value]="policy">
                     {{policy.display}}
                   </mat-option>

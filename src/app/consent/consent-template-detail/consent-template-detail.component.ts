@@ -3,11 +3,12 @@ import {ControlContainer, NgForm, NgModel, ValidationErrors} from "@angular/form
 import {ChoiceItem, ConsentTemplate, DisplayItem, Item, Validity} from "../consent-template.model";
 import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
 import {ConsentService} from "../consent.service";
-import {GlobalTitleService} from "../../services/global-title.service";
 import {MatDialog} from "@angular/material/dialog";
-import {Router} from "@angular/router";
 import {TranslateService} from "@ngx-translate/core";
 import {ConsentTemplateValidityPeriodDialog} from "./consent-template-validity-period-dialog";
+import {ConsentPolicySet} from "../../model/consent-policy-set";
+import {ConsentPolicy} from "../../model/consent-policy";
+import {MatSelectChange} from "@angular/material/select";
 
 @Component({
   selector: 'app-consent-template-detail',
@@ -254,11 +255,12 @@ export class ConsentTemplateDetailComponent implements OnInit {
       display: "MDAT GECCO83 bereitstellen NUM/CODEX ohne EU DSGVO NIVEAU"
     }
   ]
-  public consentPolicySets: Map<String, fhir4.Coding[]> = new Map<String, fhir4.Coding[]>();
+
+  public consentPolicySets: ConsentPolicySet[] = [];
+  public consentPolicies: Map<String, ConsentPolicy[]> = new Map<String, ConsentPolicy[]>();
 
   //TODO dropDow for Scope http://terminology.hl7.org/CodeSystem/consentscope
   //TODO dropDow for category: http://hl7.org/fhir/R4/valueset-consent-category.html
-
 
   public selectedModuleType: "choice" | "display" = 'choice';
 
@@ -273,20 +275,20 @@ export class ConsentTemplateDetailComponent implements OnInit {
     }
   ]
   public currentModule: Item = new DisplayItem(1, 'display');
+
   constructor(
     public consentService: ConsentService,
-    private titleService: GlobalTitleService,
     private validityPeriodDialog: MatDialog,
-    private router: Router,
     private translate: TranslateService
   ) {
-    this.titleService.setTitle("Einwilligungsvorlage erstellen");
-    this.consentPolicySets.set("MiiConsentPolicyValueSet", this.fhirChoiceItemCodings)
   }
 
   ngOnInit(): void {
+    this.consentService.getPolicySets().subscribe( r => this.consentPolicySets = r);
   }
 
+  //
+  // Handle Error
   displayError(field: NgModel) {
     return field.invalid &&
       (field.dirty || field.touched) &&
@@ -306,14 +308,6 @@ export class ConsentTemplateDetailComponent implements OnInit {
     return  validityPeriod.year + ' Jahren - ' + validityPeriod.month + ' Monaten - ' + validityPeriod.day  + ' Tagen';
   }
 
-  createModule(selectedModuleType: "choice" | "display") {
-    this.template.items = this.template.items || [];
-    let item = selectedModuleType == "choice" ?
-      new ChoiceItem(this.template.items.length, selectedModuleType, "permit") :
-      new DisplayItem(this.template.items.length, selectedModuleType)
-    this.template.items.push(item);
-  }
-
   openValidityPeriodDialog() {
     const dialogRef = this.validityPeriodDialog.open(ConsentTemplateValidityPeriodDialog,
       { data: this.template.validity, minWidth: '500px'});
@@ -324,6 +318,14 @@ export class ConsentTemplateDetailComponent implements OnInit {
         this.templateValidityPeriod = this.getValidityPeriodText(validityPeriod);
       }
     });
+  }
+
+  createModule(selectedModuleType: "choice" | "display") {
+    this.template.items = this.template.items || [];
+    let item = selectedModuleType == "choice" ?
+      new ChoiceItem(this.template.items.length, selectedModuleType, "permit") :
+      new DisplayItem(this.template.items.length, selectedModuleType)
+    this.template.items.push(item);
   }
 
   dropModule(event: CdkDragDrop<any, any>) {
@@ -337,18 +339,8 @@ export class ConsentTemplateDetailComponent implements OnInit {
   }
 
   editModule(m: Item) {
-    // clone
-    if (m.type == 'choice') {
-      this.currentModule = new ChoiceItem(m.id, m.type, "permit")
-      this.toChoiceItem(this.currentModule).fhirCoding = this.toChoiceItem(m).fhirCoding;
-      this.toChoiceItem(this.currentModule).policySet = this.toChoiceItem(m).policySet;
-    } else {
-      this.currentModule = new DisplayItem(m.id, m.type);
-    }
-    this.currentModule.text = m.text;
-    // set edit mode
     m.editing = true
-    this.currentModule.editing = m.editing;
+    this.currentModule = m.clone();
   }
 
   isEditingModule(){
@@ -361,7 +353,7 @@ export class ConsentTemplateDetailComponent implements OnInit {
     this.toChoiceItem(m).text = this.toChoiceItem(this.currentModule).text;
     this.toChoiceItem(m).editing = false;
     if (m.type == 'choice') {
-      this.toChoiceItem(m).fhirCoding = this.toChoiceItem(this.currentModule).fhirCoding;
+      this.toChoiceItem(m).policy = this.toChoiceItem(this.currentModule).policy;
       this.toChoiceItem(m).policySet = this.toChoiceItem(this.currentModule).policySet;
     }
   }
@@ -370,12 +362,26 @@ export class ConsentTemplateDetailComponent implements OnInit {
     module.editing = false;
   }
 
-  getPolicies(module: Item | undefined) {
-    if (module == undefined)
-      return []
-    return this.consentPolicySets.get(this.toChoiceItem(module).policySet || "")?.filter(p =>
-      !this.template.items.filter(i => i != module).some(i => i.type == 'choice' && this.toChoiceItem(i).fhirCoding?.code == p.code)
-    )
+  public getPolicies(): ConsentPolicy[] {
+    return (this.consentPolicies.get(this.toChoiceItem(this.currentModule).policySet?.id || "") || [])
+      .filter(p =>
+        !this.template.items.filter(i => i != this.currentModule).some(
+          i => i.type == 'choice' && this.toChoiceItem(i).policy?.code == p.code
+        )
+      )
+  }
+
+  public fetchPolicies(matSelectChange: MatSelectChange) {
+    let policies: ConsentPolicy[] | undefined = this.consentPolicies.get(matSelectChange.value.id);
+    if (policies == undefined || policies.length == 0) {
+      this.currentModule.isLoading = true;
+      this.consentService.getPolicies(matSelectChange.value.id).subscribe(
+        r => {
+          this.consentPolicies.set(matSelectChange.value.id, r);
+          this.currentModule.isLoading = false;
+        }
+      )
+    }
   }
 
   public toChoiceItem(item: Item): ChoiceItem {
@@ -389,6 +395,6 @@ export class ConsentTemplateDetailComponent implements OnInit {
         (!this.template.validity.day || this.template.validity.day == 0)) ||
       !this.template.items.some(e => e.type == 'choice') ||
       this.template.items.some( e => e.type == 'display' && (e.text == undefined || e.text.trim().length == 0) ||
-        e.type == 'choice' && (e as ChoiceItem).fhirCoding == undefined);
+        e.type == 'choice' && (e as ChoiceItem).policy == undefined);
   }
 }

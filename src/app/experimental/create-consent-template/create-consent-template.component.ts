@@ -348,12 +348,12 @@ export class CreateConsentTemplateComponent implements OnInit {
         }
       ],
       patient: {
-        "reference": "Patient/101"
+        "reference": "/fhir/Patient/101"
       },
       dateTime: "2020-09-01",
       policy: [
         {
-          uri: `/Questionnaire/${template.name}`
+          uri: `/fhir/Questionnaire/${template.name}`
         }
       ],
       provision: {
@@ -460,10 +460,10 @@ export class CreateConsentTemplateComponent implements OnInit {
         start: _moment().format("YYYY-MM-DD"),
         end: this.mapValidityToDate(this.template.validity)
       },
-      code: !item.fhirCoding ? [] : [
+      code: !item.policy ? [] : [
         {
           coding: [
-            item.fhirCoding
+            item.policy
           ]
         }
       ],
@@ -527,7 +527,7 @@ export class CreateConsentTemplateComponent implements OnInit {
       (!this.template.validity.day || this.template.validity.day == 0)) ||
       !this.template.items.some(e => e.type == 'choice') ||
       this.template.items.some( e => e.type == 'display' && (e.text == undefined || e.text.trim().length == 0) ||
-        e.type == 'choice' && this.toChoiceItem(e).fhirCoding == undefined);
+        e.type == 'choice' && this.toChoiceItem(e).policy == undefined);
   }
 
   createTemplate() {
@@ -555,8 +555,8 @@ export class CreateConsentTemplateComponent implements OnInit {
   getPolicies(module: Item | undefined) {
     if (module == undefined)
       return []
-    return this.consentPolicySets.get(this.toChoiceItem(module).policySet || "")?.filter(p =>
-      !this.template.items.filter(i => i != module).some(i => i.type == 'choice' && this.toChoiceItem(i).fhirCoding?.code == p.code)
+    return this.consentPolicySets.get(this.toChoiceItem(module).policySet?.id || "")?.filter(p =>
+      !this.template.items.filter(i => i != module).some(i => i.type == 'choice' && this.toChoiceItem(i).policy?.code == p.code)
     )
   }
 
@@ -574,7 +574,7 @@ export class CreateConsentTemplateComponent implements OnInit {
     // clone
     if (m.type == 'choice') {
       this.currentModule = new ChoiceItem(m.id, m.type, "permit")
-      this.toChoiceItem(this.currentModule).fhirCoding = this.toChoiceItem(m).fhirCoding;
+      this.toChoiceItem(this.currentModule).policy = this.toChoiceItem(m).policy;
       this.toChoiceItem(this.currentModule).policySet = this.toChoiceItem(m).policySet;
     } else {
       this.currentModule = new DisplayItem(m.id, m.type);
@@ -595,7 +595,7 @@ export class CreateConsentTemplateComponent implements OnInit {
     this.toChoiceItem(m).text = this.toChoiceItem(this.currentModule).text;
     this.toChoiceItem(m).editing = false;
     if (m.type == 'choice') {
-      this.toChoiceItem(m).fhirCoding = this.toChoiceItem(this.currentModule).fhirCoding;
+      this.toChoiceItem(m).policy = this.toChoiceItem(this.currentModule).policy;
       this.toChoiceItem(m).policySet = this.toChoiceItem(this.currentModule).policySet;
     }
   }
