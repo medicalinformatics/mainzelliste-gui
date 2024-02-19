@@ -66,6 +66,10 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
         onLoad: 'check-sso',
         silentCheckSsoRedirectUri:
           window.location.origin + '/assets/silent-check-sso.html'
+      },
+      shouldAddToken: (request) => {
+        const paths = ['/sessions', '/configuration'];
+        return paths.some((path) => request.url.includes(path));
       }
     })
     .catch(error => {
