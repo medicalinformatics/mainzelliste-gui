@@ -17,8 +17,6 @@ export interface Item {
   id: number,
   type: ItemType,
   text: string,
-  editing: boolean,
-  isLoading: boolean
   clone():Item;
 }
 
@@ -26,8 +24,6 @@ export class DisplayItem implements Item {
   id: number;
   type: ItemType;
   text: string = "";
-  editing: boolean = false;
-  isLoading: boolean = false;
 
   constructor(
       id: number,
@@ -40,7 +36,6 @@ export class DisplayItem implements Item {
   clone(): DisplayItem {
     let item = new DisplayItem(this.id, this.type);
     item.text = this.text;
-    item.editing = this.editing;
     return item;
   }
 }
@@ -49,8 +44,6 @@ export class ChoiceItem implements Item {
   id: number;
   type: ItemType;
   text: string = "";
-  editing: boolean = false;
-  isLoading: boolean = false;
   answer: ChoiceItemAnswer;
   policySet?: ConsentPolicySet;
   policy?: ConsentPolicy;
@@ -68,7 +61,6 @@ export class ChoiceItem implements Item {
   clone(): ChoiceItem {
     let item = new ChoiceItem(this.id, this.type, this.answer);
     item.text = this.text;
-    item.editing = this.editing;
     item.policySet = this.policySet;
     item.policy = this.policy;
     return item;

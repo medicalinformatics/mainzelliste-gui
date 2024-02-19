@@ -69,72 +69,7 @@
   <h4 style="margin-top: 20px; clear:both; float: left;">Module hinzufügen: </h4>
 
   <!-- modules -->
-  <div cdkDropList (cdkDropListDropped)="dropModule($event)"
-       [ngStyle]="{'width': '100%', 'flex-flow': 'row', 'clear': 'both', 'float': 'left', 'margin-bottom': template.items.length > 0 ? '10px' : '0px'}">
-    <mat-card *ngFor="let module of template.items" cdkDrag ngModelGroup="module" #moduleCtrl="ngModelGroup">
-      <mat-card-header class="module-header">
-        <mat-card-title></mat-card-title>
-        <mat-card-subtitle>{{this.module.type == 'display' ? 'Text' : 'Frage' }}</mat-card-subtitle>
-        <div></div>
-        <button mat-icon-button class="edit-module-button" color="primary"
-                style="float: right; margin-left: auto; margin-right: 10px;"
-                (click)="this.editModule(module)" [disabled]="isEditingModule()">
-          <mat-icon matTooltip="editieren">edit</mat-icon>
-        </button>
-        <button mat-icon-button class="edit-module-button" color="primary" style="float: right"
-                (click)="this.deleteModule(module)">
-          <mat-icon matTooltip="editieren">delete</mat-icon>
-        </button>
-      </mat-card-header>
-      <mat-card-content style="margin-bottom: 2px" [ngSwitch]="module.constructor.name">
-        <!-- display mode -->
-        <div *ngIf="!this.module.editing">
-          <h3 *ngIf=" this.module.type == 'choice'"><b>{{$any(module).policy?.text}}</b></h3>
-          <p [innerHTML]="module.text" style="margin-bottom: 20px;margin-top: 5px;"></p>
-          <div style="padding-bottom: 10px" *ngIf=" this.module.type == 'choice'">
-            <mat-radio-group value="permit" style="display:flex; gap:40px" #question color="primary" [disabled]="true">
-              <mat-radio-button value="permit"
-                                onclick="this.question.checked = false;">{{'radio_button_yes' | translate}}</mat-radio-button>
-              <mat-radio-button value="deny">{{'radio_button_no' | translate}}</mat-radio-button>
-            </mat-radio-group>
-          </div>
-        </div>
-
-        <!-- edit mode -->
-        <div *ngIf="this.module.editing">
-          <mat-form-field *ngIf="this.currentModule.type == 'choice'" class="templateInputField">
-            <mat-label>Einwilligungspolicy Liste</mat-label>
-            <mat-select [(ngModel)]="$any(this.currentModule).policySet" [required]="true"
-                        (selectionChange)="this.fetchPolicies($event)" name="'policySet'">
-              <mat-option *ngFor="let policy of this.consentPolicySets" [value]="policy">
-                {{policy.name}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field *ngIf="this.currentModule.type == 'choice'" class="templateInputField">
-            <mat-label>Einwilligungspolicy</mat-label>
-            <mat-spinner *ngIf="this.currentModule.isLoading" matPrefix class="spinner" diameter="20"
-                         style="padding-right: 0.5em"></mat-spinner>
-            <mat-select [(ngModel)]="$any(currentModule).policy" [required]="true"
-                        [disabled]="$any(currentModule).policySet == undefined" name="'policy'">
-              <mat-option *ngFor="let policy of this.getPolicies()" [value]="policy">{{policy.text}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field class="module-mat-form-field-textarea">
-            <mat-label>Text eingeben</mat-label>
-            <textarea matInput [(ngModel)]="currentModule.text" style="padding-bottom: 0"
-                      [name]="'module'" [required]="currentModule.type === 'display'"></textarea>
-          </mat-form-field>
-        </div>
-      </mat-card-content>
-      <mat-card-actions *ngIf="this.module.editing">
-        <button mat-button type="submit" (click)="this.saveEditedModule(module)"
-                [disabled]="!moduleCtrl?.valid || false">Speichen
-        </button>
-        <button mat-button (click)="this.cancelEditModule(module)">Abbrechen</button>
-      </mat-card-actions>
-    </mat-card>
-  </div>
+  <app-consent-template-modules [templateModules]="this.template.items"></app-consent-template-modules>
 
   <!-- add module -->
   <div
