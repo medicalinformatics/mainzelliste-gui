@@ -4,24 +4,51 @@
   <h4 style="font-weight: 100; text-align: justify">
     {{'' | translate}}
   </h4>
-  <mat-form-field appearance="fill">
-    {{data}}
-    <mat-label>{{'' | translate}}</mat-label>
-    <input matInput (keyup)="dataModel = input.value" placeholder="idType" #input>
-  </mat-form-field>
-</div>
-<div mat-dialog-actions style="margin-top: 10%;">
-  <button mat-raised-button class="submitBreak" (click)="onCancel()">
-    {{'button_cancel' | translate}}
-  </button>
-  <button
-    mat-raised-button
-    class="submit"
-    type="submit"
-    (click)="onSave()"
-    [disabled]="dataModel === ''"
-  >
-    {{'button_save_new_id' | translate}}
-  </button>
+  <div mat-dialog-content>
+    <br />
+    <h4 style="font-weight: 100; text-align: justify">
+      {{'' | translate}}
+    </h4>
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>{{'' | translate}}</mat-label>
+        <mat-select (selectionChange)="idType[0] = $event;">
+          <mat-option *ngFor="let id of internalIds" [value]="id.id">
+            {{id.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="fill">
+      <mat-label>{{'' | translate}}</mat-label>
+      <mat-select (selectionChange)="idType[1] = $event;" #option>
+        <mat-option *ngFor="let id of externalIds" [value]="id.id">
+          {{id.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  
+    <mat-form-field appearance="fill">
+      {{option.value}}
+      <mat-label>{{'' | translate}}</mat-label>
+      <input matInput (keyup)="idString = input.value" placeholder="idType" #input>
+    </mat-form-field>
+  </div>
+
+  <div mat-dialog-actions style="margin-top: 10%;">
+    <button mat-raised-button class="submitBreak" (click)="onCancel()">
+      {{'button_cancel' | translate}}
+    </button>
+    <button
+      mat-raised-button
+      class="submit"
+      type="submit"
+      (click)="onSave()"
+      [disabled]="idType[0] == null"
+    >
+      {{'button_save_new_id' | translate}}
+    </button>
+  </div>
 </div>
 

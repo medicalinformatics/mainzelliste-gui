@@ -363,8 +363,15 @@ export class PatientService {
     return this.patientListService.getIdTypes("R");
   }
 
-  addNewAssociatedId(group: AssociatedIdGroup, idType: string, idString: string) {
-    group.associatedIds.push(new AssociatedId([new Id(idType, idString)]));
+  addNewAssociatedId(group: AssociatedIdGroup, intIdType: string, intIdString: string, extId?: Id) {
+    if (extId != undefined) {
+      group.associatedIds.push(new AssociatedId([new Id(extId.idType, extId.idString), new Id(intIdType, intIdString)]));
+    } else {
+      group.associatedIds.push(new AssociatedId([new Id(intIdType, intIdString)]));
+    }
   }
 
+  generateNewAssociatedIntId(group: AssociatedIdGroup, idType: string, idString: string) {
+    group.associatedIds.push(new AssociatedId([new Id(idType, idString)]));
+  }
 }

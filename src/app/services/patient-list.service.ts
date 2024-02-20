@@ -441,7 +441,8 @@ export class PatientListService {
     return patient;
   }
 
-  getAssociatedIdTypes(group: string): [{i18n: string, name: string}] | undefined {
+  getAssociatedIdTypes(group: string): [{name: string, id: string, isExternal: boolean}] | undefined {
+    
     for (let x = 0; 0 < this.patientList.associatedIdGroups.length; x++) {
       if (this.patientList.associatedIdGroups[x].name === group) {
         return this.patientList.associatedIdGroups[x].idTypes;

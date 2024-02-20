@@ -130,12 +130,25 @@ export class IdcardComponent implements OnInit {
     this.patientListService.generateId(this.idType, this.idString, newIdType).subscribe(() => this.loadPatient());
   }
 
-  addNewAssociatedId(group: AssociatedIdGroup, idType: string, idString: string): boolean {
-    if (!this.patient.idExists(idString)) {
-      this.patientService.addNewAssociatedId(group, idType, idString);
+  private addNewAssociatedId(group: AssociatedIdGroup, intIdType: string, extId?: Id): boolean {
+    if (extId != undefined) {
+      if (!this.patient.idExists(extId?.idString)) {
+        this.patientService.addNewAssociatedId(group, intIdType, this.generateNewIntId(), extId);
+        return true;
+      }
+      return false;
+    } else {
+      this.patientService.addNewAssociatedId(group, intIdType, this.generateNewIntId());
       return true;
     }
-    return false
+  }
+  
+  private generateNewIntId(): string {
+    let x: number = 0;
+    while (this.patient.idExists(x.toString())) {
+      x++;
+    }
+    return x.toString();
   }
 
   openConsentDialog() {
@@ -168,7 +181,7 @@ export class IdcardComponent implements OnInit {
       });
   }
 
-  openAssociateIdsDialog(group: AssociatedIdGroup): void {
+  private openAssociateIdsDialog(group: AssociatedIdGroup): void {
     const dialogRef = this.associatedIdsDialog.open(AssociatedIdsDialog, {
       data: {idTypes: this.patientListService.getAssociatedIdTypes(group.name), group: group}
     });
@@ -196,19 +209,17 @@ export class IdcardComponent implements OnInit {
     });
   }
 
-  openNewAssociatedIdDialog(group: AssociatedIdGroup): void {
+  private openNewAssociatedIdDialog(group: AssociatedIdGroup): void {
     if (this.patientListService.getAssociatedIdTypes(group.name) != undefined) {
       const dialogRef = this.newAssociatedIdDialog.open(NewAssociatedIdDialog, {
-        data: this.patientListService.getAssociatedIdTypes(group.name)![0].name
+        data: this.patientListService.getAssociatedIdTypes(group.name)
       });
 
-      dialogRef.afterClosed().subscribe((result: Id) => {
-        if (result != null) {
-          if (this.addNewAssociatedId(group, result.idType, result.idString)) {
-            this.openAssociateIdsDialog(group);
-          } else {
-            this.openIdExistsErrorDialog(group);
-          }
+      dialogRef.afterClosed().subscribe((result: {intId: string, extId: Id}) => {
+        if (this.addNewAssociatedId(group, result.intId, result.extId)) {
+          this.openAssociateIdsDialog(group);
+        } else {
+          this.openIdExistsErrorDialog(group);
         }
       });
     } else {
@@ -216,7 +227,7 @@ export class IdcardComponent implements OnInit {
     }  
   }
 
-  openIdExistsErrorDialog(group: AssociatedIdGroup): void {
+  private openIdExistsErrorDialog(group: AssociatedIdGroup): void {
     const dialogRef = this.idExistsErrorDialog.open(IdExistsErrorDialog);
 
     dialogRef.afterClosed().subscribe(() => {

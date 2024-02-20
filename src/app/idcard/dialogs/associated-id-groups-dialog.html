@@ -1,10 +1,17 @@
 <div>
     <ng-container *ngFor="let group of data">
-        <button (click)="onSave(group)">
+        <button
+        mat-raised-button
+      class="submit"
+      type="submit"
+      style="margin-left: 10px; margin-right: 10px;" (click)="onSave(group)">
             {{group.name}}
         </button>
     </ng-container>
-    <button (click)="onCancel()">
+    <button mat-raised-button
+        class="submit"
+        type="submit"
+        style="margin-left: 10px;" (click)="onCancel()">
         {{'button_cancel' | translate}}
     </button>
 </div>
