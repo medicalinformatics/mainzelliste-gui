@@ -30,7 +30,7 @@
               [ngClass]="this.hasAllIds() ? '': 'idcard-button'" style="margin-bottom: 15px">
         <mat-icon matTooltip="{{'button_generate_id' | translate}}">add_box</mat-icon>
       </button>
-      <button *appHasPermission="Permission.GENERATE_IDS" mat-fab (click)="openAssociateIdsDialog()"
+      <button *appHasPermission="Permission.GENERATE_IDS" mat-fab (click)="openAssociateIdGroupsDialog()"
               ngClass="idcard-button" style="margin-bottom: 15px">
         <mat-icon matTooltip="{{'' | translate}}">add_box</mat-icon>
       </button>

@@ -8,19 +8,9 @@
 
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" style="width: 100%;">
 
-    <ng-container matColumnDef="idType">
-      <th mat-header-cell *matHeaderCellDef> Id Type </th>
-      <td mat-cell *matCellDef="let element"> {{element.idType}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="intId">
-      <th mat-header-cell *matHeaderCellDef> Internal Id </th>
-      <td mat-cell *matCellDef="let element"> {{element.intId}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="extId">
-      <th mat-header-cell *matHeaderCellDef> External Id </th>
-      <td mat-cell *matCellDef="let element"> {{element.extId}} </td>
+    <ng-container *ngFor="let column of data.idTypes; index as i" matColumnDef={{column.name}}>
+      <th mat-header-cell *matHeaderCellDef> {{column.i18n}} </th>
+      <td mat-cell *matCellDef="let element"> {{element.ids[i]}} </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -39,9 +29,17 @@
       mat-raised-button
       class="submit"
       type="submit"
-      (click)="onSave()"
+      (click)="onSave('')"
     >
       {{'button_save_new_id' | translate}}
+    </button>
+    <button
+      mat-raised-button
+      class="submit"
+      type="submit"
+      (click)="onSave('back')"
+    >back
+      {{'' | translate}}
     </button>
     </div>
 </div>

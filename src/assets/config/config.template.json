@@ -68,7 +68,13 @@
         "consent": ${ML_UI_ENABLE_CONSENT},
         "copyConcatenatedId": false,
         "copyId": true
-      }
+      },
+      "associatedIdGroups": [
+        { "name": "lab", "idTypes": [{"i18n": "ext_id_text", "name": "extId"}, {"i18n": "int_id_text", "name": "intId"}]},
+        { "name": "visit", "idTypes": [{"i18n": "ext_id_text", "name": "extId"}, {"i18n": "int_id_text", "name": "intId"}]},
+        { "name": "cache", "idTypes": [{"i18n": "input_id_text", "name": "inputId"}, {"i18n": "output_id_text", "name": "outputId"}]},
+        { "name": "temp", "idTypes": [{"i18n": "te_id_text", "name": "teId"}, {"i18n": "mp_id_text", "name": "mpId"}, {"i18n": "test", "name": "test"}]}
+      ]
     }
   ]
 }

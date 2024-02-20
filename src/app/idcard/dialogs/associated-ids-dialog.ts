@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import { MatTableDataSource } from '@angular/material/table';
-import { AssociatedId } from 'src/app/model/associated-id';
+import { AssociatedIdGroup } from 'src/app/model/associated-id-group';
 
 @Component({
     selector: 'associated-ids-dialog',
@@ -11,8 +11,8 @@ import { AssociatedId } from 'src/app/model/associated-id';
 export class AssociatedIdsDialog implements OnInit {
 
   elementData: Element[] = [];
-  displayedColumns = ['idType', 'intId', 'extId'];
-  dataSource = new MatTableDataSource(this.elementData);
+  displayedColumns: string[];
+  dataSource: MatTableDataSource<Element>;
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -21,11 +21,11 @@ export class AssociatedIdsDialog implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<AssociatedIdsDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: AssociatedId[],
-    @Inject(MAT_DIALOG_DATA) public dataModel: any
+    @Inject(MAT_DIALOG_DATA) public data: {idTypes: {i18n: string, name: string}[], group: AssociatedIdGroup}
   ) {
-    this.dataModel = null
     this.fillElementData();
+    this.displayedColumns = data.idTypes.map(id => id.name);
+    this.dataSource = new MatTableDataSource(this.elementData);
   }
 
   ngOnInit(): void {}
@@ -34,19 +34,25 @@ export class AssociatedIdsDialog implements OnInit {
     this.dialogRef.close();
   }
   
-  onSave() {
-    this.dialogRef.close("xdd");
+  onSave(result: string) {
+    this.dialogRef.close(result);
   }
 
   fillElementData() {
-    this.data.forEach(id => {
-      this.elementData.push({idType: id.name, intId: id.internalId, extId: id.externalId});
+    this.data.group.associatedIds.forEach(associatedId => {
+      let tempIds: string[] = [];
+      for (let x = 0; x < associatedId.idTypes.length; x++) {
+        for (let i = 0; i < this.data.idTypes.length; i++) {
+          if (associatedId.idTypes[x].idType === this.data.idTypes[i].name) {
+            tempIds[i] = associatedId.idTypes[x].idString;
+          }
+        }
+      }
+      this.elementData.push({ids: tempIds});
     });
   }
 }
 
 export interface Element {
-  idType: string;
-  intId: string;
-  extId: string;
+  ids: string[];
 }

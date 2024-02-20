@@ -53,6 +53,8 @@ import { NewAssociatedIdDialog } from './idcard/dialogs/new-associated-id-dialog
 import { AssociatedIdsDialog } from './idcard/dialogs/associated-ids-dialog';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { PatientSearchComponent } from './experimental/patientSearch/patientSearch.component';
+import { AssociatedIdGroupsDialog } from './idcard/dialogs/associated-id-groups-dialog';
+import { IdExistsErrorDialog } from './idcard/dialogs/id-exists-error-dialog';
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
   return () => configService.init()
@@ -96,7 +98,9 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     LogoutComponent,
     NewUniqueIdDialog,
     AssociatedIdsDialog,
+    AssociatedIdGroupsDialog,
     NewAssociatedIdDialog,
+    IdExistsErrorDialog,
     AccessDeniedComponent,
     PageNotFoundComponent,
     PatientSearchComponent

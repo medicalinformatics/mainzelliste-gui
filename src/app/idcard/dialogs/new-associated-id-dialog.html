@@ -5,8 +5,9 @@
     {{'' | translate}}
   </h4>
   <mat-form-field appearance="fill">
+    {{data}}
     <mat-label>{{'' | translate}}</mat-label>
-    <input matInput (keyup)="this.dataModel = input.value" placeholder="idType" #input>
+    <input matInput (keyup)="dataModel = input.value" placeholder="idType" #input>
   </mat-form-field>
 </div>
 <div mat-dialog-actions style="margin-top: 10%;">
@@ -18,7 +19,7 @@
     class="submit"
     type="submit"
     (click)="onSave()"
-    [disabled]="this.dataModel === ''"
+    [disabled]="dataModel === ''"
   >
     {{'button_save_new_id' | translate}}
   </button>

@@ -1,3 +1,4 @@
+import { AssociatedIdGroupTemplate } from "./associated-id-group-template";
 import {Field, FieldType} from "./field";
 
 export class PatientList {
@@ -16,7 +17,8 @@ export class PatientList {
       new Field("zip_code_text", "PLZ", "plz", [], FieldType.TEXT, true, "", "mind. 5 Zeichen")
     ],
     public debug?:boolean,
-    public betaFeatures?: BetaFeatures
+    public betaFeatures?: BetaFeatures,
+    public associatedIdGroups: AssociatedIdGroupTemplate[] = []
   ) {}
 }
 

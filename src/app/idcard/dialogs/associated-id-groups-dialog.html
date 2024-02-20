@@ -1,0 +1,10 @@
+<div>
+    <ng-container *ngFor="let group of data">
+        <button (click)="onSave(group)">
+            {{group.name}}
+        </button>
+    </ng-container>
+    <button (click)="onCancel()">
+        {{'button_cancel' | translate}}
+    </button>
+</div>

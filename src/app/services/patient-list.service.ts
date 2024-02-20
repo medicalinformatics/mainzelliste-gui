@@ -440,4 +440,13 @@ export class PatientListService {
     patient.ids = displayPatient.ids;
     return patient;
   }
+
+  getAssociatedIdTypes(group: string): [{i18n: string, name: string}] | undefined {
+    for (let x = 0; 0 < this.patientList.associatedIdGroups.length; x++) {
+      if (this.patientList.associatedIdGroups[x].name === group) {
+        return this.patientList.associatedIdGroups[x].idTypes;
+      }
+    }
+   return undefined;
+  }
 }

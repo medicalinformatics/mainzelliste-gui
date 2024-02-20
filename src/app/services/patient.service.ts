@@ -8,6 +8,7 @@ import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessages} from "../error/error-messages";
 import {Id} from "../model/id";
 import { AssociatedId } from '../model/associated-id';
+import { AssociatedIdGroup } from '../model/associated-id-group';
 
 @Injectable({
   providedIn: 'root'
@@ -362,21 +363,8 @@ export class PatientService {
     return this.patientListService.getIdTypes("R");
   }
 
-  addNewAssociatedId(patient: Patient, associatedIdType: string) {
-    patient.associatedIds.push(new AssociatedId(associatedIdType, patient.generateNewIntId(), ""));
-  }
-
-  generateInternalId(patient: Patient, extId: string) {
-    let id: AssociatedId | undefined = patient.findAssociatedId(extId);
-    if (id != undefined) {
-      id.externalId = patient.generateNewIntId();
-    } else {
-      console.log("error: associated id not found");
-    }
-  }
-
-  tESTaddNewExtId(patient: Patient, associatedIdType: string) {
-    patient.associatedIds.push(new AssociatedId(associatedIdType, patient.generateNewIntId(), ""));
+  addNewAssociatedId(group: AssociatedIdGroup, idType: string, idString: string) {
+    group.associatedIds.push(new AssociatedId([new Id(idType, idString)]));
   }
 
 }
