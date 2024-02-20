@@ -1,4 +1,5 @@
 <h1 mat-dialog-title>Einwilligungsvorlage erstellen</h1>
+<app-error-card [(messages)]="errorMessages"></app-error-card>
 <form #consentTemplateForm="ngForm">
   <div mat-dialog-content>
     <app-consent-template-detail [template]="dataModel"></app-consent-template-detail>
@@ -7,10 +8,10 @@
     <button mat-raised-button class="submitBreak" (click)="onCancel()">{{'button_cancel' | translate}}</button>
     <button mat-raised-button class="submit" style="clear: both; float: left;"
             [disabled]="disable(consentTemplateForm) || saving"
-            (click)="onSave(consentTemplateForm, false)">Erstellen
+            (click)="onSave(false)">Erstellen
       <mat-icon *ngIf="saving"><mat-spinner diameter="20"></mat-spinner></mat-icon>
     </button>
-    <button mat-raised-button class="submit" type="submit" (click)="onSave(consentTemplateForm,true)"
+    <button mat-raised-button class="submit" type="submit" (click)="onSave(true)"
             [disabled]="disable(consentTemplateForm) || saving">Veröffentlichen
       <mat-icon *ngIf="saving"><mat-spinner diameter="20"></mat-spinner></mat-icon>
     </button>

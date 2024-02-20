@@ -20,7 +20,7 @@
                       style="transform: scale(1.5); margin-right: 0.5em;">{{this.titleService.titleIcon}}</mat-icon>
             {{this.titleService.titleText}}</h1>
         </div>
-        <app-error-card></app-error-card>
+        <app-error-card [(messages)]="errorNotificationService.messages"></app-error-card>
         <div>
           <div style="flex: 1 1 auto;min-height: 90%;">
             <router-outlet></router-outlet>

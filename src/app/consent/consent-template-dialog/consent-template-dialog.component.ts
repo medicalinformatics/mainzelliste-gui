@@ -1,9 +1,12 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {ConsentDetailComponent} from "../consent-detail/consent-detail.component";
 import {MatDialogRef} from "@angular/material/dialog";
 import {ConsentTemplateDetailComponent} from "../consent-template-detail/consent-template-detail.component";
 import {ChoiceItem, ConsentTemplate} from "../consent-template.model";
 import {NgForm} from "@angular/forms";
+import {ConsentService} from "../consent.service";
+import {TranslateService} from "@ngx-translate/core";
+import {getErrorMessageFrom} from "../../error/error-utils";
 
 @Component({
   selector: 'app-consent-template-dialog',
@@ -19,10 +22,13 @@ export class ConsentTemplateDialogComponent {
     status: "draft",
     policy: "2.16.840.1.113883.3.1937.777.24.2.1790"
   }
-  public saving:boolean = false;
+  public saving: boolean = false;
+  errorMessages: string[] = [];
 
   constructor(
-    public dialogRef: MatDialogRef<ConsentTemplateDetailComponent>
+    public dialogRef: MatDialogRef<ConsentTemplateDetailComponent>,
+    public consentService: ConsentService,
+    private translate: TranslateService
   ) {
   }
 
@@ -30,11 +36,19 @@ export class ConsentTemplateDialogComponent {
     this.dialogRef.close();
   }
 
-  onSave(consentTemplateForm: NgForm, isActive: boolean) {
+  onSave(isActive: boolean) {
     //consentTemplateForm.form.disable();
     this.saving = true;
     this.dataModel.status = isActive ? 'active' : 'draft'
-    this.dialogRef.close(this.dataModel);
+    this.consentService.addConsentTemplate(this.dataModel)
+      .then(r => {
+        this.dialogRef.close(this.dataModel);
+        this.saving = false;
+      })
+      .catch(error => {
+        this.errorMessages.push(getErrorMessageFrom(error, this.translate));
+        this.saving = false;
+      })
   }
 
 

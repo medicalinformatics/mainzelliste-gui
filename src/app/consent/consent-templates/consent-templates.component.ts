@@ -74,7 +74,7 @@ export class ConsentTemplatesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(consentTemplate => {
       if (consentTemplate) {
-        this.consentService.addConsentTemplate(consentTemplate).then(e => this.loadTemplates(0, this.defaultPageSize));
+        this.loadTemplates(0, this.defaultPageSize);
       }
     });
   }

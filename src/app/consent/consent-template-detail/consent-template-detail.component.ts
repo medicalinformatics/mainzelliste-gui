@@ -89,14 +89,4 @@ export class ConsentTemplateDetailComponent implements OnInit {
       new DisplayItem(this.template.items.length, selectedModuleType)
     this.template.items.push(item);
   }
-
-  public isValid(consentTemplateForm: NgForm): boolean {
-    return (!consentTemplateForm.valid  ||
-        (!this.template.validity.year || this.template.validity.year <= 0) &&
-        (!this.template.validity.month || this.template.validity.month == 0) &&
-        (!this.template.validity.day || this.template.validity.day == 0)) ||
-      !this.template.items.some(e => e.type == 'choice') ||
-      this.template.items.some( e => e.type == 'display' && (e.text == undefined || e.text.trim().length == 0) ||
-        e.type == 'choice' && (e as ChoiceItem).policy == undefined);
-  }
 }
