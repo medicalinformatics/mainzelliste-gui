@@ -14,11 +14,9 @@ import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.c
 import {ConsentService} from "../consent/consent.service";
 import {Permission} from "../model/permission";
 import {ConsentStatus} from "../consent/consent.model";
-import { NewAssociatedIdDialog } from './dialogs/new-associated-id-dialog';
 import { AssociatedIdsDialog } from './dialogs/associated-ids-dialog';
-import { AssociatedIdGroupsDialog } from './dialogs/associated-id-groups-dialog';
 import { AssociatedIdGroup } from '../model/associated-id-group';
-import { IdExistsErrorDialog } from './dialogs/id-exists-error-dialog';
+
 
 export interface ConsentRow {id: string, date:string, title: string, period:string, version?:string, status: string}
 
@@ -130,27 +128,6 @@ export class IdcardComponent implements OnInit {
     this.patientListService.generateId(this.idType, this.idString, newIdType).subscribe(() => this.loadPatient());
   }
 
-  private addNewAssociatedId(group: AssociatedIdGroup, intIdType: string, extId?: Id): boolean {
-    if (extId != undefined) {
-      if (!this.patient.idExists(extId?.idString)) {
-        this.patientService.addNewAssociatedId(group, intIdType, this.generateNewIntId(), extId);
-        return true;
-      }
-      return false;
-    } else {
-      this.patientService.addNewAssociatedId(group, intIdType, this.generateNewIntId());
-      return true;
-    }
-  }
-  
-  private generateNewIntId(): string {
-    let x: number = 0;
-    while (this.patient.idExists(x.toString())) {
-      x++;
-    }
-    return x.toString();
-  }
-
   openConsentDialog() {
     const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
       width: '900px'
@@ -168,35 +145,6 @@ export class IdcardComponent implements OnInit {
     return this.patientListService.getNewIdType(this.patient).length == 0;
   }
 
-  openAssociateIdGroupsDialog() {
-    const dialogRef = this.associatedIdGroupsDialog.open(AssociatedIdGroupsDialog,
-      {
-        data: this.patient.associatedIdGroups
-      });
-
-      dialogRef.afterClosed().subscribe((result: AssociatedIdGroup) => {
-        if (result != null) {
-          this.openAssociateIdsDialog(result);
-        }
-      });
-  }
-
-  private openAssociateIdsDialog(group: AssociatedIdGroup): void {
-    const dialogRef = this.associatedIdsDialog.open(AssociatedIdsDialog, {
-      data: {idTypes: this.patientListService.getAssociatedIdTypes(group.name), group: group}
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result != null) {
-        if (result === "") {
-          this.openNewAssociatedIdDialog(group);
-        } else if (result === "back") {
-          this.openAssociateIdGroupsDialog();
-        }
-      }
-    });
-  }
-
   openNewUniqueIdDialog(): void {
     const dialogRef = this.newUniqueIdDialog.open(NewUniqueIdDialog, {
       data: this.patientListService.getNewIdType(this.patient)
@@ -209,30 +157,15 @@ export class IdcardComponent implements OnInit {
     });
   }
 
-  private openNewAssociatedIdDialog(group: AssociatedIdGroup): void {
-    if (this.patientListService.getAssociatedIdTypes(group.name) != undefined) {
-      const dialogRef = this.newAssociatedIdDialog.open(NewAssociatedIdDialog, {
-        data: this.patientListService.getAssociatedIdTypes(group.name)
+  openAssociateIdsDialog() {
+    const dialogRef = this.associatedIdsDialog.open(AssociatedIdsDialog,
+      {
+        data: {patientListService: this.patientListService, patientService: this.patientService, patient: this.patient}
       });
 
-      dialogRef.afterClosed().subscribe((result: {intId: string, extId: Id}) => {
-        if (this.addNewAssociatedId(group, result.intId, result.extId)) {
-          this.openAssociateIdsDialog(group);
-        } else {
-          this.openIdExistsErrorDialog(group);
-        }
+      dialogRef.afterClosed().subscribe(result => {
+
       });
-    } else {
-      console.log("error");
-    }  
-  }
-
-  private openIdExistsErrorDialog(group: AssociatedIdGroup): void {
-    const dialogRef = this.idExistsErrorDialog.open(IdExistsErrorDialog);
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.openAssociateIdsDialog(group);
-    });
   }
 
   openDeletePatientDialog(): void {

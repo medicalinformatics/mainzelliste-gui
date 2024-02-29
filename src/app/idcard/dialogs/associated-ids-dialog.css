@@ -1,0 +1,7 @@
+:host ::ng-deep .mat-stepper-header {
+    pointer-events: none !important;
+}
+
+:host ::ng-deep .mat-stepper-header[aria-selected="true"] {
+    background-color: #FAFAFA;
+}

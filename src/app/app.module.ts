@@ -49,12 +49,12 @@ import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.co
 import { TranslateService } from '@ngx-translate/core';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
 import {InternationalizedMatPaginatorIntl} from "./shared/components/paginator/internationalized-mat-paginator-intl";
-import { NewAssociatedIdDialog } from './idcard/dialogs/new-associated-id-dialog';
-import { AssociatedIdsDialog } from './idcard/dialogs/associated-ids-dialog';
+import { AssociatedIdsTableComponent } from './idcard/associated-ids-table/associated-ids-table.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { PatientSearchComponent } from './experimental/patientSearch/patientSearch.component';
-import { AssociatedIdGroupsDialog } from './idcard/dialogs/associated-id-groups-dialog';
+import { AssociatedIdsDialog } from './idcard/dialogs/associated-ids-dialog';
 import { IdExistsErrorDialog } from './idcard/dialogs/id-exists-error-dialog';
+import { MatStepperModule } from '@angular/material/stepper';
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
   return () => configService.init()
@@ -98,12 +98,11 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     LogoutComponent,
     NewUniqueIdDialog,
     AssociatedIdsDialog,
-    AssociatedIdGroupsDialog,
-    NewAssociatedIdDialog,
     IdExistsErrorDialog,
     AccessDeniedComponent,
     PageNotFoundComponent,
-    PatientSearchComponent
+    PatientSearchComponent,
+    AssociatedIdsTableComponent
   ],
   imports: [
     SharedModule,
@@ -126,7 +125,8 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     MatProgressSpinnerModule,
     MatProgressBarModule,
     ClipboardModule,
-    ConsentModule
+    ConsentModule,
+    MatStepperModule
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
