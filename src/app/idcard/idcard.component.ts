@@ -158,8 +158,8 @@ export class IdcardComponent implements OnInit {
   }
 
   openAssociateIdsDialog() {
-    const dialogRef = this.associatedIdsDialog.open(AssociatedIdsDialog,
-      {
+    const dialogRef = this.associatedIdsDialog.open(AssociatedIdsDialog, {
+        panelClass: 'my-dialog',
         data: {patientListService: this.patientListService, patientService: this.patientService, patient: this.patient}
       });
 

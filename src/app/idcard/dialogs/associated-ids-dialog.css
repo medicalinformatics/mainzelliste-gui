@@ -1,7 +1,73 @@
-:host ::ng-deep .mat-stepper-header {
+::ng-deep .mat-stepper-header {
     pointer-events: none !important;
 }
 
-:host ::ng-deep .mat-stepper-header[aria-selected="true"] {
-    background-color: #FAFAFA;
+.groups-radio-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+  
+.groups-radio-button {
+    margin: 5px;
+}
+
+#stepper {
+    padding-left: 50px;
+    width: 1200px;
+    height: 620px;
+    margin: 0 auto;
+}
+
+.stepper-content {
+    margin-top: 10px;
+    height: 470px;
+    width: 1100px;
+}
+
+.stepper-action {
+    width: 1100px;
+    display: flex;
+}
+
+.left-section {
+    width: 550px;
+    text-align: left;
+}
+
+.right-section {
+    flex: 1;
+    text-align: right;
+}
+
+#actionButton {
+    object-position: center;
+    width: 130px;
+    height: 40px;
+    font-size: large;
+}
+
+#newEntry {
+    object-position: center;
+    width: 160px;
+    height: 40px;
+    font-size: large;
+}
+
+#backButton {
+    width: 100px;
+    height: 40px;
+    font-size: large;
+    color: #646464;
+    border: 1px solid #646464;
+}
+
+mat-form-field {
+    font-size: medium;
+    padding-top: 20px;
+    margin-bottom: 30px;
+}
+
+#idInput {
+    margin-left: 50px;
 }

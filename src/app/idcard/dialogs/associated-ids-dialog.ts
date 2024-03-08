@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { AssociatedId } from "src/app/model/associated-id";
 import { AssociatedIdGroup } from "src/app/model/associated-id-group";
 import { Id } from "src/app/model/id";
 import { Patient } from "src/app/model/patient";
@@ -19,14 +20,17 @@ export class AssociatedIdsDialog implements OnInit {
     isLinear: boolean = true;
     externalIds: {name: string, id: string}[] = [{name: "-", id: "-"}];
     internalIds: {name: string, id: string}[] = [];
+    internalIdIds: string[] = [];
     idType: any[] = [null, null];
     idString: string = "";
     canGenerate: boolean = false;
+    dataModel!: AssociatedIdGroup;
+    generatedId!: AssociatedId;
+
   
     constructor(
         public dialogRef: MatDialogRef<AssociatedIdsDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: {patientListService: PatientListService, patientService: PatientService, patient: Patient},
-        @Inject(MAT_DIALOG_DATA) public dataModel: AssociatedIdGroup,
+        @Inject(MAT_DIALOG_DATA) public data: {patientListService: PatientListService, patientService: PatientService, patient: Patient}
       ) {}
 
     setupTable(): void {
@@ -44,12 +48,12 @@ export class AssociatedIdsDialog implements OnInit {
     addNewAssociatedId(group: AssociatedIdGroup, intIdType: string, extId?: Id): boolean {
         if (extId != undefined) {
           if (!this.data.patient.idExists(extId?.idString)) {
-            this.data.patientService.addNewAssociatedId(group, intIdType, this.generateNewIntId(), extId);
+            this.generatedId = this.data.patientService.addNewAssociatedId(group, intIdType, this.generateNewIntId(), extId);
             return true;
           }
           return false;
         } else {
-          this.data.patientService.addNewAssociatedId(group, intIdType, this.generateNewIntId());
+          this.generatedId = this.data.patientService.addNewAssociatedId(group, intIdType, this.generateNewIntId());
           return true;
         }
       }
@@ -90,17 +94,14 @@ export class AssociatedIdsDialog implements OnInit {
                 this.externalIds.push({name: id.name, id: id.id});
             } else {
                 this.internalIds.push({name: id.name, id: id.id});
+                this.internalIdIds.push(id.id);
             }
         });
     }
 
     ngOnInit(): void {}
 
-    onCancel(): void {
-        this.dialogRef.close();
-    }
-
-    onSave() {
+    onClose(): void {
         this.dialogRef.close();
     }
 }
