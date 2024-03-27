@@ -12,7 +12,7 @@ import {EditPatientComponent} from "./patient/edit-patient/edit-patient.componen
 import {AccessDeniedComponent} from "./access-denied/access-denied.component";
 import {AddConsentComponent} from "./consent/add-consent/add-consent.component";
 import {EditConsentComponent} from "./consent/edit-consent/edit-consent.component";
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 
 const routes: Routes = [
   // TODO: All Paths should have english wording.
@@ -20,13 +20,13 @@ const routes: Routes = [
     path: '', canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
       {path: '', pathMatch: 'full', redirectTo: 'patientlist'},
       {path: 'info', component: InfoComponent},
-      {path: 'idcard/:idType/:idString', component: IdcardComponent, data : { permission: Permission.READ_PATIENT }},
+      {path: 'idcard/:idType/:idString', component: IdcardComponent, data : { permission: Permission.READ_PATIENT, checkIdType:true}},
       {path: 'add-new-patient', component: CreatePatientComponent, data: { permission: Permission.CREATE_PATIENT }},
-      {path: 'edit-patient/:idType/:idString', component: EditPatientComponent, data: { anyPermissions: [Permission.EDIT_PATIENT, Permission.EDIT_IDS]}},
+      {path: 'edit-patient/:idType/:idString', component: EditPatientComponent, data: { anyPermissions: [Permission.EDIT_PATIENT, Permission.EDIT_IDS], checkIdType:true}},
       {path: 'patientlist', component: PatientlistViewComponent, data : { permission: Permission.READ_PATIENT }},
-      {path: 'patient/:idType/:idString/add-consent', component: AddConsentComponent, data: { permission: Permission.CREATE_CONSENT}},
+      {path: 'patient/:idType/:idString/add-consent', component: AddConsentComponent, data: { permission: Permission.CREATE_CONSENT, checkIdType:true}},
       // TODO support multiple permissions 'readConsent'
-      {path: 'patient/:idType/:idString/edit-consent/:id', component: EditConsentComponent, data: { permission: Permission.EDIT_CONSENT}}
+      {path: 'patient/:idType/:idString/edit-consent/:id', component: EditConsentComponent, data: { permission: Permission.EDIT_CONSENT, checkIdType:true}}
       // {path: 'delete-patient/:idType/:idString', pathMatch: 'full', redirectTo:  ''},
       // {path: 'merge-patients', component: MergePatientsComponent},
       // {path: 'audittrail', component: AudittrailComponent},
@@ -37,13 +37,15 @@ const routes: Routes = [
   // Needs to be outside, because we want message why user couldn't authenticate
   {path: 'error', component: ErrorComponent},
   {path: 'logout', component: LogoutComponent},
-  //Wild Card Route for 404 request 
-  { path: '**', pathMatch: 'full',  
+  //Wild Card Route for 404 request
+  { path: '**', pathMatch: 'full',
   component: PageNotFoundComponent }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    onSameUrlNavigation: 'reload'
+  })],
   exports: [RouterModule]
 
 })
