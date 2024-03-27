@@ -54,7 +54,6 @@ export class AuthGuard extends KeycloakAuthGuard implements CanActivateChild {
 
   canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    console.log("canActivateChild")
     return this.checkPermission(childRoute.data.permission) &&
       this.checkAnyPermissions(childRoute.data.anyPermissions) &&
       (!childRoute.data.checkIdType || this.checkTenantIdType(childRoute.url));

@@ -1,3 +1,5 @@
+import {Operation} from "../tenant";
+
 export interface ClaimsConfig {
   roles: string[],
   permissions: ClaimPermissions
