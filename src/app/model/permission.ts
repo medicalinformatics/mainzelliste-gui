@@ -1,5 +1,4 @@
-import {PermissionType} from "./role";
-import {Operation} from "./patientlist";
+import {Operation, PermissionType} from "./tenant";
 
 export class Permission {
   public static readonly CREATE_PATIENT = new Permission("patient", "C");

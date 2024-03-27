@@ -4,8 +4,8 @@ import {IdTypSelection} from "../create-patient/create-patient.component";
 import {ControlContainer, NgForm} from "@angular/forms";
 import {Id} from "../../model/id";
 import {ExternalPseudonymsComponent} from "../external-pseudonyms/external-pseudonyms.component";
-import {Operation} from "../../model/patientlist";
 import {AppConfigService} from "../../app-config.service";
+import {Operation} from "../../model/tenant";
 
 @Component({
   selector: 'app-patient-pseudonyms',

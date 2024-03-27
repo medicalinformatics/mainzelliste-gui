@@ -4,7 +4,6 @@ export class PatientList {
   constructor(
     public url: URL,
     public oAuthConfig?: OAuthConfig,
-    public roles: ConfigRole[] = [],
     public mainIdType?: string,
     public showAllIds?: boolean,
     public fields: Array<Field> = [
@@ -25,50 +24,6 @@ export interface OAuthConfig {
   realm: string;
   clientId: string;
 }
-
-export interface ConfigRole {
-  name: string,
-  permissions: Permissions;
-}
-export interface Permissions {
-  realm?: Realm
-  resources: ResourcesPermissions
-}
-
-export interface Realm {
-  name: string
-  criteria: RealmCriteria
-}
-
-export interface RealmCriteria {
-  ids: string[]
-}
-
-export interface ResourcesPermissions {
-  patient: PatientPermissions
-  consent: ConsentPermissions
-}
-
-export interface PatientPermissions {
-  operations: Operation[],
-  contents?: PatientPermissionsContents
-}
-
-export interface PatientPermissionsContents {
-  ids?: PatientPermissionsContent[]
-  fields?: PatientPermissionsContent[]
-}
-
-export interface PatientPermissionsContent {
-  type: string
-  operations: Operation[]
-}
-
-export interface ConsentPermissions {
-  operations: Operation[]
-}
-
-export type Operation = "C" | "R" | "U" | "D";
 
 export interface BetaFeatures {
   consent?: boolean;

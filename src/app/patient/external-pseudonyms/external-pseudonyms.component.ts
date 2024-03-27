@@ -5,8 +5,8 @@ import {MatSelect} from "@angular/material/select";
 import {addIfNotExist, removeFrom} from "../../utils/array-utils";
 import {PatientListService} from "../../services/patient-list.service";
 import {ControlContainer, NgForm} from "@angular/forms";
-import {Operation} from "../../model/patientlist";
 import {AppConfigService} from "../../app-config.service";
+import {Operation} from "../../model/tenant";
 
 @Component({
   selector: 'app-external-pseudonyms',

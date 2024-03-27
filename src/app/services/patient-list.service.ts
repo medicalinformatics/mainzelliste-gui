@@ -1,7 +1,7 @@
 import {Inject, Injectable, Optional} from '@angular/core';
 import {SessionService} from "./session.service";
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from "@angular/common/http";
-import {Operation, PatientList} from "../model/patientlist";
+import {PatientList} from "../model/patientlist";
 import {Patient} from "../model/patient";
 import {AppConfigService, IdGenerator} from "../app-config.service";
 import {ReadPatientsTokenData} from "../model/read-patients-token-data";
@@ -22,6 +22,7 @@ import {Id} from "../model/id";
 import { CreateIdsTokenData } from '../model/create-ids-token-data';
 import {AuthorizationService} from "./authorization.service";
 import { TranslateService } from '@ngx-translate/core';
+import {Operation} from "../model/tenant";
 
 export interface ReadPatientsResponse {
   patients: Patient[];
