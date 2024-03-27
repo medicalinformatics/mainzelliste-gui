@@ -73,6 +73,7 @@
 	"patientlist_view.paginator_first_page_label": "Erste Seite",
 	"patientlist_view.paginator_last_page_label": "Letzte Seite",
 
+  "session.tenancy": "Projekte",
 	"session.language_english": "Englisch",
 	"session.language_german": "Deutsch",
 	"session.menu_language": "Sprache",
@@ -209,11 +210,11 @@
 	"appConfigService.backend_online": "Mainzelliste ist online",
 	"appConfigService.main_id_type_valid": "Haupt-Id-Typ ist gültig",
 
-  	"access_denied.title": "Zugriff verweigert",
-  	"access_denied.message": "Sie haben keine Berechtigung zum Anzeigen dieser Seite",
+  "access_denied.title": "Zugriff verweigert",
+  "access_denied.message": "Sie haben keine Berechtigung zum Anzeigen dieser Seite",
 
-  	"page_not_found.title": "Seite nicht gefunden",
-  	"page_not_found.message": "Die gesuchte Seite konnte nicht gefunden werden",
+  "page_not_found.title": "Seite nicht gefunden",
+  "page_not_found.message": "Die gesuchte Seite konnte nicht gefunden werden",
 
 	"patientlistView.title": "Patientenliste",
 
