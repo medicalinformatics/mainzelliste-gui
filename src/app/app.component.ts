@@ -1,12 +1,11 @@
-import {Component} from '@angular/core';
-import {SessionService} from "./services/session.service";
+import {AfterContentChecked, ChangeDetectorRef, Component} from '@angular/core';
 import {GlobalTitleService} from "./services/global-title.service";
 import {ErrorNotificationService} from "./services/error-notification.service";
 import {NavigationStart, Router} from "@angular/router";
 import {Observable} from "rxjs";
 import {filter} from 'rxjs/operators';
 import {UserAuthService} from "./services/user-auth.service";
-import { TranslateService } from '@ngx-translate/core';
+import {TranslateService} from '@ngx-translate/core';
 
 
 @Component({
@@ -14,16 +13,16 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements AfterContentChecked {
   title = 'mainzelliste-gui';
 
   constructor(
     translate: TranslateService,
-    public readonly sessionService: SessionService,
     public readonly titleService: GlobalTitleService,
     public readonly errorNotificationService: ErrorNotificationService,
     protected readonly userAuthService: UserAuthService,
-    public router: Router
+    public router: Router,
+    private changeDetector: ChangeDetectorRef,
   ) {
     translate.addLangs(['en-US', 'de-DE']);
     translate.setDefaultLang('de-DE');
@@ -37,5 +36,9 @@ export class AppComponent {
 
   isLoggedIn(): boolean {
     return this.userAuthService.isLoggedIn();
+  }
+
+  ngAfterContentChecked(): void {
+    this.changeDetector.detectChanges();
   }
 }
