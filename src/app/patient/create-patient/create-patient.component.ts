@@ -19,6 +19,7 @@ import {ConsentDialogComponent} from "../../consent/consent-dialog/consent-dialo
 import {Consent} from "../../consent/consent.model";
 import {ConsentService} from "../../consent/consent.service";
 import {Permission} from "../../model/permission";
+import {Operation} from "../../model/tenant";
 
 export interface IdTypSelection {
   idType: string,
@@ -76,8 +77,7 @@ export class CreatePatientComponent  implements OnInit {
   }
 
   ngOnInit(): void {
-    let internalIdTypes  = this.patientListService.getIdGenerators("C")
-      .filter(g => !g.isExternal).map( g => g.idType)
+    let internalIdTypes  = this.patientListService.getIdGenerators(false, "C").map( g => g.idType)
     let mainIdType = this.patientListService.findDefaultIdType(internalIdTypes);
     this.selectedInternalIdTypes.push(mainIdType);
 
@@ -162,6 +162,10 @@ export class CreatePatientComponent  implements OnInit {
       this.chipList.errorState = false;
       this.chipListInputCtrl.updateValueAndValidity({onlySelf: false, emitEvent: true});
     }
+  }
+
+  getExternalIdTypes(permittedOperation: Operation): string[] {
+    return this.patientListService.getIdGenerators(true, permittedOperation).map(g => g.idType);
   }
 
   removeInternalIdType(idType: string) {

@@ -43,8 +43,7 @@ export class PatientPseudonymsComponent{
   getInternalIdTypes(): IdTypSelection[] {
     if (this.internalIdTypes.length == 0) {
       //init.
-      this.internalIdTypes = this.patientListService.getIdGenerators("R")
-      .filter(g => !g.isExternal)
+      this.internalIdTypes = this.patientListService.getIdGenerators(false, "R")
       .map(g => {
         return {idType: g.idType, added: false}
       });
@@ -59,8 +58,7 @@ export class PatientPseudonymsComponent{
   getExternalIdTypes(): string[] {
     //init.
     if (this.externalIdTypes.length == 0) {
-      this.externalIdTypes = this.patientListService.getIdGenerators("R")
-      .filter(g => g.isExternal)
+      this.externalIdTypes = this.patientListService.getIdGenerators(true, this.permittedOperation)
       .map(g => g.idType);
     }
     return this.externalIdTypes;

@@ -36,26 +36,22 @@ export class AuthGuard extends KeycloakAuthGuard implements CanActivateChild {
     console.log("login " + a); return a}) || this.router.createUrlTree(['access-denied']);
   }
 
-  checkPermission(permission: Permission): boolean | UrlTree {
-    return permission == undefined || this.authorizationService.hasPermission(permission)
-      || this.router.createUrlTree(['access-denied']);
-  }
+  canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot):
+    boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+    let accessGranted = false;
+    if(childRoute.data.permission != undefined)
+      accessGranted =  this.authorizationService.hasPermission(childRoute.data.permission);
+    else if(childRoute.data.anyPermissions != undefined && childRoute.data.anyPermissions.length > 0)
+      accessGranted =  this.authorizationService.hasAnyPermissions(childRoute.data.anyPermissions);
+    if(!accessGranted)
+      return this.router.createUrlTree(['access-denied']);
 
-  checkAnyPermissions(permissions: Permission[]): boolean | UrlTree {
-    return permissions == undefined || permissions.length == 0  || this.authorizationService.hasAnyPermissions(permissions)
-      || this.router.createUrlTree(['access-denied']);
+    return !childRoute.data.checkIdType || this.checkTenantIdType(childRoute.url);
   }
 
   checkTenantIdType(urlSegments: UrlSegment[]): boolean | UrlTree {
     return urlSegments == undefined || urlSegments.length < 2
-      || this.authorizationService.getRealmIdTypes().includes(urlSegments[1].path)
+      || this.authorizationService.getTenantIdTypes().includes(urlSegments[1].path)
       || this.router.createUrlTree(['access-denied']);
-  }
-
-  canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot):
-    boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    return this.checkPermission(childRoute.data.permission) &&
-      this.checkAnyPermissions(childRoute.data.anyPermissions) &&
-      (!childRoute.data.checkIdType || this.checkTenantIdType(childRoute.url));
   }
 }

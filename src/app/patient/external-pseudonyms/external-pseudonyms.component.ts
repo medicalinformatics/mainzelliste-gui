@@ -65,8 +65,7 @@ export class ExternalPseudonymsComponent implements OnChanges {
   getExternalIdTypes(): IdTypSelection[] {
     //init.
     if (this.externalIdTypes.length == 0) {
-      this.externalIdTypes = this.patientListService.getIdGenerators(this.permittedOperation)
-      .filter(g => g.isExternal)
+      this.externalIdTypes = this.patientListService.getIdGenerators(true, this.permittedOperation)
       .map(g => {
         return {idType: g.idType, added: false}
       });

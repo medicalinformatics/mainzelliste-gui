@@ -14,6 +14,8 @@ export class AuthorizationService {
   private readonly userRoles: string[] = [];
   private readonly configuredTenants: Tenant[];
   private currentTenantId: string;
+  private allowedIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
+  private allowedExternalIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
 
   constructor(
     private translate: TranslateService,
@@ -29,6 +31,15 @@ export class AuthorizationService {
             this.convertClaimPermissions(e.permissions))
         })
     this.currentTenantId = this.configuredTenants.length > 0 ? this.configuredTenants[0].id : "";
+    this.initIdtypes()
+  }
+
+  private initIdtypes(){
+    let internalIdTypeOperations:Operation[] = ["C", "R"];
+    internalIdTypeOperations.forEach( o => this.allowedIdTypes.set(o, this.findAllowedIdTypes(o, false)));
+
+    let externalIdTypeOperations:Operation[] = ["C", "U", "R"];
+    externalIdTypeOperations.forEach( o => this.allowedExternalIdTypes.set(o, this.findAllowedIdTypes(o, true)))
   }
 
   private convertClaimPermissions(claimPermissions: ClaimPermissions): TenantPermission[] {
@@ -98,6 +109,7 @@ export class AuthorizationService {
 
   setTenant(tenantId: string){
     this.currentTenantId = tenantId;
+    this.initIdtypes();
   }
 
   getCurrentTenant() {
@@ -121,18 +133,27 @@ export class AuthorizationService {
       && p.operations.includes(permission.operation))
   }
 
-  // TODO make difference between external and non-external id types
-  getAllowedIdTypes(operation: Operation): string[] {
+  getAllAllowedIdTypes(operation: Operation): string[] {
+    return this.getAllowedIdTypes(operation, false).concat(this.getAllowedIdTypes(operation, true));
+  }
+  getAllowedIdTypes(operation: Operation, isExternal: boolean): string[] {
+    return (isExternal? this.allowedExternalIdTypes.get(operation) : this.allowedIdTypes.get(operation)) || [];
+  }
+
+  findAllowedIdTypes(operation: Operation, isExternal: boolean): string[] {
     let permittedIdTypes: string[] = this.configService.getMainzellisteClaims()
       .filter(c => c.permissions.tenant.id == this.currentTenantId)
       .filter(c => c.roles.some( r => this.userRoles.includes(r)))
-      .map(c => c.permissions.resources.patient.resources.ids?.filter( i=> i.operations.includes(operation))
-        .map(i => i.type) || [])
+      .map(c => c.permissions.resources.patient.resources )
+      .map(r => isExternal? r.externalIds : r.ids )
+      .map(t => t.filter( i=> i.operations.includes(operation)).map(i => i.type) || [])
       .reduce((accumulator, currentValue) => accumulator.concat(currentValue.filter(e => !accumulator.includes(e))), []);
-    return permittedIdTypes.some( t => t == "*") ? this.configService.getMainzellisteIdTypes() : permittedIdTypes;
+    return !permittedIdTypes.some( t => t == "*") ? permittedIdTypes :
+      this.configService.getMainzellisteIdGenerators().filter(g => g.isExternal == isExternal)
+      .map(g => g.idType);
   }
 
-  getRealmIdTypes(): string[] {
+  getTenantIdTypes(): string[] {
     return this.configuredTenants
       .filter(c => c.id == this.currentTenantId)
       .filter(t => this.userRoles.some(r => t.roles.includes(r)))
