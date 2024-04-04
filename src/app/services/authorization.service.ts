@@ -16,6 +16,7 @@ export class AuthorizationService {
   private currentTenantId: string;
   private allowedIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
   private allowedExternalIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
+  private allowedFieldNames: Map<Operation, string[]> = new Map<Operation, string[]>();
 
   constructor(
     private translate: TranslateService,
@@ -31,15 +32,26 @@ export class AuthorizationService {
             this.convertClaimPermissions(e.permissions))
         })
     this.currentTenantId = this.configuredTenants.length > 0 ? this.configuredTenants[0].id : "";
-    this.initIdtypes()
+    this.initPatientAllowedAttributes()
   }
 
-  private initIdtypes(){
+  private initPatientAllowedAttributes(){
     let internalIdTypeOperations:Operation[] = ["C", "R"];
     internalIdTypeOperations.forEach( o => this.allowedIdTypes.set(o, this.findAllowedIdTypes(o, false)));
 
     let externalIdTypeOperations:Operation[] = ["C", "U", "R"];
     externalIdTypeOperations.forEach( o => this.allowedExternalIdTypes.set(o, this.findAllowedIdTypes(o, true)))
+
+    let fieldsOperations:Operation[] = ["C", "U", "R"];
+    fieldsOperations.forEach( o => {
+      let permittedFieldNames: string[] = this.configService.getMainzellisteClaims()
+        .filter(c => c.permissions.tenant.id == this.currentTenantId)
+        .filter(c => c.roles.some( r => this.userRoles.includes(r)))
+        .map(c => c.permissions.resources.patient.resources.fields )
+        .map(t => t.filter( i=> i.operations.includes(o)).map(i => i.name) || [])
+        .reduce((accumulator, currentValue) => accumulator.concat(currentValue.filter(e => !accumulator.includes(e))), []);
+      this.allowedFieldNames.set(o, !permittedFieldNames.some( t => t == "*") ? permittedFieldNames : this.configService.getMainzellisteFields());
+    })
   }
 
   private convertClaimPermissions(claimPermissions: ClaimPermissions): TenantPermission[] {
@@ -109,7 +121,7 @@ export class AuthorizationService {
 
   setTenant(tenantId: string){
     this.currentTenantId = tenantId;
-    this.initIdtypes();
+    this.initPatientAllowedAttributes();
   }
 
   getCurrentTenant() {
@@ -136,8 +148,13 @@ export class AuthorizationService {
   getAllAllowedIdTypes(operation: Operation): string[] {
     return this.getAllowedIdTypes(operation, false).concat(this.getAllowedIdTypes(operation, true));
   }
+
   getAllowedIdTypes(operation: Operation, isExternal: boolean): string[] {
     return (isExternal? this.allowedExternalIdTypes.get(operation) : this.allowedIdTypes.get(operation)) || [];
+  }
+
+  getAllowedFieldNames(operation: Operation): string[] {
+    return this.allowedFieldNames.get(operation) || [];
   }
 
   findAllowedIdTypes(operation: Operation, isExternal: boolean): string[] {

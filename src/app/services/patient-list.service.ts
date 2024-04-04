@@ -91,6 +91,10 @@ export class PatientListService {
     return allowedIdTypes.length == 0  ? this.configService.getMainzellisteIdTypes() : allowedIdTypes;
   }
 
+  getFieldNames(operation: Operation): Array<string> {
+    return this.authorizationService.getAllowedFieldNames(operation);
+  }
+
   getIdGenerators(isExternal?: boolean, operation?: Operation): Array<IdGenerator> {
     let isExternalIdType = isExternal!=null && isExternal;
     let allowedIdTypes = operation != undefined ? this.authorizationService.getAllowedIdTypes(operation, isExternalIdType) : [];
@@ -158,7 +162,7 @@ export class PatientListService {
     if (filters.every(f => !f.isIdType)) {
       // get permitted idTypes
       allowedIdTypes = this.authorizationService.getTenantIdTypes();
-      if(allowedIdTypes.length > 0)
+      if(allowedIdTypes.length > 0 && !allowedIdTypes.some( t => t == "*"))
         searchIds = allowedIdTypes.map(type => ({idType: type, idString: "*"}));
       else
         searchIds = [{idType: "*", idString: "*"}];
@@ -166,9 +170,10 @@ export class PatientListService {
       filters.filter(f => f.isIdType).forEach(f =>
         searchIds.push({idType: f.field, idString: f.searchCriteria.trim()}));
     }
+
     // create read patients token
     return this.sessionService.createToken("readPatients",
-      new ReadPatientsTokenData(searchIds, this.configService.getMainzellisteFields(), this.getIdTypes("R")))
+      new ReadPatientsTokenData(searchIds, this.getFieldNames("R"), this.getIdTypes("R")))
     .pipe(
       // resolve read patients token
       mergeMap(token => this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + token.id
