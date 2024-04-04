@@ -32,8 +32,7 @@ export class AuthGuard extends KeycloakAuthGuard implements CanActivateChild {
     routeSnapshot: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ) {
-    return this.userAuthService.login(this.authenticated, state.url).then( a => {
-    console.log("login " + a); return a}) || this.router.createUrlTree(['access-denied']);
+    return this.userAuthService.login(this.authenticated, state.url).then() || this.router.createUrlTree(['access-denied']);
   }
 
   canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot):

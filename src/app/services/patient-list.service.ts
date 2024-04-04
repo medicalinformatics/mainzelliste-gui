@@ -82,8 +82,9 @@ export class PatientListService {
     _moment.locale(this._locale);
   }
 
-  getConfiguredFields(): Array<Field> {
-    return this.patientList.fields;
+  getConfiguredFields(operation: Operation): Array<Field> {
+    let allowedFieldNames = this.authorizationService.getAllowedFieldNames(operation);
+    return this.patientList.fields.filter( f => allowedFieldNames.some( n => n == f.mainzellisteField));
   }
 
   getIdTypes(operation?: Operation): Array<string> {
@@ -322,12 +323,12 @@ export class PatientListService {
     )
   }
 
-  async readPatient(id: Id, operation?: Operation): Promise<Patient[]> {
+  async readPatient(id: Id, operation: Operation): Promise<Patient[]> {
     let readToken = await this.sessionService.createToken(
       "readPatients",
       new ReadPatientsTokenData(
         [{idType: id.idType, idString: id.idString}],
-        this.configService.getMainzellisteFields(),
+        this.getFieldNames(operation),
         this.getIdTypes(operation)
       )).toPromise();
     return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + readToken.id).toPromise();

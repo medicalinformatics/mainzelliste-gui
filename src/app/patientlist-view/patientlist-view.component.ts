@@ -141,7 +141,7 @@ export class PatientlistViewComponent implements OnInit {
     }));
 
     // init. filter data model with fields
-    this.patientService.getConfiguredFields().forEach(fieldConfig => {
+    this.patientService.getConfiguredFields("R").forEach(fieldConfig => {
       let fieldName = fieldConfig.type+"" == 'DATE' ? "birthday" : fieldConfig.mainzellisteField;
       this.filterConfigs.push({
         field: fieldName,

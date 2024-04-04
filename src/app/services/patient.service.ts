@@ -7,6 +7,7 @@ import {Observable} from "rxjs";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessages} from "../error/error-messages";
 import {Id} from "../model/id";
+import {Operation} from "../model/tenant";
 
 @Injectable({
   providedIn: 'root'
@@ -353,8 +354,8 @@ export class PatientService {
      this.patientListService.deletePatient(patient).then().catch(error => {console.log(error)})
   }
 
-  getConfiguredFields(): Array<Field> {
-    return this.patientListService.getConfiguredFields();
+  getConfiguredFields(operation: Operation): Array<Field> {
+    return this.patientListService.getConfiguredFields(operation);
   }
 
   getConfigureIdTypes(): Array<string> {
