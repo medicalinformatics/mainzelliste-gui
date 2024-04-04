@@ -84,7 +84,9 @@ export class PatientListService {
 
   getConfiguredFields(operation: Operation): Array<Field> {
     let allowedFieldNames = this.authorizationService.getAllowedFieldNames(operation);
-    return this.patientList.fields.filter( f => allowedFieldNames.some( n => n == f.mainzellisteField));
+    return this.patientList.fields.filter( f => allowedFieldNames.some( n => n == f.mainzellisteField)
+      || f.mainzellisteFields != null && f.mainzellisteFields.length > 0
+      && f.mainzellisteFields.every( c => allowedFieldNames.some( n => n == c)));
   }
 
   getIdTypes(operation?: Operation): Array<string> {
@@ -286,7 +288,7 @@ export class PatientListService {
   resolveAddPatientToken(tokenId: string | undefined, patient: Patient, sureness: boolean): Observable<Id> {
     //prepare request body
     let body = new URLSearchParams();
-    const convertedFields = this.convertToPatient(patient).fields
+    const convertedFields = this.convertToPatientFields(patient.fields, this.configService.getMainzellisteFields())
     for (const name in convertedFields) {
       body.set(name, convertedFields[name]);
     }
@@ -339,7 +341,7 @@ export class PatientListService {
       "editPatient",
       new EditPatientTokenData(
         {idType: id.idType, idString: id.idString},
-        this.configService.getMainzellisteFields(),
+        this.getFieldNames("U"),
         this.getIdGenerators(true,"U").map( g => g.idType)
       )
     )
@@ -349,7 +351,7 @@ export class PatientListService {
   }
 
   resolveEditPatientToken(tokenId: string | undefined, patient: Patient, sureness: boolean): Observable<any> {
-    let fields: { [key: string]: string } =  this.convertToPatient(patient).fields;
+    let fields: { [key: string]: string } =  this.convertToPatientFields(patient.fields, this.getFieldNames("U"));
 
     // add external ids
     patient.ids.filter(id => this.isExternalId(id.idType, "U"))
@@ -425,27 +427,27 @@ export class PatientListService {
     return displayPatient;
   }
 
-  convertToPatient(displayPatient: Patient): Patient {
-    let patient = new Patient();
+  private convertToPatientFields(fields: { [p: string]: string }, permittedFieldNames: Array<string>): { [p: string]: string } {
+    let result: { [p: string]: string } = {};
     for(const fieldConfig of this.patientList.fields) {
       switch (fieldConfig.type+"") {
         case "TEXT":{
-          if(displayPatient.fields[fieldConfig.name] != undefined) {
-            patient.fields[fieldConfig.mainzellisteField] = displayPatient.fields[fieldConfig.name];
+          if(fields[fieldConfig.name] != undefined && permittedFieldNames.some( p => p == fieldConfig.mainzellisteField)) {
+            result[fieldConfig.mainzellisteField] = fields[fieldConfig.name];
           }
           break;
         }
         case "DATE": {
-          if(displayPatient.fields[fieldConfig.name] != undefined ) {
-            let dateStr = new DatePipe('en-US').transform(displayPatient.fields[fieldConfig.name], 'dd.MM.yyyy') || "";
+          if(fields[fieldConfig.name] != undefined && fieldConfig.mainzellisteFields.every( c =>
+            permittedFieldNames.some( p => p == c))) {
+            let dateStr = new DatePipe('en-US').transform(fields[fieldConfig.name], 'dd.MM.yyyy') || "";
             const dateFields = dateStr.split('.');
-            fieldConfig.mainzellisteFields.forEach((n,i) => patient.fields[n] = dateFields[i]);
+            fieldConfig.mainzellisteFields.forEach((n,i) => result[n] = dateFields[i]);
           }
           break;
         }
       }
     }
-    patient.ids = displayPatient.ids;
-    return patient;
+    return result;
   }
 }

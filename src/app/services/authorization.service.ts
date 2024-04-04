@@ -64,16 +64,17 @@ export class AuthorizationService {
       // ids permissions
       permissions.push({
         type: 'ids',
-        operations: this.extractOperationsFromPatientIdsPermissions(claimPermissions.resources.patient.resources.ids || [],
-          claimPermissions.resources.patient.operations)
+        operations: this.filterOperations(claimPermissions.resources.patient.resources.ids || [])
+      })
+      // externalIds permissions
+      permissions.push({
+        type: 'externalIds',
+        operations: this.filterOperations(claimPermissions.resources.patient.resources.externalIds || [])
       })
       // fields permissions
       permissions.push({
         type: 'fields',
-        operations: this.extractOperationsFromPatientContentPermissions(
-          claimPermissions.resources.patient.resources.externalIds || [],
-          claimPermissions.resources.patient.resources.fields || [],
-          claimPermissions.resources.patient.operations)
+        operations: this.filterOperations(claimPermissions.resources.patient.resources.fields || [])
       })
     }
 
@@ -86,33 +87,11 @@ export class AuthorizationService {
     return permissions;
   }
 
-  private extractOperationsFromPatientIdsPermissions(idsPermissions: IDPermissions[],
-                                                     patientOperations: Operation[]) {
-    let operations: Operation[] = []
-    this.concatOperations(idsPermissions, operations);
-    return operations.length == 0 ? patientOperations : operations;
-  }
-
-  //TODO support external ids
-  private extractOperationsFromPatientContentPermissions(idsPermissions: IDPermissions[],
-                                                         fieldPermissions: FieldPermissions[],
-                                                         patientOperations: Operation[]) {
-    let operations: Operation[] = []
-    this.concatOperations(idsPermissions, operations);
-    this.concatOperations(fieldPermissions, operations);
-    return operations.length == 0 ? patientOperations : operations;
-  }
-
-  private concatOperations(items: { operations: Operation[] }[], result: Operation[]) {
-    for (let item of items) {
-      item.operations.filter(o => !result.includes(o)).forEach(o => result.push(o))
-      if (result.length == 4)
-        break
-    }
-  }
-
-  hasPermission(permission: Permission): boolean {
-    return this.hasAnyPermissions([permission]);
+  private filterOperations(items: { operations: Operation[] }[]) {
+    return items.map(i => i.operations)
+      .reduce((accumulator, currentValue) =>
+        accumulator.concat(currentValue.filter(o => !accumulator.includes(o))), []
+      );
   }
 
   getTenants(): { id: string, name: string }[] {
@@ -126,6 +105,10 @@ export class AuthorizationService {
 
   getCurrentTenant() {
     return this.currentTenantId;
+  }
+
+  hasPermission(permission: Permission): boolean {
+    return this.hasAnyPermissions([permission]);
   }
 
   hasAnyPermissions(permissions: Permission[]): boolean {
