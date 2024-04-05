@@ -350,8 +350,8 @@ export class PatientService {
     return this.patientListService.addPatient(patient, idTypes, sureness);
   }
 
-  async deletePatient(patient: Patient){
-     this.patientListService.deletePatient(patient).then().catch(error => {console.log(error)})
+  deletePatient(patient: Patient){
+     return this.patientListService.deletePatient(patient);
   }
 
   getConfiguredFields(operation: Operation): Array<Field> {

@@ -112,9 +112,8 @@ export class IdcardComponent implements OnInit {
     await this.router.navigate(["patient", this.idType, this.idString, 'edit-consent', row.id]);
   }
 
-  async deletePatient() {
-    await this.patientService.deletePatient(this.patient)
-    .then(() => this.router.navigate(['/patientlist']).then());
+  deletePatient() {
+    this.patientService.deletePatient(this.patient).then(() => this.router.navigate(['/patientlist']).then());
   }
 
   generateId(newIdType: string) {
@@ -157,7 +156,7 @@ export class IdcardComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result)
-        this.deletePatient().then();
+        this.deletePatient();
     });
   }
 }

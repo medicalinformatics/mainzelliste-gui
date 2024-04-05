@@ -65,6 +65,10 @@ export class PatientListService {
     ErrorMessages.CREATE_PATIENT_INVALID_DATE_2
   ];
 
+  private deletePatientErrorMessages: ErrorMessage[] = [
+    ErrorMessages.DELETE_PATIENT_NOT_FOUND
+  ];
+
   private createIdsErrorMessages: ErrorMessage[] = [
     ErrorMessages.CREATE_IDS_ERROR
   ];
@@ -385,14 +389,38 @@ export class PatientListService {
     );
   }
 
-  async deletePatient(patient: Patient): Promise<Object> {
-    let token = await this.sessionService.createToken(
+  deletePatient(patient: Patient) {
+    return this.sessionService.createToken(
       "deletePatient",
       new DeletePatientTokenData(
         {idType: patient.ids[0].idType, idString: patient.ids[0].idString}
       )
+    )
+    .pipe(
+      mergeMap(token => this.resolveDeletePatientToken(token.id))
     ).toPromise();
-      return this.httpClient.delete(this.patientList.url + "/patients?tokenId=" + token.id).toPromise();
+  }
+
+  resolveDeletePatientToken(tokenId: string | undefined): Observable<any> {
+
+    return this.httpClient.delete(this.patientList.url + "/patients?tokenId=" + tokenId, {
+      headers: new HttpHeaders()
+        .set('Content-Type', 'application/json')
+        .set('mainzellisteApiVersion', '3.2')
+    })
+      .pipe(
+        catchError(e => {
+          let errorMessage;
+          if (e instanceof HttpErrorResponse && (e.status == 404)) {
+            errorMessage = this.deletePatientErrorMessages.find(msg => msg.match(e))
+            // find error message arguments
+            if( errorMessage == ErrorMessages.DELETE_PATIENT_NOT_FOUND) {
+              return throwError(new MainzellisteError(errorMessage));
+            }
+          }
+          return throwError(errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
+        })
+      );
   }
 
   // Utils
