@@ -32,20 +32,21 @@ export class PatientlistViewComponent implements OnInit {
   fields: Array<string> = [];
   patientsMatTableData: MatTableDataSource<Patient>;
   loading: boolean = false;
-
-  separatorKeysCodes = [ENTER, COMMA] as const;
-  filterCtrl = new FormControl();
-
-  filters: Array<{ display: string, field: string, fields: string[], searchCriteria: string, isIdType: boolean }> = [];
-  filterConfigs: Array<FilterConfig> = [];
-  @ViewChild('filterInput')
-  filterInput!: ElementRef<HTMLInputElement>;
-  filteredFields: Observable<FilterConfig[]> = of([]);
-
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
   defaultPageSize: number = 10 as const;
   pageNumber: number = 100000;
+
+  separatorKeysCodes = [ENTER, COMMA] as const;
+  filterCtrl = new FormControl();
+  @ViewChild('filterInput')
+  filterInput!: ElementRef<HTMLInputElement>;
+  // configured searching keys : id type and fields
+  configuredFilteringKeys: Array<FilterConfig> = [];
+  // available searching keys used in autocomplete options
+  availableFilteringKeys: Observable<FilterConfig[]> = of([]);
+  // chip items : entered searching keywords
+  filters: Array<{ display: string, field: string, fields: string[], searchCriteria: string, isIdType: boolean }> = [];
 
   constructor(
     public translate: TranslateService,
@@ -67,7 +68,7 @@ export class PatientlistViewComponent implements OnInit {
     // Add filter
     if (value) {
       // find filter
-      let filterConfig: FilterConfig | undefined = this.filterConfigs
+      let filterConfig: FilterConfig | undefined = this.configuredFilteringKeys
       .find(f => new RegExp('^\\s*' + f.display.toLowerCase() + '\\s*:.*$')
       .test(value.toLowerCase().trim()));
 
@@ -96,7 +97,7 @@ export class PatientlistViewComponent implements OnInit {
 
   remove(filter: any): void {
     // show deleted filter in dropdown menu (autocomplete)
-    this.filterConfigs.filter(e => e.field == filter.field).forEach(e => e.hidden = false);
+    this.configuredFilteringKeys.filter(e => e.field == filter.field).forEach(e => e.hidden = false);
 
     const index = this.filters.indexOf(filter);
     if (index >= 0) {
@@ -110,7 +111,7 @@ export class PatientlistViewComponent implements OnInit {
 
   selected(event: MatAutocompleteSelectedEvent): void {
     // set search input field with search key
-    let filterConfig = this.filterConfigs.find(e => !e.hidden && e.field == event.option.value.field);
+    let filterConfig = this.configuredFilteringKeys.find(e => !e.hidden && e.field == event.option.value.field);
     if (filterConfig) {
       this.filterInput.nativeElement.value = filterConfig.display + ":";
     }
@@ -123,7 +124,7 @@ export class PatientlistViewComponent implements OnInit {
     })
     // init. filter data model with id types
     let configuredIdTypes = this.patientService.getConfigureIdTypes();
-    configuredIdTypes.forEach(idType => this.filterConfigs.push({
+    configuredIdTypes.forEach(idType => this.configuredFilteringKeys.push({
       field: idType,
       fields: [],
       display: idType,
@@ -134,7 +135,7 @@ export class PatientlistViewComponent implements OnInit {
     // init. filter data model with fields
     this.patientService.getConfiguredFields("R").forEach(fieldConfig => {
       let fieldName = fieldConfig.type+"" == 'DATE' ? "birthday" : fieldConfig.mainzellisteField;
-      this.filterConfigs.push({
+      this.configuredFilteringKeys.push({
         field: fieldName,
         fields: fieldConfig.mainzellisteFields,
         display: this.translate.instant(fieldConfig.i18n),
@@ -144,13 +145,13 @@ export class PatientlistViewComponent implements OnInit {
     })
 
     // init filters in autocomplete field
-    this.filteredFields = this.filterCtrl.valueChanges.pipe(
+    this.availableFilteringKeys = this.filterCtrl.valueChanges.pipe(
       startWith(''),
       map( value => {
         if(typeof value === "string")
-          return this.filterConfigs.filter(option => !option.hidden && option.display.toLowerCase().startsWith(value.toLowerCase()));
+          return this.configuredFilteringKeys.filter(option => !option.hidden && option.display.toLowerCase().startsWith(value.toLowerCase()));
         else
-          return this.filterConfigs.filter(option => !option.hidden && option.field == value.field);
+          return this.configuredFilteringKeys.filter(option => !option.hidden && option.field == value.field);
       }),
     );
     await this.loadPatients(0, this.defaultPageSize);

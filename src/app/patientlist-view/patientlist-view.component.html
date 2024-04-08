@@ -18,7 +18,7 @@
                (matChipInputTokenEnd)="add($event)">
       </mat-chip-list>
       <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)="selected($event)">
-        <mat-option style="height: auto" *ngFor="let filterItem of filteredFields | async"
+        <mat-option style="height: auto" *ngFor="let filterItem of availableFilteringKeys | async"
                     [value]="filterItem">
           <div [hidden]="filterItem.hidden"><span style="font-weight: bold">{{filterItem.display}}</span></div>
         </mat-option>
