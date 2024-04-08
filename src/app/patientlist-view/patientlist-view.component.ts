@@ -30,19 +30,14 @@ export class PatientlistViewComponent implements OnInit {
   patientService: PatientService;
   patient: Patient = new Patient();
   fields: Array<string> = [];
-  selectedPatients: Array<Patient> = [];
   patientsMatTableData: MatTableDataSource<Patient>;
+  loading: boolean = false;
 
   separatorKeysCodes = [ENTER, COMMA] as const;
   filterCtrl = new FormControl();
 
   filters: Array<{ display: string, field: string, fields: string[], searchCriteria: string, isIdType: boolean }> = [];
   filterConfigs: Array<FilterConfig> = [];
-  loading: boolean = false;
-
-  filterInputValue: string | undefined;
-  allPatientsToSearch: Array<string> = [];
-
   @ViewChild('filterInput')
   filterInput!: ElementRef<HTMLInputElement>;
   filteredFields: Observable<FilterConfig[]> = of([]);
@@ -73,7 +68,7 @@ export class PatientlistViewComponent implements OnInit {
     if (value) {
       // find filter
       let filterConfig: FilterConfig | undefined = this.filterConfigs
-      .find(f => new RegExp('^\\s*' + this.translate.instant(f.display).toLowerCase() + '\\s*:.*$')
+      .find(f => new RegExp('^\\s*' + f.display.toLowerCase() + '\\s*:.*$')
       .test(value.toLowerCase().trim()));
 
       if (filterConfig != undefined) {
@@ -89,11 +84,11 @@ export class PatientlistViewComponent implements OnInit {
             isIdType: filterConfig.isIdType
           });
           this.filterInput.nativeElement.value = "";
-          // this.filterCtrl.setValue("");
+          this.filterCtrl.setValue("");
           // load patients
           this.loadPatients(0, this.paginator.pageSize).then();
-          // Clear the input value
-          event.chipInput!.clear();
+          // // Clear the input value
+          // event.chipInput!.clear();
         }
       }
     }
@@ -115,14 +110,10 @@ export class PatientlistViewComponent implements OnInit {
 
   selected(event: MatAutocompleteSelectedEvent): void {
     // set search input field with search key
-    let filterConfig = this.filterConfigs.find(e => e.field == event.option.value);
+    let filterConfig = this.filterConfigs.find(e => !e.hidden && e.field == event.option.value.field);
     if (filterConfig) {
-      this.filterInput.nativeElement.value = this.translate.instant(filterConfig.display) + ":";
+      this.filterInput.nativeElement.value = filterConfig.display + ":";
     }
-  }
-
-  patientSelected(selectedPatients: Patient[]) {
-    this.selectedPatients = selectedPatients;
   }
 
   async ngOnInit() {
@@ -146,7 +137,7 @@ export class PatientlistViewComponent implements OnInit {
       this.filterConfigs.push({
         field: fieldName,
         fields: fieldConfig.mainzellisteFields,
-        display: fieldConfig.i18n,
+        display: this.translate.instant(fieldConfig.i18n),
         isIdType: false,
         hidden: false
       });
@@ -155,10 +146,11 @@ export class PatientlistViewComponent implements OnInit {
     // init filters in autocomplete field
     this.filteredFields = this.filterCtrl.valueChanges.pipe(
       startWith(''),
-      map(value => {
-        let searchValue = typeof value === "string" ? value : value.searchCriteria;
-        return this.filterConfigs.filter(option => !option.hidden
-          && this.translate.instant(option.display).toLowerCase().includes(searchValue.toLowerCase()));
+      map( value => {
+        if(typeof value === "string")
+          return this.filterConfigs.filter(option => !option.hidden && option.display.toLowerCase().startsWith(value.toLowerCase()));
+        else
+          return this.filterConfigs.filter(option => !option.hidden && option.field == value.field);
       }),
     );
     await this.loadPatients(0, this.defaultPageSize);

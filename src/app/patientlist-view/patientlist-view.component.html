@@ -6,11 +6,10 @@
         <mat-chip *ngFor="let filter of filters"
                   [selectable]="true"
                   [removable]="true" (removed)="remove(filter)" style="font-family: Tahoma;">
-          {{filter.display | translate}}: {{filter.searchCriteria}}
+          {{filter.display}}: {{filter.searchCriteria}}
           <mat-icon matChipRemove style="color:#494949">cancel</mat-icon>
         </mat-chip>
         <input #filterInput
-               [(ngModel)]="filterInputValue"
                placeholder="{{'patientlist.search_placeholder' | translate}}"
                [matChipInputFor]="chipList"
                [formControl]="filterCtrl"
@@ -20,48 +19,20 @@
       </mat-chip-list>
       <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)="selected($event)">
         <mat-option style="height: auto" *ngFor="let filterItem of filteredFields | async"
-                    [value]="filterItem.field">
-          <div [hidden]="filterItem.hidden"><span style="font-weight: bold">{{filterItem.display | translate}}</span></div>
+                    [value]="filterItem">
+          <div [hidden]="filterItem.hidden"><span style="font-weight: bold">{{filterItem.display}}</span></div>
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
 
-<!--    <div>-->
-<!--      <br>-->
-<!--      <button mat-raised-button matBadgeColor="accent"-->
-<!--              disabled="disabled"> <mat-icon>grid_view</mat-icon> Projekt Erstellen-->
-<!--      </button>-->
-<!--      <button mat-raised-button matBadgeColor="accent" [routerLink]="['/merge-patients']"-->
-<!--              [state]="{patients: selectedPatients}"-->
-<!--              [disabled]="selectedPatients.length!=2"-->
-<!--              [matBadge]="selectedPatients.length"-->
-<!--              [matBadgeHidden]="selectedPatients.length<1">-->
-<!--        <mat-icon>merge_type</mat-icon>-->
-<!--        Zusammenführen-->
-<!--      </button>-->
-
-<!--      <button mat-raised-button matBadgeColor="accent" [routerLink]="['/delete-patients']"-->
-<!--              [state]="{patients: selectedPatients}"-->
-<!--              [disabled]="selectedPatients.length<2"-->
-<!--              [matBadge]="selectedPatients.length"-->
-<!--              [matBadgeHidden]="selectedPatients.length<1">-->
-<!--        <mat-icon>delete_outline</mat-icon> Löschen-->
-
-<!--      </button>-->
-
-<!--    </div>-->
-
     <br><br>
-  <app-patientlist (selectedPatients)="patientSelected($event)"
-                   [patients]="patientsMatTableData"
-                   [loading]="loading"></app-patientlist>
-
-  <mat-paginator 
+  <app-patientlist [patients]="patientsMatTableData" [loading]="loading"></app-patientlist>
+  <mat-paginator
     [length]="pageNumber"
     [pageSize]="10"
     [pageSizeOptions]="[5,10,20,50,100]"
     arialabel="Select page"
-    [disabled]="loading"                
+    [disabled]="loading"
     (page)="handlePageEvent($event)"
     >
   </mat-paginator>
