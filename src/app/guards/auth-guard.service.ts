@@ -50,7 +50,7 @@ export class AuthGuard extends KeycloakAuthGuard implements CanActivateChild {
 
   checkTenantIdType(urlSegments: UrlSegment[]): boolean | UrlTree {
     return urlSegments == undefined || urlSegments.length < 2
-      || this.authorizationService.getTenantIdTypes().includes(urlSegments[1].path)
+      || this.authorizationService.getAllowedIdTypes('R', false).includes(urlSegments[1].path)
       || this.router.createUrlTree(['access-denied']);
   }
 }

@@ -125,10 +125,6 @@ export class PatientListService {
     return of(this.configService.getMainzellisteIdTypes());
   }
 
-  getMainIdType(): string {
-    return this.patientList.mainIdType == undefined ? this.getIdTypes()[0] : this.patientList.mainIdType;
-  }
-
   /**
    * @deprecated replace with getMainIdType
    */
@@ -142,16 +138,6 @@ export class PatientListService {
 
   findDefaultIdType(configuredIdTypes: string[]): string {
     return this.patientList.mainIdType != undefined && configuredIdTypes.some(t => t == this.patientList.mainIdType)? this.patientList.mainIdType : configuredIdTypes[0];
-  }
-
-  //TODO Refactor: replace with getConfiguredIdTypes
-  getPatientListIdTypes(): Promise<Array<string>> {
-    return this.getConfiguredIdTypes().toPromise();
-  }
-
-  //TODO Refactor: replace with getConfiguredDefaultIdType
-  async getPatientListMainIdType(): Promise<string> {
-    return this.getConfiguredDefaultIdType().toPromise();
   }
 
   /**
@@ -168,7 +154,7 @@ export class PatientListService {
     //let defaultIdType = this.findDefaultIdType(this.getIdTypes());
     if (filters.every(f => !f.isIdType)) {
       // get permitted idTypes
-      allowedIdTypes = this.authorizationService.getTenantIdTypes();
+      allowedIdTypes = this.authorizationService.getAllowedIdTypes('R', false);
       if(allowedIdTypes.length > 0 && !allowedIdTypes.some( t => t == "*"))
         searchIds = allowedIdTypes.map(type => ({idType: type, idString: "*"}));
       else
@@ -178,12 +164,19 @@ export class PatientListService {
         searchIds.push({idType: f.field, idString: f.searchCriteria.trim()}));
     }
 
+    // find current tenant id
+    let tenantId = this.authorizationService.getCurrentTenant();
+    if(tenantId === undefined || tenantId == "default")
+      tenantId = "";
+
     // create read patients token
     return this.sessionService.createToken("readPatients",
       new ReadPatientsTokenData(searchIds, this.getFieldNames("R"), this.getIdTypes("R")))
     .pipe(
       // resolve read patients token
-      mergeMap(token => this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + token.id
+      mergeMap(token => this.httpClient.get<Patient[]>(this.patientList.url + "/patients?"
+        +"tokenId=" + token.id
+        + (tenantId.length == 0 ? "":"&tenantId="+tenantId)
         + "&page=" + pageIndex + "&limit=" + pageSize + "&"
         + this.convertFiltersToUrl(filters), {observe: 'response'})
       .pipe(
