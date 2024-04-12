@@ -77,7 +77,7 @@ export class CreatePatientComponent  implements OnInit {
   }
 
   ngOnInit(): void {
-    let internalIdTypes  = this.patientListService.getIdGenerators(false, "C").map( g => g.idType)
+    let internalIdTypes  = this.patientListService.getInternalTypes( "C");
     let mainIdType = this.patientListService.findDefaultIdType(internalIdTypes);
     this.selectedInternalIdTypes.push(mainIdType);
 

@@ -38,6 +38,20 @@ export class AuthorizationService {
   private initPatientAllowedAttributes(){
     let internalIdTypeOperations:Operation[] = ["C", "R"];
     internalIdTypeOperations.forEach( o => this.allowedIdTypes.set(o, this.findAllowedIdTypes(o, false)));
+    //put tenant Id types first
+    let tenantIdTypes: string[] = this.configuredTenants.find(t => t.id == this.currentTenantId)?.idTypes || [];
+    const operationList:Operation[] =  ['C', 'U', 'R'];
+    for(const operation of operationList) {
+      let idTypes = this.allowedIdTypes.get(operation) || [];
+      let newIdTypes = [];
+      for (let i = 0; i < idTypes.length; i++) {
+        if (tenantIdTypes.includes(idTypes[i]))
+          newIdTypes.unshift(idTypes[i])
+        else
+          newIdTypes.push(idTypes[i])
+      }
+      this.allowedIdTypes.set(operation, newIdTypes);
+    }
 
     let externalIdTypeOperations:Operation[] = ["C", "U", "R"];
     externalIdTypeOperations.forEach( o => this.allowedExternalIdTypes.set(o, this.findAllowedIdTypes(o, true)))

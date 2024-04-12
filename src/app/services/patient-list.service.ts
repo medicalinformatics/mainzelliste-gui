@@ -98,6 +98,12 @@ export class PatientListService {
     return allowedIdTypes.length == 0  ? this.configService.getMainzellisteIdTypes() : allowedIdTypes;
   }
 
+  getInternalTypes(operation?: Operation): Array<string> {
+    let allowedIdTypes = operation != undefined ? this.authorizationService.getAllowedIdTypes(operation, false) : [];
+    return allowedIdTypes.length > 0  ? allowedIdTypes : this.configService.getMainzellisteIdGenerators()
+      .filter(g => !g.isExternal).map(g => g.idType);
+  }
+
   getFieldNames(operation: Operation): Array<string> {
     return this.authorizationService.getAllowedFieldNames(operation);
   }
