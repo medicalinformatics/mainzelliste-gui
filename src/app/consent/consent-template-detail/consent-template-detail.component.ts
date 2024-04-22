@@ -17,9 +17,9 @@ export class ConsentTemplateDetailComponent implements OnInit {
   @Input() template!: ConsentTemplate;
 
   public miiFhirBroadConsentVersions = [
-    {name: "1.6d", code: "2.16.840.1.113883.3.1937.777.24.2.1790"},
-    {name: "1.6f", code:  "2.16.840.1.113883.3.1937.777.24.2.1791"},
-    {name: "1.7.2", code:  "2.16.840.1.113883.3.1937.777.24.2.2079"}
+    {name: "1.6d", code: "urn:oid:2.16.840.1.113883.3.1937.777.24.2.1790"},
+    {name: "1.6f", code:  "urn:oid:2.16.840.1.113883.3.1937.777.24.2.1791"},
+    {name: "1.7.2", code:  "urn:oid:2.16.840.1.113883.3.1937.777.24.2.2079"}
   ]
 
   public templateValidityPeriod: string = this.getValidityPeriodText({day: 0, month: 0, year: 0});
