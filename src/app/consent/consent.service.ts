@@ -318,22 +318,22 @@ export class ConsentService {
     .then(resource => {
       let bundle: fhir4.Bundle<fhir4.Consent> = resource as fhir4.Bundle<fhir4.Consent>
       return bundle.entry?.forEach(r => {
-        let templateIds = this.findConsentTemplateId(r.resource?.policy || []);
-        let template = [...consentTemplates].find(([k, v]) => templateIds.find(id => id == k)) || [];
+        let templateIds = this.findConsentTemplateId(r.resource?.policy ?? []);
+        let template = [...consentTemplates].find(([k, v]) => templateIds.find(id => id == k)) ?? [];
         let endDate = r.resource?.provision?.period?.end;
         let startDate = r.resource?.provision?.period?.start;
         result.push({
           id: r.resource?.id,
-          title: template[1]?.title || "",
-          createdAt: new Date(r.resource?.dateTime || ""),
+          title: template[1]?.title ?? "",
+          createdAt: new Date(r.resource?.dateTime ?? ""),
           validFrom: startDate && startDate.trim().length > 0 ? _moment(startDate) : undefined,
           validUntil: endDate && endDate.trim().length > 0 ? new Date(endDate) : undefined,
-          status: r.resource?.status || "active",
+          status: r.resource?.status ?? "active",
           period: 0,
           version: r.resource?.meta?.versionId,
           items: [],
           fhirResource: r.resource,
-          templateName: template[0] || ""
+          templateName: template[0] ?? ""
         });
       }) || result;
     })
@@ -342,20 +342,13 @@ export class ConsentService {
 
   private findConsentTemplateId(fhirPolicies: fhir4.ConsentPolicy[]): string[] {
     let results: string[] = [];
-    //this.mainzellisteBaseUrl + "/fhir"
     fhirPolicies.forEach(p => {
-      // check url
-      let uriFragments: string[] = p.uri?.split(this.mainzellisteBaseUrl + "/fhir/Questionnaire/") || [];
-      if (uriFragments.length == 2) {
-        results.push(uriFragments[1]);
-      } else if ((p.uri?.split("Questionnaire/") || []).length == 2) {
-        uriFragments = p.uri?.split("Questionnaire/") || [];
-        // addd only if relative
-        if (uriFragments[0] == "" || uriFragments[0] == "/") {
-          results.push(uriFragments[1]);
-        }
+      let uriFragments: string[] = p.uri?.split(new RegExp(`(${this.mainzellisteBaseUrl}|\/?)fhir\/Questionnaire\/`)) ?? [];
+      if (uriFragments.length == 3) {
+        results.push(uriFragments[2]);
       } else {
-        results.push(p.uri || "");
+        //TODO throw exception
+        results.push(p.uri ?? "");
       }
     });
     return results;
