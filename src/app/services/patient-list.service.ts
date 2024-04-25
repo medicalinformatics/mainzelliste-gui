@@ -131,17 +131,6 @@ export class PatientListService {
     return of(this.configService.getMainzellisteIdTypes());
   }
 
-  /**
-   * @deprecated replace with getMainIdType
-   */
-  getConfiguredDefaultIdType(): Observable<string> {
-    if(this.patientList.mainIdType != undefined){
-      return of(this.patientList.mainIdType);
-    }else{ //TODO should be called one time and cached
-      return this.getConfiguredIdTypes().pipe(map(idTypes => idTypes[0]));
-    }
-  }
-
   findDefaultIdType(configuredIdTypes: string[]): string {
     return this.patientList.mainIdType != undefined && configuredIdTypes.some(t => t == this.patientList.mainIdType)? this.patientList.mainIdType : configuredIdTypes[0];
   }

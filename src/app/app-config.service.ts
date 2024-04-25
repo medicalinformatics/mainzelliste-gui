@@ -206,9 +206,7 @@ export class AppConfigService {
     let idType = idGenerators[0].idType;
 
     //set main id type if the configured value is empty
-    if (AppConfigService.isStringEmpty(config.mainIdType)) {
-      config.mainIdType = idType;
-    } else if (!idGenerators.some( g => g.idType == config.mainIdType?.trim())) {
+    if (config.mainIdType != undefined && !idGenerators.some( g => g.idType == config.mainIdType?.trim())) {
       throw new Error("mainIdType '" + config.mainIdType + "'not configured in the backend, please check your ui configuration");
     }
     return this.translate.instant('appConfigService.main_id_type_valid');
