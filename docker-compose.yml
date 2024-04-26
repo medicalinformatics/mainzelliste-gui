@@ -6,7 +6,7 @@ volumes:
   keycloakDB:
 services:
   mainzelliste-gui:
-    image: medicalinformatics/mainzelliste-gui:main
+    image: docker.verbis.dkfz.de/ttp/mainzelliste-gui:consent
     ports:
       - "4200:80"
     environment:
