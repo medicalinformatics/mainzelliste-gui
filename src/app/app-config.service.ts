@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {ConfigRole, OAuthConfig, PatientList} from "./model/patientlist";
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {OAuthConfig, PatientList} from "./model/patientlist";
 import {AppConfig} from "./app-config";
 import {catchError, map} from "rxjs/operators";
 import {throwError} from "rxjs";
@@ -8,6 +8,7 @@ import {MainzellisteField, MainzellisteFieldType} from "./model/mainzelliste-fie
 import {Field, FieldType} from "./model/field";
 import {MainzellisteUnknownError} from './model/mainzelliste-unknown-error';
 import {TranslateService} from '@ngx-translate/core';
+import {ClaimsConfig} from "./model/api/configuration-claims-data";
 
 
 export interface IdGenerator {
@@ -24,6 +25,7 @@ export class AppConfigService {
   private mainzellisteIdGenerators: IdGenerator[] = [];
   private mainzellisteIdTypes: string[] = [];
   private mainzellisteFields: string[] = [];
+  private mainzellisteClaims: ClaimsConfig[] = [];
   private version: string = "";
   private consentEnabled: boolean = false;
   private copyConcatenatedIdEnabled: boolean = false;
@@ -82,10 +84,6 @@ export class AppConfigService {
     return this.mainzellisteIdTypes;
   }
 
-  getMainzellisteExternalIdTypes(): string[] {
-    return this.mainzellisteIdGenerators.filter( g => g.isExternal).map( g => g.idType);
-  }
-
   getMainzellisteIdGenerators(): IdGenerator[] {
     return this.mainzellisteIdGenerators;
   }
@@ -94,16 +92,16 @@ export class AppConfigService {
     return this.mainzellisteFields;
   }
 
+  getMainzellisteClaims(): ClaimsConfig[] {
+    return this.mainzellisteClaims;
+  }
+
   getMainzellisteUrl(): string {
     return this.data[0].url.toString();
   }
 
   isDebugModeEnabled(): boolean {
     return this.data[0].debug != undefined && this.data[0].debug;
-  }
-
-  getRolesWithPermissions(): ConfigRole[]{
-    return this.data[0].roles
   }
 
   getVersion(): string {
@@ -146,6 +144,21 @@ export class AppConfigService {
       })
     ).toPromise();
   }
+
+    public fetchClaims(): Promise<ClaimsConfig[]> {
+      return this.httpClient.get<ClaimsConfig[]>(this.data[0].url + "/configuration/claims", {
+              headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2'),
+              params: new HttpParams().set('filter', 'roles').set('merge', true)
+          })
+          .pipe(
+              catchError((e) => throwError(new Error("Can't init claims configurations. Failed to connect " +
+                  "to the backend Endpoint /configuration/claims"))),
+              map(claims => {
+                  this.mainzellisteClaims = claims;
+                  return claims;
+              })
+          ).toPromise();
+    }
 
   public fetchMainzellisteFields(): Promise<MainzellisteField[]> {
     let fieldEndpointUrl = this.data[0].url + "/configuration/fields";
@@ -193,9 +206,7 @@ export class AppConfigService {
     let idType = idGenerators[0].idType;
 
     //set main id type if the configured value is empty
-    if (AppConfigService.isStringEmpty(config.mainIdType)) {
-      config.mainIdType = idType;
-    } else if (!idGenerators.some( g => g.idType == config.mainIdType?.trim())) {
+    if (config.mainIdType != undefined && !idGenerators.some( g => g.idType == config.mainIdType?.trim())) {
       throw new Error("mainIdType '" + config.mainIdType + "'not configured in the backend, please check your ui configuration");
     }
     return this.translate.instant('appConfigService.main_id_type_valid');

@@ -1,7 +1,8 @@
 # Changelog
 ## Unreleased
 ### Features
-- support refined permissions
+- resource based refined permissions
+- multitenancy
 ## [0.0.3] - 2023-12-12
 ### Fix
 - support idtypes array in CreateIds token

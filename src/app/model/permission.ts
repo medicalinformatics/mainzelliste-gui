@@ -1,5 +1,4 @@
-import {PermissionType} from "./role";
-import {Operation} from "./patientlist";
+import {Operation, PermissionType} from "./tenant";
 
 export class Permission {
   public static readonly CREATE_PATIENT = new Permission("patient", "C");
@@ -10,6 +9,10 @@ export class Permission {
   public static readonly GENERATE_IDS = new Permission("ids", "C");
   public static readonly READ_IDS = new Permission("ids", "R");
   public static readonly EDIT_IDS = new Permission("ids", "U");
+
+  public static readonly GENERATE_EXT_IDS = new Permission("externalIds", "C");
+  public static readonly READ_EXT_IDS = new Permission("externalIds", "R");
+  public static readonly EDIT_EXT_IDS = new Permission("externalIds", "U");
 
   public static readonly READ_FIELDS = new Permission("fields", "R");
   public static readonly EDIT_FIELDS = new Permission("fields", "U");

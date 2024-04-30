@@ -14,6 +14,9 @@ import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.c
 import {ConsentService} from "../consent/consent.service";
 import {Permission} from "../model/permission";
 import {ConsentStatus} from "../consent/consent.model";
+import {HttpErrorResponse} from "@angular/common/http";
+import {throwError} from "rxjs";
+import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 
 export interface ConsentRow {id: string, date:string, title: string, period:string, version?:string, status: string}
 
@@ -71,9 +74,17 @@ export class IdcardComponent implements OnInit {
   }
 
   private loadPatient() {
-    this.patientListService.readPatient(new Id(this.idType, this.idString), "R").then(patients => {
-      this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
-    });
+    this.patientListService.readPatient(new Id(this.idType, this.idString), "R")
+      .then(
+        patients => {
+          this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
+        })
+      .catch(e => {
+        if (e instanceof HttpErrorResponse && (e.status == 404)) {
+          this.router.navigate(['/**']).then();
+        }
+        return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_add_patient_token'), e, this.translate))
+      });
   }
 
   private loadConsents() {
@@ -112,9 +123,8 @@ export class IdcardComponent implements OnInit {
     await this.router.navigate(["patient", this.idType, this.idString, 'edit-consent', row.id]);
   }
 
-  async deletePatient() {
-    await this.patientService.deletePatient(this.patient)
-    .then(() => this.router.navigate(['/patientlist']).then());
+  deletePatient() {
+    this.patientService.deletePatient(this.patient).then(() => this.router.navigate(['/patientlist']).then());
   }
 
   generateId(newIdType: string) {
@@ -157,7 +167,7 @@ export class IdcardComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result)
-        this.deletePatient().then();
+        this.deletePatient();
     });
   }
 }
