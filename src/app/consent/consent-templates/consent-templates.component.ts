@@ -40,7 +40,7 @@ export class ConsentTemplatesComponent implements OnInit {
   loadTemplates(pageIndex: number, pageSize: number) {
     this.loading = true;
     //TODO pagination pageIndex pageSize
-    this.consentService.getConsentTemplates().then(
+    this.consentService.getConsentTemplates().subscribe(
       response => {
         this.templatesMatTableData.data = [...response.values()];
         this.pageNumber = this.templatesMatTableData.data.length / pageSize;

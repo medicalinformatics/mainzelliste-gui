@@ -5,9 +5,10 @@ import {SessionService} from "../services/session.service";
 import {DatePipe} from "@angular/common";
 import {AppConfigService} from "../app-config.service";
 import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "./consent.model";
+import {FhirResource, SearchParams} from "fhir-kit-client/types/index"
 import {TranslateService} from '@ngx-translate/core';
 import {MainzellisteError} from "../model/mainzelliste-error.model";
-import {ErrorMessages} from "../error/error-messages";
+import {ErrorMessage, ErrorMessages} from "../error/error-messages";
 import _moment from "moment";
 import {ConsentTemplateFhirWrapper} from "../model/consent-template-fhir-wrapper";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
@@ -200,66 +201,46 @@ export class ConsentService {
     };
   }
 
-  public async addConsent(dataModel: Consent) {
-
+  public addConsent(dataModel: Consent): Observable<FhirResource> {
     if (dataModel.fhirResource == undefined) {
       this.handleError<any>(this.translate.instant('error.consent_service_fhir_consent_not_found'));
-      return {id: "", title: "NOT FOUND", date: new Date(), items: []};
-    }
-
-    //find if consent exist
-    let consents = await this.getConsents(dataModel.patientId?.idType!, dataModel.patientId?.idString!);
-    let existingConsent = consents.find( c => c.templateName == dataModel.template?.name);
-    if(existingConsent && existingConsent.fhirResource){
-      // id consent exist update
-      dataModel.fhirResource = existingConsent.fhirResource;
-      return this.editConsent(dataModel, true);
+      return of({id: "", title: "NOT FOUND", date: new Date(), items: []} as unknown as fhir4.Consent);
     } else {
-      // set patient id
+      // set patient id in fhir resource
       dataModel.fhirResource.patient = {
         identifier: {
           system: this.mainzellisteBaseUrl + "/id/" + dataModel.patientId?.idType,
           value: dataModel.patientId?.idString
         }
       }
+      let fhirResource: fhir4.Consent = dataModel.fhirResource;
+
+      //find if consent exist
+      return this.getConsents(dataModel.patientId?.idType!, dataModel.patientId?.idString!).pipe(
+        mergeMap( consents => {
+          let existingConsent = consents.find( c => c.templateName == dataModel.template?.name);
+          if(existingConsent?.fhirResource) {
+            // id consent exist update
+            dataModel.fhirResource = existingConsent.fhirResource;
+            return this.editConsent(dataModel, true);
+          } else {
+            this.serializeConsentDataModelToFhir(dataModel, true);
+            return this.createFhirResource<fhir4.Consent>("addConsent", {}, 'Consent', fhirResource);
+          }
+        })
+      )
     }
-
-    this.serializeConsentDataModelToFhir(dataModel, true);
-
-    // create token
-    let token = await this.sessionService.createToken(
-      "addConsent", {}
-    ).toPromise();
-
-    return this.client.create({
-      resourceType: 'Consent', body: dataModel.fhirResource,
-      headers: {'Authorization': 'MainzellisteToken ' + token.id}
-    })
-    .then(resource => resource as fhir4.Consent)
-    .catch(error => this.handleException(error, undefined));
   }
 
-  public async editConsent(dataModel: Consent, force: boolean) {
-
-    if (dataModel.fhirResource == undefined) {
-      this.handleError<any>(this.translate.instant('error.consent_service_fhir_consent_not_found'));
-      return {id: "", title: "NOT FOUND", date: new Date(), items: []};
+    public editConsent(dataModel: Consent, force: boolean) {
+      if (dataModel.fhirResource == undefined) {
+          this.handleError<any>(this.translate.instant('error.consent_service_fhir_consent_not_found'));
+          return of({id: "", title: "NOT FOUND", date: new Date(), items: []} as unknown as fhir4.Consent);
+      } else {
+        this.serializeConsentDataModelToFhir(dataModel, force);
+        return this.updateFhirResource<fhir4.Consent>("editConsent", {}, 'Consent', dataModel.fhirResource);
+      }
     }
-
-    this.serializeConsentDataModelToFhir(dataModel, force);
-
-    // create token
-    let token = await this.sessionService.createToken(
-      "editConsent", {}
-    ).toPromise();
-
-    return this.client.update({
-      resourceType: 'Consent', id: dataModel.fhirResource.id, body: dataModel.fhirResource,
-      headers: {'Authorization': 'MainzellisteToken ' + token.id}
-    })
-    .then(resource => resource as fhir4.Consent)
-    .catch(error => this.handleException(error, undefined));
-  }
 
   public async readConsent(id: string): Promise<Consent> {
     if (id == undefined) {
@@ -275,7 +256,7 @@ export class ConsentService {
       };
     }
 
-    let consentTemplates: Map<string, fhir4.Questionnaire> = await this.getConsentTemplatesResources();
+    let consentTemplates: Map<string, fhir4.Questionnaire> = await this.getConsentTemplatesResources().toPromise();
 
     // create token
     let token = await this.sessionService.createToken(
@@ -299,45 +280,37 @@ export class ConsentService {
     .catch(error => this.handleException(error, consentDataModel));
   }
 
-  public async getConsents(idType: string, idString: string): Promise<Consent[]> {
-    let consentTemplates: Map<string, fhir4.Questionnaire> = await this.getConsentTemplatesResources();
-
-    // create token
-    let token = await this.sessionService.createToken(
-      "searchConsents", {}
-    ).toPromise();
-
-    let result: Consent[] = [];
-    return this.client.search({
-      resourceType: 'Consent',
-      searchParams: {'patient:identifier': this.appConfigService.getMainzellisteUrl() + '/id/' + idType + '|' + idString},
-      options: {
-        headers: {'Authorization': 'MainzellisteToken ' + token.id}
-      }
-    })
-    .then(resource => {
-      let bundle: fhir4.Bundle<fhir4.Consent> = resource as fhir4.Bundle<fhir4.Consent>
-      return bundle.entry?.forEach(r => {
-        let templateIds = this.findConsentTemplateId(r.resource?.policy ?? []);
-        let template = [...consentTemplates].find(([k, v]) => templateIds.find(id => id == k)) ?? [];
-        let endDate = r.resource?.provision?.period?.end;
-        let startDate = r.resource?.provision?.period?.start;
-        result.push({
-          id: r.resource?.id,
-          title: template[1]?.title ?? "",
-          createdAt: new Date(r.resource?.dateTime ?? ""),
-          validFrom: startDate && startDate.trim().length > 0 ? _moment(startDate) : undefined,
-          validUntil: endDate && endDate.trim().length > 0 ? new Date(endDate) : undefined,
-          status: r.resource?.status ?? "active",
-          period: 0,
-          version: r.resource?.meta?.versionId,
-          items: [],
-          fhirResource: r.resource,
-          templateName: template[0] ?? ""
-        });
-      }) || result;
-    })
-    .catch( error => this.handleException(error, result));
+  public getConsents(idType: string, idString: string): Observable<Consent[]> {
+    return this.getConsentTemplatesResources().pipe(
+      mergeMap( consentTemplates =>
+        this.searchFhirResources<fhir4.Consent>("searchConsents", {},
+          'Consent', ErrorMessages.SEARCH_CONSENT_TEMPLATES_FAILED,
+          {'patient:identifier': this.appConfigService.getMainzellisteUrl() + '/id/' + idType + '|' + idString})
+          .pipe(
+            map(fhirConsents => {
+              return fhirConsents.map(r => {
+                let templateIds = this.findConsentTemplateId(r?.policy ?? []);
+                let template = [...consentTemplates].find(([k, v]) => templateIds.find(id => id == k)) ?? [];
+                let endDate = r?.provision?.period?.end;
+                let startDate = r?.provision?.period?.start;
+                return {
+                  id: r?.id,
+                  title: template[1]?.title ?? "",
+                  createdAt: new Date(r?.dateTime ?? ""),
+                  validFrom: startDate && startDate.trim().length > 0 ? _moment(startDate) : undefined,
+                  validUntil: endDate && endDate.trim().length > 0 ? new Date(endDate) : undefined,
+                  status: r?.status ?? "active",
+                  period: 0,
+                  version: r?.meta?.versionId,
+                  items: [],
+                  fhirResource: r,
+                  templateName: template[0] ?? ""
+                };
+              });
+            })
+          )
+      )
+    )
   }
 
   private findConsentTemplateId(fhirPolicies: fhir4.ConsentPolicy[]): string[] {
@@ -354,59 +327,36 @@ export class ConsentService {
     return results;
   }
 
-  public getConsentTemplates(): Promise<Map<string, ConsentTemplateFhirWrapper>> {
-    return this.getConsentTemplatesResources().then(entries => {
-      let result: Map<string, ConsentTemplateFhirWrapper> = new Map();
-      entries.forEach((v, k) => {
-        result.set(k, {
-          id: v.id || "",
-          name: v.name || "",
-          title: v.title || "",
-          definition: v
-        })
-      });
-      return result;
-    });
+  public getConsentTemplates(searchParams?: SearchParams): Observable<Map<string, ConsentTemplateFhirWrapper>> {
+    return this.getConsentTemplatesResources(searchParams).pipe(
+      map(entries => {
+        let result: Map<string, ConsentTemplateFhirWrapper> = new Map();
+        entries.forEach((v, k) => {
+          result.set(k, {
+            id: v.id ?? "",
+            name: v.name ?? "",
+            title: v.title ?? "",
+            definition: v
+          })
+        });
+        return result;
+      })
+    );
   }
 
   /**
    * return a map of content templates
    */
-  private getConsentTemplatesResources(): Promise<Map<string, fhir4.Questionnaire>> {
-
-    return this.sessionService.createToken(
-      "searchConsentTemplates", {}
-    )
+  private getConsentTemplatesResources(searchParam?:SearchParams): Observable<Map<string, fhir4.Questionnaire>> {
+    return this.searchFhirResources<fhir4.Questionnaire>("searchConsentTemplates", {},
+      'Questionnaire', ErrorMessages.SEARCH_CONSENT_TEMPLATES_FAILED, searchParam)
       .pipe(
-        mergeMap(token => this.resolveSearchConsentTemplatesToken(token.id)),
-        catchError(e => {
-          // handle failed token creation
-          return throwError(e)
+        map(resources => {
+          let result = new Map();
+          resources.forEach(r => result.set(r?.name, r!));
+          return result;
         })
-      ).toPromise();
-  }
-
-  resolveSearchConsentTemplatesToken(tokenId: string | undefined): Promise<Map<string, fhir4.Questionnaire>> {
-    let result = new Map();
-    return this.client.search({
-        resourceType: 'Questionnaire',
-        headers: {'Authorization': 'MainzellisteToken ' + tokenId}
-      }
-    ).then(resource => {
-        let bundle: fhir4.Bundle<fhir4.Questionnaire> = resource as fhir4.Bundle<fhir4.Questionnaire>
-        return bundle.entry?.forEach(r => result.set(r.resource?.name, r.resource!)) || result;
-      })
-      .catch(e => {
-        if(e.response?.data != undefined) {
-          let errorMessage = "";
-          for(const issue of (e.response.data as fhir4.OperationOutcome).issue) {
-            if(issue.severity == 'error')
-              errorMessage += issue.diagnostics
-          }
-          throw new MainzellisteError(ErrorMessages.SEARCH_CONSENT_TEMPLATES_FAILED, errorMessage);
-        } else
-          throw new MainzellisteUnknownError("Failed to find consent templates", e, this.translate);
-      })
+      );
   }
 
   public addConsentTemplate(consentTemplate: ConsentTemplate): Promise<fhir4.FhirResource | fhir4.Questionnaire> {
@@ -439,6 +389,17 @@ export class ConsentService {
         } else
           throw new MainzellisteUnknownError("Failed to create consent template", e, this.translate);
       })
+  }
+
+  public getConsentTemplate(id: string): Observable<ConsentTemplateFhirWrapper> {
+    return this.readFhirResources<fhir4.Questionnaire>("readConsentTemplate", {}, 'Questionnaire', id,
+      ErrorMessages.READ_CONSENT_TEMPLATE_FAILED).pipe(
+      map(q => new ConsentTemplateFhirWrapper(
+        q.id ?? "",
+        q.name ?? "",
+        q.title ?? "",
+        q))
+    )
   }
 
   public mapConsentTemplate(template:ConsentTemplate): fhir4.Questionnaire {
@@ -545,16 +506,9 @@ export class ConsentService {
       }
     }
 
-    //TODO if publish -> status: "active" otherwise status is draft
     return {
       resourceType: "Questionnaire",
       status: template.status,
-      extension: [
-        {
-          url: "http://hl7.org/fhir/StructureDefinition/artifact-url",
-          valueUri: "#100"
-        }
-      ],
       contained: [fhirConsent],
       name: template.name,
       title: template.title,
@@ -636,6 +590,114 @@ export class ConsentService {
       .add(validityPeriod.month || 0, 'months')
       .add(validityPeriod.year || 0, 'years')
       .format("YYYY-MM-DD")
+  }
+
+  public createFhirResource<F extends FhirResource>(tokenType: TokenType, tokenData: TokenData, resourceType: string, resource: F) : Observable<FhirResource> {
+    return this.executeFhirOperation<F>(tokenType, tokenData, resourceType, resource, this.resolveAddFhirResourceToken, "create");
+  }
+
+  public updateFhirResource<F extends FhirResource>(tokenType: TokenType, tokenData: TokenData, resourceType: string, resource: F) : Observable<FhirResource> {
+    return this.executeFhirOperation<F>(tokenType, tokenData, resourceType, resource, this.resolveEditFhirResourceToken, "update");
+  }
+
+  public readFhirResources<F extends FhirResource>(tokenType: TokenType, tokenData: TokenData, resourceType: string,
+                                                     id: string, errorMessageType: ErrorMessage) : Observable<F> {
+    return this.executeReadFhirOperation<F>(tokenType, tokenData, resourceType, id, errorMessageType) as Observable<F>;
+  }
+
+  public searchFhirResources<F extends FhirResource>(tokenType: TokenType, tokenData: TokenData, resourceType: string,
+                                                     errorMessageType: ErrorMessage, searchParam?:SearchParams) : Observable<(F | undefined)[]> {
+    let result : Observable<FhirResource> = this.executeSearchFhirOperation(tokenType, tokenData, resourceType,
+      this.resolveSearchFhirResourceToken, "search", errorMessageType, searchParam);
+    return (result as Observable<fhir4.Bundle<F>>).pipe(
+      map( b => b.entry?.map(r => r.resource)||[])
+    );
+  }
+
+  public executeReadFhirOperation<F extends FhirResource>(tokenType: TokenType,
+                                                            tokenData: TokenData,
+                                                            resourceType: string,
+                                                            id: string,
+                                                            errorMessageType: ErrorMessage,
+  ) : Observable<FhirResource> {
+    return this.sessionService.createToken(tokenType, tokenData)
+      .pipe(
+        mergeMap(token => this.resolveReadFhirResourceToken<F>(token.id, resourceType, id)),
+        catchError((error) => this.handleFailedRequest(resourceType, error, errorMessageType, "read"))
+      )
+  }
+
+  public executeSearchFhirOperation<F extends FhirResource>(tokenType: TokenType,
+                                                            tokenData: TokenData,
+                                                            resourceType: string,
+                                                            resolveToken: (tokenId: string | undefined, resourceType: string, searchParam?:SearchParams) => Promise<FhirResource | F>,
+                                                            errorPrefix: string,
+                                                            errorMessageType: ErrorMessage,
+                                                            searchParam?: SearchParams
+  ) : Observable<FhirResource> {
+    return this.sessionService.createToken(tokenType, tokenData)
+      .pipe(
+        mergeMap(token => resolveToken(token.id, resourceType, searchParam)),
+        catchError((error) => this.handleFailedRequest(resourceType, error, errorMessageType, errorPrefix))
+      )
+  }
+
+  private handleFailedRequest(resourceType: string, error: any, errorMessageType: ErrorMessage, errorPrefix: string) {
+    if (error.response?.data != undefined) {
+      let errorMessage = "";
+      for (const issue of (error.response.data as fhir4.OperationOutcome).issue) {
+        if (issue.severity == 'error')
+          errorMessage += issue.diagnostics
+      }
+      return throwError(new MainzellisteError(errorMessageType, errorMessage));
+    } else
+      return throwError(new MainzellisteUnknownError(`Failed to ${errorPrefix} resource fhir/${resourceType}.
+                    Cause: ${getErrorMessageFrom(error, this.translate)}`, error, this.translate))
+  }
+
+  public executeFhirOperation<F extends FhirResource>(tokenType: TokenType,
+                                                      tokenData: TokenData,
+                                                      resourceType: string,
+                                                      resource: F,
+                                                      resolveToken: (tokenId: string | undefined, resourceType: string, resource: F) => Promise<FhirResource | F>,
+                                                      errorPrefix: string
+  ) : Observable<FhirResource> {
+    return this.sessionService.createToken(tokenType, tokenData)
+      .pipe(
+        mergeMap(token => resolveToken(token.id, resourceType, resource)),
+        catchError((error) =>
+          throwError(new Error(`Failed to ${errorPrefix} resource fhir/${resourceType}. Cause: ${getErrorMessageFrom(error, this.translate)}`))
+        )
+      )
+  }
+
+  resolveAddFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, resource: F): Promise<FhirResource | F> => {
+    return this.client.create<F>({
+      resourceType: resourceType, body: resource,
+      headers: {'Authorization': 'MainzellisteToken ' + tokenId}
+    })
+  }
+
+  resolveEditFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, resource: F): Promise<FhirResource | F> => {
+    return this.client.update<F>({
+      resourceType: resourceType, id: resource.id, body: resource,
+      headers: {'Authorization': 'MainzellisteToken ' + tokenId}
+    })
+  }
+
+  resolveReadFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, id:string): Promise<FhirResource | F> => {
+    return this.client.read({
+      resourceType: resourceType,
+      id: id,
+      headers: {'Authorization': 'MainzellisteToken ' + tokenId}
+    })
+  }
+
+  resolveSearchFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, searchParams?:SearchParams): Promise<FhirResource | F> => {
+    return this.client.search({
+          resourceType: resourceType,
+          headers: {'Authorization': 'MainzellisteToken ' + tokenId}, searchParams
+    })
   }
 
   //////////////////////////////

@@ -53,10 +53,9 @@ export class EditConsentComponent implements OnInit {
 
   editConsent(force?: boolean) {
     this.dataModel.patientId = {idType: this.idType, idString: this.idString};
-    this.consentService.editConsent(this.dataModel, force || false).then(() =>
-        this.router.navigate(["/idcard", this.idType, this.idString])
-      )
-      .catch(e => {
+    this.consentService.editConsent(this.dataModel, force || false).subscribe(() =>
+        this.router.navigate(["/idcard", this.idType, this.idString]),
+      e => {
         if (e instanceof MainzellisteError && e.errorMessage == ErrorMessages.CREATE_CONSENT_REJECTED) {
           this.openConsentRejectedDialog();
         } else if (e instanceof MainzellisteError && e.errorMessage == ErrorMessages.CREATE_CONSENT_INACTIVE) {

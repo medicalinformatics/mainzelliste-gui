@@ -79,7 +79,7 @@ export class IdcardComponent implements OnInit {
   private loadConsents() {
     this.loadingConsents = true;
     this.consents = []
-    this.consentService.getConsents(this.idType, this.idString).then(dataModels => {
+    this.consentService.getConsents(this.idType, this.idString).subscribe(dataModels => {
           dataModels.forEach(m => {
             //map period
             let period = "unbegrenzt";
@@ -129,7 +129,7 @@ export class IdcardComponent implements OnInit {
     dialogRef.afterClosed().subscribe(consent => {
       if (consent) {
         consent.patientId = {idType: this.idType, idString: this.idString};
-        this.consentService.addConsent(consent).then(e => this.loadConsents());
+        this.consentService.addConsent(consent).subscribe(e => this.loadConsents());
       }
     });
   }

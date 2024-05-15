@@ -9,12 +9,12 @@ import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
 import {ErrorNotificationService} from "../../services/error-notification.service";
 import {GlobalTitleService} from "../../services/global-title.service";
 import {Observable, of} from "rxjs";
-import {concatMap, map, retryWhen, startWith, switchMap} from "rxjs/operators";
+import {concatMap, map, mergeMap, retryWhen, startWith, switchMap} from "rxjs/operators";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MainzellisteError} from "../../model/mainzelliste-error.model";
 import {ErrorMessages} from "../../error/error-messages";
 import {UserAuthService} from "../../services/user-auth.service";
-import { TranslateService } from '@ngx-translate/core';
+import {TranslateService} from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../../consent/consent-dialog/consent-dialog.component";
 import {Consent} from "../../consent/consent.model";
 import {ConsentService} from "../../consent/consent.service";
@@ -126,12 +126,16 @@ export class CreatePatientComponent  implements OnInit {
             throw e;
           })
         )
-      )
-    ).toPromise().then(newId => {
-      if(this.consent){
-        this.consent.patientId = newId;
-        this.consentService.addConsent(this.consent).then();
-      } this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
+      ),
+      mergeMap( newId => {
+        if(this.consent){
+          this.consent.patientId = newId;
+          return this.consentService.addConsent(this.consent).pipe(map( c => newId));
+        } else
+          return of(newId);
+      })
+    ).subscribe(newId => {
+      this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
     })
   }
 

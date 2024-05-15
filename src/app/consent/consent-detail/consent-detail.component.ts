@@ -5,6 +5,8 @@ import {MAT_DATE_LOCALE, MatOption} from "@angular/material/core";
 import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "../consent.model";
 import _moment, {Moment} from "moment";
 import {ConsentTemplateFhirWrapper} from "../../model/consent-template-fhir-wrapper";
+import {of} from "rxjs";
+import {map, mergeMap} from "rxjs/operators";
 
 @Component({
   selector: 'app-consent-detail',
@@ -31,7 +33,8 @@ export class ConsentDetailComponent implements OnInit {
 
   ngOnInit(): void {
     // get a list of templates from Mainzelliste as map <id , fhir4.Questionnaire>
-    this.consentService.getConsentTemplates().then(r => this.consentTemplates = r);
+    this.consentService.getConsentTemplates({'_elements': 'id,status,name,title','status': 'active'})
+      .subscribe(r => this.consentTemplates = r);
 
     //reset selection if no template selected
     if ((!this.dataModel || !this.dataModel.id) && (!this.edit && this.templateSelection)) {
@@ -44,10 +47,14 @@ export class ConsentDetailComponent implements OnInit {
    * @param consentTemplateId
    */
   initDataModel(consentTemplateId: string) {
-    this.dataModel = this.consentService.getNewConsentDataModelFromTemplate(
-      this.consentTemplates.get(consentTemplateId));
-    // propagate change to parent component
-    this.dataModelChange.emit(this.dataModel);
+    of(this.consentTemplates.get(consentTemplateId)).pipe(
+      mergeMap( t => this.consentService.getConsentTemplate( t?.definition.id ?? "0")),
+      map( t => this.consentService.getNewConsentDataModelFromTemplate(t))
+    ).subscribe( consentDataModel => {
+      this.dataModel = consentDataModel;
+      // propagate change to parent component
+      this.dataModelChange.emit(this.dataModel)
+    });
   }
 
   /**
