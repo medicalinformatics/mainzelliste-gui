@@ -2,6 +2,7 @@
   "patientLists": [
     {
       "url": "${MAINZELLISTE_URL}",
+      "defaultLanguage": "${ML_UI_DEFAULT_LANGUAGE}",
       "oAuthConfig": {
         "url": "${KEYCLOAK_URL}",
         "realm": "${KEYCLOAK_REALM}",

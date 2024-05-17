@@ -3,6 +3,7 @@ import {Field, FieldType} from "./field";
 export class PatientList {
   constructor(
     public url: URL,
+    public defaultLanguage: string,
     public oAuthConfig?: OAuthConfig,
     public mainIdType?: string,
     public showAllIds?: boolean,

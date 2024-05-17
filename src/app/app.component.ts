@@ -17,16 +17,12 @@ export class AppComponent implements AfterContentChecked {
   title = 'mainzelliste-gui';
 
   constructor(
-    translate: TranslateService,
     public readonly titleService: GlobalTitleService,
     public readonly errorNotificationService: ErrorNotificationService,
     protected readonly userAuthService: UserAuthService,
     public router: Router,
     private changeDetector: ChangeDetectorRef,
   ) {
-    translate.addLangs(['en-US', 'de-DE']);
-    translate.setDefaultLang('de-DE');
-    translate.use('de-DE');
     (router.events.pipe(
       filter(evt => evt instanceof NavigationStart)
     ) as Observable<NavigationStart>).subscribe(() =>
