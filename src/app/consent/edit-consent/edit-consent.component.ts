@@ -10,6 +10,8 @@ import {ErrorMessages} from "../../error/error-messages";
 import {MatDialog} from "@angular/material/dialog";
 import {ConsentRejectedDialog} from ".././dialogs/consent-rejected-dialog";
 import {ConsentInactivatedDialog} from ".././dialogs/consent-inactivated-dialog";
+import {catchError} from "rxjs/operators";
+import {throwError} from "rxjs";
 
 @Component({
   selector: 'app-edit-consent',
@@ -48,13 +50,16 @@ export class EditConsentComponent implements OnInit {
     this.idType = this.route.snapshot.paramMap.get('idType') ?? "";
     this.idString = this.route.snapshot.paramMap.get('idString') ?? "";
     this.consentId = this.route.snapshot.paramMap.get('id') ?? "";
-    this.consentService.readConsent(this.consentId).then(c => this.dataModel = c);
+    //TODO handle consent not found -> redirect page not found
+    this.consentService.readConsent(this.consentId).subscribe(c => this.dataModel = c);
   }
 
   editConsent(force?: boolean) {
     this.dataModel.patientId = {idType: this.idType, idString: this.idString};
-    this.consentService.editConsent(this.dataModel, force || false).subscribe(() =>
-        this.router.navigate(["/idcard", this.idType, this.idString]),
+    this.consentService.editConsent(this.dataModel, force || false).pipe(
+      catchError(e => throwError(e))
+    ).subscribe(
+      () => this.router.navigate(["/idcard", this.idType, this.idString]),
       e => {
         if (e instanceof MainzellisteError && e.errorMessage == ErrorMessages.CREATE_CONSENT_REJECTED) {
           this.openConsentRejectedDialog();

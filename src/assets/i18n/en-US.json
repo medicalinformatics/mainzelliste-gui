@@ -46,6 +46,8 @@
 	"idcard.title_pseudonyms": "Pseudonyms",
 	"idcard.title_id_card": "ID Card",
 
+  "consent_list.unlimited_period": "unlimited",
+
   "consent_status.draft": "Draft",
   "consent_status.proposed": "Proposed",
   "consent_status.active": "Active",
@@ -209,6 +211,7 @@
 	"error.app_config_service_id_type_mismatch_text3": "' are different",
 	"error.app_module_connect_keycloak": "Failed to connect to Keycloak.",
   "error.create_consent_rejected": "Failed to create consent. Cause: '${1}'",
+  "error.read_consent_failed": "Failed to read consent. Cause: '${1}'",
   "error.create_consent_template_rejected": "Failed to create consent template. Cause: '${1}'",
   "error.read_consent_template_failed": "Failed to read consent template. Cause: '${1}'",
   "error.search_consent_templates_failed": "Failed to find consent templates. Cause: '${1}'",

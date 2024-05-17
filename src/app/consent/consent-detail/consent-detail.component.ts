@@ -3,7 +3,7 @@ import {MatSelect, MatSelectChange} from "@angular/material/select";
 import {ConsentService} from "../consent.service";
 import {MAT_DATE_LOCALE, MatOption} from "@angular/material/core";
 import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "../consent.model";
-import _moment, {Moment} from "moment";
+import _moment from "moment";
 
 @Component({
   selector: 'app-consent-detail',
@@ -19,17 +19,16 @@ export class ConsentDetailComponent implements OnInit {
 
   consentTemplates: Map<string, string>;
   localDateFormat:string;
-  validFrom:Moment
 
   constructor(private consentService: ConsentService,
               @Inject(MAT_DATE_LOCALE) private _locale: string) {
     this.consentTemplates = new Map();
     _moment.locale(this._locale);
     this.localDateFormat = _moment().localeData().longDateFormat('L');
-    this.validFrom = _moment();
   }
 
   ngOnInit(): void {
+    // fetch consent template map <id, title> from backend
     this.consentService.getConsentTemplateTitleMap()
       .subscribe(r => this.consentTemplates = r);
 
@@ -39,10 +38,6 @@ export class ConsentDetailComponent implements OnInit {
     }
   }
 
-  /**
-   * Init data model from the selected consent template
-   * @param consentTemplateId
-   */
   initDataModel(consentTemplateId: MatSelectChange) {
     this.consentService.getNewConsentDataModel(consentTemplateId.value || "0")
     .subscribe( consentDataModel => {
@@ -52,19 +47,10 @@ export class ConsentDetailComponent implements OnInit {
     });
   }
 
-  /**
-   * get default selected consent template from data model
-   */
-  getSelectedTemplate(): string {
-    return this.dataModel?.templateId || "";
-  }
-
   getConsentExpiration(): string {
-    let period = this.dataModel.period;
-    this.validFrom = this.dataModel.validFrom || _moment();
     return this.dataModel.period == 0 ? " für einen unbegrenzten Zeit-Raum" :
       ` bis ${new Date((this.dataModel.validFrom?.toDate().getTime() || 0)
-        + period).toLocaleDateString()}`;
+        + this.dataModel.period).toLocaleDateString()}`;
   }
 
   /** Utils Method **/

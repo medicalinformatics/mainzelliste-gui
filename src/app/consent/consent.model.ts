@@ -1,6 +1,9 @@
 import {Questionnaire} from "fhir/r4";
 import {Moment} from "moment/moment";
 
+/**
+ * model consent dialog
+ */
 export class Consent {
   constructor(
     public title: string,
@@ -14,10 +17,21 @@ export class Consent {
     public validFrom?: Moment,
     public validUntil?: Date,
     public patientId?: { idType: string, idString: string },
-    public fhirResource?: fhir4.Consent,
-    public template?: Questionnaire
+    public fhirResource?: fhir4.Consent
   ) {
   }
+}
+
+/**
+ * model a row in a list of consents
+ */
+export interface ConsentRow {
+  id: string,
+  createdAt: string,
+  title: string,
+  validityPeriod: string,
+  version?: string,
+  status: string
 }
 
 export type ConsentStatus = "draft" | "proposed" | "active" | "rejected" | "inactive" | "entered-in-error";

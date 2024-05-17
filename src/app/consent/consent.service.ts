@@ -4,12 +4,12 @@ import Client from 'fhir-kit-client'
 import {SessionService} from "../services/session.service";
 import {DatePipe} from "@angular/common";
 import {AppConfigService} from "../app-config.service";
-import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "./consent.model";
+import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentRow, ConsentItem, ConsentStatus} from "./consent.model";
 import {FhirResource, SearchParams} from "fhir-kit-client/types/index"
 import {TranslateService} from '@ngx-translate/core';
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessage, ErrorMessages} from "../error/error-messages";
-import _moment from "moment";
+import _moment, {Moment} from "moment";
 import {ConsentTemplateFhirWrapper} from "../model/consent-template-fhir-wrapper";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {ChoiceItem, ConsentTemplate, DisplayItem, Validity} from "./consent-template.model";
@@ -107,21 +107,11 @@ export class ConsentService {
   }
 
   /**
-   * deserialize contained consent resource
-   * @param consentTemplateId consent template id
-   */
-  public getNewConsentDataModel(consentTemplateId: string): Observable<Consent> {
-    return this.getConsentTemplate(consentTemplateId).pipe(
-      map( t => this.deserializeConsentDataModelFrom(t?.definition, undefined))
-    );
-  }
-
-  /**
    * deserialize consent template (fhir Questionnaire resource) and consent fhir resource to ui data model
    * @param questionnaire fhir consent template resource
    * @param fhirConsent fhir consent resource
    */
-  private deserializeConsentDataModelFrom(questionnaire: fhir4.Questionnaire | undefined, fhirConsent: fhir4.Consent | undefined): Consent {
+  private deserializeConsentDataModelFrom(questionnaire: fhir4.Questionnaire, fhirConsent: fhir4.Consent | undefined): Consent {
     if (questionnaire == undefined) {
       this.handleError<any>(this.translate.instant('error.consent_service_questionnaire_not_found'));
       return {
@@ -200,9 +190,18 @@ export class ConsentService {
       items: items,
       status: fhirConsent?.status || "active",
       fhirResource: fhirConsent,
-      templateId: questionnaire?.id || "0",
-      template: questionnaire
+      templateId: questionnaire?.id || "0"
     };
+  }
+
+  /**
+   * deserialize contained consent resource
+   * @param consentTemplateId consent template id
+   */
+  public getNewConsentDataModel(consentTemplateId: string): Observable<Consent> {
+    return this.getConsentTemplate(consentTemplateId).pipe(
+      map( t => this.deserializeConsentDataModelFrom(t, undefined))
+    );
   }
 
   public addConsent(dataModel: Consent): Observable<FhirResource> {
@@ -223,84 +222,61 @@ export class ConsentService {
       return this.updateFhirResource<fhir4.Consent>("editConsent", {}, 'Consent',
         dataModel.fhirResource, {
         'patient:identifier': dataModel.fhirResource.patient.identifier?.system + '|' + dataModel.fhirResource.patient.identifier?.value,
-        'policyUri': 'fhir/Questionnaire/' + dataModel.template?.id});
+        'policyUri': 'fhir/Questionnaire/' + dataModel.templateId});
     }
   }
 
-    public editConsent(dataModel: Consent, force: boolean) {
-      if (dataModel.fhirResource == undefined) {
-          this.handleError<any>(this.translate.instant('error.consent_service_fhir_consent_not_found'));
-          return of({id: "", title: "NOT FOUND", date: new Date(), items: []} as unknown as fhir4.Consent);
-      } else {
+  public editConsent(dataModel: Consent, force: boolean) {
+    if (dataModel.fhirResource == undefined) {
+        this.handleError<any>(this.translate.instant('error.consent_service_fhir_consent_not_found'));
+        return of({id: "", title: "NOT FOUND", date: new Date(), items: []} as unknown as fhir4.Consent);
+    } else {
+      try {
         this.serializeConsentDataModelToFhir(dataModel, force);
-        return this.updateFhirResource<fhir4.Consent>("editConsent", {}, 'Consent', dataModel.fhirResource);
+      } catch (e){
+        return throwError(e);
       }
+      return this.updateFhirResource<fhir4.Consent>("editConsent", {}, 'Consent', dataModel.fhirResource);
     }
-
-  public async readConsent(id: string): Promise<Consent> {
-    if (id == undefined) {
-      this.handleError<any>(this.translate.instant('error.consent_service_fhir_consent_not_found'));
-      return {
-        id: "",
-        title: "NOT FOUND",
-        createdAt: new Date(),
-        validFrom: _moment(),
-        period: 0,
-        items: [],
-        status: "active",
-        templateId: "0"
-      };
-    }
-
-    let consentTemplates: Map<string, fhir4.Questionnaire> = await this.getConsentTemplatesResources().toPromise();
-
-    // create token
-    let token = await this.sessionService.createToken(
-      "readConsent", {}
-    ).toPromise();
-
-    let consentDataModel: Consent;
-    return this.client.read({
-      resourceType: 'Consent', id: id,
-      headers: {'Authorization': 'MainzellisteToken ' + token.id}
-    })
-    .then(resource => {
-      // find template
-      let consent: fhir4.Consent = resource as fhir4.Consent;
-      let templateIds = this.findConsentTemplateId(resource?.policy || []);
-      let template = [...consentTemplates].find(([k, v]) => templateIds.find(tId => tId == k)) || [];
-      // init consent data model
-      consentDataModel = this.deserializeConsentDataModelFrom(template[1], consent);
-      return consentDataModel;
-    })
-    .catch(error => this.handleException(error, consentDataModel));
   }
 
-  public getConsents(idType: string, idString: string): Observable<Consent[]> {
-    return this.getConsentTemplatesResources().pipe(
-      mergeMap( consentTemplates =>
+  public readConsent(id: string): Observable<Consent> {
+    return this.readFhirResources<fhir4.Consent>("readConsent", {}, 'Consent', id,
+      ErrorMessages.READ_CONSENT_FAILED).pipe(
+      mergeMap(c => this.getConsentTemplate(this.findConsentTemplateId(c.policy || [])).pipe(
+        map(t => this.deserializeConsentDataModelFrom(t, c))
+      ))
+    );
+  }
+
+  public getConsents(idType: string, idString: string): Observable<ConsentRow[]> {
+    return this.getConsentTemplateTitleMap().pipe(
+      mergeMap(consentTemplates =>
         this.searchFhirResources<fhir4.Consent>("searchConsents", {},
           'Consent', ErrorMessages.SEARCH_CONSENT_TEMPLATES_FAILED,
-          {'patient:identifier': this.appConfigService.getMainzellisteUrl() + '/id/' + idType + '|' + idString})
+          {
+            'patient:identifier': this.appConfigService.getMainzellisteUrl() + '/id/' + idType + '|' + idString,
+            '_elements': 'id,meta,status,dateTime,policy,provision.period'
+          })
           .pipe(
             map(fhirConsents => {
               return fhirConsents.map(r => {
-                let templateIds = this.findConsentTemplateId(r?.policy ?? []);
-                let template = [...consentTemplates].find(([k, v]) => templateIds.find(id => id == k)) ?? [];
+                let templateId: string = this.findConsentTemplateId(r?.policy ?? []);
                 let endDate = r?.provision?.period?.end;
                 let startDate = r?.provision?.period?.start;
+                let validFrom: string = startDate && startDate.trim().length > 0 ? _moment(startDate).toDate().toLocaleDateString() : "??";
+                let validUntil: Date | undefined = endDate && endDate?.trim().length > 0 ? new Date(endDate) : undefined;
+                let period = this.translate.instant("consent_list.unlimited_period") ;
+                if (validUntil) {
+                  period = validFrom + " - " + new Date(validUntil).toLocaleDateString();
+                }
                 return {
-                  id: r?.id,
-                  title: template[1]?.title ?? "",
-                  createdAt: new Date(r?.dateTime ?? ""),
-                  validFrom: startDate && startDate.trim().length > 0 ? _moment(startDate) : undefined,
-                  validUntil: endDate && endDate.trim().length > 0 ? new Date(endDate) : undefined,
-                  status: r?.status ?? "active",
-                  period: 0,
+                  id: r?.id || "",
+                  title: consentTemplates.get(templateId) ?? "",
+                  createdAt: new Date(r?.dateTime ?? "").toLocaleDateString(),
+                  validityPeriod: period,
                   version: r?.meta?.versionId,
-                  items: [],
-                  fhirResource: r,
-                  templateId: template[1]?.id || "0"
+                  status: this.consentStatusToString(r?.status ?? "active", validUntil)
                 };
               });
             })
@@ -309,18 +285,20 @@ export class ConsentService {
     )
   }
 
-  private findConsentTemplateId(fhirPolicies: fhir4.ConsentPolicy[]): string[] {
-    let results: string[] = [];
-    fhirPolicies.forEach(p => {
-      let uriFragments: string[] = p.uri?.split(new RegExp(`(${this.mainzellisteBaseUrl}|\/?)fhir\/Questionnaire\/`)) ?? [];
-      if (uriFragments.length == 3) {
-        results.push(uriFragments[2]);
-      } else {
-        //TODO throw exception
-        results.push(p.uri ?? "");
-      }
-    });
-    return results;
+  private consentStatusToString(status: ConsentStatus, validUntil?: Date): string {
+    let statusStr = (validUntil != undefined && validUntil.getTime()  < new Date().getTime()) ? "inactive" : status;
+    return this.translate.instant("consent_status." + statusStr);
+  }
+
+  private findConsentTemplateId(fhirPolicies: fhir4.ConsentPolicy[]): string {
+    let results: string[] = fhirPolicies.map( p => p.uri?.split(new RegExp(`(${this.mainzellisteBaseUrl}|\/?)fhir\/Questionnaire\/`)) ?? [])
+      .filter(uriFragments => uriFragments.length == 3)
+      .map(uriFragments => uriFragments[2])
+    if(results.length > 1)
+      throw new Error(`Found multiple consent template references`);
+    else if(results.length == 0)
+      throw new Error(`Template id not found`);
+    return results[0];
   }
 
   public getConsentTemplates(searchParams?: SearchParams): Observable<Map<string, ConsentTemplateFhirWrapper>> {
@@ -398,15 +376,9 @@ export class ConsentService {
       })
   }
 
-  public getConsentTemplate(id: string): Observable<ConsentTemplateFhirWrapper> {
+  public getConsentTemplate(id: string): Observable<fhir4.Questionnaire> {
     return this.readFhirResources<fhir4.Questionnaire>("readConsentTemplate", {}, 'Questionnaire', id,
-      ErrorMessages.READ_CONSENT_TEMPLATE_FAILED).pipe(
-      map(q => new ConsentTemplateFhirWrapper(
-        q.id ?? "",
-        q.name ?? "",
-        q.title ?? "",
-        q))
-    )
+      ErrorMessages.READ_CONSENT_TEMPLATE_FAILED);
   }
 
   public mapConsentTemplate(template:ConsentTemplate): fhir4.Questionnaire {

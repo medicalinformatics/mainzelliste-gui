@@ -13,9 +13,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.component";
 import {ConsentService} from "../consent/consent.service";
 import {Permission} from "../model/permission";
-import {ConsentStatus} from "../consent/consent.model";
-
-export interface ConsentRow {id: string, date:string, title: string, period:string, version?:string, status: string}
+import {ConsentRow, ConsentStatus} from "../consent/consent.model";
 
 @Component({
   selector: 'app-idcard',
@@ -79,33 +77,13 @@ export class IdcardComponent implements OnInit {
   private loadConsents() {
     this.loadingConsents = true;
     this.consents = []
-    this.consentService.getConsents(this.idType, this.idString).subscribe(dataModels => {
-          dataModels.forEach(m => {
-            //map period
-            let period = "unbegrenzt";
-            if (m.validUntil) {
-              period = (!m.validFrom ? "??" : m.validFrom.toDate().toLocaleDateString()) + " - "
-                  + new Date(m.validUntil).toLocaleDateString();
-            }
-
-            this.consents.push({
-              id: m.id!,
-              date: new Date(m.createdAt).toLocaleDateString(),
-              title: m.title,
-              period: period,
-              version: m.version,
-              status: this.consentStatusToString(m.status, m.validUntil)
-            });
-            this.consentTable.renderRows();
-          })
+    this.consentService.getConsents(this.idType, this.idString)
+      .subscribe(dataModels => {
+          this.consents = dataModels;
+          this.consentTable.renderRows();
           this.loadingConsents = false;
         },
         error => this.loadingConsents = false);
-  }
-
-  private consentStatusToString(status: ConsentStatus, validUntil?: Date): string {
-    let statusStr = (validUntil != undefined && validUntil.getTime()  < new Date().getTime()) ? "inactive" : status;
-    return this.translate.instant("consent_status." + statusStr);
   }
 
   async editConsent(row: ConsentRow) {

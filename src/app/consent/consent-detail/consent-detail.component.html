@@ -5,7 +5,7 @@
       <mat-label>{{'consentDetail.consent_template' | translate}}</mat-label>
       <mat-select #templateSelection
                   (selectionChange)="initDataModel($event)"
-                  [value]="getSelectedTemplate()" required>
+                  [value]="this.dataModel?.templateId" required>
         <mat-option *ngFor="let consentTemplate of consentTemplates | keyvalue "
                     [value]="consentTemplate.key">{{consentTemplate.value}}</mat-option>
       </mat-select>
@@ -43,7 +43,7 @@
       <mat-label>{{'consentDetail.validity_date_label' | translate}}</mat-label>
       <input matInput [matDatepicker]="picker"
              placeholder="{{localDateFormat}}"
-             [(ngModel)]="this.validFrom" name="date">
+             [(ngModel)]="this.dataModel.validFrom" name="date">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
