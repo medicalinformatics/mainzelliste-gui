@@ -4,15 +4,15 @@
     <mat-form-field style="width: 400px">
       <mat-label>{{'consentDetail.consent_template' | translate}}</mat-label>
       <mat-select #templateSelection
-                  (selectionChange)="initDataModel(templateSelection.value)"
+                  (selectionChange)="initDataModel($event)"
                   [value]="getSelectedTemplate()" required>
         <mat-option *ngFor="let consentTemplate of consentTemplates | keyvalue "
-                    [value]="consentTemplate.key">{{consentTemplate.value.title}}</mat-option>
+                    [value]="consentTemplate.key">{{consentTemplate.value}}</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
-<!--  <mat-divider *ngIf="dataModel" style="margin-bottom: 1.34375em;  width: 430px"></mat-divider>-->
 </div>
+<mat-divider *ngIf="dataModel" style="margin-bottom: 1.34375em"></mat-divider>
 <mat-card *ngIf="dataModel">
   <h2 style="text-align: center">{{dataModel.title | uppercase}}</h2>
   <div *ngFor="let item of dataModel.items; index as i">

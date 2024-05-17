@@ -8,14 +8,14 @@ export class Consent {
     public period: number,
     public items: ConsentItem[],
     public status: ConsentStatus,
+    public templateId: string,
     public id?: string,
     public version?: string,
     public validFrom?: Moment,
     public validUntil?: Date,
     public patientId?: { idType: string, idString: string },
     public fhirResource?: fhir4.Consent,
-    public templateName?: string,
-    public template?: Questionnaire,
+    public template?: Questionnaire
   ) {
   }
 }

@@ -107,11 +107,13 @@ export class ConsentService {
   }
 
   /**
-   * deserialize consent template (fhir Questionnaire resource) to ui data model
-   * @param template ui template data model
+   * deserialize contained consent resource
+   * @param consentTemplateId consent template id
    */
-  public getNewConsentDataModelFromTemplate(template: ConsentTemplateFhirWrapper | undefined): Consent {
-    return this.deserializeConsentDataModelFrom(template?.definition, undefined);
+  public getNewConsentDataModel(consentTemplateId: string): Observable<Consent> {
+    return this.getConsentTemplate(consentTemplateId).pipe(
+      map( t => this.deserializeConsentDataModelFrom(t?.definition, undefined))
+    );
   }
 
   /**
@@ -129,7 +131,8 @@ export class ConsentService {
         validFrom: _moment(),
         period: 0,
         items: [],
-        status: "active"
+        status: "active",
+        templateId: "0"
       };
     }
 
@@ -197,6 +200,7 @@ export class ConsentService {
       items: items,
       status: fhirConsent?.status || "active",
       fhirResource: fhirConsent,
+      templateId: questionnaire?.id || "0",
       template: questionnaire
     };
   }
@@ -213,22 +217,13 @@ export class ConsentService {
           value: dataModel.patientId?.idString
         }
       }
-      let fhirResource: fhir4.Consent = dataModel.fhirResource;
 
-      //find if consent exist
-      return this.getConsents(dataModel.patientId?.idType!, dataModel.patientId?.idString!).pipe(
-        mergeMap( consents => {
-          let existingConsent = consents.find( c => c.templateName == dataModel.template?.name);
-          if(existingConsent?.fhirResource) {
-            // id consent exist update
-            dataModel.fhirResource = existingConsent.fhirResource;
-            return this.editConsent(dataModel, true);
-          } else {
-            this.serializeConsentDataModelToFhir(dataModel, true);
-            return this.createFhirResource<fhir4.Consent>("addConsent", {}, 'Consent', fhirResource);
-          }
-        })
-      )
+      //conditional update
+      this.serializeConsentDataModelToFhir(dataModel, true);
+      return this.updateFhirResource<fhir4.Consent>("editConsent", {}, 'Consent',
+        dataModel.fhirResource, {
+        'patient:identifier': dataModel.fhirResource.patient.identifier?.system + '|' + dataModel.fhirResource.patient.identifier?.value,
+        'policyUri': 'fhir/Questionnaire/' + dataModel.template?.id});
     }
   }
 
@@ -252,7 +247,8 @@ export class ConsentService {
         validFrom: _moment(),
         period: 0,
         items: [],
-        status: "active"
+        status: "active",
+        templateId: "0"
       };
     }
 
@@ -304,7 +300,7 @@ export class ConsentService {
                   version: r?.meta?.versionId,
                   items: [],
                   fhirResource: r,
-                  templateName: template[0] ?? ""
+                  templateId: template[1]?.id || "0"
                 };
               });
             })
@@ -344,6 +340,17 @@ export class ConsentService {
     );
   }
 
+  public getConsentTemplateTitleMap(): Observable<Map<string, string>> {
+    return this.getConsentTemplatesResources({'_elements': 'id,title', 'status': 'active'})
+      .pipe(
+        map(entries => {
+          let result: Map<string, string> = new Map();
+          entries.forEach((v, k) => result.set(k, v.title ?? ""))
+          return result;
+        })
+      );
+  }
+
   /**
    * return a map of content templates
    */
@@ -353,7 +360,7 @@ export class ConsentService {
       .pipe(
         map(resources => {
           let result = new Map();
-          resources.forEach(r => result.set(r?.name, r!));
+          resources.forEach(r => result.set(r?.id, r!));
           return result;
         })
       );
@@ -427,12 +434,12 @@ export class ConsentService {
         }
       ],
       patient: {
-        "reference": "/fhir/Patient/101"
+        "reference": "Patient/101"
       },
       dateTime: "2020-09-01",
       policy: [
         {
-          uri: `/fhir/Questionnaire/${template.name}`
+          uri: `fhir/Questionnaire/${template.name}`
         }
       ],
       provision: {
@@ -596,8 +603,13 @@ export class ConsentService {
     return this.executeFhirOperation<F>(tokenType, tokenData, resourceType, resource, this.resolveAddFhirResourceToken, "create");
   }
 
-  public updateFhirResource<F extends FhirResource>(tokenType: TokenType, tokenData: TokenData, resourceType: string, resource: F) : Observable<FhirResource> {
-    return this.executeFhirOperation<F>(tokenType, tokenData, resourceType, resource, this.resolveEditFhirResourceToken, "update");
+  public updateFhirResource<F extends FhirResource>(tokenType: TokenType, tokenData: TokenData, resourceType: string,
+                                                    resource: F, searchParams?:SearchParams) : Observable<FhirResource> {
+    return this.sessionService.createToken(tokenType, tokenData)
+      .pipe(
+        mergeMap(token => this.resolveEditFhirResourceToken(token.id, resourceType, resource, searchParams)),
+        catchError((error) => this.handleFailedRequest(resourceType, error, ErrorMessages.CREATE_CONSENT_REJECTED, "update"))
+      )
   }
 
   public readFhirResources<F extends FhirResource>(tokenType: TokenType, tokenData: TokenData, resourceType: string,
@@ -678,10 +690,11 @@ export class ConsentService {
     })
   }
 
-  resolveEditFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, resource: F): Promise<FhirResource | F> => {
+  resolveEditFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, resource: F, searchParams?: SearchParams): Promise<FhirResource | F> => {
     return this.client.update<F>({
-      resourceType: resourceType, id: resource.id, body: resource,
-      headers: {'Authorization': 'MainzellisteToken ' + tokenId}
+      resourceType: resourceType, id: !searchParams? resource.id : undefined, body: resource,
+      headers: {'Authorization': 'MainzellisteToken ' + tokenId},
+      searchParams
     })
   }
 
@@ -693,10 +706,11 @@ export class ConsentService {
     })
   }
 
-  resolveSearchFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, searchParams?:SearchParams): Promise<FhirResource | F> => {
+  resolveSearchFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, searchParams?: SearchParams): Promise<FhirResource | F> => {
     return this.client.search({
-          resourceType: resourceType,
-          headers: {'Authorization': 'MainzellisteToken ' + tokenId}, searchParams
+      resourceType: resourceType,
+      headers: {'Authorization': 'MainzellisteToken ' + tokenId},
+      searchParams
     })
   }
 

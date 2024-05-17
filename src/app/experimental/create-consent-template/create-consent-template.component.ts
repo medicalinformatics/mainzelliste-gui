@@ -348,7 +348,7 @@ export class CreateConsentTemplateComponent implements OnInit {
         }
       ],
       patient: {
-        "reference": "/fhir/Patient/101"
+        "reference": "Patient/101"
       },
       dateTime: "2020-09-01",
       policy: [

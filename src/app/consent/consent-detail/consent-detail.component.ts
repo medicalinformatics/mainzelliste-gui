@@ -1,12 +1,9 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {MatSelect} from "@angular/material/select";
+import {MatSelect, MatSelectChange} from "@angular/material/select";
 import {ConsentService} from "../consent.service";
 import {MAT_DATE_LOCALE, MatOption} from "@angular/material/core";
 import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "../consent.model";
 import _moment, {Moment} from "moment";
-import {ConsentTemplateFhirWrapper} from "../../model/consent-template-fhir-wrapper";
-import {of} from "rxjs";
-import {map, mergeMap} from "rxjs/operators";
 
 @Component({
   selector: 'app-consent-detail',
@@ -15,29 +12,29 @@ import {map, mergeMap} from "rxjs/operators";
 })
 export class ConsentDetailComponent implements OnInit {
 
+  @Input() edit: boolean = false;
   @Input() dataModel!: Consent;
   @Output() dataModelChange = new EventEmitter<Consent>();
-  consentTemplates: Map<string, ConsentTemplateFhirWrapper>;
   @ViewChild('templateSelection') templateSelection!: MatSelect;
-  @Input() edit: boolean = false;
+
+  consentTemplates: Map<string, string>;
   localDateFormat:string;
   validFrom:Moment
 
   constructor(private consentService: ConsentService,
-  @Inject(MAT_DATE_LOCALE) private _locale: string) {
-    _moment.locale(this._locale);
+              @Inject(MAT_DATE_LOCALE) private _locale: string) {
     this.consentTemplates = new Map();
+    _moment.locale(this._locale);
     this.localDateFormat = _moment().localeData().longDateFormat('L');
     this.validFrom = _moment();
   }
 
   ngOnInit(): void {
-    // get a list of templates from Mainzelliste as map <id , fhir4.Questionnaire>
-    this.consentService.getConsentTemplates({'_elements': 'id,status,name,title','status': 'active'})
+    this.consentService.getConsentTemplateTitleMap()
       .subscribe(r => this.consentTemplates = r);
 
     //reset selection if no template selected
-    if ((!this.dataModel || !this.dataModel.id) && (!this.edit && this.templateSelection)) {
+    if (!this.dataModel?.id && (!this.edit && this.templateSelection)) {
       this.templateSelection.options.forEach((data: MatOption) => data.deselect());
     }
   }
@@ -46,11 +43,9 @@ export class ConsentDetailComponent implements OnInit {
    * Init data model from the selected consent template
    * @param consentTemplateId
    */
-  initDataModel(consentTemplateId: string) {
-    of(this.consentTemplates.get(consentTemplateId)).pipe(
-      mergeMap( t => this.consentService.getConsentTemplate( t?.definition.id ?? "0")),
-      map( t => this.consentService.getNewConsentDataModelFromTemplate(t))
-    ).subscribe( consentDataModel => {
+  initDataModel(consentTemplateId: MatSelectChange) {
+    this.consentService.getNewConsentDataModel(consentTemplateId.value || "0")
+    .subscribe( consentDataModel => {
       this.dataModel = consentDataModel;
       // propagate change to parent component
       this.dataModelChange.emit(this.dataModel)
@@ -61,7 +56,7 @@ export class ConsentDetailComponent implements OnInit {
    * get default selected consent template from data model
    */
   getSelectedTemplate(): string {
-    return (this.dataModel && this.dataModel.id != undefined) ? this.dataModel.template?.name || "" : ""
+    return this.dataModel?.templateId || "";
   }
 
   getConsentExpiration(): string {

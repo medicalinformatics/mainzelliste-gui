@@ -208,6 +208,7 @@
 	"error.app_config_service_id_type_mismatch_text2": "' und der konfigurierte Haupt-ID-Typ '",
 	"error.app_config_service_id_type_mismatch_text3": "' sind unterschiedlich",
 	"error.app_module_connect_keycloak": "Verbindung zu Keycloak konnte nicht hergestellt werden.",
+  "error.create_consent_rejected": "Einwilligung konnte nicht erstellt werden. Cause: '${1}'",
   "error.create_consent_template_rejected": "Einwilligungsvorlage konnte nicht erstellt werden. Ursache: '${1}'",
   "error.read_consent_template_failed": "Einwilligungsvorlage konnte nicht gelesen werden. Ursache: '${1}'",
   "error.search_consent_templates_failed": "Einwilligungsvorlagen konnten nicht gefunden werden. Ursache: '${1}'",
