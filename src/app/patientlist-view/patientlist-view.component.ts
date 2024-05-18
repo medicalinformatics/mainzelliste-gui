@@ -4,7 +4,7 @@ import {Patient} from "../model/patient";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
-import {FormControl} from "@angular/forms";
+import {UntypedFormControl} from "@angular/forms";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {Observable, of} from "rxjs";
@@ -38,7 +38,7 @@ export class PatientlistViewComponent implements OnInit {
   pageNumber: number = 100000;
 
   separatorKeysCodes = [ENTER, COMMA] as const;
-  filterCtrl = new FormControl();
+  filterCtrl = new UntypedFormControl();
   @ViewChild('filterInput')
   filterInput!: ElementRef<HTMLInputElement>;
   // configured searching keys : id type and fields

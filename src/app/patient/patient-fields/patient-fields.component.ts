@@ -3,7 +3,7 @@ import {FieldService} from "../../services/field.service";
 import {Field} from "../../model/field";
 import _moment from "moment";
 import {
-  ControlContainer, FormControl,
+  ControlContainer, UntypedFormControl,
   FormGroupDirective,
   NgForm,
   NgModel,
@@ -67,7 +67,7 @@ export class PatientFieldsComponent implements OnInit {
 }
 
 export class DirtyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+  isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     return !!(control && control.invalid && (control.dirty || control.touched));
   }
 }
