@@ -2,7 +2,7 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Patient} from "../../model/patient";
 import {PatientService} from "../../services/patient.service";
 import {Router} from "@angular/router";
-import {UntypedFormControl, NgForm} from "@angular/forms";
+import {FormControl, NgForm} from "@angular/forms";
 import {PatientListService} from "../../services/patient-list.service";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
@@ -35,7 +35,7 @@ export class CreatePatientComponent  implements OnInit {
   public readonly Permission = Permission;
   @Input() fields: Array<string> = [];
 
-  externalIdTypesFormControl = new UntypedFormControl('');
+  externalIdTypesFormControl = new FormControl('');
   @ViewChild('chipList') chipList!: MatChipList;
 
   patient: Patient = new Patient();
@@ -49,7 +49,7 @@ export class CreatePatientComponent  implements OnInit {
   selectedInternalIdTypes: string[] = [];
   /** autocomplete data model */
   filteredInternalIdTypes: Observable<IdTypSelection[]> = of([]);
-  chipListInputCtrl = new UntypedFormControl();
+  chipListInputCtrl = new FormControl();
   chipListInputData: string = "";
 
   externalIdTypes: IdTypSelection[] = [];
@@ -150,7 +150,7 @@ export class CreatePatientComponent  implements OnInit {
     }
 
     // Clear the input value
-    $event.chipInput!.clear();
+    $event.chipInput.clear();
   }
 
   private addInternalIdType(idType: string) {

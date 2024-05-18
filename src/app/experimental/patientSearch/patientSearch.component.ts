@@ -1,6 +1,6 @@
 import {Component, Inject, Injectable, Input, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
-import {FormBuilder, UntypedFormControl, UntypedFormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, UntypedFormGroup} from "@angular/forms";
 import {PatientService} from "../../services/patient.service";
 
 @Component({
@@ -13,8 +13,8 @@ export class PatientSearchComponent implements OnInit {
 
   filterOptions: Array<string> = ["gleich", "nicht gleich", "Beginnt mit", "Endet mit", "Enthält", "Enthält nicht"];
   range = new UntypedFormGroup({
-    start: new UntypedFormControl(),
-    end: new UntypedFormControl(),
+    start: new FormControl(),
+    end: new FormControl(),
   });
 
 
