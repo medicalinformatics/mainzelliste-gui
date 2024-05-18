@@ -13,13 +13,13 @@ import {ScrollingModule} from "@angular/cdk/scrolling";
 import {PatientlistViewComponent} from './patientlist-view/patientlist-view.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatBadgeModule} from "@angular/material/badge";
-import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatPaginatorIntl, MatPaginatorModule} from "@angular/material/paginator";
 import {
-  DateAdapter,
-  ErrorStateMatcher,
-  MAT_DATE_FORMATS,
-  MAT_DATE_LOCALE,
-  MatNativeDateModule
+    DateAdapter,
+    ErrorStateMatcher,
+    MAT_DATE_FORMATS,
+    MAT_DATE_LOCALE,
+    MatNativeDateModule
 } from '@angular/material/core';
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
@@ -33,58 +33,64 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {GlobalErrorHandler} from "./error/global-error-handler";
 import {
-  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
-  MAT_MOMENT_DATE_FORMATS,
-  MomentDateAdapter
+    MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+    MAT_MOMENT_DATE_FORMATS,
+    MomentDateAdapter
 } from "@angular/material-moment-adapter";
 import {ClipboardModule} from "@angular/cdk/clipboard";
-import {from} from "rxjs";
+import {firstValueFrom, from} from "rxjs";
 import {UserAuthService} from "./services/user-auth.service";
 import {NewIdDialog} from './idcard/dialogs/new-id-dialog';
-import { NgxCsvParserModule } from 'ngx-csv-parser';
-import { ProjectIdComponent } from './project-id/project-id.component';
-import { FileSaverModule } from 'ngx-filesaver';
+import {NgxCsvParserModule} from 'ngx-csv-parser';
+import {ProjectIdComponent} from './project-id/project-id.component';
+import {FileSaverModule} from 'ngx-filesaver';
 import {SharedModule} from "./shared/shared.module";
 import {ConsentModule} from "./consent/consent.module";
 import {MainLayoutModule} from "./main-layout/main-layout.module";
 import {PatientModule} from "./patient/patient.module";
 import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.component";
-import { TranslateService } from '@ngx-translate/core';
-import { AccessDeniedComponent } from './access-denied/access-denied.component';
-import { NgxMatFileInputModule } from '@angular-material-components/file-input';
-import { MatStepperModule } from '@angular/material/stepper';
-import { ProjectIdTableComponent } from './project-id/table/table.component';
-import { ProjectIdEmptyFieldsDialog } from './project-id/dialog/project-id-empty-fields-dialog';
+import {TranslateService} from '@ngx-translate/core';
+import {AccessDeniedComponent} from './access-denied/access-denied.component';
+import {NgxMatFileInputModule} from '@angular-material-components/file-input';
+import {MatStepperModule} from '@angular/material/stepper';
+import {ProjectIdTableComponent} from './project-id/table/table.component';
+import {ProjectIdEmptyFieldsDialog} from './project-id/dialog/project-id-empty-fields-dialog';
+import {InternationalizedMatPaginatorIntl} from "./shared/components/paginator/internationalized-mat-paginator-intl";
+import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 
-function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
+function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService,
+                              userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
+  translate.addLangs(['en-US', 'de-DE']);
   return () => configService.init()
-  .then(config => {
-    from(keycloak.keycloakEvents$).subscribe( event => userAuthService.notifyKeycloakEvent(event));
-    return keycloak.init({
-      config: {
-        url: config[0].oAuthConfig?.url ?? "",
-        realm: config[0].oAuthConfig?.realm ?? "",
-        clientId: config[0].oAuthConfig?.clientId ?? ""
-      },
-      loadUserProfileAtStartUp: true,
-      initOptions: {
-        onLoad: 'check-sso',
-        silentCheckSsoRedirectUri:
-          window.location.origin + '/assets/silent-check-sso.html'
-      }
-    })
-    .catch(error => {
-      // find error reason
-      let reason = "";
-      if (error) {
-        reason = error.error?.length > 0 ? " Reason: " + error.error : "";
-      }
-      throw new Error(translate.instant('error.app_module_connect_keycloak') + reason);
-    })
-    .then( isLoggedIn => isLoggedIn ? configService.fetchMainzellisteIdGenerators() : [])
-    .then( idGenerators => idGenerators.length > 0? configService.fetchMainzellisteFields() : [])
-      .then(fields => fields.length > 0 ? configService.fetchVersion() : {});
-  });
+    .then(config => {
+      from(keycloak.keycloakEvents$).subscribe(event => userAuthService.notifyKeycloakEvent(event));
+      translate.setDefaultLang(config[0].defaultLanguage || "en-US");
+      return firstValueFrom(translate.use(translate.getDefaultLang()))
+        .then(() => keycloak.init({
+          config: {
+            url: config[0].oAuthConfig?.url ?? "",
+            realm: config[0].oAuthConfig?.realm ?? "",
+            clientId: config[0].oAuthConfig?.clientId ?? ""
+          },
+          loadUserProfileAtStartUp: true,
+          initOptions: {
+            onLoad: 'check-sso',
+            silentCheckSsoRedirectUri:
+              window.location.origin + '/assets/silent-check-sso.html'
+          }
+        }).catch(error => {
+          // find error reason
+          let reason = "";
+          if (error) {
+            reason = error.error?.length > 0 ? " Reason: " + error.error : "";
+          }
+          throw new Error(translate.instant('error.app_module_connect_keycloak') + reason);
+        }))
+        .then(isLoggedIn => isLoggedIn ? configService.fetchMainzellisteIdGenerators() : [])
+        .then(idGenerators => idGenerators.length > 0 ? configService.fetchMainzellisteFields() : [])
+        .then(fields => fields.length > 0 ? configService.fetchClaims() : [])
+        .then(claims => claims.length > 0 ? configService.fetchVersion() : {});
+    });
 }
 
 @NgModule({
@@ -98,6 +104,7 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     LogoutComponent,
     NewIdDialog,
     AccessDeniedComponent,
+    PageNotFoundComponent,
     ProjectIdComponent,
     ProjectIdTableComponent,
     ProjectIdEmptyFieldsDialog
@@ -117,7 +124,6 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     MatNativeDateModule,
     MatTableModule,
     MatCheckboxModule,
-    MatCheckboxModule,
     MatTooltipModule,
     HttpClientModule,
     KeycloakAngularModule,
@@ -131,11 +137,12 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     MatStepperModule
   ],
   providers: [
+    {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
     {
       provide: APP_INITIALIZER,
       useFactory: initializeAppFactory,
-      deps: [AppConfigService, KeycloakService, UserAuthService],
+      deps: [AppConfigService, KeycloakService, UserAuthService, TranslateService],
       multi: true
     },
     {provide: ErrorHandler, useClass: GlobalErrorHandler},

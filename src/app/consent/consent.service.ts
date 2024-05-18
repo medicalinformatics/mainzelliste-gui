@@ -6,7 +6,10 @@ import {DatePipe} from "@angular/common";
 import {AppConfigService} from "../app-config.service";
 import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "./consent.model";
 import {ConsentTemplate} from "./consent-template.model";
-import { TranslateService } from '@ngx-translate/core';
+import {TranslateService} from '@ngx-translate/core';
+import {MainzellisteError} from "../model/mainzelliste-error.model";
+import {ErrorMessages} from "../error/error-messages";
+import _moment from "moment";
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +22,7 @@ export class ConsentService {
   constructor(
     private sessionService: SessionService,
     private appConfigService: AppConfigService,
-    private translate: TranslateService       
+    private translate: TranslateService
   ) {
     this.mainzellisteBaseUrl = this.appConfigService.data[0].url.toString();
     this.client = new Client({baseUrl: this.mainzellisteBaseUrl + "/fhir"});
@@ -33,7 +36,7 @@ export class ConsentService {
    * serialize ui change in consent fhir resource
    * @param dataModel
    */
-  public serializeConsentDataModelToFhir(dataModel: Consent) {
+  public serializeConsentDataModelToFhir(dataModel: Consent, force: boolean) {
     if (dataModel.fhirResource) {
       //set fhir consent date
       let datePipe: DatePipe = new DatePipe('en-US');
@@ -43,19 +46,20 @@ export class ConsentService {
       let period = dataModel.fhirResource?.provision?.period;
       if (period == undefined || !period.end || period.end.trim().length < 1) {
         dataModel.fhirResource.provision!.period = {
-          start: datePipe.transform(dataModel.validFrom, 'yyyy-MM-dd') || undefined
+          start: datePipe.transform(dataModel.validFrom?.toDate(), 'yyyy-MM-dd') || undefined
         }
       } else {
         let periodAsDate = 0;
         if ((period.start && period.start.trim().length > 0))
           periodAsDate = new Date(period.end).getTime() - new Date(period.start).getTime();
         dataModel.fhirResource.provision!.period = {
-          start: datePipe.transform(dataModel.validFrom, 'yyyy-MM-dd') || undefined,
-          end: datePipe.transform(new Date((dataModel.validFrom?.getTime() || 0) + periodAsDate), 'yyyy-MM-dd') || undefined
+          start: datePipe.transform(dataModel.validFrom?.toDate(), 'yyyy-MM-dd') || undefined,
+          end: datePipe.transform(new Date((dataModel.validFrom?.toDate().getTime() || 0) + periodAsDate), 'yyyy-MM-dd') || undefined
         }
       }
 
       //set fhir consent provisions from ui data model
+      let rejected = true;
       dataModel.items.filter(i => i instanceof ConsentChoiceItem)
       .map(i => i as ConsentChoiceItem).forEach(i => {
         if (!dataModel.fhirResource?.provision) {
@@ -68,10 +72,25 @@ export class ConsentService {
           });
           // set provision type : denied or permit
           if (provision) {
+            if(i.answer == "permit")
+              rejected = false;
             provision.type = i.answer;
           }
         }
       })
+
+      //set status
+      if (rejected) {
+        if (!force)
+          throw new MainzellisteError(ErrorMessages.CREATE_CONSENT_REJECTED);
+        dataModel.fhirResource.status = "rejected";
+      } else if (dataModel.fhirResource?.provision?.period.end != undefined
+        && new Date(dataModel.fhirResource?.provision?.period.end).getTime() < new Date().getTime()) {
+        if (!force)
+          throw new MainzellisteError(ErrorMessages.CREATE_CONSENT_INACTIVE);
+        dataModel.fhirResource.status = "inactive";
+      } else
+        dataModel.fhirResource.status = "active";
     }
   }
 
@@ -95,9 +114,10 @@ export class ConsentService {
         id: "",
         title: "NOT FOUND",
         createdAt: new Date(),
-        validFrom: new Date(),
+        validFrom: _moment(),
         period: 0,
-        items: []
+        items: [],
+        status: "active"
       };
     }
 
@@ -146,14 +166,14 @@ export class ConsentService {
     // calculate period from consent resource
     let fhirPeriod = fhirConsent?.provision?.period;
     let period;
-    let validFrom = new Date();
+    let validFrom = _moment();
     if (fhirPeriod == undefined || !fhirPeriod.end || fhirPeriod.end.trim().length < 1) {
       period = 0;
     } else if ((!fhirPeriod.start || fhirPeriod.start.trim().length < 1)) {
-      period = new Date(fhirPeriod.end).getTime() - validFrom.getTime();
+      period = new Date(fhirPeriod.end).getTime() - validFrom.toDate().getTime();
     } else {
-      validFrom = !initNewDataModel ? new Date(fhirPeriod.start) : validFrom;
-      period = new Date(fhirPeriod.end).getTime() - validFrom.getTime();
+      validFrom = !initNewDataModel ? _moment(fhirPeriod.start) : validFrom;
+      period = new Date(fhirPeriod.end).getTime() - validFrom.toDate().getTime();
     }
 
     return {
@@ -163,6 +183,7 @@ export class ConsentService {
       validFrom: validFrom,
       period: period,
       items: items,
+      status: fhirConsent?.status || "active",
       fhirResource: fhirConsent,
       template: questionnaire
     };
@@ -181,7 +202,7 @@ export class ConsentService {
     if(existingConsent && existingConsent.fhirResource){
       // id consent exist update
       dataModel.fhirResource = existingConsent.fhirResource;
-      return this.editConsent(dataModel);
+      return this.editConsent(dataModel, true);
     } else {
       // set patient id
       dataModel.fhirResource.patient = {
@@ -192,7 +213,7 @@ export class ConsentService {
       }
     }
 
-    this.serializeConsentDataModelToFhir(dataModel);
+    this.serializeConsentDataModelToFhir(dataModel, true);
 
     // create token
     let token = await lastValueFrom(this.sessionService.createToken(
@@ -207,14 +228,14 @@ export class ConsentService {
     .catch(error => this.handleException(error, undefined));
   }
 
-  public async editConsent(dataModel: Consent) {
+  public async editConsent(dataModel: Consent, force: boolean) {
 
     if (dataModel.fhirResource == undefined) {
       this.handleError<any>(this.translate.instant('error.consent_service_fhir_consent_not_found'));
       return {id: "", title: "NOT FOUND", date: new Date(), items: []};
     }
 
-    this.serializeConsentDataModelToFhir(dataModel);
+    this.serializeConsentDataModelToFhir(dataModel, force);
 
     // create token
     let token = await lastValueFrom(this.sessionService.createToken(
@@ -236,9 +257,10 @@ export class ConsentService {
         id: "",
         title: "NOT FOUND",
         createdAt: new Date(),
-        validFrom: new Date(),
+        validFrom: _moment(),
         period: 0,
-        items: []
+        items: [],
+        status: "active"
       };
     }
 
@@ -293,8 +315,9 @@ export class ConsentService {
           id: r.resource?.id,
           title: template[1]?.title || "",
           createdAt: new Date(r.resource?.dateTime || ""),
-          validFrom: startDate && startDate.trim().length > 0 ? new Date(startDate) : undefined,
+          validFrom: startDate && startDate.trim().length > 0 ? _moment(startDate) : undefined,
           validUntil: endDate && endDate.trim().length > 0 ? new Date(endDate) : undefined,
+          status: r.resource?.status || "active",
           period: 0,
           version: r.resource?.meta?.versionId,
           items: [],

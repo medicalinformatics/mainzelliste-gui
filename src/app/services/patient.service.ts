@@ -7,6 +7,7 @@ import {Observable} from "rxjs";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessages} from "../error/error-messages";
 import {Id} from "../model/id";
+import {Operation} from "../model/tenant";
 
 @Injectable({
   providedIn: 'root'
@@ -349,15 +350,15 @@ export class PatientService {
     return this.patientListService.addPatient(patient, idTypes, sureness);
   }
 
-  async deletePatient(patient: Patient){
-     this.patientListService.deletePatient(patient).then().catch(error => {console.log(error)})
+  deletePatient(patient: Patient){
+     return this.patientListService.deletePatient(patient);
   }
 
-  getConfiguredFields(): Array<Field> {
-    return this.patientListService.getConfiguredFields();
+  getConfiguredFields(operation: Operation): Array<Field> {
+    return this.patientListService.getConfiguredFields(operation);
   }
 
   getConfigureIdTypes(): Array<string> {
-    return this.patientListService.getIdTypes();
+    return this.patientListService.getIdTypes("R");
   }
 }

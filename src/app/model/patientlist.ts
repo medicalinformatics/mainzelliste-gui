@@ -3,8 +3,8 @@ import {Field, FieldType} from "./field";
 export class PatientList {
   constructor(
     public url: URL,
+    public defaultLanguage: string,
     public oAuthConfig?: OAuthConfig,
-    public roles: Role[] = [],
     public mainIdType?: string,
     public showAllIds?: boolean,
     public fields: Array<Field> = [
@@ -26,15 +26,9 @@ export interface OAuthConfig {
   clientId: string;
 }
 
-export interface Role {
-  name: string,
-  permissions: Permission[];
-}
-
-export type Permission = "addPatient" | "readPatients" | "editPatient" | "deletePatient" | "createIds" | "addConsent" | "searchConsents" | "readConsent" |  "editConsent";
-
-
 export interface BetaFeatures {
   consent?: boolean;
+  copyConcatenatedId?: boolean
+  copyId?: boolean
 }
 

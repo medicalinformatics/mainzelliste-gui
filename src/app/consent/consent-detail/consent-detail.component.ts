@@ -59,9 +59,9 @@ export class ConsentDetailComponent implements OnInit {
 
   getConsentExpiration(): string {
     let period = this.dataModel.period;
-    this.dataModel.validFrom = this.validFrom.toDate();
+    this.validFrom = this.dataModel.validFrom || _moment();
     return this.dataModel.period == 0 ? " für einen unbegrenzten Zeit-Raum" :
-      ` bis ${new Date((this.dataModel.validFrom?.getTime() || 0)
+      ` bis ${new Date((this.dataModel.validFrom?.toDate().getTime() || 0)
         + period).toLocaleDateString()}`;
   }
 

@@ -12,8 +12,13 @@ import {NewIdDialog} from './dialogs/new-id-dialog';
 import {TranslateService} from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.component";
 import {ConsentService} from "../consent/consent.service";
+import {Permission} from "../model/permission";
+import {ConsentStatus} from "../consent/consent.model";
+import {HttpErrorResponse} from "@angular/common/http";
+import {throwError} from "rxjs";
+import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 
-export interface ConsentRow {id: string, date:string, title: string, period:string, version?:string}
+export interface ConsentRow {id: string, date:string, title: string, period:string, version?:string, status: string}
 
 @Component({
   selector: 'app-idcard',
@@ -22,11 +27,12 @@ export interface ConsentRow {id: string, date:string, title: string, period:stri
 })
 
 export class IdcardComponent implements OnInit {
+  public readonly Permission = Permission;
 
   public idString: string = "";
   public idType: string = "";
   public patient: Patient = new Patient();
-  public displayedConsentColumns: string[] = ['date', 'title', 'period', 'version'];
+  public displayedConsentColumns: string[] = ['date', 'title', 'period', 'version', 'status'];
   public consents: ConsentRow[] = [];
   @ViewChild('consentTable') consentTable!: MatTable<ConsentRow>;
   public loadingConsents: boolean = false;
@@ -43,6 +49,7 @@ export class IdcardComponent implements OnInit {
     public newIdDialog: MatDialog,
     public consentService: ConsentService
   ) {
+      //TODO ?????
     this.router.routeReuseStrategy.shouldReuseRoute = () => {
       return false;
     };
@@ -71,9 +78,17 @@ export class IdcardComponent implements OnInit {
   }
 
   private loadPatient() {
-    this.patientListService.readPatient(new Id(this.idType, this.idString)).then(patients => {
-      this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
-    });
+    this.patientListService.readPatient(new Id(this.idType, this.idString), "R")
+      .then(
+        patients => {
+          this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
+        })
+      .catch(e => {
+        if (e instanceof HttpErrorResponse && (e.status == 404)) {
+          this.router.navigate(['/**']).then();
+        }
+        return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_add_patient_token'), e, this.translate))
+      });
   }
 
   private loadConsents() {
@@ -84,7 +99,7 @@ export class IdcardComponent implements OnInit {
             //map period
             let period = "unbegrenzt";
             if (m.validUntil) {
-              period = (!m.validFrom ? "??" : new Date(m.validFrom).toLocaleDateString()) + " - "
+              period = (!m.validFrom ? "??" : m.validFrom.toDate().toLocaleDateString()) + " - "
                   + new Date(m.validUntil).toLocaleDateString();
             }
 
@@ -93,7 +108,8 @@ export class IdcardComponent implements OnInit {
               date: new Date(m.createdAt).toLocaleDateString(),
               title: m.title,
               period: period,
-              version: m.version
+              version: m.version,
+              status: this.consentStatusToString(m.status, m.validUntil)
             });
             this.consentTable.renderRows();
           })
@@ -102,13 +118,17 @@ export class IdcardComponent implements OnInit {
         error => this.loadingConsents = false);
   }
 
+  private consentStatusToString(status: ConsentStatus, validUntil?: Date): string {
+    let statusStr = (validUntil != undefined && validUntil.getTime()  < new Date().getTime()) ? "inactive" : status;
+    return this.translate.instant("consent_status." + statusStr);
+  }
+
   async editConsent(row: ConsentRow) {
     await this.router.navigate(["patient", this.idType, this.idString, 'edit-consent', row.id]);
   }
 
-  async deletePatient() {
-    await this.patientService.deletePatient(this.patient)
-    .then(() => this.router.navigate(['/patientlist']).then());
+  deletePatient() {
+    this.patientService.deletePatient(this.patient).then(() => this.router.navigate(['/patientlist']).then());
   }
 
   generateId(newIdType: string) {
@@ -151,7 +171,7 @@ hasAllIds(): boolean {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result)
-        this.deletePatient().then();
+        this.deletePatient();
     });
   }
 }

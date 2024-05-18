@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {KeycloakEvent, KeycloakEventType, KeycloakService} from "keycloak-angular";
 import {SessionService} from "./session.service";
 import {mergeMap} from "rxjs/operators";
-import { lastValueFrom } from "rxjs";
+import {firstValueFrom, lastValueFrom} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -44,7 +44,7 @@ export class UserAuthService {
   }
 
   async logout() {
-    return await this.keycloak.logout().then( () => this.sessionService.deleteSession().toPromise());
+    return await this.keycloak.logout().then( () => firstValueFrom(this.sessionService.deleteSession()));
   }
 
   public getUserName(): string {

@@ -1,4 +1,5 @@
 {
+	"EMPTY": "",
 	"button_add_consent": "Add consent",
   	"button_generate_id": "Generate",
 	"button_delete": "Delete",
@@ -9,7 +10,7 @@
 	"button_edit_patient": "Edit patient data",
 	"button_id_card": "ID Card",
 	"button_add": "Add",
-	"button_save_new_id": "Save new ID",
+	"button_save_new_id": "Generate",
 	"button_correct": "Correct",
 	"button_confirm": "Confirm",
 	"button_stepper_next": "Next",
@@ -45,11 +46,22 @@
 	"idcard.consent_title": "Consents",
 	"idcard.consent_validity_period": "Validity period",
 	"idcard.consent_version": "Version",
+  "idcard.consent_status": "Status",
 	"idcard.title_patient_data": "Patient data",
 	"idcard.title_pseudonyms": "Pseudonyms",
 	"idcard.title_id_card": "ID Card",
 
-	"navigation.info": "Info",
+    "consent_status.draft": "Draft",
+    "consent_status.proposed": "Proposed",
+    "consent_status.active": "Active",
+    "consent_status.rejected": "Rejected",
+    "consent_status.inactive": "Inactive",
+    "consent_status.entered-in-error": "Error",
+
+    "add_consent.rejected-dialog-text": "All consent modules were rejected. The consent status is automatically set as Rejected",
+    "add_consent.inactivated-dialog-text": "The end of the Timeframe of this consent is in the past. The consent status is automatically set as Inactive",
+
+    "navigation.info": "Info",
 	"navigation.new_patient": "New patient",
 	"navigation.patientlist": "Patient list",
 	"navigation.project_id": "Project-Ids",
@@ -59,6 +71,15 @@
 	"patientlist.no_patient_found": "No patient found.",
 	"patientlist.search_placeholder": "Search...",
 
+	"patientlist_view.paginator_current_page_label_text1": "Page",
+	"patientlist_view.paginator_current_page_label_text2": "of",
+	"patientlist_view.paginator_item_number_label": "Items per page:",
+	"patientlist_view.paginator_next_page_label": "Next page",
+	"patientlist_view.paginator_previous_page_label": "Previous page",
+	"patientlist_view.paginator_first_page_label": "First page",
+	"patientlist_view.paginator_last_page_label": "Last page",
+
+  "session.tenancy": "Projects",
 	"session.language_english": "English",
 	"session.language_german": "German",
 	"session.menu_language": "Language",
@@ -150,7 +171,9 @@
 	"error.edit_patient_conflict_ext_ids_idat_multiple_match": "Patient could not be edited because the IDAT entered was assigned to different patients",
 	"error.edit_patient_conflict_possible_match": "A similar patient was found for the data entered, but he cannot be assigned with sufficient certainty. To avoid any confusion, please check your entry again",
 	"error.edit_patient_conflict_match": "A patient was found for the data entered. To avoid any confusion, please check your entry again",
-	"error.resolve_create_id_token": "ResolveCreateIdTokenError",
+  "error.delete_patient_not_found": "Patient not found",
+
+  "error.resolve_create_id_token": "ResolveCreateIdTokenError",
 	"error.consent_service_fhir_consent_template": "Contained fhir consent template contain no provisions",
 	"error.consent_service_questionnaire_not_found": "Questionnaire not found",
 	"error.consent_service_consent_resource_not_found": "Contained consent resource not found",
@@ -197,6 +220,9 @@
 
   "access_denied.title": "Access Denied",
   "access_denied.message": "you do not have permission to view this page",
+
+  "page_not_found.title": "Page not found",
+  "page_not_found.message": "The page you were looking for could not be found",
 
 	"patientlistView.title": "Patient list",
 

@@ -18,6 +18,8 @@ import { TranslateService } from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../../consent/consent-dialog/consent-dialog.component";
 import {Consent} from "../../consent/consent.model";
 import {ConsentService} from "../../consent/consent.service";
+import {Permission} from "../../model/permission";
+import {Operation} from "../../model/tenant";
 
 export interface IdTypSelection {
   idType: string,
@@ -30,6 +32,7 @@ export interface IdTypSelection {
   styleUrls: ['./create-patient.component.css']
 })
 export class CreatePatientComponent implements OnInit {
+  public readonly Permission = Permission;
   @Input() fields: Array<string> = [];
 
   externalIdTypesFormControl = new FormControl('');
@@ -41,7 +44,7 @@ export class CreatePatientComponent implements OnInit {
   userAuthService : UserAuthService;
   consent?: Consent;
 
-  internalIdTypes: IdTypSelection[] = [];
+  internalIdTypeSelection: IdTypSelection[] = [];
   /** selected chip data model */
   selectedInternalIdTypes: string[] = [];
   /** autocomplete data model */
@@ -74,12 +77,13 @@ export class CreatePatientComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.selectedInternalIdTypes.push(this.patientListService.getMainIdType());
+    let internalIdTypes  = this.patientListService.getInternalTypes( "C");
+    let mainIdType = this.patientListService.findDefaultIdType(internalIdTypes);
+    this.selectedInternalIdTypes.push(mainIdType);
 
-    this.internalIdTypes = this.patientListService.getIdGenerators()
-    .filter(g => !g.isExternal)
-    .map(g => {
-      return {idType: g.idType, added: this.patientListService.getMainIdType() == g.idType}
+    this.internalIdTypeSelection = internalIdTypes
+    .map(t => {
+      return {idType: t, added: mainIdType == t}
     });
 
     this.filteredInternalIdTypes = this.chipListInputCtrl.valueChanges.pipe(
@@ -90,7 +94,7 @@ export class CreatePatientComponent implements OnInit {
           searchValue = "";
         else if (typeof searchValue !== "string")
           searchValue = value.idType
-        return this.internalIdTypes
+        return this.internalIdTypeSelection
         .filter(e => !e.added && e.idType.toLowerCase().includes(searchValue.toLowerCase()))
       }),
     );
@@ -146,7 +150,7 @@ export class CreatePatientComponent implements OnInit {
     }
 
     // Clear the input value
-    $event.chipInput!.clear();
+    $event.chipInput.clear();
   }
 
   private addInternalIdType(idType: string) {
@@ -160,10 +164,14 @@ export class CreatePatientComponent implements OnInit {
     }
   }
 
+  getExternalIdTypes(permittedOperation: Operation): string[] {
+    return this.patientListService.getIdGenerators(true, permittedOperation).map(g => g.idType);
+  }
+
   removeInternalIdType(idType: string) {
     const value = (idType || '').trim();
 
-    this.internalIdTypes
+    this.internalIdTypeSelection
     .filter(e => e.idType == value)
     .forEach(e => {
       e.added = false;
@@ -179,7 +187,7 @@ export class CreatePatientComponent implements OnInit {
   }
 
   private findIdType(idType: string): IdTypSelection | undefined {
-    return this.internalIdTypes.find(e => e.idType == idType && !e.added);
+    return this.internalIdTypeSelection.find(e => e.idType == idType && !e.added);
   }
 
   openCreatePatientTentativeDialog(): void {

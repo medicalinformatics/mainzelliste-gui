@@ -4,6 +4,8 @@ import {IdTypSelection} from "../create-patient/create-patient.component";
 import {ControlContainer, NgForm} from "@angular/forms";
 import {Id} from "../../model/id";
 import {ExternalPseudonymsComponent} from "../external-pseudonyms/external-pseudonyms.component";
+import {AppConfigService} from "../../app-config.service";
+import {Operation} from "../../model/tenant";
 
 @Component({
   selector: 'app-patient-pseudonyms',
@@ -13,12 +15,12 @@ import {ExternalPseudonymsComponent} from "../external-pseudonyms/external-pseud
 })
 
 export class PatientPseudonymsComponent{
-  private patientListService: PatientListService;
   @Input() ids: Array<Id> = [];
 
   @Input() fields: { [key: string]: any } = {};
   @Input() readOnly: boolean = false;
   @Input() side: string = "none";
+  @Input() permittedOperation?: Operation;
 
   @Output() slideFieldEvent = new EventEmitter<{ name: string, value: string }>();
   @Output() pseudonymEvent = new EventEmitter<{ name: string, value: string }>();
@@ -28,8 +30,10 @@ export class PatientPseudonymsComponent{
   internalIdTypes: IdTypSelection[] = [];
   externalIdTypes: string[] = [];
 
-  constructor(patientListService: PatientListService) {
-    this.patientListService = patientListService;
+  constructor(
+    private patientListService: PatientListService,
+    public config: AppConfigService
+  ) {
   }
 
   slideData(value: string, name: string): void {
@@ -39,8 +43,7 @@ export class PatientPseudonymsComponent{
   getInternalIdTypes(): IdTypSelection[] {
     if (this.internalIdTypes.length == 0) {
       //init.
-      this.internalIdTypes = this.patientListService.getIdGenerators()
-      .filter(g => !g.isExternal)
+      this.internalIdTypes = this.patientListService.getIdGenerators(false, "R")
       .map(g => {
         return {idType: g.idType, added: false}
       });
@@ -55,8 +58,7 @@ export class PatientPseudonymsComponent{
   getExternalIdTypes(): string[] {
     //init.
     if (this.externalIdTypes.length == 0) {
-      this.externalIdTypes = this.patientListService.getIdGenerators()
-      .filter(g => g.isExternal)
+      this.externalIdTypes = this.patientListService.getIdGenerators(true, this.permittedOperation)
       .map(g => g.idType);
     }
     return this.externalIdTypes;
@@ -66,5 +68,9 @@ export class PatientPseudonymsComponent{
     return this.ids.filter(id =>
       this.getExternalIdTypes().some(idType => idType == id.idType)
     );
+  }
+
+  public getConcatenated(id: Id): string {
+    return id.idType + "." + id.idString;
   }
 }

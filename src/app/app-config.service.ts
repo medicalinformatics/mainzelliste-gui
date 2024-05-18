@@ -1,13 +1,14 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {OAuthConfig, PatientList, Role} from "./model/patientlist";
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {OAuthConfig, PatientList} from "./model/patientlist";
 import {AppConfig} from "./app-config";
 import {catchError, map} from "rxjs/operators";
-import {throwError, lastValueFrom} from "rxjs";
+import {firstValueFrom, lastValueFrom, throwError} from "rxjs";
 import {MainzellisteField, MainzellisteFieldType} from "./model/mainzelliste-field";
 import {Field, FieldType} from "./model/field";
-import { MainzellisteUnknownError } from './model/mainzelliste-unknown-error';
-import { TranslateService } from '@ngx-translate/core';
+import {MainzellisteUnknownError} from './model/mainzelliste-unknown-error';
+import {TranslateService} from '@ngx-translate/core';
+import {ClaimsConfig} from "./model/api/configuration-claims-data";
 
 export interface IdGenerator {
   name: string,
@@ -23,8 +24,11 @@ export class AppConfigService {
   private mainzellisteIdGenerators: IdGenerator[] = [];
   private mainzellisteIdTypes: string[] = [];
   private mainzellisteFields: string[] = [];
+  private mainzellisteClaims: ClaimsConfig[] = [];
   private version: string = "";
   private consentEnabled: boolean = false;
+  private copyConcatenatedIdEnabled: boolean = false;
+  private copyIdEnabled: boolean = false;
 
   constructor(
     private httpClient: HttpClient,
@@ -47,6 +51,8 @@ export class AppConfigService {
 
           // init feature toggle
           this.consentEnabled = this.data[0].betaFeatures?.consent ?? false;
+          this.copyConcatenatedIdEnabled = this.data[0].betaFeatures?.copyConcatenatedId ?? false;
+          this.copyIdEnabled = this.data[0].betaFeatures?.copyId ?? false;
 
           //start validation
           this.validateBackendUrl(this.data[0])
@@ -65,12 +71,16 @@ export class AppConfigService {
     return this.consentEnabled;
   }
 
-  getMainzellisteIdTypes(): string[] {
-    return this.mainzellisteIdTypes;
+  isCopyConcatenatedIdEnabled(): boolean {
+    return this.copyConcatenatedIdEnabled;
   }
 
-  getMainzellisteExternalIdTypes(): string[] {
-    return this.mainzellisteIdGenerators.filter( g => g.isExternal).map( g => g.idType);
+  isCopyIdEnabled(): boolean {
+    return this.copyIdEnabled;
+  }
+
+  getMainzellisteIdTypes(): string[] {
+    return this.mainzellisteIdTypes;
   }
 
   getMainzellisteIdGenerators(): IdGenerator[] {
@@ -81,16 +91,16 @@ export class AppConfigService {
     return this.mainzellisteFields;
   }
 
+  getMainzellisteClaims(): ClaimsConfig[] {
+    return this.mainzellisteClaims;
+  }
+
   getMainzellisteUrl(): string {
     return this.data[0].url.toString();
   }
 
   isDebugModeEnabled(): boolean {
     return this.data[0].debug != undefined && this.data[0].debug;
-  }
-
-  getRolesWithPermissions(): Role[]{
-    return this.data[0].roles
   }
 
   getVersion(): string {
@@ -133,6 +143,21 @@ export class AppConfigService {
       })
     ));
   }
+
+    public fetchClaims(): Promise<ClaimsConfig[]> {
+      return firstValueFrom(this.httpClient.get<ClaimsConfig[]>(this.data[0].url + "/configuration/claims", {
+              headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2'),
+              params: new HttpParams().set('filter', 'roles').set('merge', true)
+          })
+          .pipe(
+              catchError((e) => throwError(new Error("Can't init claims configurations. Failed to connect " +
+                  "to the backend Endpoint /configuration/claims"))),
+              map(claims => {
+                  this.mainzellisteClaims = claims;
+                  return claims;
+              })
+          ));
+    }
 
   public fetchMainzellisteFields(): Promise<MainzellisteField[]> {
     let fieldEndpointUrl = this.data[0].url + "/configuration/fields";
@@ -180,10 +205,8 @@ export class AppConfigService {
     let idType = idGenerators[0].idType;
 
     //set main id type if the configured value is empty
-    if (AppConfigService.isStringEmpty(config.mainIdType)) {
-      config.mainIdType = idType;
-    } else if (config.mainIdType?.trim() != idType.trim()) {
-      throw new Error(this.translate.instant('error.app_config_service_id_type_mismatch_text1') + idType + this.translate.instant('error.app_config_service_id_type_mismatch_text2') + config.mainIdType + this.translate.instant('error.app_config_service_id_type_mismatch_text3'))
+    if (config.mainIdType != undefined && !idGenerators.some( g => g.idType == config.mainIdType?.trim())) {
+      throw new Error("mainIdType '" + config.mainIdType + "'not configured in the backend, please check your ui configuration");
     }
     return this.translate.instant('appConfigService.main_id_type_valid');
   }
