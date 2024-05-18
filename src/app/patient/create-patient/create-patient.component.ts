@@ -150,7 +150,7 @@ export class CreatePatientComponent  implements OnInit {
     }
 
     // Clear the input value
-    $event.chipInput!.clear();
+    $event.chipInput.clear();
   }
 
   private addInternalIdType(idType: string) {
