@@ -1,6 +1,8 @@
 import {Operation, PermissionType} from "./tenant";
 
 export class Permission {
+  public static readonly DEFAULT = new Permission("default", "R");
+
   public static readonly CREATE_PATIENT = new Permission("patient", "C");
   public static readonly READ_PATIENT = new Permission("patient", "R");
   public static readonly EDIT_PATIENT = new Permission("patient", "U");

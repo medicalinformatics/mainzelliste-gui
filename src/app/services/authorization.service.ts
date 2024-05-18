@@ -129,6 +129,9 @@ export class AuthorizationService {
     // return true, if tenant not configured in the backend
     if (this.configuredTenants == undefined)
       return true;
+    // return true, if permission contain DEFAULT
+    if(permissions.some( p => p.type == "default"))
+      return true
     //check permission
     let tenants: Tenant[] = this.configuredTenants.filter(c => c.id == this.currentTenantId)
       .filter(t => this.userRoles.some(r => t.roles.includes(r)))
