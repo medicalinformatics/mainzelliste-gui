@@ -49,10 +49,6 @@ export class IdcardComponent implements OnInit {
     public newIdDialog: MatDialog,
     public consentService: ConsentService
   ) {
-      //TODO ?????
-    this.router.routeReuseStrategy.shouldReuseRoute = () => {
-      return false;
-    };
     this.activatedRoute.params.subscribe((params) => {
       if (params["idType"] !== undefined)
         this.idType = params["idType"]

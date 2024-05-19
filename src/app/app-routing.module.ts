@@ -20,7 +20,7 @@ const routes: Routes = [
   {
     path: '', canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
       {path: '', pathMatch: 'full', redirectTo: 'patientlist'},
-          {path: 'project-id', component: ProjectIdComponent},
+      {path: 'project-id', component: ProjectIdComponent, data : { permission: Permission.GENERATE_IDS, checkIdType:true}},
       {path: 'info', component: InfoComponent, data: { permission: Permission.DEFAULT }},
       {path: 'idcard/:idType/:idString', component: IdcardComponent, data : { permission: Permission.READ_PATIENT, checkIdType:true}},
       {path: 'add-new-patient', component: CreatePatientComponent, data: { permission: Permission.CREATE_PATIENT }},
