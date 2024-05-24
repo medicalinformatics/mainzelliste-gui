@@ -80,7 +80,6 @@ export class CreatePatientComponent  implements OnInit {
       .filter(g => !g.isExternal).map( g => g.idType)
     let mainIdType = this.patientListService.findDefaultIdType(internalIdTypes);
     this.selectedInternalIdTypes.push(mainIdType);
-
     this.internalIdTypeSelection = internalIdTypes
     .map(t => {
       return {idType: t, added: mainIdType == t}

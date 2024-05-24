@@ -1,7 +1,7 @@
 <button class="close" mat-button (click)="onClose()">&times;</button>
 <div mat-dialog-content>
 <mat-stepper [linear]="isLinear" id="stepper" #stepper>
-    <mat-step>
+    <mat-step completed="false">
       <div class="stepper-content">
         <ng-template matStepLabel>Auswahl einer Gruppe{{'' | translate}}</ng-template>
         <ng-container>
@@ -33,18 +33,17 @@
         <div class="right-section">
         <button
           mat-raised-button
-          matStepperNext
           class="submit"
           id="actionButton"
           [disabled]="dataModel == undefined"
-          (click)="setupTable(); toSecondStep()">
+          (click)="stepper.reset(); setupTable(); toSecondStep(); stepper.selected!.completed = true; this.stepper.next();">
           Weiter{{'' | translate}}
         </button>
         </div>
 
       </div>
     </mat-step>
-    <mat-step>
+    <mat-step completed="false">
       <div class="stepper-content">
         <ng-template matStepLabel>Gruppen Ids{{'' | translate}}</ng-template>
         <associated-ids-table *ngIf="step == 1" [data]="tableData">
@@ -54,9 +53,8 @@
         <div class="left-section">
             <button
               mat-raised-button
-              matStepperPrevious
               id="backButton"
-              (click)="step = 0"
+              (click)="step = 0; this.stepper.previous(); stepper.selected!.completed = false;"
             >
             Zurück {{'' | translate}}
             </button>
@@ -64,33 +62,34 @@
         <div class="right-section">
             <button
               mat-raised-button
-              matStepperNext
               class="submit"
               id="newEntry"
-              (click)="step = 2; generate()"
+              (click)="step = 2; generate(); stepper.selected!.completed = true; this.stepper.next();"
             >
               Neuer Eintrag{{'' | translate}}
             </button>
         </div>
       </div>
     </mat-step>
-    <mat-step>
+    <mat-step completed="false">
       <div>
         <ng-template matStepLabel>Eintrag bearbeiten{{'' | translate}}</ng-template>
         <ng-container *ngIf="canGenerate">
           <div class="stepper-content">
-            <div>
-              <!--<mat-form-field color="primary" style="width: 76.5%">
+            <form #intIdsForm="ngForm" style="margin-left: 5%;">
+            <div ngModelGroup="internalIds"
+         #internalIdModelGroup="ngModelGroup">
+              <h4>Wählen sie einen internen Id-Typen aus:{{'' | translate}}</h4>
+              <mat-form-field color="primary" style="width: 76.5%">
                 <mat-label>{{'' | translate}}</mat-label>
                 <mat-chip-list #chipList aria-label="Fruit selection"
                                name="internalIdTypesChipList"
-                               [ngModel]="internalIdIds.join(',')"
-                               required>
-                  <mat-chip *ngFor="let id of internalIds"
+                               [ngModel]="selectedInternalIds">
+                  <mat-chip *ngFor="let id of selectedInternalIds"
                             [selectable]="true"
                             [removable]="true"
-                            (removed)="removeInternalIdType(idType)">
-                    {{idType}}
+                            (removed)="removeInternalId(id)">
+                    {{id.name}}
                     <button matChipRemove>
                       <mat-icon>cancel</mat-icon>
                     </button>
@@ -99,17 +98,19 @@
                          [matChipInputFor]="chipList"
                          [matAutocomplete]="auto"
                          [matChipInputAddOnBlur]="true"
-                         (matChipInputTokenEnd)="">
+                         (matChipInputTokenEnd)="findAndAddInternalId($event)">
                 </mat-chip-list>
-                <mat-error>{{'' | translate}}</mat-error>
                 <mat-autocomplete #auto="matAutocomplete"
-                                  (optionSelected)="">
-                  <mat-option style="height: auto" *ngFor="let idType of "
-                              [value]="idType.idType">
-                    <div [hidden]="idType.added">{{idType.idType}}</div>
+                                  (optionSelected)="selectedInternalId($event)">
+                  <mat-option style="height: auto" *ngFor="let id of this.filteredInternalIds | async"
+                              [value]="id.id.id">
+                    <div [hidden]="id.added">{{id.id.name}}</div>
                   </mat-option>
                 </mat-autocomplete>
-              </mat-form-field>-->
+              </mat-form-field>
+            </div>
+          
+              <!-- vorherige Implementation mit einem DropDownSelect
               <div>
                 Wählen sie einen internen Id-Typen aus:
               </div>
@@ -122,13 +123,13 @@
                 </mat-select>
                 <mat-error>Error</mat-error>
               </mat-form-field>
-            </div>
+            </div>-->
 
             <div>
-              <div>Wählen sie einen externen Id-Typen aus und tragen sie die Id ein: (optional)</div>
+              <h4>Wählen sie einen externen Id-Typen aus und tragen sie die Id ein: (optional)</h4>
               <mat-form-field appearance="fill">
                 <mat-label>ExtId{{'' | translate}}</mat-label>
-                <mat-select (selectionChange)="idType[1] = $event; input.value = ''; idString = ''" #option>
+                <mat-select (selectionChange)="idType = $event; input.value = ''; idString = ''" #option>
                   <mat-option *ngFor="let id of externalIds" [value]="id.id">
                     {{id.name}}
                   </mat-option>
@@ -137,24 +138,25 @@
           
               <mat-form-field appearance="fill" id="idInput">
                 <mat-label>{{'' | translate}}</mat-label>
-                <input matInput [disabled]="idType[1] == null || option.value === '-'" [required]="idType[1] != null && option.value !== '-'" (keyup)="idString = input.value" #input>
+                <input matInput [disabled]="idType == null || option.value === '-'" [required]="idType != null && option.value !== '-'" (keyup)="idString = input.value" #input>
               </mat-form-field>
             </div>
+          </form>
           </div>
+        
           <div class="stepper-action">
             <div class="left-section">
-              <button matStepperPrevious mat-raised-button id="backButton" (click)="toSecondStep()">
+              <button mat-raised-button id="backButton" (click)="removeAllChips(); toSecondStep(); this.stepper.previous(); stepper.selected!.completed = false;">
                 Zurück{{'' | translate}}
               </button>
             </div>
             <div class="right-section">
               <button
-                matStepperNext
                 mat-raised-button
                 class="submit"
                 id="actionButton"
-                [disabled]="idType[0] == null || (idType[1] != null && option.value !== '-' && idString === '')"
-                (click)="addId()"
+                [disabled]="selectedInternalIds.length == 0 || (idType != null && option.value !== '-' && idString === '')"
+                (click)="addId(); step = 3; stepper.selected!.completed = true; this.stepper.next();"
               >
                 {{'button_save_new_id' | translate}}
               </button>
@@ -168,8 +170,8 @@
           </div>
           <div class="stepper-action">
             <div class="left-section">
-              <button matStepperPrevious mat-raised-button id="back-button" (click)="toSecondStep()">
-                back{{'' | translate}}
+              <button mat-raised-button id="backButton" (click)="toSecondStep(); this.stepper.previous(); stepper.selected!.completed = false;">
+                Zurück{{'' | translate}}
               </button>
             </div>
             <div class="right-section">
@@ -178,7 +180,7 @@
         </ng-container>
       </div>
     </mat-step>
-    <mat-step>
+    <mat-step completed="false">
       <ng-template matStepLabel>Erstellte Id{{''|translate}}</ng-template>
       <div class="stepper-content">
         <ng-container *ngIf="generatedId != undefined">

@@ -1,7 +1,3 @@
-::ng-deep .mat-stepper-header {
-    pointer-events: none !important;
-}
-
 .groups-radio-group {
     display: flex;
     flex-direction: column;
