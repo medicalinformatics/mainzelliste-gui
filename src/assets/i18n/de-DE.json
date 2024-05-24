@@ -1,7 +1,7 @@
 {
 	"EMPTY": "",
 	"button_add_consent": "Einwilligung hinzufügen",
-  "button_generate_id": "Generieren",
+  	"button_generate_id": "Generieren",
 	"button_delete": "Löschen",
 	"button_edit": "Bearbeiten",
 	"button_request": "Anfordern",
@@ -15,6 +15,11 @@
 	"button_confirm": "Bestätigen",
 	"button_generate_new_unique_id": "Eindeutige ID",
 	"button_generate_new_associated_id": "Zugehörige ID",
+	"button_next": "Weiter",
+	"button_back": "Zurück",
+	"button_new_entry": "Neuer Eintrag",
+	"button_close": "Schließen",
+	"button_copy_id_tooltip": "Id kopieren",
 
 	"radio_button_yes": "Ja",
 	"radio_button_no": "Nein",
@@ -226,5 +231,17 @@
 	"logout.message": "Du wurdest erfolgreich ausgelogged!",
 
 	"footer.version": "Version ",
-	"footer.info": "Mainzelliste - Unterstützt vom Team Föderierte Informationssysteme vom DKFZ Heidelberg"
+	"footer.info": "Mainzelliste - Unterstützt vom Team Föderierte Informationssysteme vom DKFZ Heidelberg",
+
+	"associatedIdsDialog.group_selection_label": "Auswahl einer Gruppe",
+	"associatedIdsDialog.group_selection_heading": "Bitte wähle sie eine Gruppe aus:",
+	"associatedIdsDialog.group_ids_label": "Gruppen Ids",
+	"associatedIdsDialog.edit_entry_label": "Eintrag bearbeiten",
+	"associatedIdsDialog.edit_entry_int_id_heading": "Wählen sie die gewünschten internen Id-Typen aus:",
+	"associatedIdsDialog.edit_entry_int_id_label": "interne Id-Typen",
+	"associatedIdsDialog.edit_entry_ext_id_heading": "Wählen sie einen externen Id-Typen aus und tragen sie die Id ein: (optional)",
+	"associatedIdsDialog.edit_entry_ext_id_label": "externer Id-Typ",
+	"associatedIdsDialog.edit_entry_error": "ERROR: Bitte wähle eine gültige Gruppe aus",
+	"associatedIdsDialog.generated_id_label": "Erstellte Id",
+	"associatedIdsDialog.generated_id_error": "ERROR: Es konnte keine neue Gruppe generiert werden"
 }

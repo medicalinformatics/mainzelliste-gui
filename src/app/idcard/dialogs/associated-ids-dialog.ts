@@ -3,6 +3,7 @@ import { FormControl, NgForm } from "@angular/forms";
 import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
 import { MatChipInputEvent, MatChipList } from "@angular/material/chips";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { TranslateService } from "@ngx-translate/core";
 import { Observable, of } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { AssociatedId } from "src/app/model/associated-id";
@@ -52,6 +53,7 @@ export class AssociatedIdsDialog implements OnInit {
 
   
     constructor(
+        public translate: TranslateService,
         public dialogRef: MatDialogRef<AssociatedIdsDialog>,
         @Inject(MAT_DIALOG_DATA) public data: {patientListService: PatientListService, patientService: PatientService, patient: Patient}
       ) {}
@@ -62,7 +64,7 @@ export class AssociatedIdsDialog implements OnInit {
 
     addId() {
         if(this.idType != null && this.idString !== "") {
-          this.addNewAssociatedId(this.dataModel, this.selectedInternalIds.map(id => id.id), new Id(this.idType[1].value, this.idString));
+          this.addNewAssociatedId(this.dataModel, this.selectedInternalIds.map(id => id.id), new Id(this.idType.value, this.idString));
         } else {
           this.addNewAssociatedId(this.dataModel, this.selectedInternalIds.map(id => id.id), undefined);
         }

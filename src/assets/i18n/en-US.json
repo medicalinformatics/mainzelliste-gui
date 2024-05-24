@@ -15,6 +15,11 @@
 	"button_confirm": "Confirm",
 	"button_generate_new_unique_id": "Unique ID",
 	"button_generate_new_associated_id": "Associated ID",
+	"button_next": "Next",
+	"button_back": "Back",
+	"button_new_entry": "New Entry",
+	"button_close": "Close",
+	"button_copy_id_tooltip": "copy Id",
 
 	"radio_button_yes": "Yes",
 	"radio_button_no": "No",
@@ -226,5 +231,17 @@
 	"logout.message": "You are now logged out!",
 
 	"footer.version": "Version ",
-	"footer.info": " Mainzelliste - Powered by Team Federated Information Systems from DKFZ Heidelberg"
+	"footer.info": " Mainzelliste - Powered by Team Federated Information Systems from DKFZ Heidelberg",
+
+	"associatedIdsDialog.group_selection_label": "Group Selection",
+	"associatedIdsDialog.group_selection_heading": "Please select a group:",
+	"associatedIdsDialog.group_ids_label": "Group Ids",
+	"associatedIdsDialog.edit_entry_label": "Edit Entry",
+	"associatedIdsDialog.edit_entry_int_id_heading": "Select the desired internal Id types:",
+	"associatedIdsDialog.edit_entry_int_id_label": "internal Id types",
+	"associatedIdsDialog.edit_entry_ext_id_heading": "Select an external Id type and enter the Id: (optional)",
+	"associatedIdsDialog.edit_entry_ext_id_label": "external Id type",
+	"associatedIdsDialog.edit_entry_error": "ERROR: please select a valid group",
+	"associatedIdsDialog.generated_id_label": "Generated Id",
+	"associatedIdsDialog.generated_id_error": "ERROR: A new group could not be generated"
 }
