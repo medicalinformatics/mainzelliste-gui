@@ -16,6 +16,8 @@ services:
       KEYCLOAK_URL: http://${HOST}:8082
       KEYCLOAK_REALM: mainzelliste
       KEYCLOAK_CLIENT_ID: mainzelliste-ui
+      # supported languages: 'en-US' or 'de-DE'
+      ML_UI_DEFAULT_LANGUAGE: en-US
       ML_UI_MAIN_ID_TYPE: pid
       ML_UI_SHOW_ALL_IDS: false
       ML_UI_DEBUG_MODE: false

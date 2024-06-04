@@ -5,13 +5,15 @@
     <mat-card class="patientendatenMatCard"
               style="flex: 1 1 25%; display: flex;  flex-flow: column">
       <mat-card-title>{{'editPatient.title_patient_data' | translate}}</mat-card-title>
-      <app-patient-fields [readOnly]=false (fieldEvent)="fieldsChanged($event)" [fields]="patient.fields"></app-patient-fields>
+      <app-patient-fields [readOnly]="!this.authorizationService.hasPermission(Permission.EDIT_FIELDS)"
+                          (fieldEvent)="fieldsChanged($event)" [fields]="patient.fields"></app-patient-fields>
     </mat-card>
 
     <mat-card class="pseudonyme"
               style="flex: 1 1 25%; display: flex;  flex-flow: column">
       <mat-card-title>{{'editPatient.title_pseudonyms' | translate}}</mat-card-title>
-      <app-patient-pseudonyms [readOnly]=false [ids]="patient.ids" [permittedOperation]="'U'"></app-patient-pseudonyms>
+      <app-patient-pseudonyms [readOnly]="!this.authorizationService.hasPermission(Permission.EDIT_EXT_IDS)"
+                              [ids]="patient.ids" [permittedOperation]="'U'"></app-patient-pseudonyms>
     </mat-card>
 
     <section style="display: flex; flex: 1 1 1%; margin-left:2%; flex-flow: column;">
