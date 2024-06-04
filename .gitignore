@@ -50,3 +50,4 @@ src/assets/config
 !src/assets/config/config.template.json
 docker-compose.override.yml
 /out/
+/mainzelliste-gui.iml
