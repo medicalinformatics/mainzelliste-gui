@@ -7,6 +7,7 @@ import {Router} from "@angular/router";
 import {GlobalTitleService} from "../../services/global-title.service";
 import {MatDialog} from "@angular/material/dialog";
 import {ConsentTemplateDialogComponent} from "../consent-template-dialog/consent-template-dialog.component";
+import {Permission} from "../../model/permission";
 
 @Component({
   selector: 'app-consent-templates',
@@ -78,6 +79,8 @@ export class ConsentTemplatesComponent implements OnInit {
       }
     });
   }
+
+  protected readonly Permission = Permission;
 }
 
 export interface ConsentTemplateRow {id: string, title:string, name: string}

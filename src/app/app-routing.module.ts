@@ -32,7 +32,7 @@ const routes: Routes = [
       // {path: 'merge-patients', component: MergePatientsComponent},
       // {path: 'audittrail', component: AudittrailComponent},
       // {path: 'delete-patients', component: DeleteMultiplePatientsComponent, data : { permission: 'deletePatient' }},
-      {path: 'consent-templates', component: ConsentTemplatesComponent, data: { permission: Permission.READ_CONSENT_TEMPLATE}}
+      {path: 'consent-templates', component: ConsentTemplatesComponent, data: { permission: Permission.CREATE_CONSENT_TEMPLATE}}
       // {path: 'create-consent-template', component: CreateConsentTemplateComponent, data: { permission: Permission.CREATE_CONSENT}}
     ]
   },

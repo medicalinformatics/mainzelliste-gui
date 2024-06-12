@@ -8,8 +8,8 @@ import {TranslateService} from '@ngx-translate/core';
 import {MainzellisteError} from "../../model/mainzelliste-error.model";
 import {ErrorMessages} from "../../error/error-messages";
 import {MatDialog} from "@angular/material/dialog";
-import {ConsentRejectedDialog} from ".././dialogs/consent-rejected-dialog";
-import {ConsentInactivatedDialog} from ".././dialogs/consent-inactivated-dialog";
+import {ConsentRejectedDialog} from "../dialogs/consent-rejected-dialog";
+import {ConsentInactivatedDialog} from "../dialogs/consent-inactivated-dialog";
 import {catchError} from "rxjs/operators";
 import {throwError} from "rxjs";
 
