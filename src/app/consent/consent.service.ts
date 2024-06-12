@@ -226,10 +226,9 @@ export class ConsentService {
     }
   }
 
-  public editConsent(dataModel: Consent, force: boolean) {
+  public editConsent(dataModel: Consent, force: boolean): Observable<FhirResource> {
     if (dataModel.fhirResource == undefined) {
-        this.handleError<any>(this.translate.instant('error.consent_service_fhir_consent_not_found'));
-        return of({id: "", title: "NOT FOUND", date: new Date(), items: []} as unknown as fhir4.Consent);
+      throw new Error(this.translate.instant('error.consent_service_fhir_consent_not_found'));
     } else {
       try {
         this.serializeConsentDataModelToFhir(dataModel, force);
@@ -286,8 +285,7 @@ export class ConsentService {
   }
 
   private consentStatusToString(status: ConsentStatus, validUntil?: Date): string {
-    let statusStr = (validUntil != undefined && validUntil.getTime()  < new Date().getTime()) ? "inactive" : status;
-    return this.translate.instant("consent_status." + statusStr);
+    return (validUntil != undefined && validUntil.getTime()  < new Date().getTime()) ? "inactive" : status;
   }
 
   private findConsentTemplateId(fhirPolicies: fhir4.ConsentPolicy[]): string {
