@@ -30,7 +30,7 @@ export class IdcardComponent implements OnInit {
   public idString: string = "";
   public idType: string = "";
   public patient: Patient = new Patient();
-  public displayedConsentColumns: string[] = ['date', 'title', 'period', 'version', 'status'];
+  public displayedConsentColumns: string[] = ['date', 'title', 'period', 'version', 'status', 'actions'];
   public consents: ConsentRow[] = [];
   @ViewChild('consentTable') consentTable!: MatTable<ConsentRow>;
   public loadingConsents: boolean = false;
