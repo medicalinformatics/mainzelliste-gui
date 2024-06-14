@@ -4,12 +4,19 @@ import Client from 'fhir-kit-client'
 import {SessionService} from "../services/session.service";
 import {DatePipe} from "@angular/common";
 import {AppConfigService} from "../app-config.service";
-import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentRow, ConsentItem, ConsentStatus} from "./consent.model";
+import {
+  Consent,
+  ConsentChoiceItem,
+  ConsentDisplayItem,
+  ConsentItem,
+  ConsentStatus,
+  ConsentsView
+} from "./consent.model";
 import {FhirResource, SearchParams} from "fhir-kit-client/types/index"
 import {TranslateService} from '@ngx-translate/core';
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessage, ErrorMessages} from "../error/error-messages";
-import _moment, {Moment} from "moment";
+import _moment from "moment";
 import {ConsentTemplateFhirWrapper} from "../model/consent-template-fhir-wrapper";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {ChoiceItem, ConsentTemplate, DisplayItem, Validity} from "./consent-template.model";
@@ -248,39 +255,46 @@ export class ConsentService {
     );
   }
 
-  public getConsents(idType: string, idString: string): Observable<ConsentRow[]> {
+  public getConsents(idType: string, idString: string): Observable<ConsentsView> {
     return this.getConsentTemplateTitleMap().pipe(
-      mergeMap(consentTemplates =>
-        this.searchFhirResources<fhir4.Consent>("searchConsents", {},
-          'Consent', ErrorMessages.SEARCH_CONSENT_TEMPLATES_FAILED,
-          {
-            'patient:identifier': this.appConfigService.getMainzellisteUrl() + '/id/' + idType + '|' + idString,
-            '_elements': 'id,meta,status,dateTime,policy,provision.period'
-          })
-          .pipe(
-            map(fhirConsents => {
-              return fhirConsents.map(r => {
-                let templateId: string = this.findConsentTemplateId(r?.policy ?? []);
-                let endDate = r?.provision?.period?.end;
-                let startDate = r?.provision?.period?.start;
-                let validFrom: string = startDate && startDate.trim().length > 0 ? _moment(startDate).toDate().toLocaleDateString() : "??";
-                let validUntil: Date | undefined = endDate && endDate?.trim().length > 0 ? new Date(endDate) : undefined;
-                let period = this.translate.instant("consent_list.unlimited_period") ;
-                if (validUntil) {
-                  period = validFrom + " - " + new Date(validUntil).toLocaleDateString();
-                }
-                return {
-                  id: r?.id || "",
-                  title: consentTemplates.get(templateId) ?? "",
-                  createdAt: new Date(r?.dateTime ?? "").toLocaleDateString(),
-                  validityPeriod: period,
-                  version: r?.meta?.versionId,
-                  status: this.consentStatusToString(r?.status ?? "active", validUntil)
-                };
-              });
-            })
-          )
-      )
+        mergeMap(consentTemplates =>
+            this.searchFhirResources<fhir4.Consent>("searchConsents", {},
+                'Consent', ErrorMessages.SEARCH_CONSENT_TEMPLATES_FAILED,
+                {
+                  'patient:identifier': this.appConfigService.getMainzellisteUrl() + '/id/' + idType + '|' + idString,
+                  '_elements': 'id,meta,status,dateTime,policy,provision.period'
+                })
+            .pipe(
+                map(fhirConsents => {
+                  return fhirConsents.map(r => {
+                    let templateId: string = this.findConsentTemplateId(r?.policy ?? []);
+                    let endDate = r?.provision?.period?.end;
+                    let startDate = r?.provision?.period?.start;
+                    let validFrom: string = startDate && startDate.trim().length > 0 ? _moment(startDate).toDate().toLocaleDateString() : "??";
+                    let validUntil: Date | undefined = endDate && endDate?.trim().length > 0 ? new Date(endDate) : undefined;
+                    let period = this.translate.instant("consent_list.unlimited_period");
+                    if (validUntil) {
+                      period = validFrom + " - " + new Date(validUntil).toLocaleDateString();
+                    }
+                    return {
+                      id: r?.id || "",
+                      templateId: templateId,
+                      title: consentTemplates.get(templateId) ?? "",
+                      createdAt: new Date(r?.dateTime ?? "").toLocaleDateString(),
+                      validityPeriod: period,
+                      version: r?.meta?.versionId,
+                      status: this.consentStatusToString(r?.status ?? "active", validUntil)
+                    };
+                  });
+                }),
+                mergeMap(consents => of(
+                    {
+                      consentTemplates: consentTemplates,
+                      consentRows: consents
+                    }
+                ))
+            )
+        )
     )
   }
 

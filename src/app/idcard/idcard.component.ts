@@ -16,7 +16,7 @@ import {Permission} from "../model/permission";
 import {HttpErrorResponse} from "@angular/common/http";
 import {throwError} from "rxjs";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
-import {ConsentRow} from "../consent/consent.model";
+import {ConsentRow, ConsentsView} from "../consent/consent.model";
 
 @Component({
   selector: 'app-idcard',
@@ -31,7 +31,7 @@ export class IdcardComponent implements OnInit {
   public idType: string = "";
   public patient: Patient = new Patient();
   public displayedConsentColumns: string[] = ['date', 'title', 'period', 'version', 'status', 'actions'];
-  public consents: ConsentRow[] = [];
+  public consentsView: ConsentsView =  { consentTemplates : new Map, consentRows: [] };
   @ViewChild('consentTable') consentTable!: MatTable<ConsentRow>;
   public loadingConsents: boolean = false;
 
@@ -87,10 +87,10 @@ export class IdcardComponent implements OnInit {
 
   private loadConsents() {
     this.loadingConsents = true;
-    this.consents = []
+    this.consentsView = { consentTemplates : new Map, consentRows: [] }
     this.consentService.getConsents(this.idType, this.idString)
       .subscribe(dataModels => {
-          this.consents = dataModels;
+          this.consentsView = dataModels;
           this.consentTable.renderRows();
           this.loadingConsents = false;
         },
@@ -109,15 +109,24 @@ export class IdcardComponent implements OnInit {
     this.patientListService.generateId(this.idType, this.idString, newIdType).subscribe(() => this.loadPatient());
   }
 
+  hasAllTemplateIds(): boolean {
+    return [...this.consentsView.consentTemplates.keys()].every(templateId =>
+        this.consentsView.consentRows.some(v => v.templateId == templateId))
+  }
+
+
   openConsentDialog() {
     const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
-      width: '900px'
+      width: '900px',
+      data: {templates: new Map([...this.consentsView.consentTemplates].filter(e =>
+            !this.consentsView.consentRows.some(r => r.templateId == e[0]))
+        )}
     });
 
-    dialogRef.afterClosed().subscribe(consent => {
-      if (consent) {
-        consent.patientId = {idType: this.idType, idString: this.idString};
-        this.consentService.addConsent(consent).subscribe(e => this.loadConsents());
+    dialogRef.afterClosed().subscribe(dataModel => {
+      if (dataModel?.consent) {
+        dataModel.consent.patientId = {idType: this.idType, idString: this.idString};
+        this.consentService.addConsent(dataModel.consent).subscribe(e => this.loadConsents());
       }
     });
   }
@@ -125,7 +134,6 @@ export class IdcardComponent implements OnInit {
   hasAllIds(): boolean {
     return this.patientListService.getNewIdType(this.patient).length == 0;
   }
-
   openNewIdDialog(): void {
     const dialogRef = this.newIdDialog.open(NewIdDialog, {
       data: this.patientListService.getNewIdType(this.patient)

@@ -13,27 +13,29 @@ import _moment from "moment";
 export class ConsentDetailComponent implements OnInit {
 
   @Input() edit: boolean = false;
-  @Input() dataModel!: Consent;
-  @Output() dataModelChange = new EventEmitter<Consent>();
+  @Input() consent!: Consent;
+  @Input() templates!: Map<string, string>;
+  @Output() consentChange = new EventEmitter<Consent>();
   @ViewChild('templateSelection') templateSelection!: MatSelect;
 
-  consentTemplates: Map<string, string>;
   localDateFormat:string;
 
-  constructor(private consentService: ConsentService,
-              @Inject(MAT_DATE_LOCALE) private _locale: string) {
-    this.consentTemplates = new Map();
+  constructor(
+      private consentService: ConsentService,
+      @Inject(MAT_DATE_LOCALE) private _locale: string
+  ) {
     _moment.locale(this._locale);
     this.localDateFormat = _moment().localeData().longDateFormat('L');
   }
 
   ngOnInit(): void {
     // fetch consent template map <id, title> from backend
-    this.consentService.getConsentTemplateTitleMap()
-      .subscribe(r => this.consentTemplates = r);
+    if(this.templates == null)
+      this.consentService.getConsentTemplateTitleMap()
+        .subscribe(r => this.templates = r);
 
     //reset selection if no template selected
-    if (!this.dataModel?.id && (!this.edit && this.templateSelection)) {
+    if (!this.consent?.id && (!this.edit && this.templateSelection)) {
       this.templateSelection.options.forEach((data: MatOption) => data.deselect());
     }
   }
@@ -41,16 +43,16 @@ export class ConsentDetailComponent implements OnInit {
   initDataModel(consentTemplateId: MatSelectChange) {
     this.consentService.getNewConsentDataModel(consentTemplateId.value || "0")
     .subscribe( consentDataModel => {
-      this.dataModel = consentDataModel;
+      this.consent = consentDataModel;
       // propagate change to parent component
-      this.dataModelChange.emit(this.dataModel)
+      this.consentChange.emit(this.consent)
     });
   }
 
   getConsentExpiration(): string {
-    return this.dataModel.period == 0 ? " für einen unbegrenzten Zeit-Raum" :
-      ` bis ${new Date((this.dataModel.validFrom?.toDate().getTime() || 0)
-        + this.dataModel.period).toLocaleDateString()}`;
+    return this.consent.period == 0 ? " für einen unbegrenzten Zeit-Raum" :
+      ` bis ${new Date((this.consent.validFrom?.toDate().getTime() || 0)
+        + this.consent.period).toLocaleDateString()}`;
   }
 
   /** Utils Method **/

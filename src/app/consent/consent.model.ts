@@ -22,11 +22,17 @@ export class Consent {
   }
 }
 
+export interface ConsentsView {
+  consentTemplates: Map<string, string>,
+  consentRows: ConsentRow[]
+}
+
 /**
- * model a row in a list of consents
+ * model of a row in a list of consents
  */
 export interface ConsentRow {
   id: string,
+  templateId: string,
   createdAt: string,
   title: string,
   validityPeriod: string,

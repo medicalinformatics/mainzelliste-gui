@@ -15,7 +15,7 @@ export class ConsentDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<ConsentDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public dataModel: Consent) {
+    @Inject(MAT_DIALOG_DATA) public dataModel: { consent: Consent, templates: Map<string, string>}) {
   }
 
   ngOnInit(): void {}

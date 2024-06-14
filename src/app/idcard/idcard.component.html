@@ -31,8 +31,8 @@
         <mat-icon matTooltip="{{'button_generate_id' | translate}}">add_box</mat-icon>
       </button>
       <ng-container *ngIf="this.consentService.isServiceEnabled()">
-        <button mat-fab *appHasPermission="Permission.CREATE_CONSENT" (click)="openConsentDialog()"
-                class="idcard-button">
+        <button mat-fab *appHasPermission="Permission.CREATE_CONSENT" [disabled]="this.hasAllTemplateIds()" (click)="openConsentDialog()"
+                [ngClass]="this.hasAllTemplateIds() ? '': 'idcard-button'">
           <mat-icon matTooltip="{{'button_add_consent' | translate}}">assignment_turned_in</mat-icon>
         </button>
       </ng-container>
@@ -41,7 +41,7 @@
   <ng-container *ngIf="this.consentService.isServiceEnabled()">
     <mat-card *appHasPermission="Permission.READ_CONSENT" id="consents">
       <mat-card-title style="float: left; margin-left: 2.5%;">{{'idcard.consent_title' | translate}}</mat-card-title>
-        <table #consentTable mat-table [dataSource]="consents" class="mat-elevation-z8">
+        <table #consentTable mat-table [dataSource]="consentsView.consentRows" class="mat-elevation-z8">
 
           <ng-container matColumnDef="date">
             <th mat-header-cell *matHeaderCellDef> {{'idcard.consent_created' | translate}} </th>
@@ -66,7 +66,7 @@
           <ng-container matColumnDef="status">
             <th mat-header-cell *matHeaderCellDef style="text-align: center"> {{'idcard.consent_status' | translate}}  </th>
             <td mat-cell *matCellDef="let element" style="text-align: center">
-              <mat-basic-chip id="{{element.status}}" class="mat-basic-chip-status">{{'consent_status.' + element.status | translate}}</mat-basic-chip>
+              <mat-basic-chip disableRipple="true" id="{{element.status}}" class="mat-basic-chip-status">{{'consent_status.' + element.status | translate}}</mat-basic-chip>
             </td>
           </ng-container>
 
@@ -76,13 +76,13 @@
               <div style="display: flex; flex-flow: row; justify-content: right;">
                 <ng-container *ngIf="element.status == 'draft' || element.status == 'proposed'">
                   <button *appHasPermission="Permission.EDIT_CONSENT" mat-icon-button style="border:none;"
-                          [routerLink]="['patient', idType, idString, 'edit-consent', element.id]">
+                          [routerLink]="['/patient', idType, idString, 'edit-consent', element.id]">
                     <mat-icon matTooltip="{{'button_edit_consent' | translate}}">edit</mat-icon>
                   </button>
                 </ng-container>
                 <ng-container *ngIf="element.status == 'active' || element.status == 'rejected'|| element.status == 'inactive'">
                   <button *appHasPermission="Permission.EDIT_CONSENT" mat-icon-button style="border:none;"
-                          [routerLink]="['patient', idType, idString, 'edit-consent', element.id]">
+                          [routerLink]="['/patient', idType, idString, 'edit-consent', element.id]">
                     <mat-icon matTooltip="{{'button_add_consent' | translate}}">assignment_turned_in</mat-icon>
                   </button>
                 </ng-container>

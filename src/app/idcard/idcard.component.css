@@ -34,7 +34,6 @@ mat-card-title{
 
 .consent-row:hover {
   background-color: #dddddd;
-  cursor: pointer;
 }
 
 .idcard-button.mat-fab.mat-accent {
