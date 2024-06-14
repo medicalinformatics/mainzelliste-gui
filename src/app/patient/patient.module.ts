@@ -11,6 +11,7 @@ import {ExternalPseudonymsComponent} from "./external-pseudonyms/external-pseudo
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {FormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
+import {DeleteConsentDialog} from "../idcard/dialogs/delete-consent-dialog";
 
 
 @NgModule({
@@ -34,7 +35,9 @@ import {RouterModule} from "@angular/router";
     EditPatientComponent,
     EditPatientTentativeDialog,
     DeletePatientComponent,
-    DeletePatientDialog]
+    DeletePatientDialog,
+    DeleteConsentDialog
+  ]
 })
 export class PatientModule {
 }

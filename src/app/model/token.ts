@@ -1,6 +1,6 @@
 import {TokenData} from './token-data';
 export type TokenType = 'readPatients' | 'addPatient' | 'editPatient' | 'deletePatient' | 'createIds'
-  | 'addConsent' | 'searchConsents' | 'editConsent' | 'readConsent' | 'addConsentTemplate' | 'searchConsentTemplates'
+  | 'addConsent' | 'searchConsents' | 'editConsent' | 'readConsent' | 'deleteConsent' | 'addConsentTemplate' | 'searchConsentTemplates'
   | 'readConsentTemplate' | 'addConsentPolicySet' | 'readConsentPolicySet' | 'searchConsentPolicySets'
   | 'addConsentPolicy' | 'searchConsentPolicies' ;
 export class Token {

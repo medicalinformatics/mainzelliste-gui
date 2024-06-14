@@ -117,6 +117,10 @@
 	"deletePatientDialog.delete_patient_question": "Do you want to delete the following patient?",
 	"deletePatientDialog.delete_patient_warning": "The patient data will be completely deleted and cannot be restored.",
 
+	"deleteConsentDialog.title_delete_consent": "Delete consent",
+	"deleteConsentDialog.delete_consent_question": "Do you want to delete the following consent?",
+	"deleteConsentDialog.delete_consent_warning": "The consent data will be completely deleted and cannot be restored.",
+
 	"addConsent.title_add_consent": "Add consent",
 	"editConsent.title_edit_consent": "Edit Consent",
 
@@ -217,7 +221,8 @@
 	"error.app_module_connect_keycloak": "Failed to connect to Keycloak.",
   "error.create_consent_rejected": "Failed to create consent. Cause: '${1}'",
   "error.read_consent_failed": "Failed to read consent. Cause: '${1}'",
-  "error.create_consent_template_rejected": "Failed to create consent template. Cause: '${1}'",
+	"error.delete_consent_failed": "Consent not found",
+	"error.create_consent_template_rejected": "Failed to create consent template. Cause: '${1}'",
   "error.read_consent_template_failed": "Failed to read consent template. Cause: '${1}'",
   "error.search_consent_templates_failed": "Failed to find consent templates. Cause: '${1}'",
 

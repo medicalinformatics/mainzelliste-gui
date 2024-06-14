@@ -255,6 +255,11 @@ export class ConsentService {
     );
   }
 
+  public deleteConsent(id: string): Observable<fhir4.Consent> {
+    return this.executeDeleteFhirOperation<fhir4.Consent>("deleteConsent", {}, 'Consent', id,
+        ErrorMessages.DELETE_CONSENT_NOT_FOUND) as Observable<fhir4.Consent>;
+  }
+
   public getConsents(idType: string, idString: string): Observable<ConsentsView> {
     return this.getConsentTemplateTitleMap().pipe(
         mergeMap(consentTemplates =>
@@ -610,32 +615,48 @@ export class ConsentService {
     );
   }
 
-  public executeReadFhirOperation<F extends FhirResource>(tokenType: TokenType,
-                                                            tokenData: TokenData,
-                                                            resourceType: string,
-                                                            id: string,
-                                                            errorMessageType: ErrorMessage,
-  ) : Observable<FhirResource> {
+  public executeReadFhirOperation<F extends FhirResource>(
+      tokenType: TokenType,
+      tokenData: TokenData,
+      resourceType: string,
+      id: string,
+      errorMessageType: ErrorMessage,
+  ): Observable<FhirResource> {
     return this.sessionService.createToken(tokenType, tokenData)
-      .pipe(
+    .pipe(
         mergeMap(token => this.resolveReadFhirResourceToken<F>(token.id, resourceType, id)),
         catchError((error) => this.handleFailedRequest(resourceType, error, errorMessageType, "read"))
-      )
+    )
   }
 
-  public executeSearchFhirOperation<F extends FhirResource>(tokenType: TokenType,
-                                                            tokenData: TokenData,
-                                                            resourceType: string,
-                                                            resolveToken: (tokenId: string | undefined, resourceType: string, searchParam?:SearchParams) => Promise<FhirResource | F>,
-                                                            errorPrefix: string,
-                                                            errorMessageType: ErrorMessage,
-                                                            searchParam?: SearchParams
-  ) : Observable<FhirResource> {
+  public executeDeleteFhirOperation<F extends FhirResource>(
+      tokenType: TokenType,
+      tokenData: TokenData,
+      resourceType: string,
+      id: string,
+      errorMessageType: ErrorMessage,
+  ): Observable<FhirResource> {
     return this.sessionService.createToken(tokenType, tokenData)
-      .pipe(
+    .pipe(
+        mergeMap(token => this.resolveDeleteFhirResourceToken<F>(token.id, resourceType, id)),
+        catchError((error) => this.handleFailedRequest(resourceType, error, errorMessageType, "delete"))
+    )
+  }
+
+  public executeSearchFhirOperation<F extends FhirResource>(
+      tokenType: TokenType,
+      tokenData: TokenData,
+      resourceType: string,
+      resolveToken: (tokenId: string | undefined, resourceType: string, searchParam?: SearchParams) => Promise<FhirResource | F>,
+      errorPrefix: string,
+      errorMessageType: ErrorMessage,
+      searchParam?: SearchParams
+  ): Observable<FhirResource> {
+    return this.sessionService.createToken(tokenType, tokenData)
+    .pipe(
         mergeMap(token => resolveToken(token.id, resourceType, searchParam)),
         catchError((error) => this.handleFailedRequest(resourceType, error, errorMessageType, errorPrefix))
-      )
+    )
   }
 
   private handleFailedRequest(resourceType: string, error: any, errorMessageType: ErrorMessage, errorPrefix: string) {
@@ -684,6 +705,14 @@ export class ConsentService {
 
   resolveReadFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, id:string): Promise<FhirResource | F> => {
     return this.client.read({
+      resourceType: resourceType,
+      id: id,
+      headers: {'Authorization': 'MainzellisteToken ' + tokenId}
+    })
+  }
+
+  resolveDeleteFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, id:string): Promise<FhirResource | F> => {
+    return this.client.delete({
       resourceType: resourceType,
       id: id,
       headers: {'Authorization': 'MainzellisteToken ' + tokenId}

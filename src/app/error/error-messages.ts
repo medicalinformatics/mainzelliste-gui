@@ -131,6 +131,14 @@ export class ErrorMessages {
   public static READ_CONSENT_FAILED: ErrorMessage = new ErrorMessage(5003,
     "ReadConsentFailed",
     'error.read_consent_failed');
+
+  ////
+  // DELETE CONSENT
+  //---------------------
+  public static DELETE_CONSENT_NOT_FOUND: ErrorMessage = new ErrorMessage(5004,
+      "No patient found",
+      "error.delete_consent_failed");
+
   ////
   // CREATE/EDIT CONSENT TEMPLATE
   //-----------------------------

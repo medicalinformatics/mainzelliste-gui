@@ -86,7 +86,8 @@
                     <mat-icon matTooltip="{{'button_add_consent' | translate}}">assignment_turned_in</mat-icon>
                   </button>
                 </ng-container>
-                <button *appHasPermission="Permission.DELETE_CONSENT" mat-icon-button style="border:none;">
+                <button *appHasPermission="Permission.DELETE_CONSENT" mat-icon-button style="border:none;"
+                (click)="openDeleteConsentDialog(element.id)">
                   <mat-icon matTooltip="{{'button_delete_consent' | translate}}">delete</mat-icon>
                 </button>
               </div>

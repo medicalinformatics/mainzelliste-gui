@@ -17,6 +17,8 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {throwError} from "rxjs";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {ConsentRow, ConsentsView} from "../consent/consent.model";
+import {mergeMap} from "rxjs/operators";
+import {DeleteConsentDialog} from "./dialogs/delete-consent-dialog";
 
 @Component({
   selector: 'app-idcard',
@@ -43,7 +45,8 @@ export class IdcardComponent implements OnInit {
     private patientService: PatientService,
     private titleService: GlobalTitleService,
     public consentDialog: MatDialog,
-    public deleteDialog: MatDialog,
+    public deletePatientDialog: MatDialog,
+    public deleteConsentDialog: MatDialog,
     public newIdDialog: MatDialog,
     public consentService: ConsentService
   ) {
@@ -97,8 +100,17 @@ export class IdcardComponent implements OnInit {
         error => this.loadingConsents = false);
   }
 
-  async editConsent(row: ConsentRow) {
-    await this.router.navigate(["patient", this.idType, this.idString, 'edit-consent', row.id]);
+  deleteConsent(consentId: string) {
+    this.consentService.deleteConsent(consentId).pipe(
+        mergeMap(r => this.consentService.getConsents(this.idType, this.idString))
+    ).subscribe(
+        dataModels => {
+          this.consentsView = dataModels;
+          this.consentTable.renderRows();
+          this.loadingConsents = false;
+        },
+        error => this.loadingConsents = false
+    );
   }
 
   deletePatient() {
@@ -147,13 +159,25 @@ export class IdcardComponent implements OnInit {
   }
 
   openDeletePatientDialog(): void {
-    const dialogRef = this.deleteDialog.open(DeletePatientDialog, {
+    const dialogRef = this.deletePatientDialog.open(DeletePatientDialog, {
       data: {},
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result)
         this.deletePatient();
+    });
+  }
+
+
+  openDeleteConsentDialog(consentId: string): void {
+    const dialogRef = this.deleteConsentDialog.open(DeleteConsentDialog, {
+      data: {},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.deleteConsent(consentId);
     });
   }
 }

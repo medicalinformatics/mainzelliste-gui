@@ -117,6 +117,10 @@
 	"deletePatientDialog.delete_patient_question": "Möchten Sie den folgenden Patient löschen?",
 	"deletePatientDialog.delete_patient_warning": "Die Patientendaten werden vollständig gelöscht und können nicht wiederhergestellt werden.",
 
+	"deleteConsentDialog.title_delete_consent": "Einwilligung Löschen",
+	"deleteConsentDialog.delete_consent_question": "Möchten Sie die folgende Einwilligung löschen?",
+	"deleteConsentDialog.delete_consent_warning": "Die Einwilligung wird vollständig gelöscht und kann nicht wiederhergestellt werden.",
+
 	"addConsent.title_add_consent": "Einwilligung Hinzufügen",
 	"editConsent.title_edit_consent": "Einwilligung Editieren",
 
@@ -217,7 +221,8 @@
 	"error.app_module_connect_keycloak": "Verbindung zu Keycloak konnte nicht hergestellt werden.",
   "error.create_consent_rejected": "Einwilligung konnte nicht erstellt werden. Cause: '${1}'",
   "error.read_consent_failed": "Einwilligungserklärung konnte nicht gelesen werden. Ursache: '${1}'",
-  "error.create_consent_template_rejected": "Einwilligungsvorlage konnte nicht erstellt werden. Ursache: '${1}'",
+	"error.delete_consent_failed": "Einwilligung konnte nicht gefunden werden.",
+	"error.create_consent_template_rejected": "Einwilligungsvorlage konnte nicht erstellt werden. Ursache: '${1}'",
   "error.read_consent_template_failed": "Einwilligungsvorlage konnte nicht gelesen werden. Ursache: '${1}'",
   "error.search_consent_templates_failed": "Einwilligungsvorlagen konnten nicht gefunden werden. Ursache: '${1}'",
 
