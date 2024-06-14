@@ -5,7 +5,7 @@
       <mat-label>{{'consentDetail.consent_template' | translate}}</mat-label>
       <mat-select #templateSelection
                   (selectionChange)="initDataModel($event)"
-                  [value]="this.consent?.templateId" required>
+                  [value]="this.getCurrentTemplateId()" required>
         <mat-option *ngFor="let consentTemplate of templates | keyvalue "
                     [value]="consentTemplate.key">{{consentTemplate.value}}</mat-option>
       </mat-select>

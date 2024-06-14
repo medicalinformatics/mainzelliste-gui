@@ -377,7 +377,7 @@ export class ConsentService {
   resolveAddConsentTemplateToken(tokenId: string | undefined, consentTemplate: fhir4.Questionnaire): Promise<fhir4.FhirResource | fhir4.Questionnaire> {
     return this.client.create({
       resourceType: 'Questionnaire', body: consentTemplate,
-      headers: {'Authorization': 'MainzellisteToken ' + tokenId}
+      options: { headers: {'Authorization': 'MainzellisteToken ' + tokenId}}
     })
       .then(resource => resource as fhir4.Consent)
       .catch(e => {
@@ -691,14 +691,14 @@ export class ConsentService {
   resolveAddFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, resource: F): Promise<FhirResource | F> => {
     return this.client.create<F>({
       resourceType: resourceType, body: resource,
-      headers: {'Authorization': 'MainzellisteToken ' + tokenId}
+      options: { headers: {'Authorization': 'MainzellisteToken ' + tokenId}}
     })
   }
 
   resolveEditFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, resource: F, searchParams?: SearchParams): Promise<FhirResource | F> => {
     return this.client.update<F>({
       resourceType: resourceType, id: !searchParams? resource.id : undefined, body: resource,
-      headers: {'Authorization': 'MainzellisteToken ' + tokenId},
+      options: { headers: {'Authorization': 'MainzellisteToken ' + tokenId}},
       searchParams
     })
   }
@@ -707,7 +707,7 @@ export class ConsentService {
     return this.client.read({
       resourceType: resourceType,
       id: id,
-      headers: {'Authorization': 'MainzellisteToken ' + tokenId}
+      options: { headers: {'Authorization': 'MainzellisteToken ' + tokenId}}
     })
   }
 
@@ -715,14 +715,14 @@ export class ConsentService {
     return this.client.delete({
       resourceType: resourceType,
       id: id,
-      headers: {'Authorization': 'MainzellisteToken ' + tokenId}
+      options: { headers: {'Authorization': 'MainzellisteToken ' + tokenId}}
     })
   }
 
   resolveSearchFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, searchParams?: SearchParams): Promise<FhirResource | F> => {
     return this.client.search({
       resourceType: resourceType,
-      headers: {'Authorization': 'MainzellisteToken ' + tokenId},
+      options: { headers: {'Authorization': 'MainzellisteToken ' + tokenId}},
       searchParams
     })
   }

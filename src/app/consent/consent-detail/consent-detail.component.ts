@@ -71,4 +71,8 @@ export class ConsentDetailComponent implements OnInit {
   toChoiceItem(item: ConsentItem): ConsentChoiceItem {
     return item as ConsentChoiceItem;
   }
+
+  getCurrentTemplateId() {
+    return this.consent?.templateId;
+  }
 }
