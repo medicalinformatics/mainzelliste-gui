@@ -109,6 +109,8 @@
 	"consentDetail.validity_label": "Valid from",
 	"consentDetail.validity_date_label": "Select validity date",
 
+	"error.consentDetail.validity_date": "Validity period lies in the past",
+
 	"deletePatient.title_patient_data": "Patient data",
 	"deletePatient.title_pseudonyms": "Pseudonyms",
 	"deletePatient.title": "Delete patient",

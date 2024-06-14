@@ -14,15 +14,17 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {ConsentTemplateValidityPeriodDialog} from "./consent-template-detail/consent-template-validity-period-dialog";
 import {ConsentTemplateModulesComponent} from "./consent-template-detail/consent-template-modules.component";
 import {MatDividerModule} from "@angular/material/divider";
+import {InvalidConsentPeriodDirective} from "../shared/directives/invalid-consent-period.directive";
 
 
 @NgModule({
-    imports: [
-        CommonModule,
-        SharedModule,
-        MatProgressSpinnerModule,
-        MatDividerModule
-    ],
+  imports: [
+    CommonModule,
+    SharedModule,
+    MatProgressSpinnerModule,
+    MatDividerModule,
+    InvalidConsentPeriodDirective
+  ],
   declarations: [
     ConsentDetailComponent,
     ConsentDialogComponent,

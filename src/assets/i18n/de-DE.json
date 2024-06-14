@@ -109,6 +109,8 @@
 	"consentDetail.validity_label": "Gültig ab",
 	"consentDetail.validity_date_label": "Gültigkeitsdatum auswählen",
 
+	"error.consentDetail.validity_date": "Gültigkeitszeitraum liegt in der vergangenheit",
+
 	"deletePatient.title_patient_data": "Patientendaten",
 	"deletePatient.title_pseudonyms": "Pseudonyme",
 	"deletePatient.title": "Patienten löschen",

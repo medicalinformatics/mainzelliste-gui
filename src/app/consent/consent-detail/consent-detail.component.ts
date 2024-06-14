@@ -4,11 +4,19 @@ import {ConsentService} from "../consent.service";
 import {MAT_DATE_LOCALE, MatOption} from "@angular/material/core";
 import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "../consent.model";
 import _moment from "moment";
+import {
+  AbstractControl,
+  ControlContainer,
+  NgForm,
+  ValidationErrors,
+  ValidatorFn
+} from "@angular/forms";
 
 @Component({
   selector: 'app-consent-detail',
   templateUrl: './consent-detail.component.html',
-  styleUrls: ['./consent-detail.component.css']
+  styleUrls: ['./consent-detail.component.css'],
+  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
 })
 export class ConsentDetailComponent implements OnInit {
 
@@ -17,7 +25,6 @@ export class ConsentDetailComponent implements OnInit {
   @Input() templates!: Map<string, string>;
   @Output() consentChange = new EventEmitter<Consent>();
   @ViewChild('templateSelection') templateSelection!: MatSelect;
-
   localDateFormat:string;
 
   constructor(
@@ -75,4 +82,10 @@ export class ConsentDetailComponent implements OnInit {
   getCurrentTemplateId() {
     return this.consent?.templateId;
   }
+}
+
+export function invalidPeriodEndDateValidator(consentPeriod: number): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    return control.value + consentPeriod< new Date().getTime() ? { invalidPeriodEndDate: { value: control.value } } : null;
+  };
 }

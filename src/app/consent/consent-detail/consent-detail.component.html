@@ -41,11 +41,17 @@
     <label>{{'consentDetail.validity_label' | translate}}</label>
     <mat-form-field appearance="fill">
       <mat-label>{{'consentDetail.validity_date_label' | translate}}</mat-label>
-      <input matInput [matDatepicker]="picker"
+      <input matInput
+             [matDatepicker]="picker"
              placeholder="{{localDateFormat}}"
-             [(ngModel)]="this.consent.validFrom" name="date">
+             [appInvalidConsentPeriod]="this.consent.period"
+             [(ngModel)]="this.consent.validFrom"
+             name="date"
+             #date="ngModel"
+      >
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
+      <mat-error>{{'error.consentDetail.validity_date' | translate}}</mat-error>
     </mat-form-field>
     <label><strong>{{getConsentExpiration()}}</strong></label>
   </div>
