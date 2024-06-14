@@ -32,10 +32,12 @@ export class ConsentDetailComponent implements OnInit {
       @Inject(MAT_DATE_LOCALE) private _locale: string
   ) {
     _moment.locale(this._locale);
+    console.log("dialog " + this.consent)
     this.localDateFormat = _moment().localeData().longDateFormat('L');
   }
 
   ngOnInit(): void {
+    console.log("dialog init " + this.consent)
     // fetch consent template map <id, title> from backend
     if(this.templates == null)
       this.consentService.getConsentTemplateTitleMap()

@@ -1,3 +1,4 @@
+<form #consentForm="ngForm">
 <div style="height:100%; width:100%;">
   <div style="margin-bottom: 15%;width: 75%; margin-left: 2.5%">
     <app-consent-detail [(consent)]="dataModel" [edit]="true"></app-consent-detail>
@@ -7,8 +8,10 @@
               style="margin-right: 20px;">{{'button_cancel' | translate}}
       </button>
       <button mat-raised-button class="submit" *ngIf="dataModel"
-              (click)="editConsent()">{{'button_save' | translate}}
+              [disabled]="!dataModel || !consentForm.form.valid"
+              (click)="editConsent()">{{'button_publish' | translate}}
       </button>
     </div>
   </div>
 </div>
+</form>

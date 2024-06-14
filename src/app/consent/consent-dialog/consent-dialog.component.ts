@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, Inject, Input, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {ConsentDetailComponent} from "../consent-detail/consent-detail.component";
 import {Consent} from "../consent.model";
@@ -15,7 +15,7 @@ export class ConsentDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<ConsentDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public dataModel: { consent: Consent, templates: Map<string, string>}) {
+    @Inject(MAT_DIALOG_DATA) public dataModel: { consent: Consent, templates: Map<string, string>, isSaveButton: boolean}) {
   }
 
   ngOnInit(): void {}
