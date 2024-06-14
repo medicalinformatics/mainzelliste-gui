@@ -215,11 +215,12 @@ export class CreatePatientComponent  implements OnInit {
   openConsentDialog() {
     const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
       width: '900px',
-      data: this.consent
+      disableClose: true,
+      data: {consent: this.consent}
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.consent = result;
+      this.consent = result?.consent;
     });
   }
 }

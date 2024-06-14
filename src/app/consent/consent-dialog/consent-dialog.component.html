@@ -6,7 +6,7 @@
   <div mat-dialog-actions>
     <button mat-raised-button class="submitBreak" (click)="onCancel()">{{'button_cancel' | translate}}</button>
     <button mat-raised-button class="submit"  type="submit" (click)="onSave()"
-            [disabled]="!dataModel || !consentForm.form.valid">{{'button_save' | translate}}
+            [disabled]="!dataModel.consent || !consentForm.form.valid">{{'button_save' | translate}}
     </button>
   </div>
 </form>

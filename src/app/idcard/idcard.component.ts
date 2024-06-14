@@ -130,6 +130,7 @@ export class IdcardComponent implements OnInit {
   openConsentDialog() {
     const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
       width: '900px',
+      disableClose: true,
       data: {templates: new Map([...this.consentsView.consentTemplates].filter(e =>
             !this.consentsView.consentRows.some(r => r.templateId == e[0]))
         )}
