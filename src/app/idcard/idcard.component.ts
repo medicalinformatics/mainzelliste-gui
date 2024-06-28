@@ -15,7 +15,6 @@ import {ConsentService} from "../consent/consent.service";
 import {Permission} from "../model/permission";
 import {ConsentStatus} from "../consent/consent.model";
 import { AssociatedIdsDialog } from './dialogs/associated-ids-dialog';
-import { AssociatedIdGroup } from '../model/associated-id-group';
 
 
 export interface ConsentRow {id: string, date:string, title: string, period:string, version?:string, status: string}
@@ -157,10 +156,10 @@ export class IdcardComponent implements OnInit {
     });
   }
 
-  openAssociateIdsDialog() {
+  openAssociatedIdsDialog() {
     const dialogRef = this.associatedIdsDialog.open(AssociatedIdsDialog, {
         panelClass: 'my-dialog',
-        data: {patientListService: this.patientListService, patientService: this.patientService, patient: this.patient}
+        data: this.patient
       });
 
       dialogRef.afterClosed().subscribe(result => {

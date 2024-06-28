@@ -11,6 +11,9 @@ import {ExternalPseudonymsComponent} from "./external-pseudonyms/external-pseudo
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {FormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
+import { PatientAssociatedIdsComponent } from './patient-associated-ids/patient-associated-ids.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 @NgModule({
@@ -19,11 +22,14 @@ import {RouterModule} from "@angular/router";
     FormsModule,
     SharedModule,
     ClipboardModule,
-    RouterModule
+    RouterModule,
+    MatTableModule,
+    MatPaginatorModule
   ],
   exports: [
     PatientFieldsComponent,
-    PatientPseudonymsComponent
+    PatientPseudonymsComponent,
+    PatientAssociatedIdsComponent
   ],
   declarations: [
     PatientFieldsComponent,
@@ -34,7 +40,9 @@ import {RouterModule} from "@angular/router";
     EditPatientComponent,
     EditPatientTentativeDialog,
     DeletePatientComponent,
-    DeletePatientDialog]
+    DeletePatientDialog,
+    PatientAssociatedIdsComponent
+  ]
 })
 export class PatientModule {
 }

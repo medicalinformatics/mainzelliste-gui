@@ -243,5 +243,6 @@
 	"associatedIdsDialog.edit_entry_ext_id_label": "external Id type",
 	"associatedIdsDialog.edit_entry_error": "ERROR: please select a valid group",
 	"associatedIdsDialog.generated_id_label": "Generated Id",
-	"associatedIdsDialog.generated_id_error": "ERROR: A new group could not be generated"
+	"associatedIdsDialog.generated_id_error": "ERROR: A new group could not be generated",
+	"associatedIdsDialog.select_group_heading": "Select an id group:"
 }

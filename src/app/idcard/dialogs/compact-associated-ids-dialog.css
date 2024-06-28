@@ -1,0 +1,28 @@
+.content {
+    margin-left: 5%;
+    margin-top: 10px;
+}
+
+.input-field{
+    width: 40%;
+    margin-bottom: 0px;
+    padding-top: 0px;
+}
+
+#actionButton {
+    margin-left: 70%;
+    object-position: center;
+    width: 130px;
+    height: 40px;
+    font-size: large;
+}
+
+mat-form-field {
+    font-size: medium;
+    padding-top: 20px;
+    margin-bottom: 30px;
+}
+
+#idInput {
+    margin-left: 50px;
+}

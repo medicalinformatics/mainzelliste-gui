@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit, ViewChild } from "@angular/core";
-import { FormControl, NgForm } from "@angular/forms";
+import { FormControl } from "@angular/forms";
 import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
 import { MatChipInputEvent, MatChipList } from "@angular/material/chips";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { MatInput } from "@angular/material/input";
 import { TranslateService } from "@ngx-translate/core";
 import { Observable, of } from "rxjs";
 import { map, startWith } from "rxjs/operators";
@@ -10,7 +11,6 @@ import { AssociatedId } from "src/app/model/associated-id";
 import { AssociatedIdGroup } from "src/app/model/associated-id-group";
 import { Id } from "src/app/model/id";
 import { Patient } from "src/app/model/patient";
-import { PatientListService } from "src/app/services/patient-list.service";
 import { PatientService } from "src/app/services/patient.service";
 
 export interface IdSelection {
@@ -19,21 +19,18 @@ export interface IdSelection {
 }
 
 @Component({
-    selector: 'associated-ids-dialog',
-    templateUrl: 'associated-ids-dialog.html',
-    styleUrls: ['./associated-ids-dialog.css']
+    selector: 'compact-associated-ids-dialog',
+    templateUrl: 'compact-associated-ids-dialog.html',
+    styleUrls: ['./compact-associated-ids-dialog.css']
 })
 
-export class AssociatedIdsDialog implements OnInit {
+export class CompactAssociatedIdsDialog implements OnInit {
 
-    step: number = 0;
-    tableData!: {idTypes: {name: string, id: string, isExternal: boolean}[] | undefined, group: AssociatedIdGroup};
-    isLinear: boolean = true;
     externalIds: {name: string, id: string}[] = [{name: "-", id: "-"}];
     internalIds: {name: string, id: string}[] = [];
 
     @ViewChild('chipList') chipList!: MatChipList;
-    @ViewChild('intIdsForm') intIdsForm!: NgForm;
+    @ViewChild('input') input!: MatInput;
 
     /** selected chip data model */
     selectedInternalIds: {name: string, id: string}[] = [];
@@ -43,38 +40,31 @@ export class AssociatedIdsDialog implements OnInit {
     chipListInputData: string = "";
     internalIdSelection: IdSelection[] = [];
 
+    
     idType: any = null;
     idString: string = "";
     temp: number = 0;
     addIntIds: {idType: string, idString: string}[] = [];
-    canGenerate: boolean = false;
-    dataModel!: AssociatedIdGroup;
     generatedId!: AssociatedId;
-
   
     constructor(
         public translate: TranslateService,
-        private patientListService: PatientListService,
+        public dialogRef: MatDialogRef<CompactAssociatedIdsDialog>,
         private patientService: PatientService,
-        public dialogRef: MatDialogRef<AssociatedIdsDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: Patient
+        @Inject(MAT_DIALOG_DATA) public data: {patient: Patient, idTypes: {name: string, id: string, isExternal: boolean}[] | undefined, group: AssociatedIdGroup}
       ) {}
-
-    setupTable(): void {
-        this.tableData = {idTypes: this.patientListService.getAssociatedIdTypes(this.dataModel.name), group: this.dataModel}
-    }
 
     addId() {
         if(this.idType != null && this.idString !== "") {
-          this.addNewAssociatedId(this.dataModel, this.selectedInternalIds.map(id => id.id), new Id(this.idType.value, this.idString));
+          this.addNewAssociatedId(this.data.group, this.selectedInternalIds.map(id => id.id), new Id(this.idType.value, this.idString));
         } else {
-          this.addNewAssociatedId(this.dataModel, this.selectedInternalIds.map(id => id.id), undefined);
+          this.addNewAssociatedId(this.data.group, this.selectedInternalIds.map(id => id.id), undefined);
         }
       }
 
     addNewAssociatedId(group: AssociatedIdGroup, intIdTypes: string[], extId?: Id): boolean {
       if (extId != undefined) {
-          if (!this.data.idExists(extId?.idString)) {
+          if (!this.data.patient.idExists(extId?.idString)) {
             intIdTypes.forEach(idType => {
               let idString = this.generateNewIntId();
               this.temp++;
@@ -99,19 +89,16 @@ export class AssociatedIdsDialog implements OnInit {
 
     private generateNewIntId(): string {
         let x: number = 0;
-        while (this.data.idExists(x.toString())) {
+        while (this.data.patient.idExists(x.toString())) {
           x++;
         }
         return (x + this.temp).toString();
     }
 
     generate() {
-        if (this.patientListService.getAssociatedIdTypes(this.dataModel.name) != undefined) {
-            this.splitIds(this.patientListService.getAssociatedIdTypes(this.dataModel.name)!);
-            this.canGenerate = true;
-        } else {
-            this.canGenerate = false;
-        }
+      if (this.data.idTypes != undefined) {
+        this.splitIds(this.data.idTypes);
+      }
         this.filteredInternalIds = this.chipListInputCtrl.valueChanges.pipe(
           startWith(''),
           map(value => {
@@ -129,15 +116,6 @@ export class AssociatedIdsDialog implements OnInit {
           return {id: t, added: false}
         });
     }
-
-    toSecondStep() {
-        this.step = 1;
-        this.canGenerate = false;
-        this.externalIds = [{name: "-", id: "-"}];
-        this.internalIds = [];
-        this.idType = null;
-        this.idString = "";
-    }
     
     splitIds(ids: {
         name: string;
@@ -153,27 +131,28 @@ export class AssociatedIdsDialog implements OnInit {
         });
     }
 
-    removeAllChips() {
-      this.selectedInternalIds.forEach(id => {
-        this.removeInternalId(id);
-      });
-    }
+    // removes all chips currently selected in the chipList
+    /*removeAllChips() {
+      this.removeInternalId(this.selectedInternalIds);
+    }*/
 
-    removeInternalId(id: {name: string, id: string}) {
-      const value = (id.id || '').trim();
+    removeInternalId(id: {name: string, id: string}[]) {
+      for (let x = 0; 0 < id.length; x++) {
+        const value = (id[0].id || '').trim();
   
-      this.internalIdSelection
-      .filter(e => e.id.id == value)
-      .forEach(e => {
-        e.added = false;
-      })
+        this.internalIdSelection
+        .filter(e => e.id.id == value)
+        .forEach(e => {
+          e.added = false;
+        })
   
-      // remove id type from selected id types
-      let index = this.selectedInternalIds.findIndex(e => e.id == value);
-      if (index > -1) {
-        this.selectedInternalIds.splice(index, 1);
-        this.chipList.errorState = this.selectedInternalIds.length == 0;
-        this.chipListInputCtrl.updateValueAndValidity({onlySelf: false, emitEvent: true});
+        // remove id type from selected id types
+        let index = this.selectedInternalIds.findIndex(e => e.id == value);
+        if (index > -1) {
+          this.selectedInternalIds.splice(index, 1);
+          this.chipList.errorState = this.selectedInternalIds.length == 0;
+          this.chipListInputCtrl.updateValueAndValidity({onlySelf: false, emitEvent: true});
+        }
       }
     }
 
@@ -207,6 +186,7 @@ export class AssociatedIdsDialog implements OnInit {
     }
 
     ngOnInit(): void {
+      this.generate();
     }
 
     onClose(): void {

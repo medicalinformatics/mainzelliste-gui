@@ -1,0 +1,72 @@
+<button class="close" mat-button (click)="onClose()">&times;</button>
+<div mat-dialog-content>
+  <ng-template matStepLabel>{{'associatedIdsDialog.edit_entry_label' | translate}}</ng-template>
+  <ng-container>
+    <div class="content">
+      <form>
+        <div ngModelGroup="internalIds" #internalIdModelGroup="ngModelGroup">
+          <h4>{{'associatedIdsDialog.edit_entry_int_id_heading' | translate}}</h4>
+          <mat-form-field color="primary" style="width: 76.5%">
+            <mat-label>{{'associatedIdsDialog.edit_entry_int_id_label' | translate}}</mat-label>
+            <mat-chip-list #chipList aria-label="Fruit selection"
+                name="internalIdTypesChipList"
+                [ngModel]="selectedInternalIds">
+              <mat-chip *ngFor="let id of selectedInternalIds"
+                  [selectable]="true"
+                  [removable]="true"
+                  (removed)="removeInternalId([id])">
+                {{id.name}}
+                <button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip>
+              <input [formControl]="chipListInputCtrl"
+                  [matChipInputFor]="chipList"
+                  [matAutocomplete]="auto"
+                  [matChipInputAddOnBlur]="true"
+                  (matChipInputTokenEnd)="findAndAddInternalId($event)">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedInternalId($event)">
+              <mat-option style="height: auto" *ngFor="let id of this.filteredInternalIds | async" [value]="id.id.id">
+                <div [hidden]="id.added">{{id.id.name}}</div>
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <h4>{{'associatedIdsDialog.edit_entry_ext_id_heading' | translate}}</h4>
+          <mat-form-field appearance="fill">
+            <mat-label>{{'associatedIdsDialog.edit_entry_ext_id_label' | translate}}</mat-label>
+            <mat-select (selectionChange)="idType = $event; input.value = ''; idString = ''" #option>
+              <mat-option *ngFor="let id of externalIds" [value]="id.id">
+                {{id.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          
+          <mat-form-field appearance="fill" id="idInput">
+            <mat-label>extId</mat-label>
+            <input matInput [disabled]="idType == null || option.value === '-'" [required]="idType != null && option.value !== '-'" (keyup)="idString = input.value" #input>
+          </mat-form-field>
+        </div>
+      </form>
+    </div>
+        
+    <div class="action">
+      <div class="left-section">
+      </div>
+      <div class="right-section">
+        <button
+            mat-raised-button
+            class="submit"
+            id="actionButton"
+            [disabled]="selectedInternalIds.length == 0 || (idType != null && option.value !== '-' && idString === '')"
+            (click)="addId(); onClose()">
+          {{'button_save_new_id' | translate}}
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+</div>

@@ -55,6 +55,7 @@ import { PatientSearchComponent } from './experimental/patientSearch/patientSear
 import { AssociatedIdsDialog } from './idcard/dialogs/associated-ids-dialog';
 import { IdExistsErrorDialog } from './idcard/dialogs/id-exists-error-dialog';
 import { MatStepperModule } from '@angular/material/stepper';
+import { CompactAssociatedIdsDialog } from './idcard/dialogs/compact-associated-ids-dialog';
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
   return () => configService.init()
@@ -102,7 +103,8 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     AccessDeniedComponent,
     PageNotFoundComponent,
     PatientSearchComponent,
-    AssociatedIdsTableComponent
+    AssociatedIdsTableComponent,
+    CompactAssociatedIdsDialog
   ],
   imports: [
     SharedModule,

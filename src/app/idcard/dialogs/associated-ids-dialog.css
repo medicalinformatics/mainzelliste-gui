@@ -36,6 +36,12 @@
     text-align: right;
 }
 
+.input-field{
+    width: 40%;
+    margin-bottom: 0px;
+    padding-top: 0px;
+}
+
 #actionButton {
     object-position: center;
     width: 130px;

@@ -7,21 +7,21 @@
         <h4>
           {{'associatedIdsDialog.group_selection_heading' | translate}}
         </h4>
-        <ng-container *ngIf="data.patient.associatedIdGroups.length <= 4">
+        <ng-container *ngIf="data.associatedIdGroups.length <= 4">
           <mat-radio-group
             style="padding-top: 20px;"
             class="groups-radio-group"
             [(ngModel)]="dataModel"
             #radioGroup>
-            <mat-radio-button class="groups-radio-button" *ngFor="let group of data.patient.associatedIdGroups" [value]="group">
+            <mat-radio-button class="groups-radio-button" *ngFor="let group of data.associatedIdGroups" [value]="group">
               {{group.name}}
             </mat-radio-button>
           </mat-radio-group>
         </ng-container>
-        <ng-container *ngIf="data.patient.associatedIdGroups.length > 4">
+        <ng-container *ngIf="data.associatedIdGroups.length > 4">
           <mat-form-field appearance="fill">
             <mat-select (selectionChange)="dataModel = $event.value">
-              <mat-option *ngFor="let group of data.patient.associatedIdGroups" [value]="group">
+              <mat-option *ngFor="let group of data.associatedIdGroups" [value]="group">
                 {{group.name}}
               </mat-option>
             </mat-select>
@@ -43,6 +43,8 @@
 
       </div>
     </mat-step>
+
+
     <mat-step completed="false">
       <div class="stepper-content">
         <ng-template matStepLabel>{{'associatedIdsDialog.group_ids_label' | translate}}</ng-template>
@@ -71,6 +73,8 @@
         </div>
       </div>
     </mat-step>
+
+
     <mat-step completed="false">
       <div>
         <ng-template matStepLabel>{{'associatedIdsDialog.edit_entry_label' | translate}}</ng-template>
@@ -180,15 +184,24 @@
         </ng-container>
       </div>
     </mat-step>
+
+
     <mat-step completed="false">
       <ng-template matStepLabel>{{'associatedIdsDialog.generated_id_label' | translate}}</ng-template>
-      <div class="stepper-content">
+      <div class="stepper-content" style="padding-top: 3%;">
         <ng-container *ngIf="generatedId != undefined">
-          <div *ngFor="let id of generatedId.idTypes" #buttonContainer>
-            {{id.idType}}: {{id.idString}}
-            <button mat-icon-button [cdkCopyToClipboard]="id.idString" [matTooltip]="this.translate.instant('button_copy_id_tooltip')">
-              <mat-icon id="copyIcon" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
-            </button>
+          <div *ngFor="let id of generatedId.idTypes" #buttonContainer>          
+            <mat-form-field class="input-field">
+              <mat-label>{{id.idType}}</mat-label>
+              <input style="width: 90%" matInput [readonly]="true" value=" {{id.idString}}">
+              <span matSuffix style="display:flex; flex-flow: row; justify-content:flex-end; column-gap:6px; row-gap: 0px">
+                <button mat-icon-button [cdkCopyToClipboard]="id.idString"
+                      [ngStyle]="{'width': '24px', 'height': '24px'}"
+                      [matTooltip]="translate.instant('button_copy_id_tooltip')">
+                  <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
+                </button>
+              </span>
+            </mat-form-field>
           </div>
         </ng-container>
         <ng-container *ngIf="generatedId == undefined">

@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { TranslateService } from '@ngx-translate/core';
 import { AssociatedIdGroup } from 'src/app/model/associated-id-group';
 
 @Component({
@@ -16,6 +17,10 @@ export class AssociatedIdsTableComponent implements OnInit {
 
   @Input() data!: {idTypes: {name: string, id: string, isExternal: boolean}[] | undefined, group: AssociatedIdGroup};
 
+  constructor(
+    public translate: TranslateService,
+  ){}
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -30,6 +35,7 @@ export class AssociatedIdsTableComponent implements OnInit {
   fillElementData() {
     if (this.data != undefined && this.data.idTypes != undefined) {
       this.displayedColumns = ["index"].concat(this.data.idTypes.map(id => id.id));
+      this.displayedColumns.push("editButton");
       for (let y = 0; y < this.data.group.associatedIds.length; y++) {
         let associatedId = this.data.group.associatedIds[y];
         let tempIds: string[] = [(y + 1).toString()];
@@ -40,6 +46,7 @@ export class AssociatedIdsTableComponent implements OnInit {
             }
           }
         }
+        tempIds[this.data.idTypes!.length + 1] = "";
         this.elementData.push({ids: tempIds});
       }
     }
@@ -51,6 +58,7 @@ export class AssociatedIdsTableComponent implements OnInit {
         let temp = idType.isExternal ? "(ext)" : "(int)";
         this.headers.push({name: idType.name, id: idType.id, intOrExt: temp});
       });
+      this.headers.push({name: this.translate.instant('button_edit'), id: "editButton", intOrExt: ""})
     }
   }
 }
