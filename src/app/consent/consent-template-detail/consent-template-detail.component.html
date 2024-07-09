@@ -2,7 +2,7 @@
   <!-- Name -->
   <mat-form-field class="templateInputField" [ngStyle]="{'margin-bottom': displayError(name) ? '0.25em' : '-1.25em' }">
     <mat-label>Name</mat-label>
-    <input pattern="[A-Za-z\d\-_\.&$#\+]*" style="width: 45%;" matInput placeholder=""
+    <input pattern="[A-Za-z\d\-_\.$#]{1,255}" style="width: 45%;" matInput placeholder=""
            [(ngModel)]="this.template.name"
            [name]="'name'" #name="ngModel" required="true">
     <mat-error *ngIf="displayError(name)">

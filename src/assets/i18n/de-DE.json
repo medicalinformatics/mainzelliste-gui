@@ -58,8 +58,12 @@
   "consent_status.inactive": "Inaktiv",
   "consent_status.entered-in-error": "Fehlerhaft",
 
+	"consent_template_status.draft": "Entwurf",
+	"consent_template_status.active": "Aktiv",
+
   "consent_template.name": "Name",
   "consent_template.title": "Titel",
+	"consent_template.status": "Status",
   "consent_template.organization": "Verantwortliche Einrichtung",
   "consent_template.research_study": "Forschungsprojekt",
   "consent_template.name.based_on_mii_broad_consent": "basiert auf MII Broad Consent",
