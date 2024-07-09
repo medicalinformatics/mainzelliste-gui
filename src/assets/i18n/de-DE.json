@@ -75,6 +75,7 @@
 	"navigation.info": "Info",
 	"navigation.new_patient": "Neuer Patient",
 	"navigation.patientlist": "Patientenliste",
+  "navigation.consent_template": "Einwilligungsvorlagen",
 
 	"patientlist.filter_search": "Filter/Suche...",
 	"patientlist.headers_actions": "Aktionen",
