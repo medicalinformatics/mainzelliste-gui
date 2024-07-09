@@ -325,7 +325,7 @@ export class ConsentService {
         entries.forEach((v, k) => {
           result.set(k, {
             id: v.id ?? "",
-            name: v.name ?? "",
+            name: this.getResourceIdentifier(v.identifier),
             title: v.title ?? "",
             definition: v
           })
@@ -333,6 +333,10 @@ export class ConsentService {
         return result;
       })
     );
+  }
+
+  public getResourceIdentifier(identifiers: fhir4.Identifier[] | undefined): string {
+    return identifiers != undefined && identifiers.length > 0 ? identifiers[0].value ?? "" : ""
   }
 
   public getConsentTemplateTitleMap(): Observable<Map<string, string>> {
@@ -506,7 +510,11 @@ export class ConsentService {
       resourceType: "Questionnaire",
       status: template.status,
       contained: [fhirConsent],
-      name: template.name,
+      identifier: [
+        {
+          value: template.name
+        }
+      ],
       title: template.title,
       subjectType: ["Consent"],
       item: template.items.map(i => {
