@@ -26,13 +26,19 @@ the docker image of the ui uses several environment variables :
 ### Version Compatibility
 Choosing the right version of the [Mainzelliste](http://mainzelliste.de) backend.
 
-| Mainzelliste-UI | Mainzelliste (backend) |
-|-----------------|------------------------|
-| 0.x  (Beta)     | 12.x                   |
+| Mainzelliste-UI      | Mainzelliste (backend) |
+|----------------------|------------------------|
+| 0.0.4  (Beta)        | 12.x                   |
+| 0.0.5  (development) | 13.x (development)     |
 
 ### Running on Linux
 1. copy the file `.env.default` to `.env` and set the environment variable `HOST` to the server name or ip address.
-2. run ``docker-compose up -d``
+2. set your server name or ip address (`{HOST}`) in keyclok configuration
+```bash
+chmod u+x prepare-keycloak-import-file.sh
+./prepare-keycloak-import-file.sh {HOST}
+```
+3. run ``docker-compose up -d``
 
 #### Running in production mode behind a reverse proxy
 Adjust your docker compose file, depending on the configuration of the reverse proxy:
@@ -50,7 +56,7 @@ Adjust your docker compose file, depending on the configuration of the reverse p
      1. adjust both env. variables `KEYCLOAK_URL` and `MAINZELLISTE_URL`
 
 #### Override the default configuration file
-For more configuration eg. defining new user roles, your can override the [default configuration file](./src/assets/config/config.template.json) using the docker secret ``mainzelliste-gui.docker.conf``
+For more configuration your can override the [default configuration file](./src/assets/config/config.template.json) using the docker secret ``mainzelliste-gui.docker.conf``
 ```yaml
 services: 
   mainzelliste-gui:
