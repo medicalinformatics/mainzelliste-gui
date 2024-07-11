@@ -1,9 +1,6 @@
+<form #patientForm="ngForm">
 <div style="height:100%; width:100%">
 
-  <h1 class="titleicon">
-    <mat-icon>merge_type</mat-icon>
-    Patienten zusammenführen
-  </h1>
 
 <div  style="display: flex; flex-flow: row; justify-content: space-evenly;">
 
@@ -61,3 +58,4 @@
 </div>
 <button mat-raised-button [disabled]=true id="ergebnisButton" (click)="mergePatients()">Zusammenführen</button>
 </div>
+</form>

@@ -220,6 +220,8 @@
 
 	"patientlistView.title": "Patientenliste",
 
+	"mergePatients.title": "Patienten zusammenführen",
+
 	"newIdDialog.mat_title": "Neue ID generieren",
 	"newIdDialog.sub_title": "Für den ausgewählten Typ wird eine neue Id generiert",
 	"newIdDialog.id_types": "Id Typen",

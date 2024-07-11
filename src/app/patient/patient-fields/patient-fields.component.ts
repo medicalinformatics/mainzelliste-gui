@@ -11,6 +11,7 @@ import {
 } from "@angular/forms";
 import {ErrorStateMatcher} from "@angular/material/core";
 import { TranslateService } from '@ngx-translate/core';
+import {Patient} from "../../model/patient";
 
 @Component({
   selector: 'app-patient-fields',
@@ -21,7 +22,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 export class PatientFieldsComponent implements OnInit {
 
-  @Input()  fields: {[key: string]: any} = {};
+  @Input()  fields: {[key: string]: string} = {};
   @Output() fieldEvent = new EventEmitter<{[key: string]: any}>();
   @Output() consentEvent = new EventEmitter<boolean>();
   @Output() slideFieldEvent = new EventEmitter<{name:string,value:string}>();
@@ -30,6 +31,7 @@ export class PatientFieldsComponent implements OnInit {
   @Input() readOnly: boolean= false;
   @Input() side: string="none";
   localDateFormat: string;
+  finalPatient = new Patient();
 
   constructor(
     fieldService: FieldService,
@@ -46,7 +48,8 @@ export class PatientFieldsComponent implements OnInit {
   }
 
   slideData(value: string, name: string): void{
-      this.slideFieldEvent.emit({value:value, name:name});
+    this.finalPatient.fields[name]= value;
+    this.slideFieldEvent.emit({value:value, name:name});
   }
 
   public getFieldErrorMessage(fieldName: string, errors: ValidationErrors | null): string {

@@ -13,6 +13,7 @@ import {AccessDeniedComponent} from "./access-denied/access-denied.component";
 import {AddConsentComponent} from "./consent/add-consent/add-consent.component";
 import {EditConsentComponent} from "./consent/edit-consent/edit-consent.component";
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
+import {MergePatientsComponent} from "./experimental/mergePatients/mergePatients.component";
 
 const routes: Routes = [
   // TODO: All Paths should have english wording.
@@ -26,9 +27,9 @@ const routes: Routes = [
       {path: 'patientlist', component: PatientlistViewComponent, data : { permission: Permission.READ_PATIENT }},
       {path: 'patient/:idType/:idString/add-consent', component: AddConsentComponent, data: { permission: Permission.CREATE_CONSENT, checkIdType:true}},
       // TODO support multiple permissions 'readConsent'
-      {path: 'patient/:idType/:idString/edit-consent/:id', component: EditConsentComponent, data: { permission: Permission.EDIT_CONSENT, checkIdType:true}}
+      {path: 'patient/:idType/:idString/edit-consent/:id', component: EditConsentComponent, data: { permission: Permission.EDIT_CONSENT, checkIdType:true}},
       // {path: 'delete-patient/:idType/:idString', pathMatch: 'full', redirectTo:  ''},
-      // {path: 'merge-patients', component: MergePatientsComponent},
+      {path: 'merge-patients', component: MergePatientsComponent, data: { permission: Permission.EDIT_PATIENT, checkIdType:true}},
       // {path: 'audittrail', component: AudittrailComponent},
       // {path: 'delete-patients', component: DeleteMultiplePatientsComponent, data : { permission: 'deletePatient' }}
     ]

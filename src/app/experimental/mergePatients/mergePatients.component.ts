@@ -1,6 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Patient} from "../../model/patient";
 import {PatientService} from "../../services/patient.service";
+import {GlobalTitleService} from "../../services/global-title.service";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-merge-patients',
@@ -17,10 +19,14 @@ export class MergePatientsComponent implements OnInit {
   @Input() finalPatient= new Patient;
   emptyPatient= new Patient;
 
-  constructor(patientService: PatientService) {
+  constructor(
+      public translate: TranslateService,
+      patientService: PatientService,
+      private titleService: GlobalTitleService
+  ) {
     this.patientService = patientService;
-    this.emptyPatient.ids=[{idType: "Pseudonym", idString: " ", tentative: false}];
-
+    this.emptyPatient.ids = [{idType: "Pseudonym", idString: " ", tentative: false}];
+    this.titleService.setTitle(this.translate.instant('mergePatients.title'), false, "merge_type");
   }
 
   ngOnInit(): void {

@@ -30,6 +30,7 @@ export class PatientlistViewComponent implements OnInit {
   patientService: PatientService;
   patient: Patient = new Patient();
   fields: Array<string> = [];
+  selectedPatients: Array<Patient> = [];
   patientsMatTableData: MatTableDataSource<Patient>;
   loading: boolean = false;
   @ViewChild(MatPaginator)
@@ -115,6 +116,10 @@ export class PatientlistViewComponent implements OnInit {
     if (filterConfig) {
       this.filterInput.nativeElement.value = filterConfig.display + ":";
     }
+  }
+
+  patientSelected(selectedPatients: Patient[]) {
+    this.selectedPatients = selectedPatients;
   }
 
   async ngOnInit() {

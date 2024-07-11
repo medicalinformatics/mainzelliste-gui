@@ -25,8 +25,33 @@
       </mat-autocomplete>
     </mat-form-field>
 
+    <div>
+      <br>
+      <button mat-raised-button matBadgeColor="accent"
+              disabled="disabled"> <mat-icon>grid_view</mat-icon> Projekt Erstellen
+      </button>
+      <button mat-raised-button matBadgeColor="accent" [routerLink]="['/merge-patients']"
+              [state]="{patients: selectedPatients}"
+              [disabled]="selectedPatients.length!=2"
+              [matBadge]="selectedPatients.length"
+              [matBadgeHidden]="selectedPatients.length<1">
+        <mat-icon>merge_type</mat-icon>
+        Zusammenführen
+      </button>
+
+<!--      <button mat-raised-button matBadgeColor="accent" [routerLink]="['/delete-patients']"-->
+<!--              [state]="{patients: selectedPatients}"-->
+<!--              [disabled]="selectedPatients.length<2"-->
+<!--              [matBadge]="selectedPatients.length"-->
+<!--              [matBadgeHidden]="selectedPatients.length<1">-->
+<!--        <mat-icon>delete_outline</mat-icon> Löschen-->
+
+<!--      </button>-->
+
+    </div>
+
     <br><br>
-  <app-patientlist [patients]="patientsMatTableData" [loading]="loading"></app-patientlist>
+  <app-patientlist (selectedPatients)="patientSelected($event)" [patients]="patientsMatTableData" [loading]="loading"></app-patientlist>
   <mat-paginator
     [length]="pageNumber"
     [pageSize]="10"
