@@ -17,11 +17,11 @@ services:
       KEYCLOAK_REALM: mainzelliste
       KEYCLOAK_CLIENT_ID: mainzelliste-ui
       # supported languages: 'en-US' or 'de-DE'
-      ML_UI_DEFAULT_LANGUAGE: en-US
+      ML_UI_DEFAULT_LANGUAGE: de-DE
       ML_UI_MAIN_ID_TYPE: pid
       ML_UI_SHOW_ALL_IDS: false
       ML_UI_DEBUG_MODE: false
-      ML_UI_ENABLE_CONSENT: false
+      ML_UI_ENABLE_CONSENT: true
     depends_on:
       - mainzelliste
   mainzelliste:

@@ -530,7 +530,7 @@
   }, {
     "id" : "33f0f2bb-2466-4066-9bfc-b52e3ed4a303",
     "createdTimestamp" : 1699456184751,
-    "username" : "study-nurse",
+    "username" : "alpha-study-nurse",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
