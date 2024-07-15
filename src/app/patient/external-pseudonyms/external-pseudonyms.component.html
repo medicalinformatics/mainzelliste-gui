@@ -1,5 +1,5 @@
 <table style="width: 100%; max-width: 700px;" ngModelGroup="externalIds">
-  <tr *ngFor="let externalId of getExternalIds() ">
+  <tr *ngFor="let externalId of getExternalIds(); index as i">
     <td style="width: 100%; flex-flow: row">
       <div style="display: flex; flex-wrap: nowrap;">
         <button *ngIf="side!='none'" style=" margin-top:4%; border:none; background:none;"
@@ -10,8 +10,8 @@
         <mat-form-field class="inputField">
           <mat-label>{{externalId.idType}}</mat-label>
           <input style="width: 90%"
-                 [(ngModel)]="externalId.idString" [name]="externalId.idType"
-                 matInput [readonly]="readOnly"
+                 [(ngModel)]="externalId.idString" [name]="externalId.idType + i"
+                 matInput [readonly]="readOnly || this.permittedOperation != 'C' && this.isAssociatedIdType(externalId.idType)"
                  value="{{externalId.idString}}">
           <span matSuffix style="display:flex; flex-flow: row; justify-content:flex-end; column-gap:6px; row-gap: 0px">
             <button mat-icon-button *ngIf="readOnly && this.config.isCopyIdEnabled()" [cdkCopyToClipboard]="externalId.idString"
@@ -27,7 +27,7 @@
             </button>
           </span>
         </mat-form-field>
-        <button *ngIf="!readOnly" mat-icon-button color="primary"
+        <button *ngIf="!readOnly && (this.permittedOperation == 'C' || !this.isAssociatedIdType(externalId.idType))" mat-icon-button color="primary"
                 aria-label="Externes Pseudonym entfernen"
                 (click)="this.removeExternalIdField(externalId.idType)"
                 style="margin-top: 9px; margin-left: 8px">
@@ -37,7 +37,7 @@
     </td>
   </tr>
   <!-- external id types dropdown menu-->
-  <tr *ngIf="this.getExternalIdMatSelectData().length > 0 && !readOnly">
+  <tr *ngIf="!readOnly && this.getExternalIdMatSelectData().length > 0">
     <td>
       <div style="display: flex; flex-wrap: nowrap;">
         <mat-form-field class="inputField">

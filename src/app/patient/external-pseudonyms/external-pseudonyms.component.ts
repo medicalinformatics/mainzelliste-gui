@@ -41,7 +41,9 @@ export class ExternalPseudonymsComponent implements OnChanges {
 
   addExternalIdField(selectedExternalIdType: MatSelect) {
     //add external id to patient model
-    addIfNotExist(new Id(selectedExternalIdType.value, ''), this.ids, e => e.idType == selectedExternalIdType.value);
+    addIfNotExist(new Id(selectedExternalIdType.value, ''), this.ids,
+        e => !this.isAssociatedIdType(selectedExternalIdType.value) && e.idType == selectedExternalIdType.value
+    );
 
     this.externalIdTypes.filter(t => t.idType == selectedExternalIdType.value)
     .forEach(t => t.added = true);
@@ -65,22 +67,27 @@ export class ExternalPseudonymsComponent implements OnChanges {
   getExternalIdTypes(): IdTypSelection[] {
     //init.
     if (this.externalIdTypes.length == 0) {
-      this.externalIdTypes = this.patientListService.getIdGenerators(true, this.permittedOperation)
-      .map(g => {
-        return {idType: g.idType, added: false}
-      });
+      this.externalIdTypes = [
+        ...this.patientListService.getUniqueIdTypes(true, this.permittedOperation)
+          .map(t => { return {idType: t, added: false, associated: false } }),
+        ...this.patientListService.getAssociatedIdTypes(true, this.permittedOperation)
+          .map(t => { return {idType: t, added: false, associated: true } })];
     }
     return this.externalIdTypes;
   }
 
   getExternalIdMatSelectData(): string[] {
-    return this.getExternalIdTypes().filter(t => !t.added).map(t => t.idType);
+    return this.getExternalIdTypes().filter(t => this.isAssociatedIdType(t.idType) || !t.added).map(t => t.idType);
   }
 
   getExternalIds(): Id[] {
     return this.ids.filter(id =>
       this.getExternalIdTypes().some(t => t.idType == id.idType && t.added)
     );
+  }
+
+  isAssociatedIdType(idType: string){
+    return this.getExternalIdTypes().some( t => t.idType == idType && t.associated)
   }
 
   public getConcatenated(id: Id): string {

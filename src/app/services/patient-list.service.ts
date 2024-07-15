@@ -93,15 +93,38 @@ export class PatientListService {
       && f.mainzellisteFields.every( c => allowedFieldNames.some( n => n == c)));
   }
 
+
   getIdTypes(operation?: Operation): Array<string> {
-    let allowedIdTypes = operation != undefined ? this.authorizationService.getAllAllowedIdTypes(operation) : [];
+    let allowedIdTypes = operation != undefined ? this.authorizationService.getAllAllowedUniqueIdTypes(operation) : [];
     return allowedIdTypes.length == 0  ? this.configService.getMainzellisteIdTypes() : allowedIdTypes;
   }
 
-  getInternalTypes(operation?: Operation): Array<string> {
-    let allowedIdTypes = operation != undefined ? this.authorizationService.getAllowedIdTypes(operation, false) : [];
+  getAllIdTypes(operation: Operation): Array<string>{
+    return [ ...this.getIdTypes(operation),
+      ...this.getAssociatedIdTypes(false, operation),
+      ...this.getAssociatedIdTypes(true, operation)];
+  }
+
+  getAllExternalIdTypes(operation?: Operation): Array<string> {
+    return [ ...this.getUniqueIdTypes(true, operation),
+      ...this.getAssociatedIdTypes(true, operation)];
+  }
+
+  getAllInternalIdTypes(operation: Operation): Array<string> {
+    return [ ...this.getUniqueIdTypes(false, operation),
+      ...this.getAssociatedIdTypes(false, operation)];
+  }
+
+  getUniqueIdTypes(isExternal: boolean, operation?: Operation): Array<string> {
+    let allowedIdTypes = operation != undefined ? this.authorizationService.getAllowedUniqueIdTypes(operation, isExternal) : [];
     return allowedIdTypes.length > 0  ? allowedIdTypes : this.configService.getMainzellisteIdGenerators()
-      .filter(g => !g.isExternal).map(g => g.idType);
+    .filter(g => g.isExternal == isExternal).map(g => g.idType);
+  }
+
+  getAssociatedIdTypes(isExternal: boolean, operation?: Operation): Array<string> {
+    let allowedIdTypes = operation != undefined ? this.authorizationService.getAllowedAssociatedIdTypes(operation, isExternal) : [];
+    return allowedIdTypes.length > 0  ? allowedIdTypes : this.configService.getMainzellisteAssociatedIdGenerators()
+    .filter(g => g.isExternal == isExternal).map(g => g.idType);
   }
 
   getFieldNames(operation: Operation): Array<string> {
@@ -110,7 +133,7 @@ export class PatientListService {
 
   getIdGenerators(isExternal?: boolean, operation?: Operation): Array<IdGenerator> {
     let isExternalIdType = isExternal!=null && isExternal;
-    let allowedIdTypes = operation != undefined ? this.authorizationService.getAllowedIdTypes(operation, isExternalIdType) : [];
+    let allowedIdTypes = operation != undefined ? this.authorizationService.getAllowedUniqueIdTypes(operation, isExternalIdType) : [];
     return this.configService.getMainzellisteIdGenerators()
       .filter(g => g.isExternal == isExternalIdType && (operation == undefined || allowedIdTypes.some(t => t == g.idType)));
   }
@@ -149,7 +172,7 @@ export class PatientListService {
     //let defaultIdType = this.findDefaultIdType(this.getIdTypes());
     if (filters.every(f => !f.isIdType)) {
       // get permitted idTypes
-      allowedIdTypes = this.authorizationService.getAllowedIdTypes('R', false);
+      allowedIdTypes = this.authorizationService.getAllowedUniqueIdTypes('R', false);
       if(allowedIdTypes.length > 0 && !allowedIdTypes.some( t => t == "*"))
         searchIds = allowedIdTypes.map(type => ({idType: type, idString: "*"}));
       else
@@ -286,7 +309,7 @@ export class PatientListService {
     }
     //add external Ids
     for(let extId of patient.ids)
-      body.set(extId.idType, extId.idString)
+      body.append(extId.idType, extId.idString)
 
     // set sureness flag
     if(sureness)
@@ -323,7 +346,7 @@ export class PatientListService {
       new ReadPatientsTokenData(
         [{idType: id.idType, idString: id.idString}],
         this.getFieldNames(operation),
-        this.getIdTypes(operation)
+        this.getAllIdTypes(operation)
       )).toPromise();
     return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + readToken.id).toPromise();
   }

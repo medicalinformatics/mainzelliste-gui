@@ -11,6 +11,7 @@ import {ExternalPseudonymsComponent} from "./external-pseudonyms/external-pseudo
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {FormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
+import {ScrollingModule} from "@angular/cdk/scrolling";
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import {RouterModule} from "@angular/router";
     FormsModule,
     SharedModule,
     ClipboardModule,
-    RouterModule
+    RouterModule,
+    ScrollingModule
   ],
   exports: [
     PatientFieldsComponent,

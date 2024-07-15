@@ -16,6 +16,8 @@ export class AuthorizationService {
   private currentTenantId: string;
   private allowedIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
   private allowedExternalIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
+  private allowedAssociatedIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
+  private allowedAssociatedExternalIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
   private allowedFieldNames: Map<Operation, string[]> = new Map<Operation, string[]>();
 
   constructor(
@@ -37,7 +39,14 @@ export class AuthorizationService {
 
   private initPatientAllowedAttributes(){
     let internalIdTypeOperations:Operation[] = ["C", "R"];
-    internalIdTypeOperations.forEach( o => this.allowedIdTypes.set(o, this.findAllowedIdTypes(o, false)));
+    internalIdTypeOperations.forEach( o => {
+      let allIdTypes = this.findAllowedIdTypes(o, false);
+      this.allowedIdTypes.set(o, this.configService.getMainzellisteIdTypes().filter( t => allIdTypes.includes(t)))
+      this.allowedAssociatedIdTypes.set(o, this.configService.getMainzellisteAssociatedIdGenerators()
+      .filter( g => !g.isExternal && allIdTypes.includes(g.idType))
+      .map(g => g.idType));
+    });
+
     //put tenant Id types first
     let tenantIdTypes: string[] = this.configuredTenants.find(t => t.id == this.currentTenantId)?.idTypes || [];
     const operationList:Operation[] =  ['C', 'U', 'R'];
@@ -54,7 +63,13 @@ export class AuthorizationService {
     }
 
     let externalIdTypeOperations:Operation[] = ["C", "U", "R"];
-    externalIdTypeOperations.forEach( o => this.allowedExternalIdTypes.set(o, this.findAllowedIdTypes(o, true)))
+    externalIdTypeOperations.forEach( o => {
+      let allIdTypes = this.findAllowedIdTypes(o, true);
+      this.allowedExternalIdTypes.set(o, this.configService.getMainzellisteIdTypes().filter( t => allIdTypes.includes(t)))
+      this.allowedAssociatedExternalIdTypes.set(o, this.configService.getMainzellisteAssociatedIdGenerators()
+      .filter( g => g.isExternal && allIdTypes.includes(g.idType))
+      .map(g => g.idType));
+    })
 
     let fieldsOperations:Operation[] = ["C", "U", "R"];
     fieldsOperations.forEach( o => {
@@ -145,12 +160,16 @@ export class AuthorizationService {
       && p.operations.includes(permission.operation))
   }
 
-  getAllAllowedIdTypes(operation: Operation): string[] {
-    return this.getAllowedIdTypes(operation, false).concat(this.getAllowedIdTypes(operation, true));
+  getAllAllowedUniqueIdTypes(operation: Operation): string[] {
+    return this.getAllowedUniqueIdTypes(operation, false).concat(this.getAllowedUniqueIdTypes(operation, true));
   }
 
-  getAllowedIdTypes(operation: Operation, isExternal: boolean): string[] {
+  getAllowedUniqueIdTypes(operation: Operation, isExternal: boolean): string[] {
     return (isExternal? this.allowedExternalIdTypes.get(operation) : this.allowedIdTypes.get(operation)) || [];
+  }
+
+  getAllowedAssociatedIdTypes(operation: Operation, isExternal: boolean): string[] {
+    return (isExternal? this.allowedAssociatedExternalIdTypes.get(operation) : this.allowedAssociatedIdTypes.get(operation)) || [];
   }
 
   getAllowedFieldNames(operation: Operation): string[] {
