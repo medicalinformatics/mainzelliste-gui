@@ -11,6 +11,10 @@ import {TranslateService} from '@ngx-translate/core';
 import {ClaimsConfig} from "./model/api/configuration-claims-data";
 
 
+export interface AssociatedIds {
+  [key: string] : [IdGenerator]
+}
+
 export interface IdGenerator {
   name: string,
   idType: string,
@@ -23,6 +27,7 @@ export class AppConfigService {
 
   data: PatientList[] = [];
   private mainzellisteIdGenerators: IdGenerator[] = [];
+  private mainzellisteAssociatedIdGenerators: IdGenerator[] = []
   private mainzellisteIdTypes: string[] = [];
   private mainzellisteFields: string[] = [];
   private mainzellisteClaims: ClaimsConfig[] = [];
@@ -88,6 +93,10 @@ export class AppConfigService {
     return this.mainzellisteIdGenerators;
   }
 
+  getMainzellisteAssociatedIdGenerators(): IdGenerator[] {
+    return this.mainzellisteAssociatedIdGenerators;
+  }
+
   getMainzellisteFields(): string[] {
     return this.mainzellisteFields;
   }
@@ -142,6 +151,19 @@ export class AppConfigService {
         this.mainzellisteIdTypes = idGenerators.map( g => g.idType);
         return idGenerators;
       })
+    ).toPromise();
+  }
+
+  public fetchMainzellisteAssociatedIdGenerators(): Promise<IdGenerator[]> {
+    return this.httpClient.get<AssociatedIds>(this.data[0].url + "/configuration/idGenerators/associatedIds", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
+    .pipe(
+        catchError((e) => throwError(new Error(this.translate.instant('error.app_config_service_fetch_id_generators')))),
+        map(associatedIds => {
+          for(let key in associatedIds){
+            this.mainzellisteAssociatedIdGenerators.push(...associatedIds[key])
+          }
+          return this.mainzellisteAssociatedIdGenerators;
+        })
     ).toPromise();
   }
 
