@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Id} from "../../model/id";
 import {IdTypSelection} from "../create-patient/create-patient.component";
 import {MatSelect} from "@angular/material/select";
@@ -7,6 +7,8 @@ import {PatientListService} from "../../services/patient-list.service";
 import {ControlContainer, NgForm} from "@angular/forms";
 import {AppConfigService} from "../../app-config.service";
 import {Operation} from "../../model/tenant";
+import {MatDialog} from "@angular/material/dialog";
+import {GenerateIdDialog} from "./dialogs/generate-id/generate-id-dialog.component";
 
 @Component({
   selector: 'app-external-pseudonyms',
@@ -21,12 +23,15 @@ export class ExternalPseudonymsComponent implements OnChanges {
   @Input() removeEmptyId: boolean = false;
   @Input() side: string = "none";
   @Input() permittedOperation?: Operation;
+  @Output() generateId = new EventEmitter<{idType:string, idString:string, newIdType: string}>();
 
   externalIdTypes: IdTypSelection[] = [];
+  associatedIdTypeMap: Map<Id, string[]> = new Map();
 
   constructor(
     private patientListService: PatientListService,
-    public config: AppConfigService
+    public config: AppConfigService,
+    public generateIdDialog: MatDialog
   ) {
   }
 
@@ -92,5 +97,27 @@ export class ExternalPseudonymsComponent implements OnChanges {
 
   public getConcatenated(id: Id): string {
     return id.idType + "." + id.idString;
+  }
+
+  getAssociatedIdTypes():Map<Id, string[]> {
+    if(this.associatedIdTypeMap.size == 0)
+      this.associatedIdTypeMap = this.patientListService.getAssociatedIdTypeMapFrom(this.getExternalIds(), false, "C");
+    return this.associatedIdTypeMap;
+  }
+
+  openGenerateIdDialog(externalId:Id, idTypes:string[]): void {
+    const dialogRef = this.generateIdDialog.open(GenerateIdDialog, {
+      data: {
+        externalId: externalId,
+        idTypes: idTypes
+      },
+      width: '450px'
+    });
+
+    dialogRef.afterClosed().subscribe(idType => {
+      if (idType != null && this.generateId != undefined) {
+        this.generateId.emit({idType: externalId.idType, idString: externalId.idString, newIdType: idType});
+      }
+    })
   }
 }

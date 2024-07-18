@@ -5,6 +5,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {Operation, Tenant, TenantPermission} from "../model/tenant";
 import {Permission} from "../model/permission";
 import {ClaimPermissions, FieldPermissions, IDPermissions} from "../model/api/configuration-claims-data";
+import {IdType} from "../model/id-type";
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export class AuthorizationService {
   private allowedExternalIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
   private allowedAssociatedIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
   private allowedAssociatedExternalIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
+  private allowedAssociatedIdTypesMap: Map<string, IdType[]> = new Map<string, IdType[]>();
   private allowedFieldNames: Map<Operation, string[]> = new Map<Operation, string[]>();
 
   constructor(
@@ -25,7 +27,7 @@ export class AuthorizationService {
     private configService: AppConfigService,
     private authentication: UserAuthService
   ) {
-    this.userRoles = authentication.getRoles();
+    this.userRoles = this.authentication.getRoles();
     this.configuredTenants = this.configService.getMainzellisteClaims()
         .filter(c => c.roles.some( r => this.userRoles.includes(r)))
         .map(e => {
@@ -38,6 +40,15 @@ export class AuthorizationService {
   }
 
   private initPatientAllowedAttributes(){
+    //init associatedId Map
+    this.configService.getMainzellisteAssociatedIdGeneratorsMap().forEach((idGenerators, key) => {
+      this.allowedAssociatedIdTypesMap.set(key, idGenerators.map(g => {
+          return {name: g.idType, isExternal: g.isExternal, isAssociated: true, permissions:this.findOperations(g.idType, g.isExternal)}
+        })
+      )
+    })
+
+    // init internal id types permissions
     let internalIdTypeOperations:Operation[] = ["C", "R"];
     internalIdTypeOperations.forEach( o => {
       let allIdTypes = this.findAllowedIdTypes(o, false);
@@ -62,6 +73,7 @@ export class AuthorizationService {
       this.allowedIdTypes.set(operation, newIdTypes);
     }
 
+    // init external id types permissions
     let externalIdTypeOperations:Operation[] = ["C", "U", "R"];
     externalIdTypeOperations.forEach( o => {
       let allIdTypes = this.findAllowedIdTypes(o, true);
@@ -71,6 +83,7 @@ export class AuthorizationService {
       .map(g => g.idType));
     })
 
+    // init fields permissions
     let fieldsOperations:Operation[] = ["C", "U", "R"];
     fieldsOperations.forEach( o => {
       let permittedFieldNames: string[] = this.configService.getMainzellisteClaims()
@@ -172,6 +185,14 @@ export class AuthorizationService {
     return (isExternal? this.allowedAssociatedExternalIdTypes.get(operation) : this.allowedAssociatedIdTypes.get(operation)) || [];
   }
 
+  getRelatedAssociatedIdTypes(searchIdType: string, areExternal:boolean, operation: Operation): string[] {
+    for (let [k, idTypes] of this.allowedAssociatedIdTypesMap)
+      if (idTypes.some(idType => idType.name == searchIdType))
+        return idTypes.filter(idType => idType.isExternal == areExternal && operation.includes(operation))
+        .map(idType => idType.name)
+    return [];
+  }
+
   getAllowedFieldNames(operation: Operation): string[] {
     return this.allowedFieldNames.get(operation) || [];
   }
@@ -187,6 +208,16 @@ export class AuthorizationService {
     return !permittedIdTypes.some( t => t == "*") ? permittedIdTypes :
       this.configService.getMainzellisteIdGenerators().filter(g => g.isExternal == isExternal)
       .map(g => g.idType);
+  }
+
+  findOperations(idType:string, isExternal: boolean) {
+    return this.configService.getMainzellisteClaims()
+    .filter(c => c.permissions.tenant.id == this.currentTenantId)
+    .filter(c => c.roles.some( r => this.userRoles.includes(r)))
+    .map(c => c.permissions.resources.patient.resources )
+    .map(r => isExternal? r.externalIds : r.ids )
+    .map(ids => ids.find( id => id.type == idType || id.type == "*")?.operations || [])
+    .reduce((accumulator, currentValue) => accumulator.concat(currentValue.filter(e => !accumulator.includes(e))), []);
   }
 
   getTenantIdTypes(): string[] {

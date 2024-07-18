@@ -28,6 +28,7 @@ export class AppConfigService {
   data: PatientList[] = [];
   private mainzellisteIdGenerators: IdGenerator[] = [];
   private mainzellisteAssociatedIdGenerators: IdGenerator[] = []
+  private mainzellisteAssociatedIdGeneratorsMap: Map<string, IdGenerator[]> = new Map<string, IdGenerator[]>()
   private mainzellisteIdTypes: string[] = [];
   private mainzellisteFields: string[] = [];
   private mainzellisteClaims: ClaimsConfig[] = [];
@@ -97,6 +98,10 @@ export class AppConfigService {
     return this.mainzellisteAssociatedIdGenerators;
   }
 
+  getMainzellisteAssociatedIdGeneratorsMap(): Map<string, IdGenerator[]> {
+    return this.mainzellisteAssociatedIdGeneratorsMap;
+  }
+
   getMainzellisteFields(): string[] {
     return this.mainzellisteFields;
   }
@@ -161,6 +166,7 @@ export class AppConfigService {
         map(associatedIds => {
           for(let key in associatedIds){
             this.mainzellisteAssociatedIdGenerators.push(...associatedIds[key])
+            this.mainzellisteAssociatedIdGeneratorsMap.set(key, associatedIds[key])
           }
           return this.mainzellisteAssociatedIdGenerators;
         })

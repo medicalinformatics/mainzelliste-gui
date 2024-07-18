@@ -35,7 +35,10 @@
   <!-- external id fields-->
   <tr>
     <td>
-      <app-external-pseudonyms [readOnly]=this.readOnly [ids]="this.ids" [permittedOperation]="this.permittedOperation"></app-external-pseudonyms>
+      <app-external-pseudonyms [readOnly]=this.readOnly [ids]="this.ids"
+                               [permittedOperation]="this.permittedOperation"
+                               (generateId)="this.forwardGenerateIdEvent($event)"
+      ></app-external-pseudonyms>
     </td>
   </tr>
 </table>

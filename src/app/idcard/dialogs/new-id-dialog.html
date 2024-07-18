@@ -2,16 +2,29 @@
 <div mat-dialog-content>
   <br />
   <h4 style="font-weight: 100; text-align: justify">
-    {{'newIdDialog.sub_title' | translate}}
+    {{'newIdDialog.text_1' | translate}}
   </h4>
   <mat-form-field appearance="fill">
     <mat-label>{{'newIdDialog.id_types' | translate}}</mat-label>
-    <mat-select (selectionChange)="dataModel = $event;">
-      <mat-option *ngFor="let idType of data" [value]="idType"
-        >{{idType}}</mat-option
-      >
+    <mat-select (selectionChange)="this.idTypeSelected($event.value)">
+      <mat-option *ngFor="let idType of this.getIdTypes()" [value]="idType">
+        {{idType}}
+      </mat-option>
     </mat-select>
   </mat-form-field>
+  <ng-container  *ngIf="this.getExternalIds().length > 0">
+    <h4 style="font-weight: 100; text-align: justify">
+      Select external Id
+    </h4>
+    <mat-form-field appearance="fill">
+      <mat-label>External Ids:</mat-label>
+      <mat-select (selectionChange)="this.selectExternalId($event.value)">
+        <mat-option *ngFor="let id of this.getExternalIds()" [value]="id">
+          {{id.idType}}: {{id.idString}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </ng-container>
 </div>
 <div mat-dialog-actions style="margin-top: 10%;">
   <button mat-raised-button class="submitBreak" (click)="onCancel()">
@@ -22,7 +35,7 @@
     class="submit"
     type="submit"
     (click)="onSave()"
-    [disabled]="dataModel == null"
+    [disabled]="dataModel == undefined"
   >
     {{'button_save_new_id' | translate}}
   </button>

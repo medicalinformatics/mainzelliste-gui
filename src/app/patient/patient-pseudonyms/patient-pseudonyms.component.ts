@@ -23,7 +23,7 @@ export class PatientPseudonymsComponent{
   @Input() permittedOperation?: Operation;
 
   @Output() slideFieldEvent = new EventEmitter<{ name: string, value: string }>();
-  @Output() pseudonymEvent = new EventEmitter<{ name: string, value: string }>();
+  @Output() generateId = new EventEmitter<{idType:string, idString:string, newIdType: string}>();
 
   @ViewChild(ExternalPseudonymsComponent) externalPseudonymsComponent!: ExternalPseudonymsComponent
 
@@ -71,5 +71,13 @@ export class PatientPseudonymsComponent{
 
   public getConcatenated(id: Id): string {
     return id.idType + "." + id.idString;
+  }
+
+  forwardGenerateIdEvent(event: { idType: string, idString: string, newIdType: string }) {
+    this.generateId.emit({
+      idType: event.idType,
+      idString: event.idString,
+      newIdType: event.newIdType
+    });
   }
 }

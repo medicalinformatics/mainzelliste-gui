@@ -12,6 +12,7 @@ import {ClipboardModule} from "@angular/cdk/clipboard";
 import {FormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
 import {ScrollingModule} from "@angular/cdk/scrolling";
+import { GenerateIdDialog } from './external-pseudonyms/dialogs/generate-id/generate-id-dialog.component';
 
 
 @NgModule({
@@ -36,7 +37,9 @@ import {ScrollingModule} from "@angular/cdk/scrolling";
     EditPatientComponent,
     EditPatientTentativeDialog,
     DeletePatientComponent,
-    DeletePatientDialog]
+    DeletePatientDialog,
+    GenerateIdDialog
+  ]
 })
 export class PatientModule {
 }

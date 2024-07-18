@@ -23,6 +23,7 @@ import {CreateIdsTokenData} from '../model/create-ids-token-data';
 import {AuthorizationService} from "./authorization.service";
 import {TranslateService} from '@ngx-translate/core';
 import {Operation} from "../model/tenant";
+import {IdType} from "../model/id-type";
 
 export interface ReadPatientsResponse {
   patients: Patient[];
@@ -125,6 +126,25 @@ export class PatientListService {
     let allowedIdTypes = operation != undefined ? this.authorizationService.getAllowedAssociatedIdTypes(operation, isExternal) : [];
     return allowedIdTypes.length > 0  ? allowedIdTypes : this.configService.getMainzellisteAssociatedIdGenerators()
     .filter(g => g.isExternal == isExternal).map(g => g.idType);
+  }
+
+  getRelatedAssociatedIdsMapFrom(idTypes: IdType[], patientIds: Id[], areExternal: boolean, operation: Operation): Map<string, Id[]> {
+    let result = new Map<string, Id[]>()
+    for (let idType of idTypes) {
+      let relatedIdTypes = this.authorizationService.getRelatedAssociatedIdTypes(idType.name, areExternal, operation);
+      result.set(idType.name, !idType.isExternal && idType.isAssociated ?
+        patientIds.filter(id => relatedIdTypes.includes(id.idType)) : [])
+    }
+    return result
+  }
+
+  getAssociatedIdTypeMapFrom(searchIds: Id[], areExternal: boolean, operation: Operation): Map<Id, string[]> {
+    let result = new Map<Id, string[]>()
+    for (let searchId of searchIds) {
+      let relatedIdTypes = this.authorizationService.getRelatedAssociatedIdTypes(searchId.idType, areExternal, operation);
+      result.set(searchId, relatedIdTypes)
+    }
+    return result
   }
 
   getFieldNames(operation: Operation): Array<string> {
@@ -267,20 +287,8 @@ export class PatientListService {
   }
 
   getNewIdType(patient: Patient): string[] {
-    let temp: string[] = [];
-    let bool: boolean;
-    for (let allId of this.getIdGenerators(false, "C")) {
-      bool = true;
-      for (let id of patient.ids) {
-        if (allId.idType == id.idType) {
-          bool = false;
-        }
-      }
-      if (bool) {
-        temp.push(allId.idType);
-      }
-    }
-    return temp;
+    return this.getAllInternalIdTypes("C")
+      .filter( t => !patient.ids.some( id => id.idType == t))
   }
 
   addPatient(patient: Patient, idTypes: string[], sureness: boolean): Observable<Id> {
