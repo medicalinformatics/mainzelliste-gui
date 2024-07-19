@@ -48,7 +48,7 @@ export class EditPatientComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.patientListService.readPatient(new Id(this.idType, this.idString), "R").then(patients => {
+    this.patientListService.readPatient(new Id(this.idType, this.idString), "R").subscribe(patients => {
       this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
     });
     this.translate.onLangChange.subscribe(() => {

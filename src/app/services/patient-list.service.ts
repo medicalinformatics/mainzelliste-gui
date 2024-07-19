@@ -24,6 +24,7 @@ import {AuthorizationService} from "./authorization.service";
 import {TranslateService} from '@ngx-translate/core';
 import {Operation} from "../model/tenant";
 import {IdType} from "../model/id-type";
+import {flatMap} from "rxjs/internal/operators";
 
 export interface ReadPatientsResponse {
   patients: Patient[];
@@ -138,13 +139,24 @@ export class PatientListService {
     return result
   }
 
-  getAssociatedIdTypeMapFrom(searchIds: Id[], areExternal: boolean, operation: Operation): Map<Id, string[]> {
-    let result = new Map<Id, string[]>()
-    for (let searchId of searchIds) {
-      let relatedIdTypes = this.authorizationService.getRelatedAssociatedIdTypes(searchId.idType, areExternal, operation);
-      result.set(searchId, relatedIdTypes)
-    }
-    return result
+  findRelatedIds(id: Id, ids: Id[]): Observable<Id[]> {
+    let uniqueIdTypes = this.getIdTypes("R");
+    if (uniqueIdTypes !== undefined && uniqueIdTypes.includes(id.idType))
+      return of(ids.filter(e => uniqueIdTypes.includes(e.idType)));
+    else
+      return this.fetchRelatedAssociatedIds(id);
+  }
+
+  fetchRelatedAssociatedIds(id: Id): Observable<Id[]> {
+    let relatedIdTypes = [...this.authorizationService.getRelatedAssociatedIdTypes(id.idType, true, "R"),
+      ...this.authorizationService.getRelatedAssociatedIdTypes(id.idType, false, "R")]
+    return this.readPatient(id, "R", [], relatedIdTypes).pipe(
+      flatMap(patients => patients.map( p => p.ids))
+    )
+  }
+
+  getRelatedAssociatedIdTypes(idType: string, areExternal: boolean, operation: Operation): string[] {
+    return this.authorizationService.getRelatedAssociatedIdTypes(idType, areExternal, operation);
   }
 
   getFieldNames(operation: Operation): Array<string> {
@@ -286,11 +298,6 @@ export class PatientListService {
       )
   }
 
-  getNewIdType(patient: Patient): string[] {
-    return this.getAllInternalIdTypes("C")
-      .filter( t => !patient.ids.some( id => id.idType == t))
-  }
-
   addPatient(patient: Patient, idTypes: string[], sureness: boolean): Observable<Id> {
     return this.sessionService.createToken(
       "addPatient", new AddPatientTokenData(idTypes)
@@ -348,15 +355,17 @@ export class PatientListService {
     )
   }
 
-  async readPatient(id: Id, operation: Operation): Promise<Patient[]> {
-    let readToken = await this.sessionService.createToken(
+  readPatient(id: Id, operation: Operation, resultFields?: string[], resultIdTypes?: string[]): Observable<Patient[]> {
+    return this.sessionService.createToken(
       "readPatients",
       new ReadPatientsTokenData(
         [{idType: id.idType, idString: id.idString}],
-        this.getFieldNames(operation),
-        this.getAllIdTypes(operation)
-      )).toPromise();
-    return this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + readToken.id).toPromise();
+        resultFields != undefined? resultFields : this.getFieldNames(operation),
+        resultIdTypes != undefined ? resultIdTypes : this.getAllIdTypes(operation)
+      )).pipe(
+        mergeMap( readToken => this.httpClient.get<Patient[]>
+        (this.patientList.url + "/patients?tokenId=" + readToken.id))
+    );
   }
 
   editPatient(id:Id, patient: Patient, sureness: boolean) {

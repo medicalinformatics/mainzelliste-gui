@@ -9,6 +9,9 @@ import {AppConfigService} from "../../app-config.service";
 import {Operation} from "../../model/tenant";
 import {MatDialog} from "@angular/material/dialog";
 import {GenerateIdDialog} from "./dialogs/generate-id/generate-id-dialog.component";
+import {
+  ShowRelatedIdDialog
+} from "../patient-pseudonyms/dialogs/show-related-id-dialog/show-related-id-dialog.component";
 
 @Component({
   selector: 'app-external-pseudonyms',
@@ -31,7 +34,8 @@ export class ExternalPseudonymsComponent implements OnChanges {
   constructor(
     private patientListService: PatientListService,
     public config: AppConfigService,
-    public generateIdDialog: MatDialog
+    public generateIdDialog: MatDialog,
+    public showRelatedIdDialog: MatDialog
   ) {
   }
 
@@ -82,12 +86,12 @@ export class ExternalPseudonymsComponent implements OnChanges {
   }
 
   getExternalIdMatSelectData(): string[] {
-    return this.getExternalIdTypes().filter(t => this.isAssociatedIdType(t.idType) || !t.added).map(t => t.idType);
+    return this.getExternalIdTypes().filter(t => this.readOnly && t.associated || !t.added).map(t => t.idType);
   }
 
   getExternalIds(): Id[] {
     return this.ids.filter(id =>
-      this.getExternalIdTypes().some(t => t.idType == id.idType && t.added)
+      this.getExternalIdTypes().some(t => t.idType == id.idType && (t.added || t.associated))
     );
   }
 
@@ -99,17 +103,15 @@ export class ExternalPseudonymsComponent implements OnChanges {
     return id.idType + "." + id.idString;
   }
 
-  getAssociatedIdTypes():Map<Id, string[]> {
-    if(this.associatedIdTypeMap.size == 0)
-      this.associatedIdTypeMap = this.patientListService.getAssociatedIdTypeMapFrom(this.getExternalIds(), false, "C");
-    return this.associatedIdTypeMap;
+  getAssociatedIdTypes(idType: string):string[] {
+    return this.patientListService.getRelatedAssociatedIdTypes(idType, false, "C");
   }
 
-  openGenerateIdDialog(externalId:Id, idTypes:string[]): void {
+  openGenerateIdDialog(externalId:Id): void {
     const dialogRef = this.generateIdDialog.open(GenerateIdDialog, {
       data: {
         externalId: externalId,
-        idTypes: idTypes
+        idTypes: this.getAssociatedIdTypes(externalId.idType)
       },
       width: '450px'
     });
@@ -119,5 +121,16 @@ export class ExternalPseudonymsComponent implements OnChanges {
         this.generateId.emit({idType: externalId.idType, idString: externalId.idString, newIdType: idType});
       }
     })
+  }
+  openRelatedDialog(id: Id) {
+    this.patientListService.findRelatedIds(id, this.ids).subscribe( ids => this.showRelatedIdDialog.open(ShowRelatedIdDialog, {
+      data: ids,
+      disableClose: true,
+      minWidth: 300
+    }))
+  }
+
+  getFieldName(key: Id) {
+    return key.idType + this.ids.indexOf(key);
   }
 }

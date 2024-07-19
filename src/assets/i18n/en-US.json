@@ -6,6 +6,7 @@
 	"button_edit": "Edit",
 	"button_request": "Request",
 	"button_cancel": "Cancel",
+  "button_close": "Close",
 	"button_save": "Save",
 	"button_edit_patient": "Edit patient data",
 	"button_id_card": "ID Card",
@@ -139,6 +140,7 @@
 	"info.audit_trail_text6": "are recorded in the audit trail. The time of the action is recorded and stated. The folder symbol takes you to the patient's ID card for further details about the campaign.",
 
 	"patientPseudonyms.external": "External pseudonyms:",
+  "patientPseudonyms.related_id_button": "Show related IDs",
 
 	"patientFields.error_value_text1": "The value for the field",
 	"patientFields.error_value_text2": "is invalid",
@@ -225,6 +227,7 @@
   "newIdDialog.text_2": "and assigned to the external id",
   "newIdDialog.text_id": "{{idType}}: {{idString}}",
   "newIdDialog.text_3": "",
+  "newIdDialog.text_4": "and assigned to the selected external id",
   "newIdDialog.id_types": "Id type",
 
 	"logout.message": "You are now logged out!",

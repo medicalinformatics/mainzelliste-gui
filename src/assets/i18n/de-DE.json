@@ -6,6 +6,7 @@
 	"button_edit": "Bearbeiten",
 	"button_request": "Anfordern",
 	"button_cancel": "Abbrechen",
+  "button_close": "Schließen",
 	"button_save": "Speichern",
 	"button_edit_patient": "Patientendaten bearbeiten",
 	"button_id_card": "ID Karte",
@@ -139,6 +140,7 @@
 	"info.audit_trail_text6": "werden im Audit-Trail aufgezeichnet. Dabei wird Zeitpunkt der Aktion aufgezeichnet und angegeben. Über den Folder-Symbol gelangt man zur ID-Card des Patienten für weitere Details über die Aktion.",
 
 	"patientPseudonyms.external": "Externe Pseudonyme:",
+  "patientPseudonyms.related_id_button": "Zugeordnete IDs anzeigen",
 
 	"patientFields.error_value_text1": "Der Wert für das Feld",
 	"patientFields.error_value_text2": "ist ungültig",
@@ -225,6 +227,7 @@
   "newIdDialog.text_2": "und zu der externen Id",
   "newIdDialog.text_id": "{{idType}}: {{idString}}",
   "newIdDialog.text_3": "zugeordnet",
+  "newIdDialog.text_4": "und zu der ausgewählten externen Id zugeordnet",
 	"newIdDialog.id_types": "Id Typen",
 
 	"logout.message": "Du wurdest erfolgreich ausgelogged!",

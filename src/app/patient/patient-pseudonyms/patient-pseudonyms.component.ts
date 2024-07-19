@@ -6,6 +6,10 @@ import {Id} from "../../model/id";
 import {ExternalPseudonymsComponent} from "../external-pseudonyms/external-pseudonyms.component";
 import {AppConfigService} from "../../app-config.service";
 import {Operation} from "../../model/tenant";
+import {MatDialog} from "@angular/material/dialog";
+import {
+  ShowRelatedIdDialog
+} from "./dialogs/show-related-id-dialog/show-related-id-dialog.component";
 
 @Component({
   selector: 'app-patient-pseudonyms',
@@ -32,7 +36,8 @@ export class PatientPseudonymsComponent{
 
   constructor(
     private patientListService: PatientListService,
-    public config: AppConfigService
+    public config: AppConfigService,
+    public showRelatedIdDialog: MatDialog
   ) {
   }
 
@@ -79,5 +84,13 @@ export class PatientPseudonymsComponent{
       idString: event.idString,
       newIdType: event.newIdType
     });
+  }
+
+  openRelatedDialog(id: Id) {
+    this.patientListService.findRelatedIds(id, this.ids).subscribe( ids => this.showRelatedIdDialog.open(ShowRelatedIdDialog, {
+      data: ids,
+      disableClose: true,
+      minWidth: 300
+    }))
   }
 }

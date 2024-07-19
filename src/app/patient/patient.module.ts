@@ -13,6 +13,7 @@ import {FormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
 import {ScrollingModule} from "@angular/cdk/scrolling";
 import { GenerateIdDialog } from './external-pseudonyms/dialogs/generate-id/generate-id-dialog.component';
+import { ShowRelatedIdDialog } from './patient-pseudonyms/dialogs/show-related-id-dialog/show-related-id-dialog.component';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { GenerateIdDialog } from './external-pseudonyms/dialogs/generate-id/gene
     EditPatientTentativeDialog,
     DeletePatientComponent,
     DeletePatientDialog,
-    GenerateIdDialog
+    GenerateIdDialog,
+    ShowRelatedIdDialog
   ]
 })
 export class PatientModule {

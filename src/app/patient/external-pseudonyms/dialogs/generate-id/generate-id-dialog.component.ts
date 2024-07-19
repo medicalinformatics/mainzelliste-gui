@@ -27,7 +27,6 @@ export class GenerateIdDialog implements OnInit {
   }
 
   onSave() {
-    console.log("generate id with type " + this.selectedIdType)
     this.dialogRef.close(this.selectedIdType);
   }
 }

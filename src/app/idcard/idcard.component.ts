@@ -18,6 +18,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {throwError} from "rxjs";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {IdType} from "../model/id-type";
+import {catchError} from "rxjs/operators";
 
 export interface ConsentRow {id: string, date:string, title: string, period:string, version?:string, status: string}
 
@@ -78,15 +79,17 @@ export class IdcardComponent implements OnInit {
 
   private loadPatient() {
     this.patientListService.readPatient(new Id(this.idType, this.idString), "R")
-      .then(
-        patients => {
-          this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
-        })
-      .catch(e => {
+    .pipe(
+      catchError(e => {
         if (e instanceof HttpErrorResponse && (e.status == 404)) {
           this.router.navigate(['/**']).then();
         }
         return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_add_patient_token'), e, this.translate))
+      })
+    )
+    .subscribe(
+      patients => {
+        this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
       });
   }
 
