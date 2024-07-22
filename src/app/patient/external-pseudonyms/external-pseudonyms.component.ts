@@ -29,7 +29,6 @@ export class ExternalPseudonymsComponent implements OnChanges {
   @Output() generateId = new EventEmitter<{idType:string, idString:string, newIdType: string}>();
 
   externalIdTypes: IdTypSelection[] = [];
-  associatedIdTypeMap: Map<Id, string[]> = new Map();
 
   constructor(
     private patientListService: PatientListService,
@@ -86,7 +85,9 @@ export class ExternalPseudonymsComponent implements OnChanges {
   }
 
   getExternalIdMatSelectData(): string[] {
-    return this.getExternalIdTypes().filter(t => this.readOnly && t.associated || !t.added).map(t => t.idType);
+    return this.getExternalIdTypes()
+    .filter(t => t.associated && this.permittedOperation != 'U' || !t.added)
+    .map(t => t.idType);
   }
 
   getExternalIds(): Id[] {
