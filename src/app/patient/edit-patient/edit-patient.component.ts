@@ -63,7 +63,7 @@ export class EditPatientComponent implements OnInit {
   editPatient(sureness: boolean) {
     this.errorNotificationService.clearMessages();
     this.patientListService.editPatient(new Id(this.idType, this.idString), this.patient, sureness).then( () =>
-      this.router.navigate(["/patientlist"]).then()
+      this.router.navigate(["/idcard", this.idType, this.idString]).then()
     )
     .catch( e => {
       if(e instanceof MainzellisteError && e.errorMessage == ErrorMessages.EDIT_PATIENT_CONFLICT_POSSIBLE_MATCH){

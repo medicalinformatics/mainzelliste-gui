@@ -17,8 +17,9 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {throwError} from "rxjs";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {ConsentRow, ConsentsView} from "../consent/consent.model";
-import {mergeMap} from "rxjs/operators";
+import {catchError, mergeMap} from "rxjs/operators";
 import {DeleteConsentDialog} from "./dialogs/delete-consent-dialog";
+import {IdType} from "../model/id-type";
 
 @Component({
   selector: 'app-idcard',
