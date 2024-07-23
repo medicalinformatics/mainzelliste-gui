@@ -55,7 +55,7 @@
   "consent_status.draft": "Entwurf",
   "consent_status.proposed": "Entwurf",
   "consent_status.active": "Aktiv",
-  "consent_status.rejected": "Wiederruft",
+  "consent_status.rejected": "Widerruft",
   "consent_status.inactive": "Inaktiv",
   "consent_status.entered-in-error": "Fehlerhaft",
 
@@ -74,7 +74,7 @@
   "consent_template.validity_month": "Monaten",
   "consent_template.validity_day": "Tage",
 
-  "add_consent.rejected-dialog-text": "Alle Einwilligungsmodule wurden abgelehnt. Der Einwilligungsstatus wird automatische als Wiederrufen gesetzt",
+  "add_consent.rejected-dialog-text": "Alle Einwilligungsmodule wurden abgelehnt. Der Einwilligungsstatus wird automatische als Widerruft gesetzt",
   "add_consent.inactivated-dialog-text": "Gültigkeitsende der Einwilligung liegt in der Vergangenheit. Der Einwilligungstatus wird automatische als Inaktive gesetzt",
 
 	"navigation.info": "Info",
