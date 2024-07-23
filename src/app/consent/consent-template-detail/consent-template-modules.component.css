@@ -1,0 +1,26 @@
+.edit-module-button {
+  height: 20px;
+  width: 20px;
+  line-height: 20px;
+}
+.module-mat-form-field-textarea {
+  width: 100%;
+  padding-bottom: 0;
+  margin: 0 0 -1.25em;
+}
+
+.module-header {
+  width: 100%;
+  justify-content: space-between;
+}
+.module-header.mat-card-header-text {
+  width: 100%
+}
+
+mat-form-field.templateInputField {
+  width: 60%;
+  padding-bottom: 0;
+  margin: 0 0 -1.25em;
+  clear: both;
+  float:left;
+}

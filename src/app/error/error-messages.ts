@@ -119,13 +119,36 @@ export class ErrorMessages {
     "ResolveCreateIdTokenError",
     'error.resolve_create_id_token');
 
-    ////
-    // CREATE/EDIT CONSENT
-    //---------------------
-    public static CREATE_CONSENT_REJECTED: ErrorMessage = new ErrorMessage(5001,
-      "ConsentRejected",
-      'error.create_consent_rejected');
-    public static CREATE_CONSENT_INACTIVE: ErrorMessage = new ErrorMessage(5002,
-      "ConsentInactivated",
-      'error.create_consent_inactivated');
-  }
+  ////
+  // CREATE/EDIT CONSENT
+  //---------------------
+  public static CREATE_CONSENT_REJECTED: ErrorMessage = new ErrorMessage(5001,
+    "ConsentRejected",
+    'error.create_consent_rejected');
+  public static CREATE_CONSENT_INACTIVE: ErrorMessage = new ErrorMessage(5002,
+    "ConsentInactivated",
+    'error.create_consent_inactivated');
+  public static READ_CONSENT_FAILED: ErrorMessage = new ErrorMessage(5003,
+    "ReadConsentFailed",
+    'error.read_consent_failed');
+
+  ////
+  // DELETE CONSENT
+  //---------------------
+  public static DELETE_CONSENT_NOT_FOUND: ErrorMessage = new ErrorMessage(5004,
+      "No patient found",
+      "error.delete_consent_failed");
+
+  ////
+  // CREATE/EDIT CONSENT TEMPLATE
+  //-----------------------------
+  public static CREATE_CONSENT_TEMPLATE_REJECTED: ErrorMessage = new ErrorMessage(6001,
+    "CreateConsentTemplateRejected",
+    'error.create_consent_template_rejected');
+  public static READ_CONSENT_TEMPLATE_FAILED: ErrorMessage = new ErrorMessage(6002,
+    "ReadConsentTemplateFailed",
+    'error.read_consent_template_failed');
+  public static SEARCH_CONSENT_TEMPLATES_FAILED: ErrorMessage = new ErrorMessage(6003,
+    "SearchConsentTemplatesFailed",
+    'error.search_consent_templates_failed');
+}

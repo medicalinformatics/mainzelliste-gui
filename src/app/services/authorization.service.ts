@@ -4,8 +4,9 @@ import {UserAuthService} from "./user-auth.service";
 import {TranslateService} from '@ngx-translate/core';
 import {Operation, Tenant, TenantPermission} from "../model/tenant";
 import {Permission} from "../model/permission";
-import {ClaimPermissions, FieldPermissions, IDPermissions} from "../model/api/configuration-claims-data";
+import {ClaimPermissions} from "../model/api/configuration-claims-data";
 import {IdType} from "../model/id-type";
+import {AuthorizationState} from "../model/authorization-state";
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,7 @@ export class AuthorizationService {
   private allowedAssociatedExternalIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
   private allowedAssociatedIdTypesMap: Map<string, IdType[]> = new Map<string, IdType[]>();
   private allowedFieldNames: Map<Operation, string[]> = new Map<Operation, string[]>();
+  public authorizationState :AuthorizationState;
 
   constructor(
     private translate: TranslateService,
@@ -36,6 +38,11 @@ export class AuthorizationService {
             this.convertClaimPermissions(e.permissions))
         })
     this.currentTenantId = this.configuredTenants.length > 0 ? this.configuredTenants[0].id : "";
+
+    //init. authorization state data model
+    this.authorizationState = new AuthorizationState();
+    this.initAuthorizationState()
+
     this.initPatientAllowedAttributes()
   }
 
@@ -96,6 +103,28 @@ export class AuthorizationService {
     })
   }
 
+  private initAuthorizationState(){
+    let currentTenant: Tenant|undefined = this.configuredTenants.find( t => t.id == this.currentTenantId)
+    if(currentTenant != undefined){
+      currentTenant.permissions.forEach( permission => {
+        if(permission.type == "default")
+          this.authorizationState.DEFAULT = true;
+        else if(permission.type == "patient")
+          this.authorizationState.setPatient(permission.operations);
+        else if(permission.type ==  "ids")
+          this.authorizationState.setIds(permission.operations);
+        else if(permission.type ==  "externalIds")
+          this.authorizationState.setExternalIds(permission.operations);
+        else if(permission.type ==  "fields")
+          this.authorizationState.setFields(permission.operations);
+        else if(permission.type ==  "consent")
+          this.authorizationState.setConsent(permission.operations);
+        else if(permission.type ==  "consentTemplate")
+          this.authorizationState.setConsentTemplate(permission.operations);
+      })
+    }
+  }
+
   private convertClaimPermissions(claimPermissions: ClaimPermissions): TenantPermission[] {
     let permissions: TenantPermission[] = [];
     if (claimPermissions.resources.patient != undefined) {
@@ -120,10 +149,17 @@ export class AuthorizationService {
       })
     }
 
-    if (claimPermissions.resources.consent != undefined) {
+    if (this.configService.isConsentEnabled() && claimPermissions.resources.patient.resources.consent != undefined) {
       permissions.push({
         type: 'consent',
-        operations: claimPermissions.resources.consent.operations
+        operations: claimPermissions.resources.patient.resources.consent.operations
+      })
+    }
+
+    if (this.configService.isConsentEnabled() && claimPermissions.resources.consentTemplate != undefined) {
+      permissions.push({
+        type: 'consentTemplate',
+        operations: claimPermissions.resources.consentTemplate.operations
       })
     }
     return permissions;
@@ -143,6 +179,7 @@ export class AuthorizationService {
   setTenant(tenantId: string){
     this.currentTenantId = tenantId;
     this.initPatientAllowedAttributes();
+    this.initAuthorizationState();
   }
 
   getCurrentTenant() {

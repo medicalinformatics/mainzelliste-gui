@@ -18,7 +18,9 @@ export interface ClaimPermissionsTenant {
 
 export interface ClaimPermissionsResources {
   patient: PatientPermissionResource,
-  consent: ConsentPermissionResource
+  consentTemplate: ResourceOperations,
+  policySet: ResourceOperations,
+  policy : ResourceOperations,
 }
 
 export interface PatientPermissionResource {
@@ -26,14 +28,15 @@ export interface PatientPermissionResource {
   resources: PatientPermissionResources
 }
 
-export interface ConsentPermissionResource {
+export interface ResourceOperations {
   operations: Operation[]
 }
 
 export interface PatientPermissionResources {
   ids: IDPermissions[],
-  externalIds: IDPermissions[]
-  fields: FieldPermissions[]
+  externalIds: IDPermissions[],
+  fields: FieldPermissions[],
+  consent: ResourceOperations,
 }
 
 export interface IDPermissions {

@@ -13,14 +13,12 @@ import {TranslateService} from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.component";
 import {ConsentService} from "../consent/consent.service";
 import {Permission} from "../model/permission";
-import {ConsentStatus} from "../consent/consent.model";
 import {HttpErrorResponse} from "@angular/common/http";
 import {throwError} from "rxjs";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
-import {IdType} from "../model/id-type";
-import {catchError} from "rxjs/operators";
-
-export interface ConsentRow {id: string, date:string, title: string, period:string, version?:string, status: string}
+import {ConsentRow, ConsentsView} from "../consent/consent.model";
+import {mergeMap} from "rxjs/operators";
+import {DeleteConsentDialog} from "./dialogs/delete-consent-dialog";
 
 @Component({
   selector: 'app-idcard',
@@ -34,8 +32,8 @@ export class IdcardComponent implements OnInit {
   public idString: string = "";
   public idType: string = "";
   public patient: Patient = new Patient();
-  public displayedConsentColumns: string[] = ['date', 'title', 'period', 'version', 'status'];
-  public consents: ConsentRow[] = [];
+  public displayedConsentColumns: string[] = ['date', 'title', 'period', 'version', 'status', 'actions'];
+  public consentsView: ConsentsView =  { consentTemplates : new Map, consentRows: [] };
   @ViewChild('consentTable') consentTable!: MatTable<ConsentRow>;
   public loadingConsents: boolean = false;
   public idTypes: IdType[] = [];
@@ -48,7 +46,8 @@ export class IdcardComponent implements OnInit {
     private patientService: PatientService,
     private titleService: GlobalTitleService,
     public consentDialog: MatDialog,
-    public deleteDialog: MatDialog,
+    public deletePatientDialog: MatDialog,
+    public deleteConsentDialog: MatDialog,
     public newIdDialog: MatDialog,
     public consentService: ConsentService
   ) {
@@ -95,38 +94,27 @@ export class IdcardComponent implements OnInit {
 
   private loadConsents() {
     this.loadingConsents = true;
-    this.consents = []
-    this.consentService.getConsents(this.idType, this.idString).then(dataModels => {
-          dataModels.forEach(m => {
-            //map period
-            let period = "unbegrenzt";
-            if (m.validUntil) {
-              period = (!m.validFrom ? "??" : m.validFrom.toDate().toLocaleDateString()) + " - "
-                  + new Date(m.validUntil).toLocaleDateString();
-            }
-
-            this.consents.push({
-              id: m.id!,
-              date: new Date(m.createdAt).toLocaleDateString(),
-              title: m.title,
-              period: period,
-              version: m.version,
-              status: this.consentStatusToString(m.status, m.validUntil)
-            });
-            this.consentTable.renderRows();
-          })
+    this.consentsView = { consentTemplates : new Map, consentRows: [] }
+    this.consentService.getConsents(this.idType, this.idString)
+      .subscribe(dataModels => {
+          this.consentsView = dataModels;
+          this.consentTable.renderRows();
           this.loadingConsents = false;
         },
         error => this.loadingConsents = false);
   }
 
-  private consentStatusToString(status: ConsentStatus, validUntil?: Date): string {
-    let statusStr = (validUntil != undefined && validUntil.getTime()  < new Date().getTime()) ? "inactive" : status;
-    return this.translate.instant("consent_status." + statusStr);
-  }
-
-  async editConsent(row: ConsentRow) {
-    await this.router.navigate(["patient", this.idType, this.idString, 'edit-consent', row.id]);
+  deleteConsent(consentId: string) {
+    this.consentService.deleteConsent(consentId).pipe(
+        mergeMap(r => this.consentService.getConsents(this.idType, this.idString))
+    ).subscribe(
+        dataModels => {
+          this.consentsView = dataModels;
+          this.consentTable.renderRows();
+          this.loadingConsents = false;
+        },
+        error => this.loadingConsents = false
+    );
   }
 
   deletePatient() {
@@ -140,15 +128,25 @@ export class IdcardComponent implements OnInit {
       });
   }
 
+  hasAllTemplateIds(): boolean {
+    return [...this.consentsView.consentTemplates.keys()].every(templateId =>
+        this.consentsView.consentRows.some(v => v.templateId == templateId))
+  }
+
+
   openConsentDialog() {
     const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
-      width: '900px'
+      width: '900px',
+      disableClose: true,
+      data: {templates: new Map([...this.consentsView.consentTemplates].filter(e =>
+            !this.consentsView.consentRows.some(r => r.templateId == e[0]))
+        )}
     });
 
-    dialogRef.afterClosed().subscribe(consent => {
-      if (consent) {
-        consent.patientId = {idType: this.idType, idString: this.idString};
-        this.consentService.addConsent(consent).then(e => this.loadConsents());
+    dialogRef.afterClosed().subscribe(dataModel => {
+      if (dataModel?.consent) {
+        dataModel.consent.patientId = {idType: this.idType, idString: this.idString};
+        this.consentService.addConsent(dataModel.consent).subscribe(e => this.loadConsents());
       }
     });
   }
@@ -187,13 +185,25 @@ export class IdcardComponent implements OnInit {
   }
 
   openDeletePatientDialog(): void {
-    const dialogRef = this.deleteDialog.open(DeletePatientDialog, {
+    const dialogRef = this.deletePatientDialog.open(DeletePatientDialog, {
       data: {},
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result)
         this.deletePatient();
+    });
+  }
+
+
+  openDeleteConsentDialog(consentId: string): void {
+    const dialogRef = this.deleteConsentDialog.open(DeleteConsentDialog, {
+      data: {},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.deleteConsent(consentId);
     });
   }
 }

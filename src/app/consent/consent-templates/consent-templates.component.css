@@ -1,0 +1,71 @@
+#consentTemplates {
+  width: 100%;
+}
+
+#consentTemplates td, #consentTemplates th {
+  border: 1px solid #ddd;
+  padding: 0 10px 0 10px;
+}
+
+#consentTemplates tr:nth-child(even){
+  background-color: #f2f2f2;
+}
+
+#consentTemplates tr:hover {
+  background-color: #ADDFFF;
+}
+
+#consentTemplates .mat-header-cell{
+  background-color: #053E6A;
+  color: white;
+  font-size: inherit
+}
+
+#consentTemplates .mat-header-cell .mat-checkbox-frame {
+  border-color: white;
+}
+
+#consentTemplates .mat-header-cell .mat-checkbox-frame.mat-checkbox-indeterminate{
+  border-color: #053E6A;
+}
+.disabled {
+  color: rgb(161, 159, 159);
+}
+mat-paginator{
+  float:right;
+  margin-top: 1.5%;
+  margin-right: 1.5%;
+  background-color: transparent;
+}
+
+.mat-basic-chip-status {
+  display: inline-flex;
+  padding: 7px 10px;
+  border-radius: 6px;
+  align-items: center;
+  min-height: 22px;
+  height: 1px;
+  background-color: #e0e0e0;
+  color: #000000de;
+  box-sizing: border-box;
+  min-width: 100px;
+  justify-content: center;
+}
+
+.mat-basic-chip-status#active {
+  background-color: #cdfbd4;
+}
+
+.mat-basic-chip-status#draft {
+  background-color: #fdf6d2;
+}
+
+.mat-column-id {
+  width: 250px;
+  text-align: left;
+}
+
+.mat-column-status {
+  width: 150px;
+  text-align: center;
+}

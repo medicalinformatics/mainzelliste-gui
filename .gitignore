@@ -52,3 +52,4 @@ docker-compose.override.yml
 mainzelliste-gui.iml
 .env
 /out/
+/mainzelliste-gui.iml

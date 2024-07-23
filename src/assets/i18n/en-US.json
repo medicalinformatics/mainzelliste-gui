@@ -1,6 +1,8 @@
 {
 	"EMPTY": "",
 	"button_add_consent": "Add consent",
+	"button_edit_consent": "Edit consent",
+	"button_delete_consent": "Delete consent",
   "button_generate_id": "Generate ID",
 	"button_delete": "Delete",
 	"button_edit": "Edit",
@@ -14,6 +16,7 @@
 	"button_save_new_id": "Generate",
 	"button_correct": "Correct",
 	"button_confirm": "Confirm",
+	"button_publish": "Publish",
 
 	"radio_button_yes": "Yes",
 	"radio_button_no": "No",
@@ -47,6 +50,8 @@
 	"idcard.title_pseudonyms": "Pseudonyms",
 	"idcard.title_id_card": "ID Card",
 
+  "consent_list.unlimited_period": "unlimited",
+
   "consent_status.draft": "Draft",
   "consent_status.proposed": "Proposed",
   "consent_status.active": "Active",
@@ -54,12 +59,28 @@
   "consent_status.inactive": "Inactive",
   "consent_status.entered-in-error": "Error",
 
+	"consent_template_status.draft": "Draft",
+	"consent_template_status.active": "Active",
+
+  "consent_template.name": "Name",
+  "consent_template.title": "Titel",
+	"consent_template.status": "Status",
+  "consent_template.organization": "Organization",
+  "consent_template.research_study": "Research study",
+  "consent_template.name.based_on_mii_broad_consent": "based on MII Broad Consent",
+  "consent_template.name.mii_broad_consent_version": "Version of MII Broad Consent",
+  "consent_template.validityPeriod": "Validity period",
+  "consent_template.validity_year": "Years",
+  "consent_template.validity_month": "Months",
+  "consent_template.validity_day": "Days",
+
   "add_consent.rejected-dialog-text": "All consent modules were rejected. The consent status is automatically set as Rejected",
   "add_consent.inactivated-dialog-text": "The end of the Timeframe of this consent is in the past. The consent status is automatically set as Inactive",
 
   "navigation.info": "Info",
 	"navigation.new_patient": "New Patient",
 	"navigation.patientlist": "Patient list",
+  "navigation.consent_template": "Consent Template",
 
 	"patientlist.filter_search": "Filter/Search...",
 	"patientlist.headers_actions": "Actions",
@@ -95,6 +116,8 @@
 	"consentDetail.validity_label": "Valid from",
 	"consentDetail.validity_date_label": "Select validity date",
 
+	"error.consentDetail.validity_date": "Validity period lies in the past",
+
 	"deletePatient.title_patient_data": "Patient data",
 	"deletePatient.title_pseudonyms": "Pseudonyms",
 	"deletePatient.title": "Delete patient",
@@ -102,6 +125,10 @@
 	"deletePatientDialog.title_delete_patient": "Delete patient",
 	"deletePatientDialog.delete_patient_question": "Do you want to delete the following patient?",
 	"deletePatientDialog.delete_patient_warning": "The patient data will be completely deleted and cannot be restored.",
+
+	"deleteConsentDialog.title_delete_consent": "Delete consent",
+	"deleteConsentDialog.delete_consent_question": "Do you want to delete the following consent?",
+	"deleteConsentDialog.delete_consent_warning": "The consent data will be completely deleted and cannot be restored.",
 
 	"addConsent.title_add_consent": "Add consent",
 	"editConsent.title_edit_consent": "Edit Consent",
@@ -202,6 +229,12 @@
 	"error.app_config_service_id_type_mismatch_text2": "' and the configured main id type '",
 	"error.app_config_service_id_type_mismatch_text3": "' are different",
 	"error.app_module_connect_keycloak": "Failed to connect to Keycloak.",
+  "error.create_consent_rejected": "Failed to create consent. Cause: '${1}'",
+  "error.read_consent_failed": "Failed to read consent. Cause: '${1}'",
+	"error.delete_consent_failed": "Consent not found",
+	"error.create_consent_template_rejected": "Failed to create consent template. Cause: '${1}'",
+  "error.read_consent_template_failed": "Failed to read consent template. Cause: '${1}'",
+  "error.search_consent_templates_failed": "Failed to find consent templates. Cause: '${1}'",
 
 	"errorComponent.error": "Error",
 	"errorComponent.message": "Message",

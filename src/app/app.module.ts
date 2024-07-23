@@ -46,10 +46,11 @@ import {ConsentModule} from "./consent/consent.module";
 import {MainLayoutModule} from "./main-layout/main-layout.module";
 import {PatientModule} from "./patient/patient.module";
 import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.component";
-import { TranslateService } from '@ngx-translate/core';
-import { AccessDeniedComponent } from './access-denied/access-denied.component';
+import {TranslateService} from '@ngx-translate/core';
+import {AccessDeniedComponent} from './access-denied/access-denied.component';
 import {InternationalizedMatPaginatorIntl} from "./shared/components/paginator/internationalized-mat-paginator-intl";
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import {ConsentTemplatesComponent} from './consent/consent-templates/consent-templates.component';
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService,
                               userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
@@ -70,6 +71,10 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
             onLoad: 'check-sso',
             silentCheckSsoRedirectUri:
               window.location.origin + '/assets/silent-check-sso.html'
+          },
+          shouldAddToken: (request) => {
+            const paths = ['/sessions', '/configuration'];
+            return paths.some((path) => request.url.includes(path));
           }
         }).catch(error => {
           // find error reason
@@ -98,7 +103,8 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     LogoutComponent,
     NewIdDialog,
     AccessDeniedComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    ConsentTemplatesComponent
   ],
   imports: [
     SharedModule,

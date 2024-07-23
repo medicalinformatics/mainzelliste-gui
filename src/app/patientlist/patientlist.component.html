@@ -53,12 +53,12 @@
             [routerLink]="['/edit-patient', element.ids[0].idType, element.ids[0].idString]">
               <mat-icon matTooltip="{{'button_edit_patient' | translate}}">edit</mat-icon>
           </button>
-          <ng-container *ngIf="this.consentService.isServiceEnabled()">
-            <button *appHasPermission="Permission.CREATE_CONSENT" mat-icon-button style="background: none;border:none;" [disabled]="loading"
-              [routerLink]="['/patient', element.ids[0].idType, element.ids[0].idString, 'add-consent']">
-                <mat-icon matTooltip="{{'button_add_consent' | translate}}">assignment_turned_in</mat-icon>
-            </button>
-          </ng-container>
+<!--          <ng-container *ngIf="this.consentService.isServiceEnabled()">-->
+<!--            <button *appHasPermission="Permission.CREATE_CONSENT" mat-icon-button style="background: none;border:none;" [disabled]="loading"-->
+<!--              [routerLink]="['/patient', element.ids[0].idType, element.ids[0].idString, 'add-consent']">-->
+<!--                <mat-icon matTooltip="{{'button_add_consent' | translate}}">assignment_turned_in</mat-icon>-->
+<!--            </button>-->
+<!--          </ng-container>-->
         </div>
       </td>
     </ng-container>
