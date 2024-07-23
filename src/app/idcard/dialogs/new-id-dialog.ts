@@ -1,30 +1,62 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef, } from "@angular/material/dialog";
-import { IdcardComponent } from '../idcard.component';
-
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef,} from "@angular/material/dialog";
+import {Id} from "../../model/id";
 
 @Component({
-    selector: 'new-id-dialog',
-    templateUrl: 'new-id-dialog.html',
+  selector: 'new-id-dialog',
+  templateUrl: 'new-id-dialog.html',
 })
 
 export class NewIdDialog implements OnInit {
 
-    @ViewChild(IdcardComponent) newId!: IdcardComponent;
-
-    constructor(
-        public dialogRef: MatDialogRef<NewIdDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: String[],
-        @Inject(MAT_DIALOG_DATA) public dataModel: any
-    ) {this.dataModel = null}
-
-    ngOnInit(): void {}
-
-    onCancel(): void {
-      this.dialogRef.close();
+  constructor(
+    public dialogRef: MatDialogRef<NewIdDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: Map<string, Id[]>,
+    @Inject(MAT_DIALOG_DATA) public dataModel: {
+      idType: string,
+      idString: string,
+      resultIdType: string
     }
-  
-    onSave() {
-      this.dialogRef.close(this.dataModel);
+  ) {
+  }
+
+  ngOnInit(): void {
+  }
+
+  getIdTypes() {
+    return [ ... this.data.keys()];
+  }
+
+  getExternalIds(): Id[] {
+    return this.data.get(this.dataModel.resultIdType) || [];
+  }
+
+  idTypeSelected(selectedIdType: string) {
+    if (this.dataModel != undefined) {
+      this.dataModel.resultIdType = selectedIdType;
+    } else {
+      this.dataModel = {idType: "", idString: "", resultIdType: selectedIdType}
     }
   }
+
+  selectExternalId(selectedId: { idType: string, idString: string, resultIdType: string }) {
+    if (this.dataModel != undefined) {
+      this.dataModel.idType = selectedId.idType;
+      this.dataModel.idString = selectedId.idString;
+    } else {
+      this.dataModel = {
+        idType: selectedId.idType,
+        idString: selectedId.idString,
+        resultIdType: ""
+      }
+    }
+  }
+
+  onCancel(): void {
+    this.dialogRef.close();
+  }
+
+  onSave() {
+    this.dialogRef.close(this.dataModel);
+  }
+}

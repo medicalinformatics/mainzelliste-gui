@@ -80,6 +80,7 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
           throw new Error(translate.instant('error.app_module_connect_keycloak') + reason);
         }))
         .then(isLoggedIn => isLoggedIn ? configService.fetchMainzellisteIdGenerators() : [])
+        .then(idGenerators => idGenerators.length > 0 ? configService.fetchMainzellisteAssociatedIdGenerators() : [])
         .then(idGenerators => idGenerators.length > 0 ? configService.fetchMainzellisteFields() : [])
         .then(fields => fields.length > 0 ? configService.fetchClaims() : [])
         .then(claims => claims.length > 0 ? configService.fetchVersion() : {});

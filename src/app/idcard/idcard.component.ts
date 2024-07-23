@@ -17,6 +17,8 @@ import {ConsentStatus} from "../consent/consent.model";
 import {HttpErrorResponse} from "@angular/common/http";
 import {throwError} from "rxjs";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
+import {IdType} from "../model/id-type";
+import {catchError} from "rxjs/operators";
 
 export interface ConsentRow {id: string, date:string, title: string, period:string, version?:string, status: string}
 
@@ -36,6 +38,7 @@ export class IdcardComponent implements OnInit {
   public consents: ConsentRow[] = [];
   @ViewChild('consentTable') consentTable!: MatTable<ConsentRow>;
   public loadingConsents: boolean = false;
+  public idTypes: IdType[] = [];
 
   constructor(
     private translate: TranslateService,
@@ -59,6 +62,7 @@ export class IdcardComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getIdTypes();
     this.loadPatient();
     this.translate.onLangChange.subscribe(() => {
       this.changeTitle();
@@ -75,15 +79,17 @@ export class IdcardComponent implements OnInit {
 
   private loadPatient() {
     this.patientListService.readPatient(new Id(this.idType, this.idString), "R")
-      .then(
-        patients => {
-          this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
-        })
-      .catch(e => {
+    .pipe(
+      catchError(e => {
         if (e instanceof HttpErrorResponse && (e.status == 404)) {
           this.router.navigate(['/**']).then();
         }
         return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_add_patient_token'), e, this.translate))
+      })
+    )
+    .subscribe(
+      patients => {
+        this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
       });
   }
 
@@ -127,8 +133,11 @@ export class IdcardComponent implements OnInit {
     this.patientService.deletePatient(this.patient).then(() => this.router.navigate(['/patientlist']).then());
   }
 
-  generateId(newIdType: string) {
-    this.patientListService.generateId(this.idType, this.idString, newIdType).subscribe(() => this.loadPatient());
+  generateId(idType:string, idString:string, newIdType: string) {
+    this.patientListService.generateId(idType?.length > 0 ? idType : this.idType,
+      idString?.length> 0 ? idString : this.idString, newIdType).subscribe(() => {
+        this.loadPatient()
+      });
   }
 
   openConsentDialog() {
@@ -144,18 +153,35 @@ export class IdcardComponent implements OnInit {
     });
   }
 
+  getIdTypes():IdType[] {
+    if (this.idTypes.length == 0){
+      this.idTypes = [
+        ...this.patientListService.getUniqueIdTypes(false, "C")
+        .map(t => { return {name: t, isExternal: false, isAssociated: false } }),
+        ...this.patientListService.getAssociatedIdTypes(false, "C")
+        .map(t => { return {name: t, isExternal: false, isAssociated: true } })
+      ];
+    }
+    return this.idTypes;
+  }
+
+  getUnAvailableIdTypes(patient: Patient): IdType[] {
+    return this.getIdTypes()
+    .filter( t => t.isAssociated || !patient.ids.some( id => id.idType == t.name))
+  }
+
   hasAllIds(): boolean {
-    return this.patientListService.getNewIdType(this.patient).length == 0;
+    return this.getUnAvailableIdTypes(this.patient).length == 0;
   }
 
   openNewIdDialog(): void {
     const dialogRef = this.newIdDialog.open(NewIdDialog, {
-      data: this.patientListService.getNewIdType(this.patient)
+      data: this.patientListService.getRelatedAssociatedIdsMapFrom(this.getUnAvailableIdTypes(this.patient), this.patient.ids, true, "R")
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result != null) {
-        this.generateId(result.value);
+        this.generateId(result.idType, result.idString, result.resultIdType);
       }
     })
   }

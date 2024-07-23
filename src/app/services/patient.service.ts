@@ -359,6 +359,6 @@ export class PatientService {
   }
 
   getConfigureIdTypes(): Array<string> {
-    return this.patientListService.getIdTypes("R");
+    return this.patientListService.getAllIdTypes("R");
   }
 }

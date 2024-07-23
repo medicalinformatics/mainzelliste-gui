@@ -6,9 +6,10 @@
       <app-patient-fields [readOnly]=true [fields]="patient.fields"></app-patient-fields>
     </mat-card>
 
-    <mat-card id="pseudonyme" style="flex: 1 1 25%; display: flex;  flex-flow: column">
+    <mat-card class="mat-card-scrollable" id="pseudonyme">
       <mat-card-title>{{'idcard.title_pseudonyms' | translate}}</mat-card-title>
-      <app-patient-pseudonyms [readOnly]=true [ids]="patient.ids" [permittedOperation]="'R'"></app-patient-pseudonyms>
+      <app-patient-pseudonyms [readOnly]=true [ids]="patient.ids" [permittedOperation]="'R'"
+                              (generateId)="this.generateId($event.idType, $event.idString, $event.newIdType)"></app-patient-pseudonyms>
     </mat-card>
 
     <section style="display: flex; flex: 1 1 1%; margin-left:2%; flex-flow: column;">

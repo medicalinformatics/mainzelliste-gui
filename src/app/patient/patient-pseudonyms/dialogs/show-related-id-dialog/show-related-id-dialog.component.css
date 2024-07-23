@@ -1,0 +1,19 @@
+.connected-ids-container-line {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 50px;
+  padding: 10px 0px;
+  justify-content: center;
+  background-image: linear-gradient(#e3dfdf, #464648);
+  background-size: 100% 2px, 2px 100%;
+  background-position: 0 center, 25% 0;
+  background-repeat: no-repeat;
+}
+
+.connected-ids-container {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 50px;
+  padding: 10px 0px;
+  justify-content: center;
+}

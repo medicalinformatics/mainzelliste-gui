@@ -24,6 +24,7 @@ import {Operation} from "../../model/tenant";
 export interface IdTypSelection {
   idType: string,
   added: boolean,
+  associated?: boolean
 }
 
 @Component({
@@ -77,7 +78,7 @@ export class CreatePatientComponent  implements OnInit {
   }
 
   ngOnInit(): void {
-    let internalIdTypes  = this.patientListService.getInternalTypes( "C");
+    let internalIdTypes  = this.patientListService.getAllInternalIdTypes( "C");
     let mainIdType = this.patientListService.findDefaultIdType(internalIdTypes);
     this.selectedInternalIdTypes.push(mainIdType);
 

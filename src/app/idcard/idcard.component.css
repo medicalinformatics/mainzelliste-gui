@@ -41,3 +41,19 @@ mat-card-title{
   background-color: #053E6A;
   color:white;
 }
+
+.mat-card.mat-card-scrollable {
+  flex: 1 1 25%;
+  display: flex;
+  flex-flow: column;
+}
+
+.mat-card.mat-card-scrollable app-patient-pseudonyms {
+  overflow: auto;
+  height: 60vh;
+}
+
+.mat-card.mat-card-scrollable mat-card-title {
+  display: block;
+}
+

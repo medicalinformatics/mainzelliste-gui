@@ -11,6 +11,9 @@ import {ExternalPseudonymsComponent} from "./external-pseudonyms/external-pseudo
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {FormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
+import {ScrollingModule} from "@angular/cdk/scrolling";
+import { GenerateIdDialog } from './external-pseudonyms/dialogs/generate-id/generate-id-dialog.component';
+import { ShowRelatedIdDialog } from './patient-pseudonyms/dialogs/show-related-id-dialog/show-related-id-dialog.component';
 
 
 @NgModule({
@@ -19,7 +22,8 @@ import {RouterModule} from "@angular/router";
     FormsModule,
     SharedModule,
     ClipboardModule,
-    RouterModule
+    RouterModule,
+    ScrollingModule
   ],
   exports: [
     PatientFieldsComponent,
@@ -34,7 +38,10 @@ import {RouterModule} from "@angular/router";
     EditPatientComponent,
     EditPatientTentativeDialog,
     DeletePatientComponent,
-    DeletePatientDialog]
+    DeletePatientDialog,
+    GenerateIdDialog,
+    ShowRelatedIdDialog
+  ]
 })
 export class PatientModule {
 }
