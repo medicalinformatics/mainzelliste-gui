@@ -20,6 +20,7 @@ import {ConsentRow, ConsentsView} from "../consent/consent.model";
 import {catchError, mergeMap} from "rxjs/operators";
 import {DeleteConsentDialog} from "./dialogs/delete-consent-dialog";
 import {IdType} from "../model/id-type";
+import {AuthorizationService} from "../services/authorization.service";
 
 @Component({
   selector: 'app-idcard',
@@ -46,6 +47,7 @@ export class IdcardComponent implements OnInit {
     private patientListService: PatientListService,
     private patientService: PatientService,
     private titleService: GlobalTitleService,
+    private authorizationService: AuthorizationService,
     public consentDialog: MatDialog,
     public deletePatientDialog: MatDialog,
     public deleteConsentDialog: MatDialog,
@@ -69,7 +71,7 @@ export class IdcardComponent implements OnInit {
     });
 
     //load consent list
-    if(this.consentService.isServiceEnabled())
+    if(this.consentService.isServiceEnabled() && this.authorizationService.hasPermission(Permission.READ_CONSENT))
       this.loadConsents();
   }
 
