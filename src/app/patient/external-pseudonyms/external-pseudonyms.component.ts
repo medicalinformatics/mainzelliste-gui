@@ -86,7 +86,7 @@ export class ExternalPseudonymsComponent implements OnChanges {
 
   getExternalIdMatSelectData(): string[] {
     return this.getExternalIdTypes()
-    .filter(t => t.associated && this.permittedOperation != 'U' || !t.added)
+    .filter(t => t.associated && this.permittedOperation != 'U' || !t.associated && !t.added)
     .map(t => t.idType);
   }
 
