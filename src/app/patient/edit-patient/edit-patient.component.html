@@ -20,7 +20,7 @@
       <button mat-fab (click)="editPatient(false)" color="submit"
               style="margin-bottom: 15px;"
               aria-label="Example icon button with a delete icon"
-              [disabled]="!patientForm.form.valid">
+              [disabled]="this.disable(patientForm)">
         <mat-icon matTooltip="{{'button_save' | translate}}">done</mat-icon>
       </button>
       <button mat-fab [routerLink]="['/idcard', this.idType, this.idString]"

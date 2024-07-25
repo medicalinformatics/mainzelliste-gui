@@ -11,6 +11,7 @@ import {Id} from "../../model/id";
 import { TranslateService } from '@ngx-translate/core';
 import {AuthorizationService} from "../../services/authorization.service";
 import {Permission} from "../../model/permission";
+import {NgForm} from "@angular/forms";
 
 @Component({
   selector: 'app-edit-patient',
@@ -81,6 +82,14 @@ export class EditPatientComponent implements OnInit {
       if (result)
         this.editPatient(true);
     });
+  }
+
+  disable(patientForm: NgForm) {
+    let emptyFields = !Object.keys(this.patient.fields).length;
+    let emptyIds = !this.patient.ids.filter(id => this.patientListService.isExternalIdType(id.idType, 'R')).some(id => id.idString.length > 0);
+    let invalidIds = patientForm.form.get('externalIds')?.valid ?? true;
+    return !emptyFields && !patientForm.form.valid ||
+      emptyFields && (emptyIds || !invalidIds);
   }
 }
 

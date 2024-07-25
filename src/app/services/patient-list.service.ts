@@ -180,8 +180,12 @@ export class PatientListService {
     return this.configService.isDebugModeEnabled();
   }
 
-  isExternalId(idType: string, operation:Operation): boolean {
+  isUniqueExternalIdType(idType: string, operation:Operation): boolean {
     return this.getIdGenerators(true, operation).some(g => g.idType == idType);
+  }
+
+  isExternalIdType(idType: string, operation?:Operation): boolean {
+    return this.getAllExternalIdTypes(operation).some( t => t == idType);
   }
 
   /**
@@ -398,7 +402,7 @@ export class PatientListService {
     let fields: { [key: string]: string } =  this.convertToPatientFields(patient.fields, this.getFieldNames("U"));
 
     // add external ids
-    patient.ids.filter(id => this.isExternalId(id.idType, "U"))
+    patient.ids.filter(id => this.isUniqueExternalIdType(id.idType, "U"))
     .forEach(id => fields[id.idType] = id.idString);
 
     // set sureness flag
