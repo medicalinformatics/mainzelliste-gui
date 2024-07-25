@@ -6,7 +6,7 @@ volumes:
   keycloakDB:
 services:
   mainzelliste-gui:
-    image: docker.verbis.dkfz.de/ttp/mainzelliste-gui:consent
+    image: medicalinformatics/mainzelliste-gui:develop
     ports:
       - "4200:80"
     environment:
@@ -21,11 +21,13 @@ services:
       ML_UI_MAIN_ID_TYPE: pid
       ML_UI_SHOW_ALL_IDS: false
       ML_UI_DEBUG_MODE: false
-      ML_UI_ENABLE_CONSENT: true
+      ML_UI_ENABLE_CONSENT: false
     depends_on:
       - mainzelliste
   mainzelliste:
-    image: docker.verbis.dkfz.de/ttp/mainzelliste:consent-fhir
+    image: medicalinformatics/mainzelliste:develop
+    # image contains consent management feature
+    # image: docker.verbis.dkfz.de/ttp/mainzelliste:consent-fhir
     ports:
       - "8080:8080"
     environment:
