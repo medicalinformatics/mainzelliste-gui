@@ -19,7 +19,7 @@
     </button>
   </mat-menu>
   <mat-menu #tenants="matMenu">
-    <button *ngFor="let tenant of this.getTenants()" [disabled]="tenant.id == this.authorizationService.getCurrentTenant()" mat-menu-item (click)="setTenant(tenant.id)">{{tenant.name}}</button>
+    <button *ngFor="let tenant of this.getTenants()" [disabled]="tenant.id == this.authorizationService.getCurrentTenantId()" mat-menu-item (click)="setTenant(tenant.id)">{{tenant.name}}</button>
   </mat-menu>
   <mat-menu #languages="matMenu">
     <button *ngIf="this.translate.currentLang != 'de-DE'" mat-menu-item (click)="useLanguage('de-DE')">{{'session.language_german' | translate}}</button>

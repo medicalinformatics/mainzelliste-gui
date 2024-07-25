@@ -1,4 +1,6 @@
 export class Tenant {
+  public static DEFAULT_ID = "default"
+
   constructor(
     public id: string,
     public name: string,

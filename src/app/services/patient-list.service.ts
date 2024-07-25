@@ -22,7 +22,7 @@ import {Id} from "../model/id";
 import {CreateIdsTokenData} from '../model/create-ids-token-data';
 import {AuthorizationService} from "./authorization.service";
 import {TranslateService} from '@ngx-translate/core';
-import {Operation} from "../model/tenant";
+import {Operation, Tenant} from "../model/tenant";
 import {IdType} from "../model/id-type";
 import {flatMap} from "rxjs/internal/operators";
 
@@ -97,8 +97,10 @@ export class PatientListService {
 
 
   getIdTypes(operation?: Operation): Array<string> {
-    let allowedIdTypes = operation != undefined ? this.authorizationService.getAllAllowedUniqueIdTypes(operation) : [];
-    return allowedIdTypes.length == 0  ? this.configService.getMainzellisteIdTypes() : allowedIdTypes;
+    if(operation != undefined && !this.authorizationService.isCurrentTenantPermissionsEmpty())
+       return this.authorizationService.getAllAllowedUniqueIdTypes(operation);
+    else
+      return this.configService.getMainzellisteIdTypes();
   }
 
   getAllIdTypes(operation: Operation): Array<string>{
@@ -118,14 +120,18 @@ export class PatientListService {
   }
 
   getUniqueIdTypes(isExternal: boolean, operation?: Operation): Array<string> {
-    let allowedIdTypes = operation != undefined ? this.authorizationService.getAllowedUniqueIdTypes(operation, isExternal) : [];
-    return allowedIdTypes.length > 0  ? allowedIdTypes : this.configService.getMainzellisteIdGenerators()
+    if(operation != undefined && !this.authorizationService.isCurrentTenantPermissionsEmpty())
+       return this.authorizationService.getAllowedUniqueIdTypes(operation, isExternal);
+    else
+      return this.configService.getMainzellisteIdGenerators()
     .filter(g => g.isExternal == isExternal).map(g => g.idType);
   }
 
   getAssociatedIdTypes(isExternal: boolean, operation?: Operation): Array<string> {
-    let allowedIdTypes = operation != undefined ? this.authorizationService.getAllowedAssociatedIdTypes(operation, isExternal) : [];
-    return allowedIdTypes.length > 0  ? allowedIdTypes : this.configService.getMainzellisteAssociatedIdGenerators()
+    if(operation != undefined && !this.authorizationService.isCurrentTenantPermissionsEmpty())
+      return this.authorizationService.getAllowedAssociatedIdTypes(operation, isExternal);
+    else
+      return this.configService.getMainzellisteAssociatedIdGenerators()
     .filter(g => g.isExternal == isExternal).map(g => g.idType);
   }
 
@@ -187,7 +193,13 @@ export class PatientListService {
   }
 
   findDefaultIdType(configuredIdTypes: string[]): string {
-    return this.patientList.mainIdType != undefined && configuredIdTypes.some(t => t == this.patientList.mainIdType)? this.patientList.mainIdType : configuredIdTypes[0];
+    if (Tenant.DEFAULT_ID == this.authorizationService.getCurrentTenantId() &&
+        this.patientList.mainIdType != undefined &&
+        configuredIdTypes.some(t => t == this.patientList.mainIdType)
+    )
+      return this.patientList.mainIdType;
+    else
+      return configuredIdTypes[0];
   }
 
   /**
@@ -215,8 +227,8 @@ export class PatientListService {
     }
 
     // find current tenant id
-    let tenantId = this.authorizationService.getCurrentTenant();
-    if(tenantId === undefined || tenantId == "default")
+    let tenantId = this.authorizationService.getCurrentTenantId();
+    if(tenantId === undefined || tenantId == Tenant.DEFAULT_ID)
       tenantId = "";
 
     // create read patients token

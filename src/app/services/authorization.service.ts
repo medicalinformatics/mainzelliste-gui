@@ -165,6 +165,14 @@ export class AuthorizationService {
     return permissions;
   }
 
+  public isCurrentTenantPermissionsEmpty() {
+    return this.configService.getMainzellisteClaims()
+    .filter(c => c.roles.some(r => this.userRoles.includes(r)) && c.permissions.tenant.id == this.currentTenantId)
+    .map(c => c.permissions.resources)
+    .every(r => r.patient == undefined && r.consentTemplate == undefined
+        && r.policy == undefined && r.policySet == undefined)
+  }
+
   private filterOperations(items: { operations: Operation[] }[]) {
     return items.map(i => i.operations)
       .reduce((accumulator, currentValue) =>
@@ -182,7 +190,7 @@ export class AuthorizationService {
     this.initAuthorizationState();
   }
 
-  getCurrentTenant() {
+  getCurrentTenantId() {
     return this.currentTenantId;
   }
 
