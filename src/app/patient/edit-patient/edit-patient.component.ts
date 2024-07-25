@@ -21,8 +21,8 @@ export class EditPatientComponent implements OnInit {
   public readonly Permission = Permission;
 
   patient: Patient = new Patient();
-  private idString: string = "";
-  private idType: string = "";
+  public idString: string = "";
+  public idType: string = "";
 
   constructor(
     private translate: TranslateService,

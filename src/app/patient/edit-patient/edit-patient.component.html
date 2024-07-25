@@ -23,7 +23,7 @@
               [disabled]="!patientForm.form.valid">
         <mat-icon matTooltip="{{'button_save' | translate}}">done</mat-icon>
       </button>
-      <button mat-fab [routerLink]="['/patientlist']"
+      <button mat-fab [routerLink]="['/idcard', this.idType, this.idString]"
               style="background-color:#888888; color:white;">
         <mat-icon matTooltip="{{'button_cancel' | translate}}">close</mat-icon>
       </button>
