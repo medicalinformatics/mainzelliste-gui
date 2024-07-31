@@ -11,7 +11,8 @@ export class Field {
     public type: FieldType,
     public required: boolean,
     public validator: string,
-    public hint: string = ""
+    public hint: string = "",
+    public hideFromList: boolean = false,
   ) {
   }
 }

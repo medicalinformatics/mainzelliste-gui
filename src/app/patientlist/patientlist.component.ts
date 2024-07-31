@@ -40,8 +40,8 @@ export class PatientlistComponent implements OnInit{
   ) {
     this.patientListService = patientListService;
     this.patients = new MatTableDataSource<Patient>([]);
-    this.fields = configService.data[0].fields;
-    this.fieldNames = configService.data[0].fields.map(f => f.name);
+    this.fields = configService.data[0].fields.filter(f => !f.hideFromList);
+    this.fieldNames = configService.data[0].fields.filter(f => !f.hideFromList).map(f => f.name);
     this.showAllIds = configService.data[0].showAllIds != undefined && configService.data[0].showAllIds;
 
     const initialSelection: Patient[] = [];

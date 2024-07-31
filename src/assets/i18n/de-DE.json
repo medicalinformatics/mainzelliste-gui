@@ -25,8 +25,13 @@
 	"birth_name_text": "Geburtsname",
 	"first_name_text": "Vorname",
 	"last_name_text": "Name",
+  "street_text": "Straße",
 	"residence_text": "Wohnort",
 	"zip_code_text": "PLZ",
+  "phone_number_text": "Telefonnummer",
+  "email_text": "Email",
+  "health_insurance_text": "Krankenversicherung",
+  "health_insurance_number_text": "Krankenversichertennummer",
 
 	"tentative_dialog_title": "Unsicherer Fall",
 	"tentative_dialog_text1": "Zu den eingegeben Daten wurde ein ähnlicher Patient gefunden, der aber nicht mit hinreichender Sicherheit zugeordnet werden kann.",

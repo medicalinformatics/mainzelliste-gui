@@ -25,8 +25,13 @@
 	"birth_name_text": "Birth Name",
 	"first_name_text": "First name",
 	"last_name_text": "Last name",
+  "street_text": "Street",
 	"residence_text": "Residence",
 	"zip_code_text": "ZIP code",
+  "phone_number_text": "Phone number",
+  "email_text": "E-mail",
+  "health_insurance_text": "Health Insurance",
+  "health_insurance_number_text": "Health Insurance Number",
 
 	"tentative_dialog_title": "Unsafe case",
 	"tentative_dialog_text1": "A similar patient was found for the data entered, but he cannot be assigned with sufficient certainty.",
