@@ -219,13 +219,20 @@ export class AppConfigService {
 
     // set type
     if(!isDateType) {
-      if (mlField.type != MainzellisteFieldType.PlainTextField)
+      if (mlField.type == MainzellisteFieldType.PlainTextField)
+        configuredField.type = FieldType.TEXT
+      else if (mlField.type == MainzellisteFieldType.IntegerField) {
+        configuredField.type = FieldType.NUMBER;
+      }
+      else
         throw new Error(this.translate.instant('error.app_config_service_type_not_supported_text1') + fieldName + this.translate.instant('error.app_config_service_type_not_supported_text2') + mlField.type + this.translate.instant('error.app_config_service_type_not_supported_text3'))
-      configuredField.type = FieldType.TEXT
     }
 
     configuredField.required = mlField.required;
-    configuredField.validator = mlField.validation ?? "";
+    if (mlField.type == MainzellisteFieldType.IntegerField)
+      configuredField.validator = mlField.validation || "\\d*";
+    else
+      configuredField.validator = mlField.validation ?? "";
     this.mainzellisteFields.push(fieldName);
   }
 
