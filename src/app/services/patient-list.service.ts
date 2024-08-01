@@ -214,13 +214,18 @@ export class PatientListService {
    */
   getPatients(filters: Array<{ field: string, fields: string[], searchCriteria: string, isIdType: boolean }>,
               pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
+    // find current tenant id
+    let tenantId = this.authorizationService.getCurrentTenantId();
+    if(tenantId === undefined || tenantId == Tenant.DEFAULT_ID)
+      tenantId = "";
+
     // find searchIds
     let searchIds: Array<{idType: string, idString: string}> = [];
     let allowedIdTypes: string[] = [];
     //let defaultIdType = this.findDefaultIdType(this.getIdTypes());
     if (filters.every(f => !f.isIdType)) {
       // get permitted idTypes
-      allowedIdTypes = this.authorizationService.getAllowedUniqueIdTypes('R', false);
+      allowedIdTypes = tenantId.length > 0 ? this.authorizationService.getTenantIdTypes() : this.authorizationService.getAllowedUniqueIdTypes('R', false);
       if(allowedIdTypes.length > 0 && !allowedIdTypes.some( t => t == "*"))
         searchIds = allowedIdTypes.map(type => ({idType: type, idString: "*"}));
       else
@@ -229,11 +234,6 @@ export class PatientListService {
       filters.filter(f => f.isIdType).forEach(f =>
         searchIds.push({idType: f.field, idString: f.searchCriteria.trim()}));
     }
-
-    // find current tenant id
-    let tenantId = this.authorizationService.getCurrentTenantId();
-    if(tenantId === undefined || tenantId == Tenant.DEFAULT_ID)
-      tenantId = "";
 
     // create read patients token
     return this.sessionService.createToken("readPatients",
