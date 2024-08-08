@@ -5,7 +5,6 @@ import { CompactAssociatedIdsDialog } from 'src/app/idcard/dialogs/compact-assoc
 import { AssociatedIdGroup } from 'src/app/model/associated-id-group';
 import { Patient } from 'src/app/model/patient';
 import { PatientListService } from 'src/app/services/patient-list.service';
-import { PatientService } from 'src/app/services/patient.service';
 
 @Component({
   selector: 'app-patient-associated-ids',
@@ -28,8 +27,7 @@ export class PatientAssociatedIdsComponent implements OnInit {
 
   constructor(
     private patientListService: PatientListService,
-    private patientService: PatientService,
-    public associatedIdsDialog: MatDialog,
+    public compactAssociatedIdsDialog: MatDialog,
   ) { }
 
   onGroupChange() {
@@ -65,7 +63,7 @@ export class PatientAssociatedIdsComponent implements OnInit {
   }
 
   openCompactAssociatedIdsDialog() {
-    const dialogRef = this.associatedIdsDialog.open(CompactAssociatedIdsDialog, {
+    const dialogRef = this.compactAssociatedIdsDialog.open(CompactAssociatedIdsDialog, {
         panelClass: 'my-dialog',
         data: {patient: this.patient, idTypes: this.patientListService.getAssociatedIdTypes(this.dataModel.name), group: this.dataModel}
       });
