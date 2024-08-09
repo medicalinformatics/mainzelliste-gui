@@ -98,27 +98,57 @@ export class ErrorMessages {
   public static EDIT_PATIENT_CONFLICT_EXT_IDS_IDAT_MULTIPLE_MATCH: ErrorMessage = new ErrorMessage(2006,
     "External ID and IDAT match with different patients, respectively!",
     "error.edit_patient_conflict_ext_ids_idat_multiple_match");
-  public static EDIT_PATIENT_CONFLICT_POSSIBLE_MATCH: ErrorMessage = new ErrorMessage(1007,
+  public static EDIT_PATIENT_CONFLICT_POSSIBLE_MATCH: ErrorMessage = new ErrorMessage(2007,
     "Editing patient not possible because of tentative matching with the existing patient! Use sureness flag, if you are sure the data is correct and can be edited",
     "error.edit_patient_conflict_possible_match");
-  public static EDIT_PATIENT_CONFLICT_MATCH: ErrorMessage = new ErrorMessage(1008,
+  public static EDIT_PATIENT_CONFLICT_MATCH: ErrorMessage = new ErrorMessage(2008,
     "Editing patient not possible because of matching with the existing patient!",
     "error.edit_patient_conflict_match");
+
+  ////
+  // DELETE PATIENT ERRORS
+  //---------------------
+  public static DELETE_PATIENT_NOT_FOUND: ErrorMessage = new ErrorMessage(3001,
+    "No patient found",
+    "error.delete_patient_not_found");
 
     ////
     // CREATE IDS ERRORS
     //---------------------
-  public static CREATE_IDS_ERROR: ErrorMessage = new ErrorMessage(3001,
+  public static CREATE_IDS_ERROR: ErrorMessage = new ErrorMessage(4001,
     "ResolveCreateIdTokenError",
     'error.resolve_create_id_token');
 
   ////
   // CREATE/EDIT CONSENT
   //---------------------
-  public static CREATE_CONSENT_REJECTED: ErrorMessage = new ErrorMessage(4001,
+  public static CREATE_CONSENT_REJECTED: ErrorMessage = new ErrorMessage(5001,
     "ConsentRejected",
     'error.create_consent_rejected');
-  public static CREATE_CONSENT_INACTIVE: ErrorMessage = new ErrorMessage(4002,
+  public static CREATE_CONSENT_INACTIVE: ErrorMessage = new ErrorMessage(5002,
     "ConsentInactivated",
     'error.create_consent_inactivated');
+  public static READ_CONSENT_FAILED: ErrorMessage = new ErrorMessage(5003,
+    "ReadConsentFailed",
+    'error.read_consent_failed');
+
+  ////
+  // DELETE CONSENT
+  //---------------------
+  public static DELETE_CONSENT_NOT_FOUND: ErrorMessage = new ErrorMessage(5004,
+      "No patient found",
+      "error.delete_consent_failed");
+
+  ////
+  // CREATE/EDIT CONSENT TEMPLATE
+  //-----------------------------
+  public static CREATE_CONSENT_TEMPLATE_REJECTED: ErrorMessage = new ErrorMessage(6001,
+    "CreateConsentTemplateRejected",
+    'error.create_consent_template_rejected');
+  public static READ_CONSENT_TEMPLATE_FAILED: ErrorMessage = new ErrorMessage(6002,
+    "ReadConsentTemplateFailed",
+    'error.read_consent_template_failed');
+  public static SEARCH_CONSENT_TEMPLATES_FAILED: ErrorMessage = new ErrorMessage(6003,
+    "SearchConsentTemplatesFailed",
+    'error.search_consent_templates_failed');
 }

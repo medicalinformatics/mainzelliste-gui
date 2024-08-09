@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>{{'patientPseudonyms.related_id_button' | translate}}</h1>
+<div mat-dialog-content>
+  <div [ngClass]="this.ids.length > 1 ? 'connected-ids-container-line': 'connected-ids-container'">
+    <mat-card *ngFor="let id of this.ids">
+      <mat-card-header>
+        <mat-card-title style="text-align: center;">{{id.idString}}</mat-card-title>
+        <mat-card-subtitle style="margin-bottom: 0; text-align: center;">{{id.idType}}</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </div>
+</div>
+<br>
+<div mat-dialog-actions style="align-content: center">
+  <button mat-raised-button class="submit" (click)="onCancel()">
+    {{'button_close' | translate}}
+  </button>
+</div>

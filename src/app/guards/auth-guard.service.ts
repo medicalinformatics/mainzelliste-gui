@@ -1,5 +1,13 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivateChild, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
+import {
+    ActivatedRoute,
+    ActivatedRouteSnapshot,
+    CanActivateChild,
+    Router,
+    RouterStateSnapshot,
+    UrlSegment,
+    UrlTree
+} from '@angular/router';
 import {KeycloakAuthGuard, KeycloakService} from 'keycloak-angular';
 import {Observable} from "rxjs";
 import {UserAuthService} from "../services/user-auth.service";
@@ -12,6 +20,7 @@ import {Permission} from "../model/permission";
 export class AuthGuard extends KeycloakAuthGuard implements CanActivateChild {
   constructor(
     protected readonly router: Router,
+    protected readonly activatedRouter: ActivatedRoute,
     protected readonly keycloak: KeycloakService,
     private authorizationService: AuthorizationService,
     private userAuthService: UserAuthService
@@ -20,28 +29,28 @@ export class AuthGuard extends KeycloakAuthGuard implements CanActivateChild {
   }
 
   public async isAccessAllowed(
-    route: ActivatedRouteSnapshot,
+    routeSnapshot: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ) {
-    return this.userAuthService.login(this.authenticated, state.url)
-    .then(
-      isSessionCreated => isSessionCreated && this.checkPermission(route.data.permission) &&
-        this.checkAnyPermissions(route.data.permissions)
-    );
-  }
-
-  checkPermission(permission: Permission): boolean | UrlTree {
-    return permission == undefined || this.authorizationService.hasPermission(permission)
-      || this.router.createUrlTree(['access-denied']);
-  }
-
-  checkAnyPermissions(permissions: Permission[]): boolean | UrlTree {
-    return permissions == undefined || permissions.length == 0  || this.authorizationService.hasAnyPermissions(permissions)
-      || this.router.createUrlTree(['access-denied']);
+    return this.userAuthService.login(this.authenticated, state.url).then() || this.router.createUrlTree(['access-denied']);
   }
 
   canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot):
     boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    return this.canActivate(childRoute, state);
+    let accessGranted = false;
+    if(childRoute.data.permission != undefined)
+      accessGranted =  this.authorizationService.hasPermission(childRoute.data.permission);
+    else if(childRoute.data.anyPermissions != undefined && childRoute.data.anyPermissions.length > 0)
+      accessGranted =  this.authorizationService.hasAnyPermissions(childRoute.data.anyPermissions);
+    if(!accessGranted)
+      return this.router.createUrlTree(['access-denied']);
+
+    return !childRoute.data.checkIdType || this.checkTenantIdType(childRoute.url);
+  }
+
+  checkTenantIdType(urlSegments: UrlSegment[]): boolean | UrlTree {
+    return urlSegments == undefined || urlSegments.length < 2
+      || this.authorizationService.getAllowedUniqueIdTypes('R', false).includes(urlSegments[1].path)
+      || this.router.createUrlTree(['access-denied']);
   }
 }

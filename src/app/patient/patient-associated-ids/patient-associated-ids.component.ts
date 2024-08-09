@@ -31,7 +31,7 @@ export class PatientAssociatedIdsComponent implements OnInit {
   ) { }
 
   onGroupChange() {
-    this.tableData = this.patientListService.getAssociatedIdTypes(this.dataModel.name);
+    this.tableData = this.patientListService.getAssociatedIdTypesByGroup(this.dataModel.name);
     this.group = this.dataModel;
     this.fillElementData();
     this.dataSource = new MatTableDataSource(this.elementData);
@@ -65,7 +65,7 @@ export class PatientAssociatedIdsComponent implements OnInit {
   openCompactAssociatedIdsDialog() {
     const dialogRef = this.compactAssociatedIdsDialog.open(CompactAssociatedIdsDialog, {
         panelClass: 'my-dialog',
-        data: {patient: this.patient, idTypes: this.patientListService.getAssociatedIdTypes(this.dataModel.name), group: this.dataModel}
+        data: {patient: this.patient, idTypes: this.patientListService.getAssociatedIdTypesByGroup(this.dataModel.name), group: this.dataModel}
       });
 
       dialogRef.afterClosed().subscribe(result => {

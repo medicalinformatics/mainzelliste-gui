@@ -1,0 +1,90 @@
+<div ngModelGroup="consentTemplateDetails">
+  <!-- Name -->
+  <mat-form-field class="templateInputField" [ngStyle]="{'margin-bottom': displayError(name) ? '0.25em' : '-1.25em' }">
+    <mat-label>Name</mat-label>
+    <input pattern="[A-Za-z\d\-_\.$#]{1,255}" style="width: 45%;" matInput placeholder=""
+           [(ngModel)]="this.template.name"
+           [name]="'name'" #name="ngModel" required="true">
+    <mat-error *ngIf="displayError(name)">
+      {{ getFieldErrorMessage("name", name.errors) }}
+    </mat-error>
+  </mat-form-field>
+
+  <!-- Titel-->
+  <mat-form-field class="templateInputField" [ngStyle]="{'margin-bottom': displayError(title) ? '0.25em' : '-1.25em' }">
+    <mat-label>Titel</mat-label>
+    <input style="width: 45%;" matInput placeholder=""
+           [(ngModel)]="this.template.title" [name]="'title'" #title="ngModel" required="true">
+    <mat-error *ngIf="displayError(title)">
+      {{ getFieldErrorMessage("title", title.errors) }}
+    </mat-error>
+  </mat-form-field>
+
+  <!-- Organization-->
+  <mat-form-field class="templateInputField"
+                  [ngStyle]="{'margin-bottom': displayError(title) ? '0.25em' : '-1.25em' }">
+    <mat-label>Verantwortliche Einrichtung</mat-label>
+    <input style="width: 45%;" matInput placeholder=""
+           [(ngModel)]="this.template.organization" [name]="'organization'" #organization="ngModel">
+  </mat-form-field>
+
+  <!-- ResearchStudy-->
+  <mat-form-field class="templateInputField"
+                  [ngStyle]="{'margin-bottom': displayError(title) ? '0.25em' : '-1.25em' }">
+    <mat-label>Forschungsprojekt</mat-label>
+    <input style="width: 45%;" matInput placeholder=""
+           [(ngModel)]="this.template.researchStudy" [name]="'researchStudy'" #researchStudy="ngModel">
+  </mat-form-field>
+
+  <!-- Validity-->
+  <mat-form-field class="templateInputField"
+                  [ngStyle]="{'margin-bottom': displayError(validityPeriod) ? '0.25em' : '-1.25em' }">
+    <mat-label>Gültigkeitsdauer</mat-label>
+    <input matInput style="width: 90%; " placeholder="0 Jahren - 0 Monaten - 0 Tagen"
+           [(ngModel)]="this.templateValidityPeriod"
+           [readonly]="true" [required]="true" [name]="'validityPeriod'" #validityPeriod="ngModel">
+    <mat-error *ngIf="displayError(validityPeriod)">
+      {{getFieldErrorMessage("validityPeriod", validityPeriod.errors)}}
+    </mat-error>
+    <button mat-icon-button matSuffix (click)="openValidityPeriodDialog()" [name]="'validityPeriodEditButton'">
+      <mat-icon id="editIcon" [ngStyle]="{'transform':'scale(0.8)'}">edit</mat-icon>
+    </button>
+  </mat-form-field>
+
+
+  <mat-slide-toggle color="primary" style="clear: both; float:left; margin-top: 20px; margin-bottom: 1.25em"
+                    [(ngModel)]="this.template.isMiiFhirConsentConform" [name]="'isMiiFhir'">basiert auf MII Broad
+    Consent
+  </mat-slide-toggle>
+  <mat-form-field style="clear:both; float: left; width: 300px; padding-bottom: 0; margin: 0 0 -1.25em;"
+                  *ngIf="this.template.isMiiFhirConsentConform">
+    <mat-label>Version des MII Broad Consent</mat-label>
+    <mat-select [(ngModel)]="this.template.policy" required="true" [name]="'miiFhirVersion'">
+      <mat-option *ngFor="let version of this.miiFhirBroadConsentVersions"
+                  value="{{version.code}}">{{version.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Modules -->
+  <h4 style="margin-top: 20px; clear:both; float: left;">Module hinzufügen: </h4>
+
+  <!-- modules -->
+  <app-consent-template-modules [templateModules]="this.template.items"></app-consent-template-modules>
+
+  <!-- add module -->
+  <div
+    style="clear:both; float: left; width: 300px;  margin-top: 20px; margin-bottom: 40px; display: flex; flex-wrap: nowrap;">
+    <mat-form-field class="templateInputField">
+      <mat-label>Moduletyp</mat-label>
+      <mat-select required="false" [(value)]="selectedModuleType">
+        <mat-option *ngFor="let moduleType of this.moduleTypes"
+                    [value]="moduleType.type">{{moduleType.display}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-icon-button color="primary" aria-label="Module hinzufügen"
+            (click)="this.createModule(selectedModuleType)"
+            style="margin-top: 9px; margin-left: 8px">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</div>

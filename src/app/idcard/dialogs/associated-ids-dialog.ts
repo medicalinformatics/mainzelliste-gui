@@ -61,7 +61,7 @@ export class AssociatedIdsDialog implements OnInit {
       ) {}
 
     setupTable(): void {
-        this.tableData = {idTypes: this.patientListService.getAssociatedIdTypes(this.dataModel.name), group: this.dataModel}
+        this.tableData = {idTypes: this.patientListService.getAssociatedIdTypesByGroup(this.dataModel.name), group: this.dataModel}
     }
 
     addId() {
@@ -106,8 +106,8 @@ export class AssociatedIdsDialog implements OnInit {
     }
 
     generate() {
-        if (this.patientListService.getAssociatedIdTypes(this.dataModel.name) != undefined) {
-            this.splitIds(this.patientListService.getAssociatedIdTypes(this.dataModel.name)!);
+        if (this.patientListService.getAssociatedIdTypesByGroup(this.dataModel.name) != undefined) {
+            this.splitIds(this.patientListService.getAssociatedIdTypesByGroup(this.dataModel.name)!);
             this.canGenerate = true;
         } else {
             this.canGenerate = false;

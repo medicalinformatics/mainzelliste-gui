@@ -1,11 +1,14 @@
 {
 	"EMPTY": "",
 	"button_add_consent": "Add consent",
-  "button_generate_id": "Generate",
+	"button_edit_consent": "Edit consent",
+	"button_delete_consent": "Delete consent",
+  	"button_generate_id": "Generate ID",
 	"button_delete": "Delete",
 	"button_edit": "Edit",
 	"button_request": "Request",
 	"button_cancel": "Cancel",
+  	"button_close": "Close",
 	"button_save": "Save",
 	"button_edit_patient": "Edit patient data",
 	"button_id_card": "ID Card",
@@ -13,12 +16,12 @@
 	"button_save_new_id": "Generate",
 	"button_correct": "Correct",
 	"button_confirm": "Confirm",
+	"button_publish": "Publish",
 	"button_generate_new_unique_id": "Unique ID",
 	"button_generate_new_associated_id": "Associated ID",
 	"button_next": "Next",
 	"button_back": "Back",
 	"button_new_entry": "New Entry",
-	"button_close": "Close",
 	"button_copy_id_tooltip": "copy Id",
 
 	"radio_button_yes": "Yes",
@@ -28,8 +31,13 @@
 	"birth_name_text": "Birth Name",
 	"first_name_text": "First name",
 	"last_name_text": "Last name",
+  "street_text": "Street",
 	"residence_text": "Residence",
 	"zip_code_text": "ZIP code",
+  "phone_number_text": "Phone number",
+  "email_text": "E-mail",
+  "health_insurance_text": "Health Insurance",
+  "health_insurance_number_text": "Health Insurance Number",
 
 	"tentative_dialog_title": "Unsafe case",
 	"tentative_dialog_text1": "A similar patient was found for the data entered, but he cannot be assigned with sufficient certainty.",
@@ -53,6 +61,8 @@
 	"idcard.title_pseudonyms": "Pseudonyms",
 	"idcard.title_id_card": "ID Card",
 
+  "consent_list.unlimited_period": "unlimited",
+
   "consent_status.draft": "Draft",
   "consent_status.proposed": "Proposed",
   "consent_status.active": "Active",
@@ -60,12 +70,28 @@
   "consent_status.inactive": "Inactive",
   "consent_status.entered-in-error": "Error",
 
+	"consent_template_status.draft": "Draft",
+	"consent_template_status.active": "Active",
+
+  "consent_template.name": "Name",
+  "consent_template.title": "Titel",
+	"consent_template.status": "Status",
+  "consent_template.organization": "Organization",
+  "consent_template.research_study": "Research study",
+  "consent_template.name.based_on_mii_broad_consent": "based on MII Broad Consent",
+  "consent_template.name.mii_broad_consent_version": "Version of MII Broad Consent",
+  "consent_template.validityPeriod": "Validity period",
+  "consent_template.validity_year": "Years",
+  "consent_template.validity_month": "Months",
+  "consent_template.validity_day": "Days",
+
   "add_consent.rejected-dialog-text": "All consent modules were rejected. The consent status is automatically set as Rejected",
   "add_consent.inactivated-dialog-text": "The end of the Timeframe of this consent is in the past. The consent status is automatically set as Inactive",
 
   "navigation.info": "Info",
 	"navigation.new_patient": "New Patient",
 	"navigation.patientlist": "Patient list",
+  "navigation.consent_template": "Consent Template",
 
 	"patientlist.filter_search": "Filter/Search...",
 	"patientlist.headers_actions": "Actions",
@@ -80,6 +106,7 @@
 	"patientlist_view.paginator_first_page_label": "First page",
 	"patientlist_view.paginator_last_page_label": "Last page",
 
+  "session.tenancy": "Projects",
 	"session.language_english": "English",
 	"session.language_german": "German",
 	"session.menu_language": "Language",
@@ -100,6 +127,8 @@
 	"consentDetail.validity_label": "Valid from",
 	"consentDetail.validity_date_label": "Select validity date",
 
+	"error.consentDetail.validity_date": "Validity period lies in the past",
+
 	"deletePatient.title_patient_data": "Patient data",
 	"deletePatient.title_pseudonyms": "Pseudonyms",
 	"deletePatient.title": "Delete patient",
@@ -107,6 +136,10 @@
 	"deletePatientDialog.title_delete_patient": "Delete patient",
 	"deletePatientDialog.delete_patient_question": "Do you want to delete the following patient?",
 	"deletePatientDialog.delete_patient_warning": "The patient data will be completely deleted and cannot be restored.",
+
+	"deleteConsentDialog.title_delete_consent": "Delete consent",
+	"deleteConsentDialog.delete_consent_question": "Do you want to delete the following consent?",
+	"deleteConsentDialog.delete_consent_warning": "The consent data will be completely deleted and cannot be restored.",
 
 	"addConsent.title_add_consent": "Add consent",
 	"editConsent.title_edit_consent": "Edit Consent",
@@ -145,6 +178,7 @@
 	"info.audit_trail_text6": "are recorded in the audit trail. The time of the action is recorded and stated. The folder symbol takes you to the patient's ID card for further details about the campaign.",
 
 	"patientPseudonyms.external": "External pseudonyms:",
+  "patientPseudonyms.related_id_button": "Show related IDs",
 
 	"patientFields.error_value_text1": "The value for the field",
 	"patientFields.error_value_text2": "is invalid",
@@ -171,7 +205,9 @@
 	"error.edit_patient_conflict_ext_ids_idat_multiple_match": "Patient could not be edited because the IDAT entered was assigned to different patients",
 	"error.edit_patient_conflict_possible_match": "A similar patient was found for the data entered, but he cannot be assigned with sufficient certainty. To avoid any confusion, please check your entry again",
 	"error.edit_patient_conflict_match": "A patient was found for the data entered. To avoid any confusion, please check your entry again",
-	"error.resolve_create_id_token": "ResolveCreateIdTokenError",
+  "error.delete_patient_not_found": "Patient not found",
+
+  	"error.resolve_create_id_token": "ResolveCreateIdTokenError",
 	"error.consent_service_fhir_consent_template": "Contained fhir consent template contain no provisions",
 	"error.consent_service_questionnaire_not_found": "Questionnaire not found",
 	"error.consent_service_consent_resource_not_found": "Contained consent resource not found",
@@ -204,6 +240,12 @@
 	"error.app_config_service_id_type_mismatch_text2": "' and the configured main id type '",
 	"error.app_config_service_id_type_mismatch_text3": "' are different",
 	"error.app_module_connect_keycloak": "Failed to connect to Keycloak.",
+  "error.create_consent_rejected": "Failed to create consent. Cause: '${1}'",
+  "error.read_consent_failed": "Failed to read consent. Cause: '${1}'",
+	"error.delete_consent_failed": "Consent not found",
+	"error.create_consent_template_rejected": "Failed to create consent template. Cause: '${1}'",
+  "error.read_consent_template_failed": "Failed to read consent template. Cause: '${1}'",
+  "error.search_consent_templates_failed": "Failed to find consent templates. Cause: '${1}'",
 
 	"errorComponent.error": "Error",
 	"errorComponent.message": "Message",
@@ -225,13 +267,17 @@
 	"patientlistView.title": "Patient list",
 
 	"newIdDialog.mat_title": "Generate new ID",
-	"newIdDialog.sub_title": "A new ID will be generated for the selected type",
-	"newIdDialog.id_types": "Id type",
+	"newIdDialog.text_1": "A new ID will be generated for the selected type",
+  	"newIdDialog.text_2": "and assigned to the external id",
+  	"newIdDialog.text_id": "{{idType}}: {{idString}}",
+  	"newIdDialog.text_3": "",
+  	"newIdDialog.text_4": "and assigned to the selected external id",
+  	"newIdDialog.id_types": "Id type",
 
 	"logout.message": "You are now logged out!",
 
 	"footer.version": "Version ",
-	"footer.info": " Mainzelliste - Powered by Team Federated Information Systems from DKFZ Heidelberg",
+	"footer.info": "Mainzelliste - Powered by Team Federated Information Systems from DKFZ Heidelberg",
 
 	"associatedIdsDialog.group_selection_label": "Group Selection",
 	"associatedIdsDialog.group_selection_heading": "Please select a group:",

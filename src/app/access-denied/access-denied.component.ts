@@ -1,4 +1,6 @@
 import {Component} from '@angular/core';
+import {GlobalTitleService} from "../services/global-title.service";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-access-denied',
@@ -7,6 +9,10 @@ import {Component} from '@angular/core';
 })
 export class AccessDeniedComponent {
 
-  constructor() {
+  constructor(
+      translate: TranslateService,
+      titleService: GlobalTitleService
+  ) {
+    titleService.setTitle(translate.instant('access_denied.title'), true);
   }
 }

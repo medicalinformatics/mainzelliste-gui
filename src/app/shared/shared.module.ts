@@ -17,9 +17,13 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {ErrorCardComponent} from "./components/error-card/error-card.component";
 import {MatIconModule} from "@angular/material/icon";
 import {MatTooltipModule} from "@angular/material/tooltip";
-import {MatChip, MatChipsModule} from "@angular/material/chips";
+import {MatChipsModule} from "@angular/material/chips";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {HasAnyPermissionsDirective} from "./directives/has-any-permissions.directive";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {DragDropModule} from "@angular/cdk/drag-drop";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -42,6 +46,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatTooltipModule,
     MatChipsModule,
     MatAutocompleteModule,
+    MatSnackBarModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -66,6 +71,11 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatTooltipModule,
     MatChipsModule,
     MatAutocompleteModule,
+    TranslateModule,
+    MatExpansionModule,
+    MatSlideToggleModule,
+    DragDropModule,
+    MatSnackBarModule,
     TranslateModule
   ]
 })

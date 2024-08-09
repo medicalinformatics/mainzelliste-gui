@@ -5,7 +5,7 @@
     <app-patient-fields (fieldEvent)="fieldsChanged($event)"
                         [fields]="patient.fields"></app-patient-fields>
     <br>
-    <div style="width: 90%; margin-left: 5%; max-width: 700px;">
+    <div *ngIf="this.getExternalIdTypes('C').length > 0" style="width: 90%; margin-left: 5%; max-width: 700px;">
       <h4>{{'createPatient.add_external_pseudonym' | translate}}</h4>
       <app-external-pseudonyms [readOnly]="false" [ids]="this.patient.ids"
                                [removeEmptyId]="true" [permittedOperation]="'C'"></app-external-pseudonyms>
@@ -51,7 +51,7 @@
         <button style="float: left; margin-bottom: 40px" mat-raised-button
                 (click)="openConsentDialog()">
           <mat-icon>{{!consent ? 'add' : 'edit'}}</mat-icon>
-          {{!consent ? this.translate.instant('button_add_consent') : this.consent?.title}}
+          {{this.consent?.title || this.translate.instant('button_add_consent')}}
         </button>
       </div>
     </ng-container>

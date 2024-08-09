@@ -46,8 +46,8 @@ import {ConsentModule} from "./consent/consent.module";
 import {MainLayoutModule} from "./main-layout/main-layout.module";
 import {PatientModule} from "./patient/patient.module";
 import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.component";
-import { TranslateService } from '@ngx-translate/core';
-import { AccessDeniedComponent } from './access-denied/access-denied.component';
+import {TranslateService} from '@ngx-translate/core';
+import {AccessDeniedComponent} from './access-denied/access-denied.component';
 import {InternationalizedMatPaginatorIntl} from "./shared/components/paginator/internationalized-mat-paginator-intl";
 import { AssociatedIdsTableComponent } from './idcard/associated-ids-table/associated-ids-table.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
@@ -56,36 +56,46 @@ import { AssociatedIdsDialog } from './idcard/dialogs/associated-ids-dialog';
 import { IdExistsErrorDialog } from './idcard/dialogs/id-exists-error-dialog';
 import { MatStepperModule } from '@angular/material/stepper';
 import { CompactAssociatedIdsDialog } from './idcard/dialogs/compact-associated-ids-dialog';
+import {ConsentTemplatesComponent} from './consent/consent-templates/consent-templates.component';
 
-function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService, userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
+function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService,
+                              userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
+  translate.addLangs(['en-US', 'de-DE']);
   return () => configService.init()
-  .then(config => {
-    from(keycloak.keycloakEvents$).subscribe( event => userAuthService.notifyKeycloakEvent(event));
-    return keycloak.init({
-      config: {
-        url: config[0].oAuthConfig?.url ?? "",
-        realm: config[0].oAuthConfig?.realm ?? "",
-        clientId: config[0].oAuthConfig?.clientId ?? ""
-      },
-      loadUserProfileAtStartUp: true,
-      initOptions: {
-        onLoad: 'check-sso',
-        silentCheckSsoRedirectUri:
-          window.location.origin + '/assets/silent-check-sso.html'
-      }
-    })
-    .catch(error => {
-      // find error reason
-      let reason = "";
-      if (error) {
-        reason = error.error?.length > 0 ? " Reason: " + error.error : "";
-      }
-      throw new Error(translate.instant('error.app_module_connect_keycloak') + reason);
-    })
-    .then( isLoggedIn => isLoggedIn ? configService.fetchMainzellisteIdGenerators() : [])
-    .then( idGenerators => idGenerators.length > 0? configService.fetchMainzellisteFields() : [])
-      .then(fields => fields.length > 0 ? configService.fetchVersion() : {});
-  });
+    .then(config => {
+      from(keycloak.keycloakEvents$).subscribe(event => userAuthService.notifyKeycloakEvent(event));
+      translate.setDefaultLang(config[0].defaultLanguage || "en-US");
+      return translate.use(translate.getDefaultLang()).toPromise()
+        .then(() => keycloak.init({
+          config: {
+            url: config[0].oAuthConfig?.url ?? "",
+            realm: config[0].oAuthConfig?.realm ?? "",
+            clientId: config[0].oAuthConfig?.clientId ?? ""
+          },
+          loadUserProfileAtStartUp: true,
+          initOptions: {
+            onLoad: 'check-sso',
+            silentCheckSsoRedirectUri:
+              window.location.origin + '/assets/silent-check-sso.html'
+          },
+          shouldAddToken: (request) => {
+            const paths = ['/sessions', '/configuration'];
+            return paths.some((path) => request.url.includes(path));
+          }
+        }).catch(error => {
+          // find error reason
+          let reason = "";
+          if (error) {
+            reason = error.error?.length > 0 ? " Reason: " + error.error : "";
+          }
+          throw new Error(translate.instant('error.app_module_connect_keycloak') + reason);
+        }))
+        .then(isLoggedIn => isLoggedIn ? configService.fetchMainzellisteIdGenerators() : undefined)
+        .then(idGenerators => idGenerators != undefined ? configService.fetchMainzellisteAssociatedIdGenerators() : undefined)
+        .then(idGenerators => idGenerators != undefined ? configService.fetchMainzellisteFields() : undefined)
+        .then(fields => fields != undefined ? configService.fetchClaims() : undefined)
+        .then(claims => configService.fetchVersion());
+    });
 }
 
 @NgModule({
@@ -104,7 +114,8 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     PageNotFoundComponent,
     PatientSearchComponent,
     AssociatedIdsTableComponent,
-    CompactAssociatedIdsDialog
+    CompactAssociatedIdsDialog,
+    ConsentTemplatesComponent
   ],
   imports: [
     SharedModule,
@@ -136,7 +147,7 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     {
       provide: APP_INITIALIZER,
       useFactory: initializeAppFactory,
-      deps: [AppConfigService, KeycloakService, UserAuthService],
+      deps: [AppConfigService, KeycloakService, UserAuthService, TranslateService],
       multi: true
     },
     {provide: ErrorHandler, useClass: GlobalErrorHandler},

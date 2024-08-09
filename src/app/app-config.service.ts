@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {ConfigRole, OAuthConfig, PatientList} from "./model/patientlist";
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {OAuthConfig, PatientList} from "./model/patientlist";
 import {AppConfig} from "./app-config";
 import {catchError, map} from "rxjs/operators";
 import {throwError} from "rxjs";
@@ -8,6 +8,12 @@ import {MainzellisteField, MainzellisteFieldType} from "./model/mainzelliste-fie
 import {Field, FieldType} from "./model/field";
 import {MainzellisteUnknownError} from './model/mainzelliste-unknown-error';
 import {TranslateService} from '@ngx-translate/core';
+import {ClaimsConfig} from "./model/api/configuration-claims-data";
+
+
+export interface AssociatedIds {
+  [key: string] : [IdGenerator]
+}
 
 export interface IdGenerator {
   name: string,
@@ -21,8 +27,11 @@ export class AppConfigService {
 
   data: PatientList[] = [];
   private mainzellisteIdGenerators: IdGenerator[] = [];
+  private mainzellisteAssociatedIdGenerators: IdGenerator[] = []
+  private mainzellisteAssociatedIdGeneratorsMap: Map<string, IdGenerator[]> = new Map<string, IdGenerator[]>()
   private mainzellisteIdTypes: string[] = [];
   private mainzellisteFields: string[] = [];
+  private mainzellisteClaims: ClaimsConfig[] = [];
   private version: string = "";
   private consentEnabled: boolean = false;
   private copyConcatenatedIdEnabled: boolean = false;
@@ -81,16 +90,24 @@ export class AppConfigService {
     return this.mainzellisteIdTypes;
   }
 
-  getMainzellisteExternalIdTypes(): string[] {
-    return this.mainzellisteIdGenerators.filter( g => g.isExternal).map( g => g.idType);
-  }
-
   getMainzellisteIdGenerators(): IdGenerator[] {
     return this.mainzellisteIdGenerators;
   }
 
+  getMainzellisteAssociatedIdGenerators(): IdGenerator[] {
+    return this.mainzellisteAssociatedIdGenerators;
+  }
+
+  getMainzellisteAssociatedIdGeneratorsMap(): Map<string, IdGenerator[]> {
+    return this.mainzellisteAssociatedIdGeneratorsMap;
+  }
+
   getMainzellisteFields(): string[] {
     return this.mainzellisteFields;
+  }
+
+  getMainzellisteClaims(): ClaimsConfig[] {
+    return this.mainzellisteClaims;
   }
 
   getMainzellisteUrl(): string {
@@ -99,10 +116,6 @@ export class AppConfigService {
 
   isDebugModeEnabled(): boolean {
     return this.data[0].debug != undefined && this.data[0].debug;
-  }
-
-  getRolesWithPermissions(): ConfigRole[]{
-    return this.data[0].roles
   }
 
   getVersion(): string {
@@ -146,6 +159,35 @@ export class AppConfigService {
     ).toPromise();
   }
 
+  public fetchMainzellisteAssociatedIdGenerators(): Promise<IdGenerator[]> {
+    return this.httpClient.get<AssociatedIds>(this.data[0].url + "/configuration/idGenerators/associatedIds", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
+    .pipe(
+        catchError((e) => throwError(new Error(this.translate.instant('error.app_config_service_fetch_id_generators')))),
+        map(associatedIds => {
+          for(let key in associatedIds){
+            this.mainzellisteAssociatedIdGenerators.push(...associatedIds[key])
+            this.mainzellisteAssociatedIdGeneratorsMap.set(key, associatedIds[key])
+          }
+          return this.mainzellisteAssociatedIdGenerators;
+        })
+    ).toPromise();
+  }
+
+    public fetchClaims(): Promise<ClaimsConfig[]> {
+      return this.httpClient.get<ClaimsConfig[]>(this.data[0].url + "/configuration/claims", {
+              headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2'),
+              params: new HttpParams().set('filter', 'roles').set('merge', true)
+          })
+          .pipe(
+              catchError((e) => throwError(new Error("Can't init claims configurations. Failed to connect " +
+                  "to the backend Endpoint /configuration/claims"))),
+              map(claims => {
+                  this.mainzellisteClaims = claims;
+                  return claims;
+              })
+          ).toPromise();
+    }
+
   public fetchMainzellisteFields(): Promise<MainzellisteField[]> {
     let fieldEndpointUrl = this.data[0].url + "/configuration/fields";
     return this.httpClient.get<MainzellisteField[]>(fieldEndpointUrl, {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
@@ -177,13 +219,20 @@ export class AppConfigService {
 
     // set type
     if(!isDateType) {
-      if (mlField.type != MainzellisteFieldType.PlainTextField)
+      if (mlField.type == MainzellisteFieldType.PlainTextField)
+        configuredField.type = FieldType.TEXT
+      else if (mlField.type == MainzellisteFieldType.IntegerField) {
+        configuredField.type = FieldType.NUMBER;
+      }
+      else
         throw new Error(this.translate.instant('error.app_config_service_type_not_supported_text1') + fieldName + this.translate.instant('error.app_config_service_type_not_supported_text2') + mlField.type + this.translate.instant('error.app_config_service_type_not_supported_text3'))
-      configuredField.type = FieldType.TEXT
     }
 
     configuredField.required = mlField.required;
-    configuredField.validator = mlField.validation ?? "";
+    if (mlField.type == MainzellisteFieldType.IntegerField)
+      configuredField.validator = mlField.validation || "\\d*";
+    else
+      configuredField.validator = mlField.validation ?? "";
     this.mainzellisteFields.push(fieldName);
   }
 
@@ -192,9 +241,7 @@ export class AppConfigService {
     let idType = idGenerators[0].idType;
 
     //set main id type if the configured value is empty
-    if (AppConfigService.isStringEmpty(config.mainIdType)) {
-      config.mainIdType = idType;
-    } else if (!idGenerators.some( g => g.idType == config.mainIdType?.trim())) {
+    if (config.mainIdType != undefined && !idGenerators.some( g => g.idType == config.mainIdType?.trim())) {
       throw new Error("mainIdType '" + config.mainIdType + "'not configured in the backend, please check your ui configuration");
     }
     return this.translate.instant('appConfigService.main_id_type_valid');

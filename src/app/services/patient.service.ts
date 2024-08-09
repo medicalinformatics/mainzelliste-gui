@@ -7,6 +7,7 @@ import {Observable} from "rxjs";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessages} from "../error/error-messages";
 import {Id} from "../model/id";
+import {Operation} from "../model/tenant";
 import { AssociatedId } from '../model/associated-id';
 import { AssociatedIdGroup } from '../model/associated-id-group';
 
@@ -351,16 +352,16 @@ export class PatientService {
     return this.patientListService.addPatient(patient, idTypes, sureness);
   }
 
-  async deletePatient(patient: Patient){
-     this.patientListService.deletePatient(patient).then().catch(error => {console.log(error)})
+  deletePatient(patient: Patient){
+     return this.patientListService.deletePatient(patient);
   }
 
-  getConfiguredFields(): Array<Field> {
-    return this.patientListService.getConfiguredFields();
+  getConfiguredFields(operation: Operation): Array<Field> {
+    return this.patientListService.getConfiguredFields(operation);
   }
 
   getConfigureIdTypes(): Array<string> {
-    return this.patientListService.getIdTypes("R");
+    return this.patientListService.getAllIdTypes("R");
   }
 
   addNewAssociatedId(group: AssociatedIdGroup, intIds: {idType: string, idString: string}[], extId?: Id): AssociatedId {

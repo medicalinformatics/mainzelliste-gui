@@ -11,6 +11,7 @@ import {Id} from "../../model/id";
 import { TranslateService } from '@ngx-translate/core';
 import {AuthorizationService} from "../../services/authorization.service";
 import {Permission} from "../../model/permission";
+import {NgForm} from "@angular/forms";
 
 @Component({
   selector: 'app-edit-patient',
@@ -21,8 +22,8 @@ export class EditPatientComponent implements OnInit {
   public readonly Permission = Permission;
 
   patient: Patient = new Patient();
-  private idString: string = "";
-  private idType: string = "";
+  public idString: string = "";
+  public idType: string = "";
 
   constructor(
     private translate: TranslateService,
@@ -48,7 +49,7 @@ export class EditPatientComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.patientListService.readPatient(new Id(this.idType, this.idString), "R").then(patients => {
+    this.patientListService.readPatient(new Id(this.idType, this.idString), "R").subscribe(patients => {
       this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
     });
     this.translate.onLangChange.subscribe(() => {
@@ -63,7 +64,7 @@ export class EditPatientComponent implements OnInit {
   editPatient(sureness: boolean) {
     this.errorNotificationService.clearMessages();
     this.patientListService.editPatient(new Id(this.idType, this.idString), this.patient, sureness).then( () =>
-      this.router.navigate(["/patientlist"]).then()
+      this.router.navigate(["/idcard", this.idType, this.idString]).then()
     )
     .catch( e => {
       if(e instanceof MainzellisteError && e.errorMessage == ErrorMessages.EDIT_PATIENT_CONFLICT_POSSIBLE_MATCH){
@@ -81,6 +82,14 @@ export class EditPatientComponent implements OnInit {
       if (result)
         this.editPatient(true);
     });
+  }
+
+  disable(patientForm: NgForm) {
+    let emptyFields = !Object.keys(this.patient.fields).length;
+    let emptyIds = !this.patient.ids.filter(id => this.patientListService.isExternalIdType(id.idType, 'R')).some(id => id.idString.length > 0);
+    let invalidIds = patientForm.form.get('externalIds')?.valid ?? true;
+    return !emptyFields && !patientForm.form.valid ||
+      emptyFields && (emptyIds || !invalidIds);
   }
 }
 

@@ -1,68 +1,67 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {MatSelect} from "@angular/material/select";
+import {MatSelect, MatSelectChange} from "@angular/material/select";
 import {ConsentService} from "../consent.service";
 import {MAT_DATE_LOCALE, MatOption} from "@angular/material/core";
-import {ConsentTemplate} from "../consent-template.model";
 import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "../consent.model";
-import _moment, {Moment} from "moment";
+import _moment from "moment";
+import {
+  AbstractControl,
+  ControlContainer,
+  NgForm,
+  ValidationErrors,
+  ValidatorFn
+} from "@angular/forms";
 
 @Component({
   selector: 'app-consent-detail',
   templateUrl: './consent-detail.component.html',
-  styleUrls: ['./consent-detail.component.css']
+  styleUrls: ['./consent-detail.component.css'],
+  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
 })
 export class ConsentDetailComponent implements OnInit {
 
-  @Input() dataModel!: Consent;
-  @Output() dataModelChange = new EventEmitter<Consent>();
-  consentTemplates: Map<string, ConsentTemplate>;
-  @ViewChild('templateSelection') templateSelection!: MatSelect;
   @Input() edit: boolean = false;
+  @Input() consent!: Consent;
+  @Input() templates!: Map<string, string>;
+  @Output() consentChange = new EventEmitter<Consent>();
+  @ViewChild('templateSelection') templateSelection!: MatSelect;
   localDateFormat:string;
-  validFrom:Moment
 
-  constructor(private consentService: ConsentService,
-  @Inject(MAT_DATE_LOCALE) private _locale: string) {
+  constructor(
+      private consentService: ConsentService,
+      @Inject(MAT_DATE_LOCALE) private _locale: string
+  ) {
     _moment.locale(this._locale);
-    this.consentTemplates = new Map();
+    console.log("dialog " + this.consent)
     this.localDateFormat = _moment().localeData().longDateFormat('L');
-    this.validFrom = _moment();
   }
 
   ngOnInit(): void {
-    // get a list of templates from Mainzelliste as map <id , fhir4.Questionnaire>
-    this.consentService.getConsentTemplates().then(r => this.consentTemplates = r);
+    console.log("dialog init " + this.consent)
+    // fetch consent template map <id, title> from backend
+    if(this.templates == null)
+      this.consentService.getConsentTemplateTitleMap()
+        .subscribe(r => this.templates = r);
 
     //reset selection if no template selected
-    if ((!this.dataModel || !this.dataModel.id) && (!this.edit && this.templateSelection)) {
+    if (!this.consent?.id && (!this.edit && this.templateSelection)) {
       this.templateSelection.options.forEach((data: MatOption) => data.deselect());
     }
   }
 
-  /**
-   * Init data model from the selected consent template
-   * @param consentTemplateId
-   */
-  initDataModel(consentTemplateId: string) {
-    this.dataModel = this.consentService.getNewConsentDataModelFromTemplate(
-      this.consentTemplates.get(consentTemplateId));
-    // propagate change to parent component
-    this.dataModelChange.emit(this.dataModel);
-  }
-
-  /**
-   * get default selected consent template from data model
-   */
-  getSelectedTemplate(): string {
-    return (this.dataModel && this.dataModel.id != undefined) ? this.dataModel.template?.name || "" : ""
+  initDataModel(consentTemplateId: MatSelectChange) {
+    this.consentService.getNewConsentDataModel(consentTemplateId.value || "0")
+    .subscribe( consentDataModel => {
+      this.consent = consentDataModel;
+      // propagate change to parent component
+      this.consentChange.emit(this.consent)
+    });
   }
 
   getConsentExpiration(): string {
-    let period = this.dataModel.period;
-    this.validFrom = this.dataModel.validFrom || _moment();
-    return this.dataModel.period == 0 ? " für einen unbegrenzten Zeit-Raum" :
-      ` bis ${new Date((this.dataModel.validFrom?.toDate().getTime() || 0)
-        + period).toLocaleDateString()}`;
+    return this.consent.period == 0 ? " für einen unbegrenzten Zeit-Raum" :
+      ` bis ${new Date((this.consent.validFrom?.toDate().getTime() || 0)
+        + this.consent.period).toLocaleDateString()}`;
   }
 
   /** Utils Method **/
@@ -81,4 +80,14 @@ export class ConsentDetailComponent implements OnInit {
   toChoiceItem(item: ConsentItem): ConsentChoiceItem {
     return item as ConsentChoiceItem;
   }
+
+  getCurrentTemplateId() {
+    return this.consent?.templateId;
+  }
+}
+
+export function invalidPeriodEndDateValidator(consentPeriod: number): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    return control.value + consentPeriod< new Date().getTime() ? { invalidPeriodEndDate: { value: control.value } } : null;
+  };
 }

@@ -1,11 +1,14 @@
 {
 	"EMPTY": "",
 	"button_add_consent": "Einwilligung hinzufügen",
-  	"button_generate_id": "Generieren",
+	"button_edit_consent": "Einwilligung bearbeiten",
+	"button_delete_consent": "Einwilligung löschen",
+  	"button_generate_id": "ID generieren",
 	"button_delete": "Löschen",
 	"button_edit": "Bearbeiten",
 	"button_request": "Anfordern",
 	"button_cancel": "Abbrechen",
+  	"button_close": "Schließen",
 	"button_save": "Speichern",
 	"button_edit_patient": "Patientendaten bearbeiten",
 	"button_id_card": "ID Karte",
@@ -13,12 +16,12 @@
 	"button_save_new_id": "Generieren",
 	"button_correct": "Korrigieren",
 	"button_confirm": "Bestätigen",
+	"button_publish": "Veröffentlichen",
 	"button_generate_new_unique_id": "Eindeutige ID",
 	"button_generate_new_associated_id": "Zugehörige ID",
 	"button_next": "Weiter",
 	"button_back": "Zurück",
 	"button_new_entry": "Neuer Eintrag",
-	"button_close": "Schließen",
 	"button_copy_id_tooltip": "Id kopieren",
 
 	"radio_button_yes": "Ja",
@@ -28,8 +31,13 @@
 	"birth_name_text": "Geburtsname",
 	"first_name_text": "Vorname",
 	"last_name_text": "Name",
+  "street_text": "Straße",
 	"residence_text": "Wohnort",
 	"zip_code_text": "PLZ",
+  "phone_number_text": "Telefonnummer",
+  "email_text": "Email",
+  "health_insurance_text": "Krankenversicherung",
+  "health_insurance_number_text": "Krankenversichertennummer",
 
 	"tentative_dialog_title": "Unsicherer Fall",
 	"tentative_dialog_text1": "Zu den eingegeben Daten wurde ein ähnlicher Patient gefunden, der aber nicht mit hinreichender Sicherheit zugeordnet werden kann.",
@@ -53,19 +61,37 @@
 	"idcard.title_pseudonyms": "Pseudonyme",
 	"idcard.title_id_card": "ID Karte",
 
+  "consent_list.unlimited_period": "unbegrenzt",
+
   "consent_status.draft": "Entwurf",
   "consent_status.proposed": "Entwurf",
   "consent_status.active": "Aktiv",
-  "consent_status.rejected": "Wiederruft",
+  "consent_status.rejected": "Widerruft",
   "consent_status.inactive": "Inaktiv",
   "consent_status.entered-in-error": "Fehlerhaft",
 
-  "add_consent.rejected-dialog-text": "Alle Einwilligungsmodule wurden abgelehnt. Der Einwilligungsstatus wird automatische als Wiederrufen gesetzt",
+	"consent_template_status.draft": "Entwurf",
+	"consent_template_status.active": "Aktiv",
+
+  "consent_template.name": "Name",
+  "consent_template.title": "Titel",
+	"consent_template.status": "Status",
+  "consent_template.organization": "Verantwortliche Einrichtung",
+  "consent_template.research_study": "Forschungsprojekt",
+  "consent_template.name.based_on_mii_broad_consent": "basiert auf MII Broad Consent",
+  "consent_template.name.mii_broad_consent_version": "Version des MII Broad Consent",
+  "consent_template.validityPeriod": "Gültigkeitsdauer",
+  "consent_template.validity_year": "Jahren",
+  "consent_template.validity_month": "Monaten",
+  "consent_template.validity_day": "Tage",
+
+  "add_consent.rejected-dialog-text": "Alle Einwilligungsmodule wurden abgelehnt. Der Einwilligungsstatus wird automatische als Widerruft gesetzt",
   "add_consent.inactivated-dialog-text": "Gültigkeitsende der Einwilligung liegt in der Vergangenheit. Der Einwilligungstatus wird automatische als Inaktive gesetzt",
 
 	"navigation.info": "Info",
 	"navigation.new_patient": "Neuer Patient",
 	"navigation.patientlist": "Patientenliste",
+  "navigation.consent_template": "Einwilligungsvorlagen",
 
 	"patientlist.filter_search": "Filter/Suche...",
 	"patientlist.headers_actions": "Aktionen",
@@ -80,6 +106,7 @@
 	"patientlist_view.paginator_first_page_label": "Erste Seite",
 	"patientlist_view.paginator_last_page_label": "Letzte Seite",
 
+  "session.tenancy": "Projekte",
 	"session.language_english": "Englisch",
 	"session.language_german": "Deutsch",
 	"session.menu_language": "Sprache",
@@ -100,6 +127,8 @@
 	"consentDetail.validity_label": "Gültig ab",
 	"consentDetail.validity_date_label": "Gültigkeitsdatum auswählen",
 
+	"error.consentDetail.validity_date": "Gültigkeitszeitraum liegt in der vergangenheit",
+
 	"deletePatient.title_patient_data": "Patientendaten",
 	"deletePatient.title_pseudonyms": "Pseudonyme",
 	"deletePatient.title": "Patienten löschen",
@@ -107,6 +136,10 @@
 	"deletePatientDialog.title_delete_patient": "Patient Löschen",
 	"deletePatientDialog.delete_patient_question": "Möchten Sie den folgenden Patient löschen?",
 	"deletePatientDialog.delete_patient_warning": "Die Patientendaten werden vollständig gelöscht und können nicht wiederhergestellt werden.",
+
+	"deleteConsentDialog.title_delete_consent": "Einwilligung Löschen",
+	"deleteConsentDialog.delete_consent_question": "Möchten Sie die folgende Einwilligung löschen?",
+	"deleteConsentDialog.delete_consent_warning": "Die Einwilligung wird vollständig gelöscht und kann nicht wiederhergestellt werden.",
 
 	"addConsent.title_add_consent": "Einwilligung Hinzufügen",
 	"editConsent.title_edit_consent": "Einwilligung Editieren",
@@ -145,6 +178,7 @@
 	"info.audit_trail_text6": "werden im Audit-Trail aufgezeichnet. Dabei wird Zeitpunkt der Aktion aufgezeichnet und angegeben. Über den Folder-Symbol gelangt man zur ID-Card des Patienten für weitere Details über die Aktion.",
 
 	"patientPseudonyms.external": "Externe Pseudonyme:",
+  "patientPseudonyms.related_id_button": "Zugeordnete IDs anzeigen",
 
 	"patientFields.error_value_text1": "Der Wert für das Feld",
 	"patientFields.error_value_text2": "ist ungültig",
@@ -171,7 +205,9 @@
 	"error.edit_patient_conflict_ext_ids_idat_multiple_match": "Patient konnte nicht editiert werden, da die eingegebenen IDAT zu unterschiedlichen Patienten zugeordnet wurden",
 	"error.edit_patient_conflict_possible_match": "Zu den eingegeben Daten wurde ein ähnlicher Patient gefunden, der aber nicht mit hinreichender Sicherheit zugeordnet werden kann. Um eine Verwechslung auszuschließen, überprüfen Sie bitte nochmals Ihre Eingabe",
 	"error.edit_patient_conflict_match": "Zu den eingegeben Daten wurde ein Patient gefunden. Um eine Verwechslung auszuschließen, überprüfen Sie bitte nochmals Ihre Eingabe",
-	"error.resolve_create_id_token": "ResolveCreateIdTokenError",
+  	"error.delete_patient_not_found": "Patient konnte nicht gefunden werden.",
+
+  	"error.resolve_create_id_token": "ResolveCreateIdTokenError",
 	"error.consent_service_fhir_consent_template": "Die enthaltene Einwilligungsvorlage „fhir“ enthält keine Bestimmungen",
 	"error.consent_service_questionnaire_not_found": "Fragebogen nicht gefunden",
 	"error.consent_service_consent_resource_not_found": "Die enthaltenen Einwilligungsdaten wurden nicht gefunden",
@@ -204,6 +240,12 @@
 	"error.app_config_service_id_type_mismatch_text2": "' und der konfigurierte Haupt-ID-Typ '",
 	"error.app_config_service_id_type_mismatch_text3": "' sind unterschiedlich",
 	"error.app_module_connect_keycloak": "Verbindung zu Keycloak konnte nicht hergestellt werden.",
+  "error.create_consent_rejected": "Einwilligung konnte nicht erstellt werden. Cause: '${1}'",
+  "error.read_consent_failed": "Einwilligungserklärung konnte nicht gelesen werden. Ursache: '${1}'",
+	"error.delete_consent_failed": "Einwilligung konnte nicht gefunden werden.",
+	"error.create_consent_template_rejected": "Einwilligungsvorlage konnte nicht erstellt werden. Ursache: '${1}'",
+  "error.read_consent_template_failed": "Einwilligungsvorlage konnte nicht gelesen werden. Ursache: '${1}'",
+  "error.search_consent_templates_failed": "Einwilligungsvorlagen konnten nicht gefunden werden. Ursache: '${1}'",
 
 	"errorComponent.error": "Error",
 	"errorComponent.message": "Information",
@@ -225,13 +267,17 @@
 	"patientlistView.title": "Patientenliste",
 
 	"newIdDialog.mat_title": "Neue ID generieren",
-	"newIdDialog.sub_title": "Für den ausgewählten Typ wird eine neue Id generiert",
+	"newIdDialog.text_1": "Für den ausgewählten Typ wird eine neue Id generiert",
+  	"newIdDialog.text_2": "und zu der externen Id",
+  	"newIdDialog.text_id": "{{idType}}: {{idString}}",
+ 	"newIdDialog.text_3": "zugeordnet",
+  	"newIdDialog.text_4": "und zu der ausgewählten externen Id zugeordnet",
 	"newIdDialog.id_types": "Id Typen",
 
 	"logout.message": "Du wurdest erfolgreich ausgelogged!",
 
 	"footer.version": "Version ",
-	"footer.info": "Mainzelliste - Unterstützt vom Team Föderierte Informationssysteme vom DKFZ Heidelberg",
+	"footer.info": "Mainzelliste - Powered by Team Federated Information Systems from DKFZ Heidelberg",
 
 	"associatedIdsDialog.group_selection_label": "Auswahl einer Gruppe",
 	"associatedIdsDialog.group_selection_heading": "Bitte wähle sie eine Gruppe aus:",

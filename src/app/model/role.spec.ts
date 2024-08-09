@@ -1,7 +1,7 @@
-import { Role } from './role';
+import { Tenant } from './tenant';
 
 describe('Role', () => {
   it('should create an instance', () => {
-    expect(new Role()).toBeTruthy();
+    expect(new Tenant()).toBeTruthy();
   });
 });

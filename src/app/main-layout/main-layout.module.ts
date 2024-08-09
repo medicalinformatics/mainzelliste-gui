@@ -8,10 +8,11 @@ import {HeaderComponent} from "./header/header.component";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {RouterModule} from "@angular/router";
 import {NavigationComponent} from "./navigation/navigation.component";
+import {MatDividerModule} from "@angular/material/divider";
 
 @NgModule({
   imports: [
-    CommonModule, SharedModule, MatMenuModule, MatToolbarModule, RouterModule
+    CommonModule, SharedModule, MatMenuModule, MatToolbarModule, RouterModule, MatDividerModule
   ],
   declarations: [HeaderComponent, FooterComponent, NavigationComponent, UserMenuComponent],
   exports: [HeaderComponent, FooterComponent, NavigationComponent, UserMenuComponent]
