@@ -17,7 +17,8 @@ export class Consent {
     public validFrom?: Moment,
     public validUntil?: Date,
     public patientId?: { idType: string, idString: string },
-    public fhirResource?: fhir4.Consent
+    public fhirResource?: fhir4.Consent,
+    public templateFhirResource?: fhir4.Consent
   ) {
   }
 }

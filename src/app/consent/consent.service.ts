@@ -56,7 +56,7 @@ export class ConsentService {
    * @param force
    */
   public serializeConsentDataModelToFhir(dataModel: Consent, force: boolean) {
-    if (dataModel.fhirResource) {
+    if (dataModel.fhirResource !== undefined) {
       //set fhir consent date
       let datePipe: DatePipe = new DatePipe('en-US');
       dataModel.fhirResource.dateTime = datePipe.transform(dataModel.createdAt, 'yyyy-MM-dd')!;
@@ -76,27 +76,64 @@ export class ConsentService {
           end: datePipe.transform(new Date((dataModel.validFrom?.toDate().getTime() || 0) + periodAsDate), 'yyyy-MM-dd') || undefined
         }
       }
+      // is Mii fhir profile
+      let isMiiResource = dataModel.fhirResource.meta?.profile?.some( url => url === "https://www.medizininformatik-initiative.de/fhir/modul-consent/StructureDefinition/mii-pr-consent-einwilligung") || false
 
       //set fhir consent provisions from ui data model
       let rejected = true;
       dataModel.items.filter(i => i instanceof ConsentChoiceItem)
-      .map(i => i as ConsentChoiceItem).forEach(i => {
-        if (!dataModel.fhirResource?.provision) {
-          this.handleError<fhir4.QuestionnaireResponse>(this.translate.instant('error.consent_service_fhir_consent_template'))
-        } else if (dataModel.fhirResource.provision.provision) {
-          // find provision with the given linkedId
-          let provision = dataModel.fhirResource.provision.provision.find(p => {
-            return p.extension?.find(ext => ext.url == "http://hl7.org/fhir/StructureDefinition/originalText" &&
-              ext.valueString == i.linkId)
-          });
-          // set provision type : denied or permit
-          if (provision) {
-            if(i.answer == "permit")
-              rejected = false;
-            provision.type = i.answer;
+      .map(i => i as ConsentChoiceItem)
+      .forEach(i => {
+        if (i.answer == 'permit')
+          rejected = false;
+
+        let templateProvisions = dataModel.templateFhirResource?.provision?.provision?.filter(p => this.containLinkId(p, i.linkId)) ?? [];
+
+        // find provisions with the given linkedId
+        let useLinkId = false;
+        let provisions = dataModel.fhirResource?.provision?.provision?.filter(p => {
+          useLinkId = p.extension?.some(ext => ext.url = "http://hl7.org/fhir/StructureDefinition/originalText") ?? false;
+          return useLinkId ? p.extension?.some(ext =>
+              ext.url == "http://hl7.org/fhir/StructureDefinition/originalText" &&
+              ext.valueString == i.linkId) :
+            p.code?.every(c => templateProvisions.some( tp => tp.code?.some(tc => this.compareCodes(tc, c))))
+        }) ?? [];
+
+        // else find codes related to the search module
+
+        // set provision type : denied or permit
+        for(let p of provisions) {
+          p.type = i.answer;
+        }
+
+        // add missing policies or provisions
+        if(!isMiiResource || i.answer == 'permit'){
+          if(dataModel.fhirResource != null && dataModel.fhirResource?.provision != undefined && dataModel.fhirResource?.provision.provision == undefined)
+              dataModel.fhirResource.provision.provision = [];
+
+          for(let templateProvision of templateProvisions){
+            // find non-existing policies
+            let nonExistingPolicies = templateProvision.code?.filter(tc =>
+              provisions.every( p => !p?.code?.some(c => this.compareCodes(c, tc))
+            )) ?? [];
+
+            // add missing provision and policies (codes)
+            if(nonExistingPolicies.length > 0){
+              let provision = templateProvision
+              provision.code = nonExistingPolicies;
+              if(!useLinkId)
+                provision.extension = provision.extension?.filter(ext => ext.url != "http://hl7.org/fhir/StructureDefinition/originalText")?? []
+              dataModel.fhirResource?.provision?.provision?.push(provision);
+              // set answer
+              provision.type = i.answer;
+            }
           }
         }
       })
+
+      //remove denied provisions if Mii fhir profile
+      if(isMiiResource && dataModel.fhirResource.provision != undefined)
+        dataModel.fhirResource.provision.provision = dataModel.fhirResource.provision?.provision?.filter(p => p.type  == 'permit') || undefined
 
       //set status
       if (rejected) {
@@ -111,6 +148,23 @@ export class ConsentService {
       } else
         dataModel.fhirResource.status = "active";
     }
+  }
+
+  private compareProvision(provision: fhir4.ConsentProvision, templateProvision: fhir4.ConsentProvision) {
+    return provision.code?.some(c => templateProvision.code?.some(tc => this.compareCodes(c, tc)));
+  }
+
+  private compareCodes(firstCode: fhir4.CodeableConcept, secondCode: fhir4.CodeableConcept){
+    return firstCode.coding?.some(c => secondCode.coding?.some(tc =>
+      c.system?.toLowerCase() == tc.system?.toLowerCase() && c.code?.toLowerCase() == tc.code?.toLowerCase()
+    ))
+  }
+
+  public containLinkId(provision: fhir4.ConsentProvision, moduleId:string|undefined)
+  {
+    return provision.extension?.some(ext =>
+      ext.url == "http://hl7.org/fhir/StructureDefinition/originalText" &&
+      ext.valueString == moduleId)
   }
 
   /**
@@ -134,17 +188,19 @@ export class ConsentService {
     }
 
     let initNewDataModel = false;
-    if (!fhirConsent) {
-      if (questionnaire.contained == undefined || questionnaire.contained.length > 1
-        || questionnaire.contained.length == 0) {
-        this.handleError<any>(this.translate.instant('error.consent_service_consent_resource_not_found'));
-      } else {
-        fhirConsent = questionnaire.contained[0] as fhir4.Consent;
-        //init date
-        fhirConsent.dateTime = new DatePipe('en-US').transform(new Date(), 'yyyy-MM-dd')!;
-        initNewDataModel = true;
-      }
+    if (questionnaire.contained == undefined || questionnaire.contained.length > 1
+      || questionnaire.contained.length == 0) {
+      throw new Error("Contained consent resource not found");
     }
+
+    if (!fhirConsent) {
+      fhirConsent = questionnaire.contained[0] as fhir4.Consent;
+      //init date
+      fhirConsent.dateTime = new DatePipe('en-US').transform(new Date(), 'yyyy-MM-dd')!;
+      initNewDataModel = true;
+    }
+
+    let templateMap: Map<string, fhir4.CodeableConcept[]>  = this.extractTemplateMap(!fhirConsent ? fhirConsent : questionnaire.contained[0] as fhir4.Consent);
 
     // init template items: display text and questions
     let items: ConsentItem[] = [];
@@ -154,24 +210,32 @@ export class ConsentService {
         items.push(displayItem);
       } else if (item.type == 'choice') {
 
-        // find answer in fhir consent
-        let answer: "deny" | "permit" | undefined = 'deny';
-        if (fhirConsent?.provision && fhirConsent.provision.provision) {
-          // find provision with the given linkedId
-          let provision = fhirConsent.provision.provision.find(p => {
-            return p.extension?.find(ext => ext.url == "http://hl7.org/fhir/StructureDefinition/originalText" &&
-              ext.valueString == item.linkId)
-          });
-          // set provision type : denied or permit
-          if (provision) {
-            answer = provision.type || 'deny';
-          }
-        }
+        let answer: "deny" | "permit" | undefined;
 
-        let choiceItem: ConsentChoiceItem = new ConsentChoiceItem(item.linkId, item.text || "", answer)
-        items.push(choiceItem);
+        let templateCodes : fhir4.CodeableConcept[] = templateMap.get(item.linkId) ?? [];
+
+        // find provision codes and type with the current linkedId
+        let codes = fhirConsent?.provision?.provision?.filter(p =>
+          p.extension?.some(ext => ext.url = "http://hl7.org/fhir/StructureDefinition/originalText") ?
+            p.extension.some(ext =>
+              ext.url == "http://hl7.org/fhir/StructureDefinition/originalText" &&
+              ext.valueString == item.linkId) :
+            p.code?.every(c => templateCodes.some( tc => this.compareCodes(tc, c)))
+        )
+        .reduce((previousValue, currentValue) => {
+          (currentValue.code ?? []).forEach( c =>
+            previousValue.push({code: c, answer: currentValue.type === 'permit'}))
+          return previousValue;
+        }, [] as {code: fhir4.CodeableConcept, answer: boolean}[]) ?? [];
+
+        // Not: codes from consent resource was previously checked in the backend and each of them
+        // should be included in the code list from the template
+        // TODO support mixed response of codes belonging to the same modules
+        answer = codes.every( i =>  i.answer) && codes.length == templateCodes.length ? 'permit' : 'deny';
+
+        items.push(new ConsentChoiceItem(item.linkId, item.text ?? "", answer));
       } else {
-        this.handleError<any>(this.translate.instant('error.consent_service_questionnaire_item_type1') + ' [${item.type}] ' + this.translate.instant('error.consent_service_questionnaire_item_type2'));
+        throw Error(`questionnaire item type [${item.type}] not support yet`)
       }
     })
 
@@ -197,8 +261,29 @@ export class ConsentService {
       items: items,
       status: fhirConsent?.status || "active",
       fhirResource: fhirConsent,
-      templateId: questionnaire?.id || "0"
+      templateId: questionnaire?.id || "0",
+      templateFhirResource: questionnaire?.contained[0] as fhir4.Consent || undefined
     };
+  }
+
+  public extractTemplateMap(fhirConsent: fhir4.Consent): Map<string, fhir4.CodeableConcept[]> {
+    return fhirConsent.provision?.provision?.map(p => {
+      return {linkId: this.extractLinkId(p.extension), codes: p?.code || []}
+    })
+    .reduce((previousValue, currentValue) => {
+      let currentList = previousValue.get(currentValue.linkId)
+      if(currentList == undefined){
+        currentList = [];
+        previousValue.set(currentValue.linkId, currentList);
+      }
+      currentList.push(...currentValue.codes)
+      return previousValue;
+    }, new Map<string, fhir4.CodeableConcept[]>()) || new Map();
+  }
+
+  public extractLinkId(extension: fhir4.Extension[] | undefined) {
+    return extension?.find(ext =>
+      ext.url == "http://hl7.org/fhir/StructureDefinition/originalText")?.valueString || "";
   }
 
   /**
