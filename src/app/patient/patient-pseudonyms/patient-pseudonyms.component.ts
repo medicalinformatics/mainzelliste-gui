@@ -19,6 +19,7 @@ export class PatientPseudonymsComponent{
 
   @Input() fields: { [key: string]: any } = {};
   @Input() readOnly: boolean = false;
+  @Input()  ngGroupId: string = "";
   @Input() side: string = "none";
   @Input() permittedOperation?: Operation;
 

@@ -17,6 +17,7 @@ import {Operation} from "../../model/tenant";
 export class ExternalPseudonymsComponent implements OnChanges {
 
   @Input() ids: Array<Id> = [];
+  @Input()  ngGroupId: string = "";
   @Input() readOnly: boolean = false;
   @Input() removeEmptyId: boolean = false;
   @Input() side: string = "none";

@@ -11,13 +11,16 @@
   <div class="pseudonyme" style=" flex: 1 1 40%; display: flex; flex-flow:column; padding-top: 5%" >
     <mat-card-title style="color:dimgray; font-size: x-large; margin-left: -15%">Pseudonyme</mat-card-title>
     <div style="flex-flow: row">
-    <app-patient-pseudonyms style="width: 90%" [readOnly]=true [ids]="patients[0].ids" [permittedOperation]="'R'" (slideFieldEvent)="updatePseudonymOfFinalPatient($event.name, $event.value)"></app-patient-pseudonyms>
+    <app-patient-pseudonyms style="width: 90%" [readOnly]=true [ids]="patients[0].ids" [ngGroupId]="'1'"
+                            [permittedOperation]="'R'"
+                            (slideFieldEvent)="updatePseudonymOfFinalPatient($event.name, $event.value)"></app-patient-pseudonyms>
   </div>
   </div>
 
   <div class="patientendaten"  style=" flex: 1 1 40%; display: flex;  flex-flow: column; padding-top: 5%">
     <mat-card-title style="color:dimgray; font-size: x-large; margin-left: -15%">Patientendaten</mat-card-title>
-    <app-patient-fields [readOnly]=true  side="right" [fields]="patients[0].fields" (slideFieldEvent)="updateFieldsOfFinalPatient($event.name, $event.value)"></app-patient-fields></div>
+    <app-patient-fields [readOnly]=true  side="right" [fields]="patients[0].fields" [ngGroupId]="'1'"
+                        (slideFieldEvent)="updateFieldsOfFinalPatient($event.name, $event.value)"></app-patient-fields></div>
 </mat-card>
 
 <!-- FINALER PATIENT -->
@@ -46,13 +49,15 @@
       <mat-card-title style="color:dimgray; font-size: x-large; margin-left: -15%">Pseudonyme</mat-card-title>
       <!-- TODO: justify-content to flex-end & make pseudonym chooseable-->
         <div style="flex: 1 1 100%; display: flex; flex-flow: column; justify-content: flex-end; flow:right;">
-          <app-patient-pseudonyms [readOnly]=true [ids]="patients[1].ids" [permittedOperation]="'R'" (slideFieldEvent)="updatePseudonymOfFinalPatient($event.name, $event.value)"></app-patient-pseudonyms> <!-- style="width:160%;"-->
+          <app-patient-pseudonyms [readOnly]=true [ids]="patients[1].ids" [permittedOperation]="'R'"  [ngGroupId]="'2'"
+                                  (slideFieldEvent)="updatePseudonymOfFinalPatient($event.name, $event.value)"></app-patient-pseudonyms> <!-- style="width:160%;"-->
         </div>
     </div>
 
     <div class="patientendaten"  style=" flex: 1 1 80%; display: flex;  flex-flow: column;;  padding-top: 5%">
       <mat-card-title style="color:dimgray; font-size: x-large; margin-left: -15%">Patientendaten</mat-card-title>
-      <app-patient-fields side="left" [readOnly]=true  [fields]="patients[1].fields" (slideFieldEvent)="updateFieldsOfFinalPatient($event.name, $event.value)"></app-patient-fields></div>
+      <app-patient-fields side="left" [readOnly]=true  [fields]="patients[1].fields" [ngGroupId]="'2'"
+                          (slideFieldEvent)="updateFieldsOfFinalPatient($event.name, $event.value)"></app-patient-fields></div>
   </mat-card>
 
 </div>

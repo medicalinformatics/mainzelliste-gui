@@ -23,6 +23,7 @@ import {Patient} from "../../model/patient";
 export class PatientFieldsComponent implements OnInit {
 
   @Input()  fields: {[key: string]: string} = {};
+  @Input()  ngGroupId: string = "";
   @Output() fieldEvent = new EventEmitter<{[key: string]: any}>();
   @Output() consentEvent = new EventEmitter<boolean>();
   @Output() slideFieldEvent = new EventEmitter<{name:string,value:string}>();

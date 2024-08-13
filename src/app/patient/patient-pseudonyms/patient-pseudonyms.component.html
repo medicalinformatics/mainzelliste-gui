@@ -1,4 +1,4 @@
-<table class="patientField" cellspacing="0" ngModelGroup="pseudonyms">
+<table class="patientField" cellspacing="0" ngModelGroup="{{'pseudonyms' + this.ngGroupId}}">
   <tr *ngFor="let pseudonym of getInternalIds() ">
     <td>
       <div style="width: 100%; flex-flow: row; justify-content:flex-end; column-gap:0px">
@@ -35,7 +35,7 @@
   <!-- external id fields-->
   <tr>
     <td>
-      <app-external-pseudonyms [readOnly]=this.readOnly [ids]="this.ids" [permittedOperation]="this.permittedOperation"></app-external-pseudonyms>
+      <app-external-pseudonyms [readOnly]=this.readOnly [ids]="this.ids" [ngGroupId]="this.ngGroupId" [permittedOperation]="this.permittedOperation"></app-external-pseudonyms>
     </td>
   </tr>
 </table>

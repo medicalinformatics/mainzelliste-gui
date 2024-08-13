@@ -1,4 +1,4 @@
-<table style="width: 100%; max-width: 700px;" ngModelGroup="externalIds">
+<table style="width: 100%; max-width: 700px;" ngModelGroup="{{'externalIds' + this.ngGroupId}}">
   <tr *ngFor="let externalId of getExternalIds() ">
     <td style="width: 100%; flex-flow: row">
       <div style="display: flex; flex-wrap: nowrap;">
