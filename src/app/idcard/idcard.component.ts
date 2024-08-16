@@ -22,6 +22,9 @@ import {catchError, mergeMap} from "rxjs/operators";
 import {DeleteConsentDialog} from "./dialogs/delete-consent-dialog";
 import {IdType} from "../model/id-type";
 import {AuthorizationService} from "../services/authorization.service";
+import { GroupsDialog } from './dialogs/groups-dialog';
+import { CompactAssociatedIdsDialog } from './dialogs/compact-associated-ids-dialog';
+import { AssociatedIdGroup } from '../model/associated-id-group';
 
 @Component({
   selector: 'app-idcard',
@@ -57,6 +60,8 @@ export class IdcardComponent implements OnInit {
     public associatedIdGroupsDialog: MatDialog,
     public newAssociatedIdDialog: MatDialog,
     public idExistsErrorDialog: MatDialog,
+    public groupsDialog: MatDialog,
+    public compactAssociatedIdsDialog: MatDialog,
     public consentService: ConsentService
   ) {
     this.activatedRoute.params.subscribe((params) => {
@@ -223,5 +228,28 @@ export class IdcardComponent implements OnInit {
       if (result)
         this.deleteConsent(consentId);
     });
+  }
+
+  openGroupsDialog(): void {
+    const dialogRef = this.groupsDialog.open(GroupsDialog, {
+      data: this.patient,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result != null){
+        this.openCompactAssociatedIdsDialog(result)
+      }
+    });
+  }
+
+  openCompactAssociatedIdsDialog(group: AssociatedIdGroup) {
+    const dialogRef = this.compactAssociatedIdsDialog.open(CompactAssociatedIdsDialog, {
+        panelClass: 'my-dialog',
+        data: {patient: this.patient, idTypes: this.patientListService.getAssociatedIdTypesByGroup(group.name), group: group}
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+
+      });
   }
 }

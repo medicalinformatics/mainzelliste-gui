@@ -57,6 +57,7 @@ import { IdExistsErrorDialog } from './idcard/dialogs/id-exists-error-dialog';
 import { MatStepperModule } from '@angular/material/stepper';
 import { CompactAssociatedIdsDialog } from './idcard/dialogs/compact-associated-ids-dialog';
 import {ConsentTemplatesComponent} from './consent/consent-templates/consent-templates.component';
+import { GroupsDialog } from './idcard/dialogs/groups-dialog';
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService,
                               userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
@@ -115,6 +116,7 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     PatientSearchComponent,
     AssociatedIdsTableComponent,
     CompactAssociatedIdsDialog,
+    GroupsDialog,
     ConsentTemplatesComponent
   ],
   imports: [

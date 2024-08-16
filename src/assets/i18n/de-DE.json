@@ -60,8 +60,9 @@
 	"idcard.title_patient_data": "Patientendaten",
 	"idcard.title_pseudonyms": "Pseudonyme",
 	"idcard.title_id_card": "ID Karte",
-
-  "consent_list.unlimited_period": "unbegrenzt",
+	"idcard.title_pseudonyms_extended_view": "Erweiterte Ansicht",
+	
+	"consent_list.unlimited_period": "unbegrenzt",
 
   "consent_status.draft": "Entwurf",
   "consent_status.proposed": "Entwurf",

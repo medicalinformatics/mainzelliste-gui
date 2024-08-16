@@ -1,0 +1,13 @@
+<div style="width: 100%; display: flex; flex-flow: row; flex-wrap: wrap;">
+    <ng-container *ngFor="let group of this.data.associatedIdGroups">
+        <mat-card style="margin: 5% 0% 0% 5%; width: 40%; height: 35%;">
+            <div style=" width: 100%; display: flex; flex-flow: row; flex-wrap: wrap;">
+              <mat-card-title>{{group.name}}</mat-card-title>
+              <button (click)="onClose(group)" ngClass="idcard-button" style="position: absolute; right: 4%; margin-top: 0%">
+                <mat-icon style="margin-top: 10%;" matTooltip="{{'' | translate}}">add_box</mat-icon>
+              </button>
+            </div>
+            <app-patient-associated-ids-table [readOnly]=true [group]="group"></app-patient-associated-ids-table>
+        </mat-card>
+    </ng-container>
+</div>

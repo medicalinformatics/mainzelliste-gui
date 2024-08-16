@@ -25,7 +25,7 @@ import {
   ShowRelatedIdDialog
 } from './patient-pseudonyms/dialogs/show-related-id-dialog/show-related-id-dialog.component';
 import {DeleteConsentDialog} from "../idcard/dialogs/delete-consent-dialog";
-import { PatientAssociatedIdsComponent } from './patient-associated-ids/patient-associated-ids.component';
+import { PatientAssociatedIdsTableComponent } from './patient-associated-ids/patient-associated-ids-table.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
@@ -44,7 +44,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
   exports: [
     PatientFieldsComponent,
     PatientPseudonymsComponent,
-    PatientAssociatedIdsComponent
+    PatientAssociatedIdsTableComponent
   ],
   declarations: [
     PatientFieldsComponent,
@@ -58,9 +58,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     DeletePatientDialog,
     GenerateIdDialog,
     ShowRelatedIdDialog,
-    DeleteConsentDialog
-  ,
-    PatientAssociatedIdsComponent
+    DeleteConsentDialog,
+    PatientAssociatedIdsTableComponent
   ]
 })
 export class PatientModule {

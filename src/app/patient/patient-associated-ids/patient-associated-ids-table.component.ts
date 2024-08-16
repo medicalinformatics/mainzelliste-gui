@@ -1,23 +1,26 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { CompactAssociatedIdsDialog } from 'src/app/idcard/dialogs/compact-associated-ids-dialog';
 import { AssociatedIdGroup } from 'src/app/model/associated-id-group';
 import { Patient } from 'src/app/model/patient';
 import { PatientListService } from 'src/app/services/patient-list.service';
 
 @Component({
-  selector: 'app-patient-associated-ids',
-  templateUrl: './patient-associated-ids.component.html',
-  styleUrls: ['./patient-associated-ids.component.css']
+  selector: 'app-patient-associated-ids-table',
+  templateUrl: './patient-associated-ids-table.component.html',
+  styleUrls: ['./patient-associated-ids-table.component.css']
 })
 
-export class PatientAssociatedIdsComponent implements OnInit {
+export class PatientAssociatedIdsTableComponent implements OnInit, AfterViewInit {
 
-  @Input() patient!: Patient;
+  @Input() patient?: Patient;
+  @Input() group!: AssociatedIdGroup;
   @Input() readOnly: boolean= false;
+  
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  group: AssociatedIdGroup | undefined;
+  //group: AssociatedIdGroup | undefined;
   tableData: {name: string, id: string, isExternal: boolean}[] | undefined;
   dataModel!: AssociatedIdGroup;
   elementData: Element[] = [];
@@ -30,16 +33,26 @@ export class PatientAssociatedIdsComponent implements OnInit {
     public compactAssociatedIdsDialog: MatDialog,
   ) { }
 
-  onGroupChange() {
+  /*onGroupChange() {
     this.tableData = this.patientListService.getAssociatedIdTypesByGroup(this.dataModel.name);
     this.group = this.dataModel;
     this.fillElementData();
     this.dataSource = new MatTableDataSource(this.elementData);
     this.setupIdTypes();
+  }*/
+ 
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
   }
 
   ngOnInit(): void {
-    
+    this.tableData = this.patientListService.getAssociatedIdTypesByGroup(this.group.name);
+    this.fillElementData();
+    this.setupIdTypes();
+    if (this.elementData.length % 5 != 0) {
+      this.appendEmptyElements(5 - (this.elementData.length % 5));
+    }
+    this.dataSource = new MatTableDataSource(this.elementData);
   }
 
   fillElementData() {
@@ -62,15 +75,11 @@ export class PatientAssociatedIdsComponent implements OnInit {
     }
   }
 
-  openCompactAssociatedIdsDialog() {
-    const dialogRef = this.compactAssociatedIdsDialog.open(CompactAssociatedIdsDialog, {
-        panelClass: 'my-dialog',
-        data: {patient: this.patient, idTypes: this.patientListService.getAssociatedIdTypesByGroup(this.dataModel.name), group: this.dataModel}
-      });
-
-      dialogRef.afterClosed().subscribe(result => {
-
-      });
+  appendEmptyElements(emptyRows: number) {
+    for(let i = 0; i < emptyRows; i++) {
+      let temp = new Array<string>(this.displayedColumns.length - 1);
+      this.elementData.push({ids: temp});
+    }
   }
 
   setupIdTypes() {
