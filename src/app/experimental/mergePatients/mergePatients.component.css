@@ -1,37 +1,99 @@
-.titleicon{
+.titleicon {
   margin-left: 3%;
   font-family: Arial;
   margin-top: 1.5%;
   margin-bottom: 2%;
+
 }
 
-.patientCard{
+.patientCard {
   background-color: white;
   padding-bottom: 3%;
   margin-bottom: 3%;
   color: black;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
+  padding-bottom: 8%;
+  box-sizing: border-box;
 }
 
-.MergeCard{
+.MergeCard {
   background-color: #daedfe;
   padding-bottom: 3%;
   margin-bottom: 3%;
-}
 
-#ergebnisButton{
-  background-color: #ADDFFF;
-  color: white;
-  float:right;
-  margin-right:2.5%;
-  margin-bottom: 10%;
-}
-
-.patientendaten{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
   padding-bottom: 8%;
+  box-sizing: border-box;
+
 }
-mat-card-title{
+
+.top {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.pseudonyme {
+  padding-top: 5%;
+}
+
+
+.patientendaten {
+  padding-bottom: 8%;
+  flex: 1 1 40%;
+  display: flex;
+  flex-flow: column;
+  padding-top: 5%;
+
+  margin-top: auto;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+mat-card-title {
   transform: scale(0.7);
   padding-top: 1%;
   padding-bottom: 1%;
   font-family: Arial;
+  margin-left: -15%
+}
+
+mat-card-title.title {
+  color: black;
+  font-size: xx-large;
+}
+
+mat-card-title.subtitle {
+  color: dimgray;
+  font-size: x-large;
+}
+
+mat-card-subtitle {
+  font-size: x-large;
+  transform: scale(0.7);
+  padding-top: 1%;
+  padding-bottom: -10%; /* Decreased the padding-bottom value */
+  font-family: Arial;
+  margin-left: -15%;
+}
+
+#ergebnisButton {
+  background-color: #ADDFFF;
+  color: white;
+  float: right;
+  margin-right: 2.5%;
+  margin-bottom: 10%;
+}
+
+input[type="radio"] {
+  font-size: x-large;
+  width: 1em;
+  height: 1em;
+  vertical-align: text-bottom;
 }

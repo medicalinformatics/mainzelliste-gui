@@ -42,10 +42,13 @@ export class PatientFieldsComponent implements OnInit {
     this.localDateFormat = _moment().localeData().longDateFormat('L');
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    
+  }
 
   fieldChanged(){
     this.fieldEvent.emit(this.fields);
+    console.log('Fields:', JSON.stringify(this.fields));
   }
 
   slideData(value: string, name: string): void{
