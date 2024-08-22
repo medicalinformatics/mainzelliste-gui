@@ -1,11 +1,10 @@
 <form #patientForm="ngForm">
-<div style="height:100%; width:100%">
+  <div style="height:100%; width:100%">
 
+    <div class="cards">
 
-<div  style="display: flex; flex-flow: row; justify-content: space-evenly;">
-
-<!--PATIENTENDATEN1-->
-<mat-card class="patientCard" style="width: 28%">
+      <!--PATIENTENDATEN1-->
+      <mat-card class="patient1" style="width: 28%">
         <span class="top">
           <mat-card-title class="title">Patientendaten 1</mat-card-title>
           <mat-card-subtitle>
@@ -16,43 +15,18 @@
             <mat-card-title class="subtitle">Pseudonyme</mat-card-title>
             <div style="flex-flow: row">
               <app-patient-pseudonyms style="width: 90%" [readOnly]=true [ids]="patient1.ids"
-                [permittedOperation]="'R'"
-                (slideFieldEvent)="updatePseudonymOfFinalPatient($event.name, $event.value)"></app-patient-pseudonyms>
+                [permittedOperation]="'R'"></app-patient-pseudonyms>
             </div>
           </div>
         </span>
         <div class="patientendaten">
           <mat-card-title class="subtitle">Patientendaten</mat-card-title>
-          <app-patient-fields [readOnly]=true side="right" [fields]="patient1.fields" [ngGroupId]="'1'"
-            (slideFieldEvent)="updateFieldsOfFinalPatient($event.name, $event.value)"></app-patient-fields>
+          <app-patient-fields [readOnly]=true [fields]="patient1.fields" [ngGroupId]="'1'"></app-patient-fields>
         </div>
       </mat-card>
-
-      <!-- FINALER PATIENT -->
-      <mat-card style="width: 28%" class="MergeCard">
-        <span class="top">
-          <mat-card-title class="title">Finale Patientendaten</mat-card-title>
-          <mat-card-subtitle>
-            <div>Haupt-Patient: {{getMainPatient()}} </div>
-          </mat-card-subtitle>
-          <div class="pseudonyme">
-            <mat-card-title class="subtitle">Pseudonyme</mat-card-title>
-            <!--  <div style="flex-flow: column; justify-content: flex-end ">-->
-            <app-patient-pseudonyms [readOnly]=true [ids]="getMainPatient() == 1 ? patient1.ids : patient2.ids"
-              [permittedOperation]="'R'"></app-patient-pseudonyms>
-            <!-- [pseudonyms]="patients[0].ids"  [pseudonyms]="emptyPatient.ids"  [pseudonyms]="finalPatient.ids"-->
-            <!--   </div>-->
-          </div>
-        </span>
-        <div class="patientendaten">
-          <mat-card-title class="subtitle">Patientendaten</mat-card-title>
-          <app-patient-fields [readOnly]=true [fields]="finalPatient.fields" ></app-patient-fields>
-        </div>
-      </mat-card>
-
       <!--PATIENTENDATEN2-->
 
-      <mat-card class="patientCard" style="width: 28%">
+      <mat-card class="patient2" style="width: 28%">
         <span class="top">
           <mat-card-title class="title">Patientendaten 2</mat-card-title>
           <mat-card-subtitle>
@@ -63,20 +37,19 @@
             <mat-card-title class="subtitle">Pseudonyme</mat-card-title>
             <!-- TODO: justify-content to flex-end-->
             <div style="flex: 1 1 100%; display: flex; flex-flow: column; justify-content: flex-end; flow:right;">
-              <app-patient-pseudonyms [readOnly]=true [ids]="patient2.ids" [permittedOperation]="'R'"
-                (slideFieldEvent)="updatePseudonymOfFinalPatient($event.name, $event.value)"></app-patient-pseudonyms>
+              <app-patient-pseudonyms [readOnly]=true [ids]="patient2.ids"
+                [permittedOperation]="'R'"></app-patient-pseudonyms>
               <!-- style="width:160%;"-->
             </div>
           </div>
         </span>
         <div class="patientendaten">
           <mat-card-title class="subtitle">Patientendaten</mat-card-title>
-          <app-patient-fields side="left" [readOnly]=true [fields]="patient2.fields" [ngGroupId]="'2'"
-            (slideFieldEvent)="updateFieldsOfFinalPatient($event.name, $event.value)"></app-patient-fields>
+          <app-patient-fields [readOnly]=true [fields]="patient2.fields" [ngGroupId]="'2'"></app-patient-fields>
         </div>
       </mat-card>
 
     </div>
-    <button mat-raised-button [disabled]=true id="ergebnisButton" (click)="mergePatients()">Zusammenführen</button>
+    <button mat-raised-button id="ergebnisButton" (click)="mergePatients()">Zusammenführen</button>
   </div>
 </form>

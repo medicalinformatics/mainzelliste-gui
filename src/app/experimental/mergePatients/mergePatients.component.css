@@ -6,7 +6,14 @@
 
 }
 
-.patientCard {
+.cards {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  gap: 5%;
+}
+
+.patient1 {
   background-color: white;
   padding-bottom: 3%;
   margin-bottom: 3%;
@@ -19,7 +26,7 @@
   box-sizing: border-box;
 }
 
-.MergeCard {
+.patient2 {
   background-color: #daedfe;
   padding-bottom: 3%;
   margin-bottom: 3%;
@@ -30,7 +37,6 @@
   min-height: 100%;
   padding-bottom: 8%;
   box-sizing: border-box;
-
 }
 
 .top {
@@ -78,17 +84,19 @@ mat-card-subtitle {
   font-size: x-large;
   transform: scale(0.7);
   padding-top: 1%;
-  padding-bottom: -10%; /* Decreased the padding-bottom value */
+  padding-bottom: -10%;
+  /* Decreased the padding-bottom value */
   font-family: Arial;
   margin-left: -15%;
 }
 
-#ergebnisButton {
+.mat-raised-button{
   background-color: #ADDFFF;
-  color: white;
+  color:#294E66;
+  margin-bottom: 1%;
   float: right;
-  margin-right: 2.5%;
-  margin-bottom: 10%;
+  margin-right: 2%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 input[type="radio"] {
