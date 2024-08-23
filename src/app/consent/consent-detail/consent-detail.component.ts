@@ -11,6 +11,9 @@ import {
   ValidationErrors,
   ValidatorFn
 } from "@angular/forms";
+import {Permission} from "../../model/permission";
+import {Subscription} from "rxjs";
+import {finalize} from "rxjs/operators";
 
 @Component({
   selector: 'app-consent-detail',
@@ -26,6 +29,9 @@ export class ConsentDetailComponent implements OnInit {
   @Output() consentChange = new EventEmitter<Consent>();
   @ViewChild('templateSelection') templateSelection!: MatSelect;
   localDateFormat:string;
+  uploadInProgress: boolean = false;
+  uploadProgress: number = 0;
+  uploadSubscription: Subscription | undefined = undefined;
 
   constructor(
       private consentService: ConsentService,
@@ -81,6 +87,55 @@ export class ConsentDetailComponent implements OnInit {
 
   getCurrentTemplateId() {
     return this.consent?.templateId;
+  }
+
+  protected readonly Permission = Permission;
+
+  onScansSelected($event: Event) {
+    const target = $event.target as HTMLInputElement;
+    const files = target.files as FileList;
+    if(files != null && files.length >0) {
+      let reader = new FileReader();
+      reader.readAsDataURL(files[0]);
+      reader.onload = () => {
+        let base64 :string = reader.result != null ? (typeof reader.result === 'string' ? reader.result as string : new TextDecoder().decode(reader.result)) : ""
+        this.uploadInProgress = true;
+        this.uploadSubscription = this.consentService.uploadConsentScan(base64, files[0].name,
+          this.consent.fhirResource?.patient?.identifier).pipe(
+          finalize(() => {
+            this.resetUploadScan();
+          })
+        ).subscribe(fhirResource => {
+          let resourceId = (fhirResource as fhir4.DocumentReference).id
+          if(resourceId == undefined)
+            throw new Error("returned resource contains no id")
+          this.consent.scans.set( resourceId, files[0].name);
+
+          // if (event.type == HttpEventType.UploadProgress) {
+          //   this.uploadProgress = Math.round(100 * (event.loaded / event.total));
+          // }
+        })
+      };
+      reader.onerror = function (error) {
+        console.log('Error: ', error);
+      };
+    }
+  }
+
+  cancelUploadScan() {
+    this.uploadSubscription?.unsubscribe()
+    this.resetUploadScan();
+  }
+
+  resetUploadScan() {
+    this.uploadProgress = 0;
+    this.uploadInProgress = false;
+    this.uploadSubscription = undefined;
+  }
+
+  deleteUploadedScan(resourceId: string) {
+    this.consent.scans.delete(resourceId);
+    console.log("remove from backend not implemented yet")
   }
 }
 

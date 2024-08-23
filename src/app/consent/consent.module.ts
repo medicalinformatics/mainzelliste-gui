@@ -15,6 +15,7 @@ import {ConsentTemplateValidityPeriodDialog} from "./consent-template-detail/con
 import {ConsentTemplateModulesComponent} from "./consent-template-detail/consent-template-modules.component";
 import {MatDividerModule} from "@angular/material/divider";
 import {InvalidConsentPeriodDirective} from "../shared/directives/invalid-consent-period.directive";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import {InvalidConsentPeriodDirective} from "../shared/directives/invalid-consen
     SharedModule,
     MatProgressSpinnerModule,
     MatDividerModule,
-    InvalidConsentPeriodDirective
+    InvalidConsentPeriodDirective,
+    MatProgressBarModule
   ],
   declarations: [
     ConsentDetailComponent,

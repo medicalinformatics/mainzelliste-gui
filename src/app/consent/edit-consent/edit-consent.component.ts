@@ -10,7 +10,7 @@ import {ErrorMessages} from "../../error/error-messages";
 import {MatDialog} from "@angular/material/dialog";
 import {ConsentRejectedDialog} from "../dialogs/consent-rejected-dialog";
 import {ConsentInactivatedDialog} from "../dialogs/consent-inactivated-dialog";
-import {catchError} from "rxjs/operators";
+import {catchError, mergeMap} from "rxjs/operators";
 import {throwError} from "rxjs";
 
 @Component({
@@ -56,7 +56,9 @@ export class EditConsentComponent implements OnInit {
 
   editConsent(force?: boolean) {
     this.dataModel.patientId = {idType: this.idType, idString: this.idString};
-    this.consentService.editConsent(this.dataModel, force || false).pipe(
+    this.consentService.editConsent(this.dataModel, force || false)
+    .pipe(
+      mergeMap( r =>  this.consentService.addConsentProvenance((r as fhir4.Consent).id, this.dataModel.scans)),
       catchError(e => throwError(e))
     ).subscribe(
       () => this.router.navigate(["/idcard", this.idType, this.idString]),

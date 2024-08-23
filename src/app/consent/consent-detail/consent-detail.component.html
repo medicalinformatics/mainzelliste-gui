@@ -55,4 +55,34 @@
     </mat-form-field>
     <label><strong>{{getConsentExpiration()}}</strong></label>
   </div>
+  <br>
+  <div class="form-group">
+    <mat-chip-list style="margin-bottom: 13px" *ngFor="let file of this.consent.scans | keyvalue">
+      <mat-chip style=" margin-bottom: 13px">
+        <mat-icon style="height: 18px; width: 18px; font-size: 18px; margin-right: 6px;">attach_file</mat-icon>
+        {{file.value}}
+        <button matChipRemove>
+          <mat-icon (click)="this.deleteUploadedScan(file.key)">delete</mat-icon>
+        </button>
+      </mat-chip>
+    </mat-chip-list>
+    <input type="file"  accept="application/pdf" style="display: none" (change)="onScansSelected($event)" #fileUploader>
+    <div style="width: 150px; display: flex; justify-content: space-between;
+        align-items: center; margin-bottom: 13px;" *ngIf="this.uploadInProgress">
+      <section style="display: flex; align-content: center; align-items: center;">
+        <mat-progress-bar style="width: 140px; height: 20px"
+                          [mode]="'indeterminate'"
+                          [value]="this.uploadProgress">
+        </mat-progress-bar>
+<!--        <div style="position: absolute; padding: 10px; color: white;"> {{this.uploadProgress}}% </div>-->
+        <button mat-icon-button>
+          <mat-icon (click)="cancelUploadScan()">delete_forever</mat-icon>
+        </button>
+      </section>
+    </div>
+    <button mat-raised-button (click)="fileUploader.click()" style="margin-top: 5px">
+      <mat-icon>{{'attach_file'}}</mat-icon>
+      {{'button_add_consent_scan' | translate }}
+    </button>
+  </div>
 </mat-card>

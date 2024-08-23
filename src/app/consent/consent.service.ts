@@ -183,7 +183,8 @@ export class ConsentService {
         period: 0,
         items: [],
         status: "active",
-        templateId: "0"
+        templateId: "0",
+        scans: new Map<string, string>()
       };
     }
 
@@ -262,6 +263,7 @@ export class ConsentService {
       status: fhirConsent?.status || "active",
       fhirResource: fhirConsent,
       templateId: questionnaire?.id || "0",
+      scans: new Map<string, string>(),
       templateFhirResource: questionnaire?.contained[0] as fhir4.Consent || undefined
     };
   }
@@ -895,5 +897,63 @@ export class ConsentService {
 
   private log(message: string) {
     // this.messageService.add(`ConsentService: ${message}`);
+  }
+
+  uploadConsentScan(result: string, name: string, id: fhir4.Identifier | undefined) {
+    let resource : fhir4.DocumentReference = {
+      resourceType: "DocumentReference",
+      meta: {
+        profile: [
+          "https://www.medizininformatik-initiative.de/fhir/modul-consent/StructureDefinition/mii-pr-consent-documentreference"
+        ]
+      },
+      status: "current",
+      subject: {
+        identifier: id
+      },
+      content:  [
+        {
+          attachment: {
+            contentType: "application/pdf",
+            data: result.length > 0 ? result.split(',')[1] : "",
+            title: name
+          }
+        }
+      ]
+    };
+    return this.createFhirResource<fhir4.DocumentReference>("addConsentScan", {}, 'DocumentReference', resource);
+  }
+
+  addConsentProvenance(id: string | undefined, scans: Map<String, String>) {
+    let resource : fhir4.Provenance = {
+      resourceType: "Provenance",
+      meta: {
+        profile: [
+          "https://www.medizininformatik-initiative.de/fhir/modul-consent/StructureDefinition/mii-pr-consent-provenance"
+        ]
+      },
+      target: [
+        {
+          reference: "Consent/" + id
+        }
+      ],
+      recorded: _moment().format("YYYY-MM-DDThh:mm:ssZ"),
+      agent: [
+        {
+          who: {
+            display: "Mainzelliste - " + this.appConfigService.getVersion()
+          }
+        }
+      ],
+      entity: Array.from(scans.keys(), (id) => (
+        {
+          role: "source",
+          what: {
+            reference: "DocumentReference/" + id
+          }
+        }
+      ))
+    }
+    return this.createFhirResource<fhir4.Provenance>("addConsentProvenance", {}, 'Provenance', resource);
   }
 }
