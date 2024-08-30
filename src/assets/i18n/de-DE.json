@@ -206,6 +206,7 @@
 	"error.consent_service_fhir_consent_template": "Die enthaltene Einwilligungsvorlage „fhir“ enthält keine Bestimmungen",
 	"error.consent_service_questionnaire_not_found": "Fragebogen nicht gefunden",
 	"error.consent_service_fhir_consent_not_found": "Fhir-Einwilligung wurde nicht gefunden",
+  "error.consent_upload_scan_failed": "Upload von '${1}' fehlgeschlagen",
 	"error.get_error_message_from_undefined_error": "Undefinierter Clienterror",
 	"error.authorization_service": "Zugriff verweigert für ",
 	"error.mainzelliste_unknown_error": ". Ursache: ",

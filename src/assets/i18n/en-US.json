@@ -206,6 +206,7 @@
 	"error.consent_service_fhir_consent_template": "Contained fhir consent template contain no provisions",
 	"error.consent_service_questionnaire_not_found": "Questionnaire not found",
 	"error.consent_service_fhir_consent_not_found": "Fhir consent resource not found",
+  "error.consent_upload_scan_failed": "Failed to upload '${1}'",
 	"error.get_error_message_from_undefined_error": "Undefined client error",
 	"error.authorization_service": "Access denied for ",
 	"error.mainzelliste_unknown_error": ". Cause: ",

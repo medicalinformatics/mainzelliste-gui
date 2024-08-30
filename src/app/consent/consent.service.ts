@@ -20,13 +20,14 @@ import _moment from "moment";
 import {ConsentTemplateFhirWrapper} from "../model/consent-template-fhir-wrapper";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {ChoiceItem, ConsentTemplate, DisplayItem, Validity} from "./consent-template.model";
-import {catchError, map, mergeMap} from "rxjs/operators";
+import {catchError, finalize, map, mergeMap} from "rxjs/operators";
 import {ConsentPolicySet} from "../model/consent-policy-set";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {ConsentPolicy} from "../model/consent-policy";
 import {getErrorMessageFrom} from "../error/error-utils";
 import {TokenType} from "../model/token";
 import {TokenData} from "../model/token-data";
+import {UploadConsentFileResponse} from "../model/api/upload-consent-file-response";
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,9 @@ import {TokenData} from "../model/token-data";
 export class ConsentService {
   private readonly mainzellisteBaseUrl: string;
   private client: Client;
+  private uploadConsentScanErrorMessages: ErrorMessage[] = [
+    ErrorMessages.FAILED_UPLOAD_CONSENT_SCAN_FILE
+  ];
 
   constructor(
     private sessionService: SessionService,
@@ -184,7 +188,8 @@ export class ConsentService {
         items: [],
         status: "active",
         templateId: "0",
-        scans: new Map<string, string>()
+        scans: new Map<string, string>(),
+        scanUrls: new Map<string, string>()
       };
     }
 
@@ -264,6 +269,7 @@ export class ConsentService {
       fhirResource: fhirConsent,
       templateId: questionnaire?.id || "0",
       scans: new Map<string, string>(),
+      scanUrls: new Map<string, string>(),
       templateFhirResource: questionnaire?.contained[0] as fhir4.Consent || undefined
     };
   }
@@ -305,10 +311,7 @@ export class ConsentService {
     } else {
       // set patient id in fhir resource
       dataModel.fhirResource.patient = {
-        identifier: {
-          system: this.mainzellisteBaseUrl + "/id/" + dataModel.patientId?.idType,
-          value: dataModel.patientId?.idString
-        }
+        identifier: this.convertToFhirIdentifier(dataModel.patientId)
       }
 
       //conditional update
@@ -317,6 +320,13 @@ export class ConsentService {
         dataModel.fhirResource, {
         'patient:identifier': dataModel.fhirResource.patient.identifier?.system + '|' + dataModel.fhirResource.patient.identifier?.value,
         'policyUri': 'fhir/Questionnaire/' + dataModel.templateId});
+    }
+  }
+
+  public convertToFhirIdentifier(id: { idType: string, idString: string} | undefined): fhir4.Identifier {
+    return {
+      system: this.mainzellisteBaseUrl + "/id/" + id?.idType,
+      value: id?.idString
     }
   }
 
@@ -899,7 +909,40 @@ export class ConsentService {
     // this.messageService.add(`ConsentService: ${message}`);
   }
 
-  uploadConsentScan(result: string, name: string, id: fhir4.Identifier | undefined) {
+  uploadConsentScanFile(file: File, callback: () => void){
+    return this.sessionService.createToken("addConsentScan", {})
+    .pipe(
+      mergeMap(token => this.resolveConsentScanToken(token.id, file, callback))
+    )
+  }
+
+  private resolveConsentScanToken(tokenId: string | undefined, file: File, callback: () => void) {
+    const formData = new FormData();
+    formData.append("file", file);
+    return this.httpClient.post<UploadConsentFileResponse>(this.mainzellisteBaseUrl + "/sessions/"
+      + this.sessionService.sessionId + "/pdf?tokenId=" + tokenId, formData, {
+      headers: new HttpHeaders()
+      .set('mainzellisteApiVersion', '3.2'),
+      reportProgress: true,
+      observe: 'events'
+    })
+    .pipe(
+      catchError(e => {
+        let errorMessage;
+        if (e instanceof HttpErrorResponse && (e.status == 400)) {
+          errorMessage = this.uploadConsentScanErrorMessages.find(msg => msg.match(e))
+          // find error message arguments
+          if( errorMessage == ErrorMessages.FAILED_UPLOAD_CONSENT_SCAN_FILE) {
+            return throwError(new MainzellisteError(errorMessage, errorMessage.findVariables(e)[1]));
+          }
+        }
+        return throwError(errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
+      }),
+      finalize(callback)
+    );
+  }
+
+  uploadConsentScan(fileUrl: string, id: { idType: string, idString: string} | undefined) {
     let resource : fhir4.DocumentReference = {
       resourceType: "DocumentReference",
       meta: {
@@ -909,14 +952,14 @@ export class ConsentService {
       },
       status: "current",
       subject: {
-        identifier: id
+        identifier: this.convertToFhirIdentifier(id)
       },
       content:  [
         {
           attachment: {
             contentType: "application/pdf",
-            data: result.length > 0 ? result.split(',')[1] : "",
-            title: name
+            data: "YmFzZTY0Q29kaWVydGVzUERGRGVzVW50ZXJzY2hyaWViZW5lblBhdGllbnRlbkVpbndpbGxpZ3VuZ3Nib2dlbnM=",
+            url: fileUrl
           }
         }
       ]
@@ -924,7 +967,7 @@ export class ConsentService {
     return this.createFhirResource<fhir4.DocumentReference>("addConsentScan", {}, 'DocumentReference', resource);
   }
 
-  addConsentProvenance(id: string | undefined, scans: Map<String, String>) {
+  addConsentProvenance(id: string | undefined, docRefIds: (string | undefined)[]) {
     let resource : fhir4.Provenance = {
       resourceType: "Provenance",
       meta: {
@@ -945,7 +988,7 @@ export class ConsentService {
           }
         }
       ],
-      entity: Array.from(scans.keys(), (id) => (
+      entity: Array.from(docRefIds, (id) => (
         {
           role: "source",
           what: {

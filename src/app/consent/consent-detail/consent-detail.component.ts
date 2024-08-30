@@ -13,7 +13,7 @@ import {
 } from "@angular/forms";
 import {Permission} from "../../model/permission";
 import {Subscription} from "rxjs";
-import {finalize} from "rxjs/operators";
+import {HttpEventType} from "@angular/common/http";
 
 @Component({
   selector: 'app-consent-detail',
@@ -95,30 +95,18 @@ export class ConsentDetailComponent implements OnInit {
     const target = $event.target as HTMLInputElement;
     const files = target.files as FileList;
     if(files != null && files.length >0) {
-      let reader = new FileReader();
-      reader.readAsDataURL(files[0]);
-      reader.onload = () => {
-        let base64 :string = reader.result != null ? (typeof reader.result === 'string' ? reader.result as string : new TextDecoder().decode(reader.result)) : ""
-        this.uploadInProgress = true;
-        this.uploadSubscription = this.consentService.uploadConsentScan(base64, files[0].name,
-          this.consent.fhirResource?.patient?.identifier).pipe(
-          finalize(() => {
-            this.resetUploadScan();
-          })
-        ).subscribe(fhirResource => {
-          let resourceId = (fhirResource as fhir4.DocumentReference).id
-          if(resourceId == undefined)
-            throw new Error("returned resource contains no id")
-          this.consent.scans.set( resourceId, files[0].name);
-
-          // if (event.type == HttpEventType.UploadProgress) {
-          //   this.uploadProgress = Math.round(100 * (event.loaded / event.total));
-          // }
+      this.uploadInProgress = true;
+      this.uploadSubscription = this.consentService.uploadConsentScanFile(files[0], () => this.resetUploadScan()).subscribe(
+        event => {
+          if (event.type == HttpEventType.UploadProgress) {
+            this.uploadProgress = Math.round(100 * (event.loaded / (event.total ?? 1)));
+          } else if(event.type == HttpEventType.Response) {
+            let fileUrl = event.body?.url
+            if(fileUrl == undefined)
+              throw new Error("failed to upload File")
+            this.consent.scanUrls.set( files[0].name, fileUrl);
+          }
         })
-      };
-      reader.onerror = function (error) {
-        console.log('Error: ', error);
-      };
     }
   }
 
@@ -133,8 +121,8 @@ export class ConsentDetailComponent implements OnInit {
     this.uploadSubscription = undefined;
   }
 
-  deleteUploadedScan(resourceId: string) {
-    this.consent.scans.delete(resourceId);
+  deleteUploadedScan(fileName: string) {
+    this.consent.scanUrls.delete(fileName);
     console.log("remove from backend not implemented yet")
   }
 }

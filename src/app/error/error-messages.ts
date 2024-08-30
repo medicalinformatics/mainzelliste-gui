@@ -151,4 +151,11 @@ export class ErrorMessages {
   public static SEARCH_CONSENT_TEMPLATES_FAILED: ErrorMessage = new ErrorMessage(6003,
     "SearchConsentTemplatesFailed",
     'error.search_consent_templates_failed');
+
+  ////
+  // EDIT PATIENT ERRORS
+  //---------------------
+  public static FAILED_UPLOAD_CONSENT_SCAN_FILE: ErrorMessage = new ErrorMessage(7001,
+    /Failed to upload File '(.*)'/i,
+    "error.consent_upload_scan_failed");
 }

@@ -58,7 +58,7 @@ export class EditConsentComponent implements OnInit {
     this.dataModel.patientId = {idType: this.idType, idString: this.idString};
     this.consentService.editConsent(this.dataModel, force || false)
     .pipe(
-      mergeMap( r =>  this.consentService.addConsentProvenance((r as fhir4.Consent).id, this.dataModel.scans)),
+      //mergeMap( r =>  this.consentService.addConsentProvenance((r as fhir4.Consent).id, this.dataModel.scans)),
       catchError(e => throwError(e))
     ).subscribe(
       () => this.router.navigate(["/idcard", this.idType, this.idString]),

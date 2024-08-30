@@ -8,7 +8,7 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
 import {ErrorNotificationService} from "../../services/error-notification.service";
 import {GlobalTitleService} from "../../services/global-title.service";
-import {Observable, of} from "rxjs";
+import {forkJoin, Observable, of} from "rxjs";
 import {concatMap, map, mergeMap, retryWhen, startWith, switchMap} from "rxjs/operators";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MainzellisteError} from "../../model/mainzelliste-error.model";
@@ -131,7 +131,19 @@ export class CreatePatientComponent  implements OnInit {
       mergeMap( newId => {
         if(this.consent){
           this.consent.patientId = newId;
-          return this.consentService.addConsent(this.consent).pipe(map( c => newId));
+          return this.consentService.addConsent(this.consent).pipe(
+            // create document reference
+            mergeMap(c => {
+              return forkJoin( Array.from(this.consent?.scanUrls?.values()??[]).map( url =>
+                this.consentService.uploadConsentScan(url, this.consent?.patientId))).pipe(
+                  map(docRefs => docRefs?.map(docRef => (docRef as fhir4.DocumentReference).id) || []) ,
+                  mergeMap( docRefIds =>
+                    this.consentService.addConsentProvenance((c as fhir4.Consent).id, docRefIds)
+                  )
+              )
+            }),
+            map( c => newId)
+          );
         } else
           return of(newId);
       })

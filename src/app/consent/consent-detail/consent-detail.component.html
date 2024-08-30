@@ -57,10 +57,10 @@
   </div>
   <br>
   <div class="form-group">
-    <mat-chip-list style="margin-bottom: 13px" *ngFor="let file of this.consent.scans | keyvalue">
+    <mat-chip-list style="margin-bottom: 13px" *ngFor="let file of this.consent.scanUrls | keyvalue">
       <mat-chip style=" margin-bottom: 13px">
         <mat-icon style="height: 18px; width: 18px; font-size: 18px; margin-right: 6px;">attach_file</mat-icon>
-        {{file.value}}
+        {{file.key}}
         <button matChipRemove>
           <mat-icon (click)="this.deleteUploadedScan(file.key)">delete</mat-icon>
         </button>
@@ -71,10 +71,10 @@
         align-items: center; margin-bottom: 13px;" *ngIf="this.uploadInProgress">
       <section style="display: flex; align-content: center; align-items: center;">
         <mat-progress-bar style="width: 140px; height: 20px"
-                          [mode]="'indeterminate'"
+                          [mode]="'determinate'"
                           [value]="this.uploadProgress">
         </mat-progress-bar>
-<!--        <div style="position: absolute; padding: 10px; color: white;"> {{this.uploadProgress}}% </div>-->
+        <div style="position: absolute; padding: 10px; color: white;"> {{this.uploadProgress}}% </div>
         <button mat-icon-button>
           <mat-icon (click)="cancelUploadScan()">delete_forever</mat-icon>
         </button>

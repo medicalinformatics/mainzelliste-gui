@@ -13,6 +13,7 @@ export class Consent {
     public status: ConsentStatus,
     public templateId: string,
     public scans: Map<string, string> = new Map<string, string>(),
+    public scanUrls: Map<string, string> = new Map<string, string>(),
     public id?: string,
     public version?: string,
     public validFrom?: Moment,
