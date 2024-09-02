@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable, of, throwError} from 'rxjs';
+import {forkJoin, Observable, of, throwError} from 'rxjs';
 import Client from 'fhir-kit-client'
 import {SessionService} from "../services/session.service";
 import {DatePipe} from "@angular/common";
@@ -998,5 +998,17 @@ export class ConsentService {
       ))
     }
     return this.createFhirResource<fhir4.Provenance>("addConsentProvenance", {}, 'Provenance', resource);
+  }
+
+  createScansAndProvenance(consent: Consent|undefined, consentId: string) {
+    return forkJoin(
+      Array.from(consent?.scanUrls?.values() ?? []).map(url =>
+        this.uploadConsentScan(url, consent?.patientId))
+    ).pipe(
+      map(docRefs => docRefs?.map(docRef => (docRef as fhir4.DocumentReference).id) || []),
+      mergeMap(docRefIds =>
+        this.addConsentProvenance(consentId, docRefIds)
+      )
+    )
   }
 }

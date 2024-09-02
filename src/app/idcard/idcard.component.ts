@@ -16,7 +16,7 @@ import {Permission} from "../model/permission";
 import {HttpErrorResponse} from "@angular/common/http";
 import {throwError} from "rxjs";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
-import {ConsentRow, ConsentsView} from "../consent/consent.model";
+import {Consent, ConsentRow, ConsentsView} from "../consent/consent.model";
 import {catchError, mergeMap} from "rxjs/operators";
 import {DeleteConsentDialog} from "./dialogs/delete-consent-dialog";
 import {IdType} from "../model/id-type";
@@ -148,8 +148,13 @@ export class IdcardComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(dataModel => {
       if (dataModel?.consent) {
-        dataModel.consent.patientId = {idType: this.idType, idString: this.idString};
-        this.consentService.addConsent(dataModel.consent).subscribe(e => this.loadConsents());
+        let consentModel: Consent = dataModel?.consent;
+        consentModel.patientId = {idType: this.idType, idString: this.idString};
+        this.consentService.addConsent(consentModel).pipe(
+          mergeMap(c =>
+            this.consentService.createScansAndProvenance(consentModel, (c as fhir4.Consent).id || "")
+          )
+        ).subscribe(e => this.loadConsents());
       }
     });
   }

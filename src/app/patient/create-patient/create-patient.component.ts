@@ -129,20 +129,14 @@ export class CreatePatientComponent  implements OnInit {
         )
       ),
       mergeMap( newId => {
-        if(this.consent){
+        if (this.consent !== undefined) {
           this.consent.patientId = newId;
           return this.consentService.addConsent(this.consent).pipe(
             // create document reference
-            mergeMap(c => {
-              return forkJoin( Array.from(this.consent?.scanUrls?.values()??[]).map( url =>
-                this.consentService.uploadConsentScan(url, this.consent?.patientId))).pipe(
-                  map(docRefs => docRefs?.map(docRef => (docRef as fhir4.DocumentReference).id) || []) ,
-                  mergeMap( docRefIds =>
-                    this.consentService.addConsentProvenance((c as fhir4.Consent).id, docRefIds)
-                  )
-              )
-            }),
-            map( c => newId)
+            mergeMap(c =>
+              this.consentService.createScansAndProvenance(this.consent, (c as fhir4.Consent).id || "")
+            ),
+            map(c => newId)
           );
         } else
           return of(newId);
