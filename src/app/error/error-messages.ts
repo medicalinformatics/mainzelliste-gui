@@ -153,9 +153,19 @@ export class ErrorMessages {
     'error.search_consent_templates_failed');
 
   ////
-  // EDIT PATIENT ERRORS
+  // CONSENT SCAN ERRORS
   //---------------------
   public static FAILED_UPLOAD_CONSENT_SCAN_FILE: ErrorMessage = new ErrorMessage(7001,
     /Failed to upload File '(.*)'/i,
     "error.consent_upload_scan_failed");
+  public static READ_CONSENT_SCAN_FAILED: ErrorMessage = new ErrorMessage(7002,
+    'ReadConsentScanFailed',
+    "error.read_consent_scan_failed");
+
+  ////
+  // CONSENT PROVENANCE ERRORS
+  //---------------------
+  public static SEARCH_CONSENT_PROVENANCE_FAILED: ErrorMessage = new ErrorMessage(8001,
+    'SearchConsentProvenanceFailed',
+    "error.search_consent_provenance_failed");
 }

@@ -267,6 +267,7 @@ export class ConsentService {
       items: items,
       status: fhirConsent?.status || "active",
       fhirResource: fhirConsent,
+      version: fhirConsent?.meta?.versionId,
       templateId: questionnaire?.id || "0",
       scans: new Map<string, string>(),
       scanUrls: new Map<string, string>(),
@@ -873,50 +874,14 @@ export class ConsentService {
       )
   }
 
-  //////////////////////////////
-  ////    DRAFT
-  //////////////////////////////
-
-  private handleException<R>(error:any, result:R):R {
-    if (error instanceof TypeError) {
-      let typeError: TypeError = error;
-      console.log("error name: " + typeError.name);
-      console.log("error msg: " + typeError.message);
-      console.log("error stack: " + typeError.stack);
-    }
-    console.log(error);
-    return result;
-  }
-
-  /**
-   * Handle operation that failed.
-   */
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-
-      // TODO: better job of transforming error for user consumption
-      this.log(`${operation} failed: ${error.message}`);
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
-  }
-
-  private log(message: string) {
-    // this.messageService.add(`ConsentService: ${message}`);
-  }
-
   uploadConsentScanFile(file: File, callback: () => void){
     return this.sessionService.createToken("addConsentScan", {})
     .pipe(
-      mergeMap(token => this.resolveConsentScanToken(token.id, file, callback))
+      mergeMap(token => this.resolveAddConsentScanToken(token.id, file, callback))
     )
   }
 
-  private resolveConsentScanToken(tokenId: string | undefined, file: File, callback: () => void) {
+  private resolveAddConsentScanToken(tokenId: string | undefined, file: File, callback: () => void) {
     const formData = new FormData();
     formData.append("file", file);
     return this.httpClient.post<UploadConsentFileResponse>(this.mainzellisteBaseUrl + "/sessions/"
@@ -1010,5 +975,54 @@ export class ConsentService {
         this.addConsentProvenance(consentId, docRefIds)
       )
     )
+  }
+
+  getConsentProvenance(versionedConsentId:string){
+    return this.searchFhirResources<fhir4.Provenance>("searchConsentProvenances", {},
+      'Provenance', ErrorMessages.SEARCH_CONSENT_PROVENANCE_FAILED,
+      {
+        'target': this.appConfigService.getMainzellisteUrl() + '/Consent/' + versionedConsentId
+      });
+  }
+
+  getConsentScan(consentScanId:string){
+    return this.readFhirResources<fhir4.DocumentReference>("readConsentScan", {},
+      'DocumentReference', consentScanId, ErrorMessages.READ_CONSENT_SCAN_FAILED);
+  }
+
+  //////////////////////////////
+  ////    DRAFT
+  //////////////////////////////
+
+  private handleException<R>(error:any, result:R):R {
+    if (error instanceof TypeError) {
+      let typeError: TypeError = error;
+      console.log("error name: " + typeError.name);
+      console.log("error msg: " + typeError.message);
+      console.log("error stack: " + typeError.stack);
+    }
+    console.log(error);
+    return result;
+  }
+
+  /**
+   * Handle operation that failed.
+   */
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+
+      // TODO: send the error to remote logging infrastructure
+      console.error(error); // log to console instead
+
+      // TODO: better job of transforming error for user consumption
+      this.log(`${operation} failed: ${error.message}`);
+
+      // Let the app keep running by returning an empty result.
+      return of(result as T);
+    };
+  }
+
+  private log(message: string) {
+    // this.messageService.add(`ConsentService: ${message}`);
   }
 }

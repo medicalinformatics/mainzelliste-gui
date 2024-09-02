@@ -14,6 +14,7 @@ import {
 import {Permission} from "../../model/permission";
 import {Subscription} from "rxjs";
 import {HttpEventType} from "@angular/common/http";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-consent-detail',
@@ -24,6 +25,7 @@ import {HttpEventType} from "@angular/common/http";
 export class ConsentDetailComponent implements OnInit {
 
   @Input() edit: boolean = false;
+  @Input() readOnly: boolean = false;
   @Input() consent!: Consent;
   @Input() templates!: Map<string, string>;
   @Output() consentChange = new EventEmitter<Consent>();
@@ -32,6 +34,7 @@ export class ConsentDetailComponent implements OnInit {
   uploadInProgress: boolean = false;
   uploadProgress: number = 0;
   uploadSubscription: Subscription | undefined = undefined;
+  consentScans: Map<string,string> = new Map<string, string>();
 
   constructor(
       private consentService: ConsentService,
@@ -48,18 +51,30 @@ export class ConsentDetailComponent implements OnInit {
         .subscribe(r => this.templates = r);
 
     //reset selection if no template selected
-    if (!this.consent?.id && (!this.edit && this.templateSelection)) {
+    if (!this.consent?.id && (!this.edit && !this.readOnly && this.templateSelection)) {
       this.templateSelection.options.forEach((data: MatOption) => data.deselect());
+    }
+
+    // load scans id
+    if(this.readOnly){
+      this.consentService.getConsentProvenance(this.consent.id + '/_history/' + this.consent.version || "").pipe(
+        map(p => (p[0]?.entity ?? [])
+          .filter(e => e.role == "source")
+          .map(e => e.what.reference?.substring("DocumentReference/".length) || "")
+        )
+      ).subscribe(ids => ids.forEach(id => this.consentScans.set(id, id)))
     }
   }
 
   initDataModel(consentTemplateId: MatSelectChange) {
-    this.consentService.getNewConsentDataModel(consentTemplateId.value || "0")
-    .subscribe( consentDataModel => {
-      this.consent = consentDataModel;
-      // propagate change to parent component
-      this.consentChange.emit(this.consent)
-    });
+    if(!this.edit && !this.readOnly) {
+      this.consentService.getNewConsentDataModel(consentTemplateId.value || "0")
+      .subscribe(consentDataModel => {
+        this.consent = consentDataModel;
+        // propagate change to parent component
+        this.consentChange.emit(this.consent)
+      });
+    }
   }
 
   getConsentExpiration(): string {
@@ -124,6 +139,15 @@ export class ConsentDetailComponent implements OnInit {
   deleteUploadedScan(fileName: string) {
     this.consent.scanUrls.delete(fileName);
     console.log("remove from backend not implemented yet")
+  }
+
+  downloadScan(id: string) {
+    this.consentService.getConsentScan(id).subscribe( doc => {
+      const downloadLink = document.createElement('a');
+      downloadLink.href = "data:application/pdf;base64," + doc.content[0].attachment.data;
+      downloadLink.download = id + ".pdf";
+      downloadLink.click();
+  });
   }
 }
 

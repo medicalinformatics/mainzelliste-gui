@@ -137,7 +137,7 @@ export class IdcardComponent implements OnInit {
   }
 
 
-  openConsentDialog() {
+  openAddNewConsentDialog() {
     const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
       width: '900px',
       disableClose: true,
@@ -157,6 +157,19 @@ export class IdcardComponent implements OnInit {
         ).subscribe(e => this.loadConsents());
       }
     });
+  }
+
+  openViewConsentDialog(consentId: string) {
+    this.consentService.readConsent(consentId).subscribe(
+      c => this.consentDialog.open(ConsentDialogComponent, {
+        width: '900px',
+        disableClose: true,
+        data: {
+          consent: c,
+          readonly: true
+        }
+      })
+    );
   }
 
   getIdTypes():IdType[] {
