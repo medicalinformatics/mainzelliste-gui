@@ -58,10 +58,17 @@
     <label><strong>{{getConsentExpiration()}}</strong></label>
   </div>
   <br>
-  <div class="form-group" *ngIf="!readOnly" >
+</mat-card>
+<br>
+<ng-container *appHasAnyPermissions="[Permission.ADD_CONSENT_SCANS, Permission.READ_CONSENT_SCANS]">
+  <h4 *ngIf="consent && (!readOnly || this.consentScans.size > 0)">{{'consentDetail.scans' | translate}}</h4>
+</ng-container>
+<!-- upload and list scanned documents -->
+<ng-container *ngIf="consent && !readOnly">
+  <div class="form-group" *appHasPermission="Permission.ADD_CONSENT_SCANS">
     <mat-chip-list style="margin-bottom: 13px" *ngFor="let file of this.consent.scanUrls | keyvalue">
       <mat-chip style=" margin-bottom: 13px">
-        <mat-icon style="height: 18px; width: 18px; font-size: 18px; margin-right: 6px;">attach_file</mat-icon>
+        <mat-icon style="height: 18px; width: 18px; font-size: 18px; margin-right: 6px;">picture_as_pdf</mat-icon>
         {{file.key}}
         <button matChipRemove *ngIf="!readOnly">
           <mat-icon (click)="this.deleteUploadedScan(file.key)">delete</mat-icon>
@@ -70,7 +77,7 @@
     </mat-chip-list>
     <input type="file"  accept="application/pdf" style="display: none" (change)="onScansSelected($event)" #fileUploader>
     <div style="width: 150px; display: flex; justify-content: space-between;
-        align-items: center; margin-bottom: 13px;" *ngIf="this.uploadInProgress">
+          align-items: center; margin-bottom: 13px;" *ngIf="this.uploadInProgress">
       <section style="display: flex; align-content: center; align-items: center;">
         <mat-progress-bar style="width: 140px; height: 20px"
                           [mode]="'determinate'"
@@ -83,15 +90,19 @@
       </section>
     </div>
     <button mat-raised-button (click)="fileUploader.click()" style="margin-top: 5px">
-      <mat-icon>{{'attach_file'}}</mat-icon>
+      <mat-icon>note_add</mat-icon>
       {{'button_add_consent_scan' | translate }}
     </button>
   </div>
+  <br>
+</ng-container>
 
-  <div class="form-group" *ngIf="readOnly" >
+<!-- list scanned documents -->
+<ng-container *ngIf="consent && readOnly">
+  <div class="form-group" *appHasPermission="Permission.READ_CONSENT_SCANS">
     <mat-chip-list style="margin-bottom: 13px" *ngFor="let file of this.consentScans | keyvalue">
       <mat-chip style=" margin-bottom: 13px">
-        <mat-icon style="height: 18px; width: 18px; font-size: 18px; margin-right: 6px;">attach_file</mat-icon>
+        <mat-icon style="height: 18px; width: 18px; font-size: 18px; margin-right: 6px;">picture_as_pdf</mat-icon>
         {{file.key}}
         <button matChipRemove #downloadbuttom>
           <mat-icon (click)="this.downloadScan(file.key)">download</mat-icon>
@@ -99,4 +110,5 @@
       </mat-chip>
     </mat-chip-list>
   </div>
-</mat-card>
+  <br>
+</ng-container>

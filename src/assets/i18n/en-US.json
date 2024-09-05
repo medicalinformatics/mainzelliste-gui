@@ -122,8 +122,9 @@
 	"consentDetail.consent_template": "Consent template",
 	"consentDetail.validity_label": "Valid from",
 	"consentDetail.validity_date_label": "Select validity date",
+  "consentDetail.scans": "Scanned documents:",
 
-	"error.consentDetail.validity_date": "Validity period lies in the past",
+  "error.consentDetail.validity_date": "Validity period lies in the past",
 
 	"deletePatient.title_patient_data": "Patient data",
 	"deletePatient.title_pseudonyms": "Pseudonyms",

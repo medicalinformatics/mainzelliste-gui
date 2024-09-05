@@ -24,6 +24,12 @@ export class Permission {
   public static readonly EDIT_CONSENT = new Permission("consent", "U");
   public static readonly DELETE_CONSENT = new Permission("consent", "D");
 
+  public static readonly CREATE_CONSENT_PROVISION = new Permission("provision", "C");
+  public static readonly READ_CONSENT_PROVISION = new Permission("provision", "R");
+
+  public static readonly ADD_CONSENT_SCANS = new Permission("scans", "C");
+  public static readonly READ_CONSENT_SCANS = new Permission("scans", "R");
+
   public static readonly CREATE_CONSENT_TEMPLATE = new Permission("consentTemplate", "C");
   public static readonly READ_CONSENT_TEMPLATE = new Permission("consentTemplate", "R");
   public static readonly EDIT_CONSENT_TEMPLATE = new Permission("consentTemplate", "U");

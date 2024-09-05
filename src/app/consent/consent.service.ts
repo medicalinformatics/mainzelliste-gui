@@ -933,6 +933,8 @@ export class ConsentService {
   }
 
   addConsentProvenance(id: string | undefined, docRefIds: (string | undefined)[]) {
+    if(docRefIds == undefined || docRefIds.length == 0)
+      return of();
     let resource : fhir4.Provenance = {
       resourceType: "Provenance",
       meta: {

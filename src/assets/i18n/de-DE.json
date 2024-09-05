@@ -122,8 +122,9 @@
 	"consentDetail.consent_template": "Einwilligungsvorlage",
 	"consentDetail.validity_label": "Gültig ab",
 	"consentDetail.validity_date_label": "Gültigkeitsdatum auswählen",
+  "consentDetail.scans": "Gescannte Dokumenten:",
 
-	"error.consentDetail.validity_date": "Gültigkeitszeitraum liegt in der vergangenheit",
+  "error.consentDetail.validity_date": "Gültigkeitszeitraum liegt in der vergangenheit",
 
 	"deletePatient.title_patient_data": "Patientendaten",
 	"deletePatient.title_pseudonyms": "Pseudonyme",

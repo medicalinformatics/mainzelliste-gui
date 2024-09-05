@@ -15,6 +15,7 @@ import {Permission} from "../../model/permission";
 import {Subscription} from "rxjs";
 import {HttpEventType} from "@angular/common/http";
 import {map} from "rxjs/operators";
+import {AuthorizationService} from "../../services/authorization.service";
 
 @Component({
   selector: 'app-consent-detail',
@@ -38,6 +39,7 @@ export class ConsentDetailComponent implements OnInit {
 
   constructor(
       private consentService: ConsentService,
+      private authorizationService: AuthorizationService,
       @Inject(MAT_DATE_LOCALE) private _locale: string
   ) {
     _moment.locale(this._locale);
@@ -56,7 +58,7 @@ export class ConsentDetailComponent implements OnInit {
     }
 
     // load scans id
-    if(this.readOnly){
+    if(this.readOnly && this.authorizationService.hasPermission(Permission.READ_CONSENT_SCANS)){
       this.consentService.getConsentProvenance(this.consent.id + '/_history/' + this.consent.version || "").pipe(
         map(p => (p[0]?.entity ?? [])
           .filter(e => e.role == "source")
