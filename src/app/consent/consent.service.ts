@@ -996,16 +996,6 @@ export class ConsentService {
   ////    DRAFT
   //////////////////////////////
 
-  private handleException<R>(error:any, result:R):R {
-    if (error instanceof TypeError) {
-      let typeError: TypeError = error;
-      console.log("error name: " + typeError.name);
-      console.log("error msg: " + typeError.message);
-      console.log("error stack: " + typeError.stack);
-    }
-    console.log(error);
-    return result;
-  }
 
   /**
    * Handle operation that failed.

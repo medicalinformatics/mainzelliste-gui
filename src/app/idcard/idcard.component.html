@@ -83,13 +83,13 @@
                 </ng-container>
                 <ng-container *ngIf="element.status == 'draft' || element.status == 'proposed'">
                   <button *appHasPermission="Permission.EDIT_CONSENT" mat-icon-button style="border:none;"
-                          [routerLink]="['/patient', idType, idString, 'edit-consent', element.id]">
+                          (click)="this.openChangeConsentDialog(element.id)">
                     <mat-icon matTooltip="{{'button_edit_consent' | translate}}">edit</mat-icon>
                   </button>
                 </ng-container>
                 <ng-container *ngIf="element.status == 'active' || element.status == 'rejected'|| element.status == 'inactive'">
                   <button *appHasPermission="Permission.EDIT_CONSENT" mat-icon-button style="border:none;"
-                          [routerLink]="['/patient', idType, idString, 'edit-consent', element.id]">
+                          (click)="this.openChangeConsentDialog(element.id)">
                     <mat-icon matTooltip="{{'button_add_consent' | translate}}">assignment_turned_in</mat-icon>
                   </button>
                 </ng-container>

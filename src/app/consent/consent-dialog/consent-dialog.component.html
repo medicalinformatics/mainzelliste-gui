@@ -1,9 +1,11 @@
-<h1 mat-dialog-title>{{'consentDialog.title_consent' | translate}}</h1>
+<h1 mat-dialog-title *ngIf="!dataModel.readonly">{{'consentDialog.title_consent' | translate}}</h1>
 <form #consentForm="ngForm">
   <div mat-dialog-content>
     <app-consent-detail [(consent)]="dataModel.consent"
                         [templates]="dataModel.templates"
-                        [readOnly]="dataModel.readonly"></app-consent-detail>
+                        [readOnly]="dataModel.readonly"
+                        [edit]="dataModel.edit"
+    ></app-consent-detail>
   </div>
   <div mat-dialog-actions>
     <button mat-raised-button class="submitBreak" (click)="onCancel()">{{(!dataModel.readonly ? 'button_cancel':'button_close') | translate}}</button>

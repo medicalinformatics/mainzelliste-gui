@@ -21,6 +21,10 @@ import {catchError, mergeMap} from "rxjs/operators";
 import {DeleteConsentDialog} from "./dialogs/delete-consent-dialog";
 import {IdType} from "../model/id-type";
 import {AuthorizationService} from "../services/authorization.service";
+import {MainzellisteError} from "../model/mainzelliste-error.model";
+import {ErrorMessages} from "../error/error-messages";
+import {ConsentRejectedDialog} from "../consent/dialogs/consent-rejected-dialog";
+import {ConsentInactivatedDialog} from "../consent/dialogs/consent-inactivated-dialog";
 
 @Component({
   selector: 'app-idcard',
@@ -51,6 +55,8 @@ export class IdcardComponent implements OnInit {
     public consentDialog: MatDialog,
     public deletePatientDialog: MatDialog,
     public deleteConsentDialog: MatDialog,
+    public consentRejectedDialog: MatDialog,
+    public consentInactivatedDialog: MatDialog,
     public newIdDialog: MatDialog,
     public consentService: ConsentService
   ) {
@@ -136,7 +142,6 @@ export class IdcardComponent implements OnInit {
         this.consentsView.consentRows.some(v => v.templateId == templateId))
   }
 
-
   openAddNewConsentDialog() {
     const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
       width: '900px',
@@ -156,6 +161,68 @@ export class IdcardComponent implements OnInit {
           )
         ).subscribe(e => this.loadConsents());
       }
+    });
+  }
+
+  openChangeConsentDialog(consentId: string) {
+    this.consentService.readConsent(consentId).subscribe( c => {
+      const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
+        width: '900px',
+        disableClose: true,
+        data: {
+          consent: c,
+          edit: true
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(dataModel => {
+        if (dataModel?.consent) {
+          this.editConsent(dataModel.consent);
+        }
+      });
+    })
+  }
+
+  editConsent(dataModel: Consent, force?: boolean) {
+    dataModel.patientId = {idType: this.idType, idString: this.idString};
+    this.consentService.editConsent(dataModel, force || false)
+    .pipe(
+      mergeMap(c =>
+        this.consentService.createScansAndProvenance(dataModel, (c as fhir4.Consent).id || "")
+      ),
+      catchError(e => throwError(e))
+    ).subscribe(
+      () => {},
+      e => {
+        if (e instanceof MainzellisteError && e.errorMessage == ErrorMessages.CREATE_CONSENT_REJECTED) {
+          this.openConsentRejectedDialog(dataModel);
+        } else if (e instanceof MainzellisteError && e.errorMessage == ErrorMessages.CREATE_CONSENT_INACTIVE) {
+          this.openConsentInactivatedDialog(dataModel);
+        }
+      },
+      () => this.loadConsents()
+    );
+  }
+
+  private openConsentRejectedDialog(dataModel: Consent) {
+    const dialogRef = this.consentRejectedDialog.open(ConsentRejectedDialog, {
+      data: {},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.editConsent(dataModel, true);
+    });
+  }
+
+  private openConsentInactivatedDialog(dataModel: Consent) {
+    const dialogRef = this.consentInactivatedDialog.open(ConsentInactivatedDialog, {
+      data: {},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.editConsent(dataModel, true);
     });
   }
 
