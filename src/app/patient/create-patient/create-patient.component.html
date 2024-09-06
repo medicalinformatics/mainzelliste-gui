@@ -57,9 +57,10 @@
     </ng-container>
     <br>
     <div style="width: 90%; margin-left: 5%; max-width: 700px;">
-      <button mat-raised-button class="submit" style="clear: both; float: left; width: 20%;"
-              [disabled]="this.disable(patientForm)"
+      <button mat-raised-button class="submit" type="submit" style="clear: both; float: left;"
+              [disabled]="this.disable(patientForm) || creatingInProgress"
               (click)="createNewPatient(false)">{{'button_request' | translate}}
+        <mat-icon *ngIf="creatingInProgress" style="margin-left: 10px"><mat-spinner diameter="20"></mat-spinner></mat-icon>
       </button>
     </div>
   </div>
