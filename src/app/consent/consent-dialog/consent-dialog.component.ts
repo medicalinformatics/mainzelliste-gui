@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {ConsentDetailComponent} from "../consent-detail/consent-detail.component";
 import {Consent} from "../consent.model";
@@ -12,7 +12,7 @@ import {Consent} from "../consent.model";
 export class ConsentDialogComponent implements OnInit {
 
   @ViewChild(ConsentDetailComponent) consentDetail!: ConsentDetailComponent;
-
+  public inProgress: boolean = false
   constructor(
     public dialogRef: MatDialogRef<ConsentDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public dataModel: {
@@ -20,7 +20,8 @@ export class ConsentDialogComponent implements OnInit {
       templates: Map<string, string>,
       isSaveButton: boolean,
       readonly: boolean,
-      edit:boolean
+      edit:boolean,
+      processDone: EventEmitter<boolean>
     }) {
   }
 
@@ -31,6 +32,10 @@ export class ConsentDialogComponent implements OnInit {
   }
 
   onSave() {
+    if(this.dataModel.processDone)
+      this.inProgress = true;
     this.dialogRef.close(this.dataModel);
+    if(this.dataModel.processDone)
+      this.dataModel.processDone.subscribe(r => this.inProgress = false)
   }
 }

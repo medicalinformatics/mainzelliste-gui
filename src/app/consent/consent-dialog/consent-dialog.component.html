@@ -10,7 +10,9 @@
   <div mat-dialog-actions>
     <button mat-raised-button class="submitBreak" (click)="onCancel()">{{(!dataModel.readonly ? 'button_cancel':'button_close') | translate}}</button>
     <button *ngIf="!dataModel.readonly" mat-raised-button class="submit"  type="submit" (click)="onSave()"
-            [disabled]="!dataModel.consent || !consentForm.form.valid">{{(dataModel.isSaveButton?'button_save':'button_publish') | translate}}
+            [disabled]="!dataModel.consent || !consentForm.form.valid || inProgress">
+      {{(dataModel.isSaveButton?'button_save':'button_publish') | translate}}
+      <mat-icon *ngIf="inProgress"><mat-spinner diameter="20"></mat-spinner></mat-icon>
     </button>
   </div>
 </form>
