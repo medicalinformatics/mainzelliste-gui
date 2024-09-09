@@ -4,6 +4,7 @@ secrets:
     file: ./mainzelliste.docker.conf
 volumes:
   keycloakDB:
+#  mainzellisteConsentScans:
 services:
   mainzelliste-gui:
     image: medicalinformatics/mainzelliste-gui:develop
@@ -42,6 +43,8 @@ services:
       # Note: can be removed, if the HOST env variable not referring to the local computer (localhost or 127.0.0.1).
       # Set KC_HOSTNAME_URL in keycloak service to the keycloak frontend url e.g. http://${HOST}:8082
       ML_OIDC_INTERNAL_ISS_BASE_URL: http://keycloak:8080
+#    volumes:
+#      - mainzellisteConsentScans:/usr/local/tomcat/consents
     depends_on:
       - mainzelliste-db
     secrets:
