@@ -2,7 +2,8 @@ import {TokenData} from './token-data';
 export type TokenType = 'readPatients' | 'addPatient' | 'editPatient' | 'deletePatient' | 'createIds'
   | 'addConsent' | 'searchConsents' | 'editConsent' | 'readConsent' | 'deleteConsent' | 'addConsentTemplate' | 'searchConsentTemplates'
   | 'readConsentTemplate' | 'addConsentPolicySet' | 'readConsentPolicySet' | 'searchConsentPolicySets'
-  | 'addConsentPolicy' | 'searchConsentPolicies' ;
+  | 'addConsentPolicy' | 'searchConsentPolicies' | 'addConsentScan' | 'addConsentProvenance'
+  | 'searchConsentProvenances' | 'readConsentScan';
 export class Token {
   constructor(
     public id?: string,

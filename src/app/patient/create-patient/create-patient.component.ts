@@ -8,7 +8,7 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
 import {ErrorNotificationService} from "../../services/error-notification.service";
 import {GlobalTitleService} from "../../services/global-title.service";
-import {Observable, of} from "rxjs";
+import {forkJoin, Observable, of} from "rxjs";
 import {concatMap, map, mergeMap, retryWhen, startWith, switchMap} from "rxjs/operators";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MainzellisteError} from "../../model/mainzelliste-error.model";
@@ -54,6 +54,7 @@ export class CreatePatientComponent  implements OnInit {
   chipListInputData: string = "";
 
   externalIdTypes: IdTypSelection[] = [];
+  public creatingInProgress: boolean = false;
 
   constructor(
     public translate: TranslateService,
@@ -108,6 +109,7 @@ export class CreatePatientComponent  implements OnInit {
   createNewPatient(sureness: boolean) {
     this.errorNotificationService.clearMessages();
     //create patient
+    this.creatingInProgress = true;
     of(this.patient).pipe(
       concatMap(p => this.patientService.createPatient(p, this.selectedInternalIdTypes, sureness)),
       retryWhen(
@@ -121,6 +123,7 @@ export class CreatePatientComponent  implements OnInit {
               else if (e.errorMessage == ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH) {
                 this.openCreatePatientTentativeDialog();
                 // do not emit any value in order to send a complete notification on subscription
+                this.creatingInProgress = false;
                 return of();
               }
             }
@@ -129,13 +132,20 @@ export class CreatePatientComponent  implements OnInit {
         )
       ),
       mergeMap( newId => {
-        if(this.consent){
+        if (this.consent !== undefined) {
           this.consent.patientId = newId;
-          return this.consentService.addConsent(this.consent).pipe(map( c => newId));
+          return this.consentService.addConsent(this.consent).pipe(
+            // create document reference
+            mergeMap(c =>
+              this.consentService.createScansAndProvenance(this.consent, (c as fhir4.Consent).id || "")
+            ),
+            map(c => newId)
+          );
         } else
           return of(newId);
       })
     ).subscribe(newId => {
+      this.creatingInProgress = false;
       this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
     })
   }

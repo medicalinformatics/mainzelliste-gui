@@ -16,6 +16,6 @@ export interface TenantPermission {
   operations: Operation[]
 }
 
-export type PermissionType = "default" | "patient" | "consent" | "consentTemplate" | "ids" | "externalIds" | "fields";
+export type PermissionType = "default" | "patient" | "consent" | "provision" | "scans" | "consentTemplate" | "ids" | "externalIds" | "fields";
 
 export type Operation = "C" | "R" | "U" | "D";

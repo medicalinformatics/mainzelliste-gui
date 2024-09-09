@@ -36,7 +36,17 @@ export interface PatientPermissionResources {
   ids: IDPermissions[],
   externalIds: IDPermissions[],
   fields: FieldPermissions[],
-  consent: ResourceOperations,
+  consent: ConsentPermissionResource,
+}
+
+export interface ConsentPermissionResource {
+  operations: Operation[],
+  resources: ConsentPermissionResources
+}
+
+export interface ConsentPermissionResources {
+  provision: ResourceOperations,
+  scans: ResourceOperations,
 }
 
 export interface IDPermissions {

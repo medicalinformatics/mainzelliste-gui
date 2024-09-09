@@ -25,6 +25,7 @@ import {
   ShowRelatedIdDialog
 } from './patient-pseudonyms/dialogs/show-related-id-dialog/show-related-id-dialog.component';
 import {DeleteConsentDialog} from "../idcard/dialogs/delete-consent-dialog";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import {DeleteConsentDialog} from "../idcard/dialogs/delete-consent-dialog";
     SharedModule,
     ClipboardModule,
     RouterModule,
-    ScrollingModule
+    ScrollingModule,
+    MatProgressSpinnerModule
   ],
   exports: [
     PatientFieldsComponent,

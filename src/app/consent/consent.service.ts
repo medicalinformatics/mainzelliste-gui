@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable, of, throwError} from 'rxjs';
+import {forkJoin, Observable, of, throwError} from 'rxjs';
 import Client from 'fhir-kit-client'
 import {SessionService} from "../services/session.service";
 import {DatePipe} from "@angular/common";
@@ -20,13 +20,14 @@ import _moment from "moment";
 import {ConsentTemplateFhirWrapper} from "../model/consent-template-fhir-wrapper";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {ChoiceItem, ConsentTemplate, DisplayItem, Validity} from "./consent-template.model";
-import {catchError, map, mergeMap} from "rxjs/operators";
+import {catchError, finalize, map, mergeMap} from "rxjs/operators";
 import {ConsentPolicySet} from "../model/consent-policy-set";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {ConsentPolicy} from "../model/consent-policy";
 import {getErrorMessageFrom} from "../error/error-utils";
 import {TokenType} from "../model/token";
 import {TokenData} from "../model/token-data";
+import {UploadConsentFileResponse} from "../model/api/upload-consent-file-response";
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,9 @@ import {TokenData} from "../model/token-data";
 export class ConsentService {
   private readonly mainzellisteBaseUrl: string;
   private client: Client;
+  private uploadConsentScanErrorMessages: ErrorMessage[] = [
+    ErrorMessages.FAILED_UPLOAD_CONSENT_SCAN_FILE
+  ];
 
   constructor(
     private sessionService: SessionService,
@@ -183,7 +187,9 @@ export class ConsentService {
         period: 0,
         items: [],
         status: "active",
-        templateId: "0"
+        templateId: "0",
+        scans: new Map<string, string>(),
+        scanUrls: new Map<string, string>()
       };
     }
 
@@ -261,7 +267,10 @@ export class ConsentService {
       items: items,
       status: fhirConsent?.status || "active",
       fhirResource: fhirConsent,
+      version: fhirConsent?.meta?.versionId,
       templateId: questionnaire?.id || "0",
+      scans: new Map<string, string>(),
+      scanUrls: new Map<string, string>(),
       templateFhirResource: questionnaire?.contained[0] as fhir4.Consent || undefined
     };
   }
@@ -303,10 +312,7 @@ export class ConsentService {
     } else {
       // set patient id in fhir resource
       dataModel.fhirResource.patient = {
-        identifier: {
-          system: this.mainzellisteBaseUrl + "/id/" + dataModel.patientId?.idType,
-          value: dataModel.patientId?.idString
-        }
+        identifier: this.convertToFhirIdentifier(dataModel.patientId)
       }
 
       //conditional update
@@ -315,6 +321,13 @@ export class ConsentService {
         dataModel.fhirResource, {
         'patient:identifier': dataModel.fhirResource.patient.identifier?.system + '|' + dataModel.fhirResource.patient.identifier?.value,
         'policyUri': 'fhir/Questionnaire/' + dataModel.templateId});
+    }
+  }
+
+  public convertToFhirIdentifier(id: { idType: string, idString: string} | undefined): fhir4.Identifier {
+    return {
+      system: this.mainzellisteBaseUrl + "/id/" + id?.idType,
+      value: id?.idString
     }
   }
 
@@ -861,20 +874,128 @@ export class ConsentService {
       )
   }
 
+  uploadConsentScanFile(file: File, callback: () => void){
+    return this.sessionService.createToken("addConsentScan", {})
+    .pipe(
+      mergeMap(token => this.resolveAddConsentScanToken(token.id, file, callback))
+    )
+  }
+
+  private resolveAddConsentScanToken(tokenId: string | undefined, file: File, callback: () => void) {
+    const formData = new FormData();
+    formData.append("file", file);
+    return this.httpClient.post<UploadConsentFileResponse>(this.mainzellisteBaseUrl + "/sessions/"
+      + this.sessionService.sessionId + "/pdf?tokenId=" + tokenId, formData, {
+      headers: new HttpHeaders()
+      .set('mainzellisteApiVersion', '3.2'),
+      reportProgress: true,
+      observe: 'events'
+    })
+    .pipe(
+      catchError(e => {
+        let errorMessage;
+        if (e instanceof HttpErrorResponse && (e.status == 400)) {
+          errorMessage = this.uploadConsentScanErrorMessages.find(msg => msg.match(e))
+          // find error message arguments
+          if( errorMessage == ErrorMessages.FAILED_UPLOAD_CONSENT_SCAN_FILE) {
+            return throwError(new MainzellisteError(errorMessage, errorMessage.findVariables(e)[1]));
+          }
+        }
+        return throwError(errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
+      }),
+      finalize(callback)
+    );
+  }
+
+  uploadConsentScan(fileUrl: string, id: { idType: string, idString: string} | undefined) {
+    let resource : fhir4.DocumentReference = {
+      resourceType: "DocumentReference",
+      meta: {
+        profile: [
+          "https://www.medizininformatik-initiative.de/fhir/modul-consent/StructureDefinition/mii-pr-consent-documentreference"
+        ]
+      },
+      status: "current",
+      subject: {
+        identifier: this.convertToFhirIdentifier(id)
+      },
+      content:  [
+        {
+          attachment: {
+            contentType: "application/pdf",
+            data: "YmFzZTY0Q29kaWVydGVzUERGRGVzVW50ZXJzY2hyaWViZW5lblBhdGllbnRlbkVpbndpbGxpZ3VuZ3Nib2dlbnM=",
+            url: fileUrl
+          }
+        }
+      ]
+    };
+    return this.createFhirResource<fhir4.DocumentReference>("addConsentScan", {}, 'DocumentReference', resource);
+  }
+
+  addConsentProvenance(id: string | undefined, docRefIds: (string | undefined)[]) {
+    if(docRefIds == undefined || docRefIds.length == 0)
+      return of();
+    let resource : fhir4.Provenance = {
+      resourceType: "Provenance",
+      meta: {
+        profile: [
+          "https://www.medizininformatik-initiative.de/fhir/modul-consent/StructureDefinition/mii-pr-consent-provenance"
+        ]
+      },
+      target: [
+        {
+          reference: "Consent/" + id
+        }
+      ],
+      recorded: _moment().format("YYYY-MM-DDThh:mm:ssZ"),
+      agent: [
+        {
+          who: {
+            display: "Mainzelliste - " + this.appConfigService.getVersion()
+          }
+        }
+      ],
+      entity: Array.from(docRefIds, (id) => (
+        {
+          role: "source",
+          what: {
+            reference: "DocumentReference/" + id
+          }
+        }
+      ))
+    }
+    return this.createFhirResource<fhir4.Provenance>("addConsentProvenance", {}, 'Provenance', resource);
+  }
+
+  createScansAndProvenance(consent: Consent|undefined, consentId: string) {
+    return forkJoin(
+      Array.from(consent?.scanUrls?.values() ?? []).map(url =>
+        this.uploadConsentScan(url, consent?.patientId))
+    ).pipe(
+      map(docRefs => docRefs?.map(docRef => (docRef as fhir4.DocumentReference).id) || []),
+      mergeMap(docRefIds =>
+        this.addConsentProvenance(consentId, docRefIds)
+      )
+    )
+  }
+
+  getConsentProvenance(versionedConsentId:string){
+    return this.searchFhirResources<fhir4.Provenance>("searchConsentProvenances", {},
+      'Provenance', ErrorMessages.SEARCH_CONSENT_PROVENANCE_FAILED,
+      {
+        'target': this.appConfigService.getMainzellisteUrl() + '/Consent/' + versionedConsentId
+      });
+  }
+
+  getConsentScan(consentScanId:string){
+    return this.readFhirResources<fhir4.DocumentReference>("readConsentScan", {},
+      'DocumentReference', consentScanId, ErrorMessages.READ_CONSENT_SCAN_FAILED);
+  }
+
   //////////////////////////////
   ////    DRAFT
   //////////////////////////////
 
-  private handleException<R>(error:any, result:R):R {
-    if (error instanceof TypeError) {
-      let typeError: TypeError = error;
-      console.log("error name: " + typeError.name);
-      console.log("error msg: " + typeError.message);
-      console.log("error stack: " + typeError.stack);
-    }
-    console.log(error);
-    return result;
-  }
 
   /**
    * Handle operation that failed.

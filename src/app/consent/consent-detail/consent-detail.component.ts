@@ -11,6 +11,11 @@ import {
   ValidationErrors,
   ValidatorFn
 } from "@angular/forms";
+import {Permission} from "../../model/permission";
+import {Subscription} from "rxjs";
+import {HttpEventType} from "@angular/common/http";
+import {map} from "rxjs/operators";
+import {AuthorizationService} from "../../services/authorization.service";
 
 @Component({
   selector: 'app-consent-detail',
@@ -21,14 +26,20 @@ import {
 export class ConsentDetailComponent implements OnInit {
 
   @Input() edit: boolean = false;
+  @Input() readOnly: boolean = false;
   @Input() consent!: Consent;
   @Input() templates!: Map<string, string>;
   @Output() consentChange = new EventEmitter<Consent>();
   @ViewChild('templateSelection') templateSelection!: MatSelect;
   localDateFormat:string;
+  uploadInProgress: boolean = false;
+  uploadProgress: number = 0;
+  uploadSubscription: Subscription | undefined = undefined;
+  consentScans: Map<string,string> = new Map<string, string>();
 
   constructor(
       private consentService: ConsentService,
+      private authorizationService: AuthorizationService,
       @Inject(MAT_DATE_LOCALE) private _locale: string
   ) {
     _moment.locale(this._locale);
@@ -42,18 +53,30 @@ export class ConsentDetailComponent implements OnInit {
         .subscribe(r => this.templates = r);
 
     //reset selection if no template selected
-    if (!this.consent?.id && (!this.edit && this.templateSelection)) {
+    if (!this.consent?.id && (!this.edit && !this.readOnly && this.templateSelection)) {
       this.templateSelection.options.forEach((data: MatOption) => data.deselect());
+    }
+
+    // load scans id
+    if(this.readOnly && this.authorizationService.hasPermission(Permission.READ_CONSENT_SCANS)){
+      this.consentService.getConsentProvenance(this.consent.id + '/_history/' + this.consent.version || "").pipe(
+        map(p => (p[0]?.entity ?? [])
+          .filter(e => e.role == "source")
+          .map(e => e.what.reference?.substring("DocumentReference/".length) || "")
+        )
+      ).subscribe(ids => ids.forEach(id => this.consentScans.set(id, id)))
     }
   }
 
   initDataModel(consentTemplateId: MatSelectChange) {
-    this.consentService.getNewConsentDataModel(consentTemplateId.value || "0")
-    .subscribe( consentDataModel => {
-      this.consent = consentDataModel;
-      // propagate change to parent component
-      this.consentChange.emit(this.consent)
-    });
+    if(!this.edit && !this.readOnly) {
+      this.consentService.getNewConsentDataModel(consentTemplateId.value || "0")
+      .subscribe(consentDataModel => {
+        this.consent = consentDataModel;
+        // propagate change to parent component
+        this.consentChange.emit(this.consent)
+      });
+    }
   }
 
   getConsentExpiration(): string {
@@ -81,6 +104,52 @@ export class ConsentDetailComponent implements OnInit {
 
   getCurrentTemplateId() {
     return this.consent?.templateId;
+  }
+
+  protected readonly Permission = Permission;
+
+  onScansSelected($event: Event) {
+    const target = $event.target as HTMLInputElement;
+    const files = target.files as FileList;
+    if(files != null && files.length >0) {
+      this.uploadInProgress = true;
+      this.uploadSubscription = this.consentService.uploadConsentScanFile(files[0], () => this.resetUploadScan()).subscribe(
+        event => {
+          if (event.type == HttpEventType.UploadProgress) {
+            this.uploadProgress = Math.round(100 * (event.loaded / (event.total ?? 1)));
+          } else if(event.type == HttpEventType.Response) {
+            let fileUrl = event.body?.url
+            if(fileUrl == undefined)
+              throw new Error("failed to upload File")
+            this.consent.scanUrls.set( files[0].name, fileUrl);
+          }
+        })
+    }
+  }
+
+  cancelUploadScan() {
+    this.uploadSubscription?.unsubscribe()
+    this.resetUploadScan();
+  }
+
+  resetUploadScan() {
+    this.uploadProgress = 0;
+    this.uploadInProgress = false;
+    this.uploadSubscription = undefined;
+  }
+
+  deleteUploadedScan(fileName: string) {
+    this.consent.scanUrls.delete(fileName);
+    console.log("remove from backend not implemented yet")
+  }
+
+  downloadScan(id: string) {
+    this.consentService.getConsentScan(id).subscribe( doc => {
+      const downloadLink = document.createElement('a');
+      downloadLink.href = "data:application/pdf;base64," + doc.content[0].attachment.data;
+      downloadLink.download = id + ".pdf";
+      downloadLink.click();
+  });
   }
 }
 
