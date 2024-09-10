@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Patient } from "../../model/patient";
 import { PatientService } from "../../services/patient.service";
 import { GlobalTitleService } from "../../services/global-title.service";
@@ -9,8 +9,8 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { MainzellisteUnknownError } from "../../model/mainzelliste-unknown-error";
 import { throwError } from "rxjs";
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogActions, MatDialogContent } from '@angular/material/dialog';
-import type { DialogProps } from "@mui/material";
+import { MatDialog } from '@angular/material/dialog';
+import { MergePatientConfirmDialog } from './dialog/mergePatient-confirm-dialog';
 
 @Component({
   selector: 'app-merge-patients',
@@ -80,7 +80,8 @@ export class MergePatientsComponent implements OnInit {
     let deleteFlag: boolean = false;
     const dialogRef = this.confirmDialog.open(MergePatientConfirmDialog, {
       width: '900px',
-      data: { mainPatient: this.mainPatient, isDelete: deleteFlag }
+      data: { mainPatient: this.mainPatient, isDelete: deleteFlag },
+      panelClass: 'dialogClass'
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -103,27 +104,4 @@ export class MergePatientsComponent implements OnInit {
     return this.mainPatient;
   }
 
-}
-
-@Component({
-  selector: 'mergePatient-confirm-dialog',
-  templateUrl: 'mergePatient-confirm-dialog.html',
-})
-export class MergePatientConfirmDialog {
-  constructor(
-    public dialogRef: MatDialogRef<MergePatientConfirmDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: { mainPatient: number, isDelete: boolean }
-  ) {
-  }
-
-  cancel(isDelete: boolean): void {
-    const handleClose: DialogProps["onClose"] = (event: any, reason: string) => {
-      if (reason && reason === "backdropClick") {
-        this.dialogRef.close({ isDelete: isDelete, confirm: false });
-        return;
-      }
-    }
-    this.dialogRef.close({ isDelete: isDelete, confirm: true });
-
-  }
 }

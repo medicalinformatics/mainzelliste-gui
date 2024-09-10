@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>Confirm Merge</h1>
+<div mat-dialog-content>
+    <h3 style="text-align: justify">Möchten Sie Patientendaten Nr.{{data.mainPatient == 1 ? 2:1}} behalten oder löschen?</h3>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button class="submitBreak" (click)="cancel(true)">Löschen</button>
+    <button mat-raised-button class="submit" (click)="cancel(false)">Behalten</button>
+</div>
