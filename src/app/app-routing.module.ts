@@ -14,6 +14,7 @@ import {AddConsentComponent} from "./consent/add-consent/add-consent.component";
 import {EditConsentComponent} from "./consent/edit-consent/edit-consent.component";
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {ConsentTemplatesComponent} from "./consent/consent-templates/consent-templates.component";
+import { TentativeMatchesListComponent } from './experimental/tentative-matches-list/tentative-matches-list.component';
 
 const routes: Routes = [
   // TODO: All Paths should have english wording.
@@ -32,8 +33,10 @@ const routes: Routes = [
       // {path: 'merge-patients', component: MergePatientsComponent},
       // {path: 'audittrail', component: AudittrailComponent},
       // {path: 'delete-patients', component: DeleteMultiplePatientsComponent, data : { permission: 'deletePatient' }},
-      {path: 'consent-templates', component: ConsentTemplatesComponent, data: { permission: Permission.CREATE_CONSENT_TEMPLATE}}
-      // {path: 'create-consent-template', component: CreateConsentTemplateComponent, data: { permission: Permission.CREATE_CONSENT}}
+      {path: 'consent-templates', component: ConsentTemplatesComponent, data: { permission: Permission.CREATE_CONSENT_TEMPLATE}},
+      // {path: 'create-consent-template', component: CreateConsentTemplateComponent, data: { permission: Permission.CREATE_CONSENT}},
+      {path: 'matches', component: TentativeMatchesListComponent, data: { permission: Permission.EDIT_PATIENT }},
+    
     ]
   },
   {path: 'access-denied', component: AccessDeniedComponent},

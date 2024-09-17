@@ -51,6 +51,7 @@ import {AccessDeniedComponent} from './access-denied/access-denied.component';
 import {InternationalizedMatPaginatorIntl} from "./shared/components/paginator/internationalized-mat-paginator-intl";
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import {ConsentTemplatesComponent} from './consent/consent-templates/consent-templates.component';
+import { TentativeMatchesListComponent } from './experimental/tentative-matches-list/tentative-matches-list.component';
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService,
                               userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
@@ -104,7 +105,8 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     NewIdDialog,
     AccessDeniedComponent,
     PageNotFoundComponent,
-    ConsentTemplatesComponent
+    ConsentTemplatesComponent,
+    TentativeMatchesListComponent
   ],
   imports: [
     SharedModule,

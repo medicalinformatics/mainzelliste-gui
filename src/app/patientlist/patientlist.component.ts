@@ -1,13 +1,13 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {MatDialog} from "@angular/material/dialog";
-import {Patient} from "../model/patient";
-import {SelectionModel} from "@angular/cdk/collections";
-import {MatTableDataSource} from "@angular/material/table";
-import {PatientListService} from "../services/patient-list.service";
-import {AppConfigService} from "../app-config.service";
-import {ConsentService} from "../consent/consent.service";
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { MatDialog } from "@angular/material/dialog";
+import { Patient } from "../model/patient";
+import { SelectionModel } from "@angular/cdk/collections";
+import { MatTableDataSource } from "@angular/material/table";
+import { PatientListService } from "../services/patient-list.service";
+import { AppConfigService } from "../app-config.service";
+import { ConsentService } from "../consent/consent.service";
 import { Field } from '../model/field';
-import {Permission} from "../model/permission";
+import { Permission } from "../model/permission";
 
 @Component({
   selector: 'app-patientlist',
@@ -16,7 +16,7 @@ import {Permission} from "../model/permission";
   encapsulation: ViewEncapsulation.None
 })
 
-export class PatientlistComponent implements OnInit{
+export class PatientlistComponent implements OnInit {
   public readonly Permission = Permission;
   @Input() patients: MatTableDataSource<Patient>;
   @Input() loading: boolean = false;

@@ -10,6 +10,8 @@ import {DeleteMultiplePatientsComponent} from "./delete-multiple-patients/delete
 import {RouterModule} from "@angular/router";
 import {PatientModule} from "../patient/patient.module";
 import {CreateConsentTemplateComponent} from "./create-consent-template/create-consent-template.component";
+import { TentativeMatchesListComponent } from './tentative-matches-list/tentative-matches-list.component';
+import { MatTableModule } from '@angular/material/table';
 
 
 @NgModule({
@@ -19,7 +21,8 @@ import {CreateConsentTemplateComponent} from "./create-consent-template/create-c
         SharedModule,
         AppModule,
         RouterModule,
-        PatientModule
+        PatientModule,
+        MatTableModule,
     ]
 })
 export class ExperimentalModule {
