@@ -19,6 +19,7 @@
 	"button_correct": "Korrigieren",
 	"button_confirm": "Bestätigen",
 	"button_publish": "Veröffentlichen",
+  "button_create": "Erstellen",
 
 	"radio_button_yes": "Ja",
 	"radio_button_no": "Nein",
@@ -88,6 +89,7 @@
 	"navigation.new_patient": "Neuer Patient",
 	"navigation.patientlist": "Patientenliste",
   "navigation.consent_template": "Einwilligungsvorlagen",
+  "navigation.configuration": "Konfiguration",
 
 	"patientlist.filter_search": "Filter/Suche...",
 	"patientlist.headers_actions": "Aktionen",
@@ -144,6 +146,14 @@
 	"editPatient.title_edit_patient": "Patienten bearbeiten",
 	"editPatient.title_patient_data": "Patientendaten",
 	"editPatient.title_pseudonyms": "Pseudonyme",
+
+  "configuration.tab_idGenerator": "ID-Generators",
+
+  "configuration.idGeneratorDialog.title": "Neuer ID-Typ",
+  "configuration.idGenerators.button_create_idtype": "Neuer ID-Typ",
+  "configuration.idGenerator.idType": "ID-Typ",
+  "configuration.idGenerator.idGenerator": "ID-Generator",
+  "configuration.idGenerator.empty": "Kein ID-Generator gefunden.",
 
 	"info.title": "Informationen und Hinweise zur Mainzelliste",
 	"info.notice_add_patient": "Hinweis für die Erstellung eines Patienten",

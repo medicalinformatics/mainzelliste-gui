@@ -1,4 +1,4 @@
-import {Operation} from "../tenant";
+import {MiscellaneousPermission, Operation} from "../tenant";
 
 export interface ClaimsConfig {
   roles: string[],
@@ -8,6 +8,7 @@ export interface ClaimsConfig {
 export interface ClaimPermissions {
   tenant: ClaimPermissionsTenant,
   resources: ClaimPermissionsResources,
+  miscellaneous: MiscellaneousPermission[]
 }
 
 export interface ClaimPermissionsTenant {
