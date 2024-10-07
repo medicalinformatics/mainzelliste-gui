@@ -51,6 +51,7 @@ import {AccessDeniedComponent} from './access-denied/access-denied.component';
 import {InternationalizedMatPaginatorIntl} from "./shared/components/paginator/internationalized-mat-paginator-intl";
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import {ConsentTemplatesComponent} from './consent/consent-templates/consent-templates.component';
+import {ConfigurationModule} from "./configuration/configuration.module";
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService,
                               userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
@@ -127,7 +128,8 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     MatProgressSpinnerModule,
     MatProgressBarModule,
     ClipboardModule,
-    ConsentModule
+    ConsentModule,
+    ConfigurationModule
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},

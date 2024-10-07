@@ -9,17 +9,11 @@ import {Field, FieldType} from "./model/field";
 import {MainzellisteUnknownError} from './model/mainzelliste-unknown-error';
 import {TranslateService} from '@ngx-translate/core';
 import {ClaimsConfig} from "./model/api/configuration-claims-data";
+import {IdGenerator} from "./model/idgenerator";
 
 
 export interface AssociatedIds {
   [key: string] : [IdGenerator]
-}
-
-export interface IdGenerator {
-  name: string,
-  idType: string,
-  isExternal: boolean,
-  isPersistant: boolean
 }
 
 @Injectable({providedIn: 'root'})
@@ -36,6 +30,7 @@ export class AppConfigService {
   private consentEnabled: boolean = false;
   private copyConcatenatedIdEnabled: boolean = false;
   private copyIdEnabled: boolean = false;
+  private configurationEnabled: boolean = false;
 
   constructor(
     private httpClient: HttpClient,
@@ -60,6 +55,7 @@ export class AppConfigService {
           this.consentEnabled = this.data[0].betaFeatures?.consent ?? false;
           this.copyConcatenatedIdEnabled = this.data[0].betaFeatures?.copyConcatenatedId ?? false;
           this.copyIdEnabled = this.data[0].betaFeatures?.copyId ?? false;
+          this.configurationEnabled = this.data[0].betaFeatures?.configuration ?? false;
 
           //start validation
           this.validateBackendUrl(this.data[0])
@@ -84,6 +80,11 @@ export class AppConfigService {
 
   isCopyIdEnabled(): boolean {
     return this.copyIdEnabled;
+  }
+
+
+  isConfigurationEnabled(): boolean {
+    return this.configurationEnabled;
   }
 
   getMainzellisteIdTypes(): string[] {

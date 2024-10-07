@@ -19,6 +19,7 @@
 	"button_correct": "Correct",
 	"button_confirm": "Confirm",
 	"button_publish": "Publish",
+  "button_create": "Create",
 
 	"radio_button_yes": "Yes",
 	"radio_button_no": "No",
@@ -88,6 +89,7 @@
 	"navigation.new_patient": "New Patient",
 	"navigation.patientlist": "Patient list",
   "navigation.consent_template": "Consent Template",
+  "navigation.configuration": "Configuration",
 
 	"patientlist.filter_search": "Filter/Search...",
 	"patientlist.headers_actions": "Actions",
@@ -144,6 +146,14 @@
 	"editPatient.title_edit_patient": "Edit patients",
 	"editPatient.title_patient_data": "Patient data",
 	"editPatient.title_pseudonyms": "Pseudonyms",
+
+  "configuration.tab_idGenerator": "ID Generators",
+
+  "configuration.idGeneratorDialog.title": "New ID Type",
+  "configuration.idGenerators.button_create_idtype": "New ID Type",
+  "configuration.idGenerator.idType": "ID Type",
+  "configuration.idGenerator.idGenerator": "ID Generator",
+  "configuration.idGenerator.empty": "no ID Generator found.",
 
 	"info.title": "Information and notes on the Mainzelliste",
 	"info.notice_add_patient": "Note for creating a patient",

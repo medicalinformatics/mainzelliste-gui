@@ -1,33 +1,12 @@
 #idGenerators {
-  width: 100%;
+  margin: 0 2.5%;
+  width: 95%;
 }
 
-#idGenerators td, #idGenerators th {
-  border: 1px solid #ddd;
-  padding: 0 10px 0 10px;
+.idgenerator-row:hover {
+  background-color: #dddddd;
 }
 
-#idGenerators tr:nth-child(even){
-  background-color: #f2f2f2;
-}
-
-#idGenerators tr:hover {
-  background-color: #ADDFFF;
-}
-
-#idGenerators .mat-header-cell{
-  background-color: #053E6A;
-  color: white;
-  font-size: inherit
-}
-
-#idGenerators .mat-header-cell .mat-checkbox-frame {
-  border-color: white;
-}
-
-#idGenerators .mat-header-cell .mat-checkbox-frame.mat-checkbox-indeterminate{
-  border-color: #053E6A;
-}
 .disabled {
   color: rgb(161, 159, 159);
 }
@@ -60,12 +39,16 @@ mat-paginator{
   background-color: #fdf6d2;
 }
 
-.mat-column-id {
-  width: 250px;
+.mat-column-idType {
+  width: 150px;
   text-align: left;
 }
 
-.mat-column-status {
+.mat-column-idgenerator {
   width: 150px;
-  text-align: center;
+  text-align: left;
+}
+
+.mat-column-actions {
+  text-align: right;
 }

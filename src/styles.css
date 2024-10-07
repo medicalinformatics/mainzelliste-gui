@@ -82,7 +82,7 @@ mat-form-field.inputField {
   font-family: Arial;
   text-align: left;
   margin-left: 2%;
-  margin-bottom: 1.5%;
+  margin-bottom: 10px;
 }
 
 .consent-module-text-box {

@@ -3,7 +3,7 @@ import {SessionService} from "./session.service";
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {PatientList} from "../model/patientlist";
 import {Patient} from "../model/patient";
-import {AppConfigService, IdGenerator} from "../app-config.service";
+import {AppConfigService} from "../app-config.service";
 import {ReadPatientsTokenData} from "../model/read-patients-token-data";
 import {AddPatientTokenData} from "../model/add-patient-token-data";
 import {EditPatientTokenData} from "../model/edit-patient-token-data";
@@ -25,6 +25,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {Operation, Tenant} from "../model/tenant";
 import {IdType} from "../model/id-type";
 import {flatMap} from "rxjs/internal/operators";
+import {IdGenerator} from "../model/idgenerator";
 
 export interface ReadPatientsResponse {
   patients: Patient[];

@@ -14,6 +14,10 @@ import {AddConsentComponent} from "./consent/add-consent/add-consent.component";
 import {EditConsentComponent} from "./consent/edit-consent/edit-consent.component";
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {ConsentTemplatesComponent} from "./consent/consent-templates/consent-templates.component";
+import {
+  IdGeneratorsComponent
+} from "./configuration/idgenerator/id-generators/id-generators.component";
+import {ConfigurationComponent} from "./configuration/configuration/configuration.component";
 
 const routes: Routes = [
   // TODO: All Paths should have english wording.
@@ -21,6 +25,7 @@ const routes: Routes = [
     path: '', canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
       {path: '', pathMatch: 'full', redirectTo: 'patientlist'},
       {path: 'info', component: InfoComponent, data: { permission: Permission.DEFAULT }},
+      {path: 'configuration', component: ConfigurationComponent, data: { permission: Permission.EDIT_CONFIGURATION }},
       {path: 'idcard/:idType/:idString', component: IdcardComponent, data : { permission: Permission.READ_PATIENT, checkIdType:true}},
       {path: 'add-new-patient', component: CreatePatientComponent, data: { permission: Permission.CREATE_PATIENT }},
       {path: 'edit-patient/:idType/:idString', component: EditPatientComponent, data: { permission: Permission.EDIT_PATIENT, checkIdType:true}},
