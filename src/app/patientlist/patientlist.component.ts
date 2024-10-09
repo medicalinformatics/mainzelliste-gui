@@ -94,5 +94,6 @@ export class PatientlistComponent implements OnInit {
     this.configuredIdTypes = this.patientListService.getIdTypes("R");
     let displayIdTypes = this.showAllIds ? this.configuredIdTypes : [this.patientListService.findDefaultIdType(this.configuredIdTypes)];
     this.columns = this.columns.concat(displayIdTypes).concat(this.fieldNames).concat(["actions"]);
+    console.log(this.patients);
   }
 }

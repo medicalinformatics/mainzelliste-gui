@@ -17,7 +17,7 @@
     <span>{{'navigation.consent_template' | translate}}<sup style="font-size: 11px; font-weight: lighter;"> BETA</sup></span>
   </button>
 </ng-container>
-<button mat-button [routerLink]="['/matches']" class="sidenav-menu-item">
+<button mat-button *appHasPermission="Permission.EDIT_PATIENT" [routerLink]="['/matches']" class="sidenav-menu-item">
   <mat-icon>quiz</mat-icon>
   <span>Tentative Matches</span>
 </button>

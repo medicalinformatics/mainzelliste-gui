@@ -52,6 +52,7 @@ import {InternationalizedMatPaginatorIntl} from "./shared/components/paginator/i
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import {ConsentTemplatesComponent} from './consent/consent-templates/consent-templates.component';
 import { TentativeMatchesListComponent } from './experimental/tentative-matches-list/tentative-matches-list.component';
+import { MergeSplitPatientComponent } from './experimental/merge-split-patient/merge-split-patient.component';
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService,
                               userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
@@ -106,7 +107,8 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     AccessDeniedComponent,
     PageNotFoundComponent,
     ConsentTemplatesComponent,
-    TentativeMatchesListComponent
+    TentativeMatchesListComponent,
+    MergeSplitPatientComponent,
   ],
   imports: [
     SharedModule,
