@@ -25,6 +25,8 @@ import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessages} from "../error/error-messages";
 import {ConsentRejectedDialog} from "../consent/dialogs/consent-rejected-dialog";
 import {ConsentInactivatedDialog} from "../consent/dialogs/consent-inactivated-dialog";
+import {IdGenerator} from "../model/idgenerator";
+import {AppConfigService} from "../app-config.service";
 
 @Component({
   selector: 'app-idcard',
@@ -58,7 +60,8 @@ export class IdcardComponent implements OnInit {
     public consentRejectedDialog: MatDialog,
     public consentInactivatedDialog: MatDialog,
     public newIdDialog: MatDialog,
-    public consentService: ConsentService
+    public consentService: ConsentService,
+    public configService: AppConfigService
   ) {
     this.activatedRoute.params.subscribe((params) => {
       if (params["idType"] !== undefined)
@@ -266,8 +269,11 @@ export class IdcardComponent implements OnInit {
   }
 
   getUnAvailableIdTypes(patient: Patient): IdType[] {
+    let idGenerators : IdGenerator[] = this.configService.getMainzellisteIdGenerators();
     return this.getIdTypes()
-    .filter( t => t.isAssociated || !patient.ids.some( id => id.idType == t.name))
+    .filter( t => t.isAssociated ||
+      idGenerators.some(g => g.isPersistent && g.idType == t.name) &&
+      !patient.ids.some( id => id.idType == t.name));
   }
 
   hasAllIds(): boolean {

@@ -9,10 +9,15 @@ export interface PIDGeneratorParameters extends IDGeneratorParameters{
   rndwidth: number
 }
 
+export interface CryptoIDGeneratorParameters extends IDGeneratorParameters{
+  baseIdType: string
+}
+
 export enum IDGeneratorType {
   PIDGenerator = "PIDGenerator",
   ExternalIDGenerator = "ExternalIDGenerator",
-  SimpleIDGenerator = "SimpleIDGenerator"
+  SimpleIDGenerator = "SimpleIDGenerator",
+  CryptoIDGenerator = "CryptoIDGenerator"
 }
 
 export class IDGeneratorConfig {

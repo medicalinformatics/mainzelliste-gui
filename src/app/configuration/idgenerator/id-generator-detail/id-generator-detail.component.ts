@@ -2,6 +2,9 @@ import {Component, Input, OnInit} from '@angular/core';
 import {ControlContainer, NgForm, NgModel, ValidationErrors} from "@angular/forms";
 import {TranslateService} from "@ngx-translate/core";
 import {IDGeneratorConfig, IDGeneratorType} from "../../../model/id-generator-config";
+import {PatientListService} from "../../../services/patient-list.service";
+import {AppConfigService} from "../../../app-config.service";
+import {IdGenerator} from "../../../model/idgenerator";
 
 @Component({
   selector: 'app-id-generator-detail',
@@ -14,7 +17,9 @@ export class IdGeneratorDetailComponent implements OnInit {
   @Input() dataModel! : IDGeneratorConfig;
 
   constructor(
-    private translate: TranslateService
+    private translate: TranslateService,
+    private patientService: PatientListService,
+    private configService: AppConfigService
   ) { }
 
   ngOnInit(): void {}
@@ -54,6 +59,12 @@ export class IdGeneratorDetailComponent implements OnInit {
         case IDGeneratorType.SimpleIDGenerator:
           this.dataModel.parameters = {};
           break;
+        case IDGeneratorType.CryptoIDGenerator:
+          this.dataModel.parameters = {
+            baseIdType: this.patientService.findDefaultIdType(this.patientService.getIdTypes("R"))
+          };
+          break;
+
       }
     } else {
       console.log("empty data model")
@@ -65,4 +76,11 @@ export class IdGeneratorDetailComponent implements OnInit {
     return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled); // The maximum is
   }
   protected readonly Object = Object;
+
+  getIdTypes() {
+    let idGenerators : IdGenerator[] = this.configService.getMainzellisteIdGenerators();
+    return [...this.patientService.getUniqueIdTypes(false, "R")
+    .filter( e => idGenerators.some(g => g.isPersistent && g.idType == e)),
+      ...this.patientService.getUniqueIdTypes(true, "R")]
+  }
 }
