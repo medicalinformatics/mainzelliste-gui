@@ -29,7 +29,7 @@
         <mat-select [(ngModel)]="$any(this.dataModel.parameters).baseIdType"
                     [name]="'baseIdType'" #baseIdType="ngModel"
                     required="true">
-          <mat-option *ngFor="let idType of this.getIdTypes()" [value]="idType">
+          <mat-option *ngFor="let idType of this.getBaseIdTypes()" [value]="idType">
             {{idType}}
           </mat-option>
         </mat-select>

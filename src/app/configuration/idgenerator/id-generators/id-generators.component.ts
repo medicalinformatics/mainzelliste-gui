@@ -1,13 +1,13 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {GlobalTitleService} from "../../../services/global-title.service";
 import {IdGenerator} from "../../../model/idgenerator";
 import {AppConfigService} from "../../../app-config.service";
 import {Permission} from "../../../model/permission";
 import {IdGeneratorDialogComponent} from "../id-generator-dialog/id-generator-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {AuthorizationService} from "../../../services/authorization.service";
+import {IDGeneratorType} from "../../../model/id-generator-config";
 
 @Component({
   selector: 'app-id-generators',
@@ -17,6 +17,8 @@ import {AuthorizationService} from "../../../services/authorization.service";
 export class IdGeneratorsComponent implements OnInit {
   protected readonly Permission = Permission;
 
+  idGeneratorNode: string = 'default'
+  idGeneratorNodes: string[] = []
   loading: boolean = false;
   displayedColumns: string[] = ['idType', 'idgenerator'];
   matTableData: MatTableDataSource<IdGenerator>;
@@ -36,21 +38,34 @@ export class IdGeneratorsComponent implements OnInit {
   ngOnInit(): void {
     this.loadData(0, this.defaultPageSize, false)
     //TODO pagination pageIndex pageSize
+    this.idGeneratorNodes = [ ...this.appConfig.getMainzellisteAssociatedIdGeneratorsMap().keys()];
+    this.idGeneratorNodes.push('default');
   }
 
   loadData(pageIndex: number, pageSize: number, fetch: boolean) {
     this.loading = true
     let starFrom = pageSize * pageIndex;
     let endTo = starFrom + pageSize;
-    if(fetch){
-      this.appConfig.fetchMainzellisteIdGenerators().then(
-        e => this.appConfig.fetchClaims()
-      ).then(
-        e => {
-          this.authorizationService.initUserAllowedIDTypes();
-          this.setTableData(starFrom, endTo);
-        }
-      )
+    if(fetch) {
+      if(this.idGeneratorNode === 'default') {
+        this.appConfig.fetchMainzellisteIdGenerators().then(
+          e => this.appConfig.fetchClaims()
+        ).then(
+          e => {
+            this.authorizationService.initUserAllowedIDTypes();
+            this.setTableData(starFrom, endTo);
+          }
+        )
+      } else {
+        this.appConfig.fetchMainzellisteAssociatedIdGenerators().then(
+          e => this.appConfig.fetchClaims()
+        ).then(
+          e => {
+            this.authorizationService.initUserAllowedIDTypes();
+            this.setTableData(starFrom, endTo);
+          }
+        )
+      }
     } else {
       this.setTableData(starFrom, endTo);
     }
@@ -58,9 +73,10 @@ export class IdGeneratorsComponent implements OnInit {
   }
 
   setTableData(starFrom:number, endTo:number){
-    this.matTableData.data = [...this.appConfig.getMainzellisteIdGenerators().values()]
-    .slice(starFrom, endTo);
-    this.totalCount = this.appConfig.getMainzellisteIdGenerators().length;
+    let idGenerators : IdGenerator[] = this.idGeneratorNode === 'default' ?
+      this.appConfig.getMainzellisteIdGenerators() : this.appConfig.getMainzellisteAssociatedIdGeneratorsMap().get(this.idGeneratorNode) ?? [];
+    this.matTableData.data = [...idGenerators.values()].slice(starFrom, endTo);
+    this.totalCount = idGenerators.length;
   }
 
   handlePageEvent(event: PageEvent) {
@@ -69,6 +85,12 @@ export class IdGeneratorsComponent implements OnInit {
 
   openIDGeneratorDialog() {
     const dialogRef = this.idGeneratorDialog.open(IdGeneratorDialogComponent, {
+      data: {
+        idGenerator: IDGeneratorType.SimpleIDGenerator,
+        idType: "",
+        nodeName: this.idGeneratorNode,
+        parameters: {}
+      },
       width: '450px'
     });
 
@@ -77,5 +99,9 @@ export class IdGeneratorsComponent implements OnInit {
         this.loadData(0, this.defaultPageSize, true);
       }
     });
+  }
+
+  selectIdGeneratorNode(nodeName:string) {
+    this.loadData(0, this.defaultPageSize, true);
   }
 }

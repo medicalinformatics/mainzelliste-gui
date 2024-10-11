@@ -10,19 +10,24 @@ import {IdGenerator} from "../../../model/idgenerator";
   selector: 'app-id-generator-detail',
   templateUrl: './id-generator-detail.component.html',
   styleUrls: ['./id-generator-detail.component.css'],
-  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
+  viewProviders: [{provide: ControlContainer, useExisting: NgForm}]
 })
 export class IdGeneratorDetailComponent implements OnInit {
 
-  @Input() dataModel! : IDGeneratorConfig;
+  protected readonly Object = Object;
+
+  @Input() dataModel!: IDGeneratorConfig;
+  @Input() nodeName!: string;
 
   constructor(
     private translate: TranslateService,
     private patientService: PatientListService,
     private configService: AppConfigService
-  ) { }
+  ) {
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   displayError(field: NgModel) {
     return field.invalid &&
@@ -32,9 +37,9 @@ export class IdGeneratorDetailComponent implements OnInit {
 
   getFieldErrorMessage(fieldName: string, errors: ValidationErrors | null) {
     if (errors?.['pattern'])
-      return `${this.translate.instant('patientFields.error_value_text1')} ${this.translate.instant('consent_template.' + fieldName )} ${this.translate.instant('patientFields.error_value_text2')}`;
+      return `${this.translate.instant('patientFields.error_value_text1')} ${this.translate.instant('consent_template.' + fieldName)} ${this.translate.instant('patientFields.error_value_text2')}`;
     else if (errors?.['required'])
-      return `${this.translate.instant('patientFields.error_mandatory_text1')} ${this.translate.instant('consent_template.' + fieldName )} ${this.translate.instant('patientFields.error_mandatory_text2')}`;
+      return `${this.translate.instant('patientFields.error_mandatory_text1')} ${this.translate.instant('consent_template.' + fieldName)} ${this.translate.instant('patientFields.error_mandatory_text2')}`;
     else
       return "fehler";
   }
@@ -61,7 +66,7 @@ export class IdGeneratorDetailComponent implements OnInit {
           break;
         case IDGeneratorType.CryptoIDGenerator:
           this.dataModel.parameters = {
-            baseIdType: this.patientService.findDefaultIdType(this.patientService.getIdTypes("R"))
+            baseIdType: this.findBaseIdType()
           };
           break;
 
@@ -70,17 +75,37 @@ export class IdGeneratorDetailComponent implements OnInit {
       console.log("empty data model")
     }
   }
-  private getRandomNumber(min:number, max:number) {
+
+  private findBaseIdType(): string {
+    if (this.dataModel.nodeName === 'default') {
+      return this.patientService.findDefaultIdType(this.patientService.getIdTypes("R"))
+    } else {
+      return this.getAssociatedBaseIdTypes()[0];
+    }
+  }
+
+  private getRandomNumber(min: number, max: number) {
     const minCeiled = Math.ceil(min);
     const maxFloored = Math.floor(max);
     return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled); // The maximum is
   }
-  protected readonly Object = Object;
 
-  getIdTypes() {
-    let idGenerators : IdGenerator[] = this.configService.getMainzellisteIdGenerators();
+
+  public getBaseIdTypes() {
+    return this.dataModel.nodeName === 'default' ? this.getUniqueBaseIdTypes() : this.getAssociatedBaseIdTypes()
+  }
+
+  private getUniqueBaseIdTypes(): string[] {
+    let idGenerators: IdGenerator[] = this.configService.getMainzellisteIdGenerators();
     return [...this.patientService.getUniqueIdTypes(false, "R")
-    .filter( e => idGenerators.some(g => g.isPersistent && g.idType == e)),
+    .filter(e => idGenerators.some(g => g.isPersistent && g.idType == e)),
       ...this.patientService.getUniqueIdTypes(true, "R")]
+  }
+
+  private getAssociatedBaseIdTypes(): string[] {
+    let idGenerators: IdGenerator[] = this.configService.getMainzellisteAssociatedIdGeneratorsMap().get(this.dataModel.nodeName) ?? [];
+    return [...this.patientService.getAssociatedIdTypes(false, "R", this.dataModel.nodeName)
+    .filter(e => idGenerators.some(g => g.isPersistent && g.idType == e)),
+      ...this.patientService.getAssociatedIdTypes(true, "R", this.dataModel.nodeName)]
   }
 }

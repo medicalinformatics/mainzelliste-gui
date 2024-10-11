@@ -1,5 +1,18 @@
 <div style="height: 100%; min-height: 10em; width: 100%;display: flex; flex-flow: column;">
-  <div style="width: 96%; margin-right: 2%; margin-left: 2%; margin-bottom: 20px; margin-top: 20px">
+  <div style="display:flex; justify-content: space-between; align-items:center; width: 96%; margin-right: 2%; margin-left: 2%; margin-bottom: 20px; margin-top: 20px;">
+    <div style="display:flex; align-items:center;">
+      <mat-icon>filter_list</mat-icon>
+      <mat-form-field [ngStyle]="{'margin-bottom':'-1.25em', 'margin-left': '10px' }">
+        <mat-label>IDGenerator Node</mat-label>
+        <mat-select  [(ngModel)]="this.idGeneratorNode"
+                     (selectionChange)="this.selectIdGeneratorNode(($event.value || '').trim())"
+                     [name]="'idGeneratorNodeElem'" #idGeneratorNodeElem="ngModel">
+          <mat-option *ngFor="let nodeName of this.idGeneratorNodes" [value]="nodeName">
+            {{nodeName}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
     <ng-container>
       <button mat-raised-button class="submit" style="clear: both; float: right;"
               (click)="openIDGeneratorDialog()">{{'configuration.idGenerators.button_create_idtype' | translate}} <mat-icon matTooltip="Einwilligungsvorlage Erstellen">add</mat-icon></button>
