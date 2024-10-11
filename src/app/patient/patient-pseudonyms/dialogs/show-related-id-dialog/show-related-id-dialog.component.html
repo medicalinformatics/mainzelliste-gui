@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>{{'patientPseudonyms.related_id_button' | translate}}</h1>
-<div mat-dialog-content>
+<div mat-dialog-content style="margin-left: 0; margin-right: 0">
   <div [ngClass]="this.ids.length > 1 ? 'connected-ids-container-line': 'connected-ids-container'">
     <mat-card *ngFor="let id of this.ids">
       <mat-card-header>

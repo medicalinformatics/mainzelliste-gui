@@ -270,8 +270,9 @@ export class IdcardComponent implements OnInit {
 
   getUnAvailableIdTypes(patient: Patient): IdType[] {
     let idGenerators : IdGenerator[] = this.configService.getMainzellisteIdGenerators();
+    let associatedIdGenerators : IdGenerator[] = this.configService.getMainzellisteAssociatedIdGenerators();
     return this.getIdTypes()
-    .filter( t => t.isAssociated ||
+    .filter( t => t.isAssociated && associatedIdGenerators.some(g => g.isPersistent && g.idType == t.name)||
       idGenerators.some(g => g.isPersistent && g.idType == t.name) &&
       !patient.ids.some( id => id.idType == t.name));
   }

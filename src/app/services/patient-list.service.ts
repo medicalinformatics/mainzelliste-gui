@@ -128,11 +128,13 @@ export class PatientListService {
     .filter(g => g.isExternal == isExternal).map(g => g.idType);
   }
 
-  getAssociatedIdTypes(isExternal: boolean, operation?: Operation): Array<string> {
+  getAssociatedIdTypes(isExternal: boolean, operation?: Operation, nodeName?:string): Array<string> {
+    let idGenerators : IdGenerator[] = nodeName !== undefined ? this.configService.getMainzellisteAssociatedIdGeneratorsMap().get(nodeName) ?? []: []
     if(operation != undefined && !this.authorizationService.isCurrentTenantPermissionsEmpty())
-      return this.authorizationService.getAllowedAssociatedIdTypes(operation, isExternal);
+      return this.authorizationService.getAllowedAssociatedIdTypes(operation, isExternal)
+      .filter( t => idGenerators.length == 0 || idGenerators.some( g => g.idType == t));
     else
-      return this.configService.getMainzellisteAssociatedIdGenerators()
+      return (nodeName !== undefined ? idGenerators : this.configService.getMainzellisteAssociatedIdGenerators())
     .filter(g => g.isExternal == isExternal).map(g => g.idType);
   }
 

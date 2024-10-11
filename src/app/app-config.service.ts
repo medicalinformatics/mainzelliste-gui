@@ -165,6 +165,7 @@ export class AppConfigService {
     .pipe(
         catchError((e) => throwError(new Error(this.translate.instant('error.app_config_service_fetch_id_generators')))),
         map(associatedIds => {
+          this.mainzellisteAssociatedIdGenerators = [];
           for(let key in associatedIds){
             this.mainzellisteAssociatedIdGenerators.push(...associatedIds[key])
             this.mainzellisteAssociatedIdGeneratorsMap.set(key, associatedIds[key])

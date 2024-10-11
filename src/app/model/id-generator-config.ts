@@ -23,11 +23,13 @@ export enum IDGeneratorType {
 export class IDGeneratorConfig {
   idGenerator: IDGeneratorType;
   idType: string;
+  nodeName: string;
   parameters: IDGeneratorParameters;
 
-  constructor(idGenerator: IDGeneratorType, idType: string, parameters: IDGeneratorParameters) {
+  constructor(idGenerator: IDGeneratorType, idType: string, nodeName: string, parameters: IDGeneratorParameters) {
     this.idGenerator = idGenerator;
     this.idType = idType;
+    this.nodeName = nodeName;
     this.parameters = parameters;
   }
 }
