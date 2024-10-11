@@ -15,6 +15,7 @@ import {IdGenerator} from "../../../model/idgenerator";
 export class IdGeneratorDetailComponent implements OnInit {
 
   protected readonly Object = Object;
+  protected readonly IDGeneratorType = IDGeneratorType;
 
   @Input() dataModel!: IDGeneratorConfig;
   @Input() nodeName!: string;
@@ -43,8 +44,6 @@ export class IdGeneratorDetailComponent implements OnInit {
     else
       return "fehler";
   }
-
-  protected readonly IDGeneratorType = IDGeneratorType;
 
   idGeneratorSelected(idGenerator: IDGeneratorType) {
     if (this.dataModel != undefined) {

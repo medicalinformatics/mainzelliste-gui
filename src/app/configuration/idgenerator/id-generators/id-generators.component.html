@@ -12,6 +12,17 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+      <mat-form-field [ngStyle]="{'margin-bottom':'-1.25em', 'margin-left': '10px' }">
+        <mat-label>IDGenerator Type</mat-label>
+        <mat-select [(ngModel)]="this.idGeneratorFilter"
+                    (selectionChange)="this.selectIdGeneratorFilter($event.value || [])"
+                    multiple>
+          <mat-option *ngFor="let idGeneratorType of Object.keys(IDGeneratorType)" [value]="idGeneratorType">
+            {{idGeneratorType}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
     </div>
     <ng-container>
       <button mat-raised-button class="submit" style="clear: both; float: right;"

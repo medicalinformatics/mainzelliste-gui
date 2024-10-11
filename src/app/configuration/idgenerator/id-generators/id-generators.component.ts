@@ -16,9 +16,12 @@ import {IDGeneratorType} from "../../../model/id-generator-config";
 })
 export class IdGeneratorsComponent implements OnInit {
   protected readonly Permission = Permission;
+  protected readonly IDGeneratorType = IDGeneratorType;
+  protected readonly Object = Object;
 
   idGeneratorNode: string = 'default'
   idGeneratorNodes: string[] = []
+  idGeneratorTypesFilter: string[] = []
   loading: boolean = false;
   displayedColumns: string[] = ['idType', 'idgenerator'];
   matTableData: MatTableDataSource<IdGenerator>;
@@ -26,6 +29,7 @@ export class IdGeneratorsComponent implements OnInit {
   paginator!: MatPaginator;
   defaultPageSize: number = 8 as const;
   totalCount: number = 100000;
+  idGeneratorFilter: string [] = [];
 
   constructor(
     private appConfig: AppConfigService,
@@ -73,8 +77,10 @@ export class IdGeneratorsComponent implements OnInit {
   }
 
   setTableData(starFrom:number, endTo:number){
-    let idGenerators : IdGenerator[] = this.idGeneratorNode === 'default' ?
-      this.appConfig.getMainzellisteIdGenerators() : this.appConfig.getMainzellisteAssociatedIdGeneratorsMap().get(this.idGeneratorNode) ?? [];
+    let idGenerators : IdGenerator[] = (this.idGeneratorNode === 'default' ?
+      this.appConfig.getMainzellisteIdGenerators() :
+      this.appConfig.getMainzellisteAssociatedIdGeneratorsMap().get(this.idGeneratorNode) ?? [])
+    .filter(g => this.idGeneratorTypesFilter.length == 0 || this.idGeneratorTypesFilter.some(t => t == g.idgenerator));
     this.matTableData.data = [...idGenerators.values()].slice(starFrom, endTo);
     this.totalCount = idGenerators.length;
   }
@@ -102,6 +108,11 @@ export class IdGeneratorsComponent implements OnInit {
   }
 
   selectIdGeneratorNode(nodeName:string) {
+    this.loadData(0, this.defaultPageSize, true);
+  }
+
+  selectIdGeneratorFilter(idGeneratorTypes:string[]) {
+    this.idGeneratorTypesFilter = idGeneratorTypes;
     this.loadData(0, this.defaultPageSize, true);
   }
 }
