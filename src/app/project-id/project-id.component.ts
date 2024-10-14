@@ -18,6 +18,7 @@ import { ProjectIdEmptyFieldsDialog } from './dialog/project-id-empty-fields-dia
 })
 export class ProjectIdComponent implements OnInit {
 
+  validFileTypes: string[] = ["text/csv"];
   csvRecords: string[][] = [];
   step: number = 3;
   generated = false;
@@ -26,11 +27,11 @@ export class ProjectIdComponent implements OnInit {
   idStrings: string[] = [];
   patients: Patient[] = [];
   data: string = "";
-  accept: string = '.csv';
   multiple: boolean = false;
   placeholder: string = 'name.csv';
   csvUpload: FormControl;
   public file: any;
+  delimiter: string = ",";
   isLinear: boolean = true;
   emptyFields: number = 0;
 
@@ -61,21 +62,37 @@ export class ProjectIdComponent implements OnInit {
         this.changeTitle();
       });
       this.csvUpload.valueChanges.subscribe((file: any) => {
-        this.file = file;
-        this.fileChangeListener(this.file);
-        this.isValidFile();
+        if (file != null) {
+          this.file = file;
+          console.log(this.file.type)
+          this.fileChangeListener(this.file);
+        }
       });
     }
 
   fileChangeListener(file: any): void {
-    let files: any[] = [file];
+    if(file != null && file != undefined && this.validFileTypes.includes(file.type)) {
+      this.readCsv(file);
+    } else {
+      console.log('Error2');
+      this.step = 0;
+    }
+  }
+
+  readCsv(file: any) {
     let tempRecords: any;
-    if(files != null && files[0] != undefined && files[0].type == "text/csv") {
-      this.ngxCsvParser.parse(files[0], { header: false, delimiter: ';', encoding: 'utf8' })
+    file.text().then((content: string) => {
+      console.log(content);
+      this.delimiter = content.includes(";") ? ";" : ",";
+      this.ngxCsvParser.parse(file, { header: false, delimiter: this.delimiter, encoding: 'utf8' })
       .pipe().subscribe({
         next: (result): void => {
+          console.log(result);
+          console.log("String");
+          console.log(result.toString());
           tempRecords = result;
           let bool = false;
+          console.log(this.patientListService.getIdTypes())
           if (this.patientListService.getIdTypes().includes(tempRecords[0][0]) && tempRecords[0].length <= 2 && (tempRecords[0].length = 1 || tempRecords[0][tempRecords[0].length] == "")) {
             bool = true;
             for (let i = 1; i < tempRecords.length; i++) {
@@ -90,9 +107,11 @@ export class ProjectIdComponent implements OnInit {
             for(let i = 1; i < this.csvRecords.length; i++) {
               this.idStrings[i-1] = this.csvRecords[i][0];
             }
+            this.stepper.next();
             this.step = 1;  
           } else {
             this.step = 0;
+            console.log(this.step);
           }
         },
         error: (): void => {
@@ -100,10 +119,7 @@ export class ProjectIdComponent implements OnInit {
           this.step = 0;
         }
       });
-    } else {
-      console.log('Error2');
-      this.step = 0;
-    }
+    });
   }
 
   generateNewIds(idT: string) {
@@ -147,12 +163,6 @@ export class ProjectIdComponent implements OnInit {
     } 
   }
 
-  isValidFile() {
-    if(this.file !=undefined && this.file.type == "text/csv") {
-      this.stepper.next();
-    }
-  }
-
   private openDialog(error: boolean) {
     this.dialog.open(ProjectIdEmptyFieldsDialog, {data: [this.emptyFields, error]}).afterClosed().subscribe(() => {
       if(error) {
@@ -166,19 +176,14 @@ export class ProjectIdComponent implements OnInit {
   }
   
   backToFirst() {
-    this.csvUpload.reset();
-    this.file = undefined;
     this.reset();
     this.stepTwo.reset();
-  }
-  
-  backToSecond() {
-    this.reset();
-    this.fileChangeListener(this.file);
-    this.stepThree.reset();
+    this.step -= 1;
   }
 
   private reset() {
+    this.csvUpload.reset();
+    this.file = undefined;
     this.csvRecords = [];
     this.stepper.previous();
     this.select.value = '';
