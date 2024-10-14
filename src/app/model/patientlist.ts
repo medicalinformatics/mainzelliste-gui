@@ -30,5 +30,6 @@ export interface BetaFeatures {
   consent?: boolean;
   copyConcatenatedId?: boolean
   copyId?: boolean
+  configuration?:boolean
 }
 

@@ -8,8 +8,10 @@ import {TranslateService} from '@ngx-translate/core';
 import {MainzellisteError} from "../../model/mainzelliste-error.model";
 import {ErrorMessages} from "../../error/error-messages";
 import {MatDialog} from "@angular/material/dialog";
-import {ConsentRejectedDialog} from "../dialog/consent-rejected-dialog";
-import {ConsentInactivatedDialog} from "../dialog/consent-inactivated-dialog";
+import {ConsentRejectedDialog} from "../dialogs/consent-rejected-dialog";
+import {ConsentInactivatedDialog} from "../dialogs/consent-inactivated-dialog";
+import {catchError, map, mergeMap} from "rxjs/operators";
+import {forkJoin, throwError} from "rxjs";
 
 @Component({
   selector: 'app-edit-consent',
@@ -48,15 +50,21 @@ export class EditConsentComponent implements OnInit {
     this.idType = this.route.snapshot.paramMap.get('idType') ?? "";
     this.idString = this.route.snapshot.paramMap.get('idString') ?? "";
     this.consentId = this.route.snapshot.paramMap.get('id') ?? "";
-    this.consentService.readConsent(this.consentId).then(c => this.dataModel = c);
+    //TODO handle consent not found -> redirect page not found
+    this.consentService.readConsent(this.consentId).subscribe(c => this.dataModel = c);
   }
 
   editConsent(force?: boolean) {
     this.dataModel.patientId = {idType: this.idType, idString: this.idString};
-    this.consentService.editConsent(this.dataModel, force || false).then(() =>
-        this.router.navigate(["/idcard", this.idType, this.idString])
-      )
-      .catch(e => {
+    this.consentService.editConsent(this.dataModel, force || false)
+    .pipe(
+      mergeMap(c =>
+        this.consentService.createScansAndProvenance(this.dataModel, (c as fhir4.Consent).id || "")
+      ),
+      catchError(e => throwError(e))
+    ).subscribe(
+      () => this.router.navigate(["/idcard", this.idType, this.idString]),
+      e => {
         if (e instanceof MainzellisteError && e.errorMessage == ErrorMessages.CREATE_CONSENT_REJECTED) {
           this.openConsentRejectedDialog();
         } else if (e instanceof MainzellisteError && e.errorMessage == ErrorMessages.CREATE_CONSENT_INACTIVE) {

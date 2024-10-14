@@ -4,9 +4,10 @@ secrets:
     file: ./mainzelliste.docker.conf
 volumes:
   keycloakDB:
+#  mainzellisteConsentScans:
 services:
   mainzelliste-gui:
-    image: medicalinformatics/mainzelliste-gui:main
+    image: medicalinformatics/mainzelliste-gui:develop
     ports:
       - "4200:80"
     environment:
@@ -17,15 +18,17 @@ services:
       KEYCLOAK_REALM: mainzelliste
       KEYCLOAK_CLIENT_ID: mainzelliste-ui
       # supported languages: 'en-US' or 'de-DE'
-      ML_UI_DEFAULT_LANGUAGE: en-US
+      ML_UI_DEFAULT_LANGUAGE: de-DE
       ML_UI_MAIN_ID_TYPE: pid
       ML_UI_SHOW_ALL_IDS: false
       ML_UI_DEBUG_MODE: false
-      # ML_UI_ENABLE_CONSENT: true
+      ML_UI_ENABLE_CONSENT: false
     depends_on:
       - mainzelliste
   mainzelliste:
     image: medicalinformatics/mainzelliste:develop
+    # image contains consent management feature
+    # image: docker.verbis.dkfz.de/ttp/mainzelliste:consent-fhir
     ports:
       - "8080:8080"
     environment:
@@ -40,6 +43,8 @@ services:
       # Note: can be removed, if the HOST env variable not referring to the local computer (localhost or 127.0.0.1).
       # Set KC_HOSTNAME_URL in keycloak service to the keycloak frontend url e.g. http://${HOST}:8082
       ML_OIDC_INTERNAL_ISS_BASE_URL: http://keycloak:8080
+#    volumes:
+#      - mainzellisteConsentScans:/usr/local/tomcat/consents
     depends_on:
       - mainzelliste-db
     secrets:

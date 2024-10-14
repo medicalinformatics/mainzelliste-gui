@@ -9,12 +9,11 @@ import {Field, FieldType} from "./model/field";
 import {MainzellisteUnknownError} from './model/mainzelliste-unknown-error';
 import {TranslateService} from '@ngx-translate/core';
 import {ClaimsConfig} from "./model/api/configuration-claims-data";
+import {IdGenerator} from "./model/idgenerator";
 
-export interface IdGenerator {
-  name: string,
-  idType: string,
-  isExternal: boolean,
-  isPersistant: boolean
+
+export interface AssociatedIds {
+  [key: string] : [IdGenerator]
 }
 
 @Injectable({providedIn: 'root'})
@@ -22,6 +21,8 @@ export class AppConfigService {
 
   data: PatientList[] = [];
   private mainzellisteIdGenerators: IdGenerator[] = [];
+  private mainzellisteAssociatedIdGenerators: IdGenerator[] = []
+  private mainzellisteAssociatedIdGeneratorsMap: Map<string, IdGenerator[]> = new Map<string, IdGenerator[]>()
   private mainzellisteIdTypes: string[] = [];
   private mainzellisteFields: string[] = [];
   private mainzellisteClaims: ClaimsConfig[] = [];
@@ -29,6 +30,7 @@ export class AppConfigService {
   private consentEnabled: boolean = false;
   private copyConcatenatedIdEnabled: boolean = false;
   private copyIdEnabled: boolean = false;
+  private configurationEnabled: boolean = false;
 
   constructor(
     private httpClient: HttpClient,
@@ -53,6 +55,7 @@ export class AppConfigService {
           this.consentEnabled = this.data[0].betaFeatures?.consent ?? false;
           this.copyConcatenatedIdEnabled = this.data[0].betaFeatures?.copyConcatenatedId ?? false;
           this.copyIdEnabled = this.data[0].betaFeatures?.copyId ?? false;
+          this.configurationEnabled = this.data[0].betaFeatures?.configuration ?? false;
 
           //start validation
           this.validateBackendUrl(this.data[0])
@@ -79,12 +82,25 @@ export class AppConfigService {
     return this.copyIdEnabled;
   }
 
+
+  isConfigurationEnabled(): boolean {
+    return this.configurationEnabled;
+  }
+
   getMainzellisteIdTypes(): string[] {
     return this.mainzellisteIdTypes;
   }
 
   getMainzellisteIdGenerators(): IdGenerator[] {
     return this.mainzellisteIdGenerators;
+  }
+
+  getMainzellisteAssociatedIdGenerators(): IdGenerator[] {
+    return this.mainzellisteAssociatedIdGenerators;
+  }
+
+  getMainzellisteAssociatedIdGeneratorsMap(): Map<string, IdGenerator[]> {
+    return this.mainzellisteAssociatedIdGeneratorsMap;
   }
 
   getMainzellisteFields(): string[] {
@@ -141,7 +157,22 @@ export class AppConfigService {
         this.mainzellisteIdTypes = idGenerators.map( g => g.idType);
         return idGenerators;
       })
-    ));
+    ).toPromise();
+  }
+
+  public fetchMainzellisteAssociatedIdGenerators(): Promise<IdGenerator[]> {
+    return this.httpClient.get<AssociatedIds>(this.data[0].url + "/configuration/idGenerators/associatedIds", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
+    .pipe(
+        catchError((e) => throwError(new Error(this.translate.instant('error.app_config_service_fetch_id_generators')))),
+        map(associatedIds => {
+          this.mainzellisteAssociatedIdGenerators = [];
+          for(let key in associatedIds){
+            this.mainzellisteAssociatedIdGenerators.push(...associatedIds[key])
+            this.mainzellisteAssociatedIdGeneratorsMap.set(key, associatedIds[key])
+          }
+          return this.mainzellisteAssociatedIdGenerators;
+        })
+    ).toPromise();
   }
 
     public fetchClaims(): Promise<ClaimsConfig[]> {
@@ -190,13 +221,20 @@ export class AppConfigService {
 
     // set type
     if(!isDateType) {
-      if (mlField.type != MainzellisteFieldType.PlainTextField)
+      if (mlField.type == MainzellisteFieldType.PlainTextField)
+        configuredField.type = FieldType.TEXT
+      else if (mlField.type == MainzellisteFieldType.IntegerField) {
+        configuredField.type = FieldType.NUMBER;
+      }
+      else
         throw new Error(this.translate.instant('error.app_config_service_type_not_supported_text1') + fieldName + this.translate.instant('error.app_config_service_type_not_supported_text2') + mlField.type + this.translate.instant('error.app_config_service_type_not_supported_text3'))
-      configuredField.type = FieldType.TEXT
     }
 
     configuredField.required = mlField.required;
-    configuredField.validator = mlField.validation ?? "";
+    if (mlField.type == MainzellisteFieldType.IntegerField)
+      configuredField.validator = mlField.validation || "\\d*";
+    else
+      configuredField.validator = mlField.validation ?? "";
     this.mainzellisteFields.push(fieldName);
   }
 

@@ -1,4 +1,4 @@
-import {Operation, PermissionType} from "./tenant";
+import {MiscellaneousPermission, Operation, PermissionType} from "./tenant";
 
 export class Permission {
   public static readonly DEFAULT = new Permission("default", "R");
@@ -22,9 +22,25 @@ export class Permission {
   public static readonly CREATE_CONSENT = new Permission("consent", "C");
   public static readonly READ_CONSENT = new Permission("consent", "R");
   public static readonly EDIT_CONSENT = new Permission("consent", "U");
+  public static readonly DELETE_CONSENT = new Permission("consent", "D");
+
+  public static readonly CREATE_CONSENT_PROVISION = new Permission("provision", "C");
+  public static readonly READ_CONSENT_PROVISION = new Permission("provision", "R");
+
+  public static readonly ADD_CONSENT_SCANS = new Permission("scans", "C");
+  public static readonly READ_CONSENT_SCANS = new Permission("scans", "R");
+
+  public static readonly CREATE_CONSENT_TEMPLATE = new Permission("consentTemplate", "C");
+  public static readonly READ_CONSENT_TEMPLATE = new Permission("consentTemplate", "R");
+  public static readonly EDIT_CONSENT_TEMPLATE = new Permission("consentTemplate", "U");
+  public static readonly DELETE_CONSENT_TEMPLATE = new Permission("consentTemplate", "D");
+
+  public static readonly EDIT_CONFIGURATION = new Permission("miscellaneous", "U", "tt_editConfiguration");
+
   constructor(
     public type: PermissionType,
-    public operation: Operation
+    public operation: Operation,
+    public miscellaneous?: MiscellaneousPermission
   ) {
   }
 }

@@ -1,6 +1,6 @@
 <div mat-dialog-content style="padding-bottom: 20px; margin-right: 2%; margin-left: 2%;"
-     *ngIf="errorNotificationService.display">
-  <div *ngFor="let message of errorNotificationService.messages" class="error-message">
+     *ngIf="this.messages.length > 0">
+  <div *ngFor="let message of messages" class="error-message">
     <span><strong>{{'errorCardComponent.error' | translate}}</strong>{{ message }}</span>
     <div>
       <button mat-icon-button color="primary" aria-label="Example icon button with a home icon" (click)="closeError(message)">

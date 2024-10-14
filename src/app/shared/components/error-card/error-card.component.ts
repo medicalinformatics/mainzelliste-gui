@@ -1,5 +1,4 @@
-import {Component, OnInit} from '@angular/core';
-import {ErrorNotificationService} from "../../../services/error-notification.service";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-error-card',
@@ -8,13 +7,20 @@ import {ErrorNotificationService} from "../../../services/error-notification.ser
 })
 export class ErrorCardComponent implements OnInit {
 
-  constructor(public errorNotificationService: ErrorNotificationService) {
+  @Input() messages: string[] = [];
+  @Output() messagesChange = new EventEmitter<string[]>();
+
+  constructor() {
   }
 
   ngOnInit(): void {
   }
 
-  closeError(message : string){
-    this.errorNotificationService.removeMessage(message);
+  closeError(message: string) {
+    let index: number = this.messages.indexOf(message);
+    if (index > -1)
+      this.messages.splice(index, 1);
+    else
+      console.error("message '" + message + "'not found in error array");
   }
 }

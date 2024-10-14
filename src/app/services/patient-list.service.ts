@@ -3,7 +3,7 @@ import {SessionService} from "./session.service";
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {PatientList} from "../model/patientlist";
 import {Patient} from "../model/patient";
-import {AppConfigService, IdGenerator} from "../app-config.service";
+import {AppConfigService} from "../app-config.service";
 import {ReadPatientsTokenData} from "../model/read-patients-token-data";
 import {AddPatientTokenData} from "../model/add-patient-token-data";
 import {EditPatientTokenData} from "../model/edit-patient-token-data";
@@ -22,7 +22,10 @@ import {Id} from "../model/id";
 import {CreateIdsTokenData} from '../model/create-ids-token-data';
 import {AuthorizationService} from "./authorization.service";
 import {TranslateService} from '@ngx-translate/core';
-import {Operation} from "../model/tenant";
+import {Operation, Tenant} from "../model/tenant";
+import {IdType} from "../model/id-type";
+import {flatMap} from "rxjs/internal/operators";
+import {IdGenerator} from "../model/idgenerator";
 
 export interface ReadPatientsResponse {
   patients: Patient[];
@@ -93,15 +96,76 @@ export class PatientListService {
       && f.mainzellisteFields.every( c => allowedFieldNames.some( n => n == c)));
   }
 
+
   getIdTypes(operation?: Operation): Array<string> {
-    let allowedIdTypes = operation != undefined ? this.authorizationService.getAllAllowedIdTypes(operation) : [];
-    return allowedIdTypes.length == 0  ? this.configService.getMainzellisteIdTypes() : allowedIdTypes;
+    if(operation != undefined && !this.authorizationService.isCurrentTenantPermissionsEmpty())
+       return this.authorizationService.getAllAllowedUniqueIdTypes(operation);
+    else
+      return this.configService.getMainzellisteIdTypes();
   }
 
-  getInternalTypes(operation?: Operation): Array<string> {
-    let allowedIdTypes = operation != undefined ? this.authorizationService.getAllowedIdTypes(operation, false) : [];
-    return allowedIdTypes.length > 0  ? allowedIdTypes : this.configService.getMainzellisteIdGenerators()
-      .filter(g => !g.isExternal).map(g => g.idType);
+  getAllIdTypes(operation: Operation): Array<string>{
+    return [ ...this.getIdTypes(operation),
+      ...this.getAssociatedIdTypes(false, operation),
+      ...this.getAssociatedIdTypes(true, operation)];
+  }
+
+  getAllExternalIdTypes(operation?: Operation): Array<string> {
+    return [ ...this.getUniqueIdTypes(true, operation),
+      ...this.getAssociatedIdTypes(true, operation)];
+  }
+
+  getAllInternalIdTypes(operation: Operation): Array<string> {
+    return [ ...this.getUniqueIdTypes(false, operation),
+      ...this.getAssociatedIdTypes(false, operation)];
+  }
+
+  getUniqueIdTypes(isExternal: boolean, operation?: Operation): Array<string> {
+    if(operation != undefined && !this.authorizationService.isCurrentTenantPermissionsEmpty())
+       return this.authorizationService.getAllowedUniqueIdTypes(operation, isExternal);
+    else
+      return this.configService.getMainzellisteIdGenerators()
+    .filter(g => g.isExternal == isExternal).map(g => g.idType);
+  }
+
+  getAssociatedIdTypes(isExternal: boolean, operation?: Operation, nodeName?:string): Array<string> {
+    let idGenerators : IdGenerator[] = nodeName !== undefined ? this.configService.getMainzellisteAssociatedIdGeneratorsMap().get(nodeName) ?? []: []
+    if(operation != undefined && !this.authorizationService.isCurrentTenantPermissionsEmpty())
+      return this.authorizationService.getAllowedAssociatedIdTypes(operation, isExternal)
+      .filter( t => idGenerators.length == 0 || idGenerators.some( g => g.idType == t));
+    else
+      return (nodeName !== undefined ? idGenerators : this.configService.getMainzellisteAssociatedIdGenerators())
+    .filter(g => g.isExternal == isExternal).map(g => g.idType);
+  }
+
+  getRelatedAssociatedIdsMapFrom(idTypes: IdType[], patientIds: Id[], areExternal: boolean, operation: Operation): Map<string, Id[]> {
+    let result = new Map<string, Id[]>()
+    for (let idType of idTypes) {
+      let relatedIdTypes = this.authorizationService.getRelatedAssociatedIdTypes(idType.name, areExternal, operation);
+      result.set(idType.name, !idType.isExternal && idType.isAssociated ?
+        patientIds.filter(id => relatedIdTypes.includes(id.idType)) : [])
+    }
+    return result
+  }
+
+  findRelatedIds(id: Id, ids: Id[]): Observable<Id[]> {
+    let uniqueIdTypes = this.getIdTypes("R");
+    if (uniqueIdTypes !== undefined && uniqueIdTypes.includes(id.idType))
+      return of(ids.filter(e => uniqueIdTypes.includes(e.idType)));
+    else
+      return this.fetchRelatedAssociatedIds(id);
+  }
+
+  fetchRelatedAssociatedIds(id: Id): Observable<Id[]> {
+    let relatedIdTypes = [...this.authorizationService.getRelatedAssociatedIdTypes(id.idType, true, "R"),
+      ...this.authorizationService.getRelatedAssociatedIdTypes(id.idType, false, "R")]
+    return this.readPatient(id, "R", [], relatedIdTypes).pipe(
+      flatMap(patients => patients.map( p => p.ids))
+    )
+  }
+
+  getRelatedAssociatedIdTypes(idType: string, areExternal: boolean, operation: Operation): string[] {
+    return this.authorizationService.getRelatedAssociatedIdTypes(idType, areExternal, operation);
   }
 
   getFieldNames(operation: Operation): Array<string> {
@@ -110,7 +174,7 @@ export class PatientListService {
 
   getIdGenerators(isExternal?: boolean, operation?: Operation): Array<IdGenerator> {
     let isExternalIdType = isExternal!=null && isExternal;
-    let allowedIdTypes = operation != undefined ? this.authorizationService.getAllowedIdTypes(operation, isExternalIdType) : [];
+    let allowedIdTypes = operation != undefined ? this.authorizationService.getAllowedUniqueIdTypes(operation, isExternalIdType) : [];
     return this.configService.getMainzellisteIdGenerators()
       .filter(g => g.isExternal == isExternalIdType && (operation == undefined || allowedIdTypes.some(t => t == g.idType)));
   }
@@ -119,8 +183,12 @@ export class PatientListService {
     return this.configService.isDebugModeEnabled();
   }
 
-  isExternalId(idType: string, operation:Operation): boolean {
+  isUniqueExternalIdType(idType: string, operation:Operation): boolean {
     return this.getIdGenerators(true, operation).some(g => g.idType == idType);
+  }
+
+  isExternalIdType(idType: string, operation?:Operation): boolean {
+    return this.getAllExternalIdTypes(operation).some( t => t == idType);
   }
 
   /**
@@ -132,7 +200,13 @@ export class PatientListService {
   }
 
   findDefaultIdType(configuredIdTypes: string[]): string {
-    return this.patientList.mainIdType != undefined && configuredIdTypes.some(t => t == this.patientList.mainIdType)? this.patientList.mainIdType : configuredIdTypes[0];
+    if (Tenant.DEFAULT_ID == this.authorizationService.getCurrentTenantId() &&
+        this.patientList.mainIdType != undefined &&
+        configuredIdTypes.some(t => t == this.patientList.mainIdType)
+    )
+      return this.patientList.mainIdType;
+    else
+      return configuredIdTypes[0];
   }
 
     getInternalIdTypes(): string[] {
@@ -153,13 +227,18 @@ export class PatientListService {
    */
   getPatients(filters: Array<{ field: string, fields: string[], searchCriteria: string, isIdType: boolean }>,
               pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
+    // find current tenant id
+    let tenantId = this.authorizationService.getCurrentTenantId();
+    if(tenantId === undefined || tenantId == Tenant.DEFAULT_ID)
+      tenantId = "";
+
     // find searchIds
     let searchIds: Array<{idType: string, idString: string}> = [];
     let allowedIdTypes: string[] = [];
     //let defaultIdType = this.findDefaultIdType(this.getIdTypes());
     if (filters.every(f => !f.isIdType)) {
       // get permitted idTypes
-      allowedIdTypes = this.authorizationService.getAllowedIdTypes('R', false);
+      allowedIdTypes = tenantId.length > 0 ? this.authorizationService.getTenantIdTypes() : this.authorizationService.getAllowedUniqueIdTypes('R', false);
       if(allowedIdTypes.length > 0 && !allowedIdTypes.some( t => t == "*"))
         searchIds = allowedIdTypes.map(type => ({idType: type, idString: "*"}));
       else
@@ -168,11 +247,6 @@ export class PatientListService {
       filters.filter(f => f.isIdType).forEach(f =>
         searchIds.push({idType: f.field, idString: f.searchCriteria.trim()}));
     }
-
-    // find current tenant id
-    let tenantId = this.authorizationService.getCurrentTenant();
-    if(tenantId === undefined || tenantId == "default")
-      tenantId = "";
 
     // create read patients token
     return this.sessionService.createToken("readPatients",
@@ -309,7 +383,7 @@ export class PatientListService {
     }
     //add external Ids
     for(let extId of patient.ids)
-      body.set(extId.idType, extId.idString)
+      body.append(extId.idType, extId.idString)
 
     // set sureness flag
     if(sureness)
@@ -340,15 +414,17 @@ export class PatientListService {
     )
   }
 
-  async readPatient(id: Id, operation: Operation): Promise<Patient[]> {
-    let readToken = await lastValueFrom(this.sessionService.createToken(
+  readPatient(id: Id, operation: Operation, resultFields?: string[], resultIdTypes?: string[]): Observable<Patient[]> {
+    return this.sessionService.createToken(
       "readPatients",
       new ReadPatientsTokenData(
         [{idType: id.idType, idString: id.idString}],
-          this.getFieldNames(operation),
-          this.getIdTypes(operation)
-      )));
-    return lastValueFrom(this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + readToken.id));
+        resultFields != undefined? resultFields : this.getFieldNames(operation),
+        resultIdTypes != undefined ? resultIdTypes : this.getAllIdTypes(operation)
+      )).pipe(
+        mergeMap( readToken => this.httpClient.get<Patient[]>
+        (this.patientList.url + "/patients?tokenId=" + readToken.id))
+    );
   }
 
   editPatient(id:Id, patient: Patient, sureness: boolean) {
@@ -369,7 +445,7 @@ export class PatientListService {
     let fields: { [key: string]: string } =  this.convertToPatientFields(patient.fields, this.getFieldNames("U"));
 
     // add external ids
-    patient.ids.filter(id => this.isExternalId(id.idType, "U"))
+    patient.ids.filter(id => this.isUniqueExternalIdType(id.idType, "U"))
     .forEach(id => fields[id.idType] = id.idString);
 
     // set sureness flag

@@ -1,6 +1,7 @@
 export enum FieldType {
   TEXT = "TEXT",
-  DATE = "DATE"
+  DATE = "DATE",
+  NUMBER = "NUMBER",
 }
 export class Field {
   constructor(
@@ -11,7 +12,8 @@ export class Field {
     public type: FieldType,
     public required: boolean,
     public validator: string,
-    public hint: string = ""
+    public hint: string = "",
+    public hideFromList: boolean = false,
   ) {
   }
 }

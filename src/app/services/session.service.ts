@@ -8,7 +8,7 @@ import {AppConfigService} from "../app-config.service";
 import {catchError, map, mergeMap} from "rxjs/operators";
 import {Router} from "@angular/router";
 import {getErrorMessageFrom} from "../error/error-utils";
-import { TranslateService } from '@ngx-translate/core';
+import {TranslateService} from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root'
@@ -100,12 +100,14 @@ export class SessionService {
    * @param tokenData
    */
   createToken(tokenType: TokenType, tokenData: TokenData): Observable<Token> {
-    return this.httpClient.post<Token>(this.appConfigService.data[0].url + '/sessions/'
-      + this.sessionId + '/tokens', {
-      type: tokenType,
-      data: tokenData
-    }, {
-      headers: new HttpHeaders().append('mainzellisteApiVersion', '3.2')
-    });
+    return this.createSessionIfNotValid().pipe(
+      mergeMap(r => this.httpClient.post<Token>(this.appConfigService.data[0].url + '/sessions/'
+        + this.sessionId + '/tokens', {
+        type: tokenType,
+        data: tokenData
+      }, {
+        headers: new HttpHeaders().append('mainzellisteApiVersion', '3.2')
+      }))
+    )
   }
 }

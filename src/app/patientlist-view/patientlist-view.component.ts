@@ -3,7 +3,7 @@ import {PatientService} from "../services/patient.service";
 import {Patient} from "../model/patient";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
-import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
+import {MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from "@angular/material/autocomplete";
 import {FormControl} from "@angular/forms";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
@@ -41,6 +41,8 @@ export class PatientlistViewComponent implements OnInit {
   filterCtrl = new FormControl();
   @ViewChild('filterInput')
   filterInput!: ElementRef<HTMLInputElement>;
+  @ViewChild(MatAutocompleteTrigger)
+  filterAutoCompleteTrigger!: MatAutocompleteTrigger;
   // configured searching keys : id type and fields
   configuredFilteringKeys: Array<FilterConfig> = [];
   // available searching keys used in autocomplete options
@@ -86,6 +88,7 @@ export class PatientlistViewComponent implements OnInit {
           });
           this.filterInput.nativeElement.value = "";
           this.filterCtrl.setValue("");
+          this.filterAutoCompleteTrigger.closePanel();
           // load patients
           this.loadPatients(0, this.paginator.pageSize).then();
           // // Clear the input value

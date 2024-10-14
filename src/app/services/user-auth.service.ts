@@ -44,7 +44,10 @@ export class UserAuthService {
   }
 
   async logout() {
-    return await this.keycloak.logout().then( () => firstValueFrom(this.sessionService.deleteSession()));
+    return await this.keycloak.logout().then( () => {
+      this.sessionService.deleteSession().toPromise();
+      this.keycloak.clearToken();
+    });
   }
 
   public getUserName(): string {

@@ -2,9 +2,11 @@ import {Injectable} from '@angular/core';
 import {AppConfigService} from "../app-config.service";
 import {UserAuthService} from "./user-auth.service";
 import {TranslateService} from '@ngx-translate/core';
-import {Operation, Tenant, TenantPermission} from "../model/tenant";
+import {MiscellaneousPermission, Operation, Tenant, TenantPermission} from "../model/tenant";
 import {Permission} from "../model/permission";
-import {ClaimPermissions, FieldPermissions, IDPermissions} from "../model/api/configuration-claims-data";
+import {ClaimPermissions} from "../model/api/configuration-claims-data";
+import {IdType} from "../model/id-type";
+import {AuthorizationState} from "../model/authorization-state";
 
 @Injectable({
   providedIn: 'root'
@@ -16,14 +18,18 @@ export class AuthorizationService {
   private currentTenantId: string;
   private allowedIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
   private allowedExternalIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
+  private allowedAssociatedIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
+  private allowedAssociatedExternalIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
+  private allowedAssociatedIdTypesMap: Map<string, IdType[]> = new Map<string, IdType[]>();
   private allowedFieldNames: Map<Operation, string[]> = new Map<Operation, string[]>();
+  public authorizationState :AuthorizationState;
 
   constructor(
     private translate: TranslateService,
     private configService: AppConfigService,
     private authentication: UserAuthService
   ) {
-    this.userRoles = authentication.getRoles();
+    this.userRoles = this.authentication.getRoles();
     this.configuredTenants = this.configService.getMainzellisteClaims()
         .filter(c => c.roles.some( r => this.userRoles.includes(r)))
         .map(e => {
@@ -32,16 +38,42 @@ export class AuthorizationService {
             this.convertClaimPermissions(e.permissions))
         })
     this.currentTenantId = this.configuredTenants.length > 0 ? this.configuredTenants[0].id : "";
-    this.initPatientAllowedAttributes()
+
+    //init. authorization state data model
+    this.authorizationState = new AuthorizationState();
+    this.initAuthorizationState()
+
+    this.initUserAllowedAttributes()
   }
 
-  private initPatientAllowedAttributes(){
-    let internalIdTypeOperations:Operation[] = ["C", "R"];
-    internalIdTypeOperations.forEach( o => this.allowedIdTypes.set(o, this.findAllowedIdTypes(o, false)));
+  public initUserAllowedIDTypes() {
+    //init associatedId Map
+    this.configService.getMainzellisteAssociatedIdGeneratorsMap().forEach((idGenerators, key) => {
+      this.allowedAssociatedIdTypesMap.set(key, idGenerators.map(g => {
+          return {
+            name: g.idType,
+            isExternal: g.isExternal,
+            isAssociated: true,
+            permissions: this.findOperations(g.idType, g.isExternal)
+          }
+        })
+      )
+    })
+
+    // init internal id types permissions
+    let internalIdTypeOperations: Operation[] = ["C", "R"];
+    internalIdTypeOperations.forEach(o => {
+      let allIdTypes = this.findAllowedIdTypes(o, false);
+      this.allowedIdTypes.set(o, this.configService.getMainzellisteIdTypes().filter(t => allIdTypes.includes(t)))
+      this.allowedAssociatedIdTypes.set(o, this.configService.getMainzellisteAssociatedIdGenerators()
+      .filter(g => !g.isExternal && allIdTypes.includes(g.idType))
+      .map(g => g.idType));
+    });
+
     //put tenant Id types first
     let tenantIdTypes: string[] = this.configuredTenants.find(t => t.id == this.currentTenantId)?.idTypes || [];
-    const operationList:Operation[] =  ['C', 'U', 'R'];
-    for(const operation of operationList) {
+    const operationList: Operation[] = ['C', 'U', 'R'];
+    for (const operation of operationList) {
       let idTypes = this.allowedIdTypes.get(operation) || [];
       let newIdTypes = [];
       for (let i = 0; i < idTypes.length; i++) {
@@ -53,9 +85,20 @@ export class AuthorizationService {
       this.allowedIdTypes.set(operation, newIdTypes);
     }
 
-    let externalIdTypeOperations:Operation[] = ["C", "U", "R"];
-    externalIdTypeOperations.forEach( o => this.allowedExternalIdTypes.set(o, this.findAllowedIdTypes(o, true)))
+    // init external id types permissions
+    let externalIdTypeOperations: Operation[] = ["C", "U", "R"];
+    externalIdTypeOperations.forEach(o => {
+      let allIdTypes = this.findAllowedIdTypes(o, true);
+      this.allowedExternalIdTypes.set(o, this.configService.getMainzellisteIdTypes().filter(t => allIdTypes.includes(t)))
+      this.allowedAssociatedExternalIdTypes.set(o, this.configService.getMainzellisteAssociatedIdGenerators()
+      .filter(g => g.isExternal && allIdTypes.includes(g.idType))
+      .map(g => g.idType));
+    })
+  }
 
+  private initUserAllowedAttributes(){
+    this.initUserAllowedIDTypes();
+    // init fields permissions
     let fieldsOperations:Operation[] = ["C", "U", "R"];
     fieldsOperations.forEach( o => {
       let permittedFieldNames: string[] = this.configService.getMainzellisteClaims()
@@ -66,6 +109,30 @@ export class AuthorizationService {
         .reduce((accumulator, currentValue) => accumulator.concat(currentValue.filter(e => !accumulator.includes(e))), []);
       this.allowedFieldNames.set(o, !permittedFieldNames.some( t => t == "*") ? permittedFieldNames : this.configService.getMainzellisteFields());
     })
+  }
+
+  private initAuthorizationState(){
+    let currentTenant: Tenant|undefined = this.configuredTenants.find( t => t.id == this.currentTenantId)
+    if(currentTenant != undefined){
+      currentTenant.permissions.forEach( permission => {
+        if(permission.type == "default")
+          this.authorizationState.DEFAULT = true;
+        else if(permission.type == "patient")
+          this.authorizationState.setPatient(permission.operations);
+        else if(permission.type ==  "ids")
+          this.authorizationState.setIds(permission.operations);
+        else if(permission.type ==  "externalIds")
+          this.authorizationState.setExternalIds(permission.operations);
+        else if(permission.type ==  "fields")
+          this.authorizationState.setFields(permission.operations);
+        else if(permission.type ==  "consent")
+          this.authorizationState.setConsent(permission.operations);
+        else if(permission.type ==  "consentTemplate")
+          this.authorizationState.setConsentTemplate(permission.operations);
+        else if (permission.type == "miscellaneous")
+          this.authorizationState.setMiscellaneous(permission.miscellaneous)
+      })
+    }
   }
 
   private convertClaimPermissions(claimPermissions: ClaimPermissions): TenantPermission[] {
@@ -92,13 +159,50 @@ export class AuthorizationService {
       })
     }
 
-    if (claimPermissions.resources.consent != undefined) {
+    if (this.configService.isConsentEnabled() && claimPermissions.resources.patient.resources.consent != undefined) {
       permissions.push({
         type: 'consent',
-        operations: claimPermissions.resources.consent.operations
+        operations: claimPermissions.resources.patient.resources.consent.operations
+      })
+
+      if (claimPermissions.resources.patient.resources.consent.resources.provision != undefined) {
+        permissions.push({
+          type: 'provision',
+          operations: claimPermissions.resources.patient.resources.consent.resources.provision.operations
+        })
+      }
+      if (claimPermissions.resources.patient.resources.consent.resources.scans != undefined) {
+        permissions.push({
+          type: 'scans',
+          operations: claimPermissions.resources.patient.resources.consent.resources.scans.operations
+        })
+      }
+    }
+
+    if (this.configService.isConsentEnabled() && claimPermissions.resources.consentTemplate != undefined) {
+      permissions.push({
+        type: 'consentTemplate',
+        operations: claimPermissions.resources.consentTemplate.operations
       })
     }
+
+    if(this.configService.isConfigurationEnabled() && claimPermissions.miscellaneous != undefined) {
+      claimPermissions.miscellaneous.filter(m => m == 'tt_editConfiguration')
+      .forEach( m => permissions.push({
+        type: 'miscellaneous',
+        operations: [],
+        miscellaneous: m
+      }))
+    }
     return permissions;
+  }
+
+  public isCurrentTenantPermissionsEmpty() {
+    return this.configService.getMainzellisteClaims()
+    .filter(c => c.roles.some(r => this.userRoles.includes(r)) && c.permissions.tenant.id == this.currentTenantId)
+    .map(c => c.permissions.resources)
+    .every(r => r.patient == undefined && r.consentTemplate == undefined
+        && r.policy == undefined && r.policySet == undefined)
   }
 
   private filterOperations(items: { operations: Operation[] }[]) {
@@ -114,10 +218,11 @@ export class AuthorizationService {
 
   setTenant(tenantId: string){
     this.currentTenantId = tenantId;
-    this.initPatientAllowedAttributes();
+    this.initUserAllowedAttributes();
+    this.initAuthorizationState();
   }
 
-  getCurrentTenant() {
+  getCurrentTenantId() {
     return this.currentTenantId;
   }
 
@@ -142,15 +247,28 @@ export class AuthorizationService {
 
   private checkPermission(permissions: TenantPermission[], permission: Permission): boolean {
     return (permissions || []).some(p => p.type == permission.type
-      && p.operations.includes(permission.operation))
+      && (p.operations.includes(permission.operation)
+        || p.type == "miscellaneous" && p.miscellaneous == permission.miscellaneous))
   }
 
-  getAllAllowedIdTypes(operation: Operation): string[] {
-    return this.getAllowedIdTypes(operation, false).concat(this.getAllowedIdTypes(operation, true));
+  getAllAllowedUniqueIdTypes(operation: Operation): string[] {
+    return this.getAllowedUniqueIdTypes(operation, false).concat(this.getAllowedUniqueIdTypes(operation, true));
   }
 
-  getAllowedIdTypes(operation: Operation, isExternal: boolean): string[] {
+  getAllowedUniqueIdTypes(operation: Operation, isExternal: boolean): string[] {
     return (isExternal? this.allowedExternalIdTypes.get(operation) : this.allowedIdTypes.get(operation)) || [];
+  }
+
+  getAllowedAssociatedIdTypes(operation: Operation, isExternal: boolean): string[] {
+    return (isExternal? this.allowedAssociatedExternalIdTypes.get(operation) : this.allowedAssociatedIdTypes.get(operation)) || [];
+  }
+
+  getRelatedAssociatedIdTypes(searchIdType: string, areExternal:boolean, operation: Operation): string[] {
+    for (let [k, idTypes] of this.allowedAssociatedIdTypesMap)
+      if (idTypes.some(idType => idType.name == searchIdType))
+        return idTypes.filter(idType => idType.isExternal == areExternal && operation.includes(operation))
+        .map(idType => idType.name)
+    return [];
   }
 
   getAllowedFieldNames(operation: Operation): string[] {
@@ -168,6 +286,16 @@ export class AuthorizationService {
     return !permittedIdTypes.some( t => t == "*") ? permittedIdTypes :
       this.configService.getMainzellisteIdGenerators().filter(g => g.isExternal == isExternal)
       .map(g => g.idType);
+  }
+
+  findOperations(idType:string, isExternal: boolean) {
+    return this.configService.getMainzellisteClaims()
+    .filter(c => c.permissions.tenant.id == this.currentTenantId)
+    .filter(c => c.roles.some( r => this.userRoles.includes(r)))
+    .map(c => c.permissions.resources.patient.resources )
+    .map(r => isExternal? r.externalIds : r.ids )
+    .map(ids => ids.find( id => id.type == idType || id.type == "*")?.operations || [])
+    .reduce((accumulator, currentValue) => accumulator.concat(currentValue.filter(e => !accumulator.includes(e))), []);
   }
 
   getTenantIdTypes(): string[] {

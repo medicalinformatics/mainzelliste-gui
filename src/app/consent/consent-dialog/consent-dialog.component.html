@@ -1,12 +1,18 @@
-<h1 mat-dialog-title>{{'consentDialog.title_consent' | translate}}</h1>
+<h1 mat-dialog-title *ngIf="!dataModel.readonly">{{'consentDialog.title_consent' | translate}}</h1>
 <form #consentForm="ngForm">
   <div mat-dialog-content>
-    <app-consent-detail [(dataModel)]="dataModel"></app-consent-detail>
+    <app-consent-detail [(consent)]="dataModel.consent"
+                        [templates]="dataModel.templates"
+                        [readOnly]="dataModel.readonly"
+                        [edit]="dataModel.edit"
+    ></app-consent-detail>
   </div>
   <div mat-dialog-actions>
-    <button mat-raised-button class="submitBreak" (click)="onCancel()">{{'button_cancel' | translate}}</button>
-    <button mat-raised-button class="submit"  type="submit" (click)="onSave()"
-            [disabled]="!dataModel || !consentForm.form.valid">{{'button_save' | translate}}
+    <button mat-raised-button class="submitBreak" (click)="onCancel()">{{(!dataModel.readonly ? 'button_cancel':'button_close') | translate}}</button>
+    <button *ngIf="!dataModel.readonly" mat-raised-button class="submit"  type="submit" (click)="onSave()"
+            [disabled]="!dataModel.consent || !consentForm.form.valid || inProgress">
+      {{(dataModel.isSaveButton?'button_save':'button_publish') | translate}}
+      <mat-icon *ngIf="inProgress"><mat-spinner diameter="20"></mat-spinner></mat-icon>
     </button>
   </div>
 </form>

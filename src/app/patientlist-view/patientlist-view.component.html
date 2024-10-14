@@ -10,6 +10,7 @@
           <mat-icon matChipRemove style="color:#494949">cancel</mat-icon>
         </mat-chip>
         <input #filterInput
+               #filterAutoCompleteTrigger="matAutocompleteTrigger"
                placeholder="{{'patientlist.search_placeholder' | translate}}"
                [matChipInputFor]="chipList"
                [formControl]="filterCtrl"

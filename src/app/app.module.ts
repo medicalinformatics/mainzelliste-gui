@@ -56,7 +56,9 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {ProjectIdTableComponent} from './project-id/table/table.component';
 import {ProjectIdEmptyFieldsDialog} from './project-id/dialog/project-id-empty-fields-dialog';
 import {InternationalizedMatPaginatorIntl} from "./shared/components/paginator/internationalized-mat-paginator-intl";
-import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import {ConsentTemplatesComponent} from './consent/consent-templates/consent-templates.component';
+import {ConfigurationModule} from "./configuration/configuration.module";
 
 function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService,
                               userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
@@ -77,6 +79,10 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
             onLoad: 'check-sso',
             silentCheckSsoRedirectUri:
               window.location.origin + '/assets/silent-check-sso.html'
+          },
+          shouldAddToken: (request) => {
+            const paths = ['/sessions', '/configuration'];
+            return paths.some((path) => request.url.includes(path));
           }
         }).catch(error => {
           // find error reason
@@ -86,10 +92,11 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
           }
           throw new Error(translate.instant('error.app_module_connect_keycloak') + reason);
         }))
-        .then(isLoggedIn => isLoggedIn ? configService.fetchMainzellisteIdGenerators() : [])
-        .then(idGenerators => idGenerators.length > 0 ? configService.fetchMainzellisteFields() : [])
-        .then(fields => fields.length > 0 ? configService.fetchClaims() : [])
-        .then(claims => claims.length > 0 ? configService.fetchVersion() : {});
+        .then(isLoggedIn => isLoggedIn ? configService.fetchMainzellisteIdGenerators() : undefined)
+        .then(idGenerators => idGenerators != undefined ? configService.fetchMainzellisteAssociatedIdGenerators() : undefined)
+        .then(idGenerators => idGenerators != undefined ? configService.fetchMainzellisteFields() : undefined)
+        .then(fields => fields != undefined ? configService.fetchClaims() : undefined)
+        .then(claims => configService.fetchVersion());
     });
 }
 
@@ -107,7 +114,8 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     PageNotFoundComponent,
     ProjectIdComponent,
     ProjectIdTableComponent,
-    ProjectIdEmptyFieldsDialog
+    ProjectIdEmptyFieldsDialog,
+    ConsentTemplatesComponent
   ],
   imports: [
     SharedModule,
@@ -134,7 +142,8 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     NgxCsvParserModule,
     FileSaverModule,
     NgxMatFileInputModule,
-    MatStepperModule
+    MatStepperModule,
+    ConfigurationModule
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},

@@ -1,4 +1,4 @@
-import {Operation} from "../tenant";
+import {MiscellaneousPermission, Operation} from "../tenant";
 
 export interface ClaimsConfig {
   roles: string[],
@@ -8,6 +8,7 @@ export interface ClaimsConfig {
 export interface ClaimPermissions {
   tenant: ClaimPermissionsTenant,
   resources: ClaimPermissionsResources,
+  miscellaneous: MiscellaneousPermission[]
 }
 
 export interface ClaimPermissionsTenant {
@@ -18,7 +19,9 @@ export interface ClaimPermissionsTenant {
 
 export interface ClaimPermissionsResources {
   patient: PatientPermissionResource,
-  consent: ConsentPermissionResource
+  consentTemplate: ResourceOperations,
+  policySet: ResourceOperations,
+  policy : ResourceOperations,
 }
 
 export interface PatientPermissionResource {
@@ -26,14 +29,25 @@ export interface PatientPermissionResource {
   resources: PatientPermissionResources
 }
 
-export interface ConsentPermissionResource {
+export interface ResourceOperations {
   operations: Operation[]
 }
 
 export interface PatientPermissionResources {
   ids: IDPermissions[],
-  externalIds: IDPermissions[]
-  fields: FieldPermissions[]
+  externalIds: IDPermissions[],
+  fields: FieldPermissions[],
+  consent: ConsentPermissionResource,
+}
+
+export interface ConsentPermissionResource {
+  operations: Operation[],
+  resources: ConsentPermissionResources
+}
+
+export interface ConsentPermissionResources {
+  provision: ResourceOperations,
+  scans: ResourceOperations,
 }
 
 export interface IDPermissions {

@@ -8,13 +8,13 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
 import {ErrorNotificationService} from "../../services/error-notification.service";
 import {GlobalTitleService} from "../../services/global-title.service";
-import {Observable, lastValueFrom, of} from "rxjs";
-import {concatMap, map, retryWhen, startWith, switchMap} from "rxjs/operators";
+import {forkJoin, Observable, of} from "rxjs";
+import {concatMap, map, mergeMap, retryWhen, startWith, switchMap} from "rxjs/operators";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MainzellisteError} from "../../model/mainzelliste-error.model";
 import {ErrorMessages} from "../../error/error-messages";
 import {UserAuthService} from "../../services/user-auth.service";
-import { TranslateService } from '@ngx-translate/core';
+import {TranslateService} from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../../consent/consent-dialog/consent-dialog.component";
 import {Consent} from "../../consent/consent.model";
 import {ConsentService} from "../../consent/consent.service";
@@ -24,6 +24,7 @@ import {Operation} from "../../model/tenant";
 export interface IdTypSelection {
   idType: string,
   added: boolean,
+  associated?: boolean
 }
 
 @Component({
@@ -53,6 +54,7 @@ export class CreatePatientComponent implements OnInit {
   chipListInputData: string = "";
 
   externalIdTypes: IdTypSelection[] = [];
+  public creatingInProgress: boolean = false;
 
   constructor(
     public translate: TranslateService,
@@ -77,7 +79,7 @@ export class CreatePatientComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let internalIdTypes  = this.patientListService.getInternalTypes( "C");
+    let internalIdTypes  = this.patientListService.getAllInternalIdTypes( "C");
     let mainIdType = this.patientListService.findDefaultIdType(internalIdTypes);
     this.selectedInternalIdTypes.push(mainIdType);
 
@@ -107,7 +109,8 @@ export class CreatePatientComponent implements OnInit {
   createNewPatient(sureness: boolean) {
     this.errorNotificationService.clearMessages();
     //create patient
-    lastValueFrom(of(this.patient).pipe(
+    this.creatingInProgress = true;
+    of(this.patient).pipe(
       concatMap(p => this.patientService.createPatient(p, this.selectedInternalIdTypes, sureness)),
       retryWhen(
         error => error.pipe(
@@ -120,18 +123,30 @@ export class CreatePatientComponent implements OnInit {
               else if (e.errorMessage == ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH) {
                 this.openCreatePatientTentativeDialog();
                 // do not emit any value in order to send a complete notification on subscription
+                this.creatingInProgress = false;
                 return of();
               }
             }
             throw e;
           })
         )
-      )
-    )).then(newId => {
-      if(this.consent){
-        this.consent.patientId = newId;
-        this.consentService.addConsent(this.consent).then();
-      } this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
+      ),
+      mergeMap( newId => {
+        if (this.consent !== undefined) {
+          this.consent.patientId = newId;
+          return this.consentService.addConsent(this.consent).pipe(
+            // create document reference
+            mergeMap(c =>
+              this.consentService.createScansAndProvenance(this.consent, (c as fhir4.Consent).id || "")
+            ),
+            map(c => newId)
+          );
+        } else
+          return of(newId);
+      })
+    ).subscribe(newId => {
+      this.creatingInProgress = false;
+      this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
     })
   }
 
@@ -211,11 +226,12 @@ export class CreatePatientComponent implements OnInit {
   openConsentDialog() {
     const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
       width: '900px',
-      data: this.consent
+      disableClose: true,
+      data: {consent: this.consent, isSaveButton:true}
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.consent = result;
+      this.consent = result?.consent;
     });
   }
 }

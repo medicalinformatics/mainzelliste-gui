@@ -52,9 +52,8 @@ mat-card-title{
 
 mat-form-field.inputField {
   width: 90%;
-  margin: 0;
   padding-bottom: 0;
-  margin-bottom: -1.25em
+  margin: 0 0 -1.25em;
 }
 
 #arrow{
@@ -83,5 +82,11 @@ mat-form-field.inputField {
   font-family: Arial;
   text-align: left;
   margin-left: 2%;
-  margin-bottom: 1.5%;
+  margin-bottom: 10px;
+}
+
+.consent-module-text-box {
+  border-style: solid;
+  border-width: 1px;
+  padding: 2px 10px;
 }
