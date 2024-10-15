@@ -24,7 +24,7 @@ import {AuthorizationService} from "./authorization.service";
 import {TranslateService} from '@ngx-translate/core';
 import {Operation, Tenant} from "../model/tenant";
 import {IdType} from "../model/id-type";
-import {flatMap} from "rxjs/internal/operators";
+import {flatMap} from "rxjs";
 import {IdGenerator} from "../model/idgenerator";
 
 export interface ReadPatientsResponse {
@@ -208,16 +208,6 @@ export class PatientListService {
     else
       return configuredIdTypes[0];
   }
-
-    getInternalIdTypes(): string[] {
-        let temp: string[] = [];
-        for (let allId of this.getIdGenerators()) {
-            if (!allId.isExternal) {
-                temp.push(allId.idType);
-            }
-        }
-        return temp;
-    }
 
   /**
    * Read Patients from backend

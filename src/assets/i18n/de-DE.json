@@ -290,7 +290,8 @@
 	"logout.message": "Du wurdest erfolgreich ausgelogged!",
 
 	"footer.version": "Version ",
-	
+	"footer.info": "Mainzelliste - Powered by Team Federated Information Systems from DKFZ Heidelberg"
+
 	"project_id.title": "Projekt Ids generieren",
 	"project_id.upload_label": "CSV Datei hochladen",
 	"project_id.upload_error": "Bitte wählen sie eine gültige Datei aus!",
@@ -304,6 +305,5 @@
 	"projectIdEmptyFieldsDialog.text1": " Patienten konnten nicht gefunden werden.",
 	"projectIdEmptyFieldsDialog.text2": "Für nicht gefundene Patienten wurden keine neuen Ids generiert.",
 	"projectIdEmptyFieldsDialog.error_text1": "Es wurde kein Patient gefunden.",
-	"projectIdEmptyFieldsDialog.error_text2": "Bitte wählen sie eine gültige Datei aus.",
-	"footer.info": "Mainzelliste - Powered by Team Federated Information Systems from DKFZ Heidelberg"
+	"projectIdEmptyFieldsDialog.error_text2": "Bitte wählen sie eine gültige Datei aus."
 }

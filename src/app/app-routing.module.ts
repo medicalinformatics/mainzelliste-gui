@@ -15,9 +15,6 @@ import {EditConsentComponent} from "./consent/edit-consent/edit-consent.componen
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {ProjectIdComponent} from './project-id/project-id.component';
 import {ConsentTemplatesComponent} from "./consent/consent-templates/consent-templates.component";
-import {
-  IdGeneratorsComponent
-} from "./configuration/idgenerator/id-generators/id-generators.component";
 import {ConfigurationComponent} from "./configuration/configuration/configuration.component";
 
 const routes: Routes = [

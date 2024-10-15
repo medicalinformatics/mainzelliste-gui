@@ -11,7 +11,6 @@ import {TranslateService} from '@ngx-translate/core';
 import {ClaimsConfig} from "./model/api/configuration-claims-data";
 import {IdGenerator} from "./model/idgenerator";
 
-
 export interface AssociatedIds {
   [key: string] : [IdGenerator]
 }
@@ -157,23 +156,23 @@ export class AppConfigService {
         this.mainzellisteIdTypes = idGenerators.map( g => g.idType);
         return idGenerators;
       })
-    ).toPromise();
+    ));
   }
 
-  public fetchMainzellisteAssociatedIdGenerators(): Promise<IdGenerator[]> {
-    return this.httpClient.get<AssociatedIds>(this.data[0].url + "/configuration/idGenerators/associatedIds", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
-    .pipe(
-        catchError((e) => throwError(new Error(this.translate.instant('error.app_config_service_fetch_id_generators')))),
-        map(associatedIds => {
-          this.mainzellisteAssociatedIdGenerators = [];
-          for(let key in associatedIds){
-            this.mainzellisteAssociatedIdGenerators.push(...associatedIds[key])
-            this.mainzellisteAssociatedIdGeneratorsMap.set(key, associatedIds[key])
-          }
-          return this.mainzellisteAssociatedIdGenerators;
-        })
-    ).toPromise();
-  }
+    public fetchMainzellisteAssociatedIdGenerators(): Promise<IdGenerator[]> {
+      return lastValueFrom(this.httpClient.get<AssociatedIds>(this.data[0].url + "/configuration/idGenerators/associatedIds", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
+        .pipe(
+            catchError((e) => throwError(new Error(this.translate.instant('error.app_config_service_fetch_id_generators')))),
+            map(associatedIds => {
+              this.mainzellisteAssociatedIdGenerators = [];
+              for(let key in associatedIds){
+                this.mainzellisteAssociatedIdGenerators.push(...associatedIds[key])
+                this.mainzellisteAssociatedIdGeneratorsMap.set(key, associatedIds[key])
+              }
+              return this.mainzellisteAssociatedIdGenerators;
+            })
+        ));
+    }
 
     public fetchClaims(): Promise<ClaimsConfig[]> {
       return firstValueFrom(this.httpClient.get<ClaimsConfig[]>(this.data[0].url + "/configuration/claims", {

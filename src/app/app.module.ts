@@ -15,11 +15,11 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatBadgeModule} from "@angular/material/badge";
 import {MatPaginatorIntl, MatPaginatorModule} from "@angular/material/paginator";
 import {
-    DateAdapter,
-    ErrorStateMatcher,
-    MAT_DATE_FORMATS,
-    MAT_DATE_LOCALE,
-    MatNativeDateModule
+  DateAdapter,
+  ErrorStateMatcher,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+  MatNativeDateModule
 } from '@angular/material/core';
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
@@ -33,9 +33,9 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {GlobalErrorHandler} from "./error/global-error-handler";
 import {
-    MAT_MOMENT_DATE_ADAPTER_OPTIONS,
-    MAT_MOMENT_DATE_FORMATS,
-    MomentDateAdapter
+  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+  MAT_MOMENT_DATE_FORMATS,
+  MomentDateAdapter
 } from "@angular/material-moment-adapter";
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {firstValueFrom, from} from "rxjs";
@@ -55,8 +55,10 @@ import {NgxMatFileInputModule} from '@angular-material-components/file-input';
 import {MatStepperModule} from '@angular/material/stepper';
 import {ProjectIdTableComponent} from './project-id/table/table.component';
 import {ProjectIdEmptyFieldsDialog} from './project-id/dialog/project-id-empty-fields-dialog';
-import {InternationalizedMatPaginatorIntl} from "./shared/components/paginator/internationalized-mat-paginator-intl";
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import {
+  InternationalizedMatPaginatorIntl
+} from "./shared/components/paginator/internationalized-mat-paginator-intl";
+import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {ConsentTemplatesComponent} from './consent/consent-templates/consent-templates.component';
 import {ConfigurationModule} from "./configuration/configuration.module";
 
@@ -112,10 +114,10 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     NewIdDialog,
     AccessDeniedComponent,
     PageNotFoundComponent,
+    ConsentTemplatesComponent,
     ProjectIdComponent,
     ProjectIdTableComponent,
-    ProjectIdEmptyFieldsDialog,
-    ConsentTemplatesComponent
+    ProjectIdEmptyFieldsDialog
   ],
   imports: [
     SharedModule,
@@ -139,11 +141,11 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     MatProgressBarModule,
     ClipboardModule,
     ConsentModule,
+    ConfigurationModule,
     NgxCsvParserModule,
     FileSaverModule,
     NgxMatFileInputModule,
-    MatStepperModule,
-    ConfigurationModule
+    MatStepperModule
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
