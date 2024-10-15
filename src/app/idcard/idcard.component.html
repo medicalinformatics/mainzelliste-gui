@@ -1,47 +1,58 @@
 <form #patientForm="ngForm">
-<div style="width: 100%; height: 100%">
-  <div style=" background:none; margin-top:0.5%; flex: 1 1 70%; display: flex; flex-flow: row; justify-content: space-around; align-items: stretch; justify-content: space-around; gap: 0 1%">
-    <mat-card id="patientendaten" style="flex: 1 1 25%; display: flex;  flex-flow: column">
-      <mat-card-title>{{'idcard.title_patient_data' | translate}}</mat-card-title>
-      <app-patient-fields [readOnly]=true [fields]="patient.fields"></app-patient-fields>
-    </mat-card>
+  <div style="width: 100%; height: 100%">
+    <div
+      style=" background:none; margin-top:0.5%; flex: 1 1 70%; display: flex; flex-flow: row; justify-content: space-around; align-items: stretch; justify-content: space-around; gap: 0 1%">
+      <mat-card id="patientendaten" style="flex: 1 1 25%; display: flex;  flex-flow: column">
+        <mat-card-title>{{'idcard.title_patient_data' | translate}}</mat-card-title>
+        <app-patient-fields [readOnly]=true [fields]="patient.fields"></app-patient-fields>
+      </mat-card>
 
-    <mat-card class="mat-card-scrollable" id="pseudonyme">
-      <mat-card-title>{{'idcard.title_pseudonyms' | translate}}</mat-card-title>
-      <app-patient-pseudonyms [readOnly]=true [ids]="patient.ids" [permittedOperation]="'R'"
-                              (generateId)="this.generateId($event.idType, $event.idString, $event.newIdType)"></app-patient-pseudonyms>
-    </mat-card>
+      <mat-card class="mat-card-scrollable" id="pseudonyme">
+        <mat-card-title>{{'idcard.title_pseudonyms' | translate}}</mat-card-title>
+        <app-patient-pseudonyms [readOnly]=true [ids]="patient.ids" [permittedOperation]="'R'"
+          (generateId)="this.generateId($event.idType, $event.idString, $event.newIdType)"></app-patient-pseudonyms>
+      </mat-card>
 
-    <section style="display: flex; flex: 1 1 1%; margin-left:2%; flex-flow: column;">
-<!--      <button mat-fab style="background-color:#053E6A; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">-->
-<!--        <mat-icon matTooltip="Drucken">print</mat-icon>-->
-<!--      </button>-->
-<!--      <br><br>-->
-<!--      <button mat-fab style="background-color:#053E6A; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">-->
-<!--        <mat-icon matTooltip="ID hinzufügen">subtitles</mat-icon>-->
-<!--      </button>-->
-      <button mat-fab *appHasAnyPermissions="[Permission.EDIT_PATIENT]" [routerLink]="['/edit-patient', idType, idString]"
-              [state]="{patient: patient}" style="background-color:#ffd60a; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">
-        <mat-icon matTooltip="{{'button_edit' | translate}}">edit</mat-icon>
-      </button>
-      <button mat-fab *appHasPermission="Permission.DELETE_PATIENT" (click)="openDeletePatientDialog()" style="background-color:#da1e37; color:white; margin-bottom: 15px" aria-label="Example icon button with a delete icon">
-        <mat-icon matTooltip="{{'button_delete' | translate}}">delete</mat-icon>
-      </button>
-      <button *appHasPermission="Permission.GENERATE_IDS" [disabled]="this.hasAllIds()" mat-fab (click)="openNewIdDialog()"
-              [ngClass]="this.hasAllIds() ? '': 'idcard-button'" style="margin-bottom: 15px">
-        <mat-icon matTooltip="{{'button_generate_id' | translate}}">add_box</mat-icon>
-      </button>
-      <ng-container *ngIf="this.consentService.isServiceEnabled()">
-        <button mat-fab *appHasPermission="Permission.CREATE_CONSENT" [disabled]="this.hasAllTemplateIds()" (click)="openAddNewConsentDialog()"
-                [ngClass]="this.hasAllTemplateIds() ? '': 'idcard-button'">
-          <mat-icon matTooltip="{{'button_add_consent' | translate}}">assignment_turned_in</mat-icon>
+      <section style="display: flex; flex: 1 1 1%; margin-left:2%; flex-flow: column;">
+      
+        <button [cdkCopyToClipboard]="getContactInfo()" mat-fab [ngClass]="this.hasAllIds() ? '': 'idcard-button'"
+          style="margin-bottom: 15px">
+          <mat-icon matTooltip="Copy Contact Information">file_copy</mat-icon>
         </button>
-      </ng-container>
-    </section>
-  </div>
-  <ng-container *ngIf="this.consentService.isServiceEnabled()">
-    <mat-card *appHasPermission="Permission.READ_CONSENT" id="consents">
-      <mat-card-title style="float: left; margin-left: 2.5%;">{{'idcard.consent_title' | translate}}</mat-card-title>
+        <!--      <button mat-fab style="background-color:#053E6A; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">-->
+        <!--        <mat-icon matTooltip="Drucken">print</mat-icon>-->
+        <!--      </button>-->
+        <!--      <br><br>-->
+        <!--      <button mat-fab style="background-color:#053E6A; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">-->
+        <!--        <mat-icon matTooltip="ID hinzufügen">subtitles</mat-icon>-->
+        <!--      </button>-->
+
+        <button mat-fab *appHasAnyPermissions="[Permission.EDIT_PATIENT]"
+          [routerLink]="['/edit-patient', idType, idString]" [state]="{patient: patient}"
+          style="background-color:#ffd60a; color:white; margin-bottom: 15px;"
+          aria-label="Example icon button with a delete icon">
+          <mat-icon matTooltip="{{'button_edit' | translate}}">edit</mat-icon>
+        </button>
+        <button mat-fab *appHasPermission="Permission.DELETE_PATIENT" (click)="openDeletePatientDialog()"
+          style="background-color:#da1e37; color:white; margin-bottom: 15px"
+          aria-label="Example icon button with a delete icon">
+          <mat-icon matTooltip="{{'button_delete' | translate}}">delete</mat-icon>
+        </button>
+        <button *appHasPermission="Permission.GENERATE_IDS" [disabled]="this.hasAllIds()" mat-fab
+          (click)="openNewIdDialog()" [ngClass]="this.hasAllIds() ? '': 'idcard-button'" style="margin-bottom: 15px">
+          <mat-icon matTooltip="{{'button_generate_id' | translate}}">add_box</mat-icon>
+        </button>
+        <ng-container *ngIf="this.consentService.isServiceEnabled()">
+          <button mat-fab *appHasPermission="Permission.CREATE_CONSENT" [disabled]="this.hasAllTemplateIds()"
+            (click)="openAddNewConsentDialog()" [ngClass]="this.hasAllTemplateIds() ? '': 'idcard-button'">
+            <mat-icon matTooltip="{{'button_add_consent' | translate}}">assignment_turned_in</mat-icon>
+          </button>
+        </ng-container>
+      </section>
+    </div>
+    <ng-container *ngIf="this.consentService.isServiceEnabled()">
+      <mat-card *appHasPermission="Permission.READ_CONSENT" id="consents">
+        <mat-card-title style="float: left; margin-left: 2.5%;">{{'idcard.consent_title' | translate}}</mat-card-title>
         <table #consentTable mat-table [dataSource]="consentsView.consentRows" class="mat-elevation-z8">
 
           <ng-container matColumnDef="date">
@@ -65,9 +76,10 @@
           </ng-container>
 
           <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef> {{'idcard.consent_status' | translate}}  </th>
+            <th mat-header-cell *matHeaderCellDef> {{'idcard.consent_status' | translate}} </th>
             <td mat-cell *matCellDef="let element">
-              <mat-basic-chip disableRipple="true" id="{{element.status}}" class="mat-basic-chip-status">{{'consent_status.' + element.status | translate}}</mat-basic-chip>
+              <mat-basic-chip disableRipple="true" id="{{element.status}}"
+                class="mat-basic-chip-status">{{'consent_status.' + element.status | translate}}</mat-basic-chip>
             </td>
           </ng-container>
 
@@ -77,24 +89,25 @@
               <div style="display: flex; flex-flow: row; justify-content: right;">
                 <ng-container>
                   <button *appHasPermission="Permission.READ_CONSENT" mat-icon-button style="border:none;"
-                          (click)="openViewConsentDialog(element.id)">
+                    (click)="openViewConsentDialog(element.id)">
                     <mat-icon matTooltip="{{'button_view_consent' | translate}}">pageview</mat-icon>
                   </button>
                 </ng-container>
                 <ng-container *ngIf="element.status == 'draft' || element.status == 'proposed'">
                   <button *appHasPermission="Permission.EDIT_CONSENT" mat-icon-button style="border:none;"
-                          (click)="this.openChangeConsentDialog(element.id)">
+                    (click)="this.openChangeConsentDialog(element.id)">
                     <mat-icon matTooltip="{{'button_edit_consent' | translate}}">edit</mat-icon>
                   </button>
                 </ng-container>
-                <ng-container *ngIf="element.status == 'active' || element.status == 'rejected'|| element.status == 'inactive'">
+                <ng-container
+                  *ngIf="element.status == 'active' || element.status == 'rejected'|| element.status == 'inactive'">
                   <button *appHasPermission="Permission.EDIT_CONSENT" mat-icon-button style="border:none;"
-                          (click)="this.openChangeConsentDialog(element.id)">
+                    (click)="this.openChangeConsentDialog(element.id)">
                     <mat-icon matTooltip="{{'button_add_consent' | translate}}">assignment_turned_in</mat-icon>
                   </button>
                 </ng-container>
                 <button *appHasPermission="Permission.DELETE_CONSENT" mat-icon-button style="border:none;"
-                (click)="openDeleteConsentDialog(element.id)">
+                  (click)="openDeleteConsentDialog(element.id)">
                   <mat-icon matTooltip="{{'button_delete_consent' | translate}}">delete</mat-icon>
                 </button>
               </div>
@@ -102,8 +115,7 @@
           </ng-container>
 
           <ng-container matColumnDef="progress">
-            <th mat-header-cell *matHeaderCellDef [attr.colspan]="6"
-                style="padding: 0;">
+            <th mat-header-cell *matHeaderCellDef [attr.colspan]="6" style="padding: 0;">
               <mat-progress-bar *ngIf="loadingConsents" mode="indeterminate"></mat-progress-bar>
             </th>
             <td mat-cell></td>
@@ -111,14 +123,14 @@
 
           <tr mat-header-row *matHeaderRowDef="displayedConsentColumns"></tr>
           <tr mat-row class="consent-row" *matRowDef="let row; columns: displayedConsentColumns;"></tr>
-          <tr mat-header-row  style="height: 0; border: 0;" *matHeaderRowDef="['progress']"></tr>
+          <tr mat-header-row style="height: 0; border: 0;" *matHeaderRowDef="['progress']"></tr>
           <tr class="mat-row" *matNoDataRow>
             <td *ngIf="!loadingConsents" class="mat-cell" [attr.colspan]="6" style="text-align: center">
               {{'idcard.consent_no_consent' | translate}}
             </td>
           </tr>
         </table>
-    </mat-card>
-  </ng-container>
-</div>
+      </mat-card>
+    </ng-container>
+  </div>
 </form>

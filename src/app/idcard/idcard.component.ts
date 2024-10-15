@@ -308,4 +308,11 @@ export class IdcardComponent implements OnInit {
         this.deleteConsent(consentId);
     });
   }
+
+  getContactInfo(){
+    const contact = this.patient.fields[0]; 
+    console.log(contact);
+    return contact;
+  }
+
 }
