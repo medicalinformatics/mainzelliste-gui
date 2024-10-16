@@ -18,7 +18,7 @@ import { ProjectIdEmptyFieldsDialog } from './dialog/project-id-empty-fields-dia
 })
 export class ProjectIdComponent implements OnInit {
 
-  validFileTypes: string[] = ["text/csv"];
+  validFileTypes: string[] = ["text/csv", "application/vnd.ms-excel"];
   csvRecords: string[][] = [];
   step: number = 3;
   generated = false;
@@ -39,7 +39,7 @@ export class ProjectIdComponent implements OnInit {
   @ViewChild("stepTwo", { static: false }) stepTwo!: MatStep;
   @ViewChild("stepThree", { static: false }) stepThree!: MatStep;
   @ViewChild("select", { static: false }) select!: MatSelect;
-      
+
   constructor(
     public dialog: MatDialog,
     private titleService: GlobalTitleService,
@@ -52,7 +52,7 @@ export class ProjectIdComponent implements OnInit {
       ]);
       this.changeTitle();
     }
-  
+
     changeTitle() {
       this.titleService.setTitle(this.translate.instant('project_id.title'));
     }
@@ -71,10 +71,9 @@ export class ProjectIdComponent implements OnInit {
     }
 
   fileChangeListener(file: any): void {
-    if(file != null && file != undefined && this.validFileTypes.includes(file.type)) {
+    if(file != null && this.validFileTypes.includes(file.type)) {
       this.readCsv(file);
     } else {
-      console.log('Error2');
       this.step = 0;
     }
   }
@@ -108,7 +107,7 @@ export class ProjectIdComponent implements OnInit {
               this.idStrings[i-1] = this.csvRecords[i][0];
             }
             this.stepper.next();
-            this.step = 1;  
+            this.step = 1;
           } else {
             this.step = 0;
             console.log(this.step);
@@ -160,7 +159,7 @@ export class ProjectIdComponent implements OnInit {
       } else {
         this.csvRecords[i][1] = newIds[i-1].idString;
       }
-    } 
+    }
   }
 
   private openDialog(error: boolean) {
@@ -174,7 +173,7 @@ export class ProjectIdComponent implements OnInit {
       }
     });
   }
-  
+
   backToFirst() {
     this.reset();
     this.stepTwo.reset();
