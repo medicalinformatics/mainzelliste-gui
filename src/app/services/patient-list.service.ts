@@ -11,7 +11,7 @@ import {DeletePatientTokenData} from "../model/delete-patient-token-data";
 import {Field} from "../model/field";
 import {DatePipe} from "@angular/common";
 import {catchError, map, mergeMap} from "rxjs/operators";
-import {Observable, of, throwError} from "rxjs";
+import {Observable, lastValueFrom, of, throwError, firstValueFrom} from "rxjs";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessage, ErrorMessages} from "../error/error-messages";
 import _moment from 'moment';
@@ -24,7 +24,7 @@ import {AuthorizationService} from "./authorization.service";
 import {TranslateService} from '@ngx-translate/core';
 import {Operation, Tenant} from "../model/tenant";
 import {IdType} from "../model/id-type";
-import {flatMap} from "rxjs/internal/operators";
+import {flatMap} from "rxjs";
 import {IdGenerator} from "../model/idgenerator";
 
 export interface ReadPatientsResponse {
@@ -285,7 +285,20 @@ export class PatientListService {
   }
 
   generateId(idType: string, idString: string, newIdType: string) {
-    return this.sessionService.createToken("createIds", new CreateIdsTokenData([{idType, idString}], [newIdType]))
+    return this.generateIdArray(idType, [idString], newIdType);
+  }
+
+  generateIdArray(idType: string, idString: string[], newIdType: string): Observable<[{idType: string, idString: string}]> {
+    if(idString.length == 0) {
+      throw new Error("idString cant be empty");
+    }
+
+    let array: [{idType: string; idString: string}] = [{idType: idType, idString: idString[0]}];
+    for(let i = 1; i < idString.length; i++) {
+      array.push({idType: idType,idString: idString[i]})
+    }
+
+    return this.sessionService.createToken("createIds", new CreateIdsTokenData(array, [newIdType]))
       .pipe(mergeMap(
         token => this.resolveCreateIdsToken(token.id, newIdType)
         ),
@@ -315,6 +328,23 @@ export class PatientListService {
         return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_create_ids_token'), e, this.translate))
       })
       )
+  }
+
+  getNewIdType(ids: string[]): string[] {
+    let temp: string[] = [];
+    let bool: boolean;
+    for (let allId of this.getIdGenerators(false, "C")) {
+      bool = true;
+      for (let id of ids) {
+        if (allId.idType == id) {
+          bool = false;
+        }
+      }
+      if (bool) {
+        temp.push(allId.idType);
+      }
+    }
+    return temp;
   }
 
   addPatient(patient: Patient, idTypes: string[], sureness: boolean): Observable<Id> {
@@ -388,7 +418,7 @@ export class PatientListService {
   }
 
   editPatient(id:Id, patient: Patient, sureness: boolean) {
-    return this.sessionService.createToken(
+    return firstValueFrom(this.sessionService.createToken(
       "editPatient",
       new EditPatientTokenData(
         {idType: id.idType, idString: id.idString},
@@ -398,7 +428,7 @@ export class PatientListService {
     )
     .pipe(
       mergeMap(token => this.resolveEditPatientToken(token.id, patient, sureness))
-    ).toPromise();
+    ));
   }
 
   resolveEditPatientToken(tokenId: string | undefined, patient: Patient, sureness: boolean): Observable<any> {
@@ -437,7 +467,7 @@ export class PatientListService {
   }
 
   deletePatient(patient: Patient) {
-    return this.sessionService.createToken(
+    return lastValueFrom(this.sessionService.createToken(
       "deletePatient",
       new DeletePatientTokenData(
         {idType: patient.ids[0].idType, idString: patient.ids[0].idString}
@@ -445,7 +475,7 @@ export class PatientListService {
     )
     .pipe(
       mergeMap(token => this.resolveDeletePatientToken(token.id))
-    ).toPromise();
+    ));
   }
 
   resolveDeletePatientToken(tokenId: string | undefined): Observable<any> {

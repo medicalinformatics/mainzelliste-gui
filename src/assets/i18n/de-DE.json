@@ -18,6 +18,11 @@
 	"button_save_new_id": "Generieren",
 	"button_correct": "Korrigieren",
 	"button_confirm": "Bestätigen",
+	"button_stepper_next": "Weiter",
+	"button_stepper_generate_ids": "Neue Ids generieren",
+	"button_stepper_back": "Zurück",
+	"button_stepper_download_csv": "CSV Datei herunterladen",
+	"button_okay": "Okay",
 	"button_publish": "Veröffentlichen",
   "button_create": "Erstellen",
 
@@ -88,6 +93,7 @@
 	"navigation.info": "Info",
 	"navigation.new_patient": "Neuer Patient",
 	"navigation.patientlist": "Patientenliste",
+	"navigation.project_id": "Projekt Ids",
   "navigation.consent_template": "Einwilligungsvorlagen",
   "navigation.configuration": "Konfiguration",
 
@@ -285,4 +291,19 @@
 
 	"footer.version": "Version ",
 	"footer.info": "Mainzelliste - Powered by Team Federated Information Systems from DKFZ Heidelberg"
+
+	"project_id.title": "Projekt Ids generieren",
+	"project_id.upload_label": "CSV Datei hochladen",
+	"project_id.upload_error": "Bitte wählen sie eine gültige Datei aus!",
+	"project_id.download_label": "CSV Datei herunterladen",
+	"project_id.generate_id_label": "Neue Ids generieren",
+	"project_id.id_type_label": "Id Typ",
+	"project_id.upload_info_text1": "Bitte wählen sie eine CSV-Datei mit den PatientenIds aus.",
+	"project_id.upload_info_text2": "Die Datei muss den IdTyp als erste Zeile und die Patienten-Ids in den weiteren Zeilen enthalten.",
+	"project_id.upload_info_text3": "Leere Zeilen können zu Fehlern führen!",
+
+	"projectIdEmptyFieldsDialog.text1": " Patienten konnten nicht gefunden werden.",
+	"projectIdEmptyFieldsDialog.text2": "Für nicht gefundene Patienten wurden keine neuen Ids generiert.",
+	"projectIdEmptyFieldsDialog.error_text1": "Es wurde kein Patient gefunden.",
+	"projectIdEmptyFieldsDialog.error_text2": "Bitte wählen sie eine gültige Datei aus."
 }

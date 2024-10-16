@@ -13,10 +13,8 @@ import {AccessDeniedComponent} from "./access-denied/access-denied.component";
 import {AddConsentComponent} from "./consent/add-consent/add-consent.component";
 import {EditConsentComponent} from "./consent/edit-consent/edit-consent.component";
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
+import {ProjectIdComponent} from './project-id/project-id.component';
 import {ConsentTemplatesComponent} from "./consent/consent-templates/consent-templates.component";
-import {
-  IdGeneratorsComponent
-} from "./configuration/idgenerator/id-generators/id-generators.component";
 import {ConfigurationComponent} from "./configuration/configuration/configuration.component";
 
 const routes: Routes = [
@@ -24,6 +22,7 @@ const routes: Routes = [
   {
     path: '', canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
       {path: '', pathMatch: 'full', redirectTo: 'patientlist'},
+      {path: 'project-id', component: ProjectIdComponent, data : { permission: Permission.GENERATE_IDS, checkIdType:true}},
       {path: 'info', component: InfoComponent, data: { permission: Permission.DEFAULT }},
       {path: 'configuration', component: ConfigurationComponent, data: { permission: Permission.EDIT_CONFIGURATION }},
       {path: 'idcard/:idType/:idString', component: IdcardComponent, data : { permission: Permission.READ_PATIENT, checkIdType:true}},

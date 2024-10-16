@@ -38,9 +38,12 @@ import {
   MomentDateAdapter
 } from "@angular/material-moment-adapter";
 import {ClipboardModule} from "@angular/cdk/clipboard";
-import {from} from "rxjs";
+import {firstValueFrom, from} from "rxjs";
 import {UserAuthService} from "./services/user-auth.service";
 import {NewIdDialog} from './idcard/dialogs/new-id-dialog';
+import {NgxCsvParserModule} from 'ngx-csv-parser';
+import {ProjectIdComponent} from './project-id/project-id.component';
+import {FileSaverModule} from 'ngx-filesaver';
 import {SharedModule} from "./shared/shared.module";
 import {ConsentModule} from "./consent/consent.module";
 import {MainLayoutModule} from "./main-layout/main-layout.module";
@@ -48,8 +51,14 @@ import {PatientModule} from "./patient/patient.module";
 import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.component";
 import {TranslateService} from '@ngx-translate/core';
 import {AccessDeniedComponent} from './access-denied/access-denied.component';
-import {InternationalizedMatPaginatorIntl} from "./shared/components/paginator/internationalized-mat-paginator-intl";
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import {NgxMatFileInputModule} from '@angular-material-components/file-input';
+import {MatStepperModule} from '@angular/material/stepper';
+import {ProjectIdTableComponent} from './project-id/table/table.component';
+import {ProjectIdEmptyFieldsDialog} from './project-id/dialog/project-id-empty-fields-dialog';
+import {
+  InternationalizedMatPaginatorIntl
+} from "./shared/components/paginator/internationalized-mat-paginator-intl";
+import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {ConsentTemplatesComponent} from './consent/consent-templates/consent-templates.component';
 import {ConfigurationModule} from "./configuration/configuration.module";
 
@@ -60,7 +69,7 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     .then(config => {
       from(keycloak.keycloakEvents$).subscribe(event => userAuthService.notifyKeycloakEvent(event));
       translate.setDefaultLang(config[0].defaultLanguage || "en-US");
-      return translate.use(translate.getDefaultLang()).toPromise()
+      return firstValueFrom(translate.use(translate.getDefaultLang()))
         .then(() => keycloak.init({
           config: {
             url: config[0].oAuthConfig?.url ?? "",
@@ -105,7 +114,10 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     NewIdDialog,
     AccessDeniedComponent,
     PageNotFoundComponent,
-    ConsentTemplatesComponent
+    ConsentTemplatesComponent,
+    ProjectIdComponent,
+    ProjectIdTableComponent,
+    ProjectIdEmptyFieldsDialog
   ],
   imports: [
     SharedModule,
@@ -129,7 +141,11 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     MatProgressBarModule,
     ClipboardModule,
     ConsentModule,
-    ConfigurationModule
+    ConfigurationModule,
+    NgxCsvParserModule,
+    FileSaverModule,
+    NgxMatFileInputModule,
+    MatStepperModule
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
