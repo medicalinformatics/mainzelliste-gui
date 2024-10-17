@@ -310,9 +310,9 @@ export class IdcardComponent implements OnInit {
   }
 
   getContactInfo(){
-    const contact = this.patient.fields[0]; 
-    console.log(contact);
-    return contact;
+    const contact = this.patient.fields; 
+    const text = contact["Vorname"] + " " + contact["Nachname"] + "\n" + contact["PLZ"] + "" + contact["Wohnort"];
+    return text;
   }
 
 }
