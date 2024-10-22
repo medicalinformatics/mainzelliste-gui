@@ -5,6 +5,9 @@
       <mat-card id="patientendaten" style="flex: 1 1 25%; display: flex;  flex-flow: column">
         <mat-card-title>{{'idcard.title_patient_data' | translate}}</mat-card-title>
         <app-patient-fields [readOnly]=true [fields]="patient.fields"></app-patient-fields>
+        <button class="mat-card__action" [cdkCopyToClipboard]="getContactInfo()" mat-fab>
+          <mat-icon matTooltip="Copy Contact Information">file_copy</mat-icon>
+        </button>
       </mat-card>
 
       <mat-card class="mat-card-scrollable" id="pseudonyme">
@@ -14,11 +17,6 @@
       </mat-card>
 
       <section style="display: flex; flex: 1 1 1%; margin-left:2%; flex-flow: column;">
-      
-        <button [cdkCopyToClipboard]="getContactInfo()" mat-fab [ngClass]="this.hasAllIds() ? '': 'idcard-button'"
-          style="margin-bottom: 15px">
-          <mat-icon matTooltip="Copy Contact Information">file_copy</mat-icon>
-        </button>
         <!--      <button mat-fab style="background-color:#053E6A; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">-->
         <!--        <mat-icon matTooltip="Drucken">print</mat-icon>-->
         <!--      </button>-->

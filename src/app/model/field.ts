@@ -9,6 +9,7 @@ export class Field {
     public name: string,
     public mainzellisteField: string,
     public mainzellisteFields: string[],
+    public semantic: string,
     public type: FieldType,
     public required: boolean,
     public validator: string,
