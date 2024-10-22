@@ -334,23 +334,20 @@ export class IdcardComponent implements OnInit {
 
   getContactInfo() {
     const contact = this.patient.fields;
+    const fieldMap: { [key: string]: string } = {
+      firstname: "",
+      lastname: "",
+      plz: "",
+      residence: ""
+    };
 
-    var firstname = "";
-    var lastname = "";
-    var plz = "";
-    var residence = "";
     this.patientService.getConfiguredFields("R").forEach(fieldConfig => {
-      if (fieldConfig.semantic == "firstname")
-        firstname = contact[fieldConfig.name]
-      if (fieldConfig.semantic == "lastname")
-        lastname = contact[fieldConfig.name]
-      if (fieldConfig.semantic == "plz")
-        plz = contact[fieldConfig.name]
-      if (fieldConfig.semantic == "residence")
-        residence = contact[fieldConfig.name]
-    })
+      if (fieldMap.hasOwnProperty(fieldConfig.semantic)) {
+      fieldMap[fieldConfig.semantic] = contact[fieldConfig.name];
+      }
+    });
 
-    const text = firstname + " " + lastname + "\n" + plz + "" + residence;
+    const text = `${fieldMap.firstname} ${fieldMap.lastname}\n${fieldMap.plz}${fieldMap.residence}`;
     return text;
   }
 
