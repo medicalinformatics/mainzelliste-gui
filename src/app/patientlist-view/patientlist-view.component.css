@@ -19,13 +19,13 @@ h1{
 }
 
 .mat-chip.mat-standard-chip{
-  background-color: #ADDFFF;
-  color:#294E66;
+  background-color: #aecbde;
+  color: #162b38;
   border-radius: 0px;
 }
 
 #filterBoard{
-  font-size: large;
+  font-size: medium;
   width:96%;
   margin-right: 2%;
   margin-left: 2%;
