@@ -200,7 +200,7 @@ export class PatientListService {
   }
 
   findDefaultIdType(configuredIdTypes: string[]): string {
-    if (Tenant.DEFAULT_ID == this.authorizationService.getCurrentTenantId() &&
+    if (Tenant.DEFAULT_ID == this.authorizationService.currentTenantId &&
         this.patientList.mainIdType != undefined &&
         configuredIdTypes.some(t => t == this.patientList.mainIdType)
     )
@@ -218,7 +218,7 @@ export class PatientListService {
   getPatients(filters: Array<{ field: string, fields: string[], searchCriteria: string, isIdType: boolean }>,
               pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
     // find current tenant id
-    let tenantId = this.authorizationService.getCurrentTenantId();
+    let tenantId = this.authorizationService.currentTenantId;
     if(tenantId === undefined || tenantId == Tenant.DEFAULT_ID)
       tenantId = "";
 

@@ -2,11 +2,12 @@ import {Injectable} from '@angular/core';
 import {AppConfigService} from "../app-config.service";
 import {UserAuthService} from "./user-auth.service";
 import {TranslateService} from '@ngx-translate/core';
-import {MiscellaneousPermission, Operation, Tenant, TenantPermission} from "../model/tenant";
+import {Operation, Tenant, TenantPermission} from "../model/tenant";
 import {Permission} from "../model/permission";
 import {ClaimPermissions} from "../model/api/configuration-claims-data";
 import {IdType} from "../model/id-type";
 import {AuthorizationState} from "../model/authorization-state";
+import {LocalStorageService} from "./local-storage.service";
 
 @Injectable({
   providedIn: 'root'
@@ -15,19 +16,19 @@ export class AuthorizationService {
 
   private readonly userRoles: string[] = [];
   private readonly configuredTenants: Tenant[];
-  private currentTenantId: string;
   private allowedIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
   private allowedExternalIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
   private allowedAssociatedIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
   private allowedAssociatedExternalIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
   private allowedAssociatedIdTypesMap: Map<string, IdType[]> = new Map<string, IdType[]>();
   private allowedFieldNames: Map<Operation, string[]> = new Map<Operation, string[]>();
-  public authorizationState :AuthorizationState;
+  public authorizationState :AuthorizationState = new AuthorizationState();
 
   constructor(
     private translate: TranslateService,
     private configService: AppConfigService,
-    private authentication: UserAuthService
+    private authentication: UserAuthService,
+    private localStorageService: LocalStorageService
   ) {
     this.userRoles = this.authentication.getRoles();
     this.configuredTenants = this.configService.getMainzellisteClaims()
@@ -37,13 +38,12 @@ export class AuthorizationService {
             e.permissions.tenant?.idTypes || [],
             this.convertClaimPermissions(e.permissions))
         })
-    this.currentTenantId = this.configuredTenants.length > 0 ? this.configuredTenants[0].id : "";
-
-    //init. authorization state data model
-    this.authorizationState = new AuthorizationState();
-    this.initAuthorizationState()
-
-    this.initUserAllowedAttributes()
+    if(this.currentTenantId.length == 0 || this.configuredTenants.every(t => t.id != this.currentTenantId))
+      this.currentTenantId = this.configuredTenants.length > 0 ? this.configuredTenants[0].id : "";
+    else {
+      this.initUserAllowedAttributes();
+      this.initAuthorizationState();
+    }
   }
 
   public initUserAllowedIDTypes() {
@@ -217,14 +217,14 @@ export class AuthorizationService {
     return this.configuredTenants;
   }
 
-  setTenant(tenantId: string){
-    this.currentTenantId = tenantId;
+  set currentTenantId(tenantId: string){
+    this.localStorageService.tenantId = tenantId;
     this.initUserAllowedAttributes();
     this.initAuthorizationState();
   }
 
-  getCurrentTenantId() {
-    return this.currentTenantId;
+  get currentTenantId():string {
+    return this.localStorageService.tenantId;
   }
 
   hasPermission(permission: Permission): boolean {

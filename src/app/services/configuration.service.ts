@@ -33,7 +33,7 @@ export class ConfigurationService {
     return this.sessionService.createToken("editConfiguration", {})
     .pipe(
         mergeMap(token => this.resolveEditConfigurationToken(token.id,
-          this.authorizationService.getCurrentTenantId(), idGeneratorConfig)),
+          this.authorizationService.currentTenantId, idGeneratorConfig)),
         catchError(e => {
           // handle failed token creation
           if (e instanceof HttpErrorResponse && (e.status == 404) && ErrorMessages.ML_SESSION_NOT_FOUND.match(e))

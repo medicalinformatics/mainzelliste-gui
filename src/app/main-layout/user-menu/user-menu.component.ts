@@ -3,6 +3,7 @@ import {UserAuthService} from "../../services/user-auth.service";
 import { TranslateService } from '@ngx-translate/core';
 import {AuthorizationService} from "../../services/authorization.service";
 import {Router} from "@angular/router";
+import {LocalStorageService} from "../../services/local-storage.service";
 
 @Component({
   selector: 'app-user-menu',
@@ -14,7 +15,8 @@ export class UserMenuComponent {
     public userAuthService: UserAuthService,
     public translate :TranslateService,
     public authorizationService: AuthorizationService,
-    public router: Router
+    public router: Router,
+    private localStorageService :LocalStorageService
   ) {
   }
 
@@ -23,7 +25,8 @@ export class UserMenuComponent {
   }
 
   useLanguage(language: string): void {
-    this.translate.use(language);
+    this.localStorageService.language = language;
+    this.translate.use(language).subscribe();
   }
 
   getTenants(): { id: string, name: string }[] {
@@ -31,7 +34,7 @@ export class UserMenuComponent {
   }
 
   setTenant(tenantId: string){
-    this.authorizationService.setTenant(tenantId);
+    this.authorizationService.currentTenantId = tenantId;
     this.router.navigate([`/patientlist`]).then();
   }
 }

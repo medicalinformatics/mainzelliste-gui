@@ -6,7 +6,6 @@ import {Token, TokenType} from '../model/token';
 import {TokenData} from '../model/token-data';
 import {AppConfigService} from "../app-config.service";
 import {catchError, map, mergeMap} from "rxjs/operators";
-import {Router} from "@angular/router";
 import {getErrorMessageFrom} from "../error/error-utils";
 import {TranslateService} from '@ngx-translate/core';
 
@@ -22,7 +21,6 @@ export class SessionService {
   constructor(
     translate: TranslateService,
     private httpClient: HttpClient,
-    private router: Router,
     private appConfigService: AppConfigService
   ) {
     SessionService.translate = translate;
