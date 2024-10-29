@@ -4,6 +4,7 @@
 	"button_edit_consent": "Einwilligung bearbeiten",
   "button_view_consent": "Einwilligung ansehen",
 	"button_delete_consent": "Einwilligung löschen",
+  "button_open_consent_history": "Einwilligung-Historie ansehen",
   "button_add_consent_scan": "PDF-Datei hinzufügen",
   "button_generate_id": "ID generieren",
 	"button_delete": "Löschen",
@@ -81,6 +82,9 @@
   "consent_template.validity_year": "Jahren",
   "consent_template.validity_month": "Monaten",
   "consent_template.validity_day": "Tage",
+
+  "consent_dialog_history_title": "Einwilligung-Historie",
+  "consent_dialog_history_status": "Vorheriger status",
 
   "add_consent.rejected-dialog-text": "Alle Einwilligungsmodule wurden abgelehnt. Der Einwilligungsstatus wird automatische als Widerruft gesetzt",
   "add_consent.inactivated-dialog-text": "Gültigkeitsende der Einwilligung liegt in der Vergangenheit. Der Einwilligungstatus wird automatische als Inaktive gesetzt",
