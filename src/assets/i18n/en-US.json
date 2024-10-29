@@ -86,7 +86,7 @@
   "consent_dialog_history_title": "Consent history",
   "consent_dialog_history_status": "Previous status",
 
-  "add_consent.rejectedConsent historytext": "All consent modules were rejected. The consent status is automatically set as Rejected",
+  "add_consent.rejected-dialog-text": "All consent modules were rejected. The consent status is automatically set as Rejected",
   "add_consent.inactivated-dialog-text": "The end of the Timeframe of this consent is in the past. The consent status is automatically set as Inactive",
 
   "navigation.info": "Info",

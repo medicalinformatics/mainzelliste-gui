@@ -308,8 +308,7 @@ export class ConsentService {
 
   public addConsent(dataModel: Consent): Observable<FhirResource> {
     if (dataModel.fhirResource == undefined) {
-      this.handleError<any>(this.translate.instant('error.consent_service_fhir_consent_not_found'));
-      return of({id: "", title: "NOT FOUND", date: new Date(), items: []} as unknown as fhir4.Consent);
+      throw new Error(this.translate.instant('error.consent_service_fhir_consent_not_found'));
     } else {
       // set patient id in fhir resource
       dataModel.fhirResource.patient = {
@@ -332,7 +331,7 @@ export class ConsentService {
     }
   }
 
-  public editConsent(dataModel: Consent, force: boolean): Observable<FhirResource> {
+  public updateConsent(dataModel: Consent, force: boolean, searchParams?:SearchParams): Observable<FhirResource> {
     if (dataModel.fhirResource == undefined) {
       throw new Error(this.translate.instant('error.consent_service_fhir_consent_not_found'));
     } else {
@@ -341,7 +340,7 @@ export class ConsentService {
       } catch (e){
         return throwError(e);
       }
-      return this.updateFhirResource<fhir4.Consent>("editConsent", {}, 'Consent', dataModel.fhirResource);
+      return this.updateFhirResource<fhir4.Consent>("editConsent", {}, 'Consent', dataModel.fhirResource, searchParams);
     }
   }
 
