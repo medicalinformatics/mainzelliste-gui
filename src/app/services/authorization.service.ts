@@ -129,9 +129,10 @@ export class AuthorizationService {
           this.authorizationState.setConsent(permission.operations);
         else if(permission.type ==  "consentTemplate")
           this.authorizationState.setConsentTemplate(permission.operations);
-        else if (permission.type == "miscellaneous")
-          this.authorizationState.setMiscellaneous(permission.miscellaneous)
       })
+      this.authorizationState.setMiscellaneous(currentTenant.permissions
+        .filter(p => p.type == "miscellaneous")
+      );
     }
   }
 
