@@ -27,6 +27,9 @@ import {ConsentRejectedDialog} from "../consent/dialogs/consent-rejected-dialog"
 import {ConsentInactivatedDialog} from "../consent/dialogs/consent-inactivated-dialog";
 import {IdGenerator} from "../model/idgenerator";
 import {AppConfigService} from "../app-config.service";
+import {
+  ConsentHistoryDialogComponent
+} from "../consent/consent-history-dialog/consent-history-dialog.component";
 
 @Component({
   selector: 'app-idcard',
@@ -55,6 +58,7 @@ export class IdcardComponent implements OnInit {
     private titleService: GlobalTitleService,
     private authorizationService: AuthorizationService,
     public consentDialog: MatDialog,
+    public consentHistoryDialog: MatDialog,
     public deletePatientDialog: MatDialog,
     public deleteConsentDialog: MatDialog,
     public consentRejectedDialog: MatDialog,
@@ -254,6 +258,17 @@ export class IdcardComponent implements OnInit {
         }
       })
     );
+  }
+
+  openViewConsentHistoryDialog(consentId: string, version :number) {
+    this.consentHistoryDialog.open(ConsentHistoryDialogComponent, {
+        width: '900px',
+        disableClose: true,
+        data: {
+          consentId: consentId,
+          consentVersion: version
+        }
+      });
   }
 
   getIdTypes():IdType[] {

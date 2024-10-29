@@ -98,12 +98,14 @@ export class SessionService {
    * Create a request for generating a token for a given session
    * @param tokenType
    * @param tokenData
+   * @param allowedUses
    */
-  createToken(tokenType: TokenType, tokenData: TokenData): Observable<Token> {
+  createToken(tokenType: TokenType, tokenData: TokenData, allowedUses? :number): Observable<Token> {
     return this.createSessionIfNotValid().pipe(
       mergeMap(r => this.httpClient.post<Token>(this.appConfigService.data[0].url + '/sessions/'
         + this.sessionId + '/tokens', {
         type: tokenType,
+        allowedUses: allowedUses ?? 1,
         data: tokenData
       }, {
         headers: new HttpHeaders().append('mainzellisteApiVersion', '3.2')

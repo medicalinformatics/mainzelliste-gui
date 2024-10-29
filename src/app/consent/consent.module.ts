@@ -16,6 +16,10 @@ import {ConsentTemplateModulesComponent} from "./consent-template-detail/consent
 import {MatDividerModule} from "@angular/material/divider";
 import {InvalidConsentPeriodDirective} from "../shared/directives/invalid-consent-period.directive";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {
+  ConsentHistoryDialogComponent
+} from "./consent-history-dialog/consent-history-dialog.component";
+import {MatTableModule} from "@angular/material/table";
 
 
 @NgModule({
@@ -25,11 +29,13 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
     MatProgressSpinnerModule,
     MatDividerModule,
     InvalidConsentPeriodDirective,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatTableModule
   ],
   declarations: [
     ConsentDetailComponent,
     ConsentDialogComponent,
+    ConsentHistoryDialogComponent,
     AddConsentComponent,
     EditConsentComponent,
     ConsentRejectedDialog,

@@ -4,6 +4,7 @@
 	"button_edit_consent": "Edit consent",
   "button_view_consent": "View consent",
 	"button_delete_consent": "Delete consent",
+  "button_open_consent_history": "View consent history",
   "button_add_consent_scan": "Add PDF file",
   "button_generate_id": "Generate ID",
 	"button_delete": "Delete",
@@ -82,7 +83,10 @@
   "consent_template.validity_month": "Months",
   "consent_template.validity_day": "Days",
 
-  "add_consent.rejected-dialog-text": "All consent modules were rejected. The consent status is automatically set as Rejected",
+  "consent_dialog_history_title": "Consent history",
+  "consent_dialog_history_status": "Previous status",
+
+  "add_consent.rejectedConsent historytext": "All consent modules were rejected. The consent status is automatically set as Rejected",
   "add_consent.inactivated-dialog-text": "The end of the Timeframe of this consent is in the past. The consent status is automatically set as Inactive",
 
   "navigation.info": "Info",
