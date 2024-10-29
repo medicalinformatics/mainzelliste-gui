@@ -126,8 +126,10 @@
 
 	"consentDetail.select_consent_template": "Select consent template:",
 	"consentDetail.consent_template": "Consent template",
-	"consentDetail.validity_label": "Valid from",
+	"consentDetail.valid_from": "Valid from",
 	"consentDetail.validity_date_label": "Select validity date",
+  "consentDetail.valid_until": "until ",
+  "consentDetail.valid_unlimited": " for an unlimited period of time",
   "consentDetail.scans": "Scanned documents:",
 
   "error.consentDetail.validity_date": "Validity period lies in the past",

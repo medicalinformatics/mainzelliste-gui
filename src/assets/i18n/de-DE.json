@@ -126,8 +126,10 @@
 
 	"consentDetail.select_consent_template": "Einwilligungsvorlage auswählen:",
 	"consentDetail.consent_template": "Einwilligungsvorlage",
-	"consentDetail.validity_label": "Gültig ab",
+	"consentDetail.valid_from": "Gültig ab",
 	"consentDetail.validity_date_label": "Gültigkeitsdatum auswählen",
+  "consentDetail.valid_until": "bis ",
+  "consentDetail.valid_unlimited": "für einen unbegrenzten Zeitraum",
   "consentDetail.scans": "Gescannte Dokumenten:",
 
   "error.consentDetail.validity_date": "Gültigkeitszeitraum liegt in der vergangenheit",

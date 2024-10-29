@@ -256,7 +256,7 @@ export class ConsentService {
       period = new Date(fhirPeriod.end).getTime() - validFrom.toDate().getTime();
     } else {
       validFrom = !initNewDataModel ? _moment(fhirPeriod.start) : validFrom;
-      period = new Date(fhirPeriod.end).getTime() - validFrom.toDate().getTime();
+      period = new Date(fhirPeriod.end).getTime() - new Date(fhirPeriod.start).getTime();
     }
 
     return {
