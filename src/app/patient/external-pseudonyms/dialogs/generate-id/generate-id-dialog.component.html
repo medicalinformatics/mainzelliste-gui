@@ -8,7 +8,7 @@
     </h4>
     <mat-form-field appearance="fill">
       <mat-label>{{'newIdDialog.id_types' | translate}}</mat-label>
-      <mat-select [(ngModel)]="selectedIdType" name="idType" required>
+      <mat-select [(ngModel)]="selectedIdType" name="idType" required="true">
         <mat-option *ngFor="let idType of this.data.idTypes" [value]="idType">
           {{idType}}
         </mat-option>

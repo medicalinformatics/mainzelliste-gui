@@ -56,7 +56,7 @@ export class EditConsentComponent implements OnInit {
 
   editConsent(force?: boolean) {
     this.dataModel.patientId = {idType: this.idType, idString: this.idString};
-    this.consentService.editConsent(this.dataModel, force || false)
+    this.consentService.updateConsent(this.dataModel, force || false)
     .pipe(
       mergeMap(c =>
         this.consentService.createScansAndProvenance(this.dataModel, (c as fhir4.Consent).id || "")

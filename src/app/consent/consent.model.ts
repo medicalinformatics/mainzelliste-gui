@@ -39,11 +39,18 @@ export interface ConsentRow {
   createdAt: string,
   title: string,
   validityPeriod: string,
-  version?: string,
+  version: number,
   status: string
 }
 
 export type ConsentStatus = "draft" | "proposed" | "active" | "rejected" | "inactive" | "entered-in-error";
+
+export interface ConsentHistoryRow {
+  id: string,
+  createdAt: string,
+  version: number,
+  status: string
+}
 
 export interface ConsentItem {
   type?: string

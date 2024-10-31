@@ -4,6 +4,7 @@
 	"button_edit_consent": "Edit consent",
   "button_view_consent": "View consent",
 	"button_delete_consent": "Delete consent",
+  "button_open_consent_history": "View consent history",
   "button_add_consent_scan": "Add PDF file",
 	"button_generate_id": "Generate ID",
 	"button_delete": "Delete",
@@ -87,6 +88,9 @@
   "consent_template.validity_month": "Months",
   "consent_template.validity_day": "Days",
 
+  "consent_dialog_history_title": "Consent history",
+  "consent_dialog_history_status": "Previous status",
+
     "add_consent.rejected-dialog-text": "All consent modules were rejected. The consent status is automatically set as Rejected",
     "add_consent.inactivated-dialog-text": "The end of the Timeframe of this consent is in the past. The consent status is automatically set as Inactive",
 
@@ -128,8 +132,10 @@
 
 	"consentDetail.select_consent_template": "Select consent template:",
 	"consentDetail.consent_template": "Consent template",
-	"consentDetail.validity_label": "Valid from",
+	"consentDetail.valid_from": "Valid from",
 	"consentDetail.validity_date_label": "Select validity date",
+  "consentDetail.valid_until": "until ",
+  "consentDetail.valid_unlimited": " for an unlimited period of time",
   "consentDetail.scans": "Scanned documents:",
 
   "error.consentDetail.validity_date": "Validity period lies in the past",

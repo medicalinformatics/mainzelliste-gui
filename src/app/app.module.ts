@@ -61,9 +61,15 @@ import {
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {ConsentTemplatesComponent} from './consent/consent-templates/consent-templates.component';
 import {ConfigurationModule} from "./configuration/configuration.module";
+import {LocalStorageService} from "./services/local-storage.service";
 
-function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService,
-                              userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
+function initializeAppFactory(
+    configService: AppConfigService,
+    keycloak: KeycloakService,
+    userAuthService: UserAuthService,
+    translate: TranslateService,
+    localStorageService :LocalStorageService
+): () => Promise<any> {
   translate.addLangs(['en-US', 'de-DE']);
   return () => configService.init()
     .then(config => {
@@ -153,7 +159,7 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     {
       provide: APP_INITIALIZER,
       useFactory: initializeAppFactory,
-      deps: [AppConfigService, KeycloakService, UserAuthService, TranslateService],
+      deps: [AppConfigService, KeycloakService, UserAuthService, TranslateService, LocalStorageService],
       multi: true
     },
     {provide: ErrorHandler, useClass: GlobalErrorHandler},

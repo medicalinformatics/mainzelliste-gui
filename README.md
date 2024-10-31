@@ -95,12 +95,16 @@ secrets:
         { "i18n": "last_name_text", "name": "Nachname", "mainzellisteField": "nachname"},
         { "i18n": "birth_name_text", "name": "Geburtsname", "mainzellisteField": "geburtsname"},
         { "i18n": "birth_date_text", "name": "Geburtdatum", "mainzellisteFields": ["geburtstag", "geburtsmonat", "geburtsjahr"]},
-        { "i18n": "residence_text", "name": "Wohnort", "mainzellisteField": "plz"},
-        { "i18n": "zip_code_text", "name": "PLZ", "mainzellisteField": "ort"}
+        { "i18n": "residence_text", "name": "Wohnort", "mainzellisteField": "ort"},
+        { "i18n": "zip_code_text", "name": "PLZ", "mainzellisteField": "plz"}
       ],
       "debug": false,
       "betaFeatures": {
-        "consent": false
+        "consent": false,
+        "copyConcatenatedId": false,
+        "copyId": true,
+        "configuration": true,
+        "projectIds": true
       }
     }
   ]

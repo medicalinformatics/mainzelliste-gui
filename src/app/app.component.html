@@ -12,8 +12,8 @@
     <mat-sidenav mode="side" class="sidenav-menu" opened>
       <app-navigation style=" padding-top:22px; color: white; display: flex; flex-flow: column"></app-navigation>
     </mat-sidenav>
-    <mat-sidenav-content style="display: flex; flex-direction: column">
-      <div style="padding-bottom: 5%; padding-top: 30px; flex: 1 1 95%; display: flex; flex-flow: column;">
+    <mat-sidenav-content style="display: flex; flex-direction: column; height: 100%">
+      <div style="display: flex; flex-flow: column; padding: 30px 2% 5% 2%;">
         <div class="title" *ngIf="this.titleService.titleText.length > 0">
           <h1>
             <mat-icon *ngIf="titleService.titleIcon != undefined"
@@ -21,13 +21,11 @@
             {{this.titleService.titleText}}</h1>
         </div>
         <app-error-card [(messages)]="errorNotificationService.messages"></app-error-card>
-        <div>
-          <div style="flex: 1 1 auto;min-height: 90%;">
-            <router-outlet></router-outlet>
-          </div>
+        <div style="flex: 1 1 auto; height: 100%">
+          <router-outlet></router-outlet>
         </div>
       </div>
-      <app-footer style="flex: 0 0 5%;"></app-footer>
+      <app-footer style="height: 120px;"></app-footer>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>

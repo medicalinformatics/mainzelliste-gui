@@ -1,18 +1,5 @@
-#idGenerators {
-  width: 100%;
-}
-
-.idgenerator-row:hover {
+.consent-row:hover {
   background-color: #dddddd;
-}
-
-.disabled {
-  color: rgb(161, 159, 159);
-}
-mat-paginator{
-  float:right;
-  margin-top: 1.5%;
-  background-color: transparent;
 }
 
 .mat-basic-chip-status {
@@ -37,16 +24,37 @@ mat-paginator{
   background-color: #fdf6d2;
 }
 
-.mat-column-idType {
-  width: 150px;
-  text-align: left;
+.mat-basic-chip-status#proposed {
+  background-color: #fdf6d2;
 }
 
-.mat-column-idgenerator {
+.mat-basic-chip-status#rejected {
+  background-color: #fbcdcd;
+}
+
+.mat-basic-chip-status#entered-in-error {
+  background-color: #fbcdcd;
+}
+/*.mat-column-period {*/
+/*  width: 32px;*/
+/*  text-align: right;*/
+/*}*/
+
+.mat-column-version {
+  width: 50px;
+  text-align: center;
+}
+
+.mat-column-date {
+  padding-left: 16px;
+}
+
+.mat-column-status {
   width: 150px;
-  text-align: left;
+  text-align: center;
 }
 
 .mat-column-actions {
+  width: 40px;
   text-align: right;
 }

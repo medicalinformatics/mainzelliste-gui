@@ -13,8 +13,7 @@ export class NewIdDialog implements OnInit {
     public dialogRef: MatDialogRef<NewIdDialog>,
     @Inject(MAT_DIALOG_DATA) public data: Map<string, Id[]>,
     @Inject(MAT_DIALOG_DATA) public dataModel: {
-      idType: string,
-      idString: string,
+      externalId: Id,
       resultIdType: string
     }
   ) {
@@ -24,32 +23,11 @@ export class NewIdDialog implements OnInit {
   }
 
   getIdTypes() {
-    return [ ... this.data.keys()];
+    return [...this.data.keys()];
   }
 
   getExternalIds(): Id[] {
     return this.data.get(this.dataModel.resultIdType) || [];
-  }
-
-  idTypeSelected(selectedIdType: string) {
-    if (this.dataModel != undefined) {
-      this.dataModel.resultIdType = selectedIdType;
-    } else {
-      this.dataModel = {idType: "", idString: "", resultIdType: selectedIdType}
-    }
-  }
-
-  selectExternalId(selectedId: { idType: string, idString: string, resultIdType: string }) {
-    if (this.dataModel != undefined) {
-      this.dataModel.idType = selectedId.idType;
-      this.dataModel.idString = selectedId.idString;
-    } else {
-      this.dataModel = {
-        idType: selectedId.idType,
-        idString: selectedId.idString,
-        resultIdType: ""
-      }
-    }
   }
 
   onCancel(): void {

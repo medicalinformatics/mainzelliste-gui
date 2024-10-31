@@ -27,6 +27,11 @@ import {ConsentRejectedDialog} from "../consent/dialogs/consent-rejected-dialog"
 import {ConsentInactivatedDialog} from "../consent/dialogs/consent-inactivated-dialog";
 import {IdGenerator} from "../model/idgenerator";
 import {AppConfigService} from "../app-config.service";
+import {
+  ConsentHistoryDialogComponent
+} from "../consent/consent-history-dialog/consent-history-dialog.component";
+import {FhirResource} from "fhir-kit-client/types/index";
+import {SearchParams} from "fhir-kit-client";
 
 @Component({
   selector: 'app-idcard',
@@ -55,6 +60,7 @@ export class IdcardComponent implements OnInit {
     private titleService: GlobalTitleService,
     private authorizationService: AuthorizationService,
     public consentDialog: MatDialog,
+    public consentHistoryDialog: MatDialog,
     public deletePatientDialog: MatDialog,
     public deleteConsentDialog: MatDialog,
     public consentRejectedDialog: MatDialog,
@@ -160,17 +166,15 @@ export class IdcardComponent implements OnInit {
 
     dialogRef.beforeClosed().subscribe(dataModel => {
       if (dataModel?.consent) {
-        let consentModel: Consent = dataModel?.consent;
-        consentModel.patientId = {idType: this.idType, idString: this.idString};
-        this.consentService.addConsent(consentModel).pipe(
-          mergeMap(c =>
-            this.consentService.createScansAndProvenance(consentModel, (c as fhir4.Consent).id || "")
-          )
-        ).subscribe(r => {
-            processDone.emit(true);
-            this.loadConsents()
-          },
-          error => processDone.emit(false));
+        dataModel.consent.patientId = {idType: this.idType, idString: this.idString};
+        dataModel.consent.fhirResource.patient = {
+          identifier: this.consentService.convertToFhirIdentifier(dataModel.consent.patientId)
+        }
+        this.updateConsent(dataModel.consent, false, processDone,
+          {
+          'patient:identifier': dataModel.consent.fhirResource.patient.identifier?.system + '|' + dataModel.consent.fhirResource.patient.identifier?.value,
+          'policyUri': 'fhir/Questionnaire/' + dataModel.consent.templateId
+          });
       }
     });
   }
@@ -190,18 +194,17 @@ export class IdcardComponent implements OnInit {
 
       dialogRef.beforeClosed().subscribe(dataModel => {
         if (dataModel?.consent) {
-          this.editConsent(dataModel.consent, false, processDone);
+          dataModel.consent.patientId = {idType: this.idType, idString: this.idString};
+          this.updateConsent(dataModel.consent, false, processDone);
         }
       });
     })
   }
 
-  editConsent(dataModel: Consent, force: boolean, processDone: EventEmitter<boolean>) {
-    dataModel.patientId = {idType: this.idType, idString: this.idString};
-    this.consentService.editConsent(dataModel, force || false)
-    .pipe(
+  updateConsent(dataModel: Consent, force: boolean, processDone: EventEmitter<boolean>, searchParams? :SearchParams) {
+    this.consentService.updateConsent(dataModel, force || false, searchParams).pipe(
       mergeMap(c =>
-        this.consentService.createScansAndProvenance(dataModel, (c as fhir4.Consent).id || "")
+        this.consentService.createScansAndProvenance(dataModel, (c as fhir4.Consent).id ?? "")
       ),
       catchError(e => throwError(e))
     ).subscribe(
@@ -228,7 +231,7 @@ export class IdcardComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result)
-        this.editConsent(dataModel, true, processDone);
+        this.updateConsent(dataModel, true, processDone);
     });
   }
 
@@ -239,7 +242,7 @@ export class IdcardComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result)
-        this.editConsent(dataModel, true, processDone);
+        this.updateConsent(dataModel, true, processDone);
     });
   }
 
@@ -254,6 +257,17 @@ export class IdcardComponent implements OnInit {
         }
       })
     );
+  }
+
+  openViewConsentHistoryDialog(consentId: string, version :number) {
+    this.consentHistoryDialog.open(ConsentHistoryDialogComponent, {
+        width: '900px',
+        disableClose: true,
+        data: {
+          consentId: consentId,
+          consentVersion: version
+        }
+      });
   }
 
   getIdTypes():IdType[] {
@@ -288,7 +302,7 @@ export class IdcardComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result != null) {
-        this.generateId(result.idType, result.idString, result.resultIdType);
+        this.generateId(result.externalId?.idType ?? "", result.externalId?.idString ?? "", result.resultIdType);
       }
     })
   }

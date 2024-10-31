@@ -1,4 +1,4 @@
-import {MiscellaneousPermission, Operation} from "./tenant";
+import {MiscellaneousPermission, Operation, TenantPermission} from "./tenant";
 
 export class AuthorizationState{
   DEFAULT: boolean = false;
@@ -69,9 +69,13 @@ export class AuthorizationState{
     this.DELETE_CONSENT_TEMPLATE = operation.some(o => o == "D");
   }
 
-  setMiscellaneous(miscellaneous: MiscellaneousPermission | undefined) {
-    switch (miscellaneous){
-      case "tt_editConfiguration": this.EDIT_CONFIGURATION = true;
-    }
+  setMiscellaneous(permissions: TenantPermission[]) {
+    //set default values
+    this.EDIT_CONFIGURATION = false;
+    permissions.forEach( p => {
+      switch (p.miscellaneous){
+        case "tt_editConfiguration": this.EDIT_CONFIGURATION = true;
+      }
+    });
   }
 }

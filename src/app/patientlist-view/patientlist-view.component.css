@@ -19,16 +19,14 @@ h1{
 }
 
 .mat-chip.mat-standard-chip{
-  background-color: #ADDFFF;
-  color:#294E66;
+  background-color: #aecbde;
+  color: #162b38;
   border-radius: 0px;
 }
 
 #filterBoard{
-  font-size: large;
-  width:96%;
-  margin-right: 2%;
-  margin-left: 2%;
+  font-size: medium;
+  width:100%;
 }
 
 /*following: CSS-Design of all Inputs (specially for Search/FilterInput in Patientlist-ViewComponent, Patient-FieldsComponent and Patient-PseudonymComponent) */
@@ -52,6 +50,5 @@ h1{
 mat-paginator{
   float:right;
   margin-top: 1.5%;
-  margin-right: 1.5%;
   background-color: transparent;
 }
