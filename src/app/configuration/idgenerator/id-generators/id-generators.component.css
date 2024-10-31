@@ -1,6 +1,5 @@
 #idGenerators {
-  margin: 0 2.5%;
-  width: 95%;
+  width: 100%;
 }
 
 .idgenerator-row:hover {
@@ -13,7 +12,6 @@
 mat-paginator{
   float:right;
   margin-top: 1.5%;
-  margin-right: 1.5%;
   background-color: transparent;
 }
 

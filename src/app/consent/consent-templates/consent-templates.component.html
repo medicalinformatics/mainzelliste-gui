@@ -1,12 +1,12 @@
 <div style="height: 100%; min-height: 10em; width: 100%;display: flex;
 flex-flow: column;">
-  <div style="width: 96%; margin-right: 2%; margin-left: 2%; margin-bottom: 20px;">
+  <div style="width: 100%; margin-bottom: 20px;">
     <ng-container *ngIf="this.consentService.isServiceEnabled()">
       <button mat-raised-button *appHasPermission="Permission.CREATE_CONSENT_TEMPLATE" class="submit" style="clear: both; float: right;"
               (click)="openConsentTemplateDialog()">Neue Vorlage <mat-icon matTooltip="Einwilligungsvorlage Erstellen">assignment_add</mat-icon></button>
     </ng-container>
   </div>
-  <div class="mat-elevation-z8" style="width: 96%; margin-right: 2%; margin-left: 2%;">
+  <div class="mat-elevation-z8">
     <table id="consentTemplates" mat-table [dataSource]="templatesMatTableData" style="width: 100%;">
 
       <ng-container matColumnDef="id">
