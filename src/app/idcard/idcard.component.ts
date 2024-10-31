@@ -302,7 +302,7 @@ export class IdcardComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result != null) {
-        this.generateId(result.idType, result.idString, result.resultIdType);
+        this.generateId(result.externalId?.idType ?? "", result.externalId?.idString ?? "", result.resultIdType);
       }
     })
   }
