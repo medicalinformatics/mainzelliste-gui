@@ -34,6 +34,7 @@ export class ProjectIdComponent implements OnInit {
   delimiter: string = ",";
   isLinear: boolean = true;
   emptyFields: number = 0;
+  inputError: number = 0;
 
   @ViewChild("stepper", { static: false }) stepper!: MatStepper;
   @ViewChild("stepTwo", { static: false }) stepTwo!: MatStep;
@@ -64,7 +65,6 @@ export class ProjectIdComponent implements OnInit {
       this.csvUpload.valueChanges.subscribe((file: any) => {
         if (file != null) {
           this.file = file;
-          console.log(this.file.type)
           this.fileChangeListener(this.file);
         }
       });
@@ -74,6 +74,7 @@ export class ProjectIdComponent implements OnInit {
     if(file != null && this.validFileTypes.includes(file.type)) {
       this.readCsv(file);
     } else {
+      this.inputError = 0;
       this.step = 0;
     }
   }
@@ -81,24 +82,25 @@ export class ProjectIdComponent implements OnInit {
   readCsv(file: any) {
     let tempRecords: any;
     file.text().then((content: string) => {
-      console.log(content);
       this.delimiter = content.includes(";") ? ";" : ",";
       this.ngxCsvParser.parse(file, { header: false, delimiter: this.delimiter, encoding: 'utf8' })
       .pipe().subscribe({
         next: (result): void => {
-          console.log(result);
-          console.log("String");
-          console.log(result.toString());
           tempRecords = result;
           let bool = false;
-          console.log(this.patientListService.getIdTypes())
-          if (this.patientListService.getIdTypes().includes(tempRecords[0][0]) && tempRecords[0].length <= 2 && (tempRecords[0].length = 1 || tempRecords[0][tempRecords[0].length] == "")) {
+          if (!this.patientListService.getAllIdTypes("R").includes(tempRecords[0][0])) {
+            this.inputError = 3;
+          } else if (tempRecords[0].length <= 2 && (tempRecords[0].length == 1 || tempRecords[0][1] == "")) {
             bool = true;
             for (let i = 1; i < tempRecords.length; i++) {
-              if (tempRecords[i].length >= 3 || !(tempRecords[i].length = 1 || tempRecords[i][tempRecords[i].length] == "")) {
+              if (tempRecords[i].length >= 3 || !(tempRecords[i].length == 1 || tempRecords[i][1] == "") || tempRecords[i][0] == "") {
                 bool = false;
+                this.inputError = 2;
+                break;
               }
             }
+          } else {
+            this.inputError = 1;
           }
           if (bool) {
             this.csvRecords = tempRecords;
@@ -110,7 +112,6 @@ export class ProjectIdComponent implements OnInit {
             this.step = 1;
           } else {
             this.step = 0;
-            console.log(this.step);
           }
         },
         error: (): void => {

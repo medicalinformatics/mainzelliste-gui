@@ -290,11 +290,14 @@
 	"logout.message": "Du wurdest erfolgreich ausgelogged!",
 
 	"footer.version": "Version ",
-	"footer.info": "Mainzelliste - Powered by Team Federated Information Systems from DKFZ Heidelberg"
+	"footer.info": "Mainzelliste - Powered by Team Federated Information Systems from DKFZ Heidelberg",
 
 	"project_id.title": "Projekt Ids generieren",
 	"project_id.upload_label": "CSV Datei hochladen",
-	"project_id.upload_error": "Bitte wählen sie eine gültige Datei aus!",
+	"project_id.upload_error_file_type": "Bitte wählen sie eine Datei mit passendem Dateityp aus",
+	"project_id.upload_error_id_type": "Bitte achten sie darauf, nur einen Id-Typen in der Datei anzugeben",
+	"project_id.upload_error_ids": "Es konnte nicht in jeder Zeile eine Id erkannt werden",
+	"project_id.upload_error_read_permission": "Der Id-Typ ist ungültig oder sie haben nicht die Berechtigung, um Ids dieses Id-Typs einzulesen",
 	"project_id.download_label": "CSV Datei herunterladen",
 	"project_id.generate_id_label": "Neue Ids generieren",
 	"project_id.id_type_label": "Id Typ",

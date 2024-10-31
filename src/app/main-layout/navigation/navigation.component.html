@@ -6,10 +6,13 @@
   <mat-icon>person_add_alt</mat-icon>
   <span>{{'navigation.new_patient' | translate}}</span>
 </button>
-<button mat-button *appHasPermission="Permission.GENERATE_IDS" [routerLink]="['/project-id']" class="sidenav-menu-item">
-  <mat-icon>autorenew</mat-icon>
-  <span>{{'navigation.project_id' | translate}}<sup style="font-size: 11px; font-weight: lighter;"> BETA</sup></span>
-</button>
+<ng-container *ngIf="this.appConfigService.isProjectIdsEnabled()">
+  <button mat-button *appHasPermission="Permission.GENERATE_IDS" [routerLink]="['/project-id']" class="sidenav-menu-item">
+    <mat-icon>autorenew</mat-icon>
+    <span>{{'navigation.project_id' | translate}}<sup style="font-size: 11px; font-weight: lighter;"> BETA</sup></span>
+  </button>
+</ng-container>
+
 <!--<button mat-button [routerLink]="['/audittrail']" class="sidenav-menu-item">-->
 <!--  <mat-icon>list_alt</mat-icon>-->
 <!--  <span>Audit-Trail</span>-->

@@ -294,7 +294,10 @@
 
 	"project_id.title": "Generate project Ids",
 	"project_id.upload_label": "Upload csv-file",
-	"project_id.upload_error": "Please select a valid file!",
+	"project_id.upload_error_file_type": "Please select a file with an appropriate file type",
+	"project_id.upload_error_id_type": "Please make sure to specify only one Id type in the file",
+	"project_id.upload_error_ids": "Could not recognize an Id in every row",
+	"project_id.upload_error_read_permission": "The Id type is invalid or you do not have permission to read in Ids of this Id type",
 	"project_id.download_label": "Download csv-file",
 	"project_id.generate_id_label": "Generate new Ids",
 	"project_id.id_type_label": "Id Type",

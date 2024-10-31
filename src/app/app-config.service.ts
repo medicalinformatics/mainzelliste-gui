@@ -30,6 +30,7 @@ export class AppConfigService {
   private copyConcatenatedIdEnabled: boolean = false;
   private copyIdEnabled: boolean = false;
   private configurationEnabled: boolean = false;
+  private projectIdsEnabled: boolean = false;
 
   constructor(
     private httpClient: HttpClient,
@@ -55,6 +56,7 @@ export class AppConfigService {
           this.copyConcatenatedIdEnabled = this.data[0].betaFeatures?.copyConcatenatedId ?? false;
           this.copyIdEnabled = this.data[0].betaFeatures?.copyId ?? false;
           this.configurationEnabled = this.data[0].betaFeatures?.configuration ?? false;
+          this.projectIdsEnabled = this.data[0].betaFeatures?.projectIds ?? false;
 
           //start validation
           this.validateBackendUrl(this.data[0])
@@ -81,6 +83,9 @@ export class AppConfigService {
     return this.copyIdEnabled;
   }
 
+  isProjectIdsEnabled(): boolean {
+    return this.projectIdsEnabled;
+  }
 
   isConfigurationEnabled(): boolean {
     return this.configurationEnabled;
