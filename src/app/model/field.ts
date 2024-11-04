@@ -3,13 +3,20 @@ export enum FieldType {
   DATE = "DATE",
   NUMBER = "NUMBER",
 }
+export enum SemanticType{
+  FIRSTNAME = "FIRSTNAME",
+  LASTNAME = "LASTNAME",
+  PLZ = "PLZ",
+  RESIDENCE = "RESIDENCE",
+  UNDEFINED = "UNDEFINED"
+}
 export class Field {
   constructor(
     public i18n: string,
     public name: string,
     public mainzellisteField: string,
     public mainzellisteFields: string[],
-    public semantic: string,
+    public semantic: SemanticType,
     public type: FieldType,
     public required: boolean,
     public validator: string,
