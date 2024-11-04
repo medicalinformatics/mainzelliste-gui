@@ -25,6 +25,7 @@ import { MainzellisteError } from "../model/mainzelliste-error.model";
 import { ErrorMessages } from "../error/error-messages";
 import { ConsentRejectedDialog } from "../consent/dialogs/consent-rejected-dialog";
 import { ConsentInactivatedDialog } from "../consent/dialogs/consent-inactivated-dialog";
+import { SemanticType } from '../model/field';
 
 @Component({
   selector: 'app-idcard',
@@ -312,19 +313,19 @@ export class IdcardComponent implements OnInit {
   getContactInfo() {
     const contact = this.patient.fields;
     const fieldMap: { [key: string]: string } = {
-      firstname: "",
-      lastname: "",
-      plz: "",
-      residence: ""
+      [SemanticType.FIRSTNAME]: "",
+      [SemanticType.LASTNAME]: "",
+      [SemanticType.PLZ]: "",
+      [SemanticType.RESIDENCE]: ""
     };
 
     this.patientService.getConfiguredFields("R").forEach(fieldConfig => {
       if (fieldMap.hasOwnProperty(fieldConfig.semantic)) {
-      fieldMap[fieldConfig.semantic] = contact[fieldConfig.name];
+        fieldMap[fieldConfig.semantic] = contact[fieldConfig.name];
       }
     });
 
-    const text = `${fieldMap.firstname} ${fieldMap.lastname}\n${fieldMap.plz}${fieldMap.residence}`;
+    const text = `${fieldMap[SemanticType.FIRSTNAME]} ${fieldMap[SemanticType.LASTNAME]}\n${fieldMap[SemanticType.PLZ]} ${fieldMap[SemanticType.RESIDENCE]}`;
     return text;
   }
 
