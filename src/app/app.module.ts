@@ -75,7 +75,7 @@ function initializeAppFactory(
     .then(config => {
       from(keycloak.keycloakEvents$).subscribe(event => userAuthService.notifyKeycloakEvent(event));
       translate.setDefaultLang(config[0].defaultLanguage || "en-US");
-      return firstValueFrom(translate.use(translate.getDefaultLang()))
+      return firstValueFrom(translate.use(localStorageService.language))
         .then(() => keycloak.init({
           config: {
             url: config[0].oAuthConfig?.url ?? "",
