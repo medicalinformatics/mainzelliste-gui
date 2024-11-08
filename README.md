@@ -110,7 +110,7 @@ secrets:
 }
 ```
 6. Run `ng serve` for a dev server. Navigate to `http://localhost:4200`. The app will automatically reload if you change any of the source files.
-7. You can now login with an admin user `username:demo and password:demo` or with other user e.g study nurse `username: study-nurse and password:demo` with restricted privileges
+7. You can now login with an admin user `username:admin and password:demo` or with other user e.g study nurse `username: study-nurse and password:demo` with restricted privileges
 
 #### Setup keycloak configuration manually
 1. Create new realm **mainzelliste**
