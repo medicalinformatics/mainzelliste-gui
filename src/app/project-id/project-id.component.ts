@@ -1,15 +1,16 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgxCsvParser } from 'ngx-csv-parser';
-import { PatientListService } from '../services/patient-list.service';
-import { Patient } from '../model/patient';
-import { saveAs } from 'file-saver';
-import { FormControl, Validators } from '@angular/forms';
-import { GlobalTitleService } from '../services/global-title.service';
-import { TranslateService } from '@ngx-translate/core';
-import { MatStep, MatStepper } from '@angular/material/stepper';
-import { MatSelect } from '@angular/material/select';
-import { MatDialog } from '@angular/material/dialog';
-import { ProjectIdEmptyFieldsDialog } from './dialog/project-id-empty-fields-dialog';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {NgxCsvParser} from 'ngx-csv-parser';
+import {PatientListService} from '../services/patient-list.service';
+import {Patient} from '../model/patient';
+import {saveAs} from 'file-saver';
+import {FormBuilder, Validators} from '@angular/forms';
+import {GlobalTitleService} from '../services/global-title.service';
+import {TranslateService} from '@ngx-translate/core';
+import {MatStep, MatStepper} from '@angular/material/stepper';
+import {MatSelect} from '@angular/material/select';
+import {MatDialog} from '@angular/material/dialog';
+import {ProjectIdEmptyFieldsDialog} from './dialog/project-id-empty-fields-dialog';
+import {StepperSelectionEvent} from "@angular/cdk/stepper";
 
 @Component({
   selector: 'app-project-id',
@@ -27,30 +28,28 @@ export class ProjectIdComponent implements OnInit {
   idStrings: string[] = [];
   patients: Patient[] = [];
   data: string = "";
-  multiple: boolean = false;
-  placeholder: string = 'name.csv';
-  csvUpload: FormControl;
   public file: any;
   delimiter: string = ",";
-  isLinear: boolean = true;
   emptyFields: number = 0;
-  inputError: number = 0;
+  public isEditable: boolean = true;
 
   @ViewChild("stepper", { static: true }) stepper!: MatStepper;
   @ViewChild("stepTwo", { static: true }) stepTwo!: MatStep;
   @ViewChild("stepThree", { static: true }) stepThree!: MatStep;
   @ViewChild("select", { static: true }) select!: MatSelect;
 
+  uploadFormGroup = this._formBuilder.group({
+    uploadField: ['', [Validators.required]],
+  });
+
   constructor(
+    private _formBuilder: FormBuilder,
     public dialog: MatDialog,
     private titleService: GlobalTitleService,
     private ngxCsvParser: NgxCsvParser,
     public patientListService: PatientListService,
     private translate: TranslateService
     ) {
-      this.csvUpload = new FormControl(this.file, [
-        Validators.required
-      ]);
       this.changeTitle();
     }
 
@@ -62,22 +61,19 @@ export class ProjectIdComponent implements OnInit {
       this.translate.onLangChange.subscribe(() => {
         this.changeTitle();
       });
-      this.csvUpload.valueChanges.subscribe((file: any) => {
+
+      this.uploadFormGroup.get('uploadField')?.valueChanges.subscribe((file: any) => {
         if (file != null) {
           this.file = file;
-          this.fileChangeListener(this.file);
+          if(this.validFileTypes.includes(file.type)) {
+            this.readCsv(file);
+          } else {
+            this.uploadFormGroup.get('uploadField')?.setErrors({invalidFileType:{value:file.type}})
+            this.step = 0;
+          }
         }
       });
     }
-
-  fileChangeListener(file: any): void {
-    if(file != null && this.validFileTypes.includes(file.type)) {
-      this.readCsv(file);
-    } else {
-      this.inputError = 0;
-      this.step = 0;
-    }
-  }
 
   readCsv(file: any) {
     let tempRecords: any;
@@ -89,20 +85,18 @@ export class ProjectIdComponent implements OnInit {
           tempRecords = result;
           let bool = false;
           if (!this.patientListService.getAllIdTypes("R").includes(tempRecords[0][0])) {
-            this.inputError = 3;
+            this.uploadFormGroup.get('uploadField')?.setErrors({invalidIdType:{value:tempRecords[0][0]}})
           } else if (tempRecords[0].length <= 2 && (tempRecords[0].length == 1 || tempRecords[0][1] == "")) {
-            bool = true;
             for (let i = 1; i < tempRecords.length; i++) {
               if (tempRecords[i].length >= 3 || !(tempRecords[i].length == 1 || tempRecords[i][1] == "") || tempRecords[i][0] == "") {
-                bool = false;
-                this.inputError = 2;
+                this.uploadFormGroup.get('uploadField')?.setErrors({invalidIds:{value:""}})
                 break;
               }
             }
           } else {
-            this.inputError = 1;
+            this.uploadFormGroup.get('uploadField')?.setErrors({invalidIdTypeList:{value:""}})
           }
-          if (bool) {
+          if (!this.uploadFormGroup.get('uploadField')?.invalid) {
             this.csvRecords = tempRecords;
             this.idType = this.csvRecords[0][0];
             for(let i = 1; i < this.csvRecords.length; i++) {
@@ -129,6 +123,7 @@ export class ProjectIdComponent implements OnInit {
       if(this.emptyFields == 0) {
         this.generated = true;
         this.step = 2;
+        this.isEditable = false
         this.stepper.next();
       } else if(this.emptyFields + 1 == this.csvRecords.length) {
         this.openDialog(true);
@@ -139,12 +134,12 @@ export class ProjectIdComponent implements OnInit {
   }
 
   downloadCSV() {
-    var blob = new Blob([this.setupCSV().join('\n')], {type: 'text/csv', endings: 'native'});
+    const blob = new Blob([this.setupCSV().join('\n')], {type: 'text/csv', endings: 'native'});
     saveAs(blob, this.idType + ".csv");
   }
 
   private setupCSV() {
-    var csv = [this.csvRecords[0][0] + ";" + this.csvRecords[0][1]];
+    const csv = [this.csvRecords[0][0] + ";" + this.csvRecords[0][1]];
     for(let i = 1; i < this.csvRecords.length; i++) {
       csv.push(this.csvRecords[i][0] + ";" + this.csvRecords[i][1]);
     }
@@ -170,23 +165,29 @@ export class ProjectIdComponent implements OnInit {
       } else {
         this.generated = true;
         this.step = 2;
+        this.isEditable = false;
         this.stepper.next();
       }
     });
   }
 
   backToFirst() {
-    this.reset();
+    this.reset()
+    this.stepper.previous();
+  }
+
+  private reset() {
+    this.uploadFormGroup.get('uploadField')?.reset();
+    this.file = undefined;
+    this.csvRecords = [];
+    this.select.value = '';
+    this.dataModel = '';
     this.stepTwo.reset();
     this.step -= 1;
   }
 
-  private reset() {
-    this.csvUpload.reset();
-    this.file = undefined;
-    this.csvRecords = [];
-    this.stepper.previous();
-    this.select.value = '';
-    this.dataModel = '';
+  stepChanged($event: StepperSelectionEvent) {
+    if($event.selectedIndex == 0  && $event.previouslySelectedIndex == 1)
+      this.reset();
   }
 }

@@ -300,6 +300,7 @@
 
 	"project_id.title": "Bulk ID Generation",
 	"project_id.upload_label": "Upload CSV file",
+  "project_id.upload_error_file_required": "Please select a file",
 	"project_id.upload_error_file_type": "Please select a file with an appropriate file type",
 	"project_id.upload_error_id_type": "Please make sure to specify only one ID type in the file",
 	"project_id.upload_error_ids": "Could not recognize an ID in every row",

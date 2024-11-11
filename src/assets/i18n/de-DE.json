@@ -300,6 +300,7 @@
 
 	"project_id.title": "Bulk-Generierung von IDs",
 	"project_id.upload_label": "CSV-Datei hochladen",
+  "project_id.upload_error_file_required": "Bitte wählen Sie eine Datei aus",
 	"project_id.upload_error_file_type": "Bitte wählen Sie eine Datei mit passendem Dateityp aus",
 	"project_id.upload_error_id_type": "Bitte achten sie darauf, nur einen ID-Typen in der Datei anzugeben",
 	"project_id.upload_error_ids": "Es konnte nicht in jeder Zeile eine ID erkannt werden",

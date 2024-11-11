@@ -1,33 +1,42 @@
-<mat-stepper [linear]="isLinear" #stepper id="stepper">
-  <mat-step>
-    <ng-template matStepLabel>{{'project_id.upload_label' | translate}}</ng-template>
-    <div style="margin-top: 1%">{{'project_id.upload_info_text1' | translate}}
-      <br/>
-      {{'project_id.upload_info_text2' | translate}}
-      <br/>
-      {{'project_id.upload_info_text3' | translate}}</div>
-    <div style="margin-top: 1%">
-      <mat-form-field>
-        <ngx-mat-file-input
-          #fileInput
-          [multiple]="multiple"
-          [formControl]="csvUpload"
-          [placeholder]="placeholder"
-        ></ngx-mat-file-input>
-      </mat-form-field>
-      <p *ngIf="step == 0 && file != undefined">
-        <span id="error" *ngIf="inputError == 0"
-              style="color: red;">{{'project_id.upload_error_file_type' | translate}}</span>
-        <span id="error" *ngIf="inputError == 1"
-              style="color: red;">{{'project_id.upload_error_id_type' | translate}}</span>
-        <span id="error" *ngIf="inputError == 2"
-              style="color: red;">{{'project_id.upload_error_ids' | translate}}</span>
-        <span id="error" *ngIf="inputError == 3"
-              style="color: red;">{{'project_id.upload_error_read_permission' | translate}}</span>
-      </p>
-    </div>
+<mat-stepper [linear]="true" #stepper [disableRipple]="true" id="stepper"
+             (selectionChange)="this.stepChanged($event)">
+  <mat-step [stepControl]="uploadFormGroup" [editable]="isEditable">
+    <form [formGroup]="uploadFormGroup">
+      <ng-template matStepLabel>{{'project_id.upload_label' | translate}}</ng-template>
+      <div style="margin-top: 1%">{{'project_id.upload_info_text1' | translate}}
+        <br/>
+        {{'project_id.upload_info_text2' | translate}}
+        <br/>
+        {{'project_id.upload_info_text3' | translate}}</div>
+      <div style="margin-top: 1%">
+        <mat-form-field>
+          <ngx-mat-file-input
+            #fileInput
+            [multiple]="false"
+            [placeholder]="'file.csv'"
+            [accept]="'text/csv,.csv'"
+            [formControlName]="'uploadField'"
+          ></ngx-mat-file-input>
+          <mat-error *ngIf="fileInput.ngControl.hasError('required')">
+            {{'project_id.upload_error_file_required' | translate}}
+          </mat-error>
+          <mat-error *ngIf="fileInput.ngControl.hasError('invalidFileType')">
+            {{'project_id.upload_error_file_type' | translate}}
+          </mat-error>
+          <mat-error *ngIf="fileInput.ngControl.hasError('invalidIdTypeList')">
+            {{'project_id.upload_error_id_type' | translate}}
+          </mat-error>
+          <mat-error *ngIf="fileInput.ngControl.hasError('invalidIds')">
+            {{'project_id.upload_error_ids' | translate}}
+          </mat-error>
+          <mat-error *ngIf="fileInput.ngControl.hasError('invalidIdType')">
+            {{'project_id.upload_error_read_permission' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
   </mat-step>
-  <mat-step #stepTwo>
+  <mat-step #stepTwo [editable]="isEditable">
     <ng-template matStepLabel>{{'project_id.generate_id_label' | translate}}</ng-template>
     <div class="float-container">
       <div class="float-table">
