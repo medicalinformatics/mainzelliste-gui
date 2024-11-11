@@ -1,4 +1,4 @@
-<mat-horizontal-stepper [linear]="isLinear" #stepper id="stepper">
+<mat-stepper [linear]="isLinear" #stepper id="stepper">
     <mat-step>
         <ng-template matStepLabel>{{'project_id.upload_label' | translate}}</ng-template>
         <div style="margin-top: 1%">{{'project_id.upload_info_text1' | translate}}
@@ -7,7 +7,7 @@
             <br />
             {{'project_id.upload_info_text3' | translate}}</div>
         <div style="margin-top: 1%">
-            <mat-form-field appearance="fill">
+            <mat-form-field>
                 <ngx-mat-file-input
                     #fileInput
                     [multiple]="multiple"
@@ -41,10 +41,10 @@
                 </mat-form-field>
                 </div>
                 <div>
-                <button id="back" mat-button (click)="backToFirst()">{{'button_stepper_back' | translate}}</button>
-                <button
-                    id="generateId"
-                    mat-button
+                <button id="back" mat-raised-button (click)="backToFirst()">{{'button_stepper_back' | translate}}</button>
+                <button style="margin-left: 10px"
+                    mat-raised-button
+                    class="submit"
                     (click)="generateNewIds(dataModel)"
                     [disabled]="dataModel == ''">
                     {{'button_stepper_generate_ids' | translate}}
@@ -63,12 +63,14 @@
                 <div>
                 <button
                 id="downloadFile"
-                mat-button
+                class="submit"
+                mat-raised-button
                 (click)="downloadCSV()">
-                {{'button_stepper_download_csv' | translate}}
+                  <mat-icon style="margin-right: 0.2em;">download</mat-icon>
+                  <span>{{'button_stepper_download_csv' | translate}}</span>
             </button>
             </div>
             </div>
         </div>
     </mat-step>
-</mat-horizontal-stepper>
+</mat-stepper>

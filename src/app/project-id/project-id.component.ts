@@ -36,10 +36,10 @@ export class ProjectIdComponent implements OnInit {
   emptyFields: number = 0;
   inputError: number = 0;
 
-  @ViewChild("stepper", { static: false }) stepper!: MatStepper;
-  @ViewChild("stepTwo", { static: false }) stepTwo!: MatStep;
-  @ViewChild("stepThree", { static: false }) stepThree!: MatStep;
-  @ViewChild("select", { static: false }) select!: MatSelect;
+  @ViewChild("stepper", { static: true }) stepper!: MatStepper;
+  @ViewChild("stepTwo", { static: true }) stepTwo!: MatStep;
+  @ViewChild("stepThree", { static: true }) stepThree!: MatStep;
+  @ViewChild("select", { static: true }) select!: MatSelect;
 
   constructor(
     public dialog: MatDialog,

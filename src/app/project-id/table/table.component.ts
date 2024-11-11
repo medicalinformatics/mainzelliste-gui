@@ -9,7 +9,7 @@ export class ProjectIdTableComponent implements OnInit{
 
     @Input() csvRecords!: string[][];
 
-    ids: string[] = ["index", "firstId", "secondId"];
+    displayedColumns: string[] = ["index", "firstId", "secondId"];
     idTypes: string [] = ["#", "", ""];
     displayRecords: string[][] = [];
 
