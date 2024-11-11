@@ -23,8 +23,7 @@
         "consent": ${ML_UI_ENABLE_CONSENT},
         "copyConcatenatedId": false,
         "copyId": true,
-        "configuration": false,
-        "projectIds": false,
+        "configuration": false
       }
     }
   ]

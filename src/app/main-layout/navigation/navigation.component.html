@@ -6,13 +6,12 @@
   <mat-icon>person_add_alt</mat-icon>
   <span>{{'navigation.new_patient' | translate}}</span>
 </button>
-<ng-container *ngIf="this.appConfigService.isProjectIdsEnabled()">
-  <mat-divider *ngIf="this.authorizationService.authorizationState.GENERATE_IDS" class="menu-divider"></mat-divider>
-  <button mat-button *ngIf="this.authorizationService.authorizationState.GENERATE_IDS" [routerLink]="['/project-id']" class="sidenav-menu-item">
-    <mat-icon>library_add</mat-icon>
-    <span>{{'navigation.project_id' | translate}}<sup style="font-size: 11px; font-weight: lighter;"> BETA</sup></span>
-  </button>
-</ng-container>
+
+<mat-divider *ngIf="this.authorizationService.authorizationState.GENERATE_IDS" class="menu-divider"></mat-divider>
+<button mat-button *ngIf="this.authorizationService.authorizationState.GENERATE_IDS" [routerLink]="['/project-id']" class="sidenav-menu-item">
+  <mat-icon>library_add</mat-icon>
+  <span>{{'navigation.project_id' | translate}}</span>
+</button>
 
 <!--<button mat-button [routerLink]="['/audittrail']" class="sidenav-menu-item">-->
 <!--  <mat-icon>list_alt</mat-icon>-->
