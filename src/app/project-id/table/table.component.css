@@ -1,0 +1,31 @@
+#projectId {
+  width: 100%
+}
+
+#projectId tr.mat-row {
+  height: 38px;
+}
+
+#projectId td {
+  /*padding: 0 10px 0 10px;*/
+  text-align: center;
+  max-height: 450px;
+  /*border-right: 1px solid #ddd;*/
+}
+
+#projectId th {
+  /*padding: 0 10px 0 10px;*/
+  text-align: center;
+}
+
+.mat-column-index {
+  width: auto;
+}
+
+.mat-column-firstId {
+  min-width: 270px;
+}
+
+.mat-column-secondId {
+  min-width: 270px;
+}

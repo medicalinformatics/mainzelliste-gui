@@ -3,14 +3,13 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {OAuthConfig, PatientList} from "./model/patientlist";
 import {AppConfig} from "./app-config";
 import {catchError, map} from "rxjs/operators";
-import {throwError} from "rxjs";
+import {firstValueFrom, lastValueFrom, throwError} from "rxjs";
 import {MainzellisteField, MainzellisteFieldType} from "./model/mainzelliste-field";
 import {Field, FieldType} from "./model/field";
 import {MainzellisteUnknownError} from './model/mainzelliste-unknown-error';
 import {TranslateService} from '@ngx-translate/core';
 import {ClaimsConfig} from "./model/api/configuration-claims-data";
 import {IdGenerator} from "./model/idgenerator";
-
 
 export interface AssociatedIds {
   [key: string] : [IdGenerator]
@@ -82,7 +81,6 @@ export class AppConfigService {
     return this.copyIdEnabled;
   }
 
-
   isConfigurationEnabled(): boolean {
     return this.configurationEnabled;
   }
@@ -124,7 +122,7 @@ export class AppConfigService {
   }
 
   public fetchVersion(): Promise<{distname: string, version: string}> {
-    return this.httpClient.get<{distname: string, version: string}>(this.data[0].url + "/", {
+    return lastValueFrom(this.httpClient.get<{distname: string, version: string}>(this.data[0].url + "/", {
       headers: new HttpHeaders()
       .set('Accept', 'application/json')
     }).pipe(
@@ -135,7 +133,7 @@ export class AppConfigService {
         this.version = info.version
         return info;
       })
-    ).toPromise();
+    ));
   }
 
   private validateBackendUrl(config: PatientList) {
@@ -148,7 +146,7 @@ export class AppConfigService {
   }
 
   public fetchMainzellisteIdGenerators(): Promise<IdGenerator[]> {
-    return this.httpClient.get<IdGenerator[]>(this.data[0].url + "/configuration/idGenerators", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
+    return lastValueFrom(this.httpClient.get<IdGenerator[]>(this.data[0].url + "/configuration/idGenerators", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
     .pipe(
       catchError((e) => throwError(new Error(this.translate.instant('error.app_config_service_fetch_id_generators')))),
       map(idGenerators => {
@@ -157,26 +155,26 @@ export class AppConfigService {
         this.mainzellisteIdTypes = idGenerators.map( g => g.idType);
         return idGenerators;
       })
-    ).toPromise();
+    ));
   }
 
-  public fetchMainzellisteAssociatedIdGenerators(): Promise<IdGenerator[]> {
-    return this.httpClient.get<AssociatedIds>(this.data[0].url + "/configuration/idGenerators/associatedIds", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
-    .pipe(
-        catchError((e) => throwError(new Error(this.translate.instant('error.app_config_service_fetch_id_generators')))),
-        map(associatedIds => {
-          this.mainzellisteAssociatedIdGenerators = [];
-          for(let key in associatedIds){
-            this.mainzellisteAssociatedIdGenerators.push(...associatedIds[key])
-            this.mainzellisteAssociatedIdGeneratorsMap.set(key, associatedIds[key])
-          }
-          return this.mainzellisteAssociatedIdGenerators;
-        })
-    ).toPromise();
-  }
+    public fetchMainzellisteAssociatedIdGenerators(): Promise<IdGenerator[]> {
+      return lastValueFrom(this.httpClient.get<AssociatedIds>(this.data[0].url + "/configuration/idGenerators/associatedIds", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
+        .pipe(
+            catchError((e) => throwError(new Error(this.translate.instant('error.app_config_service_fetch_id_generators')))),
+            map(associatedIds => {
+              this.mainzellisteAssociatedIdGenerators = [];
+              for(let key in associatedIds){
+                this.mainzellisteAssociatedIdGenerators.push(...associatedIds[key])
+                this.mainzellisteAssociatedIdGeneratorsMap.set(key, associatedIds[key])
+              }
+              return this.mainzellisteAssociatedIdGenerators;
+            })
+        ));
+    }
 
     public fetchClaims(): Promise<ClaimsConfig[]> {
-      return this.httpClient.get<ClaimsConfig[]>(this.data[0].url + "/configuration/claims", {
+      return firstValueFrom(this.httpClient.get<ClaimsConfig[]>(this.data[0].url + "/configuration/claims", {
               headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2'),
               params: new HttpParams().set('filter', 'roles').set('merge', true)
           })
@@ -187,12 +185,12 @@ export class AppConfigService {
                   this.mainzellisteClaims = claims;
                   return claims;
               })
-          ).toPromise();
+          ));
     }
 
   public fetchMainzellisteFields(): Promise<MainzellisteField[]> {
     let fieldEndpointUrl = this.data[0].url + "/configuration/fields";
-    return this.httpClient.get<MainzellisteField[]>(fieldEndpointUrl, {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
+    return lastValueFrom(this.httpClient.get<MainzellisteField[]>(fieldEndpointUrl, {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
     .pipe(
       catchError(e => throwError(new Error(this.translate.instant('error.app_config_service_fetch_fields') + fieldEndpointUrl))),
       map(mlFields => {
@@ -210,7 +208,7 @@ export class AppConfigService {
         }
         return mlFields;
       })
-    ).toPromise();
+    ));
   }
 
   private initField(fieldName: string, configuredField:Field, backendMlField: MainzellisteField[], isDateType?: boolean) {

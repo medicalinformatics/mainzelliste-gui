@@ -6,7 +6,7 @@
 	"button_delete_consent": "Delete consent",
   "button_open_consent_history": "View consent history",
   "button_add_consent_scan": "Add PDF file",
-  "button_generate_id": "Generate ID",
+	"button_generate_id": "Generate ID",
 	"button_delete": "Delete",
 	"button_edit": "Edit",
 	"button_request": "Request",
@@ -19,6 +19,11 @@
 	"button_save_new_id": "Generate",
 	"button_correct": "Correct",
 	"button_confirm": "Confirm",
+	"button_stepper_next": "Next",
+	"button_stepper_generate_ids": "Generate new IDs",
+	"button_stepper_back": "Back",
+	"button_stepper_download_csv": "Download CSV file",
+	"button_okay": "Okay",
 	"button_publish": "Publish",
   "button_create": "Create",
 
@@ -61,12 +66,12 @@
 
   "consent_list.unlimited_period": "unlimited",
 
-  "consent_status.draft": "Draft",
-  "consent_status.proposed": "Proposed",
-  "consent_status.active": "Active",
-  "consent_status.rejected": "Rejected",
-  "consent_status.inactive": "Inactive",
-  "consent_status.entered-in-error": "Error",
+    "consent_status.draft": "Draft",
+    "consent_status.proposed": "Proposed",
+    "consent_status.active": "Active",
+    "consent_status.rejected": "Rejected",
+    "consent_status.inactive": "Inactive",
+    "consent_status.entered-in-error": "Error",
 
 	"consent_template_status.draft": "Draft",
 	"consent_template_status.active": "Active",
@@ -90,8 +95,9 @@
   "add_consent.inactivated-dialog-text": "The end of the Timeframe of this consent is in the past. The consent status is automatically set as Inactive",
 
   "navigation.info": "Info",
-	"navigation.new_patient": "New Patient",
+	"navigation.new_patient": "New patient",
 	"navigation.patientlist": "Patient list",
+	"navigation.project_id": "Bulk ID Generation",
   "navigation.consent_template": "Consent Template",
   "navigation.configuration": "Configuration",
 
@@ -285,10 +291,29 @@
   "newIdDialog.text_id": "{{idType}}: {{idString}}",
   "newIdDialog.text_3": "",
   "newIdDialog.text_4": "and assigned to the selected external id",
-  "newIdDialog.id_types": "Id type",
+  "newIdDialog.id_types": "ID type",
 
 	"logout.message": "You are now logged out!",
 
 	"footer.version": "Version ",
-	"footer.info": "Mainzelliste - Powered by Team Federated Information Systems from DKFZ Heidelberg"
+	"footer.info": "Mainzelliste - Powered by Team Federated Information Systems from DKFZ Heidelberg",
+
+	"project_id.title": "Bulk ID Generation",
+	"project_id.upload_label": "Upload CSV file",
+  "project_id.upload_error_file_required": "Please select a file",
+	"project_id.upload_error_file_type": "Please select a file with an appropriate file type",
+	"project_id.upload_error_id_type": "Please make sure to specify only one ID type in the file",
+	"project_id.upload_error_ids": "Could not recognize an ID in every row",
+	"project_id.upload_error_read_permission": "The ID type is invalid or you do not have permission to read in IDs of this ID type",
+	"project_id.download_label": "Download CSV file",
+	"project_id.generate_id_label": "Generate new IDs",
+	"project_id.id_type_label": "ID Type",
+	"project_id.upload_info_text1": "Please select a CSV file with the patient IDs.",
+	"project_id.upload_info_text2": "The file must contain the ID type as the first line and the patient IDs in the remaining lines.",
+	"project_id.upload_info_text3": "Empty lines can lead to errors!",
+
+	"projectIdEmptyFieldsDialog.text1": " patients were not found.",
+	"projectIdEmptyFieldsDialog.text2": "No new IDs were generated for patients not found.",
+	"projectIdEmptyFieldsDialog.error_text1": "No patient was found.",
+	"projectIdEmptyFieldsDialog.error_text2": "Please select a valid file."
 }

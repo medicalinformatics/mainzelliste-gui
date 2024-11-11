@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {forkJoin, Observable, of, range, throwError} from 'rxjs';
+import {forkJoin, lastValueFrom, Observable, of, range, throwError} from 'rxjs';
 import Client from 'fhir-kit-client'
 import {SessionService} from "../services/session.service";
 import {DatePipe} from "@angular/common";
@@ -498,7 +498,7 @@ export class ConsentService {
   }
 
   public addConsentTemplate(consentTemplate: ConsentTemplate): Promise<fhir4.FhirResource | fhir4.Questionnaire> {
-    return this.sessionService.createToken(
+    return lastValueFrom(this.sessionService.createToken(
       "addConsentTemplate", {}
     )
     .pipe(
@@ -507,7 +507,7 @@ export class ConsentService {
         // handle failed token creation
         return throwError(e)
       })
-    ).toPromise();
+    ));
   }
 
   resolveAddConsentTemplateToken(tokenId: string | undefined, consentTemplate: fhir4.Questionnaire): Promise<fhir4.FhirResource | fhir4.Questionnaire> {

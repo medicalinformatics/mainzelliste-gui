@@ -1,0 +1,95 @@
+<mat-stepper [linear]="true" #stepper [disableRipple]="true" id="stepper"
+             (selectionChange)="this.stepChanged($event)">
+  <mat-step [stepControl]="uploadFormGroup" [editable]="isEditable">
+    <form [formGroup]="uploadFormGroup">
+      <ng-template matStepLabel>{{'project_id.upload_label' | translate}}</ng-template>
+      <div style="margin-top: 1%">{{'project_id.upload_info_text1' | translate}}
+        <br/>
+        {{'project_id.upload_info_text2' | translate}}
+        <br/>
+        {{'project_id.upload_info_text3' | translate}}</div>
+      <div style="margin-top: 1%">
+        <mat-form-field>
+          <ngx-mat-file-input
+            #fileInput
+            [multiple]="false"
+            [placeholder]="'file.csv'"
+            [accept]="'text/csv,.csv'"
+            [formControlName]="'uploadField'"
+          ></ngx-mat-file-input>
+          <mat-error *ngIf="fileInput.ngControl.hasError('required')">
+            {{'project_id.upload_error_file_required' | translate}}
+          </mat-error>
+          <mat-error *ngIf="fileInput.ngControl.hasError('invalidFileType')">
+            {{'project_id.upload_error_file_type' | translate}}
+          </mat-error>
+          <mat-error *ngIf="fileInput.ngControl.hasError('invalidIdTypeList')">
+            {{'project_id.upload_error_id_type' | translate}}
+          </mat-error>
+          <mat-error *ngIf="fileInput.ngControl.hasError('invalidIds')">
+            {{'project_id.upload_error_ids' | translate}}
+          </mat-error>
+          <mat-error *ngIf="fileInput.ngControl.hasError('invalidIdType')">
+            {{'project_id.upload_error_read_permission' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step #stepTwo [editable]="isEditable">
+    <ng-template matStepLabel>{{'project_id.generate_id_label' | translate}}</ng-template>
+    <div class="float-container">
+      <div class="float-table">
+        <div>
+          <project-id-table *ngIf="step == 1" [csvRecords]="csvRecords"></project-id-table>
+        </div>
+      </div>
+      <div class="float-content">
+        <div>
+          <mat-form-field style="width: 245px;">
+            <mat-label>{{'project_id.id_type_label' | translate}}</mat-label>
+            <mat-select #select (selectionChange)="dataModel = $event.value">
+              <mat-option *ngFor="let idType of patientListService.getNewIdType([this.idType])"
+                          [value]="idType">
+                {{idType}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div>
+          <button id="back" mat-raised-button
+                  (click)="backToFirst()">{{'button_stepper_back' | translate}}</button>
+          <button style="margin-left: 10px"
+                  mat-raised-button
+                  class="submit"
+                  (click)="generateNewIds(dataModel)"
+                  [disabled]="dataModel == ''">
+            {{'button_stepper_generate_ids' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step #stepThree>
+    <ng-template matStepLabel>{{'project_id.download_label' | translate}}</ng-template>
+    <div class="float-container">
+      <div class="float-table">
+        <div>
+          <project-id-table *ngIf="step == 2" [csvRecords]="csvRecords"></project-id-table>
+        </div>
+      </div>
+      <div class="float-content">
+        <div>
+          <button
+            id="downloadFile"
+            class="submit"
+            mat-raised-button
+            (click)="downloadCSV()">
+            <mat-icon style="margin-right: 0.2em;">download</mat-icon>
+            <span>{{'button_stepper_download_csv' | translate}}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </mat-step>
+</mat-stepper>

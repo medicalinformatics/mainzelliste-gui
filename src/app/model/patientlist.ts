@@ -31,5 +31,6 @@ export interface BetaFeatures {
   copyConcatenatedId?: boolean
   copyId?: boolean
   configuration?:boolean
+  projectIds?:boolean
 }
 
