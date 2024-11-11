@@ -33,6 +33,7 @@ import {
 import {FhirResource} from "fhir-kit-client/types/index";
 import {SearchParams} from "fhir-kit-client";
 import { SemanticType } from '../model/field';
+import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 
 @Component({
@@ -335,6 +336,30 @@ export class IdcardComponent implements OnInit {
   }
 
   getContactInfo() {
+    const fieldMap = this.getFieldMap();
+    const text = `${fieldMap[SemanticType.FIRSTNAME]} ${fieldMap[SemanticType.LASTNAME]}\n${fieldMap[SemanticType.PLZ]} ${fieldMap[SemanticType.RESIDENCE]}`;
+    return text;
+  }
+
+  exportCSV() {
+    const fieldMap = this.getFieldMap();
+    var data = [
+      {
+        firstName: fieldMap[SemanticType.FIRSTNAME],
+        lastName: fieldMap[SemanticType.LASTNAME],
+        residence: fieldMap[SemanticType.RESIDENCE],
+        plz: fieldMap[SemanticType.PLZ]
+      }
+    ]
+    console.log(data);
+
+    new AngularCsv(data, 'ContactInfo', {
+      headers: ["Vorname", "Nachname", "PLZ", "Wohnort"],
+      quoteStrings: ''
+    },);
+  }
+  
+  getFieldMap() {
     const contact = this.patient.fields;
     const fieldMap: { [key: string]: string } = {
       [SemanticType.FIRSTNAME]: "",
@@ -348,9 +373,6 @@ export class IdcardComponent implements OnInit {
         fieldMap[fieldConfig.semantic] = contact[fieldConfig.name];
       }
     });
-
-    const text = `${fieldMap[SemanticType.FIRSTNAME]} ${fieldMap[SemanticType.LASTNAME]}\n${fieldMap[SemanticType.PLZ]} ${fieldMap[SemanticType.RESIDENCE]}`;
-    return text;
+    return fieldMap;
   }
-
 }

@@ -4,8 +4,11 @@
       <mat-card id="patientendaten" style="flex: 1 1 25%; display: flex;  flex-flow: column">
         <mat-card-title>{{'idcard.title_patient_data' | translate}}</mat-card-title>
         <app-patient-fields [readOnly]=true [fields]="patient.fields"></app-patient-fields>
-        <button class="mat-card__action" [cdkCopyToClipboard]="getContactInfo()" mat-fab>
+        <button class="mat-card__copy" [cdkCopyToClipboard]="getContactInfo()" mat-fab>
           <mat-icon matTooltip="Copy Contact Information">file_copy</mat-icon>
+        </button>
+        <button class="mat-card__export" (click)="exportCSV()" mat-fab>
+          <mat-icon matTooltip="Export Contact Information to Excel">download</mat-icon>
         </button>
       </mat-card>
 
