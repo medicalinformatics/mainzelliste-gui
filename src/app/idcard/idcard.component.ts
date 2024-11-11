@@ -26,6 +26,7 @@ import { ErrorMessages } from "../error/error-messages";
 import { ConsentRejectedDialog } from "../consent/dialogs/consent-rejected-dialog";
 import { ConsentInactivatedDialog } from "../consent/dialogs/consent-inactivated-dialog";
 import { SemanticType } from '../model/field';
+import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 @Component({
   selector: 'app-idcard',
@@ -311,6 +312,30 @@ export class IdcardComponent implements OnInit {
   }
 
   getContactInfo() {
+    const fieldMap = this.getFieldMap();
+    const text = `${fieldMap[SemanticType.FIRSTNAME]} ${fieldMap[SemanticType.LASTNAME]}\n${fieldMap[SemanticType.PLZ]} ${fieldMap[SemanticType.RESIDENCE]}`;
+    return text;
+  }
+
+  exportCSV() {
+    const fieldMap = this.getFieldMap();
+    var data = [
+      {
+        firstName: fieldMap[SemanticType.FIRSTNAME],
+        lastName: fieldMap[SemanticType.LASTNAME],
+        residence: fieldMap[SemanticType.RESIDENCE],
+        plz: fieldMap[SemanticType.PLZ]
+      }
+    ]
+    console.log(data);
+
+    new AngularCsv(data, 'ContactInfo', {
+      headers: ["Vorname", "Nachname", "PLZ", "Wohnort"],
+      quoteStrings: ''
+    },);
+  }
+  
+  getFieldMap() {
     const contact = this.patient.fields;
     const fieldMap: { [key: string]: string } = {
       [SemanticType.FIRSTNAME]: "",
@@ -324,9 +349,6 @@ export class IdcardComponent implements OnInit {
         fieldMap[fieldConfig.semantic] = contact[fieldConfig.name];
       }
     });
-
-    const text = `${fieldMap[SemanticType.FIRSTNAME]} ${fieldMap[SemanticType.LASTNAME]}\n${fieldMap[SemanticType.PLZ]} ${fieldMap[SemanticType.RESIDENCE]}`;
-    return text;
+    return fieldMap;
   }
-
 }
