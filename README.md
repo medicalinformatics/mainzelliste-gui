@@ -103,8 +103,7 @@ secrets:
         "consent": false,
         "copyConcatenatedId": false,
         "copyId": true,
-        "configuration": true,
-        "projectIds": true
+        "configuration": true
       }
     }
   ]

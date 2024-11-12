@@ -42,7 +42,6 @@ import {firstValueFrom, from} from "rxjs";
 import {UserAuthService} from "./services/user-auth.service";
 import {NewIdDialog} from './idcard/dialogs/new-id-dialog';
 import {NgxCsvParserModule} from 'ngx-csv-parser';
-import {ProjectIdComponent} from './project-id/project-id.component';
 import {FileSaverModule} from 'ngx-filesaver';
 import {SharedModule} from "./shared/shared.module";
 import {ConsentModule} from "./consent/consent.module";
@@ -53,8 +52,6 @@ import {TranslateService} from '@ngx-translate/core';
 import {AccessDeniedComponent} from './access-denied/access-denied.component';
 import {NgxMatFileInputModule} from '@angular-material-components/file-input';
 import {MatStepperModule} from '@angular/material/stepper';
-import {ProjectIdTableComponent} from './project-id/table/table.component';
-import {ProjectIdEmptyFieldsDialog} from './project-id/dialog/project-id-empty-fields-dialog';
 import {
   InternationalizedMatPaginatorIntl
 } from "./shared/components/paginator/internationalized-mat-paginator-intl";
@@ -62,6 +59,15 @@ import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {ConsentTemplatesComponent} from './consent/consent-templates/consent-templates.component';
 import {ConfigurationModule} from "./configuration/configuration.module";
 import {LocalStorageService} from "./services/local-storage.service";
+import {
+  BulkIdGenerationComponent
+} from "./bulk-operations/bulk-id-generation/bulk-id-generation.component";
+import {
+  BulkIdGenerationTableComponent
+} from "./bulk-operations/bulk-id-generation/table/bulk-id-generation-table.component";
+import {
+  BulkIdGenerationEmptyFieldsDialog
+} from "./bulk-operations/bulk-id-generation/dialog/bulk-id-generation-empty-fields-dialog";
 
 function initializeAppFactory(
     configService: AppConfigService,
@@ -121,9 +127,9 @@ function initializeAppFactory(
     AccessDeniedComponent,
     PageNotFoundComponent,
     ConsentTemplatesComponent,
-    ProjectIdComponent,
-    ProjectIdTableComponent,
-    ProjectIdEmptyFieldsDialog
+    BulkIdGenerationComponent,
+    BulkIdGenerationTableComponent,
+    BulkIdGenerationEmptyFieldsDialog
   ],
   imports: [
     SharedModule,

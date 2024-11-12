@@ -1,23 +1,23 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {NgxCsvParser} from 'ngx-csv-parser';
-import {PatientListService} from '../services/patient-list.service';
-import {Patient} from '../model/patient';
 import {saveAs} from 'file-saver';
 import {FormBuilder, Validators} from '@angular/forms';
-import {GlobalTitleService} from '../services/global-title.service';
 import {TranslateService} from '@ngx-translate/core';
 import {MatStep, MatStepper} from '@angular/material/stepper';
 import {MatSelect} from '@angular/material/select';
 import {MatDialog} from '@angular/material/dialog';
-import {ProjectIdEmptyFieldsDialog} from './dialog/project-id-empty-fields-dialog';
 import {StepperSelectionEvent} from "@angular/cdk/stepper";
+import {GlobalTitleService} from "../../services/global-title.service";
+import {PatientListService} from "../../services/patient-list.service";
+import {Patient} from "../../model/patient";
+import {BulkIdGenerationEmptyFieldsDialog} from "./dialog/bulk-id-generation-empty-fields-dialog";
 
 @Component({
-  selector: 'app-project-id',
-  templateUrl: './project-id.component.html',
-  styleUrls: ['./project-id.component.css']
+  selector: 'app-bulk-id-generation',
+  templateUrl: './bulk-id-generation.component.html',
+  styleUrls: ['./bulk-id-generation.component.css']
 })
-export class ProjectIdComponent implements OnInit {
+export class BulkIdGenerationComponent implements OnInit {
 
   validFileTypes: string[] = ["text/csv", "application/vnd.ms-excel"];
   csvRecords: string[][] = [];
@@ -54,7 +54,7 @@ export class ProjectIdComponent implements OnInit {
     }
 
     changeTitle() {
-      this.titleService.setTitle(this.translate.instant('project_id.title'));
+      this.titleService.setTitle(this.translate.instant('bulkIdGeneration.title'));
     }
 
     ngOnInit(): void {
@@ -159,7 +159,7 @@ export class ProjectIdComponent implements OnInit {
   }
 
   private openDialog(error: boolean) {
-    this.dialog.open(ProjectIdEmptyFieldsDialog, {data: [this.emptyFields, error]}).afterClosed().subscribe(() => {
+    this.dialog.open(BulkIdGenerationEmptyFieldsDialog, {data: [this.emptyFields, error]}).afterClosed().subscribe(() => {
       if(error) {
         this.backToFirst();
       } else {
