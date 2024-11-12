@@ -10,19 +10,20 @@ import {Permission} from "./model/permission";
 import {CreatePatientComponent} from "./patient/create-patient/create-patient.component";
 import {EditPatientComponent} from "./patient/edit-patient/edit-patient.component";
 import {AccessDeniedComponent} from "./access-denied/access-denied.component";
-import {AddConsentComponent} from "./consent/add-consent/add-consent.component";
 import {EditConsentComponent} from "./consent/edit-consent/edit-consent.component";
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
-import {ProjectIdComponent} from './project-id/project-id.component';
 import {ConsentTemplatesComponent} from "./consent/consent-templates/consent-templates.component";
 import {ConfigurationComponent} from "./configuration/configuration/configuration.component";
+import {
+  BulkIdGenerationComponent
+} from "./bulk-operations/bulk-id-generation/bulk-id-generation.component";
 
 const routes: Routes = [
   // TODO: All Paths should have english wording.
   {
     path: '', canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
       {path: '', pathMatch: 'full', redirectTo: 'patientlist'},
-      {path: 'project-id', component: ProjectIdComponent, data : { permission: Permission.GENERATE_IDS, checkIdType:true}},
+      {path: 'bulk-id-generation', component: BulkIdGenerationComponent, data : { permission: Permission.GENERATE_IDS, checkIdType:true}},
       {path: 'info', component: InfoComponent, data: { permission: Permission.DEFAULT }},
       {path: 'configuration', component: ConfigurationComponent, data: { permission: Permission.EDIT_CONFIGURATION }},
       {path: 'idcard/:idType/:idString', component: IdcardComponent, data : { permission: Permission.READ_PATIENT, checkIdType:true}},

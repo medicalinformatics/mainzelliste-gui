@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from "@angular/core";
 
 @Component({
-    selector: 'project-id-table',
-    templateUrl: 'table.component.html',
-    styleUrls: ['./table.component.css']
+    selector: 'bulk-id-generation-table',
+    templateUrl: 'bulk-id-generation-table.component.html',
+    styleUrls: ['./bulk-id-generation-table.component.css']
 })
-export class ProjectIdTableComponent implements OnInit{
+export class BulkIdGenerationTableComponent implements OnInit{
 
     @Input() csvRecords!: string[][];
 

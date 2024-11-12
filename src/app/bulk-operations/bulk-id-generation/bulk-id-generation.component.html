@@ -2,12 +2,12 @@
              (selectionChange)="this.stepChanged($event)">
   <mat-step [stepControl]="uploadFormGroup" [editable]="isEditable">
     <form [formGroup]="uploadFormGroup">
-      <ng-template matStepLabel>{{'project_id.upload_label' | translate}}</ng-template>
-      <div style="margin-top: 1%">{{'project_id.upload_info_text1' | translate}}
+      <ng-template matStepLabel>{{'bulkIdGeneration.upload_label' | translate}}</ng-template>
+      <div style="margin-top: 1%">{{'bulkIdGeneration.upload_info_text1' | translate}}
         <br/>
-        {{'project_id.upload_info_text2' | translate}}
+        {{'bulkIdGeneration.upload_info_text2' | translate}}
         <br/>
-        {{'project_id.upload_info_text3' | translate}}</div>
+        {{'bulkIdGeneration.upload_info_text3' | translate}}</div>
       <div style="margin-top: 1%">
         <mat-form-field>
           <ngx-mat-file-input
@@ -18,36 +18,36 @@
             [formControlName]="'uploadField'"
           ></ngx-mat-file-input>
           <mat-error *ngIf="fileInput.ngControl.hasError('required')">
-            {{'project_id.upload_error_file_required' | translate}}
+            {{'bulkIdGeneration.upload_error_file_required' | translate}}
           </mat-error>
           <mat-error *ngIf="fileInput.ngControl.hasError('invalidFileType')">
-            {{'project_id.upload_error_file_type' | translate}}
+            {{'bulkIdGeneration.upload_error_file_type' | translate}}
           </mat-error>
           <mat-error *ngIf="fileInput.ngControl.hasError('invalidIdTypeList')">
-            {{'project_id.upload_error_id_type' | translate}}
+            {{'bulkIdGeneration.upload_error_id_type' | translate}}
           </mat-error>
           <mat-error *ngIf="fileInput.ngControl.hasError('invalidIds')">
-            {{'project_id.upload_error_ids' | translate}}
+            {{'bulkIdGeneration.upload_error_ids' | translate}}
           </mat-error>
           <mat-error *ngIf="fileInput.ngControl.hasError('invalidIdType')">
-            {{'project_id.upload_error_read_permission' | translate}}
+            {{'bulkIdGeneration.upload_error_read_permission' | translate}}
           </mat-error>
         </mat-form-field>
       </div>
     </form>
   </mat-step>
   <mat-step #stepTwo [editable]="isEditable">
-    <ng-template matStepLabel>{{'project_id.generate_id_label' | translate}}</ng-template>
+    <ng-template matStepLabel>{{'bulkIdGeneration.generate_id_label' | translate}}</ng-template>
     <div class="float-container">
       <div class="float-table">
         <div>
-          <project-id-table *ngIf="step == 1" [csvRecords]="csvRecords"></project-id-table>
+          <bulk-id-generation-table *ngIf="step == 1" [csvRecords]="csvRecords"></bulk-id-generation-table>
         </div>
       </div>
       <div class="float-content">
         <div>
           <mat-form-field style="width: 245px;">
-            <mat-label>{{'project_id.id_type_label' | translate}}</mat-label>
+            <mat-label>{{'bulkIdGeneration.id_type_label' | translate}}</mat-label>
             <mat-select #select (selectionChange)="dataModel = $event.value">
               <mat-option *ngFor="let idType of patientListService.getNewIdType([this.idType])"
                           [value]="idType">
@@ -71,11 +71,11 @@
     </div>
   </mat-step>
   <mat-step #stepThree>
-    <ng-template matStepLabel>{{'project_id.download_label' | translate}}</ng-template>
+    <ng-template matStepLabel>{{'bulkIdGeneration.download_label' | translate}}</ng-template>
     <div class="float-container">
       <div class="float-table">
         <div>
-          <project-id-table *ngIf="step == 2" [csvRecords]="csvRecords"></project-id-table>
+          <bulk-id-generation-table *ngIf="step == 2" [csvRecords]="csvRecords"></bulk-id-generation-table>
         </div>
       </div>
       <div class="float-content">
