@@ -338,7 +338,7 @@ export class ConsentService {
       try {
         this.serializeConsentDataModelToFhir(dataModel, force);
       } catch (e){
-        return throwError(e);
+        return throwError( () => e);
       }
       return this.updateFhirResource<fhir4.Consent>("editConsent", {}, 'Consent', dataModel.fhirResource, searchParams);
     }
@@ -505,7 +505,7 @@ export class ConsentService {
       mergeMap(token => this.resolveAddConsentTemplateToken(token.id, this.mapConsentTemplate(consentTemplate))),
       catchError(e => {
         // handle failed token creation
-        return throwError(e)
+        return throwError( () => e)
       })
     ));
   }
@@ -812,9 +812,9 @@ export class ConsentService {
         if (issue.severity == 'error')
           errorMessage += issue.diagnostics
       }
-      return throwError(new MainzellisteError(errorMessageType, errorMessage));
+      return throwError( () => new MainzellisteError(errorMessageType, errorMessage));
     } else
-      return throwError(new MainzellisteUnknownError(`Failed to ${errorPrefix} resource fhir/${resourceType}.
+      return throwError( () => new MainzellisteUnknownError(`Failed to ${errorPrefix} resource fhir/${resourceType}.
                     Cause: ${getErrorMessageFrom(error, this.translate)}`, error, this.translate))
   }
 
@@ -829,7 +829,7 @@ export class ConsentService {
       .pipe(
         mergeMap(token => resolveToken(token.id, resourceType, resource)),
         catchError((error) =>
-          throwError(new Error(`Failed to ${errorPrefix} resource fhir/${resourceType}. Cause: ${getErrorMessageFrom(error, this.translate)}`))
+          throwError( () => new Error(`Failed to ${errorPrefix} resource fhir/${resourceType}. Cause: ${getErrorMessageFrom(error, this.translate)}`))
         )
       )
   }
@@ -899,7 +899,7 @@ export class ConsentService {
           if (error.status >= 400 && error.status < 500) {
             return of([]);
           } else {
-            return throwError(new Error(`Failed to fetch data from ${path}. Cause: ${getErrorMessageFrom(error, this.translate)}`));
+            return throwError( () => new Error(`Failed to fetch data from ${path}. Cause: ${getErrorMessageFrom(error, this.translate)}`));
           }
         })
       )
@@ -939,15 +939,16 @@ export class ConsentService {
     })
     .pipe(
       catchError(e => {
-        let errorMessage;
         if (e instanceof HttpErrorResponse && (e.status == 400)) {
-          errorMessage = this.uploadConsentScanErrorMessages.find(msg => msg.match(e))
+          const errorMessage = this.uploadConsentScanErrorMessages.find(msg => msg.match(e))
           // find error message arguments
           if( errorMessage == ErrorMessages.FAILED_UPLOAD_CONSENT_SCAN_FILE) {
-            return throwError(new MainzellisteError(errorMessage, errorMessage.findVariables(e)[1]));
+            return throwError( () => new MainzellisteError(errorMessage, errorMessage.findVariables(e)[1]));
+          } else {
+            throwError( () => errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
           }
         }
-        return throwError(errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
+        return throwError( () => e);
       }),
       finalize(callback)
     );

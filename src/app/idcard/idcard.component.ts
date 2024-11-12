@@ -101,7 +101,7 @@ export class IdcardComponent implements OnInit {
         if (e instanceof HttpErrorResponse && (e.status == 404)) {
           this.router.navigate(['/**']).then();
         }
-        return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_add_patient_token'), e, this.translate))
+        return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_add_patient_token'), e, this.translate))
       })
     )
     .subscribe(
@@ -114,25 +114,27 @@ export class IdcardComponent implements OnInit {
     this.loadingConsents = true;
     this.consentsView = { consentTemplates : new Map, consentRows: [] }
     this.consentService.getConsents(this.idType, this.idString)
-      .subscribe(dataModels => {
-          this.consentsView = dataModels;
-          this.consentTable.renderRows();
-          this.loadingConsents = false;
-        },
-        error => this.loadingConsents = false);
+    .subscribe({
+      next: (dataModels) => {
+        this.consentsView = dataModels;
+        this.consentTable.renderRows();
+        this.loadingConsents = false;
+      },
+      error: (error) => this.loadingConsents = false
+    });
   }
 
   deleteConsent(consentId: string) {
     this.consentService.deleteConsent(consentId).pipe(
         mergeMap(r => this.consentService.getConsents(this.idType, this.idString))
-    ).subscribe(
-        dataModels => {
-          this.consentsView = dataModels;
-          this.consentTable.renderRows();
-          this.loadingConsents = false;
-        },
-        error => this.loadingConsents = false
-    );
+    ).subscribe({
+      next: dataModels => {
+        this.consentsView = dataModels;
+        this.consentTable.renderRows();
+        this.loadingConsents = false;
+      },
+      error: () => this.loadingConsents = false
+    });
   }
 
   deletePatient() {
@@ -206,10 +208,10 @@ export class IdcardComponent implements OnInit {
       mergeMap(c =>
         this.consentService.createScansAndProvenance(dataModel, (c as fhir4.Consent).id ?? "")
       ),
-      catchError(e => throwError(e))
-    ).subscribe(
-      () => {},
-      e => {
+      catchError(e => throwError( () => e))
+    ).subscribe({
+      next: () => {},
+      error: e => {
         processDone.emit(false);
         if (e instanceof MainzellisteError && e.errorMessage == ErrorMessages.CREATE_CONSENT_REJECTED) {
           this.openConsentRejectedDialog(dataModel, processDone);
@@ -217,11 +219,11 @@ export class IdcardComponent implements OnInit {
           this.openConsentInactivatedDialog(dataModel, processDone);
         }
       },
-      () => {
+      complete: () => {
         processDone.emit(true)
         this.loadConsents()
       }
-    );
+    });
   }
 
   private openConsentRejectedDialog(dataModel: Consent, processDone: EventEmitter<boolean>) {

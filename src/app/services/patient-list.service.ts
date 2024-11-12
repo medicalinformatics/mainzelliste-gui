@@ -11,7 +11,7 @@ import {DeletePatientTokenData} from "../model/delete-patient-token-data";
 import {Field} from "../model/field";
 import {DatePipe} from "@angular/common";
 import {catchError, map, mergeMap} from "rxjs/operators";
-import {Observable, lastValueFrom, of, throwError, firstValueFrom} from "rxjs";
+import {firstValueFrom, lastValueFrom, Observable, of, throwError} from "rxjs";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessage, ErrorMessages} from "../error/error-messages";
 import _moment from 'moment';
@@ -24,7 +24,6 @@ import {AuthorizationService} from "./authorization.service";
 import {TranslateService} from '@ngx-translate/core';
 import {Operation, Tenant} from "../model/tenant";
 import {IdType} from "../model/id-type";
-import {flatMap} from "rxjs";
 import {IdGenerator} from "../model/idgenerator";
 
 export interface ReadPatientsResponse {
@@ -150,7 +149,7 @@ export class PatientListService {
 
   findRelatedIds(id: Id, ids: Id[]): Observable<Id[]> {
     let uniqueIdTypes = this.getIdTypes("R");
-    if (uniqueIdTypes !== undefined && uniqueIdTypes.includes(id.idType))
+    if (uniqueIdTypes?.includes(id.idType))
       return of(ids.filter(e => uniqueIdTypes.includes(e.idType)));
     else
       return this.fetchRelatedAssociatedIds(id);
@@ -160,7 +159,7 @@ export class PatientListService {
     let relatedIdTypes = [...this.authorizationService.getRelatedAssociatedIdTypes(id.idType, true, "R"),
       ...this.authorizationService.getRelatedAssociatedIdTypes(id.idType, false, "R")]
     return this.readPatient(id, "R", [], relatedIdTypes).pipe(
-      flatMap(patients => patients.map( p => p.ids))
+      mergeMap(patients => patients.map( p => p.ids))
     )
   }
 
@@ -262,7 +261,7 @@ export class PatientListService {
             totalCount: "0"
           });
         } else {
-          return throwError(new Error(this.translate.instant('error.patient_list_service_get_patients') + `${getErrorMessageFrom(error, this.translate)}`));
+          return throwError( () => new Error(this.translate.instant('error.patient_list_service_get_patients') + `${getErrorMessageFrom(error, this.translate)}`));
         }
       })
     )
@@ -305,10 +304,10 @@ export class PatientListService {
       catchError(e => {
         // handle failed token creation
         if (e instanceof HttpErrorResponse && (e.status == 404) && ErrorMessages.ML_SESSION_NOT_FOUND.match(e))
-          return throwError(new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND));
+          return throwError( () => new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND));
         else if (!(e instanceof MainzellisteError) && !(e instanceof MainzellisteUnknownError))
-          return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_create_create_ids_token'), e, this.translate));
-        return throwError(e);
+          return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_create_create_ids_token'), e, this.translate));
+        return throwError( () => e);
       }));
   }
 
@@ -323,9 +322,9 @@ export class PatientListService {
         if (e instanceof HttpErrorResponse && (e.status == 400 || e.status == 409)) {
           // TODO: Complete Error Handling
           let errorMessage = ErrorMessages.CREATE_IDS_ERROR;
-          return throwError(new MainzellisteError(errorMessage));
+          return throwError( () => new MainzellisteError(errorMessage));
         }
-        return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_create_ids_token'), e, this.translate))
+        return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_create_ids_token'), e, this.translate))
       })
       )
   }
@@ -356,10 +355,10 @@ export class PatientListService {
       catchError(e => {
         // handle failed token creation
         if (e instanceof HttpErrorResponse && (e.status == 404) && ErrorMessages.ML_SESSION_NOT_FOUND.match(e))
-          return throwError(new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND))
+          return throwError( () => new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND))
         else if (!(e instanceof MainzellisteError) && !(e instanceof MainzellisteUnknownError))
-          return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_create_add_patient_token'), e, this.translate))
-        return throwError(e)
+          return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_create_add_patient_token'), e, this.translate))
+        return throwError( () => e)
       })
     );
   }
@@ -388,17 +387,18 @@ export class PatientListService {
     .pipe(
       catchError(e => {
         if (e instanceof HttpErrorResponse && (e.status == 400 || e.status == 409)) {
-          let errorMessage = this.addPatientErrorMessages.find(msg => msg.match(e))
+          const errorMessage = this.addPatientErrorMessages.find(msg => msg.match(e))
           if (errorMessage == ErrorMessages.CREATE_PATIENT_INVALID_FIELD) {
             let fieldName: string = errorMessage.findVariables(e)[0];
             let field = this.patientList.fields.find(f => f.mainzellisteField == fieldName);
-            return throwError(new MainzellisteError(errorMessage, field?.name));
+            return throwError( () => new MainzellisteError(errorMessage, field?.name));
           } else if( errorMessage == ErrorMessages.CREATE_PATIENT_INVALID_EXT_ID) {
-            return throwError(new MainzellisteError(errorMessage, errorMessage.findVariables(e)[1]));
-          } if(errorMessage != undefined)
-            return throwError(new MainzellisteError(errorMessage));
+            return throwError( () => new MainzellisteError(errorMessage, errorMessage.findVariables(e)[1]));
+          } else {
+            return throwError( () => errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
+          }
         }
-        return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_add_patient_token'), e, this.translate))
+        return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_add_patient_token'), e, this.translate))
       }),
       map( ids => ids[0])
     )
@@ -406,14 +406,14 @@ export class PatientListService {
 
   readPatient(id: Id, operation: Operation, resultFields?: string[], resultIdTypes?: string[]): Observable<Patient[]> {
     return this.sessionService.createToken(
-      "readPatients",
-      new ReadPatientsTokenData(
-        [{idType: id.idType, idString: id.idString}],
-        resultFields != undefined? resultFields : this.getFieldNames(operation),
-        resultIdTypes != undefined ? resultIdTypes : this.getAllIdTypes(operation)
-      )).pipe(
-        mergeMap( readToken => this.httpClient.get<Patient[]>
-        (this.patientList.url + "/patients?tokenId=" + readToken.id))
+        "readPatients",
+        new ReadPatientsTokenData(
+            [{idType: id.idType, idString: id.idString}],
+            resultFields ?? this.getFieldNames(operation),
+            resultIdTypes ?? this.getAllIdTypes(operation)
+        )).pipe(
+        mergeMap(readToken =>
+            this.httpClient.get<Patient[]>(this.patientList.url + "/patients?tokenId=" + readToken.id))
     );
   }
 
@@ -449,19 +449,21 @@ export class PatientListService {
     })
     .pipe(
       catchError(e => {
-        let errorMessage;
         if (e instanceof HttpErrorResponse && (e.status == 400 || e.status == 409)) {
-          errorMessage = this.editPatientErrorMessages.find(msg => msg.match(e))
+          const errorMessage = this.editPatientErrorMessages.find(msg => msg.match(e))
           // find error message arguments
           if (errorMessage == ErrorMessages.CREATE_PATIENT_INVALID_FIELD || errorMessage == ErrorMessages.EDIT_PATIENT_EMPTY_FIELD) {
             let fieldName: string = errorMessage.findVariables(e)[0];
             let field = this.patientList.fields.find(f => f.mainzellisteField == fieldName);
-            return throwError(new MainzellisteError(errorMessage, field?.name));
+            return throwError( () => new MainzellisteError(errorMessage, field?.name));
           } else if( errorMessage == ErrorMessages.CREATE_PATIENT_INVALID_EXT_ID) {
-            return throwError(new MainzellisteError(errorMessage, errorMessage.findVariables(e)[1]));
+            return throwError( () => new MainzellisteError(errorMessage, errorMessage.findVariables(e)[1]));
+          } else {
+            return throwError( () => errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
           }
+        } else {
+          return throwError( () => e);
         }
-        return throwError(errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
       })
     );
   }
@@ -487,15 +489,16 @@ export class PatientListService {
     })
       .pipe(
         catchError(e => {
-          let errorMessage;
           if (e instanceof HttpErrorResponse && (e.status == 404)) {
-            errorMessage = this.deletePatientErrorMessages.find(msg => msg.match(e))
+            const errorMessage = this.deletePatientErrorMessages.find(msg => msg.match(e))
             // find error message arguments
             if( errorMessage == ErrorMessages.DELETE_PATIENT_NOT_FOUND) {
-              return throwError(new MainzellisteError(errorMessage));
+              return throwError( () => new MainzellisteError(errorMessage));
+            } else {
+              return throwError( () => errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
             }
           }
-          return throwError(errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
+          return throwError( () => e);
         })
       );
   }

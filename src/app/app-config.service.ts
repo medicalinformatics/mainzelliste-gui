@@ -45,8 +45,8 @@ export class AppConfigService {
     return new Promise<PatientList[]>((resolve, reject) => {
       this.httpClient.get<AppConfig>('assets/config/config.json')
       .pipe(map(r => Object.assign([], r.patientLists || [])))
-      .subscribe(
-        r => {
+      .subscribe({
+        next: r => {
           // set configuration
           this.data = r;
 
@@ -58,14 +58,14 @@ export class AppConfigService {
 
           //start validation
           this.validateBackendUrl(this.data[0])
-          .subscribe(
-            message => console.log(message),
-            e => reject(e),
-            () => resolve(this.data)
-          )
+          .subscribe({
+            next: message => console.log(message),
+            error: e => reject(e),
+            complete: () => resolve(this.data)
+          })
         },
-        _e => reject(new Error(this.translate.instant('error.app_config_service_config_not_found')))
-      );
+        error: _e => reject(new Error(this.translate.instant('error.app_config_service_config_not_found')))
+      });
     });
   }
 
@@ -127,7 +127,7 @@ export class AppConfigService {
       .set('Accept', 'application/json')
     }).pipe(
       catchError(e => {
-        return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_get_version'), e, this.translate))
+        return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_get_version'), e, this.translate))
       }),
       map( info => {
         this.version = info.version
@@ -141,14 +141,14 @@ export class AppConfigService {
     let urlSuffix  = new URL(config.url.toString()).pathname.endsWith('/') ?"":"/";
     return this.httpClient.get<string>(config.url.toString() + urlSuffix)
     .pipe(map(_r => this.translate.instant('appConfigService.backend_online')),
-      catchError(_e => throwError(new Error(this.translate.instant('error.app_config_service_backend_offline'))))
+      catchError(_e => throwError( () => new Error(this.translate.instant('error.app_config_service_backend_offline'))))
     )
   }
 
   public fetchMainzellisteIdGenerators(): Promise<IdGenerator[]> {
     return lastValueFrom(this.httpClient.get<IdGenerator[]>(this.data[0].url + "/configuration/idGenerators", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
     .pipe(
-      catchError((e) => throwError(new Error(this.translate.instant('error.app_config_service_fetch_id_generators')))),
+      catchError((e) => throwError( () => new Error(this.translate.instant('error.app_config_service_fetch_id_generators')))),
       map(idGenerators => {
         console.log(this.validateMainIdType(idGenerators))
         this.mainzellisteIdGenerators = idGenerators
@@ -161,7 +161,7 @@ export class AppConfigService {
     public fetchMainzellisteAssociatedIdGenerators(): Promise<IdGenerator[]> {
       return lastValueFrom(this.httpClient.get<AssociatedIds>(this.data[0].url + "/configuration/idGenerators/associatedIds", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
         .pipe(
-            catchError((e) => throwError(new Error(this.translate.instant('error.app_config_service_fetch_id_generators')))),
+            catchError((e) => throwError( () => new Error(this.translate.instant('error.app_config_service_fetch_id_generators')))),
             map(associatedIds => {
               this.mainzellisteAssociatedIdGenerators = [];
               for(let key in associatedIds){
@@ -179,7 +179,7 @@ export class AppConfigService {
               params: new HttpParams().set('filter', 'roles').set('merge', true)
           })
           .pipe(
-              catchError((e) => throwError(new Error("Can't init claims configurations. Failed to connect " +
+              catchError((e) => throwError( () => new Error("Can't init claims configurations. Failed to connect " +
                   "to the backend Endpoint /configuration/claims"))),
               map(claims => {
                   this.mainzellisteClaims = claims;
@@ -192,7 +192,7 @@ export class AppConfigService {
     let fieldEndpointUrl = this.data[0].url + "/configuration/fields";
     return lastValueFrom(this.httpClient.get<MainzellisteField[]>(fieldEndpointUrl, {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
     .pipe(
-      catchError(e => throwError(new Error(this.translate.instant('error.app_config_service_fetch_fields') + fieldEndpointUrl))),
+      catchError(e => throwError( () => new Error(this.translate.instant('error.app_config_service_fetch_fields') + fieldEndpointUrl))),
       map(mlFields => {
         //validate fields
         for (let configuredField of this.data[0].fields) {
@@ -238,7 +238,6 @@ export class AppConfigService {
 
   public validateMainIdType(idGenerators: IdGenerator[]) {
     let config = this.data[0];
-    let idType = idGenerators[0].idType;
 
     //set main id type if the configured value is empty
     if (config.mainIdType != undefined && !idGenerators.some( g => g.idType == config.mainIdType?.trim())) {
