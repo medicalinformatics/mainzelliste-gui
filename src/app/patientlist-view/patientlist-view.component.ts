@@ -162,19 +162,19 @@ export class PatientlistViewComponent implements OnInit {
 
   async loadPatients(pageIndex: number, pageSize: number) {
     this.loading = true;
-    this.patientService.getDisplayPatients(this.filters, pageIndex, pageSize).subscribe(
-      response => {
+    this.patientService.getDisplayPatients(this.filters, pageIndex, pageSize).subscribe({
+      next: (response) => {
         this.patientsMatTableData.data = response.patients;
         this.pageNumber = parseInt(response.totalCount);
         this.loading = false;
       },
-      error => {
+      error: (error) => {
         this.patientsMatTableData.data = [];
         this.pageNumber = 0;
         this.loading = false
         throw error;
       }
-    )
+    })
   }
 
   async handlePageEvent(event: PageEvent) {

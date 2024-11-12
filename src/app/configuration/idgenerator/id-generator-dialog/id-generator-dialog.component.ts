@@ -38,17 +38,17 @@ export class IdGeneratorDialogComponent {
     this.saving = true;
     if(this.dataModel.nodeName == 'default')
       this.dataModel.nodeName = ''
-    this.configService.createMainzellisteIdGenerator(this.dataModel).subscribe(
-      () => {},
-      e => {
+    this.configService.createMainzellisteIdGenerator(this.dataModel).subscribe({
+      next: () => {},
+      error: (e) => {
         this.errorMessages.push(getErrorMessageFrom(e, this.translate));
         this.saving = false;
       },
-      () => {
+      complete: () => {
         this.dialogRef.close(this.dataModel);
         this.saving = false;
       }
-    )
+    })
   }
 
   public disable(form: NgForm): boolean {

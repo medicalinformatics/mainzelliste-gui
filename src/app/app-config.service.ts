@@ -45,8 +45,8 @@ export class AppConfigService {
     return new Promise<PatientList[]>((resolve, reject) => {
       this.httpClient.get<AppConfig>('assets/config/config.json')
       .pipe(map(r => Object.assign([], r.patientLists || [])))
-      .subscribe(
-        r => {
+      .subscribe({
+        next: r => {
           // set configuration
           this.data = r;
 
@@ -58,14 +58,14 @@ export class AppConfigService {
 
           //start validation
           this.validateBackendUrl(this.data[0])
-          .subscribe(
-            message => console.log(message),
-            e => reject(e),
-            () => resolve(this.data)
-          )
+          .subscribe({
+            next: message => console.log(message),
+            error: e => reject(e),
+            complete: () => resolve(this.data)
+          })
         },
-        _e => reject(new Error(this.translate.instant('error.app_config_service_config_not_found')))
-      );
+        error: _e => reject(new Error(this.translate.instant('error.app_config_service_config_not_found')))
+      });
     });
   }
 
@@ -238,7 +238,6 @@ export class AppConfigService {
 
   public validateMainIdType(idGenerators: IdGenerator[]) {
     let config = this.data[0];
-    let idType = idGenerators[0].idType;
 
     //set main id type if the configured value is empty
     if (config.mainIdType != undefined && !idGenerators.some( g => g.idType == config.mainIdType?.trim())) {
