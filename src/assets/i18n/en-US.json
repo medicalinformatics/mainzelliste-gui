@@ -2,7 +2,7 @@
 	"EMPTY": "",
 	"button_add_consent": "Add consent",
 	"button_edit_consent": "Edit consent",
-  "button_view_consent": "View consent",
+	"button_view_consent": "View consent",
 	"button_delete_consent": "Delete consent",
   "button_open_consent_history": "View consent history",
   "button_add_consent_scan": "Add PDF file",
@@ -11,7 +11,7 @@
 	"button_edit": "Edit",
 	"button_request": "Request",
 	"button_cancel": "Cancel",
-  "button_close": "Close",
+	"button_close": "Close",
 	"button_save": "Save",
 	"button_edit_patient": "Edit patient data",
 	"button_id_card": "ID Card",
@@ -26,22 +26,19 @@
 	"button_okay": "Okay",
 	"button_publish": "Publish",
   "button_create": "Create",
-
 	"radio_button_yes": "Yes",
 	"radio_button_no": "No",
-
 	"birth_date_text": "Date of Birth",
 	"birth_name_text": "Birth Name",
 	"first_name_text": "First name",
 	"last_name_text": "Last name",
-  "street_text": "Street",
+	"street_text": "Street",
 	"residence_text": "Residence",
 	"zip_code_text": "ZIP code",
-  "phone_number_text": "Phone number",
-  "email_text": "E-mail",
-  "health_insurance_text": "Health Insurance",
-  "health_insurance_number_text": "Health Insurance Number",
-
+	"phone_number_text": "Phone number",
+	"email_text": "E-mail",
+	"health_insurance_text": "Health Insurance",
+	"health_insurance_number_text": "Health Insurance Number",
 	"tentative_dialog_title": "Unsafe case",
 	"tentative_dialog_text1": "A similar patient was found for the data entered, but he cannot be assigned with sufficient certainty.",
 	"tentative_dialog_text2": "To avoid any confusion, please check your entry again! Then:",
@@ -52,14 +49,13 @@
 	"tentative_dialog_text7": "\"Confirm\"",
 	"tentative_dialog_text8": ". A new patient will then be created with this data.",
 	"tentative_dialog_text9": "If you are sure that the data entered is correct, but the patient has already been entered previously, please contact the patient list administrator.",
-
 	"idcard.consent_created": "Created",
 	"idcard.consent_no_consent": "No consent.",
 	"idcard.consent_template": "Template",
 	"idcard.consent_title": "Consents",
 	"idcard.consent_validity_period": "Validity period",
 	"idcard.consent_version": "Version",
-  "idcard.consent_status": "Status",
+	"idcard.consent_status": "Status",
 	"idcard.title_patient_data": "Patient data",
 	"idcard.title_pseudonyms": "Pseudonyms",
 	"idcard.title_id_card": "ID Card",
@@ -75,9 +71,8 @@
 
 	"consent_template_status.draft": "Draft",
 	"consent_template_status.active": "Active",
-
-  "consent_template.name": "Name",
-  "consent_template.title": "Titel",
+	"consent_template.name": "Name",
+	"consent_template.title": "Titel",
 	"consent_template.status": "Status",
   "consent_template.organization": "Organization",
   "consent_template.research_study": "Research study",
@@ -105,7 +100,6 @@
 	"patientlist.headers_actions": "Actions",
 	"patientlist.no_patient_found": "No patient found.",
 	"patientlist.search_placeholder": "Search...",
-
 	"patientlist_view.paginator_current_page_label_text1": "Page",
 	"patientlist_view.paginator_current_page_label_text2": "of",
 	"patientlist_view.paginator_item_number_label": "Items per page:",
@@ -113,13 +107,11 @@
 	"patientlist_view.paginator_previous_page_label": "Previous page",
 	"patientlist_view.paginator_first_page_label": "First page",
 	"patientlist_view.paginator_last_page_label": "Last page",
-
-  "session.tenancy": "Projects",
+	"session.tenancy": "Projects",
 	"session.language_english": "English",
 	"session.language_german": "German",
 	"session.menu_language": "Language",
 	"session.menu_logout": "Log Out",
-
 	"createPatient.request_personal_identifier": "Request personal identifier",
 	"createPatient.enter_patient_data": "Enter patient data:",
 	"createPatient.add_pseudonym_type": "Add pseudonym type:",
@@ -127,9 +119,7 @@
 	"createPatient.no_pseudonym_type_error": "Entering the pseudonym type is required",
 	"createPatient.add_external_pseudonym": "Add external pseudonym:",
 	"createPatient.pseudonym_type": "Pseudonym type",
-
 	"consentDialog.title_consent": "Consent information",
-
 	"consentDetail.select_consent_template": "Select consent template:",
 	"consentDetail.consent_template": "Consent template",
 	"consentDetail.valid_from": "Valid from",
@@ -143,18 +133,14 @@
 	"deletePatient.title_patient_data": "Patient data",
 	"deletePatient.title_pseudonyms": "Pseudonyms",
 	"deletePatient.title": "Delete patient",
-
 	"deletePatientDialog.title_delete_patient": "Delete patient",
 	"deletePatientDialog.delete_patient_question": "Do you want to delete the following patient?",
 	"deletePatientDialog.delete_patient_warning": "The patient data will be completely deleted and cannot be restored.",
-
 	"deleteConsentDialog.title_delete_consent": "Delete consent",
 	"deleteConsentDialog.delete_consent_question": "Do you want to delete the following consent?",
 	"deleteConsentDialog.delete_consent_warning": "The consent data will be completely deleted and cannot be restored.",
-
 	"addConsent.title_add_consent": "Add consent",
 	"editConsent.title_edit_consent": "Edit Consent",
-
 	"editPatient.title_edit_patient": "Edit patients",
 	"editPatient.title_patient_data": "Patient data",
 	"editPatient.title_pseudonyms": "Pseudonyms",
@@ -195,15 +181,12 @@
 	"info.audit_trail_text4": "Patients who have been deleted",
 	"info.audit_trail_text5": "Patients who have been merged together",
 	"info.audit_trail_text6": "are recorded in the audit trail. The time of the action is recorded and stated. The folder symbol takes you to the patient's ID card for further details about the campaign.",
-
 	"patientPseudonyms.external": "External pseudonyms:",
-  "patientPseudonyms.related_id_button": "Show related IDs",
-
+	"patientPseudonyms.related_id_button": "Show related IDs",
 	"patientFields.error_value_text1": "The value for the field",
 	"patientFields.error_value_text2": "is invalid",
 	"patientFields.error_mandatory_text1": "Entering the field",
 	"patientFields.error_mandatory_text2": "is mandatory",
-
 	"error.global_session_not_found": "Session is invalid",
 	"error.create_patient_missing_field": "The mandatory fields are required",
 	"error.create_patient_missing_id_type": "Entering a pseudonym type is required",
@@ -224,15 +207,14 @@
 	"error.edit_patient_conflict_ext_ids_idat_multiple_match": "Patient could not be edited because the IDAT entered was assigned to different patients",
 	"error.edit_patient_conflict_possible_match": "A similar patient was found for the data entered, but he cannot be assigned with sufficient certainty. To avoid any confusion, please check your entry again",
 	"error.edit_patient_conflict_match": "A patient was found for the data entered. To avoid any confusion, please check your entry again",
-  "error.delete_patient_not_found": "Patient not found",
-
-  "error.resolve_create_id_token": "ResolveCreateIdTokenError",
+	"error.delete_patient_not_found": "Patient not found",
+	"error.resolve_create_id_token": "ResolveCreateIdTokenError",
 	"error.consent_service_fhir_consent_template": "Contained fhir consent template contain no provisions",
 	"error.consent_service_questionnaire_not_found": "Questionnaire not found",
 	"error.consent_service_fhir_consent_not_found": "Fhir consent resource not found",
-  "error.consent_upload_scan_failed": "Failed to upload '${1}'",
-  "error.read_consent_scan_failed": "Failed to read consent scan. Cause: '${1}'",
-  "error.search_consent_provenance_failed": "Failed to find consent informations. Cause: '${1}'",
+	"error.consent_upload_scan_failed": "Failed to upload '${1}'",
+	"error.read_consent_scan_failed": "Failed to read consent scan. Cause: '${1}'",
+	"error.search_consent_provenance_failed": "Failed to find consent informations. Cause: '${1}'",
 	"error.get_error_message_from_undefined_error": "Undefined client error",
 	"error.authorization_service": "Access denied for ",
 	"error.mainzelliste_unknown_error": ". Cause: ",
@@ -259,32 +241,25 @@
 	"error.app_config_service_id_type_mismatch_text2": "' and the configured main id type '",
 	"error.app_config_service_id_type_mismatch_text3": "' are different",
 	"error.app_module_connect_keycloak": "Failed to connect to Keycloak.",
-  "error.create_consent_rejected": "Failed to create consent. Cause: '${1}'",
-  "error.read_consent_failed": "Failed to read consent. Cause: '${1}'",
+	"error.create_consent_rejected": "Failed to create consent. Cause: '${1}'",
+	"error.read_consent_failed": "Failed to read consent. Cause: '${1}'",
 	"error.delete_consent_failed": "Consent not found",
 	"error.create_consent_template_rejected": "Failed to create consent template. Cause: '${1}'",
-  "error.read_consent_template_failed": "Failed to read consent template. Cause: '${1}'",
-  "error.search_consent_templates_failed": "Failed to find consent templates. Cause: '${1}'",
-
+	"error.read_consent_template_failed": "Failed to read consent template. Cause: '${1}'",
+	"error.search_consent_templates_failed": "Failed to find consent templates. Cause: '${1}'",
 	"errorComponent.error": "Error",
 	"errorComponent.message": "Message",
-
 	"errorCardComponent.error": "Error: ",
 	"errorDialogComponent.title": "Oups! Something went wrong!",
 	"errorDialogComponent.text1": "We encountered ",
 	"errorDialogComponent.text2": " while trying to load the application",
-
 	"appConfigService.backend_online": "Mainzelliste is online",
 	"appConfigService.main_id_type_valid": "Main id type is valid",
-
-  "access_denied.title": "Access Denied",
-  "access_denied.message": "you do not have permission to view this page",
-
-  "page_not_found.title": "Page not found",
-  "page_not_found.message": "The page you were looking for could not be found",
-
+	"access_denied.title": "Access Denied",
+	"access_denied.message": "you do not have permission to view this page",
+	"page_not_found.title": "Page not found",
+	"page_not_found.message": "The page you were looking for could not be found",
 	"patientlistView.title": "Patient list",
-
 	"newIdDialog.mat_title": "Generate new ID",
 	"newIdDialog.text_1": "A new ID will be generated for the selected type",
   "newIdDialog.text_2": "and assigned to the external id",
@@ -294,7 +269,6 @@
   "newIdDialog.id_types": "ID type",
 
 	"logout.message": "You are now logged out!",
-
 	"footer.version": "Version ",
 	"footer.info": "Mainzelliste - Powered by Team Federated Information Systems from DKFZ Heidelberg",
 
@@ -315,5 +289,8 @@
 	"bulkIdGenerationEmptyFieldsDialog.text1": " patients were not found.",
 	"bulkIdGenerationEmptyFieldsDialog.text2": "No new IDs were generated for patients not found.",
 	"bulkIdGenerationEmptyFieldsDialog.error_text1": "No patient was found.",
-	"bulkIdGenerationEmptyFieldsDialog.error_text2": "Please select a valid file."
+	"bulkIdGenerationEmptyFieldsDialog.error_text2": "Please select a valid file.",
+
+	"export_csv": "Export Contact Information to Excel",
+	"copy_data": "Copy contact information to clipboard"
 }
