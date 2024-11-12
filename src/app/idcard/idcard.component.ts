@@ -355,7 +355,8 @@ export class IdcardComponent implements OnInit {
 
     new AngularCsv(data, 'ContactInfo', {
       headers: ["Vorname", "Nachname", "PLZ", "Wohnort"],
-      quoteStrings: ''
+      quoteStrings: '', 
+      delimiter: ';'
     },);
   }
   
