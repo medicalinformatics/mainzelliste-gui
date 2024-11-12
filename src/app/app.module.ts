@@ -38,9 +38,11 @@ import {
   MomentDateAdapter
 } from "@angular/material-moment-adapter";
 import {ClipboardModule} from "@angular/cdk/clipboard";
-import {from} from "rxjs";
+import {firstValueFrom, from} from "rxjs";
 import {UserAuthService} from "./services/user-auth.service";
 import {NewIdDialog} from './idcard/dialogs/new-id-dialog';
+import {NgxCsvParserModule} from 'ngx-csv-parser';
+import {FileSaverModule} from 'ngx-filesaver';
 import {SharedModule} from "./shared/shared.module";
 import {ConsentModule} from "./consent/consent.module";
 import {MainLayoutModule} from "./main-layout/main-layout.module";
@@ -48,20 +50,38 @@ import {PatientModule} from "./patient/patient.module";
 import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.component";
 import {TranslateService} from '@ngx-translate/core';
 import {AccessDeniedComponent} from './access-denied/access-denied.component';
-import {InternationalizedMatPaginatorIntl} from "./shared/components/paginator/internationalized-mat-paginator-intl";
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import {NgxMatFileInputModule} from '@angular-material-components/file-input';
+import {MatStepperModule} from '@angular/material/stepper';
+import {
+  InternationalizedMatPaginatorIntl
+} from "./shared/components/paginator/internationalized-mat-paginator-intl";
+import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {ConsentTemplatesComponent} from './consent/consent-templates/consent-templates.component';
-import { TentativeMatchesListComponent } from './experimental/tentative-matches-list/tentative-matches-list.component';
-import { MergeSplitPatientComponent } from './experimental/merge-split-patient/merge-split-patient.component';
+import {ConfigurationModule} from "./configuration/configuration.module";
+import {LocalStorageService} from "./services/local-storage.service";
+import {
+  BulkIdGenerationComponent
+} from "./bulk-operations/bulk-id-generation/bulk-id-generation.component";
+import {
+  BulkIdGenerationTableComponent
+} from "./bulk-operations/bulk-id-generation/table/bulk-id-generation-table.component";
+import {
+  BulkIdGenerationEmptyFieldsDialog
+} from "./bulk-operations/bulk-id-generation/dialog/bulk-id-generation-empty-fields-dialog";
 
-function initializeAppFactory(configService: AppConfigService, keycloak: KeycloakService,
-                              userAuthService: UserAuthService, translate: TranslateService): () => Promise<any> {
+function initializeAppFactory(
+    configService: AppConfigService,
+    keycloak: KeycloakService,
+    userAuthService: UserAuthService,
+    translate: TranslateService,
+    localStorageService :LocalStorageService
+): () => Promise<any> {
   translate.addLangs(['en-US', 'de-DE']);
   return () => configService.init()
     .then(config => {
       from(keycloak.keycloakEvents$).subscribe(event => userAuthService.notifyKeycloakEvent(event));
       translate.setDefaultLang(config[0].defaultLanguage || "en-US");
-      return translate.use(translate.getDefaultLang()).toPromise()
+      return firstValueFrom(translate.use(localStorageService.language))
         .then(() => keycloak.init({
           config: {
             url: config[0].oAuthConfig?.url ?? "",
@@ -107,8 +127,9 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     AccessDeniedComponent,
     PageNotFoundComponent,
     ConsentTemplatesComponent,
-    TentativeMatchesListComponent,
-    MergeSplitPatientComponent,
+    BulkIdGenerationComponent,
+    BulkIdGenerationTableComponent,
+    BulkIdGenerationEmptyFieldsDialog
   ],
   imports: [
     SharedModule,
@@ -131,7 +152,12 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     MatProgressSpinnerModule,
     MatProgressBarModule,
     ClipboardModule,
-    ConsentModule
+    ConsentModule,
+    ConfigurationModule,
+    NgxCsvParserModule,
+    FileSaverModule,
+    NgxMatFileInputModule,
+    MatStepperModule
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
@@ -139,7 +165,7 @@ function initializeAppFactory(configService: AppConfigService, keycloak: Keycloa
     {
       provide: APP_INITIALIZER,
       useFactory: initializeAppFactory,
-      deps: [AppConfigService, KeycloakService, UserAuthService, TranslateService],
+      deps: [AppConfigService, KeycloakService, UserAuthService, TranslateService, LocalStorageService],
       multi: true
     },
     {provide: ErrorHandler, useClass: GlobalErrorHandler},

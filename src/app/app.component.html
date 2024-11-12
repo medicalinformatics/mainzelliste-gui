@@ -12,22 +12,22 @@
     <mat-sidenav mode="side" class="sidenav-menu" opened>
       <app-navigation style=" padding-top:22px; color: white; display: flex; flex-flow: column"></app-navigation>
     </mat-sidenav>
-    <mat-sidenav-content style="display: flex; flex-direction: column">
-      <div style="padding-bottom: 5%; padding-top: 3%; flex: 1 1 95%; display: flex; flex-flow: column;">
-        <div class="title" *ngIf="this.titleService.titleText.length > 0">
-          <h1>
-            <mat-icon *ngIf="titleService.titleIcon != undefined"
-                      style="transform: scale(1.5); margin-right: 0.5em;">{{this.titleService.titleIcon}}</mat-icon>
-            {{this.titleService.titleText}}</h1>
-        </div>
-        <app-error-card [(messages)]="errorNotificationService.messages"></app-error-card>
-        <div>
-          <div style="flex: 1 1 auto;min-height: 90%;">
+    <mat-sidenav-content style="height: 100%">
+      <div style="display: flex; flex-direction: column; height: 100%; position: absolute; width: 100%;">
+        <div style="display: flex; flex-flow: column; padding: 30px 2% 5% 2%; flex-shrink: 1; flex-grow: 1;">
+          <div class="title" *ngIf="this.titleService.titleText.length > 0">
+            <h1>
+              <mat-icon *ngIf="titleService.titleIcon != undefined"
+                        style="transform: scale(1.5); margin-right: 0.5em;">{{this.titleService.titleIcon}}</mat-icon>
+              {{this.titleService.titleText}}</h1>
+          </div>
+          <app-error-card [(messages)]="errorNotificationService.messages"></app-error-card>
+          <div style="flex: 1 1 auto; height: 100%">
             <router-outlet></router-outlet>
           </div>
         </div>
+        <app-footer style="height: 120px;"></app-footer>
       </div>
-      <app-footer style="flex: 0 0 5%;"></app-footer>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>

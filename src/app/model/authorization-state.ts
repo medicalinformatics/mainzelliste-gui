@@ -1,4 +1,4 @@
-import {Operation} from "./tenant";
+import {MiscellaneousPermission, Operation, TenantPermission} from "./tenant";
 
 export class AuthorizationState{
   DEFAULT: boolean = false;
@@ -28,6 +28,8 @@ export class AuthorizationState{
   READ_CONSENT_TEMPLATE: boolean = false;
   EDIT_CONSENT_TEMPLATE: boolean = false;
   DELETE_CONSENT_TEMPLATE: boolean = false;
+
+  EDIT_CONFIGURATION: boolean = false;
 
   setPatient(operation: Operation[]){
     this.CREATE_PATIENT = operation.some(o => o == "C");
@@ -65,5 +67,15 @@ export class AuthorizationState{
     this.READ_CONSENT_TEMPLATE = operation.some(o => o == "R");
     this.EDIT_CONSENT_TEMPLATE = operation.some(o => o == "U");
     this.DELETE_CONSENT_TEMPLATE = operation.some(o => o == "D");
+  }
+
+  setMiscellaneous(permissions: TenantPermission[]) {
+    //set default values
+    this.EDIT_CONFIGURATION = false;
+    permissions.forEach( p => {
+      switch (p.miscellaneous){
+        case "tt_editConfiguration": this.EDIT_CONFIGURATION = true;
+      }
+    });
   }
 }

@@ -95,19 +95,22 @@ secrets:
         { "i18n": "last_name_text", "name": "Nachname", "mainzellisteField": "nachname"},
         { "i18n": "birth_name_text", "name": "Geburtsname", "mainzellisteField": "geburtsname"},
         { "i18n": "birth_date_text", "name": "Geburtdatum", "mainzellisteFields": ["geburtstag", "geburtsmonat", "geburtsjahr"]},
-        { "i18n": "residence_text", "name": "Wohnort", "mainzellisteField": "plz"},
-        { "i18n": "zip_code_text", "name": "PLZ", "mainzellisteField": "ort"}
+        { "i18n": "residence_text", "name": "Wohnort", "mainzellisteField": "ort"},
+        { "i18n": "zip_code_text", "name": "PLZ", "mainzellisteField": "plz"}
       ],
       "debug": false,
       "betaFeatures": {
-        "consent": false
+        "consent": false,
+        "copyConcatenatedId": false,
+        "copyId": true,
+        "configuration": true
       }
     }
   ]
 }
 ```
 6. Run `ng serve` for a dev server. Navigate to `http://localhost:4200`. The app will automatically reload if you change any of the source files.
-7. You can now login with an admin user `username:demo and password:demo` or with other user e.g study nurse `username: study-nurse and password:demo` with restricted privileges
+7. You can now login with an admin user `username:admin and password:demo` or with other user e.g study nurse `username: study-nurse and password:demo` with restricted privileges
 
 #### Setup keycloak configuration manually
 1. Create new realm **mainzelliste**

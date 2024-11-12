@@ -22,7 +22,8 @@
       "betaFeatures": {
         "consent": ${ML_UI_ENABLE_CONSENT},
         "copyConcatenatedId": false,
-        "copyId": true
+        "copyId": true,
+        "configuration": false
       }
     }
   ]

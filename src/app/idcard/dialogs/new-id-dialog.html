@@ -1,4 +1,5 @@
 <h1 mat-dialog-title>{{'newIdDialog.mat_title' | translate}}</h1>
+<form #generateId="ngForm">
 <div mat-dialog-content>
   <br />
   <h4 style="font-weight: 100; text-align: justify">
@@ -6,7 +7,7 @@
   </h4>
   <mat-form-field appearance="fill">
     <mat-label>{{'newIdDialog.id_types' | translate}}</mat-label>
-    <mat-select (selectionChange)="this.idTypeSelected($event.value)">
+    <mat-select [(ngModel)]="this.dataModel.resultIdType" name="idType" required="true">
       <mat-option *ngFor="let idType of this.getIdTypes()" [value]="idType">
         {{idType}}
       </mat-option>
@@ -18,7 +19,7 @@
     </h4>
     <mat-form-field appearance="fill">
       <mat-label>External Ids:</mat-label>
-      <mat-select (selectionChange)="this.selectExternalId($event.value)">
+      <mat-select [(ngModel)]="this.dataModel.externalId" name="externalId">
         <mat-option *ngFor="let id of this.getExternalIds()" [value]="id">
           {{id.idType}}: {{id.idString}}
         </mat-option>
@@ -35,9 +36,10 @@
     class="submit"
     type="submit"
     (click)="onSave()"
-    [disabled]="dataModel == undefined"
+    [disabled]="!generateId.form.valid"
   >
     {{'button_save_new_id' | translate}}
   </button>
 </div>
+</form>
 

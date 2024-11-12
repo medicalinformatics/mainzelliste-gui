@@ -6,6 +6,13 @@
   <mat-icon>person_add_alt</mat-icon>
   <span>{{'navigation.new_patient' | translate}}</span>
 </button>
+
+<mat-divider *ngIf="this.authorizationService.authorizationState.GENERATE_IDS" class="menu-divider"></mat-divider>
+<button mat-button *ngIf="this.authorizationService.authorizationState.GENERATE_IDS" [routerLink]="['/bulk-id-generation']" class="sidenav-menu-item">
+  <mat-icon>library_add</mat-icon>
+  <span>{{'navigation.bulkIdGeneration' | translate}}</span>
+</button>
+
 <!--<button mat-button [routerLink]="['/audittrail']" class="sidenav-menu-item">-->
 <!--  <mat-icon>list_alt</mat-icon>-->
 <!--  <span>Audit-Trail</span>-->
@@ -23,6 +30,12 @@
 </button>
 
 <mat-divider class="menu-divider"></mat-divider>
+<ng-container *ngIf="this.appConfigService.isConfigurationEnabled()">
+  <button mat-button *ngIf="this.authorizationService.authorizationState.EDIT_CONFIGURATION" [routerLink]="['/configuration']" class="sidenav-menu-item">
+    <mat-icon>settings</mat-icon>
+    <span>{{'navigation.configuration' | translate}}</span>
+  </button>
+</ng-container>
 <button mat-button [routerLink]="['/info']" class="sidenav-menu-item">
   <mat-icon>info</mat-icon>
   <span>{{'navigation.info' | translate}}</span>

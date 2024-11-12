@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {forkJoin, Observable, of, throwError} from 'rxjs';
+import {forkJoin, lastValueFrom, Observable, of, range, throwError} from 'rxjs';
 import Client from 'fhir-kit-client'
 import {SessionService} from "../services/session.service";
 import {DatePipe} from "@angular/common";
@@ -8,6 +8,7 @@ import {
   Consent,
   ConsentChoiceItem,
   ConsentDisplayItem,
+  ConsentHistoryRow,
   ConsentItem,
   ConsentStatus,
   ConsentsView
@@ -20,7 +21,7 @@ import _moment from "moment";
 import {ConsentTemplateFhirWrapper} from "../model/consent-template-fhir-wrapper";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {ChoiceItem, ConsentTemplate, DisplayItem, Validity} from "./consent-template.model";
-import {catchError, finalize, map, mergeMap} from "rxjs/operators";
+import {catchError, finalize, map, mergeMap, reduce} from "rxjs/operators";
 import {ConsentPolicySet} from "../model/consent-policy-set";
 import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {ConsentPolicy} from "../model/consent-policy";
@@ -255,7 +256,7 @@ export class ConsentService {
       period = new Date(fhirPeriod.end).getTime() - validFrom.toDate().getTime();
     } else {
       validFrom = !initNewDataModel ? _moment(fhirPeriod.start) : validFrom;
-      period = new Date(fhirPeriod.end).getTime() - validFrom.toDate().getTime();
+      period = new Date(fhirPeriod.end).getTime() - new Date(fhirPeriod.start).getTime();
     }
 
     return {
@@ -307,8 +308,7 @@ export class ConsentService {
 
   public addConsent(dataModel: Consent): Observable<FhirResource> {
     if (dataModel.fhirResource == undefined) {
-      this.handleError<any>(this.translate.instant('error.consent_service_fhir_consent_not_found'));
-      return of({id: "", title: "NOT FOUND", date: new Date(), items: []} as unknown as fhir4.Consent);
+      throw new Error(this.translate.instant('error.consent_service_fhir_consent_not_found'));
     } else {
       // set patient id in fhir resource
       dataModel.fhirResource.patient = {
@@ -331,26 +331,60 @@ export class ConsentService {
     }
   }
 
-  public editConsent(dataModel: Consent, force: boolean): Observable<FhirResource> {
+  public updateConsent(dataModel: Consent, force: boolean, searchParams?:SearchParams): Observable<FhirResource> {
     if (dataModel.fhirResource == undefined) {
       throw new Error(this.translate.instant('error.consent_service_fhir_consent_not_found'));
     } else {
       try {
         this.serializeConsentDataModelToFhir(dataModel, force);
       } catch (e){
-        return throwError(e);
+        return throwError( () => e);
       }
-      return this.updateFhirResource<fhir4.Consent>("editConsent", {}, 'Consent', dataModel.fhirResource);
+      return this.updateFhirResource<fhir4.Consent>("editConsent", {}, 'Consent', dataModel.fhirResource, searchParams);
     }
   }
 
-  public readConsent(id: string): Observable<Consent> {
-    return this.readFhirResources<fhir4.Consent>("readConsent", {}, 'Consent', id,
-      ErrorMessages.READ_CONSENT_FAILED).pipe(
+  public readConsent(id: string, version? :string): Observable<Consent> {
+    return this.readFhirResources<fhir4.Consent>("readConsent", {},
+      ErrorMessages.READ_CONSENT_FAILED, 'Consent', id, version).pipe(
       mergeMap(c => this.getConsentTemplate(this.findConsentTemplateId(c.policy || [])).pipe(
         map(t => this.deserializeConsentDataModelFrom(t, c))
       ))
     );
+  }
+
+  public readConsentHistory(id:string, version: number): Observable<ConsentHistoryRow[]> {
+    return this.sessionService.createToken("readConsent", {}, version)
+    .pipe(
+      mergeMap(token => this.resolveReadConsentHistory(token.id, id, version)),
+      catchError((error) => this.handleFailedRequest("Consent", error, ErrorMessages.READ_CONSENT_FAILED, "read"))
+    );
+  }
+
+  public resolveReadConsentHistory(tokenId: string | undefined, id: string, version: number): Observable<ConsentHistoryRow[]> {
+    return range(1, version - 1)
+    .pipe(
+      mergeMap(v => this.resolveReadFhirResourceToken<fhir4.Consent>(
+        tokenId, "Consent", id, v + '?_elements=id,meta,dateTime,status')),
+      map(r => {
+        return {
+          id: id,
+          createdAt: new Date(r?.dateTime ?? "").toLocaleString(),
+          version: parseInt(r?.meta?.versionId ?? "1"),
+          status: r?.status || "active"
+        }
+      }),
+      reduce((result: ConsentHistoryRow[], c) => {
+        result.push(c)
+        return result;
+      }, []),
+      map(result => result.sort((a, b) => {
+        if (a.version == b.version)
+          return 0;
+        else
+          return a.version > b.version ? -1 : 1
+      }))
+    )
   }
 
   public deleteConsent(id: string): Observable<fhir4.Consent> {
@@ -385,7 +419,7 @@ export class ConsentService {
                       title: consentTemplates.get(templateId) ?? "",
                       createdAt: new Date(r?.dateTime ?? "").toLocaleDateString(),
                       validityPeriod: period,
-                      version: r?.meta?.versionId,
+                      version: parseInt(r?.meta?.versionId ?? "1"),
                       status: this.consentStatusToString(r?.status ?? "active", validUntil)
                     };
                   });
@@ -464,16 +498,16 @@ export class ConsentService {
   }
 
   public addConsentTemplate(consentTemplate: ConsentTemplate): Promise<fhir4.FhirResource | fhir4.Questionnaire> {
-    return this.sessionService.createToken(
+    return lastValueFrom(this.sessionService.createToken(
       "addConsentTemplate", {}
     )
     .pipe(
       mergeMap(token => this.resolveAddConsentTemplateToken(token.id, this.mapConsentTemplate(consentTemplate))),
       catchError(e => {
         // handle failed token creation
-        return throwError(e)
+        return throwError( () => e)
       })
-    ).toPromise();
+    ));
   }
 
   resolveAddConsentTemplateToken(tokenId: string | undefined, consentTemplate: fhir4.Questionnaire): Promise<fhir4.FhirResource | fhir4.Questionnaire> {
@@ -496,8 +530,8 @@ export class ConsentService {
   }
 
   public getConsentTemplate(id: string): Observable<fhir4.Questionnaire> {
-    return this.readFhirResources<fhir4.Questionnaire>("readConsentTemplate", {}, 'Questionnaire', id,
-      ErrorMessages.READ_CONSENT_TEMPLATE_FAILED);
+    return this.readFhirResources<fhir4.Questionnaire>("readConsentTemplate", {},
+      ErrorMessages.READ_CONSENT_TEMPLATE_FAILED, 'Questionnaire', id);
   }
 
   public mapConsentTemplate(template:ConsentTemplate): fhir4.Questionnaire {
@@ -707,9 +741,14 @@ export class ConsentService {
       )
   }
 
-  public readFhirResources<F extends FhirResource>(tokenType: TokenType, tokenData: TokenData, resourceType: string,
-                                                     id: string, errorMessageType: ErrorMessage) : Observable<F> {
-    return this.executeReadFhirOperation<F>(tokenType, tokenData, resourceType, id, errorMessageType) as Observable<F>;
+  public readFhirResources<F extends FhirResource>(
+    tokenType: TokenType,
+    tokenData: TokenData,
+    errorMessageType: ErrorMessage,
+    resourceType: string,
+    id: string,
+    version?: string) : Observable<F> {
+    return this.executeReadFhirOperation<F>(tokenType, tokenData, errorMessageType, resourceType, id, version) as Observable<F>;
   }
 
   public searchFhirResources<F extends FhirResource>(tokenType: TokenType, tokenData: TokenData, resourceType: string,
@@ -724,13 +763,14 @@ export class ConsentService {
   public executeReadFhirOperation<F extends FhirResource>(
       tokenType: TokenType,
       tokenData: TokenData,
+      errorMessageType: ErrorMessage,
       resourceType: string,
       id: string,
-      errorMessageType: ErrorMessage,
+      version?: string,
   ): Observable<FhirResource> {
     return this.sessionService.createToken(tokenType, tokenData)
     .pipe(
-        mergeMap(token => this.resolveReadFhirResourceToken<F>(token.id, resourceType, id)),
+        mergeMap(token => this.resolveReadFhirResourceToken<F>(token.id, resourceType, id, version)),
         catchError((error) => this.handleFailedRequest(resourceType, error, errorMessageType, "read"))
     )
   }
@@ -772,9 +812,9 @@ export class ConsentService {
         if (issue.severity == 'error')
           errorMessage += issue.diagnostics
       }
-      return throwError(new MainzellisteError(errorMessageType, errorMessage));
+      return throwError( () => new MainzellisteError(errorMessageType, errorMessage));
     } else
-      return throwError(new MainzellisteUnknownError(`Failed to ${errorPrefix} resource fhir/${resourceType}.
+      return throwError( () => new MainzellisteUnknownError(`Failed to ${errorPrefix} resource fhir/${resourceType}.
                     Cause: ${getErrorMessageFrom(error, this.translate)}`, error, this.translate))
   }
 
@@ -789,7 +829,7 @@ export class ConsentService {
       .pipe(
         mergeMap(token => resolveToken(token.id, resourceType, resource)),
         catchError((error) =>
-          throwError(new Error(`Failed to ${errorPrefix} resource fhir/${resourceType}. Cause: ${getErrorMessageFrom(error, this.translate)}`))
+          throwError( () => new Error(`Failed to ${errorPrefix} resource fhir/${resourceType}. Cause: ${getErrorMessageFrom(error, this.translate)}`))
         )
       )
   }
@@ -809,12 +849,18 @@ export class ConsentService {
     })
   }
 
-  resolveReadFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, id:string): Promise<FhirResource | F> => {
-    return this.client.read({
-      resourceType: resourceType,
-      id: id,
-      options: { headers: {'Authorization': 'MainzellisteToken ' + tokenId}}
-    })
+  resolveReadFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, id: string, version?: string): Promise<FhirResource | F> => {
+    return version == undefined ? this.client.read({
+        resourceType: resourceType,
+        id: id,
+        options: {headers: {'Authorization': 'MainzellisteToken ' + tokenId}}
+      }):
+      this.client.vread({
+        resourceType: resourceType,
+        id: id,
+        version: version,
+        options: {headers: {'Authorization': 'MainzellisteToken ' + tokenId}}
+      })
   }
 
   resolveDeleteFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, id:string): Promise<FhirResource | F> => {
@@ -853,7 +899,7 @@ export class ConsentService {
           if (error.status >= 400 && error.status < 500) {
             return of([]);
           } else {
-            return throwError(new Error(`Failed to fetch data from ${path}. Cause: ${getErrorMessageFrom(error, this.translate)}`));
+            return throwError( () => new Error(`Failed to fetch data from ${path}. Cause: ${getErrorMessageFrom(error, this.translate)}`));
           }
         })
       )
@@ -893,15 +939,16 @@ export class ConsentService {
     })
     .pipe(
       catchError(e => {
-        let errorMessage;
         if (e instanceof HttpErrorResponse && (e.status == 400)) {
-          errorMessage = this.uploadConsentScanErrorMessages.find(msg => msg.match(e))
+          const errorMessage = this.uploadConsentScanErrorMessages.find(msg => msg.match(e))
           // find error message arguments
           if( errorMessage == ErrorMessages.FAILED_UPLOAD_CONSENT_SCAN_FILE) {
-            return throwError(new MainzellisteError(errorMessage, errorMessage.findVariables(e)[1]));
+            return throwError( () => new MainzellisteError(errorMessage, errorMessage.findVariables(e)[1]));
+          } else {
+            throwError( () => errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
           }
         }
-        return throwError(errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
+        return throwError( () => e);
       }),
       finalize(callback)
     );
@@ -987,9 +1034,9 @@ export class ConsentService {
       });
   }
 
-  getConsentScan(consentScanId:string){
+  getConsentScan(consentScanId:string, version? :string){
     return this.readFhirResources<fhir4.DocumentReference>("readConsentScan", {},
-      'DocumentReference', consentScanId, ErrorMessages.READ_CONSENT_SCAN_FAILED);
+      ErrorMessages.READ_CONSENT_SCAN_FAILED, 'DocumentReference', consentScanId, version);
   }
 
   //////////////////////////////

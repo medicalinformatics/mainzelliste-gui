@@ -5,7 +5,6 @@
 }
 
 #patientendaten{
-  margin-left: 2%;
   width: 30%;
 }
 
@@ -14,14 +13,11 @@
 }
 
 #consents{
-  width: 79%;
-  margin-top: 1%;
-  margin-left: 2%;
-  padding-bottom: 2%;
+  width: 94%;
 }
 
 #consents table {
-  margin: 0 2.5%;
+  margin: 0 2.5% 15px 2.5%;
   width: 95%;
 }
 

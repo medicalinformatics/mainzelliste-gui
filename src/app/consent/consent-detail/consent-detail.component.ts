@@ -16,6 +16,7 @@ import {Subscription} from "rxjs";
 import {HttpEventType} from "@angular/common/http";
 import {map} from "rxjs/operators";
 import {AuthorizationService} from "../../services/authorization.service";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-consent-detail',
@@ -40,6 +41,7 @@ export class ConsentDetailComponent implements OnInit {
   constructor(
       private consentService: ConsentService,
       private authorizationService: AuthorizationService,
+      private translate :TranslateService,
       @Inject(MAT_DATE_LOCALE) private _locale: string
   ) {
     _moment.locale(this._locale);
@@ -80,9 +82,11 @@ export class ConsentDetailComponent implements OnInit {
   }
 
   getConsentExpiration(): string {
-    return this.consent.period == 0 ? " für einen unbegrenzten Zeit-Raum" :
-      ` bis ${new Date((this.consent.validFrom?.toDate().getTime() || 0)
-        + this.consent.period).toLocaleDateString()}`;
+    return this.consent.period == 0 ?
+      this.translate.instant('consentDetail.valid_unlimited') :
+      this.translate.instant('consentDetail.valid_until')
+      + new Date((this.consent.validFrom?.toDate().getTime() || 0)
+        + this.consent.period).toLocaleDateString();
   }
 
   /** Utils Method **/
