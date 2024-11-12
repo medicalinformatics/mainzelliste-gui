@@ -101,7 +101,7 @@ export class IdcardComponent implements OnInit {
         if (e instanceof HttpErrorResponse && (e.status == 404)) {
           this.router.navigate(['/**']).then();
         }
-        return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_add_patient_token'), e, this.translate))
+        return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_add_patient_token'), e, this.translate))
       })
     )
     .subscribe(
@@ -206,7 +206,7 @@ export class IdcardComponent implements OnInit {
       mergeMap(c =>
         this.consentService.createScansAndProvenance(dataModel, (c as fhir4.Consent).id ?? "")
       ),
-      catchError(e => throwError(e))
+      catchError(e => throwError( () => e))
     ).subscribe(
       () => {},
       e => {

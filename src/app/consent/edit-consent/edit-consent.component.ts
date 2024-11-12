@@ -61,7 +61,7 @@ export class EditConsentComponent implements OnInit {
       mergeMap(c =>
         this.consentService.createScansAndProvenance(this.dataModel, (c as fhir4.Consent).id || "")
       ),
-      catchError(e => throwError(e))
+      catchError(e => throwError( () => e))
     ).subscribe(
       () => this.router.navigate(["/idcard", this.idType, this.idString]),
       e => {

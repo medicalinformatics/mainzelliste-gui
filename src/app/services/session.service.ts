@@ -85,7 +85,7 @@ export class SessionService {
     if (error.status == 404)
       return of(false)
     else
-      throw throwError(new Error(`${errorMessage}` + SessionService.translate.instant('error.session_service_handle_failed_request') + `${getErrorMessageFrom(error, SessionService.translate)}`));
+      throw throwError( () => new Error(`${errorMessage}` + SessionService.translate.instant('error.session_service_handle_failed_request') + `${getErrorMessageFrom(error, SessionService.translate)}`));
   }
 
   public isSessionCreated(): boolean {
