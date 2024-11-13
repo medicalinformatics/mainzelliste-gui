@@ -98,6 +98,7 @@
 	"navigation.new_patient": "Neuer Patient",
 	"navigation.patientlist": "Patientenliste",
 	"navigation.bulkIdGeneration": "Bulk-ID-Generierung",
+	"navigation.bulkPseudonymization": "Bulk-Pseudonymisierung",
   "navigation.consent_template": "Einwilligungsvorlagen",
   "navigation.configuration": "Konfiguration",
 
