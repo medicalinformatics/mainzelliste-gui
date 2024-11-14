@@ -48,6 +48,12 @@
 	"tentative_dialog_text8": ". Es wird dann ein neuer Patient mit diesen Daten angelegt.",
 	"tentative_dialog_text9": "Falls Sie sicher sind, dass die eingegebenen Daten stimmen, aber der Patient schon früher einmal eingegeben wurde, melden Sie sich bitte beim Administrator der Patientenliste.",
 
+	"similar_patient_button":"Ähnliche Patienten suchen",
+	"similar_patient_dialog_title": "Ähnlicher Patient gefunden",
+	"similar_patient_dialog_text1": "Es gibt ähnliche Patienten im System. Bitte überprüfen Sie die folgenden Patienten, bevor Sie fortfahren.",
+	"similar_patient_dialog_title2": "Kein ähnlicher Patient gefunden",
+	"similar_patient_dialog_text2": "Es gibt keine ähnlichen Patienten im System. Bitte fahren Sie mit der Erstellung des neuen Patienten fort.",
+
 	"idcard.consent_created": "Erstellt",
 	"idcard.consent_no_consent": "Keine Einwilligung.",
 	"idcard.consent_template": "Vorlage",

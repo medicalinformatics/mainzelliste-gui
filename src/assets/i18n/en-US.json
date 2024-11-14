@@ -48,13 +48,19 @@
 	"tentative_dialog_text8": ". A new patient will then be created with this data.",
 	"tentative_dialog_text9": "If you are sure that the data entered is correct, but the patient has already been entered previously, please contact the patient list administrator.",
 
+	"similar_patient_button": "Search similar patients",
+	"similar_patient_dialog_title": "Similar patient found",
+	"similar_patient_dialog_text1": "There are Similar Patients in the system. Please review the following patients before proceeding.",
+	"similar_patient_dialog_title2": "No similar patient found",
+	"similar_patient_dialog_text2": "There are no similar patients in the system. Please proceed with the creation of the new patient.",
+
 	"idcard.consent_created": "Created",
 	"idcard.consent_no_consent": "No consent.",
 	"idcard.consent_template": "Template",
 	"idcard.consent_title": "Consents",
 	"idcard.consent_validity_period": "Validity period",
 	"idcard.consent_version": "Version",
-  "idcard.consent_status": "Status",
+  	"idcard.consent_status": "Status",
 	"idcard.title_patient_data": "Patient data",
 	"idcard.title_pseudonyms": "Pseudonyms",
 	"idcard.title_id_card": "ID Card",
@@ -291,4 +297,7 @@
 
 	"footer.version": "Version ",
 	"footer.info": "Mainzelliste - Powered by Team Federated Information Systems from DKFZ Heidelberg"
+
+
+	
 }

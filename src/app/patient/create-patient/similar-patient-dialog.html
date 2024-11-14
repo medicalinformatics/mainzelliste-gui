@@ -1,0 +1,28 @@
+<h1 mat-dialog-title>Similar Patients</h1>
+<div mat-dialog-content>
+    <div *ngIf="resultsFound">
+        <h4> {{'similar_patient_dialog_title' | translate}}</h4>
+        <div>{{'similar_patient_dialog_text' | translate}}</div>
+        <li>
+            <div *ngFor="let patient of patients">
+                <div>
+                    <h4>{{patient.fields.lastname}}</h4>
+                    <p>{{patient.fields.name}}</p>
+                    <p>{{patient.fields.birthdate}}</p>
+                </div>
+                <button mat-button><mat-icon></mat-icon></button>
+            </div>
+        </li>
+    </div>
+    <div *ngIf="!resultsFound">
+        <h4>{{'similar_patient_dialog_title2' | translate}}</h4>
+        <div>{{'similar_patient_dialog_text2' | translate}}</div>
+
+    </div>
+
+
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button class="submitBreak" (click)="cancel()">{{'button_correct' | translate}}</button>
+    <button mat-raised-button class="submit" [mat-dialog-close]="true">{{'button_confirm' | translate}}</button>
+</div>

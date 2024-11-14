@@ -3,7 +3,8 @@ import {CommonModule} from '@angular/common';
 import {SharedModule} from "../shared/shared.module";
 import {
   CreatePatientComponent,
-  CreatePatientTentativeDialog
+  CreatePatientTentativeDialog,
+  SimilarPatientDialog
 } from "./create-patient/create-patient.component";
 import {
   EditPatientComponent,
@@ -48,6 +49,7 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     ExternalPseudonymsComponent,
     CreatePatientComponent,
     CreatePatientTentativeDialog,
+    SimilarPatientDialog,
     EditPatientComponent,
     EditPatientTentativeDialog,
     DeletePatientComponent,
