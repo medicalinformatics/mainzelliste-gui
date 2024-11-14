@@ -90,6 +90,7 @@
 
   "consent_dialog_history_title": "Einwilligung-Historie",
   "consent_dialog_history_status": "Vorheriger status",
+	"consent_dialog_history_last_updated": "Zuletzt aktualisiert",
 
   "add_consent.rejected-dialog-text": "Alle Einwilligungsmodule wurden abgelehnt. Der Einwilligungsstatus wird automatische als Widerruft gesetzt",
   "add_consent.inactivated-dialog-text": "Gültigkeitsende der Einwilligung liegt in der Vergangenheit. Der Einwilligungstatus wird automatische als Inaktive gesetzt",

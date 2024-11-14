@@ -9,8 +9,8 @@
     </ng-container>
 
     <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef> {{'idcard.consent_created' | translate}} </th>
-      <td mat-cell *matCellDef="let element"> {{element.createdAt}} </td>
+      <th mat-header-cell *matHeaderCellDef> {{'consent_dialog_history_last_updated' | translate}} </th>
+      <td mat-cell *matCellDef="let element"> {{element.lastUpdated}} </td>
     </ng-container>
 
     <ng-container matColumnDef="status">
