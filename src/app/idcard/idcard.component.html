@@ -2,14 +2,20 @@
   <div style="float: left; margin: 0 20px 14px 0; width: 94%; height: 475px; display: flex;
     flex-flow: row; justify-content: space-around; align-items: stretch; column-gap: 14px;">
     <mat-card id="patientendaten" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; flex: 1">
-      <mat-card-title>{{'idcard.title_patient_data' | translate}}</mat-card-title>
+      <mat-card-title-group>
+        <mat-card-title style="flex-grow: 2">{{'idcard.title_patient_data' | translate}}</mat-card-title>
+        <div>
+          <button mat-icon-button class="mini-icon-button" [cdkCopyToClipboard]="getContactInfo()"
+                  matTooltip="{{'copy_data' | translate}}">
+            <mat-icon>file_copy</mat-icon>
+          </button>
+          <button mat-icon-button class="mini-icon-button" (click)="exportCSV()"
+                  matTooltip="{{'export_data' | translate}}">
+            <mat-icon>download</mat-icon>
+          </button>
+        </div>
+      </mat-card-title-group>
       <app-patient-fields style="overflow: auto; height: 100%" [readOnly]=true [fields]="patient.fields"></app-patient-fields>
-      <button class="mat-card__copy" [cdkCopyToClipboard]="getContactInfo()" mat-fab>
-        <mat-icon matTooltip="{{'copy_data' | translate}}">file_copy</mat-icon>
-      </button>
-      <button class="mat-card__export" (click)="exportCSV()" mat-fab>
-        <mat-icon matTooltip="{{'export_data' | translate}}">download</mat-icon>
-      </button>
     </mat-card>
 
     <mat-card id="pseudonyme" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; flex: 1">
