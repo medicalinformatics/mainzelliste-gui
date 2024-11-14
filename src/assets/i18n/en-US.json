@@ -266,6 +266,10 @@
 	"error.create_consent_template_rejected": "Failed to create consent template. Cause: '${1}'",
   "error.read_consent_template_failed": "Failed to read consent template. Cause: '${1}'",
   "error.search_consent_templates_failed": "Failed to find consent templates. Cause: '${1}'",
+  "error.create_patients_unauthorized": "You do not have the permission to execute a bulk pseudonymization",
+  "error.create_patients_token_failed": "Failed to create AddPatientsToken",
+  "error.fetch_patients_job_unauthorized": "You do not have the permission to read the bulk pseudonymization result",
+  "error.fetch_patients_job_not_found": "Bulk pseudonymization failed",
 
 	"errorComponent.error": "Error",
 	"errorComponent.message": "Message",

@@ -266,8 +266,12 @@
 	"error.create_consent_template_rejected": "Einwilligungsvorlage konnte nicht erstellt werden. Ursache: '${1}'",
   "error.read_consent_template_failed": "Einwilligungsvorlage konnte nicht gelesen werden. Ursache: '${1}'",
   "error.search_consent_templates_failed": "Einwilligungsvorlagen konnten nicht gefunden werden. Ursache: '${1}'",
+  "error.create_patients_unauthorized": "Sie haben keine Berechtigung, um ein Bulk-Pseudonymisierung durchführen zu können",
+  "error.create_patients_token_failed": "AddPatientsToken konnte nicht erstellt werden",
+  "error.fetch_patients_job_unauthorized": "Sie haben keine Berechtigung, um die Bulk-Pseudonymisierungsergebnisse zu lesen",
+  "error.fetch_patients_job_not_found": "Bulk-Pseudonymisierung ist fehlgeschlagen",
 
-	"errorComponent.error": "Error",
+  "errorComponent.error": "Error",
 	"errorComponent.message": "Information",
 
 	"errorCardComponent.error": "Error: ",
