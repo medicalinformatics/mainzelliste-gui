@@ -1,1 +1,9 @@
-
+.footerLogos {
+    display: flex;
+    align-items: baseline;
+    flex-flow: row;
+    justify-content: flex-end;
+    align-self: flex-end;
+    gap: 30px;
+    padding-right: 30px;
+}
