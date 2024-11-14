@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppConfigService } from 'src/app/app-config.service';
+import {FooterLogo} from "../../model/patientlist";
 
 @Component({
   selector: 'app-footer',
@@ -14,11 +15,13 @@ export class FooterComponent implements OnInit {
   version: string = "";
   year: number;
   startYear: string = " 2021 - ";
+  logos: FooterLogo[] = [];
 
   constructor(
     appConfig: AppConfigService
   ) {
     this.version = appConfig.getVersion();
+    this.logos = appConfig.getLayoutFooterLogos();
     this.year = new Date().getFullYear();
   }
 
