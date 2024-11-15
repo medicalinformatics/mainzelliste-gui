@@ -316,5 +316,7 @@
 	"bulkIdGenerationEmptyFieldsDialog.text1": " Patienten konnten nicht gefunden werden.",
 	"bulkIdGenerationEmptyFieldsDialog.text2": "Für nicht gefundene Patienten wurden keine neuen IDs generiert.",
 	"bulkIdGenerationEmptyFieldsDialog.error_text1": "Es wurde kein Patient gefunden.",
-	"bulkIdGenerationEmptyFieldsDialog.error_text2": "Bitte wählen sie eine gültige Datei aus."
+	"bulkIdGenerationEmptyFieldsDialog.error_text2": "Bitte wählen sie eine gültige Datei aus.",
+	"export_data": "Kontaktdaten nach Excel exportieren",
+	"copy_data": "Kontaktdaten in Zwischenablage kopieren"
 }
