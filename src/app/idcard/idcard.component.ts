@@ -337,7 +337,7 @@ export class IdcardComponent implements OnInit {
 
   getContactInfo() {
     const fieldMap = this.getFieldMap();
-    const text = `${fieldMap[SemanticType.FIRSTNAME]} ${fieldMap[SemanticType.LASTNAME]}\n${fieldMap[SemanticType.PLZ]} ${fieldMap[SemanticType.RESIDENCE]}`;
+    const text = `${fieldMap[SemanticType.FIRSTNAME]} ${fieldMap[SemanticType.LASTNAME]}\n${fieldMap[SemanticType.POSTAL_CODE]} ${fieldMap[SemanticType.CITY]}`;
     return text;
   }
 
@@ -347,29 +347,29 @@ export class IdcardComponent implements OnInit {
       {
         firstName: fieldMap[SemanticType.FIRSTNAME],
         lastName: fieldMap[SemanticType.LASTNAME],
-        residence: fieldMap[SemanticType.RESIDENCE],
-        plz: fieldMap[SemanticType.PLZ]
+        residence: fieldMap[SemanticType.CITY],
+        plz: fieldMap[SemanticType.POSTAL_CODE]
       }
     ]
     console.log(data);
 
     new AngularCsv(data, 'ContactInfo', {
       headers: [this.translate.instant("first_name_text"),
-         this.translate.instant("last_name_text"), 
-         this.translate.instant("zip_code_text"), 
+         this.translate.instant("last_name_text"),
+         this.translate.instant("zip_code_text"),
          this.translate.instant("residence_text")],
-      quoteStrings: '', 
+      quoteStrings: '',
       delimiter: ';'
     },);
   }
-  
+
   getFieldMap() {
     const contact = this.patient.fields;
     const fieldMap: { [key: string]: string } = {
       [SemanticType.FIRSTNAME]: "",
       [SemanticType.LASTNAME]: "",
-      [SemanticType.PLZ]: "",
-      [SemanticType.RESIDENCE]: ""
+      [SemanticType.POSTAL_CODE]: "",
+      [SemanticType.CITY]: ""
     };
 
     this.patientService.getConfiguredFields("R").forEach(fieldConfig => {

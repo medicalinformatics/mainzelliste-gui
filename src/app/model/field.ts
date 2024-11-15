@@ -4,11 +4,12 @@ export enum FieldType {
   NUMBER = "NUMBER",
 }
 export enum SemanticType{
-  FIRSTNAME = "FIRSTNAME",
-  LASTNAME = "LASTNAME",
-  PLZ = "PLZ",
-  RESIDENCE = "RESIDENCE",
-  UNDEFINED = "UNDEFINED"
+  FIRSTNAME = "firstname",
+  LASTNAME = "lastname",
+  BIRTH_NAME = "birthName",
+  POSTAL_CODE = "postalCode",
+  CITY = "city",
+  UNDEFINED = "undefined"
 }
 export class Field {
   constructor(
