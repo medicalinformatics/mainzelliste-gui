@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {OAuthConfig, PatientList} from "./model/patientlist";
+import {FooterLogo, OAuthConfig, PatientList} from "./model/patientlist";
 import {AppConfig} from "./app-config";
 import {catchError, map} from "rxjs/operators";
 import {firstValueFrom, lastValueFrom, throwError} from "rxjs";
@@ -26,6 +26,7 @@ export class AppConfigService {
   private mainzellisteFields: string[] = [];
   private mainzellisteClaims: ClaimsConfig[] = [];
   private version: string = "";
+  private layoutFooterLogos: FooterLogo[] = [];
   private consentEnabled: boolean = false;
   private copyConcatenatedIdEnabled: boolean = false;
   private copyIdEnabled: boolean = false;
@@ -55,6 +56,9 @@ export class AppConfigService {
           this.copyConcatenatedIdEnabled = this.data[0].betaFeatures?.copyConcatenatedId ?? false;
           this.copyIdEnabled = this.data[0].betaFeatures?.copyId ?? false;
           this.configurationEnabled = this.data[0].betaFeatures?.configuration ?? false;
+
+          // init layout
+          this.layoutFooterLogos = this.data[0].layout?.footerLogos ?? [];
 
           //start validation
           this.validateBackendUrl(this.data[0])
@@ -119,6 +123,10 @@ export class AppConfigService {
 
   getVersion(): string {
     return this.version;
+  }
+
+  public getLayoutFooterLogos(): FooterLogo[] {
+    return this.layoutFooterLogos;
   }
 
   public fetchVersion(): Promise<{distname: string, version: string}> {

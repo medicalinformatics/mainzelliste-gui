@@ -91,6 +91,9 @@ mat-form-field.inputField {
 .mat-tab-body-wrapper, .mat-tab-body.mat-tab-body-active, .mat-tab-body-content{
   overflow: visible!important;
 }
+button.mini-icon-button {
+  transform: scale(0.9);
+}
 
 button.mini-icon-button .mat-button-focus-overlay{
   opacity: 0;

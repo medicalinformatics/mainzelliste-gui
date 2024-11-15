@@ -15,9 +15,17 @@ export class PatientList {
       new Field("residence_text", "Wohnort", "ort", [], SemanticType.CITY, FieldType.TEXT, true, "", "Musterstadt"),
       new Field("zip_code_text", "PLZ", "plz", [], SemanticType.POSTAL_CODE, FieldType.TEXT, true, "", "mind. 5 Zeichen")
     ],
+    public layout?: Layout,
     public debug?: boolean,
     public betaFeatures?: BetaFeatures
   ) {}
+}
+
+export interface Layout{
+  footerLogos?: FooterLogo[]
+}
+export interface FooterLogo {
+  id: string
 }
 
 export interface OAuthConfig {
