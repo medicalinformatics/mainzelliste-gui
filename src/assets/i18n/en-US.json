@@ -292,6 +292,6 @@
 	"bulkIdGenerationEmptyFieldsDialog.error_text1": "No patient was found.",
 	"bulkIdGenerationEmptyFieldsDialog.error_text2": "Please select a valid file.",
 
-	"export_csv": "Export Contact Information to Excel",
+	"export_data": "Export contact information to excel",
 	"copy_data": "Copy contact information to clipboard"
 }
