@@ -169,11 +169,15 @@ export class PatientListService {
   }
 
   fetchRelatedAssociatedIds(id: Id): Observable<Id[]> {
-    let relatedIdTypes = [...this.authorizationService.getRelatedAssociatedIdTypes(id.idType, true, "R"),
-      ...this.authorizationService.getRelatedAssociatedIdTypes(id.idType, false, "R")]
-    return this.readPatient(id, "R", [], relatedIdTypes).pipe(
-      mergeMap(patients => patients.map( p => p.ids))
+    return this.readPatient(id, "R", [], this.getAllRelatedAssociatedIdTypes(id.idType, "R"))
+    .pipe(
+      mergeMap(patients => patients.map(p => p.ids))
     )
+  }
+
+  getAllRelatedAssociatedIdTypes(idType: string, operation: Operation) {
+    return [...this.authorizationService.getRelatedAssociatedIdTypes(idType, true, operation),
+      ...this.authorizationService.getRelatedAssociatedIdTypes(idType, false, operation)]
   }
 
   getRelatedAssociatedIdTypes(idType: string, areExternal: boolean, operation: Operation): string[] {
@@ -340,23 +344,6 @@ export class PatientListService {
         return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_create_ids_token'), e, this.translate))
       })
       )
-  }
-
-  getNewIdType(ids: string[]): string[] {
-    let temp: string[] = [];
-    let bool: boolean;
-    for (let allId of this.getIdGenerators(false, "C")) {
-      bool = true;
-      for (let id of ids) {
-        if (allId.idType == id) {
-          bool = false;
-        }
-      }
-      if (bool) {
-        temp.push(allId.idType);
-      }
-    }
-    return temp;
   }
 
   addPatient(patient: Patient, idTypes: string[], sureness: boolean): Observable<Id> {

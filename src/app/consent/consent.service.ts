@@ -369,7 +369,7 @@ export class ConsentService {
       map(r => {
         return {
           id: id,
-          createdAt: new Date(r?.dateTime ?? "").toLocaleString(),
+          lastUpdated: new Date(r?.meta?.lastUpdated ?? "").toLocaleString(),
           version: parseInt(r?.meta?.versionId ?? "1"),
           status: r?.status || "active"
         }

@@ -47,7 +47,7 @@ export type ConsentStatus = "draft" | "proposed" | "active" | "rejected" | "inac
 
 export interface ConsentHistoryRow {
   id: string,
-  createdAt: string,
+  lastUpdated: string,
   version: number,
   status: string
 }
