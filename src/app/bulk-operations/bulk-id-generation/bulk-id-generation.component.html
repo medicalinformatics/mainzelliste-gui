@@ -49,8 +49,7 @@
           <mat-form-field style="width: 245px;">
             <mat-label>{{'bulkIdGeneration.id_type_label' | translate}}</mat-label>
             <mat-select #select (selectionChange)="dataModel = $event.value">
-              <mat-option *ngFor="let idType of patientListService.getNewIdType([this.idType])"
-                          [value]="idType">
+              <mat-option *ngFor="let idType of geIdTypes(this.idType)" [value]="idType">
                 {{idType}}
               </mat-option>
             </mat-select>

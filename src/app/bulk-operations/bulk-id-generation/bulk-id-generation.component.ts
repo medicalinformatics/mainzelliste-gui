@@ -158,6 +158,12 @@ export class BulkIdGenerationComponent implements OnInit {
     }
   }
 
+  public geIdTypes(currentIdType: string) {
+    return [...this.patientListService.getRelatedAssociatedIdTypes(currentIdType, false, "C"),
+      ...this.patientListService.getUniqueIdTypes(false, "C")]
+    .filter(idType => idType != currentIdType);
+  }
+
   private openDialog(error: boolean) {
     this.dialog.open(BulkIdGenerationEmptyFieldsDialog, {data: [this.emptyFields, error]}).afterClosed().subscribe(() => {
       if(error) {
