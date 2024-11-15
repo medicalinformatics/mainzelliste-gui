@@ -337,8 +337,7 @@ export class IdcardComponent implements OnInit {
 
   getContactInfo() {
     const fieldMap = this.getFieldMap();
-    const text = `${fieldMap[SemanticType.FIRSTNAME]} ${fieldMap[SemanticType.LASTNAME]}\n${fieldMap[SemanticType.POSTAL_CODE]} ${fieldMap[SemanticType.CITY]}`;
-    return text;
+    return `${fieldMap[SemanticType.FIRSTNAME]} ${fieldMap[SemanticType.LASTNAME]}\n${fieldMap[SemanticType.POSTAL_CODE]} ${fieldMap[SemanticType.CITY]}`;
   }
 
   exportCSV() {
