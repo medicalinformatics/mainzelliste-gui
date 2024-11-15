@@ -12,7 +12,7 @@ export class PatientList {
       new Field("last_name_text", "Nachname", "nachname", [], SemanticType.LASTNAME, FieldType.TEXT, true, "", "Mustermann"),
       new Field("birth_name_text", "Geburtsname", "geburtsname", [], SemanticType.UNDEFINED , FieldType.TEXT, true, "", "falls vorhanden"),
       new Field("birth_date_text", "Geburtdatum", "", ["geburtstag", "geburtsmonat", "geburtsjahr"], SemanticType.UNDEFINED , FieldType.DATE, true, "", "00.00.0000"),
-      new Field("residence_text", "Wohnort", "ort", [], SemanticType.RESIDENCE, FieldType.TEXT, true, "residence", "Musterstadt"),
+      new Field("residence_text", "Wohnort", "ort", [], SemanticType.RESIDENCE, FieldType.TEXT, true, "", "Musterstadt"),
       new Field("zip_code_text", "PLZ", "plz", [], SemanticType.PLZ, FieldType.TEXT, true, "", "mind. 5 Zeichen")
     ],
     public debug?: boolean,

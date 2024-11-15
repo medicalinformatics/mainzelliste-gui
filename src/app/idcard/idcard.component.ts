@@ -354,7 +354,10 @@ export class IdcardComponent implements OnInit {
     console.log(data);
 
     new AngularCsv(data, 'ContactInfo', {
-      headers: ["Vorname", "Nachname", "PLZ", "Wohnort"],
+      headers: [this.translate.instant("first_name_text"),
+         this.translate.instant("last_name_text"), 
+         this.translate.instant("zip_code_text"), 
+         this.translate.instant("residence_text")],
       quoteStrings: '', 
       delimiter: ';'
     },);
