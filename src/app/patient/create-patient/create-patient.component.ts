@@ -8,8 +8,8 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
 import {ErrorNotificationService} from "../../services/error-notification.service";
 import {GlobalTitleService} from "../../services/global-title.service";
-import {Observable, of} from "rxjs";
-import {concatMap, map, mergeMap, retryWhen, startWith, switchMap} from "rxjs/operators";
+import {Observable, of, retry} from "rxjs";
+import {concatMap, map, mergeMap, startWith} from "rxjs/operators";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MainzellisteError} from "../../model/mainzelliste-error.model";
 import {ErrorMessages} from "../../error/error-messages";
@@ -112,33 +112,35 @@ export class CreatePatientComponent implements OnInit {
     this.creatingInProgress = true;
     of(this.patient).pipe(
       concatMap(p => this.patientService.createPatient(p, this.selectedInternalIdTypes, sureness)),
-      retryWhen(
-        error => error.pipe(
-          switchMap( (e) => {
-            if(e instanceof MainzellisteError) {
-              // handle session timeout
-              if( e.errorMessage == ErrorMessages.ML_SESSION_NOT_FOUND)
-                return this.userAuthService.retryLogin(this.router.url)
-              // handle tentative
-              else if (e.errorMessage == ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH) {
-                this.openCreatePatientTentativeDialog();
-                // do not emit any value in order to send a complete notification on subscription
-                this.creatingInProgress = false;
-                return of();
+      retry({
+        delay: e => {
+              if (e instanceof MainzellisteError) {
+                // handle session timeout
+                if (e.errorMessage == ErrorMessages.ML_SESSION_NOT_FOUND)
+                  return this.userAuthService.retryLogin(this.router.url)
+                // handle tentative
+                else if (e.errorMessage == ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH) {
+                  this.openCreatePatientTentativeDialog();
+                  // do not emit any value in order to send a complete notification on subscription
+                  this.creatingInProgress = false;
+                  return of();
+                }
               }
+              throw e;
             }
-            throw e;
-          })
-        )
-      ),
+      }),
       mergeMap( newId => {
         if (this.consent !== undefined) {
           this.consent.patientId = newId;
-          return this.consentService.addConsent(this.consent).pipe(
+          return this.consentService.addConsent(this.consent)
+          .pipe(
             // create document reference
-            mergeMap(c =>
-              this.consentService.createScansAndProvenance(this.consent, (c as fhir4.Consent).id || "")
-            ),
+            mergeMap(c => {
+              if((this.consent?.scanUrls?.size || 0) > 0)
+                return this.consentService.createScansAndProvenance(this.consent, (c as fhir4.Consent).id || "")
+              else
+                return of(newId);
+            }),
             map(c => newId)
           );
         } else
