@@ -115,7 +115,7 @@
 	"patientlist_view.paginator_first_page_label": "Erste Seite",
 	"patientlist_view.paginator_last_page_label": "Letzte Seite",
 
-  "session.tenancy": "Projekte",
+  "session.tenancy": "Domäne",
 	"session.language_english": "Englisch",
 	"session.language_german": "Deutsch",
 	"session.menu_language": "Sprache",

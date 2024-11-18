@@ -108,7 +108,7 @@
 	"patientlist_view.paginator_previous_page_label": "Previous page",
 	"patientlist_view.paginator_first_page_label": "First page",
 	"patientlist_view.paginator_last_page_label": "Last page",
-	"session.tenancy": "Projects",
+	"session.tenancy": "Domain",
 	"session.language_english": "English",
 	"session.language_german": "German",
 	"session.menu_language": "Language",
