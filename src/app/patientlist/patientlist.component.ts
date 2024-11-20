@@ -8,6 +8,7 @@ import {AppConfigService} from "../app-config.service";
 import {ConsentService} from "../consent/consent.service";
 import { Field } from '../model/field';
 import {Permission} from "../model/permission";
+import {AuthorizationService} from "../services/authorization.service";
 
 @Component({
   selector: 'app-patientlist',
@@ -36,6 +37,7 @@ export class PatientlistComponent implements OnInit{
     public dialog: MatDialog,
     patientListService: PatientListService,
     configService: AppConfigService,
+    public authorizationService: AuthorizationService,
     public consentService: ConsentService
   ) {
     this.patientListService = patientListService;
@@ -93,6 +95,13 @@ export class PatientlistComponent implements OnInit{
   ngOnInit(): void {
     this.configuredIdTypes = this.patientListService.getIdTypes("R");
     let displayIdTypes = this.showAllIds ? this.configuredIdTypes : [this.patientListService.findDefaultIdType(this.configuredIdTypes)];
-    this.columns = this.columns.concat(displayIdTypes).concat(this.fieldNames).concat(["actions"]);
+    this.columns = this.columns.concat(displayIdTypes).concat(this.fieldNames);
+    if(this.showTenantColumn())
+      this.columns.push("tenants");
+    this.columns.push("actions");
+  }
+
+  showTenantColumn(){
+    return this.authorizationService.getTenants().length > 1;
   }
 }

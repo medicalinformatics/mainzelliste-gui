@@ -103,6 +103,7 @@
   "navigation.configuration": "Konfiguration",
 
 	"patientlist.filter_search": "Filter/Suche...",
+	"patientlist.headers_tenants": "Domänen",
 	"patientlist.headers_actions": "Aktionen",
 	"patientlist.no_patient_found": "Kein Patient gefunden.",
 	"patientlist.search_placeholder": "Suche...",
