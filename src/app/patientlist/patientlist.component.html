@@ -1,5 +1,5 @@
-<ng-container style="width: 100%; height: 100%; margin-right: 1%">
-  <table id="patientlist" mat-table [dataSource]="patients" class="mat-elevation-z8">
+<section class="table-container mat-elevation-z8" tabindex="0">
+  <table id="patientlist" mat-table [dataSource]="patients">
 
 <!--    <ng-container matColumnDef="select">-->
 <!--      <th mat-header-cell style="width: 3%!important;"*matHeaderCellDef>-->
@@ -17,7 +17,7 @@
 <!--      </td>-->
 <!--    </ng-container>-->
 
-    <ng-container *ngFor="let idType of configuredIdTypes" matColumnDef="{{idType}}" style="flex-flow: row">
+    <ng-container *ngFor="let idType of configuredIdTypes" matColumnDef="{{idType}}" style="flex-flow: row" sticky>
       <th mat-header-cell *matHeaderCellDef style="flex-flow: row;"> {{idType}}
 <!--        <button class= "filterbutton"><mat-icon matTooltip="Filter Pseudonym" style="transform: scale(0.7); float: right" (click)="openFilter(idType)">-->
 <!--          arrow_circle_down</mat-icon></button>-->
@@ -82,4 +82,4 @@
     <tr mat-row *matRowDef="let row; columns: columns;" (click)="selection.toggle(row)"></tr>
 
   </table>
-</ng-container>
+</section>
