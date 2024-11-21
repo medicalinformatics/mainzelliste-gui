@@ -55,6 +55,16 @@
       </button>
     </ng-container>
   </section>
+  <ng-container *ngIf="this.showDomainsCard()">
+    <mat-card id="domains" style="box-sizing: border-box; display: flex; flex-direction: column; margin: 0 20px 14px 0;">
+      <mat-card-title style="margin: 0 1.25%; align-self: start;">{{'patientlist.headers_tenants' | translate}}</mat-card-title>
+      <mat-card-content style="display: flex; flex-direction: column; height: 100%">
+        <mat-chip-list style="margin: 0 0 7px 1.4%;">
+          <mat-chip *ngFor="let domainName of patient.tenants"> {{domainName}}</mat-chip>
+        </mat-chip-list>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
   <ng-container *ngIf="this.consentService.isServiceEnabled()">
     <mat-card *appHasPermission="Permission.READ_CONSENT" id="consents"
       style="box-sizing: border-box; display: flex; flex-direction: column;">
