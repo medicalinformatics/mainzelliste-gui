@@ -98,6 +98,7 @@
   "navigation.configuration": "Configuration",
 
 	"patientlist.filter_search": "Filter/Search...",
+	"patientlist.button_filter_columns": "Select columns",
 	"patientlist.headers_tenants": "Domains",
 	"patientlist.headers_actions": "Actions",
 	"patientlist.no_patient_found": "No patient found.",

@@ -1,3 +1,21 @@
+<div style="display:flex; justify-content: space-between; align-items:center; margin-bottom: 8px;">
+  <div style="display:flex; align-items:center;">
+    <button mat-button (click)="columnFilter.open()" color="primary">
+      <mat-icon matPrefix>view_column</mat-icon> {{"patientlist.button_filter_columns" | translate}}
+    </button>
+    <mat-form-field style="margin-bottom: -1.25em; position: absolute; padding-left: 73px; padding-top: 63px" [class.cdk-visually-hidden]="true">
+      <mat-label>{{'button_filter_columns' | translate}}</mat-label>
+      <mat-select [(ngModel)]="this.columns" multiple #columnFilter
+                  (selectionChange)="this.selectColumns($event.value || [])">
+        <mat-option *ngFor="let columnName of this.allColumnNames" [value]="columnName"
+                    [ngStyle]="this.hideColumn(columnName) ? {'display':  'none' } : {}">
+          {{this.getColumnDisplayText(columnName)}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </div>
+</div>
 <section class="table-container mat-elevation-z8" tabindex="0">
   <table id="patientlist" mat-table [dataSource]="patients">
 
@@ -17,13 +35,12 @@
 <!--      </td>-->
 <!--    </ng-container>-->
 
-    <ng-container *ngFor="let idType of configuredIdTypes" matColumnDef="{{idType}}" style="flex-flow: row" sticky>
+    <ng-container *ngFor="let idType of configuredIdTypes" matColumnDef="{{idType}}" [sticky]="this.defaultIdType === idType">
       <th mat-header-cell *matHeaderCellDef style="flex-flow: row;"> {{idType}}
 <!--        <button class= "filterbutton"><mat-icon matTooltip="Filter Pseudonym" style="transform: scale(0.7); float: right" (click)="openFilter(idType)">-->
 <!--          arrow_circle_down</mat-icon></button>-->
       </th>
       <td mat-cell *matCellDef="let element" [ngClass]="{'disabled': loading}"> {{element.getIdString(idType)}} </td>
-      <!-- anhand von idType pseudonym finden -->
     </ng-container>
 
     <ng-container *ngFor="let field of fields" matColumnDef="{{field.name}}">
@@ -36,7 +53,7 @@
     </ng-container>
 
     <ng-container *ngIf="this.showTenantColumn()" matColumnDef="tenants">
-      <th mat-header-cell *matHeaderCellDef>{{'session.tenancy' | translate}}</th>
+      <th mat-header-cell *matHeaderCellDef>{{'patientlist.headers_tenants' | translate}}</th>
       <td mat-cell *matCellDef="let element" style="white-space: nowrap;"
           [ngClass]="{'disabled': loading}"> {{element.tenants?.join(", ") || ""}} </td>
     </ng-container>
