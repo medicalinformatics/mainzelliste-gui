@@ -1,9 +1,10 @@
 <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom: 8px;">
-  <div style="display:flex; align-items:center;">
-    <button mat-button (click)="columnFilter.open()" color="primary">
+  <div>
+    <button mat-button (click)="columnFilter.open()" color="primary" style="position: relative;">
       <mat-icon matPrefix>view_column</mat-icon> {{"patientlist.button_filter_columns" | translate}}
     </button>
-    <mat-form-field style="margin-bottom: -1.25em; position: absolute; padding-left: 73px; padding-top: 63px" [class.cdk-visually-hidden]="true">
+    <mat-form-field style="position: relative; left: 31px; top: 25px; float: left"
+                    [class.cdk-visually-hidden]="true">
       <mat-label>{{'button_filter_columns' | translate}}</mat-label>
       <mat-select [(ngModel)]="this.columns" multiple #columnFilter
                   (selectionChange)="this.selectColumns($event.value || [])">
