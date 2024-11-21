@@ -98,9 +98,12 @@
   "navigation.configuration": "Configuration",
 
 	"patientlist.filter_search": "Filter/Search...",
+	"patientlist.button_filter_columns": "Select columns",
+	"patientlist.headers_tenants": "Domains",
 	"patientlist.headers_actions": "Actions",
 	"patientlist.no_patient_found": "No patient found.",
 	"patientlist.search_placeholder": "Search...",
+
 	"patientlist_view.paginator_current_page_label_text1": "Page",
 	"patientlist_view.paginator_current_page_label_text2": "of",
 	"patientlist_view.paginator_item_number_label": "Items per page:",

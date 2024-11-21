@@ -31,6 +31,7 @@ export class AppConfigService {
   private copyConcatenatedIdEnabled: boolean = false;
   private copyIdEnabled: boolean = false;
   private configurationEnabled: boolean = false;
+  private _showDomainsInIDCard: boolean = false;
 
   constructor(
     private httpClient: HttpClient,
@@ -56,6 +57,7 @@ export class AppConfigService {
           this.copyConcatenatedIdEnabled = this.data[0].betaFeatures?.copyConcatenatedId ?? false;
           this.copyIdEnabled = this.data[0].betaFeatures?.copyId ?? false;
           this.configurationEnabled = this.data[0].betaFeatures?.configuration ?? false;
+          this._showDomainsInIDCard = this.data[0].betaFeatures?.showDomainsInIDCard ?? false;
 
           // init layout
           this.layoutFooterLogos = this.data[0].layout?.footerLogos ?? [];
@@ -87,6 +89,10 @@ export class AppConfigService {
 
   isConfigurationEnabled(): boolean {
     return this.configurationEnabled;
+  }
+
+  public showDomainsInIDCard(): boolean {
+    return this._showDomainsInIDCard;
   }
 
   getMainzellisteIdTypes(): string[] {

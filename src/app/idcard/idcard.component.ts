@@ -53,6 +53,8 @@ export class IdcardComponent implements OnInit {
   @ViewChild('consentTable') consentTable!: MatTable<ConsentRow>;
   public loadingConsents: boolean = false;
   public idTypes: IdType[] = [];
+  private readIdTypes: string [] = [];
+  private otherTenantIdTypes: string [] = [];
 
   constructor(
     private translate: TranslateService,
@@ -82,7 +84,17 @@ export class IdcardComponent implements OnInit {
   }
 
   ngOnInit() {
+    // find id types, that can be created
     this.getIdTypes();
+
+    // find id types, that can be read
+    this.readIdTypes = this.patientListService.getAllIdTypes("R")
+    this.otherTenantIdTypes = this.authorizationService.getTenants()
+    .filter(t => t.id != this.authorizationService.currentTenantId)
+    .map(t => t.idTypes)
+    .reduce((a,b) => a.concat(b));
+    this.readIdTypes.push(... this.otherTenantIdTypes)
+
     this.loadPatient();
     this.translate.onLangChange.subscribe(() => {
       this.changeTitle();
@@ -98,7 +110,7 @@ export class IdcardComponent implements OnInit {
   }
 
   private loadPatient() {
-    this.patientListService.readPatient(new Id(this.idType, this.idString), "R")
+    this.patientListService.readPatient(new Id(this.idType, this.idString), "R", undefined, this.readIdTypes)
     .pipe(
       catchError(e => {
         if (e instanceof HttpErrorResponse && (e.status == 404)) {
@@ -109,7 +121,8 @@ export class IdcardComponent implements OnInit {
     )
     .subscribe(
       patients => {
-        this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
+        this.patient = this.patientListService.convertToDisplayPatient(patients[0], false, this.authorizationService.getTenants());
+        this.patient.ids = this.patient.ids.filter(id => !this.otherTenantIdTypes.some(t => t == id.idType));
       });
   }
 
@@ -377,5 +390,9 @@ export class IdcardComponent implements OnInit {
       }
     });
     return fieldMap;
+  }
+
+  showDomainsCard():boolean{
+    return this.configService.showDomainsInIDCard() && this.authorizationService.getTenants().length > 1;
   }
 }

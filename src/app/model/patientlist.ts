@@ -39,5 +39,6 @@ export interface BetaFeatures {
   copyConcatenatedId?: boolean
   copyId?: boolean
   configuration?:boolean
+  showDomainsInIDCard?:boolean
 }
 
