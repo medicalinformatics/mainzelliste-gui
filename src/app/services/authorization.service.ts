@@ -213,7 +213,7 @@ export class AuthorizationService {
       );
   }
 
-  getTenants(): { id: string, name: string }[] {
+  getTenants(): { id: string, name: string, idTypes: string[] }[] {
     return this.configuredTenants;
   }
 

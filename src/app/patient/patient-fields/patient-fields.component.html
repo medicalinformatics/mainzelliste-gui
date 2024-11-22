@@ -7,11 +7,14 @@
           </button>
           <mat-form-field *ngSwitchCase="'DATE'" class="inputField" appearance="outline">
             <mat-label>{{field.i18n | translate}}</mat-label>
-            <input matInput style="width: 90%;" [readonly]="readOnly" [matDatepicker]="picker"
+            <input matInput style="width: 90%;" [readonly]="readOnly"
+                   [matDatepicker]="picker"
+                   (blur)="enableDateFieldValidation(dateField)"
                    (input)="fieldChanged()"
                    [required]="field.required"
                    placeholder="{{field.hint}} {{localDateFormat}}"
-                   [(ngModel)]="fields[field.name]" [name]="field.name">
+                   [(ngModel)]="fields[field.name]" [name]="field.name"
+                   #dateField="ngModel">
             <mat-datepicker-toggle *ngIf="!readOnly" matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker [disabled]="readOnly"></mat-datepicker>
             <button mat-icon-button *ngIf="readOnly" [cdkCopyToClipboard]="fields[field.name]" matSuffix>

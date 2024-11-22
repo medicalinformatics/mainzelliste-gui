@@ -254,9 +254,12 @@ export class PatientListService {
         searchIds.push({idType: f.field, idString: f.searchCriteria.trim()}));
     }
 
+    let resultIdTypes: string [] = this.getIdTypes("R");
+    this.authorizationService.getTenants().forEach(t => resultIdTypes.push(... t.idTypes));
+
     // create read patients token
     return this.sessionService.createToken("readPatients",
-      new ReadPatientsTokenData(searchIds, this.getFieldNames("R"), this.getIdTypes("R")))
+      new ReadPatientsTokenData(searchIds, this.getFieldNames("R"), resultIdTypes))
     .pipe(
       // resolve read patients token
       mergeMap(token => this.httpClient.get<Patient[]>(this.patientList.url + "/patients?"
@@ -576,9 +579,18 @@ export class PatientListService {
   // Utils
   //-------
 
-  convertToDisplayPatient(patient: Patient, convertToLocal?:boolean): Patient {
+  convertToDisplayPatient(patient: Patient, convertDateToLocal?:boolean,
+                          tenants?: { id: string, name: string, idTypes: string[] }[]): Patient {
     let displayPatient = new Patient();
+    //ids
     displayPatient.ids = patient.ids;
+
+    // tenants
+    if((tenants?.length || 0) > 1)
+      displayPatient.tenants = tenants?.filter(t => t.idTypes.some( t => displayPatient.ids.some( id => id.idType == t)))
+      .map(t => t.name);
+
+    // fields
     if(patient.fields == undefined){
       return displayPatient;
     }
@@ -597,7 +609,7 @@ export class PatientListService {
           let month = extractDate(fieldConfig.mainzellisteFields, patient.fields, 1, "00");
           let year = extractDate(fieldConfig.mainzellisteFields, patient.fields, 2, "0000");
           let date = `${year}-${month}-${day}`;
-          displayPatient.fields[fieldConfig.name] = convertToLocal ? _moment(date, "YYYY-MM-DD").format('L') : date;
+          displayPatient.fields[fieldConfig.name] = convertDateToLocal ? _moment(date, "YYYY-MM-DD").format('L') : date;
           break;
         }
       }

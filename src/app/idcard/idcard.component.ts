@@ -32,6 +32,9 @@ import {
 } from "../consent/consent-history-dialog/consent-history-dialog.component";
 import {FhirResource} from "fhir-kit-client/types/index";
 import {SearchParams} from "fhir-kit-client";
+import { SemanticType } from '../model/field';
+import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
+
 
 @Component({
   selector: 'app-idcard',
@@ -46,10 +49,12 @@ export class IdcardComponent implements OnInit {
   public idType: string = "";
   public patient: Patient = new Patient();
   public displayedConsentColumns: string[] = ['date', 'title', 'period', 'version', 'status', 'actions'];
-  public consentsView: ConsentsView =  { consentTemplates : new Map, consentRows: [] };
+  public consentsView: ConsentsView = { consentTemplates: new Map, consentRows: [] };
   @ViewChild('consentTable') consentTable!: MatTable<ConsentRow>;
   public loadingConsents: boolean = false;
   public idTypes: IdType[] = [];
+  private readIdTypes: string [] = [];
+  private otherTenantIdTypes: string [] = [];
 
   constructor(
     private translate: TranslateService,
@@ -79,14 +84,24 @@ export class IdcardComponent implements OnInit {
   }
 
   ngOnInit() {
+    // find id types, that can be created
     this.getIdTypes();
+
+    // find id types, that can be read
+    this.readIdTypes = this.patientListService.getAllIdTypes("R")
+    this.otherTenantIdTypes = this.authorizationService.getTenants()
+    .filter(t => t.id != this.authorizationService.currentTenantId)
+    .map(t => t.idTypes)
+    .reduce((a,b) => a.concat(b));
+    this.readIdTypes.push(... this.otherTenantIdTypes)
+
     this.loadPatient();
     this.translate.onLangChange.subscribe(() => {
       this.changeTitle();
     });
 
     //load consent list
-    if(this.consentService.isServiceEnabled() && this.authorizationService.hasPermission(Permission.READ_CONSENT))
+    if (this.consentService.isServiceEnabled() && this.authorizationService.hasPermission(Permission.READ_CONSENT))
       this.loadConsents();
   }
 
@@ -95,7 +110,7 @@ export class IdcardComponent implements OnInit {
   }
 
   private loadPatient() {
-    this.patientListService.readPatient(new Id(this.idType, this.idString), "R")
+    this.patientListService.readPatient(new Id(this.idType, this.idString), "R", undefined, this.readIdTypes)
     .pipe(
       catchError(e => {
         if (e instanceof HttpErrorResponse && (e.status == 404)) {
@@ -106,13 +121,14 @@ export class IdcardComponent implements OnInit {
     )
     .subscribe(
       patients => {
-        this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
+        this.patient = this.patientListService.convertToDisplayPatient(patients[0], false, this.authorizationService.getTenants());
+        this.patient.ids = this.patient.ids.filter(id => !this.otherTenantIdTypes.some(t => t == id.idType));
       });
   }
 
   private loadConsents() {
     this.loadingConsents = true;
-    this.consentsView = { consentTemplates : new Map, consentRows: [] }
+    this.consentsView = { consentTemplates: new Map, consentRows: [] }
     this.consentService.getConsents(this.idType, this.idString)
     .subscribe({
       next: (dataModels) => {
@@ -141,16 +157,16 @@ export class IdcardComponent implements OnInit {
     this.patientService.deletePatient(this.patient).then(() => this.router.navigate(['/patientlist']).then());
   }
 
-  generateId(idType:string, idString:string, newIdType: string) {
+  generateId(idType: string, idString: string, newIdType: string) {
     this.patientListService.generateId(idType?.length > 0 ? idType : this.idType,
-      idString?.length> 0 ? idString : this.idString, newIdType).subscribe(() => {
+      idString?.length > 0 ? idString : this.idString, newIdType).subscribe(() => {
         this.loadPatient()
       });
   }
 
   hasAllTemplateIds(): boolean {
     return [...this.consentsView.consentTemplates.keys()].every(templateId =>
-        this.consentsView.consentRows.some(v => v.templateId == templateId))
+      this.consentsView.consentRows.some(v => v.templateId == templateId))
   }
 
   openAddNewConsentDialog() {
@@ -183,7 +199,7 @@ export class IdcardComponent implements OnInit {
 
   openChangeConsentDialog(consentId: string) {
     let processDone = new EventEmitter<boolean>();
-    this.consentService.readConsent(consentId).subscribe( c => {
+    this.consentService.readConsent(consentId).subscribe(c => {
       const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
         width: '900px',
         disableClose: true,
@@ -276,9 +292,9 @@ export class IdcardComponent implements OnInit {
     if (this.idTypes.length == 0){
       this.idTypes = [
         ...this.patientListService.getUniqueIdTypes(false, "C")
-        .map(t => { return {name: t, isExternal: false, isAssociated: false } }),
+          .map(t => { return { name: t, isExternal: false, isAssociated: false } }),
         ...this.patientListService.getAssociatedIdTypes(false, "C")
-        .map(t => { return {name: t, isExternal: false, isAssociated: true } })
+          .map(t => { return { name: t, isExternal: false, isAssociated: true } })
       ];
     }
     return this.idTypes;
@@ -330,5 +346,53 @@ export class IdcardComponent implements OnInit {
       if (result)
         this.deleteConsent(consentId);
     });
+  }
+
+  getContactInfo() {
+    const fieldMap = this.getFieldMap();
+    return `${fieldMap[SemanticType.FIRSTNAME]} ${fieldMap[SemanticType.LASTNAME]}\n${fieldMap[SemanticType.POSTAL_CODE]} ${fieldMap[SemanticType.CITY]}`;
+  }
+
+  exportCSV() {
+    const fieldMap = this.getFieldMap();
+    var data = [
+      {
+        firstName: fieldMap[SemanticType.FIRSTNAME],
+        lastName: fieldMap[SemanticType.LASTNAME],
+        residence: fieldMap[SemanticType.CITY],
+        plz: fieldMap[SemanticType.POSTAL_CODE]
+      }
+    ]
+    console.log(data);
+
+    new AngularCsv(data, 'ContactInfo', {
+      headers: [this.translate.instant("first_name_text"),
+         this.translate.instant("last_name_text"),
+         this.translate.instant("zip_code_text"),
+         this.translate.instant("residence_text")],
+      quoteStrings: '',
+      delimiter: ';'
+    },);
+  }
+
+  getFieldMap() {
+    const contact = this.patient.fields;
+    const fieldMap: { [key: string]: string } = {
+      [SemanticType.FIRSTNAME]: "",
+      [SemanticType.LASTNAME]: "",
+      [SemanticType.POSTAL_CODE]: "",
+      [SemanticType.CITY]: ""
+    };
+
+    this.patientService.getConfiguredFields("R").forEach(fieldConfig => {
+      if (fieldMap.hasOwnProperty(fieldConfig.semantic)) {
+        fieldMap[fieldConfig.semantic] = contact[fieldConfig.name];
+      }
+    });
+    return fieldMap;
+  }
+
+  showDomainsCard():boolean{
+    return this.configService.showDomainsInIDCard() && this.authorizationService.getTenants().length > 1;
   }
 }

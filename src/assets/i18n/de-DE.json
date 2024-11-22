@@ -104,6 +104,8 @@
   "navigation.configuration": "Konfiguration",
 
 	"patientlist.filter_search": "Filter/Suche...",
+	"patientlist.button_filter_columns": "Spalten auswählen",
+	"patientlist.headers_tenants": "Domänen",
 	"patientlist.headers_actions": "Aktionen",
 	"patientlist.no_patient_found": "Kein Patient gefunden.",
 	"patientlist.search_placeholder": "Suche...",
@@ -116,7 +118,7 @@
 	"patientlist_view.paginator_first_page_label": "Erste Seite",
 	"patientlist_view.paginator_last_page_label": "Letzte Seite",
 
-  "session.tenancy": "Projekte",
+  "session.tenancy": "Domäne",
 	"session.language_english": "Englisch",
 	"session.language_german": "Deutsch",
 	"session.menu_language": "Sprache",
@@ -321,5 +323,7 @@
 	"bulkIdGenerationEmptyFieldsDialog.text1": " Patienten konnten nicht gefunden werden.",
 	"bulkIdGenerationEmptyFieldsDialog.text2": "Für nicht gefundene Patienten wurden keine neuen IDs generiert.",
 	"bulkIdGenerationEmptyFieldsDialog.error_text1": "Es wurde kein Patient gefunden.",
-	"bulkIdGenerationEmptyFieldsDialog.error_text2": "Bitte wählen sie eine gültige Datei aus."
+	"bulkIdGenerationEmptyFieldsDialog.error_text2": "Bitte wählen sie eine gültige Datei aus.",
+	"export_data": "Kontaktdaten nach Excel exportieren",
+	"copy_data": "Kontaktdaten in Zwischenablage kopieren"
 }

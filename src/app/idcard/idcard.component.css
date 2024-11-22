@@ -12,6 +12,10 @@
   width: 30%;
 }
 
+#domains{
+  width: 94%;
+}
+
 #consents{
   width: 94%;
 }
@@ -102,4 +106,3 @@ mat-card-title{
 .mat-card.mat-card-scrollable mat-card-title {
   display: block;
 }
-
