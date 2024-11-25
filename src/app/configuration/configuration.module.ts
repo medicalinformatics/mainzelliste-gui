@@ -16,6 +16,8 @@ import {MatTableModule} from "@angular/material/table";
 import { IdGeneratorDetailComponent } from './idgenerator/id-generator-detail/id-generator-detail.component';
 import { ConfigurationComponent } from './configuration/configuration.component';
 import {MatTabsModule} from "@angular/material/tabs";
+import { PoliciesComponent } from './policies/policies.component';
+import { PolicyDialogComponent } from './policy-dialog/policy-dialog.component';
 
 
 @NgModule({
@@ -37,7 +39,9 @@ import {MatTabsModule} from "@angular/material/tabs";
     IdGeneratorsComponent,
     IdGeneratorDialogComponent,
     IdGeneratorDetailComponent,
-    ConfigurationComponent
+    ConfigurationComponent,
+    PoliciesComponent,
+    PolicyDialogComponent
   ]
 })
 export class ConfigurationModule {

@@ -168,6 +168,15 @@
   "configuration.idGenerator.idGenerator": "ID-Generator",
   "configuration.idGenerator.empty": "Kein ID-Generator gefunden.",
 
+  "configuration.tab_policies": "Policy Sets",
+  "configuration.policySet.id": "Policy-Set-Id",
+  "configuration.policySet.externalId": "Policy-Set-External-Id",
+  "configuration.policySet.name": "Policy-Set-Name",
+  "configuration.policy.policies": "Policies",
+  "configuration.policy.policyCode": "Policy-Code",
+  "configuration.policy.policyText": "Policy-Text",
+  "configuration.policy.close": "Schließen",
+
 	"info.title": "Informationen und Hinweise zur Mainzelliste",
 	"info.notice_add_patient": "Hinweis für die Erstellung eines Patienten",
 	"info.add_patient_text1": "Diese Anwendung gibt für die von Ihnen im Folgenden einzugebenden Stammdaten einen Personenidentifikator (PID) zurück. Dabei wird der bekannte Patientenbestand durchsucht; bei einem Treffer wird der bestehende PID zurueckgegeben.",

@@ -154,6 +154,15 @@
   "configuration.idGenerator.idGenerator": "ID Generator",
   "configuration.idGenerator.empty": "no ID Generator found.",
 
+  "configuration.tab_policies": "Policy Sets",
+  "configuration.policySet.id": "Policy Set Id",
+  "configuration.policySet.externalId": "Policy Set External Id",
+  "configuration.policySet.name": "Policy Set Name",
+  "configuration.policy.policies": "Policies",
+  "configuration.policy.policyCode": "Policy Code",
+  "configuration.policy.policyText": "Policy Text",
+  "configuration.policy.close": "Close",
+
 	"info.title": "Information and notes on the Mainzelliste",
 	"info.notice_add_patient": "Note for creating a patient",
 	"info.add_patient_text1": "This application returns a personal identifier (PID) for the reference data you enter below. The known patient population is searched; If there is a match, the existing PID is returned.",
