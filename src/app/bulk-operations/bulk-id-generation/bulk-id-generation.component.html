@@ -7,7 +7,10 @@
         <br/>
         {{'bulkIdGeneration.upload_info_text2' | translate}}
         <br/>
-        {{'bulkIdGeneration.upload_info_text3' | translate}}</div>
+        {{'bulkIdGeneration.upload_info_text3' | translate}}
+        <br/>
+        {{'bulkIdGeneration.upload_info_text4' | translate}}
+      </div>
       <div style="margin-top: 1%">
         <mat-form-field>
           <ngx-mat-file-input
@@ -25,6 +28,9 @@
           </mat-error>
           <mat-error *ngIf="fileInput.ngControl.hasError('invalidIdTypeList')">
             {{'bulkIdGeneration.upload_error_id_type' | translate}}
+          </mat-error>
+          <mat-error *ngIf="fileInput.ngControl.hasError('invalidFileLength')">
+            {{'bulkIdGeneration.upload_error_file_length' | translate}}
           </mat-error>
           <mat-error *ngIf="fileInput.ngControl.hasError('invalidIds')">
             {{'bulkIdGeneration.upload_error_ids' | translate}}

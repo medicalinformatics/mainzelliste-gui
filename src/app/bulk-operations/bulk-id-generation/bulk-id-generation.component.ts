@@ -83,9 +83,10 @@ export class BulkIdGenerationComponent implements OnInit {
       .pipe().subscribe({
         next: (result): void => {
           tempRecords = result;
-          let bool = false;
           if (!this.patientListService.getAllIdTypes("R").includes(tempRecords[0][0])) {
             this.uploadFormGroup.get('uploadField')?.setErrors({invalidIdType:{value:tempRecords[0][0]}})
+          } else if (tempRecords.length > 50001) {
+            this.uploadFormGroup.get('uploadField')?.setErrors({invalidFileLength:{value:""}})
           } else if (tempRecords[0].length <= 2 && (tempRecords[0].length == 1 || tempRecords[0][1] == "")) {
             for (let i = 1; i < tempRecords.length; i++) {
               if (tempRecords[i].length >= 3 || !(tempRecords[i].length == 1 || tempRecords[i][1] == "") || tempRecords[i][0] == "") {
