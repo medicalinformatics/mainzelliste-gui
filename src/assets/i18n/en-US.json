@@ -300,6 +300,29 @@
 	"bulkIdGenerationEmptyFieldsDialog.error_text1": "No patient was found.",
 	"bulkIdGenerationEmptyFieldsDialog.error_text2": "Please select a valid file.",
 
+  "bulkPseudonymization.title": "Bulk Pseudonymization",
+  "bulkPseudonymization.upload_label": "Upload CSV file",
+  "bulkPseudonymization.upload_error_file_required": "Please select a file",
+  "bulkPseudonymization.upload_error_file_type": "Please select a file with an appropriate file type",
+  "bulkPseudonymization.upload_error_unknown_header": "CSV-Header values are unknown",
+  "bulkPseudonymization.upload_error_some_unknown_header": "Following CSV-Header values ['${}'] are unknown",
+  "bulkPseudonymization.upload_error_invalid_file": "Invalid CSV-File",
+  "bulkPseudonymization.upload_error_required_header": "Missing required patient field names ['${}'] in the CSV-Header",
+  "bulkPseudonymization.upload_error_no_header": "Missing CSV-Headers",
+  "bulkPseudonymization.upload_error_empty": "No data found",
+  "bulkPseudonymization.button_stepper_pseudonymize": "Pseudonymize",
+  "bulkPseudonymization.progess_status_start": "Pseudonymization of patients",
+  "bulkPseudonymization.progess_status_prepare_result": "Creating CSV file",
+  "bulkPseudonymization.pseudonymization_in_progress": "In progress, this may take a few minutes.",
+  "bulkPseudonymization.pseudonymization_done": "${} patients were successfully pseudonymized",
+
+  "bulkPseudonymization.download_label": "Download CSV file",
+  "bulkPseudonymization.generate_id_label": "Pseudonymize",
+
+  "bulkPseudonymization.upload_info_text1": "Please select a CSV file with patient data",
+  "bulkPseudonymization.upload_info_text2": "The file must at least contains the required field names (${fieldName}) and/or one external ID type (${extIdTypes}) as CSV-Header.",
+  "bulkPseudonymization.upload_info_text3": "Empty lines can lead to errors!",
+
 	"export_data": "Export contact information to excel",
 	"copy_data": "Copy contact information to clipboard"
 }

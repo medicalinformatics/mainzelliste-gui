@@ -73,6 +73,7 @@ export class AuthorizationState{
   setMiscellaneous(permissions: TenantPermission[]) {
     //set default values
     this.EDIT_CONFIGURATION = false;
+    this.ADD_PATIENTS = false
     permissions.forEach( p => {
       switch (p.miscellaneous){
         case "tt_editConfiguration": this.EDIT_CONFIGURATION = true; break;
