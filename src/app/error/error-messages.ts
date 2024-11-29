@@ -168,4 +168,21 @@ export class ErrorMessages {
   public static SEARCH_CONSENT_PROVENANCE_FAILED: ErrorMessage = new ErrorMessage(8001,
     'SearchConsentProvenanceFailed',
     "error.search_consent_provenance_failed");
+
+  ////
+  // ADD PATIENTS ERRORS
+  //---------------------
+  public static CREATE_PATIENTS_UNAUTHORIZED: ErrorMessage = new ErrorMessage(9001,
+    'Please supply a valid \'addPatients\' token.',
+    "error.create_patients_unauthorized");
+
+  ////
+  // FETCH PATIENTS JOB ERRORS
+  //---------------------------
+  public static FETCH_PATIENTS_JOB_UNAUTHORIZED: ErrorMessage = new ErrorMessage(10001,
+    'please supply a valid \'addPatients\' token',
+    "error.fetch_patients_job_unauthorized");
+  public static FETCH_PATIENTS_JOB_NOTFOUND: ErrorMessage = new ErrorMessage(10002,
+    'job not found',
+    "error.fetch_patients_job_not_found")
 }

@@ -7,8 +7,4 @@ export class AddPatientTokenData extends TokenData{
   ) {
     super(callback, redirect)
   }
-
-  public addIdType(idType: string){
-    this.idTypes.push(idType);
-  }
 }

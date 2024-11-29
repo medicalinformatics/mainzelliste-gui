@@ -68,6 +68,7 @@ import {
 import {
   BulkIdGenerationEmptyFieldsDialog
 } from "./bulk-operations/bulk-id-generation/dialog/bulk-id-generation-empty-fields-dialog";
+import { BulkPseudonymizationComponent } from './bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component';
 
 function initializeAppFactory(
     configService: AppConfigService,
@@ -129,7 +130,8 @@ function initializeAppFactory(
     ConsentTemplatesComponent,
     BulkIdGenerationComponent,
     BulkIdGenerationTableComponent,
-    BulkIdGenerationEmptyFieldsDialog
+    BulkIdGenerationEmptyFieldsDialog,
+    BulkPseudonymizationComponent
   ],
   imports: [
     SharedModule,

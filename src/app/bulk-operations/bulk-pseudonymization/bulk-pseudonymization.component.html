@@ -1,0 +1,188 @@
+<mat-stepper [linear]="true" #stepper [disableRipple]="true" id="stepper"
+             (selectionChange)="this.stepChanged($event)">
+  <mat-step [stepControl]="uploadFormGroup" [editable]="isEditable">
+    <form [formGroup]="uploadFormGroup">
+      <ng-template matStepLabel>{{'bulkPseudonymization.upload_label' | translate}}</ng-template>
+      <mat-card @infoDialogTrigger *ngIf="this.showInfoCard && fileInput.ngControl.hasError('csvError')" style=" width: 50%; margin: 10px auto 30px auto; background: #fff6f6;">
+        <mat-card-title-group>
+          <button mat-icon-button class="mini-icon-button" (click)="this.hideInfoDialog()">
+            <mat-icon style="color: #555958;">close</mat-icon>
+          </button>
+        </mat-card-title-group>
+        <mat-card-content style="display: flex; justify-content: start; flex-direction: row;
+        align-items: center; margin: 0 15px 18px 15px; text-align: center; gap: 10px">
+          <mat-icon
+            style="color: #a80b1e; font-size: 50px; height: 50px; width: 50px; flex-shrink: 0">
+            report
+          </mat-icon>
+          <h3 style=" color: #3c3939; flex-grow: 2;">{{fileInput.ngControl.getError('csvError').value}}</h3>
+        </mat-card-content>
+      </mat-card>
+      <div style="margin: 1% auto 0 auto; width: 66%;">{{'bulkPseudonymization.upload_info_text1' | translate}}
+        <br/>
+        {{ this.translate.instant('bulkPseudonymization.upload_info_text2')
+          .replace('${fieldName}', this.fieldNames.join(', '))
+          .replace('${extIdTypes}', this.externalIdTypes.join(', ')) }}
+        <br/>
+        {{'bulkPseudonymization.upload_info_text3' | translate}}
+      </div>
+      <div style="margin-top: 1%; display: flex; justify-content: center;">
+        <mat-form-field style="float: left;">
+          <ngx-mat-file-input
+            #fileInput
+            [multiple]="false"
+            [placeholder]="'file.csv'"
+            [accept]="'text/csv,.csv'"
+            [formControlName]="'uploadField'"
+            (selectionchange)="this.showInfoCard = true"
+          ></ngx-mat-file-input>
+<!--          <mat-error *ngIf="fileInput.ngControl.hasError('csvError')">-->
+<!--            {{fileInput.ngControl.getError('csvError').value}}-->
+<!--          </mat-error>-->
+        </mat-form-field>
+        <mat-spinner *ngIf="this.readingInProgress" style="margin-left: 10px; margin-top: 18px;" diameter="28"></mat-spinner>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step #stepTwo [editable]="isEditable">
+    <ng-template matStepLabel>{{'bulkPseudonymization.generate_id_label' | translate}}</ng-template>
+    <div class="float-container">
+      <mat-card @infoDialogTrigger *ngIf="!this.addingInProgress && this.showInfoCard && this.undefinedHeaders.length > 0" style=" width: 50%; margin: 10px auto 30px auto; background: rgb(251, 248, 238);">
+        <mat-card-title-group>
+          <button mat-icon-button class="mini-icon-button" (click)="this.hideInfoDialog()">
+            <mat-icon style="color: #555958;">close</mat-icon>
+          </button>
+        </mat-card-title-group>
+        <mat-card-content style="display: flex; justify-content: start; flex-direction: row;
+        align-items: center; margin: 0 15px 18px 15px; text-align: center; gap: 10px">
+          <mat-icon style="color: #e6c155; font-size: 50px; height: 50px; width: 50px; flex-shrink: 0">
+            warning
+          </mat-icon>
+          <h3 style=" color: #3c3939; flex-grow: 2;">{{this.translate.instant("bulkPseudonymization.upload_error_some_unknown_header").replace("${}", this.undefinedHeaders)}}</h3>
+        </mat-card-content>
+      </mat-card>
+      <mat-card *ngIf="this.addingInProgress" style=" width: 50%; margin: 0 auto;">
+        <mat-card-content style="display: flex; justify-content: center; flex-direction: column; text-align: center; margin: 13px 0;">
+          <div>
+            <span>{{this.addingStatus}} ...</span>
+            <mat-progress-bar mode="indeterminate" style="margin-top: 15px; margin-bottom: 15px;"></mat-progress-bar>
+            <span style="color: #8f8f8f;">{{"bulkPseudonymization.pseudonymization_in_progress" | translate}}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <div class="float-content">
+        <mat-form-field color="primary" style="width: 100%">
+          <mat-label>{{'createPatient.pseudonym_types' | translate}}</mat-label>
+          <mat-chip-list [disabled]="this.addingInProgress" #chipList aria-label="Fruit selection"
+                         name="internalIdTypesChipList"
+                         [ngModel]="this.selectedInternalIdTypes.join(',')"
+                         required>
+            <mat-chip *ngFor="let idType of this.selectedInternalIdTypes"
+                      [selectable]="true"
+                      [removable]="true"
+                      (removed)="removeInternalIdType(idType)">
+              {{idType}}
+              <button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip>
+            <input [formControl]="chipListInputCtrl"
+                   [matChipInputFor]="chipList"
+                   [matAutocomplete]="auto"
+                   [matChipInputAddOnBlur]="true"
+                   (matChipInputTokenEnd)="findAndAddInternalIdType($event)">
+          </mat-chip-list>
+          <mat-error>{{'createPatient.no_pseudonym_type_error' | translate}}</mat-error>
+          <mat-autocomplete #auto="matAutocomplete"
+                            (optionSelected)="selectedInternalIdType($event)">
+            <mat-option style="height: auto"
+                        *ngFor="let idType of this.filteredInternalIdTypes | async"
+                        [value]="idType.idType">
+              <div [hidden]="idType.added">{{idType.idType}}</div>
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <div style="display: flex; justify-content: center;">
+          <button id="back" mat-raised-button
+                  [disabled]="this.addingInProgress"
+                  (click)="backToFirst()">{{'button_stepper_back' | translate}}</button>
+          <button style="margin-left: 10px"mat-raised-button
+                  class="submit"
+                  (click)="addPatients()"
+                  [disabled]="this.addingInProgress || this.selectedInternalIdTypes.length == 0">
+            {{'bulkPseudonymization.button_stepper_pseudonymize' | translate}}
+          </button>
+        </div>
+      </div>
+      <ng-container *ngIf="!this.addingInProgress && step == 1">
+        <section class="float-table mat-elevation-z8" tabindex="0">
+          <table mat-table [dataSource]="this.addPatientRequests | slice: getPageStart(originalDataPaginator): getPageEnd(originalDataPaginator)" class="bulkPseudonymisationTable mat-elevation-z8">
+            <ng-container *ngFor="let idType of Object.keys(addPatientRequests[0]?.ids ?? {})" [matColumnDef]="idType">
+              <th mat-header-cell *matHeaderCellDef>{{idType}}</th>
+              <td mat-cell *matCellDef="let e">{{e.ids[idType]}}</td>
+            </ng-container>
+            <ng-container *ngFor="let fieldName of Object.keys(addPatientRequests[0]?.fields ?? {})" [matColumnDef]="fieldName">
+              <th mat-header-cell *matHeaderCellDef>{{fieldName}}</th>
+              <td mat-cell *matCellDef="let e">{{e.fields[fieldName]}}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="Object.keys(addPatientRequests[0]?.ids ?? {}).concat(Object.keys(addPatientRequests[0]?.fields ?? {})); sticky: true;"></tr>
+            <tr mat-row *matRowDef="let row; columns: Object.keys(addPatientRequests[0]?.ids ?? {}).concat(Object.keys(addPatientRequests[0]?.fields ?? {}));"></tr>
+          </table>
+        </section>
+        <mat-paginator #originalDataPaginator
+            [length]="this.addPatientRequests.length - 1"
+            [pageSize]="this.defaultPageSize"
+            [pageSizeOptions]="[5,10,20,50,100]"
+            [showFirstLastButtons]="true"
+        >
+        </mat-paginator>
+      </ng-container>
+    </div>
+  </mat-step>
+  <mat-step #stepThree>
+    <ng-template matStepLabel>{{'bulkPseudonymization.download_label' | translate}}</ng-template>
+    <div class="float-container">
+      <mat-card @infoDialogTrigger *ngIf="this.showInfoCard" style=" width: 50%; margin: 0 auto;">
+        <mat-card-title-group>
+          <mat-icon
+            style="color: #87ce84; font-size: 50px; height: 50px; width: 50px;">
+            task_alt
+          </mat-icon>
+          <button mat-icon-button class="mini-icon-button" (click)="this.hideInfoDialog()">
+            <mat-icon style="color: #555958;">close</mat-icon>
+          </button>
+        </mat-card-title-group>
+        <mat-card-content style="display: flex; justify-content: center; flex-direction: column; text-align: center; margin: 13px 0;">
+          <h3 style=" color: #393c39; font-weight: 450;">{{this.translate.instant("bulkPseudonymization.pseudonymization_done").replace("${}", this.getSuccessfullyPseudonymized())}}</h3>
+        </mat-card-content>
+      </mat-card>
+      <div class="float-content">
+        <button style="width: 230px; align-self: center;"
+          id="downloadFile"
+          class="submit"
+          mat-raised-button
+          (click)="downloadCSV()">
+          <mat-icon style="margin-right: 0.2em;">download</mat-icon>
+          <span>{{'button_stepper_download_csv' | translate}}</span>
+        </button>
+      </div>
+      <section class="float-table mat-elevation-z8" *ngIf="step == 2" tabindex="0">
+        <table mat-table [dataSource]="this.result | slice: getPageStart(resultPaginator)+1: getPageEnd(resultPaginator)+1" class="bulkPseudonymisationTable mat-elevation-z8">
+          <ng-container *ngFor="let colName of this.result[0]; index as i" [matColumnDef]="colName">
+            <th mat-header-cell *matHeaderCellDef>{{colName}}</th>
+            <td mat-cell *matCellDef="let e">{{e[i]}}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="this.result[0]"></tr>
+          <tr mat-row *matRowDef="let row; columns: this.result[0];"></tr>
+        </table>
+      </section>
+      <mat-paginator *ngIf="step == 2" #resultPaginator
+                     [length]="this.result.length - 1"
+                     [pageSize]="this.defaultPageSize"
+                     [pageSizeOptions]="[5,10,20,50,100]"
+                     [showFirstLastButtons]="true"
+      >
+      </mat-paginator>
+    </div>
+  </mat-step>
+</mat-stepper>

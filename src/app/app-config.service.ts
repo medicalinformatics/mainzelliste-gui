@@ -115,6 +115,10 @@ export class AppConfigService {
     return this.mainzellisteFields;
   }
 
+  getFields(): Field[] {
+    return this.data[0].fields || []
+  }
+
   getMainzellisteClaims(): ClaimsConfig[] {
     return this.mainzellisteClaims;
   }

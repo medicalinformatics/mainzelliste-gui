@@ -1,0 +1,45 @@
+#stepper {
+  width: 1200px;
+  background-color: #FAFAFA;
+  text-align: center
+}
+
+.float-table {
+  overflow: auto;
+  max-height: 500px;
+}
+
+.float-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 500px;
+  margin: 0 auto;
+  padding: 40px 0 30px 0;
+}
+.bulkPseudonymisationTable {
+  width: 100%
+}
+
+.bulkPseudonymisationTable tr.mat-row {
+  height: 38px;
+}
+
+.bulkPseudonymisationTable td {
+  text-align: center;
+  max-height: 450px;
+}
+
+.bulkPseudonymisationTable th {
+  text-align: center;
+  padding: 0 10px;
+}
+
+.mat-column-index {
+  width: auto;
+}
+mat-paginator{
+  float:right;
+  margin-top: 1.5%;
+  background-color: transparent;
+}
