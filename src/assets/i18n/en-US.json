@@ -82,6 +82,7 @@
   "consent_template.validity_year": "Years",
   "consent_template.validity_month": "Months",
   "consent_template.validity_day": "Days",
+  "consent_template.consent-model": "Consent Model",
 
   "consent_dialog_history_title": "Consent history",
   "consent_dialog_history_status": "Previous status",

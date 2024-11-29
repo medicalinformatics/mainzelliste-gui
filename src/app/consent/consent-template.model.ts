@@ -8,7 +8,9 @@ export class ConsentTemplate {
   validity: Validity = {month: 0, day: 0};
   organization?: string;
   researchStudy?: string;
-  policy?: string
+  policy?: string;
+  // if true is "opt in" otherwise "opt-out"
+  consentModel: boolean = true;
   items: Item[] = [];
   isMiiFhirConsentConform?: boolean = false;
 }

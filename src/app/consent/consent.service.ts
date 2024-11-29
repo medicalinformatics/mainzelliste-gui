@@ -568,7 +568,7 @@ export class ConsentService {
         }
       ],
       provision: {
-        type: "deny",
+        type: template.consentModel? "deny" : "permit",
         period: {
           start: _moment().format("YYYY-MM-DD"),
           end: this.mapValidityToDate(template.validity)
@@ -664,7 +664,7 @@ export class ConsentService {
 
   private mapChoiceItemToProvision(item: ChoiceItem, validity:Validity): fhir4.ConsentProvision {
     return {
-      type: "permit",
+      type: item.answer,
       period: {
         start: _moment().format("YYYY-MM-DD"),
         end: this.mapValidityToDate(validity)

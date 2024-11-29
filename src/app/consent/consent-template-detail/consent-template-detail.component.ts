@@ -85,7 +85,7 @@ export class ConsentTemplateDetailComponent implements OnInit {
   createModule(selectedModuleType: "choice" | "display") {
     this.template.items = this.template.items || [];
     let item = selectedModuleType == "choice" ?
-      new ChoiceItem(this.template.items.length, selectedModuleType, "permit") :
+      new ChoiceItem(this.template.items.length, selectedModuleType, this.template.consentModel? "permit":"deny") :
       new DisplayItem(this.template.items.length, selectedModuleType)
     this.template.items.push(item);
   }

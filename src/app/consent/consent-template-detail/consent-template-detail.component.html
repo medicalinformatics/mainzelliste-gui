@@ -51,7 +51,6 @@
     </button>
   </mat-form-field>
 
-
   <mat-slide-toggle color="primary" style="clear: both; float:left; margin-top: 20px; margin-bottom: 1.25em"
                     [(ngModel)]="this.template.isMiiFhirConsentConform" [name]="'isMiiFhir'">basiert auf MII Broad
     Consent
@@ -64,6 +63,15 @@
                   value="{{version.code}}">{{version.name}}</mat-option>
     </mat-select>
   </mat-form-field>
+
+  <!-- Opt-In/out -->
+  <div style="clear: both; float: left; margin-top: 20px; margin-bottom: 1.25em;">
+    <label id="opt-radio-group-label"><h4>{{"consent_template.consent-model" | translate}}</h4></label>
+    <mat-radio-group aria-labelledby="opt-radio-group-label" color="primary" [(ngModel)]="this.template.consentModel" [name]="'optIn'">
+      <mat-radio-button [value]="true">Opt-In</mat-radio-button>
+      <mat-radio-button [value]="false">Opt-Out</mat-radio-button>
+    </mat-radio-group>
+  </div>
 
   <!-- Modules -->
   <h4 style="margin-top: 20px; clear:both; float: left;">Module hinzufügen: </h4>
