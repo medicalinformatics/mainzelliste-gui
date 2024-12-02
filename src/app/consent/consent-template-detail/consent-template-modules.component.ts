@@ -36,12 +36,16 @@ export class ConsentTemplateModulesComponent implements OnInit {
 
   dropModule(event: CdkDragDrop<any, any>) {
     moveItemInArray(this.templateModules, event.previousIndex, event.currentIndex);
+    this.templateModules.forEach((module, index) => module.id = index)
   }
 
   deleteModule(module: Item) {
     let index = this.templateModules.indexOf(module);
-    if (index > -1)
+    if (index > -1){
       this.templateModules.splice(index, 1);
+      // update index of the remaining modules
+      this.templateModules.forEach((module, index) => module.id = index)
+    }
   }
 
   editModule(m: Item) {
