@@ -77,6 +77,7 @@
 	"consent_template_status.active": "Aktiv",
 
   "consent_template.name": "Name",
+  "consent_template.version": "Version",
   "consent_template.title": "Titel",
 	"consent_template.status": "Status",
   "consent_template.organization": "Verantwortliche Einrichtung",

@@ -1,12 +1,21 @@
 <div ngModelGroup="consentTemplateDetails">
   <!-- Name -->
-  <mat-form-field class="templateInputField" [ngStyle]="{'margin-bottom': displayError(name) ? '0.25em' : '-1.25em' }">
+  <mat-form-field class="templateInputField" [ngStyle]="{'width': '45%', 'margin-bottom': displayError(name) ? '0.25em' : '-1.25em' }">
     <mat-label>Name</mat-label>
     <input pattern="[A-Za-z\d\-_\.$#]{1,255}" style="width: 45%;" matInput placeholder=""
            [(ngModel)]="this.template.name"
            [name]="'name'" #name="ngModel" required="true">
     <mat-error *ngIf="displayError(name)">
       {{ getFieldErrorMessage("name", name.errors) }}
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field class="templateVersion" [ngStyle]="{'margin-bottom': displayError(version) ? '0.65em' : '-1.25em' }">
+    <mat-label>Version</mat-label>
+    <input pattern="[A-Za-z\d\-_\.]{1,255}" matInput placeholder=""
+           [(ngModel)]="this.template.version"
+           [name]="'version'" #version="ngModel">
+    <mat-error *ngIf="displayError(version)">
+      {{ getFieldErrorMessage("version", version.errors) }}
     </mat-error>
   </mat-form-field>
 

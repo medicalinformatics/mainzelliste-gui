@@ -562,11 +562,7 @@ export class ConsentService {
         "reference": "Patient/101"
       },
       dateTime: "2020-09-01",
-      policy: [
-        {
-          uri: `fhir/Questionnaire/${template.name}`
-        }
-      ],
+      policy: [],
       provision: {
         type: template.consentModel? "deny" : "permit",
         period: {
@@ -648,6 +644,7 @@ export class ConsentService {
         }
       ],
       title: template.title,
+      version: template.version,
       subjectType: ["Consent"],
       item: template.items.map(i => {
         if (i instanceof DisplayItem)

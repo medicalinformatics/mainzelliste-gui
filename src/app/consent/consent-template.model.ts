@@ -3,6 +3,7 @@ import {ConsentPolicy} from "../model/consent-policy";
 
 export class ConsentTemplate {
   name?: string;
+  version?:string;
   title?: string;
   status: "draft" | "active" | "retired" | "unknown" = "draft";
   validity: Validity = {month: 0, day: 0};
