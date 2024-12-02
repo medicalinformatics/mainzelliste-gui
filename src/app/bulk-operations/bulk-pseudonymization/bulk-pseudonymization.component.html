@@ -167,17 +167,17 @@
         </button>
       </div>
       <section class="float-table mat-elevation-z8" *ngIf="step == 2" tabindex="0">
-        <table mat-table [dataSource]="this.result | slice: getPageStart(resultPaginator)+1: getPageEnd(resultPaginator)+1" class="bulkPseudonymisationTable mat-elevation-z8">
-          <ng-container *ngFor="let colName of this.result[0]; index as i" [matColumnDef]="colName">
+        <table mat-table [dataSource]="this.csvRecords | slice: getPageStart(resultPaginator)+1: getPageEnd(resultPaginator)+1" class="bulkPseudonymisationTable mat-elevation-z8">
+          <ng-container *ngFor="let colName of this.csvRecords[0]; index as i" [matColumnDef]="colName">
             <th mat-header-cell *matHeaderCellDef>{{colName}}</th>
             <td mat-cell *matCellDef="let e">{{e[i]}}</td>
           </ng-container>
-          <tr mat-header-row *matHeaderRowDef="this.result[0]"></tr>
-          <tr mat-row *matRowDef="let row; columns: this.result[0];"></tr>
+          <tr mat-header-row *matHeaderRowDef="this.csvRecords[0]; sticky: true;"></tr>
+          <tr mat-row *matRowDef="let row; columns: this.csvRecords[0];"></tr>
         </table>
       </section>
       <mat-paginator *ngIf="step == 2" #resultPaginator
-                     [length]="this.result.length - 1"
+                     [length]="this.csvRecords.length - 1"
                      [pageSize]="this.defaultPageSize"
                      [pageSizeOptions]="[5,10,20,50,100]"
                      [showFirstLastButtons]="true"

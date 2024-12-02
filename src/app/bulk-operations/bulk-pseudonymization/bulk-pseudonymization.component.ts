@@ -52,9 +52,8 @@ export class BulkPseudonymizationComponent implements OnInit {
   readingInProgress: boolean = false;
   addingStatus: string = ""
 
-  csvHeaders: string[] = []
+  csvRecords: string[][] = []
   undefinedHeaders: string[] = []
-  result: string[][] = [];
 
   showInfoCard: boolean = true;
   @ViewChild('chipList') chipList!: MatChipList;
@@ -155,10 +154,11 @@ export class BulkPseudonymizationComponent implements OnInit {
             console.log(records.message)
             throw new FieldError(this.translate, "bulkPseudonymization.upload_error_invalid_file");
           }
-          this.csvHeaders = records[0] as string[]
+          this.csvRecords = records;
+          const csvHeaders = records[0] as string[]
 
           // check empty headers
-          if(records.length == 0 || this.csvHeaders.length == 0)
+          if(records.length == 0 || csvHeaders.length == 0)
             throw new FieldError(this.translate, "bulkPseudonymization.upload_error_no_header");
 
           // check empty rows
@@ -166,9 +166,9 @@ export class BulkPseudonymizationComponent implements OnInit {
             throw new FieldError(this.translate, "bulkPseudonymization.upload_error_empty");
 
           // check undefined headers
-          const fieldsIndexes = this.csvHeaders.map((h, i) => this.fieldNames.includes(h.trim())? i : -1).filter( i => i >= 0)
-          const idTypesIndexes = this.csvHeaders.map((h, i) => this.externalIdTypes.includes(h.trim())? i : -1).filter( i => i >= 0)
-          this.undefinedHeaders = this.csvHeaders.filter((h,i) => !fieldsIndexes.includes(i) && !idTypesIndexes.includes(i))
+          const fieldsIndexes = csvHeaders.map((h, i) => this.fieldNames.includes(h.trim())? i : -1).filter( i => i >= 0)
+          const idTypesIndexes = csvHeaders.map((h, i) => this.externalIdTypes.includes(h.trim())? i : -1).filter( i => i >= 0)
+          this.undefinedHeaders = csvHeaders.filter((h,i) => !fieldsIndexes.includes(i) && !idTypesIndexes.includes(i))
           if (fieldsIndexes.length == 0 && idTypesIndexes.length == 0 && this.undefinedHeaders.length > 0) {
             this.undefinedHeaders = [];
             throw new FieldError(this.translate, "bulkPseudonymization.upload_error_unknown_header")
@@ -180,23 +180,23 @@ export class BulkPseudonymizationComponent implements OnInit {
             const missingRequiredFields = this.fieldNames.filter( fieldName => this.configService.getFields()
             .some( f => f.required && (f.mainzellisteField != undefined && f.mainzellisteField.length > 0?
               f.mainzellisteField == fieldName : f.mainzellisteFields.includes(fieldName))))
-            .filter( f => !this.csvHeaders.includes(f))
+            .filter( f => !csvHeaders.includes(f))
             if(missingRequiredFields.length > 0)
               throw new FieldError(this.translate, "bulkPseudonymization.upload_error_required_header", missingRequiredFields.join(", "))
           }
 
           return records.filter((r,i) => i>0).map( row => {
             const fields: { [key: string]: string }  = {};
-            fieldsIndexes.forEach( i => fields[this.csvHeaders[i]] = row[i])
+            fieldsIndexes.forEach( i => fields[csvHeaders[i]] = row[i])
             const idTypes: { [key: string]: string }  = {};
-            idTypesIndexes.forEach( i => idTypes[this.csvHeaders[i]] = row[i])
+            idTypesIndexes.forEach( i => idTypes[csvHeaders[i]] = row[i])
             return new AddPatientRequest(fields, idTypes);
           })
         })
       ).subscribe({
-        next: (records): void => {
+        next: (requests): void => {
           this.readingInProgress = false
-          this.addPatientRequests = records;
+          this.addPatientRequests = requests;
           this.stepper.next();
           this.step = 1;
         },
@@ -220,20 +220,16 @@ export class BulkPseudonymizationComponent implements OnInit {
     .subscribe({
       next: (responses): void => {
         this.addingStatus = this.translate.instant("bulkPseudonymization.progess_status_prepare_result");
-        this.result.push(this.csvHeaders.concat(this.selectedInternalIdTypes).concat("error"))
+        const l = this.csvRecords[0].length;
+        this.csvRecords[0] = this.csvRecords[0].concat(this.selectedInternalIdTypes).concat("error");
         this.addPatientRequests.forEach((r, j) => {
-          let row :string[] = []
-          let i = 0;
-          for (let idType in r.ids)
-            row[i++] = r.ids[idType]
-          for (let field in r.fields)
-            row[i++] = r.fields[field]
+          let i = l;
+
           if(responses[j].error != undefined)
             i = i + this.selectedInternalIdTypes.length;
           else
-            responses[j].ids.forEach( id => row[i++] = id.idString)
-          row[i++] = responses[j].error ?? ""
-          this.result.push(row)
+            responses[j].ids.forEach( id => this.csvRecords[j+1][i++] = id.idString)
+          this.csvRecords[j+1][i++] = responses[j].error ?? ""
         })
         this.addingInProgress = false
         this.step = 2;
@@ -249,7 +245,7 @@ export class BulkPseudonymizationComponent implements OnInit {
 
   downloadCSV() {
     const blob = new Blob([
-      this.result.map( row => row.join(";")).join('\n')], {type: 'text/csv', endings: 'native'});
+      this.csvRecords.map( row => row.join(";")).join('\n')], {type: 'text/csv', endings: 'native'});
     saveAs(blob, `${_moment().format("DD.MM.YYYY_h:mm:ss")}_${this.fileName}`);
   }
 
@@ -260,7 +256,6 @@ export class BulkPseudonymizationComponent implements OnInit {
 
   private reset() {
     this.uploadFormGroup.get('uploadField')?.reset();
-    this.result = [];
     this.stepTwo.reset();
     this.step -= 1;
   }
@@ -332,9 +327,9 @@ export class BulkPseudonymizationComponent implements OnInit {
   }
 
   public getSuccessfullyPseudonymized(): number {
-    if (this.result.length == 0)
+    if (this.csvRecords.length == 0)
       return 0;
-    const lastIndex = this.result[0].length -1
-    return this.result.filter( r => r[lastIndex]?.length == 0).length
+    const lastIndex = this.csvRecords[0].length - 1
+    return this.csvRecords.filter( r => r[lastIndex]?.length == 0).length
   }
 }
