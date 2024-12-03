@@ -18,6 +18,7 @@ import { ConfigurationComponent } from './configuration/configuration.component'
 import {MatTabsModule} from "@angular/material/tabs";
 import { PoliciesComponent } from './policies/policies.component';
 import { PolicyDialogComponent } from './policy-dialog/policy-dialog.component';
+import { PolicySetFormComponent } from './policy-set-form/policy-set-form.component';
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import { PolicyDialogComponent } from './policy-dialog/policy-dialog.component';
     IdGeneratorDetailComponent,
     ConfigurationComponent,
     PoliciesComponent,
-    PolicyDialogComponent
+    PolicyDialogComponent,
+    PolicySetFormComponent
   ]
 })
 export class ConfigurationModule {

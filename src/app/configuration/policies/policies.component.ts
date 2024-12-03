@@ -1,14 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs/internal/Observable';
-import { AppConfigService } from 'src/app/app-config.service';
 import { ConsentService } from 'src/app/consent/consent.service';
 import { ConsentPolicySet } from 'src/app/model/consent-policy-set';
-import { AuthorizationService } from 'src/app/services/authorization.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PolicyDialogComponent } from '../policy-dialog/policy-dialog.component';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-
+import { PolicySetFormComponent } from '../policy-set-form/policy-set-form.component';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-policies',
@@ -46,7 +45,6 @@ export class PoliciesComponent implements OnInit {
     let endTo = startFrom + pageSize;
 
     this.setTableData(startFrom, endTo);
-    this.loading = false;
   }
 
   setTableData(startFrom: number, endTo: number) {
@@ -60,6 +58,7 @@ export class PoliciesComponent implements OnInit {
       }));
       this.dataSource = new MatTableDataSource(data.slice(startFrom, endTo));
       this.totalCount = policySets.length;
+      this.loading = false;
     });
   }
 
@@ -74,6 +73,20 @@ export class PoliciesComponent implements OnInit {
         maxWidth: '66vw',
         width: '66vw'
       });
+    });
+  }
+
+  addPolicySet() {
+    const dialogRef = this.dialog.open(PolicySetFormComponent, {
+      width: '20em',
+    });
+
+    dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
+      if (result) {
+        this.consentService.addPolicySet(result.id, result.name, result.externalId).pipe(take(1)).subscribe(response => {
+          this.loadData(0, this.defaultPageSize, false);
+        });
+      }
     });
   }
 }

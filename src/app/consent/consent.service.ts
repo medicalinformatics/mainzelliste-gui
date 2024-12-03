@@ -29,6 +29,7 @@ import {getErrorMessageFrom} from "../error/error-utils";
 import {TokenType} from "../model/token";
 import {TokenData} from "../model/token-data";
 import {UploadConsentFileResponse} from "../model/api/upload-consent-file-response";
+import { APOSTROPHE } from '@angular/cdk/keycodes';
 
 @Injectable({
   providedIn: 'root'
@@ -919,6 +920,45 @@ export class ConsentService {
         map(response => response.result)
       )
   }
+
+  public addPolicySet(id: String, name: String, externalId: String): Observable<any> {
+    let body = JSON.stringify({ id, name, externalId });
+    return this.postData<ConsentPolicySet>("addConsentPolicySet", {}, "consent-policies", body)
+  }
+
+  public addPolicy(setId: String, code: String, text: String): Observable<any> {
+    let body = JSON.stringify({ code, text });
+    let path = "consent-policies/" + setId + "/policy"; 
+    return this.postData<ConsentPolicy>("addConsentPolicy", {}, path, body)
+  }
+
+  public postData<T>(tokenType: TokenType, tokenData: TokenData, path : string, body: String) {
+    console.log(tokenData, tokenType, path, body);
+    return this.sessionService.createToken(tokenType, tokenData)
+      .pipe(
+        mergeMap(token => this.resolvePostToken<T>(token.id, path, body)),
+        catchError((error) => {
+          if (error.status >= 400 && error.status < 500) {
+            return of([]);
+          } else {
+            return throwError( () => new Error(`Failed to fetch data from ${path}. Cause: ${getErrorMessageFrom(error, this.translate)}`));
+          }
+        })
+      )
+  }
+
+  public resolvePostToken<T>(tokenId: string | undefined, path: string, body: String) {
+    const headers = new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('mainzellisteApiVersion', '3.2')
+      .set('Authorization', 'MainzellisteToken ' + tokenId);
+  
+    return this.httpClient.post<{ total: number, result: T[] }>(this.mainzellisteBaseUrl + "/" + path, body, { headers })
+      .pipe(
+        map(response => response.result)
+      );
+  }
+
 
   uploadConsentScanFile(file: File, callback: () => void){
     return this.sessionService.createToken("addConsentScan", {})
