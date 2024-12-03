@@ -20,7 +20,8 @@ export class ConsentTemplateDialogComponent {
     items: [],
     validity: {day: 0, month: 0, year: 0},
     status: "draft",
-    policy: "urn:oid:2.16.840.1.113883.3.1937.777.24.2.1790"
+    policy: "urn:oid:2.16.840.1.113883.3.1937.777.24.2.1790",
+    consentModel: true
   }
   public saving: boolean = false;
   errorMessages: string[] = [];

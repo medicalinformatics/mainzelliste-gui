@@ -562,13 +562,9 @@ export class ConsentService {
         "reference": "Patient/101"
       },
       dateTime: "2020-09-01",
-      policy: [
-        {
-          uri: `fhir/Questionnaire/${template.name}`
-        }
-      ],
+      policy: [],
       provision: {
-        type: "deny",
+        type: template.consentModel? "deny" : "permit",
         period: {
           start: _moment().format("YYYY-MM-DD"),
           end: this.mapValidityToDate(template.validity)
@@ -648,6 +644,7 @@ export class ConsentService {
         }
       ],
       title: template.title,
+      version: template.version,
       subjectType: ["Consent"],
       item: template.items.map(i => {
         if (i instanceof DisplayItem)
@@ -664,7 +661,7 @@ export class ConsentService {
 
   private mapChoiceItemToProvision(item: ChoiceItem, validity:Validity): fhir4.ConsentProvision {
     return {
-      type: "permit",
+      type: item.answer,
       period: {
         start: _moment().format("YYYY-MM-DD"),
         end: this.mapValidityToDate(validity)

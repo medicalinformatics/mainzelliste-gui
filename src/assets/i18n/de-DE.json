@@ -77,6 +77,7 @@
 	"consent_template_status.active": "Aktiv",
 
   "consent_template.name": "Name",
+  "consent_template.version": "Version",
   "consent_template.title": "Titel",
 	"consent_template.status": "Status",
   "consent_template.organization": "Verantwortliche Einrichtung",
@@ -87,6 +88,7 @@
   "consent_template.validity_year": "Jahren",
   "consent_template.validity_month": "Monaten",
   "consent_template.validity_day": "Tage",
+  "consent_template.consent-model": "Zustimmungsverfahren",
 
   "consent_dialog_history_title": "Einwilligung-Historie",
   "consent_dialog_history_status": "Vorheriger status",
