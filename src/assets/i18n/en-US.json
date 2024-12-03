@@ -162,6 +162,10 @@
   "configuration.policy.policyCode": "Policy Code",
   "configuration.policy.policyText": "Policy Text",
   "configuration.policy.close": "Close",
+  "configuration.policy.show": "Show Policies",
+  "configuration.policy.create": "Add Policy",
+  "configuration.policySet.add": "Add Policy Set",
+  "configuration.policy.save": "Save",
 
 	"info.title": "Information and notes on the Mainzelliste",
 	"info.notice_add_patient": "Note for creating a patient",

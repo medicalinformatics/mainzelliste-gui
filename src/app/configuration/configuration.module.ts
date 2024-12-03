@@ -19,6 +19,7 @@ import {MatTabsModule} from "@angular/material/tabs";
 import { PoliciesComponent } from './policies/policies.component';
 import { PolicyDialogComponent } from './policy-dialog/policy-dialog.component';
 import { PolicySetFormComponent } from './policy-set-form/policy-set-form.component';
+import { PolicyFormComponent } from './policy-form/policy-form.component';
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import { PolicySetFormComponent } from './policy-set-form/policy-set-form.compon
     ConfigurationComponent,
     PoliciesComponent,
     PolicyDialogComponent,
-    PolicySetFormComponent
+    PolicySetFormComponent,
+    PolicyFormComponent
   ]
 })
 export class ConfigurationModule {

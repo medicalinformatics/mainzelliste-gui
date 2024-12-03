@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PolicyDialogComponent } from '../policy-dialog/policy-dialog.component';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { PolicySetFormComponent } from '../policy-set-form/policy-set-form.component';
+import { PolicyFormComponent } from '../policy-form/policy-form.component';
 import { take } from 'rxjs/operators';
 
 @Component({
@@ -15,7 +16,7 @@ import { take } from 'rxjs/operators';
   styleUrls: ['./policies.component.css']
 })
 export class PoliciesComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'externalId', 'name', 'expand'];
+  displayedColumns: string[] = ['id', 'externalId', 'name', 'expand', 'addPolicy'];
   dataSource: MatTableDataSource<any>;
   expandedElement: any | null;
   loading: boolean = false;
@@ -84,6 +85,20 @@ export class PoliciesComponent implements OnInit {
     dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
       if (result) {
         this.consentService.addPolicySet(result.id, result.name, result.externalId).pipe(take(1)).subscribe(response => {
+          this.loadData(0, this.defaultPageSize, false);
+        });
+      }
+    });
+  }
+
+  addPolicy(policySetId: string) {
+    const dialogRef = this.dialog.open(PolicyFormComponent, {
+      width: '400px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.consentService.addPolicy(policySetId, result.code, result.text).subscribe(response => {
           this.loadData(0, this.defaultPageSize, false);
         });
       }
