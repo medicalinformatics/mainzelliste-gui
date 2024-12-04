@@ -8,11 +8,19 @@ import {SharedModule} from "../shared/shared.module";
 import {ConsentService} from "./consent.service";
 import {ConsentRejectedDialog} from "./dialogs/consent-rejected-dialog";
 import {ConsentInactivatedDialog} from "./dialogs/consent-inactivated-dialog";
-import {ConsentTemplateDialogComponent} from './consent-template-dialog/consent-template-dialog.component';
-import {ConsentTemplateDetailComponent} from './consent-template-detail/consent-template-detail.component';
+import {
+  ConsentTemplateDialogComponent
+} from './consent-template-dialog/consent-template-dialog.component';
+import {
+  ConsentTemplateDetailComponent
+} from './consent-template-detail/consent-template-detail.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {ConsentTemplateValidityPeriodDialog} from "./consent-template-detail/consent-template-validity-period-dialog";
-import {ConsentTemplateModulesComponent} from "./consent-template-detail/consent-template-modules.component";
+import {
+  ConsentTemplateValidityPeriodDialog
+} from "./consent-template-detail/consent-template-validity-period-dialog";
+import {
+  ConsentTemplateModulesComponent
+} from "./consent-template-detail/consent-template-modules.component";
 import {MatDividerModule} from "@angular/material/divider";
 import {InvalidConsentPeriodDirective} from "../shared/directives/invalid-consent-period.directive";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
@@ -20,6 +28,9 @@ import {
   ConsentHistoryDialogComponent
 } from "./consent-history-dialog/consent-history-dialog.component";
 import {MatTableModule} from "@angular/material/table";
+import {
+  ConsentTemplatePolicyDialog
+} from "./consent-template-detail/consent-template-policy-dialog";
 
 
 @NgModule({
@@ -41,6 +52,7 @@ import {MatTableModule} from "@angular/material/table";
     ConsentRejectedDialog,
     ConsentInactivatedDialog,
     ConsentTemplateValidityPeriodDialog,
+    ConsentTemplatePolicyDialog,
     ConsentTemplateDialogComponent,
     ConsentTemplateDetailComponent,
     ConsentTemplateModulesComponent

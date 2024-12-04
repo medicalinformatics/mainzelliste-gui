@@ -1,0 +1,36 @@
+<h1 mat-dialog-title>{{'consent_template.add_polices' | translate}}</h1>
+<div mat-dialog-content style="padding-bottom: 20px;">
+  <mat-form-field class="templateInputField">
+    <mat-label>{{'consent_template.policy_set_name' | translate}}</mat-label>
+    <mat-select [(value)]="this.selectedPolicySetId" [required]="true"
+                (selectionChange)="this.fetchPolicies($event)">
+      <mat-option *ngFor="let policySet of this.policySets" [value]="policySet.id">
+        {{policySet.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="templateInputField">
+    <mat-label>{{'consent_template.policies' | translate}}</mat-label>
+    <mat-spinner *ngIf="this.policiesLoading" matPrefix class="spinner" diameter="20"
+                 style="padding-right: 0.5em"></mat-spinner>
+    <mat-select [(ngModel)]="this.selectedPolicy" [required]="true"
+                [disabled]="this.selectedPolicySetId == undefined" name="'policy'">
+      <mat-option *ngFor="let policy of this.getPolicies()" [value]="policy">{{policy.text}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button class="submitBreak" (click)="onCancel()">
+    {{'button_cancel' | translate}}
+  </button>
+  <button
+    mat-raised-button
+    class="submit"
+    type="submit"
+    (click)="onSave()"
+    [disabled]="selectedPolicy == undefined  || this.selectedPolicySetId == undefined"
+  >
+    {{'button_add' | translate}}
+  </button>
+</div>
+

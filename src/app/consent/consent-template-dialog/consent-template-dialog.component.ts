@@ -60,6 +60,6 @@ export class ConsentTemplateDialogComponent {
         (!this.dataModel.validity.day || this.dataModel.validity.day == 0)) ||
       !this.dataModel.items.some(e => e.type == 'choice') ||
       this.dataModel.items.some(e => e.type == 'display' && (e.text == undefined || e.text.trim().length == 0) ||
-        e.type == 'choice' && (e as ChoiceItem).policy == undefined);
+        e.type == 'choice' && (e as ChoiceItem).policies?.length == 0);
   }
 }

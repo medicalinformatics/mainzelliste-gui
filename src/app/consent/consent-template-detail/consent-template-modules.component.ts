@@ -1,11 +1,13 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ChoiceItem, Item} from "../consent-template.model";
+import {ChoiceItem, Item, PolicyView} from "../consent-template.model";
 import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
 import {ConsentPolicy} from "../../model/consent-policy";
-import {MatSelectChange} from "@angular/material/select";
 import {ConsentService} from "../consent.service";
 import {ConsentPolicySet} from "../../model/consent-policy-set";
 import {ControlContainer, NgForm} from "@angular/forms";
+import {MatTableDataSource} from "@angular/material/table";
+import {MatDialog} from "@angular/material/dialog";
+import {ConsentTemplatePolicyDialog} from "./consent-template-policy-dialog";
 
 @Component({
   selector: 'app-consent-template-modules',
@@ -16,22 +18,26 @@ import {ControlContainer, NgForm} from "@angular/forms";
 export class ConsentTemplateModulesComponent implements OnInit {
 
   public readonly ConsentPolicy = ConsentPolicy;
+  protected readonly Object = Object;
 
   @Input() templateModules!: Item[];
 
-  public consentPolicySets: ConsentPolicySet[] = [];
-  public consentPolicies: Map<String, ConsentPolicy[]> = new Map<String, ConsentPolicy[]>();
+  public cachedPoliciesMap: Map<string, {policySet: ConsentPolicySet, policies: ConsentPolicy[]}> = new Map()
   public editedModule: Item | undefined;
-  public policiesLoading: boolean = false;
+
+  displayedColumns: string[] = ['policySetName', 'displayText', 'code'];
+  policiesTableData: MatTableDataSource<PolicyView>  = new MatTableDataSource<PolicyView>([]);
 
   constructor(
-    public consentService: ConsentService
+    public consentService: ConsentService,
+    private policyDialog: MatDialog,
   ) {
   }
 
   ngOnInit(): void {
-    // fetch policySets from backend
-    this.consentService.getPolicySets().subscribe(r => this.consentPolicySets = r);
+    this.consentService.getPolicySets().subscribe(r =>
+      r.forEach( s => this.cachedPoliciesMap.set(s.id, {policySet: s, policies: []}))
+    );
   }
 
   dropModule(event: CdkDragDrop<any, any>) {
@@ -57,36 +63,14 @@ export class ConsentTemplateModulesComponent implements OnInit {
       return
     m.text = this.editedModule.text;
     if (m.type == 'choice') {
-      this.toChoiceItem(m).policy = this.toChoiceItem(this.editedModule).policy;
-      this.toChoiceItem(m).policySet = this.toChoiceItem(this.editedModule).policySet;
+      this.toChoiceItem(m).policies = this.toChoiceItem(this.editedModule).policies
     }
     this.editedModule = undefined;
   }
 
   cancel() {
     this.editedModule = undefined;
-  }
-
-  public getPolicies(): ConsentPolicy[] {
-    return (this.consentPolicies.get(this.toChoiceItem(this.editedModule).policySet?.id || "") || [])
-      .filter(p =>
-        !this.templateModules.filter(i => i.id != this.editedModule?.id).some(
-          i => i instanceof ChoiceItem && this.toChoiceItem(i).policy?.code == p.code
-        )
-      )
-  }
-
-  public fetchPolicies(matSelectChange: MatSelectChange) {
-    let policies: ConsentPolicy[] | undefined = this.consentPolicies.get(matSelectChange.value.id);
-    if ((policies == undefined || policies.length == 0) && this.editedModule != undefined) {
-      this.policiesLoading = true;
-      this.consentService.getPolicies(matSelectChange.value.id).subscribe(
-        r => {
-          this.consentPolicies.set(matSelectChange.value.id, r);
-          this.policiesLoading = false;
-        }
-      )
-    }
+    this.policiesTableData.data = []
   }
 
   public toChoiceItem(item: Item | undefined): ChoiceItem {
@@ -95,5 +79,29 @@ export class ConsentTemplateModulesComponent implements OnInit {
 
   public isChoiceModule(): boolean {
     return this.editedModule instanceof ChoiceItem
+  }
+
+  openPolicyDialog() {
+    const dialogRef = this.policyDialog.open(ConsentTemplatePolicyDialog,
+      {
+        data: {
+          addedPolicyViews: (this.templateModules
+          .filter(m => m.id != this.editedModule?.id && m instanceof ChoiceItem)
+          .map( m => (m as ChoiceItem).policies)
+          .reduce((accumulator, currentValue) =>
+            (accumulator??[]).concat(currentValue ?? []), []) ?? [])
+          .concat((this.editedModule as ChoiceItem).policies ?? []),
+          cachedPoliciesMap: this.cachedPoliciesMap
+        },
+        minWidth: '500px'
+      });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        (this.editedModule as ChoiceItem).policies?.push(result.policyView);
+        this.policiesTableData.data = (this.editedModule as ChoiceItem).policies ?? [];
+        this.cachedPoliciesMap = result.cachedPoliciesMap
+      }
+    });
   }
 }

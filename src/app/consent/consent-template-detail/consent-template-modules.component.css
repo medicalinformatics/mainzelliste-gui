@@ -24,3 +24,27 @@ mat-form-field.templateInputField {
   clear: both;
   float:left;
 }
+
+.policiesTable {
+  width: 100%
+}
+.policiesTable tr.mat-row {
+  height: 38px;
+}
+
+.policiesTable tr.mat-header-row {
+  height: 40px;
+}
+
+.policiesTable td {
+  text-align: center;
+  max-height: 450px;
+}
+
+.policiesTable th {
+  text-align: center;
+  padding: 0 10px;
+}
+.mat-column-index {
+  width: auto;
+}

@@ -84,6 +84,12 @@
   "consent_template.validity_month": "Months",
   "consent_template.validity_day": "Days",
   "consent_template.consent-model": "Consent Model",
+  "consent_template.policy_set_name": "Policy Set",
+  "consent_template.policy_display_text": "Name",
+  "consent_template.policy_code": "Code",
+  "consent_template.no_policy_found": "No policy found.",
+  "consent_template.policies": "Policies:",
+  "consent_template.add_polices": "Add Policy",
 
   "consent_dialog_history_title": "Consent history",
   "consent_dialog_history_status": "Previous status",
