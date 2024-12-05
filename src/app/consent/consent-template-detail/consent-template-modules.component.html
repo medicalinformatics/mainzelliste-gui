@@ -33,12 +33,10 @@
 
       <!-- edit mode -->
       <div *ngIf="this.editedModule != undefined && this.editedModule?.id == module.id">
-        <mat-form-field class="module-mat-form-field-textarea">
-          <mat-label>Text eingeben</mat-label>
-          <textarea matInput [(ngModel)]="$any(this.editedModule).text" style="padding-bottom: 0"
-                    [name]="'module'" [required]="!isChoiceModule()"></textarea>
-        </mat-form-field>
-
+        <editor [init]="this.moduleRichTextEditor" [required]="!isChoiceModule()"
+                [(ngModel)]="$any(this.editedModule).text" [name]="'module'"
+                initialValue="Once upon a time...">
+        </editor>
         <div style="clear: both; margin-top: 20px; margin-right: 5px; display: flex; justify-content: space-between; align-items: center;">
           <h4>{{'consent_template.policies' | translate}}</h4>
           <button mat-icon-button color="primary" style="float: right" (click)="openPolicyDialog()"
@@ -46,6 +44,7 @@
             <mat-icon>add_moderator</mat-icon>
           </button>
         </div>
+
         <section class="mat-elevation-z1" tabindex="0" style="overflow: auto; max-height: 500px;">
           <table mat-table [dataSource]="this.policiesTableData" class="policiesTable">
             <ng-container matColumnDef="policySetName">

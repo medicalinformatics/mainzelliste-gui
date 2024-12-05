@@ -63,7 +63,7 @@ export class ChoiceItem implements Item {
   clone(): ChoiceItem {
     let item = new ChoiceItem(this.id, this.type, this.answer);
     item.text = this.text;
-    item.policies = this.policies;
+    item.policies = this.policies?.map(v => v);
     return item;
   }
 }

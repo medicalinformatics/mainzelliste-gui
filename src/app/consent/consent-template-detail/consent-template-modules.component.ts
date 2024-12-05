@@ -8,6 +8,7 @@ import {ControlContainer, NgForm} from "@angular/forms";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
 import {ConsentTemplatePolicyDialog} from "./consent-template-policy-dialog";
+import {EditorComponent} from "@tinymce/tinymce-angular";
 
 @Component({
   selector: 'app-consent-template-modules',
@@ -24,6 +25,18 @@ export class ConsentTemplateModulesComponent implements OnInit {
 
   public cachedPoliciesMap: Map<string, {policySet: ConsentPolicySet, policies: ConsentPolicy[]}> = new Map()
   public editedModule: Item | undefined;
+
+  moduleRichTextEditor: EditorComponent['init'] = {
+    base_url: '/tinymce',
+    suffix: '.min',
+    height: 250,
+    menubar: false,
+    plugins: ['code', 'lists', 'link'],
+    toolbar: 'code | undo redo | bold italic | blocks | alignleft aligncenter alignright alignjustify | outdent indent | bullist numlist | removeformat link',
+    toolbar_mode: 'sliding',
+    branding: false,
+    file_picker_types: 'image'
+  };
 
   displayedColumns: string[] = ['policySetName', 'displayText', 'code'];
   policiesTableData: MatTableDataSource<PolicyView>  = new MatTableDataSource<PolicyView>([]);

@@ -31,6 +31,7 @@ import {MatTableModule} from "@angular/material/table";
 import {
   ConsentTemplatePolicyDialog
 } from "./consent-template-detail/consent-template-policy-dialog";
+import {EditorComponent} from "@tinymce/tinymce-angular";
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import {
     MatDividerModule,
     InvalidConsentPeriodDirective,
     MatProgressBarModule,
-    MatTableModule
+    MatTableModule,
+    EditorComponent
   ],
   declarations: [
     ConsentDetailComponent,

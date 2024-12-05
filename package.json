@@ -24,6 +24,7 @@
     "@angular/router": "^14.3.0",
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
+    "@tinymce/tinymce-angular": "^7.0.0",
     "@types/fhir": "0.0.35",
     "angular-csv": "^1.0.0",
     "angular-csv-ext": "^1.0.5",
