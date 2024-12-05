@@ -32,10 +32,15 @@ export class ConsentTemplateModulesComponent implements OnInit {
     height: 250,
     menubar: false,
     plugins: ['code', 'lists', 'link'],
-    toolbar: 'code | undo redo | bold italic | blocks | alignleft aligncenter alignright alignjustify | outdent indent | bullist numlist | removeformat link',
+    toolbar: 'code | undo redo | blocks | bold italic underline| alignleft aligncenter alignright alignjustify | outdent indent | bullist numlist | removeformat | link',
     toolbar_mode: 'sliding',
     branding: false,
-    file_picker_types: 'image'
+    formats: {
+      box: {
+        attributes: {title: 'box'}, block: 'p', styles: {borderStyle: 'solid', borderWidth: '1px', padding: '2px 10px'}
+      }
+    },
+    block_formats: 'Paragraph=p; Box=box; Heading 1=h1; Heading 2=h2; Heading 3=h3; Heading 4=h4; Heading 5=h5; Heading 6=h6;'
   };
 
   displayedColumns: string[] = ['policySetName', 'displayText', 'code'];

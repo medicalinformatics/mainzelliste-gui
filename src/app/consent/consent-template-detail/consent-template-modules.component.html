@@ -3,9 +3,10 @@
      [ngStyle]="{'width': '100%', 'display': 'flex', 'flex-direction': 'column', 'row-gap': '10px',
      'margin-bottom': templateModules.length > 0 ? '10px' : '0px'}">
   <mat-card *ngFor="let module of templateModules" cdkDrag>
-    <mat-card-header class="module-header">
+    <mat-card-title-group class="module-header">
       <mat-card-title></mat-card-title>
-      <mat-card-subtitle>{{this.module.type == 'display' ? 'Text' : 'Frage' }}</mat-card-subtitle>
+      <mat-card-subtitle style="display: flex; align-items: center; column-gap: 3px;}">
+        <mat-icon style="transform: scale(1.1);">{{this.module.type == 'display' ? 'notes':'help_center'}}</mat-icon>{{this.module.type == 'display' ? 'Text' : 'Frage' }}</mat-card-subtitle>
       <div></div>
       <button mat-icon-button class="edit-module-button" color="primary"
               style="float: right; margin-left: auto; margin-right: 10px;"
@@ -16,16 +17,16 @@
               (click)="this.deleteModule(module)">
         <mat-icon matTooltip="editieren">delete</mat-icon>
       </button>
-    </mat-card-header>
+    </mat-card-title-group>
     <mat-card-content style="margin-bottom: 15px" [ngSwitch]="module.constructor.name">
       <!-- display mode -->
       <div *ngIf="this.editedModule == undefined || this.editedModule?.id != module.id">
         <h3 *ngIf=" this.module.type == 'choice'"><b>{{$any(module).policy?.text}}</b></h3>
         <p [innerHTML]="module.text" style="margin-bottom: 20px;margin-top: 5px;"></p>
-        <div style="padding-bottom: 10px" *ngIf=" this.module.type == 'choice'">
+        <div style="padding-bottom: 10px" *ngIf="this.module.type == 'choice'">
           <mat-radio-group value="permit" style="display:flex; gap:40px" #question color="primary" [disabled]="true">
             <mat-radio-button value="permit"
-                              onclick="this.question.checked = false;">{{'radio_button_yes' | translate}}</mat-radio-button>
+                              onclick="question.checked = false">{{'radio_button_yes' | translate}}</mat-radio-button>
             <mat-radio-button value="deny">{{'radio_button_no' | translate}}</mat-radio-button>
           </mat-radio-group>
         </div>
@@ -37,40 +38,41 @@
                 [(ngModel)]="$any(this.editedModule).text" [name]="'module'"
                 initialValue="Once upon a time...">
         </editor>
-        <div style="clear: both; margin-top: 20px; margin-right: 5px; display: flex; justify-content: space-between; align-items: center;">
-          <h4>{{'consent_template.policies' | translate}}</h4>
-          <button mat-icon-button color="primary" style="float: right" (click)="openPolicyDialog()"
-          matTooltip="{{'consent_template.add_polices' | translate}}">
-            <mat-icon>add_moderator</mat-icon>
-          </button>
-        </div>
+        <ng-container *ngIf="this.module.type == 'choice'">
+          <div style="clear: both; margin-top: 20px; margin-right: 5px; display: flex; justify-content: space-between; align-items: center;">
+            <h4>{{'consent_template.policies' | translate}}</h4>
+            <button mat-icon-button color="primary" style="float: right" (click)="openPolicyDialog()"
+            matTooltip="{{'consent_template.add_polices' | translate}}">
+              <mat-icon>add_moderator</mat-icon>
+            </button>
+          </div>
+          <section class="mat-elevation-z1" tabindex="0" style="overflow: auto; max-height: 500px;">
+            <table mat-table [dataSource]="this.policiesTableData" class="policiesTable">
+              <ng-container matColumnDef="policySetName">
+                <th mat-header-cell *matHeaderCellDef>{{'consent_template.policy_set_name' | translate}}</th>
+                <td mat-cell *matCellDef="let element">{{element.policySet.name}} </td>
+              </ng-container>
 
-        <section class="mat-elevation-z1" tabindex="0" style="overflow: auto; max-height: 500px;">
-          <table mat-table [dataSource]="this.policiesTableData" class="policiesTable">
-            <ng-container matColumnDef="policySetName">
-              <th mat-header-cell *matHeaderCellDef>{{'consent_template.policy_set_name' | translate}}</th>
-              <td mat-cell *matCellDef="let element">{{element.policySet.name}} </td>
-            </ng-container>
+              <ng-container matColumnDef="displayText">
+                <th mat-header-cell *matHeaderCellDef>{{'consent_template.policy_display_text' | translate}}</th>
+                <td mat-cell *matCellDef="let element"> {{element.displayText}} </td>
+              </ng-container>
 
-            <ng-container matColumnDef="displayText">
-              <th mat-header-cell *matHeaderCellDef>{{'consent_template.policy_display_text' | translate}}</th>
-              <td mat-cell *matCellDef="let element"> {{element.displayText}} </td>
-            </ng-container>
+              <ng-container matColumnDef="code">
+                <th mat-header-cell *matHeaderCellDef>{{'consent_template.policy_code' | translate}}</th>
+                <td mat-cell *matCellDef="let element"> {{element.code}} </td>
+              </ng-container>
 
-            <ng-container matColumnDef="code">
-              <th mat-header-cell *matHeaderCellDef>{{'consent_template.policy_code' | translate}}</th>
-              <td mat-cell *matCellDef="let element"> {{element.code}} </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="this.displayedColumns; sticky: true;"></tr>
-            <tr mat-row *matRowDef="let row; columns: this.displayedColumns;"></tr>
-            <tr class="mat-row"  *matNoDataRow>
-              <td class="mat-cell" [attr.colspan]="this.displayedColumns.length" style="text-align: center">
-                {{'consent_template.no_policy_found' | translate}}
-              </td>
-            </tr>
-          </table>
-        </section>
+              <tr mat-header-row *matHeaderRowDef="this.displayedColumns; sticky: true;"></tr>
+              <tr mat-row *matRowDef="let row; columns: this.displayedColumns;"></tr>
+              <tr class="mat-row"  *matNoDataRow>
+                <td class="mat-cell" [attr.colspan]="this.displayedColumns.length" style="text-align: center">
+                  {{'consent_template.no_policy_found' | translate}}
+                </td>
+              </tr>
+            </table>
+          </section>
+        </ng-container>
       </div>
     </mat-card-content>
     <mat-card-actions *ngIf="this.editedModule != undefined && this.editedModule?.id == module.id">
