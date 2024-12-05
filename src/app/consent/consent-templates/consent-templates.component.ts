@@ -70,7 +70,8 @@ export class ConsentTemplatesComponent implements OnInit {
 
   openConsentTemplateDialog() {
     const dialogRef = this.consentTemplateDialog.open(ConsentTemplateDialogComponent, {
-      width: '1100px'
+      width: '1100px',
+      maxHeight: '95vw'
     });
 
     dialogRef.afterClosed().subscribe(consentTemplate => {
