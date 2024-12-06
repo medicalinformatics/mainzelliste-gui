@@ -90,6 +90,7 @@
   "consent_template.no_policy_found": "No policy found.",
   "consent_template.policies": "Policies:",
   "consent_template.add_polices": "Add Policy",
+  "consent_template.error.required_policies": "Please select at least one policy",
 
   "consent_dialog_history_title": "Consent history",
   "consent_dialog_history_status": "Previous status",

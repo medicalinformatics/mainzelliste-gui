@@ -95,6 +95,7 @@
   "consent_template.no_policy_found": "Kein policy gefunden.",
   "consent_template.policies": "Policies:",
   "consent_template.add_polices": "Policy hinzufügen",
+  "consent_template.error.required_policies": "Die Eingabe von Policies ist erforderlich",
 
   "consent_dialog_history_title": "Einwilligung-Historie",
   "consent_dialog_history_status": "Vorheriger status",
