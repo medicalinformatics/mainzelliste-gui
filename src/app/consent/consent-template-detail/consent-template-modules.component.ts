@@ -9,6 +9,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
 import {ConsentTemplatePolicyDialog} from "./consent-template-policy-dialog";
 import {EditorComponent} from "@tinymce/tinymce-angular";
+import {Permission} from "../../model/permission";
 
 @Component({
   selector: 'app-consent-template-modules',
@@ -18,7 +19,7 @@ import {EditorComponent} from "@tinymce/tinymce-angular";
 })
 export class ConsentTemplateModulesComponent implements OnInit {
 
-  public readonly ConsentPolicy = ConsentPolicy;
+  protected readonly ConsentPolicy = ConsentPolicy;
   protected readonly Object = Object;
 
   @Input() templateModules!: Item[];
@@ -43,7 +44,7 @@ export class ConsentTemplateModulesComponent implements OnInit {
     block_formats: 'Paragraph=p; Box=box; Heading 1=h1; Heading 2=h2; Heading 3=h3; Heading 4=h4; Heading 5=h5; Heading 6=h6;'
   };
 
-  displayedColumns: string[] = ['policySetName', 'displayText', 'code'];
+  displayedColumns: string[] = ['policySetName', 'displayText', 'code', 'actions'];
   policiesTableData: MatTableDataSource<PolicyView>  = new MatTableDataSource<PolicyView>([]);
 
   constructor(
@@ -70,10 +71,13 @@ export class ConsentTemplateModulesComponent implements OnInit {
       // update index of the remaining modules
       this.templateModules.forEach((module, index) => module.id = index)
     }
+    this.editedModule = undefined;
+    this.policiesTableData.data = []
   }
 
   editModule(m: Item) {
     this.editedModule = m.clone();
+    this.policiesTableData.data =  (this.editedModule as ChoiceItem).policies ?? [];
   }
 
   save(m: Item) {
@@ -84,6 +88,7 @@ export class ConsentTemplateModulesComponent implements OnInit {
       this.toChoiceItem(m).policies = this.toChoiceItem(this.editedModule).policies
     }
     this.editedModule = undefined;
+    this.policiesTableData.data = []
   }
 
   cancel() {
@@ -121,5 +126,17 @@ export class ConsentTemplateModulesComponent implements OnInit {
         this.cachedPoliciesMap = result.cachedPoliciesMap
       }
     });
+  }
+
+  protected readonly Permission = Permission;
+
+  removePolicy(policy:PolicyView) {
+    let index = (this.editedModule as ChoiceItem).policies?.findIndex(p => p.code == policy.code && p.policySet.id == policy.policySet.id);
+    if(index == undefined)
+      console.error("index of policy not found");
+    else if (index > -1){
+      (this.editedModule as ChoiceItem).policies?.splice(index, 1);
+    }
+    this.policiesTableData.data = (this.editedModule as ChoiceItem).policies ?? []
   }
 }

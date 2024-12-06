@@ -76,7 +76,8 @@
   <!-- Opt-In/out -->
   <div style="clear: both; float: left; margin-top: 20px; margin-bottom: 1.25em;">
     <label id="opt-radio-group-label"><h4>{{"consent_template.consent-model" | translate}}</h4></label>
-    <mat-radio-group aria-labelledby="opt-radio-group-label" color="primary" [(ngModel)]="this.template.consentModel" [name]="'optIn'">
+    <mat-radio-group aria-labelledby="opt-radio-group-label" color="primary"
+                     [(ngModel)]="this.template.consentModel" [name]="'optIn'"(change)="this.consentModelChanged($event)">
       <mat-radio-button [value]="true">Opt-In</mat-radio-button>
       <mat-radio-button [value]="false">Opt-Out</mat-radio-button>
     </mat-radio-group>

@@ -5,6 +5,7 @@ import {ConsentService} from "../consent.service";
 import {MatDialog} from "@angular/material/dialog";
 import {TranslateService} from "@ngx-translate/core";
 import {ConsentTemplateValidityPeriodDialog} from "./consent-template-validity-period-dialog";
+import {MatRadioChange} from "@angular/material/radio";
 
 @Component({
   selector: 'app-consent-template-detail',
@@ -88,5 +89,11 @@ export class ConsentTemplateDetailComponent implements OnInit {
       new ChoiceItem(this.template.items.length, selectedModuleType, this.template.consentModel? "permit":"deny") :
       new DisplayItem(this.template.items.length, selectedModuleType)
     this.template.items.push(item);
+  }
+
+  consentModelChanged($event: MatRadioChange) {
+    this.template.items.filter(i => i instanceof ChoiceItem)
+    .map(i => i as ChoiceItem)
+    .forEach( i => i.answer = $event.value? "permit": "deny")
   }
 }
