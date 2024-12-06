@@ -132,5 +132,13 @@
       <button mat-button type="submit" (click)="this.save(module)" [disabled]="!moduleCtrl?.valid || false">Speichen</button>
       <button mat-button (click)="this.cancel()">Abbrechen</button>
     </mat-card-actions>
+    <mat-card-footer *ngIf="module.type == 'choice' && this.editedModule?.id != module.id
+    && (this.toChoiceItem(module).policies?.length == 0)">
+      <mat-error style="display: flex; flex-direction: row; align-items: flex-end; padding: 7px 14px;
+        column-gap: 5px;">
+        <mat-icon>error</mat-icon>
+        <span>{{ this.translate.instant('consent_template.error.required_policies') }}</span>
+      </mat-error>
+    </mat-card-footer>
   </mat-card>
 </div>

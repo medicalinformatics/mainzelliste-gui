@@ -59,6 +59,7 @@ export class ConsentTemplateDialogComponent {
         (!this.dataModel.validity.month || this.dataModel.validity.month == 0) &&
         (!this.dataModel.validity.day || this.dataModel.validity.day == 0)) ||
       !this.dataModel.items.some(e => e.type == 'choice') ||
+      this.dataModel.items.filter(e => e.type == 'choice').map( e => e as ChoiceItem).some(e => e.policies?.length == 0) ||
       this.dataModel.items.some(e => e.type == 'display' && (e.text == undefined || e.text.trim().length == 0) ||
         e.type == 'choice' && (e as ChoiceItem).policies?.length == 0);
   }

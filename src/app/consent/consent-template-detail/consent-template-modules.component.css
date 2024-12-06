@@ -45,6 +45,7 @@ mat-form-field.templateInputField {
 .policiesTable .mat-column-actions {
   width: 105px;
   text-align: right;
+  padding-right: 3px;
 }
 
 .policiesTable th {

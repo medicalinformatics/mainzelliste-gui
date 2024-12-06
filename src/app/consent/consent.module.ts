@@ -32,6 +32,9 @@ import {
   ConsentTemplatePolicyDialog
 } from "./consent-template-detail/consent-template-policy-dialog";
 import {EditorComponent} from "@tinymce/tinymce-angular";
+import {
+  EmptyConsentTemplateValidityPeriodDirective
+} from "../shared/directives/empty-consent-template-validity-period.directive";
 
 
 @NgModule({
@@ -43,7 +46,8 @@ import {EditorComponent} from "@tinymce/tinymce-angular";
     InvalidConsentPeriodDirective,
     MatProgressBarModule,
     MatTableModule,
-    EditorComponent
+    EditorComponent,
+    EmptyConsentTemplateValidityPeriodDirective
   ],
   declarations: [
     ConsentDetailComponent,

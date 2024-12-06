@@ -51,9 +51,10 @@
     <mat-label>Gültigkeitsdauer</mat-label>
     <input matInput style="width: 90%; " placeholder="0 Jahren - 0 Monaten - 0 Tagen"
            [(ngModel)]="this.templateValidityPeriod"
+           [appEmptyConsentTemplateValidityPeriod]="this.template.validity"
            [readonly]="true" [required]="true" [name]="'validityPeriod'" #validityPeriod="ngModel">
     <mat-error *ngIf="displayError(validityPeriod)">
-      {{getFieldErrorMessage("validityPeriod", validityPeriod.errors)}}
+      {{ getFieldErrorMessage("validityPeriod", validityPeriod.errors) }}
     </mat-error>
     <button mat-icon-button matSuffix (click)="openValidityPeriodDialog()" [name]="'validityPeriodEditButton'">
       <mat-icon id="editIcon" [ngStyle]="{'transform':'scale(0.8)'}">edit</mat-icon>

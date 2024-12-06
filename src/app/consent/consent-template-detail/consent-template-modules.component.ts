@@ -10,6 +10,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ConsentTemplatePolicyDialog} from "./consent-template-policy-dialog";
 import {EditorComponent} from "@tinymce/tinymce-angular";
 import {Permission} from "../../model/permission";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-consent-template-modules',
@@ -49,6 +50,7 @@ export class ConsentTemplateModulesComponent implements OnInit {
 
   constructor(
     public consentService: ConsentService,
+    public translate: TranslateService,
     private policyDialog: MatDialog,
   ) {
   }
