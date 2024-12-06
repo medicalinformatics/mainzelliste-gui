@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ChoiceItem, Item, PolicyView} from "../consent-template.model";
+import {ChoiceItem, Item, PolicyView, Validity} from "../consent-template.model";
 import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
 import {ConsentPolicy} from "../../model/consent-policy";
 import {ConsentService} from "../consent.service";
@@ -44,7 +44,7 @@ export class ConsentTemplateModulesComponent implements OnInit {
     block_formats: 'Paragraph=p; Box=box; Heading 1=h1; Heading 2=h2; Heading 3=h3; Heading 4=h4; Heading 5=h5; Heading 6=h6;'
   };
 
-  displayedColumns: string[] = ['policySetName', 'displayText', 'code', 'actions'];
+  displayedColumns: string[] = ['policySetName', 'displayText', 'code', 'validity', 'actions'];
   policiesTableData: MatTableDataSource<PolicyView>  = new MatTableDataSource<PolicyView>([]);
 
   constructor(
@@ -114,9 +114,9 @@ export class ConsentTemplateModulesComponent implements OnInit {
           .reduce((accumulator, currentValue) =>
             (accumulator??[]).concat(currentValue ?? []), []) ?? [])
           .concat((this.editedModule as ChoiceItem).policies ?? []),
-          cachedPoliciesMap: this.cachedPoliciesMap
+          cachedPoliciesMap: this.cachedPoliciesMap,
         },
-        minWidth: '500px'
+        minWidth: '450px'
       });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -138,5 +138,9 @@ export class ConsentTemplateModulesComponent implements OnInit {
       (this.editedModule as ChoiceItem).policies?.splice(index, 1);
     }
     this.policiesTableData.data = (this.editedModule as ChoiceItem).policies ?? []
+  }
+
+  public getValidityPeriodText(validityPeriod: Validity){
+    return  validityPeriod?.year + ' Jahren - ' + validityPeriod?.month + ' Monaten - ' + validityPeriod?.day  + ' Tagen';
   }
 }

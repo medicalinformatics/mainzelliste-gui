@@ -5,7 +5,8 @@ import {MatSelectChange} from "@angular/material/select";
 import {ConsentPolicy} from "../../model/consent-policy";
 import {ConsentPolicySet} from "../../model/consent-policy-set";
 import {ConsentService} from "../consent.service";
-import {PolicyView} from "../consent-template.model";
+import {PolicyView, Validity} from "../consent-template.model";
+import {NgModel, ValidationErrors} from "@angular/forms";
 
 
 @Component({
@@ -16,7 +17,7 @@ import {PolicyView} from "../consent-template.model";
 
 export class ConsentTemplatePolicyDialog implements OnInit {
 
-  public policies: Map<String, ConsentPolicy[]> = new Map();
+  public policies: Map<string, ConsentPolicy[]> = new Map();
   public policySets: ConsentPolicySet[] = [];
 
   public selectedPolicySetId: string | undefined;
@@ -24,13 +25,17 @@ export class ConsentTemplatePolicyDialog implements OnInit {
 
   public policiesLoading: boolean = false;
 
+  public validityPeriod: Validity = {month: 0, day: 0};
+  public validityDays: number[] = Array(32).fill(0).map((x, i) => i++)
+  public validityMonths: number[] = Array(13).fill(0).map((x, i) => i++)
+
   constructor(
     public dialogRef: MatDialogRef<ConsentTemplatePolicyDialog>,
     public consentService: ConsentService,
     private translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) public dataModel: {
       addedPolicyViews: PolicyView[],
-      cachedPoliciesMap: Map<string, {policySet: ConsentPolicySet, policies: ConsentPolicy[]}>
+      cachedPoliciesMap: Map<string, {policySet: ConsentPolicySet, policies: ConsentPolicy[]}>,
     }
   ) {
   }
@@ -94,8 +99,24 @@ export class ConsentTemplatePolicyDialog implements OnInit {
         policySet: this.policySets.find(s => s.id == this.selectedPolicySetId),
         displayText: this.selectedPolicy?.text,
         code: this.selectedPolicy?.code,
+        validity: {
+          year: this.validityPeriod?.year,
+          month: this.validityPeriod?.month ?? 0,
+          day: this.validityPeriod?.day ?? 0
+        }
       },
-      cachedPoliciesMap: this.dataModel.cachedPoliciesMap
+      cachedPoliciesMap: this.dataModel.cachedPoliciesMap,
     });
+  }
+
+  displayError(field: NgModel) {
+    return field.invalid && (field.dirty || field.touched) && field.errors?.['required'];
+  }
+
+  getFieldErrorMessage(fieldName: string, errors: ValidationErrors | null) {
+    if (errors?.['required'])
+      return `${this.translate.instant('patientFields.error_mandatory_text1')} ${this.translate.instant('consent_template.' + fieldName )} ${this.translate.instant('patientFields.error_mandatory_text2')}`;
+    else
+      return "error";
   }
 }

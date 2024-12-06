@@ -665,7 +665,7 @@ export class ConsentService {
       type: item.answer,
       period: {
         start: _moment().format("YYYY-MM-DD"),
-        end: this.mapValidityToDate(validity)
+        end: this.mapValidityToDate(p.validity ?? validity)
       },
       code: !p ? [] : [
         {
@@ -723,7 +723,7 @@ export class ConsentService {
     let now = _moment();
     return now.add(validityPeriod.day || 0, 'days')
       .add(validityPeriod.month || 0, 'months')
-      .add(validityPeriod.year || 0, 'years')
+      .add(validityPeriod.year ?? 0, 'years')
       .format("YYYY-MM-DD")
   }
 

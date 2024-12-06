@@ -63,7 +63,7 @@ export class ChoiceItem implements Item {
   clone(): ChoiceItem {
     let item = new ChoiceItem(this.id, this.type, this.answer);
     item.text = this.text;
-    item.policies = this.policies?.map(v => v);
+    item.policies = this.policies?.map(p => p);
     return item;
   }
 }
@@ -82,4 +82,5 @@ export interface PolicyView {
   policySet: ConsentPolicySet,
   displayText: string,
   code: string,
+  validity: Validity
 }

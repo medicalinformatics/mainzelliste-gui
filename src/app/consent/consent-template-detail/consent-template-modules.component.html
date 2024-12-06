@@ -40,6 +40,12 @@
                 <th mat-header-cell *matHeaderCellDef>{{'consent_template.policy_code' | translate}}</th>
                 <td mat-cell *matCellDef="let element"> {{element.code}} </td>
               </ng-container>
+
+              <ng-container matColumnDef="validity">
+                <th mat-header-cell *matHeaderCellDef>{{'consent_template.validity' | translate}}</th>
+                <td mat-cell *matCellDef="let element"> {{this.getValidityPeriodText(element.validity)}} </td>
+              </ng-container>
+
               <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let element"></td>
@@ -48,7 +54,7 @@
               <tr mat-header-row *matHeaderRowDef="this.displayedColumns; sticky: true;"></tr>
               <tr mat-row *matRowDef="let row; columns: this.displayedColumns;"></tr>
               <tr class="mat-row"  *matNoDataRow>
-                <td class="mat-cell" [attr.colspan]="this.displayedColumns.length+1" style="text-align: center">
+                <td class="mat-cell" [attr.colspan]="this.displayedColumns.length+2" style="text-align: center">
                   {{'consent_template.no_policy_found' | translate}}
                 </td>
               </tr>
@@ -96,6 +102,11 @@
                 <td mat-cell *matCellDef="let element"> {{element.code}} </td>
               </ng-container>
 
+              <ng-container matColumnDef="validity">
+                <th mat-header-cell *matHeaderCellDef>{{'consent_template.validity' | translate}}</th>
+                <td mat-cell *matCellDef="let element"> {{this.getValidityPeriodText(element.validity)}} </td>
+              </ng-container>
+
               <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let element">
@@ -108,7 +119,7 @@
               <tr mat-header-row *matHeaderRowDef="this.displayedColumns; sticky: true;"></tr>
               <tr mat-row *matRowDef="let row; columns: this.displayedColumns;"></tr>
               <tr class="mat-row"  *matNoDataRow>
-                <td class="mat-cell" [attr.colspan]="this.displayedColumns.length+1" style="text-align: center">
+                <td class="mat-cell" [attr.colspan]="this.displayedColumns.length+2" style="text-align: center">
                   {{'consent_template.no_policy_found' | translate}}
                 </td>
               </tr>
