@@ -48,8 +48,7 @@ export class ChoiceItem implements Item {
   type: ItemType;
   text: string = "";
   answer: ChoiceItemAnswer;
-  policySet?: ConsentPolicySet;
-  policy?: ConsentPolicy;
+  policies?: PolicyView[] = [];
 
   constructor(
       id: number,
@@ -64,8 +63,7 @@ export class ChoiceItem implements Item {
   clone(): ChoiceItem {
     let item = new ChoiceItem(this.id, this.type, this.answer);
     item.text = this.text;
-    item.policySet = this.policySet;
-    item.policy = this.policy;
+    item.policies = this.policies?.map(p => p);
     return item;
   }
 }
@@ -78,4 +76,11 @@ export interface Validity {
   day: number,
   month: number,
   year?: number
+}
+
+export interface PolicyView {
+  policySet: ConsentPolicySet,
+  displayText: string,
+  code: string,
+  validity: Validity
 }

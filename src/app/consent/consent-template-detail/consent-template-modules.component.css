@@ -12,6 +12,7 @@
 .module-header {
   width: 100%;
   justify-content: space-between;
+  font-size: 15px;
 }
 .module-header.mat-card-header-text {
   width: 100%
@@ -23,4 +24,31 @@ mat-form-field.templateInputField {
   margin: 0 0 -1.25em;
   clear: both;
   float:left;
+}
+
+.policiesTable {
+  width: 100%
+}
+.policiesTable tr.mat-row {
+  height: 38px;
+}
+
+.policiesTable tr.mat-header-row {
+  height: 40px;
+}
+
+.policiesTable td {
+  text-align: center;
+  max-height: 450px;
+}
+
+.policiesTable .mat-column-actions {
+  width: 105px;
+  text-align: right;
+  padding-right: 3px;
+}
+
+.policiesTable th {
+  text-align: center;
+  padding: 0 10px;
 }

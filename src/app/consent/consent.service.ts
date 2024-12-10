@@ -570,7 +570,8 @@ export class ConsentService {
           end: this.mapValidityToDate(template.validity)
         },
         provision: template.items.filter(i => i instanceof ChoiceItem)
-          .map(i => this.mapChoiceItemToProvision((i as ChoiceItem), template.validity))
+        .map(i => this.mapChoiceItemToProvision((i as ChoiceItem), template.validity))
+        .reduce((a, v) => a.concat(v), [])
       }
     };
 
@@ -659,19 +660,20 @@ export class ConsentService {
     };
   }
 
-  private mapChoiceItemToProvision(item: ChoiceItem, validity:Validity): fhir4.ConsentProvision {
-    return {
+  private mapChoiceItemToProvision(item: ChoiceItem, validity:Validity): fhir4.ConsentProvision[] {
+    return item.policies?.map(p => { return {
       type: item.answer,
       period: {
         start: _moment().format("YYYY-MM-DD"),
-        end: this.mapValidityToDate(validity)
+        end: this.mapValidityToDate(p.validity ?? validity)
       },
-      code: !item.policy ? [] : [
+      code: !p ? [] : [
         {
           coding: [
             {
-              code: item.policy.code,
-              system: item.policySet?.externalId || `/consent-policies/${item.policySet?.id}`
+              code: p.code,
+              system: p.policySet?.externalId || `/consent-policies/${p.policySet?.id}`,
+              display: p.displayText
             }
           ]
         }
@@ -682,7 +684,7 @@ export class ConsentService {
           valueString: `${item.id}`
         }
       ]
-    };
+    }}) ?? [];
   }
 
   private mapChoiceItemToQuestionnaireItem(item: ChoiceItem): fhir4.QuestionnaireItem {
@@ -721,7 +723,7 @@ export class ConsentService {
     let now = _moment();
     return now.add(validityPeriod.day || 0, 'days')
       .add(validityPeriod.month || 0, 'months')
-      .add(validityPeriod.year || 0, 'years')
+      .add(validityPeriod.year ?? 0, 'years')
       .format("YYYY-MM-DD")
   }
 
