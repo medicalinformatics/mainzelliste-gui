@@ -39,6 +39,14 @@
 	"email_text": "E-mail",
 	"health_insurance_text": "Health Insurance",
 	"health_insurance_number_text": "Health Insurance Number",
+
+  "confirm_delete_dialog.title": "Confirm delete",
+  "confirm_delete_dialog.text": "Are you sure you want to delete ${1}?",
+  "confirm_delete_dialog.warning": "The data will be completely deleted and cannot be restored.",
+  "confirm_delete_dialog.item_patient": "the following patient",
+  "confirm_delete_dialog.item_consent_template": "this consent template",
+  "confirm_delete_dialog.item_consent": "this consent",
+
 	"tentative_dialog_title": "Unsafe case",
 	"tentative_dialog_text1": "A similar patient was found for the data entered, but he cannot be assigned with sufficient certainty.",
 	"tentative_dialog_text2": "To avoid any confusion, please check your entry again! Then:",
@@ -91,6 +99,7 @@
   "consent_template.policies": "Policies:",
   "consent_template.add_polices": "Add Policy",
   "consent_template.error.required_policies": "Please select at least one policy",
+  "consent_template.error.referred_by": "Failed to delete consent template due to existing consents based on this template",
 
   "consent_dialog_history_title": "Consent history",
   "consent_dialog_history_status": "Previous status",
