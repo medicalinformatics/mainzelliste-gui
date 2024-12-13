@@ -153,6 +153,13 @@ export class ErrorMessages {
     'error.search_consent_templates_failed');
 
   ////
+  // DELETE CONSENT TEMPLATE
+  //---------------------
+  public static DELETE_CONSENT_TEMPLATE_REFERRED_BY: ErrorMessage = new ErrorMessage(6004,
+    /\[6004]\s:\s.+/i,
+    "consent_template.error.referred_by");
+
+  ////
   // CONSENT SCAN ERRORS
   //---------------------
   public static FAILED_UPLOAD_CONSENT_SCAN_FILE: ErrorMessage = new ErrorMessage(7001,

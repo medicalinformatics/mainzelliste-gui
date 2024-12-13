@@ -29,6 +29,7 @@ import {getErrorMessageFrom} from "../error/error-utils";
 import {TokenType} from "../model/token";
 import {TokenData} from "../model/token-data";
 import {UploadConsentFileResponse} from "../model/api/upload-consent-file-response";
+import * as querystring from "querystring";
 
 @Injectable({
   providedIn: 'root'
@@ -534,6 +535,11 @@ export class ConsentService {
       ErrorMessages.READ_CONSENT_TEMPLATE_FAILED, 'Questionnaire', id);
   }
 
+  public deleteConsentTemplate(id: string): Observable<fhir4.Questionnaire> {
+    return this.executeDeleteFhirOperation<fhir4.Questionnaire>("deleteConsentTemplate", {}, 'Questionnaire', id,
+      ErrorMessages.DELETE_CONSENT_TEMPLATE_REFERRED_BY, { "sureness": true }) as Observable<fhir4.Questionnaire>;
+  }
+
   public mapConsentTemplate(template:ConsentTemplate): fhir4.Questionnaire {
 
     let fhirConsent: fhir4.Consent = {
@@ -780,10 +786,11 @@ export class ConsentService {
       resourceType: string,
       id: string,
       errorMessageType: ErrorMessage,
+      urlParams?: SearchParams
   ): Observable<FhirResource> {
     return this.sessionService.createToken(tokenType, tokenData)
     .pipe(
-        mergeMap(token => this.resolveDeleteFhirResourceToken<F>(token.id, resourceType, id)),
+        mergeMap(token => this.resolveDeleteFhirResourceToken<F>(token.id, resourceType, id, urlParams)),
         catchError((error) => this.handleFailedRequest(resourceType, error, errorMessageType, "delete"))
     )
   }
@@ -862,10 +869,10 @@ export class ConsentService {
       })
   }
 
-  resolveDeleteFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, id:string): Promise<FhirResource | F> => {
+  resolveDeleteFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, id:string, urlParams?: SearchParams): Promise<FhirResource | F> => {
     return this.client.delete({
       resourceType: resourceType,
-      id: id,
+      id: urlParams && Object.keys(urlParams).length > 0 ? id + "?" +  querystring.stringify(urlParams) : id,
       options: { headers: {'Authorization': 'MainzellisteToken ' + tokenId}}
     })
   }
