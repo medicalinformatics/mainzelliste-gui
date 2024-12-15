@@ -1,17 +1,17 @@
 <form #patientForm="ngForm">
 <div style="height:100%;width:100%;">
   <div style=" width: 50%">
-    <h4 style="margin-left: 5%">{{'createPatient.enter_patient_data' | translate}}</h4>
+    <h4>{{'createPatient.enter_patient_data' | translate}}</h4>
     <app-patient-fields (fieldEvent)="fieldsChanged($event)"
                         [fields]="patient.fields"></app-patient-fields>
     <br>
-    <div *ngIf="this.getExternalIdTypes('C').length > 0" style="width: 90%; margin-left: 5%; max-width: 700px;">
+    <div *ngIf="this.getExternalIdTypes('C').length > 0" style="width: 90%; max-width: 700px;">
       <h4>{{'createPatient.add_external_pseudonym' | translate}}</h4>
       <app-external-pseudonyms [readOnly]="false" [ids]="this.patient.ids"
                                [removeEmptyId]="true" [permittedOperation]="'C'"></app-external-pseudonyms>
     </div>
     <br>
-    <div style="width: 90%; margin-left: 5%; max-width: 700px;" ngModelGroup="internalIdTypes"
+    <div style="width: 90%; max-width: 700px;" ngModelGroup="internalIdTypes"
          #internalIdTypesModelGroup="ngModelGroup">
       <h4>{{'createPatient.add_pseudonym_type' | translate}}</h4>
       <mat-form-field color="primary" style="width: 76.5%">
@@ -47,7 +47,7 @@
       <br>
     </div>
     <ng-container *ngIf="this.consentService.isServiceEnabled()">
-      <div *appHasPermission="Permission.CREATE_CONSENT" style="width: 90%; margin-left: 5%; max-width: 700px;">
+      <div *appHasPermission="Permission.CREATE_CONSENT" style="width: 90%; max-width: 700px;">
         <button style="float: left; margin-bottom: 40px" mat-raised-button
                 (click)="openConsentDialog()">
           <mat-icon>{{!consent ? 'add' : 'edit'}}</mat-icon>
@@ -56,7 +56,7 @@
       </div>
     </ng-container>
     <br>
-    <div style="width: 90%; margin-left: 5%; max-width: 700px;">
+    <div style="width: 90%; max-width: 700px;">
       <button mat-raised-button class="submit" type="submit" style="clear: both; float: left;"
               [disabled]="this.disable(patientForm) || creatingInProgress"
               (click)="createNewPatient(false)">{{'button_request' | translate}}

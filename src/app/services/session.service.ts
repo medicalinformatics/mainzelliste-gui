@@ -6,7 +6,6 @@ import {Token, TokenType} from '../model/token';
 import {TokenData} from '../model/token-data';
 import {AppConfigService} from "../app-config.service";
 import {catchError, map, mergeMap} from "rxjs/operators";
-import {Router} from "@angular/router";
 import {getErrorMessageFrom} from "../error/error-utils";
 import {TranslateService} from '@ngx-translate/core';
 
@@ -22,7 +21,6 @@ export class SessionService {
   constructor(
     translate: TranslateService,
     private httpClient: HttpClient,
-    private router: Router,
     private appConfigService: AppConfigService
   ) {
     SessionService.translate = translate;
@@ -87,7 +85,7 @@ export class SessionService {
     if (error.status == 404)
       return of(false)
     else
-      throw throwError(new Error(`${errorMessage}` + SessionService.translate.instant('error.session_service_handle_failed_request') + `${getErrorMessageFrom(error, SessionService.translate)}`));
+      throw throwError( () => new Error(`${errorMessage}` + SessionService.translate.instant('error.session_service_handle_failed_request') + `${getErrorMessageFrom(error, SessionService.translate)}`));
   }
 
   public isSessionCreated(): boolean {
@@ -98,12 +96,14 @@ export class SessionService {
    * Create a request for generating a token for a given session
    * @param tokenType
    * @param tokenData
+   * @param allowedUses
    */
-  createToken(tokenType: TokenType, tokenData: TokenData): Observable<Token> {
+  createToken(tokenType: TokenType, tokenData: TokenData, allowedUses? :number): Observable<Token> {
     return this.createSessionIfNotValid().pipe(
       mergeMap(r => this.httpClient.post<Token>(this.appConfigService.data[0].url + '/sessions/'
         + this.sessionId + '/tokens', {
         type: tokenType,
+        allowedUses: allowedUses ?? 1,
         data: tokenData
       }, {
         headers: new HttpHeaders().append('mainzellisteApiVersion', '3.2')

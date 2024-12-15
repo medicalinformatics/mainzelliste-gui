@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {KeycloakEvent, KeycloakEventType, KeycloakService} from "keycloak-angular";
 import {SessionService} from "./session.service";
 import {mergeMap} from "rxjs/operators";
+import {firstValueFrom, lastValueFrom} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -31,20 +32,20 @@ export class UserAuthService {
   async login(authenticated: boolean, redirectUrl: string): Promise<boolean> {
     if (!authenticated) {
       // delete old session
-      await this.sessionService.deleteSession()
+      await lastValueFrom(this.sessionService.deleteSession()
       .pipe( // login in keycloak
         mergeMap(() =>
           this.keycloak.login({redirectUri: window.location.origin + redirectUrl})
         )
-      ).toPromise();
+      ));
     }
     // create new session
-    return this.sessionService.createSessionIfNotValid().toPromise();
+    return lastValueFrom(this.sessionService.createSessionIfNotValid());
   }
 
   async logout() {
     return await this.keycloak.logout().then( () => {
-      this.sessionService.deleteSession().toPromise();
+      firstValueFrom(this.sessionService.deleteSession());
       this.keycloak.clearToken();
     });
   }

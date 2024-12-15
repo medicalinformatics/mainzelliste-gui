@@ -1,13 +1,13 @@
 <div style="height: 100%; min-height: 10em; width: 100%;display: flex;
 flex-flow: column;">
-  <div style="width: 96%; margin-right: 2%; margin-left: 2%; margin-bottom: 20px;">
+  <div style="width: 100%; margin-bottom: 20px;">
     <ng-container *ngIf="this.consentService.isServiceEnabled()">
       <button mat-raised-button *appHasPermission="Permission.CREATE_CONSENT_TEMPLATE" class="submit" style="clear: both; float: right;"
               (click)="openConsentTemplateDialog()">Neue Vorlage <mat-icon matTooltip="Einwilligungsvorlage Erstellen">assignment_add</mat-icon></button>
     </ng-container>
   </div>
-  <div class="mat-elevation-z8" style="width: 96%; margin-right: 2%; margin-left: 2%;">
-    <table id="consentTemplates" mat-table [dataSource]="templatesMatTableData">
+  <div class="mat-elevation-z8">
+    <table id="consentTemplates" mat-table [dataSource]="templatesMatTableData" style="width: 100%;">
 
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef>Id</th>
@@ -31,9 +31,18 @@ flex-flow: column;">
         </td>
       </ng-container>
 
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button *appHasPermission="Permission.DELETE_CONSENT_TEMPLATE" mat-icon-button color="primary" class="ml-icon-button" (click)="openDeleteTemplateDialog(element.id)">
+            <mat-icon matTooltip="delete consent template">delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
 
       <ng-container matColumnDef="progress">
-        <th mat-header-cell *matHeaderCellDef [attr.colspan]="5"
+        <th mat-header-cell *matHeaderCellDef [attr.colspan]="6"
             style="padding: 0;">
           <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
         </th>
@@ -45,7 +54,7 @@ flex-flow: column;">
       <tr mat-row class="consent-row" (click)="editTemplate(row)" *matRowDef="let row; columns: displayedConsentTemplateColumns;"></tr>
       <tr mat-header-row  style="height: 0; border: 0;" *matHeaderRowDef="['progress']"></tr>
       <tr class="mat-row" *matNoDataRow>
-        <td *ngIf="!loading" class="mat-cell" [attr.colspan]="5" style="text-align: center">
+        <td *ngIf="!loading" class="mat-cell" [attr.colspan]="6" style="text-align: center">
           {{'idcard.consent_no_consent' | translate}}
         </td>
       </tr>

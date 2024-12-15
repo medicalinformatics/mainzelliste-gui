@@ -38,9 +38,10 @@
     </div>
   </div>
   <br>
+  <br>
   <div class="form-group">
-    <label>{{'consentDetail.validity_label' | translate}}</label>
-    <mat-form-field appearance="fill">
+    <label>{{'consentDetail.valid_from' | translate}}</label>
+    <mat-form-field appearance="fill" style="width: 150px; margin: 0 7px 0 7px">
       <mat-label>{{'consentDetail.validity_date_label' | translate}}</mat-label>
       <input matInput
              [matDatepicker]="picker"
@@ -57,7 +58,6 @@
     </mat-form-field>
     <label><strong>{{getConsentExpiration()}}</strong></label>
   </div>
-  <br>
 </mat-card>
 <br>
 <ng-container *appHasAnyPermissions="[Permission.ADD_CONSENT_SCANS, Permission.READ_CONSENT_SCANS]">

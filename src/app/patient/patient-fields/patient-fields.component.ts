@@ -3,14 +3,15 @@ import {FieldService} from "../../services/field.service";
 import {Field} from "../../model/field";
 import _moment from "moment";
 import {
-  ControlContainer, FormControl,
+  ControlContainer,
+  FormControl,
   FormGroupDirective,
   NgForm,
   NgModel,
   ValidationErrors
 } from "@angular/forms";
 import {ErrorStateMatcher} from "@angular/material/core";
-import { TranslateService } from '@ngx-translate/core';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-patient-fields',
@@ -58,11 +59,24 @@ export class PatientFieldsComponent implements OnInit {
       return "fehler";
   }
 
-  displayError(field: NgModel){
-    //let isFieldsEmpty = !Object.keys(this.fields).length || !Object.entries(this.fields).some( (e) => e[1].length > 0);
-    return field.invalid &&
-      (field.dirty || field.touched) &&
-      (field.errors?.['pattern'] || field.errors?.['required']);
+  enableDateFieldValidation(field: NgModel) {
+    if (this.readOnly) {
+      field.control.clearValidators()
+      field.control.updateValueAndValidity()
+    }
+  }
+
+  displayError(field: NgModel) {
+    if (this.readOnly) {
+      field.control.clearValidators()
+      field.control.updateValueAndValidity()
+      return false
+    } else {
+      //let isFieldsEmpty = !Object.keys(this.fields).length || !Object.entries(this.fields).some( (e) => e[1].length > 0);
+      return field.invalid &&
+          (field.dirty || field.touched) &&
+          (field.errors?.['pattern'] || field.errors?.['required']);
+    }
   }
 }
 

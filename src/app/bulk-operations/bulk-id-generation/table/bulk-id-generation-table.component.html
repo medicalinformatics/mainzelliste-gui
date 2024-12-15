@@ -1,0 +1,12 @@
+
+  <section class="mat-elevation-z8" tabindex="0" style="overflow: auto; max-height: 500px;">
+    <table mat-table id="bulkIdGeneration" [dataSource]="displayRecords" class="mat-elevation-z8">
+        <ng-container [matColumnDef]="id" *ngFor="let id of displayedColumns; let i = index">
+            <th mat-header-cell *matHeaderCellDef>{{idTypes[i]}}</th>
+            <td mat-cell *matCellDef="let e">{{e[i]}}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true;"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </section>

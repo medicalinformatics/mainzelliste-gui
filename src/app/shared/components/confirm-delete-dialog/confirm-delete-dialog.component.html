@@ -1,13 +1,11 @@
 <h1 mat-dialog-title>
-  {{'deletePatientDialog.title_delete_patient' | translate}}
+  {{'confirm_delete_dialog.title' | translate}}
 </h1>
 <div mat-dialog-content>
-  <h3 style="text-align: justify">
-    {{'deletePatientDialog.delete_patient_question' | translate}}
-  </h3>
+  <h3 style="text-align: justify">{{this.message}}</h3>
   <br />
   <h4 style="font-weight: 100; text-align: justify">
-    {{'deletePatientDialog.delete_patient_warning' | translate}}
+    {{'confirm_delete_dialog.warning' | translate}}
   </h4>
 </div>
 <div mat-dialog-actions>

@@ -11,6 +11,7 @@ import {Observable, of} from "rxjs";
 import {map, startWith} from 'rxjs/operators';
 import {GlobalTitleService} from "../services/global-title.service";
 import {TranslateService} from '@ngx-translate/core';
+import {AuthorizationService} from "../services/authorization.service";
 
 export interface FilterConfig {
   display: string,
@@ -53,6 +54,7 @@ export class PatientlistViewComponent implements OnInit {
   constructor(
     public translate: TranslateService,
     patientService: PatientService,
+    public authorizationService: AuthorizationService,
     private titleService: GlobalTitleService
   ) {
     this.patientService = patientService;
@@ -162,19 +164,19 @@ export class PatientlistViewComponent implements OnInit {
 
   async loadPatients(pageIndex: number, pageSize: number) {
     this.loading = true;
-    this.patientService.getDisplayPatients(this.filters, pageIndex, pageSize).subscribe(
-      response => {
+    this.patientService.getDisplayPatients(this.filters, pageIndex, pageSize, this.authorizationService.getTenants()).subscribe({
+      next: (response) => {
         this.patientsMatTableData.data = response.patients;
         this.pageNumber = parseInt(response.totalCount);
         this.loading = false;
       },
-      error => {
+      error: (error) => {
         this.patientsMatTableData.data = [];
         this.pageNumber = 0;
         this.loading = false
         throw error;
       }
-    )
+    })
   }
 
   async handlePageEvent(event: PageEvent) {

@@ -2,10 +2,11 @@
      #moduleCtrl="ngModelGroup"
      [ngStyle]="{'width': '100%', 'display': 'flex', 'flex-direction': 'column', 'row-gap': '10px',
      'margin-bottom': templateModules.length > 0 ? '10px' : '0px'}">
-  <mat-card *ngFor="let module of templateModules" cdkDrag>
-    <mat-card-header class="module-header">
+  <mat-card *ngFor="let module of templateModules; index as i" cdkDrag [cdkDragDisabled]="this.editedModule != undefined">
+    <mat-card-title-group class="module-header">
       <mat-card-title></mat-card-title>
-      <mat-card-subtitle>{{this.module.type == 'display' ? 'Text' : 'Frage' }}</mat-card-subtitle>
+      <mat-card-subtitle style="display: flex; align-items: center; column-gap: 3px; margin-bottom: 8px;">
+        <mat-icon style="transform: scale(1.1);">{{this.module.type == 'display' ? 'notes':'help_center'}}</mat-icon>{{this.module.type == 'display' ? 'Text' : 'Frage' }}</mat-card-subtitle>
       <div></div>
       <button mat-icon-button class="edit-module-button" color="primary"
               style="float: right; margin-left: auto; margin-right: 10px;"
@@ -16,51 +17,128 @@
               (click)="this.deleteModule(module)">
         <mat-icon matTooltip="editieren">delete</mat-icon>
       </button>
-    </mat-card-header>
-    <mat-card-content style="margin-bottom: 2px" [ngSwitch]="module.constructor.name">
+    </mat-card-title-group>
+    <mat-card-content [ngStyle]="{'margin-bottom': module.type == 'display' ? '15px' : '0'}" [ngSwitch]="module.constructor.name">
       <!-- display mode -->
       <div *ngIf="this.editedModule == undefined || this.editedModule?.id != module.id">
-        <h3 *ngIf=" this.module.type == 'choice'"><b>{{$any(module).policy?.text}}</b></h3>
-        <p [innerHTML]="module.text" style="margin-bottom: 20px;margin-top: 5px;"></p>
-        <div style="padding-bottom: 10px" *ngIf=" this.module.type == 'choice'">
-          <mat-radio-group value="permit" style="display:flex; gap:40px" #question color="primary" [disabled]="true">
-            <mat-radio-button value="permit"
-                              onclick="this.question.checked = false;">{{'radio_button_yes' | translate}}</mat-radio-button>
-            <mat-radio-button value="deny">{{'radio_button_no' | translate}}</mat-radio-button>
-          </mat-radio-group>
-        </div>
+        <h3 *ngIf=" module.type == 'choice'"><b>{{$any(module).policy?.text}}</b></h3>
+        <p [innerHTML]="module.text" style="margin-bottom: 20px; margin-top: 5px;"></p>
+        <ng-container *ngIf="this.module.type == 'choice'">
+          <section *ngIf="($any(module).policies?.length ?? 0) > 0" class="mat-elevation-z1" tabindex="0" style="overflow: auto; max-height: 500px; margin-bottom: 20px;">
+            <table mat-table [dataSource]="$any(module).policies" class="policiesTable">
+              <ng-container matColumnDef="policySetName">
+                <th mat-header-cell *matHeaderCellDef>{{'consent_template.policy_set_name' | translate}}</th>
+                <td mat-cell *matCellDef="let element">{{element.policySet.name}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="displayText">
+                <th mat-header-cell *matHeaderCellDef>{{'consent_template.policy_display_text' | translate}}</th>
+                <td mat-cell *matCellDef="let element"> {{element.displayText}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="code">
+                <th mat-header-cell *matHeaderCellDef>{{'consent_template.policy_code' | translate}}</th>
+                <td mat-cell *matCellDef="let element"> {{element.code}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="validity">
+                <th mat-header-cell *matHeaderCellDef>{{'consent_template.validityPeriod' | translate}}</th>
+                <td mat-cell *matCellDef="let element"> {{this.getValidityPeriodText(element.validity)}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element"></td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="this.displayedColumns; sticky: true;"></tr>
+              <tr mat-row *matRowDef="let row; columns: this.displayedColumns;"></tr>
+              <tr class="mat-row"  *matNoDataRow>
+                <td class="mat-cell" [attr.colspan]="this.displayedColumns.length+2" style="text-align: center">
+                  {{'consent_template.no_policy_found' | translate}}
+                </td>
+              </tr>
+            </table>
+          </section>
+          <div style="padding-bottom: 10px">
+            <mat-radio-group value="permit" style="display:flex; gap:40px" #question color="primary"
+                             [disabled]="true" [ngModel]="toChoiceItem(module).answer" name="question-{{i}}">
+              <mat-radio-button value="permit">{{'radio_button_yes' | translate}}</mat-radio-button>
+              <mat-radio-button value="deny">{{'radio_button_no' | translate}}</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </ng-container>
       </div>
 
       <!-- edit mode -->
       <div *ngIf="this.editedModule != undefined && this.editedModule?.id == module.id">
-        <mat-form-field *ngIf="isChoiceModule()" class="templateInputField">
-          <mat-label>Einwilligungspolicy Liste</mat-label>
-          <mat-select [(ngModel)]="$any(this.editedModule).policySet" [required]="true"
-                      (selectionChange)="this.fetchPolicies($event)" name="'policySet'">
-            <mat-option *ngFor="let policy of this.consentPolicySets" [value]="policy">
-              {{policy.name}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field *ngIf="isChoiceModule()" class="templateInputField">
-          <mat-label>Einwilligungspolicy</mat-label>
-          <mat-spinner *ngIf="this.policiesLoading" matPrefix class="spinner" diameter="20"
-                       style="padding-right: 0.5em"></mat-spinner>
-          <mat-select [(ngModel)]="$any(this.editedModule).policy" [required]="true"
-                      [disabled]="$any(this.editedModule).policySet == undefined" name="'policy'">
-            <mat-option *ngFor="let policy of this.getPolicies()" [value]="policy">{{policy.text}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field class="module-mat-form-field-textarea">
-          <mat-label>Text eingeben</mat-label>
-          <textarea matInput [(ngModel)]="$any(this.editedModule).text" style="padding-bottom: 0"
-                    [name]="'module'" [required]="!isChoiceModule()"></textarea>
-        </mat-form-field>
+        <editor [init]="this.moduleRichTextEditor" [required]="!isChoiceModule()"
+                [(ngModel)]="$any(this.editedModule).text" [name]="'module'"
+                style="margin-top: 8px"
+                initialValue="Once upon a time...">
+        </editor>
+        <ng-container *ngIf="this.module.type == 'choice'">
+          <div style="clear: both; margin-top: 20px; margin-right: 5px; display: flex; justify-content: space-between; align-items: center;">
+            <h4>{{'consent_template.policies' | translate}}</h4>
+            <button mat-icon-button color="primary" style="float: right; margin-bottom: 5px;" class="ml-icon-button"
+                    (click)="openPolicyDialog()" matTooltip="{{'consent_template.add_polices' | translate}}">
+              <mat-icon>add_moderator</mat-icon>
+            </button>
+          </div>
+          <section class="mat-elevation-z1" tabindex="0" style="overflow: auto; max-height: 500px;">
+            <table mat-table [dataSource]="this.policiesTableData" class="policiesTable">
+              <ng-container matColumnDef="policySetName">
+                <th mat-header-cell *matHeaderCellDef>{{'consent_template.policy_set_name' | translate}}</th>
+                <td mat-cell *matCellDef="let element">{{element.policySet.name}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="displayText">
+                <th mat-header-cell *matHeaderCellDef>{{'consent_template.policy_display_text' | translate}}</th>
+                <td mat-cell *matCellDef="let element"> {{element.displayText}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="code">
+                <th mat-header-cell *matHeaderCellDef>{{'consent_template.policy_code' | translate}}</th>
+                <td mat-cell *matCellDef="let element"> {{element.code}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="validity">
+                <th mat-header-cell *matHeaderCellDef>{{'consent_template.validityPeriod' | translate}}</th>
+                <td mat-cell *matCellDef="let element"> {{this.getValidityPeriodText(element.validity)}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-icon-button color="primary" class="ml-icon-button" (click)="removePolicy(element)">
+                    <mat-icon matTooltip="remove policy">delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="this.displayedColumns; sticky: true;"></tr>
+              <tr mat-row *matRowDef="let row; columns: this.displayedColumns;"></tr>
+              <tr class="mat-row"  *matNoDataRow>
+                <td class="mat-cell" [attr.colspan]="this.displayedColumns.length+2" style="text-align: center">
+                  {{'consent_template.no_policy_found' | translate}}
+                </td>
+              </tr>
+            </table>
+          </section>
+        </ng-container>
       </div>
     </mat-card-content>
     <mat-card-actions *ngIf="this.editedModule != undefined && this.editedModule?.id == module.id">
       <button mat-button type="submit" (click)="this.save(module)" [disabled]="!moduleCtrl?.valid || false">Speichen</button>
       <button mat-button (click)="this.cancel()">Abbrechen</button>
     </mat-card-actions>
+    <mat-card-footer *ngIf="module.type == 'choice' && this.editedModule?.id != module.id
+    && (this.toChoiceItem(module).policies?.length == 0)">
+      <mat-error style="display: flex; flex-direction: row; align-items: flex-end; padding: 7px 14px;
+        column-gap: 5px;">
+        <mat-icon>error</mat-icon>
+        <span>{{ this.translate.instant('consent_template.error.required_policies') }}</span>
+      </mat-error>
+    </mat-card-footer>
   </mat-card>
 </div>
