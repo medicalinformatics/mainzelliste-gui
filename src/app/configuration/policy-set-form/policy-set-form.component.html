@@ -1,21 +1,21 @@
-<h1 mat-dialog-title>Add Policy Set</h1>
+<h1 mat-dialog-title>{{"configuration.policySet.add" | translate}}</h1>
 <div mat-dialog-content>
   <form [formGroup]="policySetForm">
-    <mat-form-field appearance="fill">
-      <mat-label>ID</mat-label>
+    <mat-form-field appearance="outline">
+      <mat-label>{{'configuration.policySet.id' | translate}}</mat-label>
       <input matInput formControlName="id">
     </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Name</mat-label>
+    <mat-form-field appearance="outline">
+      <mat-label>{{'configuration.policySet.name' | translate}}</mat-label>
       <input matInput formControlName="name">
     </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>External ID</mat-label>
+    <mat-form-field appearance="outline">
+      <mat-label>{{'configuration.policySet.externalId' | translate}}</mat-label>
       <input matInput formControlName="externalId">
     </mat-form-field>
   </form>
 </div>
 <div mat-dialog-actions>
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-button (click)="save()" cdkFocusInitial>Save</button>
+  <button mat-button mat-dialog-close class="submitBreak">{{'button_cancel' | translate}}</button>
+  <button mat-button (click)="save()" class="submit" cdkFocusInitial [disabled]="!policySetForm.valid">{{'button_create' | translate}}</button>
 </div>

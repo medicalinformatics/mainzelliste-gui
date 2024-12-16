@@ -17,7 +17,7 @@ export class PolicySetFormComponent implements OnInit {
     this.policySetForm = this.fb.group({
       id: ['', Validators.required],
       name: ['', Validators.required],
-      externalId: ['', Validators.required]
+      externalId: ['']
     });
   }
 

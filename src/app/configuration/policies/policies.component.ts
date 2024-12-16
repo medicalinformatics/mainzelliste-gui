@@ -16,7 +16,7 @@ import { take } from 'rxjs/operators';
   styleUrls: ['./policies.component.css']
 })
 export class PoliciesComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'externalId', 'name', 'expand', 'addPolicy'];
+  displayedColumns: string[] = ['id', 'name', 'externalId', 'actions'];
   dataSource: MatTableDataSource<any>;
   expandedElement: any | null;
   loading: boolean = false;
@@ -38,7 +38,8 @@ export class PoliciesComponent implements OnInit {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-  }
+    this.paginator._intl.itemsPerPageLabel = 'Items per page';
+  }  
 
   loadData(pageIndex: number, pageSize: number, fetch: boolean) {
     this.loading = true;
@@ -60,6 +61,7 @@ export class PoliciesComponent implements OnInit {
       this.dataSource = new MatTableDataSource(data.slice(startFrom, endTo));
       this.totalCount = policySets.length;
       this.loading = false;
+      this.paginator.length = this.totalCount;
     });
   }
 
@@ -81,15 +83,17 @@ export class PoliciesComponent implements OnInit {
     const dialogRef = this.dialog.open(PolicySetFormComponent, {
       width: '20em',
     });
-
+  
     dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
       if (result) {
         this.consentService.addPolicySet(result.id, result.name, result.externalId).pipe(take(1)).subscribe(response => {
-          this.loadData(0, this.defaultPageSize, false);
+          this.loadData(this.paginator.pageIndex, this.paginator.pageSize, false);
+          this.paginator.firstPage();
         });
       }
     });
   }
+  
 
   addPolicy(policySetId: string) {
     const dialogRef = this.dialog.open(PolicyFormComponent, {

@@ -169,17 +169,16 @@
   "configuration.idGenerator.empty": "Kein ID-Generator gefunden.",
 
   "configuration.tab_policies": "Policy Sets",
-  "configuration.policySet.id": "Policy-Set-Id",
-  "configuration.policySet.externalId": "Policy-Set-External-Id",
-  "configuration.policySet.name": "Policy-Set-Name",
+  "configuration.policySet.id": "Id",
+  "configuration.policySet.externalId": "Externe Id",
+  "configuration.policySet.name": "Name",
   "configuration.policy.policies": "Policies",
   "configuration.policy.policyCode": "Policy-Code",
   "configuration.policy.policyText": "Policy-Text",
-  "configuration.policy.close": "Schließen",
   "configuration.policy.show": "Policies anzeigen",
   "configuration.policy.create": "Policy hinzufügen",
   "configuration.policySet.add": "Policy-Set hinzufügen",
-  "configuration.policy.save": "Speichern",
+
   
 	"info.title": "Informationen und Hinweise zur Mainzelliste",
 	"info.notice_add_patient": "Hinweis für die Erstellung eines Patienten",

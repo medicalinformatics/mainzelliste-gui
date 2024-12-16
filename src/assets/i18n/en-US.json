@@ -155,9 +155,9 @@
   "configuration.idGenerator.empty": "no ID Generator found.",
 
   "configuration.tab_policies": "Policy Sets",
-  "configuration.policySet.id": "Policy Set Id",
-  "configuration.policySet.externalId": "Policy Set External Id",
-  "configuration.policySet.name": "Policy Set Name",
+  "configuration.policySet.id": "Id",
+  "configuration.policySet.externalId": "External Id",
+  "configuration.policySet.name": "Name",
   "configuration.policy.policies": "Policies",
   "configuration.policy.policyCode": "Policy Code",
   "configuration.policy.policyText": "Policy Text",

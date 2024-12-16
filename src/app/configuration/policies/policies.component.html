@@ -18,14 +18,6 @@
       </div>
     </td>
   </ng-container>
-  <ng-container matColumnDef="externalId">
-    <th mat-header-cell *matHeaderCellDef class="mat-column-policySetExternalId">{{'configuration.policySet.externalId' | translate}}</th>
-    <td mat-cell *matCellDef="let element" class="policySetExternalId-row">
-      <div class="flex-container">
-        {{ element.externalId }}
-      </div>
-    </td>
-  </ng-container>
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef class="mat-column-policySetName">{{'configuration.policySet.name' | translate}}</th>
     <td mat-cell *matCellDef="let element" class="policySetName-row">
@@ -34,22 +26,23 @@
       </div>
     </td>
   </ng-container>
-  <ng-container matColumnDef="expand">
-    <th mat-header-cell *matHeaderCellDef class="mat-column-expand">{{'configuration.policy.show' | translate}}</th>
-    <td mat-cell *matCellDef="let element" class="expand-row">
+  <ng-container matColumnDef="externalId">
+    <th mat-header-cell *matHeaderCellDef class="mat-column-policySetExternalId">{{'configuration.policySet.externalId' | translate}}</th>
+    <td mat-cell *matCellDef="let element" class="policySetExternalId-row">
       <div class="flex-container">
-        <button mat-icon-button (click)="openPolicyDialog(element.id)">
-          <mat-icon>open_in_new</mat-icon>
-        </button>
+        {{ element.externalId }}
       </div>
     </td>
   </ng-container>
-  <ng-container matColumnDef="addPolicy">
-    <th mat-header-cell *matHeaderCellDef class="mat-column-addPolicy">{{'configuration.policy.create' | translate}}</th>
-    <td mat-cell *matCellDef="let element" class="addPolicy-row">
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef class="mat-column-expand"></th>
+    <td mat-cell *matCellDef="let element" class="expand-row">
       <div class="flex-container">
+        <button mat-icon-button (click)="openPolicyDialog(element.id)">
+          <mat-icon>list_alt</mat-icon>
+        </button>
         <button mat-icon-button (click)="addPolicy(element.id)">
-          <mat-icon>add</mat-icon>
+          <mat-icon>add_moderator</mat-icon>
         </button>
       </div>
     </td>
@@ -58,4 +51,4 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 
-<mat-paginator [pageSizeOptions]="[5, 10, 20, 50]" [pageSize]="defaultPageSize" [length]="totalCount" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>
+<mat-paginator [pageSizeOptions]="[5, 8, 10, 20, 50]" [pageSize]="defaultPageSize" [length]="totalCount" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>

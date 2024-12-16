@@ -7,36 +7,10 @@
   background-color: #dddddd;
 }
 
-.disabled {
-  color: rgb(161, 159, 159);
-}
-
 mat-paginator {
   float: right;
   margin-right: 1.5%;
   background-color: transparent;
-}
-
-.mat-basic-chip-status {
-  display: inline-flex;
-  padding: 7px 10px;
-  border-radius: 6px;
-  align-items: center;
-  min-height: 22px;
-  height: 1px;
-  background-color: #e0e0e0;
-  color: #000000de;
-  box-sizing: border-box;
-  min-width: 100px;
-  justify-content: center;
-}
-
-.mat-basic-chip-status#active {
-  background-color: #cdfbd4;
-}
-
-.mat-basic-chip-status#draft {
-  background-color: #fdf6d2;
 }
 
 .mat-column-policySetId,
@@ -44,14 +18,13 @@ mat-paginator {
 .mat-column-policySetName,
 .mat-column-policyId,
 .mat-column-policyName {
-  width: 25%;
+  width: 30%;
   text-align: left;
 }
 
-.mat-column-expand,
-.mat-column-addPolicy {
+.mat-column-actions {
   width: 10%;
-  text-align: center;
+  text-align: right;
 }
 
 .loading-shade {
@@ -67,9 +40,9 @@ mat-paginator {
   z-index: 1000;
 }
 
-mat-spinner {
-  color: #053E6A; 
-}
+/* mat-spinner {
+  color: #053E6A;
+} */
 
 .header-container {
   display: flex;
