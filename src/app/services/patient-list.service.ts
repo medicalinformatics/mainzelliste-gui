@@ -10,7 +10,7 @@ import {EditPatientTokenData} from "../model/edit-patient-token-data";
 import {DeletePatientTokenData} from "../model/delete-patient-token-data";
 import {Field} from "../model/field";
 import {DatePipe} from "@angular/common";
-import {catchError, map, mergeMap} from "rxjs/operators";
+import {catchError, filter, map, mergeMap, repeat, retry, take, takeWhile} from "rxjs/operators";
 import {firstValueFrom, lastValueFrom, Observable, of, throwError} from "rxjs";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessage, ErrorMessages} from "../error/error-messages";
@@ -25,6 +25,9 @@ import {TranslateService} from '@ngx-translate/core';
 import {Operation, Tenant} from "../model/tenant";
 import {IdType} from "../model/id-type";
 import {IdGenerator} from "../model/idgenerator";
+import {AddPatientsSingleResponse} from "../model/add-patients-single-response";
+import {TaskResponse} from "../model/task-response";
+import {AddPatientRequest} from "../model/add-patient-request";
 
 export interface ReadPatientsResponse {
   patients: Patient[];
@@ -50,6 +53,16 @@ export class PatientListService {
     ErrorMessages.CREATE_PATIENT_INVALID_DATE_1,
     ErrorMessages.CREATE_PATIENT_INVALID_DATE_2
   ];
+
+  private addPatientsErrorMessages: ErrorMessage[] = [
+    ErrorMessages.CREATE_PATIENTS_UNAUTHORIZED
+  ]
+
+
+  private fetchPatientsJobErrorMessages: ErrorMessage[] = [
+    ErrorMessages.FETCH_PATIENTS_JOB_NOTFOUND,
+    ErrorMessages.FETCH_PATIENTS_JOB_UNAUTHORIZED
+  ]
 
   private editPatientErrorMessages: ErrorMessage[] = [
     ErrorMessages.EDIT_PATIENT_EMPTY_FIELD,
@@ -392,6 +405,76 @@ export class PatientListService {
       }),
       map( ids => ids[0])
     )
+  }
+
+  addPatients(patients: AddPatientRequest[], idTypes: string[], sureness: boolean): Observable<AddPatientsSingleResponse[]> {
+    return this.runAddPatients(patients, idTypes, sureness)
+    .pipe(
+      mergeMap( e => this.httpClient.get<TaskResponse[]>(e.locationUrl, {observe: 'response'})
+      .pipe(
+        repeat({count: Infinity, delay: 1000}),
+        filter((response: HttpResponse<TaskResponse[]>): boolean => ( response.status == 202)),
+        take(1),
+        map(r => r.body?.map(this.convertTaskResponse) ?? [])
+      )),
+      catchError(e => {
+        if (e instanceof HttpErrorResponse && (e.status == 401 || e.status == 404)) {
+          const errorMessage = this.fetchPatientsJobErrorMessages.find(msg => msg.match(e))
+          if (errorMessage != undefined) {
+            return throwError( () => new MainzellisteError(errorMessage));
+          }
+        }
+        return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.fetch_patients_job_not_found'), e, this.translate))
+      }),
+    )
+  }
+
+  convertTaskResponse(taskResponse: TaskResponse): AddPatientsSingleResponse {
+    return taskResponse.status == 201 ? {ids: taskResponse.body as Id[]} :
+      {ids: [], error: `status[${taskResponse.status}]:${(taskResponse.body as { message: string }).message}`}
+  }
+
+  runAddPatients(patients: AddPatientRequest[], idTypes: string[], sureness: boolean): Observable<{ tokenId:string, locationUrl: string}> {
+    return this.sessionService.createToken(
+      "addPatients", new AddPatientTokenData(idTypes)
+    )
+    .pipe(
+      mergeMap(token => this.resolveAddPatientsToken(token.id, patients, sureness)),
+      catchError(e => {
+        // handle failed token creation
+        if (e instanceof HttpErrorResponse && (e.status == 404) && ErrorMessages.ML_SESSION_NOT_FOUND.match(e))
+          return throwError( () => new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND))
+        else if (!(e instanceof MainzellisteError) && !(e instanceof MainzellisteUnknownError))
+          return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.create_patients_token_failed'), e, this.translate))
+        return throwError( () => e)
+      })
+    );
+  }
+
+  resolveAddPatientsToken(tokenId: string | undefined, patients: AddPatientRequest[], sureness: boolean): Observable<{ tokenId:string, locationUrl: string}> {
+    //set sureness flag
+    patients.forEach(p => p.sureness = sureness);
+
+    //send request
+    return this.httpClient.post<string>(this.patientList.url + "/jobs?tokenId=" + tokenId, patients, {
+      headers: new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('mainzellisteApiVersion', '3.2'),
+      observe: 'response'
+    })
+    .pipe(
+      map(response => {
+        return {
+          tokenId: tokenId ?? "",
+          locationUrl: this.patientList.url + "/jobs" + response.headers.get("Location")?.split("/jobs")[1] ?? ""
+        }
+      }),
+      catchError(e => {
+        if (e instanceof HttpErrorResponse && (e.status == 401) && ErrorMessages.CREATE_PATIENTS_UNAUTHORIZED.match(e))
+          return throwError(() => new MainzellisteError(ErrorMessages.CREATE_PATIENTS_UNAUTHORIZED))
+        return throwError(() => new MainzellisteUnknownError("Failed to run balk pseudonymization", e, this.translate))
+      })
+    );
   }
 
   readPatient(id: Id, operation: Operation, resultFields?: string[], resultIdTypes?: string[]): Observable<Patient[]> {

@@ -7,10 +7,15 @@
   <span>{{'navigation.new_patient' | translate}}</span>
 </button>
 
-<mat-divider *ngIf="this.authorizationService.authorizationState.GENERATE_IDS" class="menu-divider"></mat-divider>
+<mat-divider *ngIf="this.authorizationService.authorizationState.GENERATE_IDS
+  || this.authorizationService.authorizationState.ADD_PATIENTS " class="menu-divider"></mat-divider>
 <button mat-button *ngIf="this.authorizationService.authorizationState.GENERATE_IDS" [routerLink]="['/bulk-id-generation']" class="sidenav-menu-item">
   <mat-icon>library_add</mat-icon>
   <span>{{'navigation.bulkIdGeneration' | translate}}</span>
+</button>
+<button mat-button *ngIf="this.authorizationService.authorizationState.ADD_PATIENTS" [routerLink]="['/bulk-pseudonymization']" class="sidenav-menu-item">
+  <mat-icon>group_add</mat-icon>
+  <span>{{'navigation.bulkPseudonymization' | translate}}</span>
 </button>
 
 <!--<button mat-button [routerLink]="['/audittrail']" class="sidenav-menu-item">-->

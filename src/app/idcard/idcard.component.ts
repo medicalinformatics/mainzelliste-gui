@@ -7,7 +7,6 @@ import {Id} from "../model/id";
 import {MatTable} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
 import {PatientService} from "../services/patient.service";
-import {DeletePatientDialog} from "./dialogs/delete-patient-dialog";
 import {NewIdDialog} from './dialogs/new-id-dialog';
 import {TranslateService} from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.component";
@@ -18,7 +17,6 @@ import {throwError} from "rxjs";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {Consent, ConsentRow, ConsentsView} from "../consent/consent.model";
 import {catchError, mergeMap} from "rxjs/operators";
-import {DeleteConsentDialog} from "./dialogs/delete-consent-dialog";
 import {IdType} from "../model/id-type";
 import {AuthorizationService} from "../services/authorization.service";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
@@ -32,8 +30,11 @@ import {
 } from "../consent/consent-history-dialog/consent-history-dialog.component";
 import {FhirResource} from "fhir-kit-client/types/index";
 import {SearchParams} from "fhir-kit-client";
-import { SemanticType } from '../model/field';
-import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
+import {SemanticType} from '../model/field';
+import {AngularCsv} from 'angular-csv-ext/dist/Angular-csv';
+import {
+  ConfirmDeleteDialogComponent
+} from "../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
 
 
 @Component({
@@ -326,8 +327,10 @@ export class IdcardComponent implements OnInit {
   }
 
   openDeletePatientDialog(): void {
-    const dialogRef = this.deletePatientDialog.open(DeletePatientDialog, {
-      data: {},
+    const dialogRef = this.deletePatientDialog.open(ConfirmDeleteDialogComponent, {
+      data: {
+        itemI18nName: "confirm_delete_dialog.item_patient"
+      },
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -338,8 +341,10 @@ export class IdcardComponent implements OnInit {
 
 
   openDeleteConsentDialog(consentId: string): void {
-    const dialogRef = this.deleteConsentDialog.open(DeleteConsentDialog, {
-      data: {},
+    const dialogRef = this.deleteConsentDialog.open(ConfirmDeleteDialogComponent, {
+      data: {
+        itemI18nName: "confirm_delete_dialog.item_consent"
+      },
     });
 
     dialogRef.afterClosed().subscribe(result => {

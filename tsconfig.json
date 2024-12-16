@@ -22,7 +22,10 @@
       "es2018",
       "dom"
     ],
-    "types": ["fhir"]
+    "types": ["fhir"],
+    "paths": {
+      "querystring": ["./node_modules/query-string"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

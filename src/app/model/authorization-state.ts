@@ -30,6 +30,7 @@ export class AuthorizationState{
   DELETE_CONSENT_TEMPLATE: boolean = false;
 
   EDIT_CONFIGURATION: boolean = false;
+  ADD_PATIENTS: boolean = false;
 
   setPatient(operation: Operation[]){
     this.CREATE_PATIENT = operation.some(o => o == "C");
@@ -72,9 +73,11 @@ export class AuthorizationState{
   setMiscellaneous(permissions: TenantPermission[]) {
     //set default values
     this.EDIT_CONFIGURATION = false;
+    this.ADD_PATIENTS = false
     permissions.forEach( p => {
       switch (p.miscellaneous){
-        case "tt_editConfiguration": this.EDIT_CONFIGURATION = true;
+        case "tt_editConfiguration": this.EDIT_CONFIGURATION = true; break;
+        case "tt_addPatients": this.ADD_PATIENTS = true; break;
       }
     });
   }

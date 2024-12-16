@@ -6,8 +6,13 @@ import {MatTableDataSource} from "@angular/material/table";
 import {Router} from "@angular/router";
 import {GlobalTitleService} from "../../services/global-title.service";
 import {MatDialog} from "@angular/material/dialog";
-import {ConsentTemplateDialogComponent} from "../consent-template-dialog/consent-template-dialog.component";
+import {
+  ConsentTemplateDialogComponent
+} from "../consent-template-dialog/consent-template-dialog.component";
 import {Permission} from "../../model/permission";
+import {
+  ConfirmDeleteDialogComponent
+} from "../../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
 
 @Component({
   selector: 'app-consent-templates',
@@ -17,7 +22,7 @@ import {Permission} from "../../model/permission";
 export class ConsentTemplatesComponent implements OnInit {
 
   loading: boolean = false;
-  public displayedConsentTemplateColumns: string[] = ['id', 'name', 'title', 'status'];
+  public displayedConsentTemplateColumns: string[] = ['id', 'name', 'title', 'status', 'actions'];
   templatesMatTableData: MatTableDataSource<ConsentTemplateFhirWrapper>;
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -28,7 +33,8 @@ export class ConsentTemplatesComponent implements OnInit {
     public consentService: ConsentService,
     private router: Router,
     private titleService: GlobalTitleService,
-    public consentTemplateDialog: MatDialog
+    public consentTemplateDialog: MatDialog,
+    public confirmDeleteDialog: MatDialog
   ) {
     this.titleService.setTitle("Einwilligungsvorlagen", false);
     this.templatesMatTableData = new MatTableDataSource<ConsentTemplateFhirWrapper>([]);
@@ -70,7 +76,8 @@ export class ConsentTemplatesComponent implements OnInit {
 
   openConsentTemplateDialog() {
     const dialogRef = this.consentTemplateDialog.open(ConsentTemplateDialogComponent, {
-      width: '1100px'
+      width: '1100px',
+      maxHeight: '95vw'
     });
 
     dialogRef.afterClosed().subscribe(consentTemplate => {
@@ -81,6 +88,31 @@ export class ConsentTemplatesComponent implements OnInit {
   }
 
   protected readonly Permission = Permission;
+
+  private deleteTemplate(templateId: string) {
+    this.consentService.deleteConsentTemplate(templateId).subscribe({
+      next: r => {
+        this.loadTemplates(this.paginator.pageIndex, this.paginator.pageSize);
+      },
+      error: (error) => {
+        this.loading = false
+        throw error;
+      }
+    })
+  }
+
+  public openDeleteTemplateDialog(templateId: string): void {
+    const dialogRef = this.confirmDeleteDialog.open(ConfirmDeleteDialogComponent, {
+      data: {
+        itemI18nName: "confirm_delete_dialog.item_consent_template"
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.deleteTemplate(templateId);
+    });
+  }
 }
 
 export interface ConsentTemplateRow {id: string, title:string, name: string}

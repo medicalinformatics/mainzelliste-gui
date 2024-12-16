@@ -69,3 +69,9 @@ mat-paginator{
   width: 150px;
   text-align: center;
 }
+
+.mat-column-actions {
+  width: 105px;
+  text-align: right;
+  padding-right: 3px;
+}
