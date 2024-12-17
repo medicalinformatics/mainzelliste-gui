@@ -19,6 +19,10 @@
 #consents{
   width: 94%;
 }
+#secondary{
+  width: 30%;
+}
+
 
 #consents table {
   margin: 0 1.25% 15px 1.25%;

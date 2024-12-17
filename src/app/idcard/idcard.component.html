@@ -1,26 +1,31 @@
 <form #patientForm="ngForm" style="width: 100%; height: 100%">
   <div style="float: left; margin: 0 20px 14px 0; width: 94%; height: 480px; display: flex;
     flex-flow: row; justify-content: space-around; align-items: stretch; column-gap: 14px;">
-    <mat-card id="patientendaten" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; flex: 1">
+    <mat-card id="patientendaten"
+      style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; flex: 1">
       <mat-card-title-group style="margin: 0 0 0 2.5%;">
         <mat-card-title style="flex-grow: 2;">{{'idcard.title_patient_data' | translate}}</mat-card-title>
         <div>
-          <button style="transform: scale(0.8)" mat-icon-button class="mini-icon-button" [cdkCopyToClipboard]="getContactInfo()"
-                  matTooltip="{{'copy_data' | translate}}">
+          <button style="transform: scale(0.8)" mat-icon-button class="mini-icon-button"
+            [cdkCopyToClipboard]="getContactInfo()" matTooltip="{{'copy_data' | translate}}">
             <mat-icon>file_copy</mat-icon>
           </button>
           <button mat-icon-button class="mini-icon-button" (click)="exportCSV()"
-                  matTooltip="{{'export_data' | translate}}">
+            matTooltip="{{'export_data' | translate}}">
             <mat-icon>download</mat-icon>
           </button>
         </div>
       </mat-card-title-group>
-      <app-patient-fields style="overflow: auto; height: 100%; margin: 0 0 0 2.5%;" [readOnly]=true [fields]="patient.fields"></app-patient-fields>
+      <app-patient-fields style="overflow: auto; height: 100%; margin: 0 0 0 2.5%;" [readOnly]=true
+        [fields]="patient.fields"></app-patient-fields>
     </mat-card>
 
-    <mat-card id="pseudonyme" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; flex: 1">
-      <mat-card-title style="margin: 0 0 0 2.5%; align-self: start">{{'idcard.title_pseudonyms' | translate}}</mat-card-title>
-      <app-patient-pseudonyms style="overflow: auto; height: 100%; margin: 0 0 0 2.5%;" [readOnly]=true [ids]="patient.ids" [permittedOperation]="'R'"
+    <mat-card id="pseudonyme"
+      style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; flex: 1">
+      <mat-card-title style="margin: 0 0 0 2.5%; align-self: start">{{'idcard.title_pseudonyms' |
+        translate}}</mat-card-title>
+      <app-patient-pseudonyms style="overflow: auto; height: 100%; margin: 0 0 0 2.5%;" [readOnly]=true
+        [ids]="patient.ids" [permittedOperation]="'R'"
         (generateId)="this.generateId($event.idType, $event.idString, $event.newIdType)"></app-patient-pseudonyms>
     </mat-card>
   </div>
@@ -33,9 +38,8 @@
     <!--        <mat-icon matTooltip="ID hinzufügen">subtitles</mat-icon>-->
     <!--      </button>-->
 
-    <button mat-fab *appHasAnyPermissions="[Permission.EDIT_PATIENT]"
-      [routerLink]="['/edit-patient', idType, idString]" [state]="{patient: patient}"
-      style="background-color:#ffd60a; color:white; margin-bottom: 15px;"
+    <button mat-fab *appHasAnyPermissions="[Permission.EDIT_PATIENT]" [routerLink]="['/edit-patient', idType, idString]"
+      [state]="{patient: patient}" style="background-color:#ffd60a; color:white; margin-bottom: 15px;"
       aria-label="Example icon button with a delete icon">
       <mat-icon matTooltip="{{'button_edit' | translate}}">edit</mat-icon>
     </button>
@@ -56,8 +60,10 @@
     </ng-container>
   </section>
   <ng-container *ngIf="this.showDomainsCard()">
-    <mat-card id="domains" style="box-sizing: border-box; display: flex; flex-direction: column; margin: 0 20px 14px 0;">
-      <mat-card-title style="margin: 0 1.25%; align-self: start;">{{'patientlist.headers_tenants' | translate}}</mat-card-title>
+    <mat-card id="domains"
+      style="box-sizing: border-box; display: flex; flex-direction: column; margin: 0 20px 14px 0;">
+      <mat-card-title style="margin: 0 1.25%; align-self: start;">{{'patientlist.headers_tenants' |
+        translate}}</mat-card-title>
       <mat-card-content style="display: flex; flex-direction: column; height: 100%">
         <mat-chip-list style="margin: 0 0 7px 1.4%;">
           <mat-chip *ngFor="let domainName of patient.tenants"> {{domainName}}</mat-chip>
@@ -68,7 +74,8 @@
   <ng-container *ngIf="this.consentService.isServiceEnabled()">
     <mat-card *appHasPermission="Permission.READ_CONSENT" id="consents"
       style="box-sizing: border-box; display: flex; flex-direction: column;">
-      <mat-card-title style="margin: 0 1.25%; align-self: start;">{{'idcard.consent_title' | translate}}</mat-card-title>
+      <mat-card-title style="margin: 0 1.25%; align-self: start;">{{'idcard.consent_title' |
+        translate}}</mat-card-title>
       <mat-card-content style="display: flex; flex-direction: column; height: 100%">
         <table #consentTable mat-table [dataSource]="consentsView.consentRows" class="mat-elevation-z8">
           <ng-container matColumnDef="date">
@@ -156,4 +163,36 @@
       </mat-card-content>
     </mat-card>
   </ng-container>
+  <div style="float: left; margin: 0 20px 14px 0; width: 94%; height: 480px; display: flex;
+    flex-flow: row; justify-content: space-around; align-items: stretch; column-gap: 14px;"><mat-card id="Secondary"
+      style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; flex: 1">
+      <mat-card-title-group style="margin: 0 0 0 2.5%;">
+        <mat-card-title style="flex-grow: 2;">Secondary Identities</mat-card-title>
+      </mat-card-title-group>
+      <mat-card-content style="display: flex; flex-direction: row; height: 100%">
+        
+        <mat-card style="margin: 2.5%" *ngFor="let identity of secondaryIdentities">
+          <mat-card-title-group style="margin: 0 0 0 2.5%;">
+            <mat-card-title>{{identity.getIdString(idType)}}</mat-card-title>
+            <mat-card-subtitle>{{idType}}</mat-card-subtitle>
+            <div>
+              <button style="transform: scale(0.8)" mat-icon-button class="mini-icon-button"
+                matTooltip="{{'button_id_card' | translate}}" (click)="showSecondartyIDCardDialog(identity)">
+                <mat-icon>fact_check</mat-icon>
+              </button>
+            </div>
+          </mat-card-title-group>
+          <mat-list>
+            <mat-list-item *ngFor="let field of fields" lines="2">
+              <span matListItemTitle>{{identity.fields[field.name]}} </span>
+              <span matListItemLine>{{field.name}}</span>
+            </mat-list-item>
+          </mat-list>
+        </mat-card>
+        <mat-paginator [length]="secondaryIdentities.length" [pageSize]="5" [disabled]="true" [hidePageSize]="true"
+          aria-label="Select page">
+        </mat-paginator>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </form>

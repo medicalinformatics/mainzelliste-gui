@@ -1,38 +1,39 @@
-import {Component, EventEmitter, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {PatientListService} from "../services/patient-list.service";
-import {Patient} from "../model/patient";
-import {GlobalTitleService} from "../services/global-title.service";
-import {Id} from "../model/id";
-import {MatTable} from "@angular/material/table";
-import {MatDialog} from "@angular/material/dialog";
-import {PatientService} from "../services/patient.service";
-import {DeletePatientDialog} from "./dialogs/delete-patient-dialog";
-import {NewIdDialog} from './dialogs/new-id-dialog';
-import {TranslateService} from '@ngx-translate/core';
-import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.component";
-import {ConsentService} from "../consent/consent.service";
-import {Permission} from "../model/permission";
-import {HttpErrorResponse} from "@angular/common/http";
-import {throwError} from "rxjs";
-import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
-import {Consent, ConsentRow, ConsentsView} from "../consent/consent.model";
-import {catchError, mergeMap} from "rxjs/operators";
-import {DeleteConsentDialog} from "./dialogs/delete-consent-dialog";
-import {IdType} from "../model/id-type";
-import {AuthorizationService} from "../services/authorization.service";
-import {MainzellisteError} from "../model/mainzelliste-error.model";
-import {ErrorMessages} from "../error/error-messages";
-import {ConsentRejectedDialog} from "../consent/dialogs/consent-rejected-dialog";
-import {ConsentInactivatedDialog} from "../consent/dialogs/consent-inactivated-dialog";
-import {IdGenerator} from "../model/idgenerator";
-import {AppConfigService} from "../app-config.service";
+import { Component, Input, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from "@angular/router";
+import { PatientListService } from "../services/patient-list.service";
+import { Patient } from "../model/patient";
+import { GlobalTitleService } from "../services/global-title.service";
+import { Id } from "../model/id";
+import { MatTable } from "@angular/material/table";
+import { MatDialog } from "@angular/material/dialog";
+import { PatientService } from "../services/patient.service";
+import { DeletePatientDialog } from "./dialogs/delete-patient-dialog";
+import { NewIdDialog } from './dialogs/new-id-dialog';
+import { TranslateService } from '@ngx-translate/core';
+import { ConsentDialogComponent } from "../consent/consent-dialog/consent-dialog.component";
+import { ConsentService } from "../consent/consent.service";
+import { Permission } from "../model/permission";
+import { HttpErrorResponse } from "@angular/common/http";
+import { throwError } from "rxjs";
+import { MainzellisteUnknownError } from "../model/mainzelliste-unknown-error";
+import { Consent, ConsentRow, ConsentsView } from "../consent/consent.model";
+import { catchError, mergeMap } from "rxjs/operators";
+import { DeleteConsentDialog } from "./dialogs/delete-consent-dialog";
+import { IdType } from "../model/id-type";
+import { AuthorizationService } from "../services/authorization.service";
+import { MainzellisteError } from "../model/mainzelliste-error.model";
+import { ErrorMessages } from "../error/error-messages";
+import { ConsentRejectedDialog } from "../consent/dialogs/consent-rejected-dialog";
+import { ConsentInactivatedDialog } from "../consent/dialogs/consent-inactivated-dialog";
+import { SecondaryIDCardDialog } from './dialogs/secondary-idcard-dialog';
+import { IdGenerator } from "../model/idgenerator";
+import { AppConfigService } from "../app-config.service";
 import {
   ConsentHistoryDialogComponent
 } from "../consent/consent-history-dialog/consent-history-dialog.component";
-import {FhirResource} from "fhir-kit-client/types/index";
-import {SearchParams} from "fhir-kit-client";
-import { SemanticType } from '../model/field';
+import { FhirResource } from "fhir-kit-client/types/index";
+import { SearchParams } from "fhir-kit-client";
+import { SemanticType, Field } from '../model/field';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 
@@ -43,6 +44,12 @@ import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 })
 
 export class IdcardComponent implements OnInit {
+  @Input() public inIdType: string ="";
+  @Input() public inIdString: string ="";
+
+  getFilteredFileds(arg0: { [key: string]: string; }): { [key: string]: any; } {
+    throw new Error('Method not implemented.');
+  }
   public readonly Permission = Permission;
 
   public idString: string = "";
@@ -53,8 +60,56 @@ export class IdcardComponent implements OnInit {
   @ViewChild('consentTable') consentTable!: MatTable<ConsentRow>;
   public loadingConsents: boolean = false;
   public idTypes: IdType[] = [];
-  private readIdTypes: string [] = [];
-  private otherTenantIdTypes: string [] = [];
+  private readIdTypes: string[] = [];
+  private otherTenantIdTypes: string[] = [];
+  fields: Field[];
+  public secondaryIdentities: Patient[] = [new Patient({ "Nachname": "Fischer", "Vorname": "Peter", "Geburtsname": "", "Geburtsdatum": "23.05.1985", "Wohnort": "Hamburg", "PLZ": "20095" },
+    [{
+      idType: "biobankId", idString: "9101",
+      tentative: true
+    }]),
+    new Patient({ "Nachname": "Schmidt", "Vorname": "Anna", "Geburtsname": "Meier", "Geburtsdatum": "12.11.1990", "Wohnort": "Berlin", "PLZ": "10115" },
+      [{
+        idType: "biobankId", idString: "5678",
+        tentative: true
+      }]),
+    new Patient({ "Nachname": "Müller", "Vorname": "Hans", "Geburtsname": "", "Geburtsdatum": "01.01.1970", "Wohnort": "München", "PLZ": "80331" },
+      [{
+        idType: "biobankId", idString: "1234",
+        tentative: true
+      }]),
+    new Patient({ "Nachname": "Klein", "Vorname": "Klaus", "Geburtsname": "", "Geburtsdatum": "15.07.1980", "Wohnort": "Frankfurt", "PLZ": "60311" },
+      [{
+        idType: "biobankId", idString: "4321",
+        tentative: true
+      }]),
+    new Patient({ "Nachname": "Schneider", "Vorname": "Maria", "Geburtsname": "", "Geburtsdatum": "30.04.1995", "Wohnort": "Düsseldorf", "PLZ": "40213" },
+      [{
+        idType: "biobankId", idString: "6789",
+        tentative: true
+      }]),
+    new Patient({ "Nachname": "Weber", "Vorname": "Thomas", "Geburtsname": "", "Geburtsdatum": "25.09.1988", "Wohnort": "Stuttgart", "PLZ": "70173" },
+      [{
+        idType: "biobankId", idString: "3456",
+        tentative: true
+      }]),
+    new Patient({ "Nachname": "Becker", "Vorname": "Sabine", "Geburtsname": "", "Geburtsdatum": "07.03.1975", "Wohnort": "Köln", "PLZ": "50667" },
+      [{
+        idType: "biobankId", idString: "7890",
+        tentative: true
+      }]),
+    new Patient({ "Nachname": "Hoffmann", "Vorname": "Andreas", "Geburtsname": "", "Geburtsdatum": "18.06.1983", "Wohnort": "Hannover", "PLZ": "30159" },
+      [{
+        idType: "biobankId", idString: "9012",
+        tentative: true
+      }]),
+    new Patient({ "Nachname": "Schulz", "Vorname": "Petra", "Geburtsname": "", "Geburtsdatum": "02.12.1992", "Wohnort": "Leipzig", "PLZ": "04109" },
+      [{
+        idType: "biobankId", idString: "3456",
+        tentative: true
+      }]),
+    ];
+
 
   constructor(
     private translate: TranslateService,
@@ -71,16 +126,24 @@ export class IdcardComponent implements OnInit {
     public consentRejectedDialog: MatDialog,
     public consentInactivatedDialog: MatDialog,
     public newIdDialog: MatDialog,
+    public secondaryIDCardDialog: MatDialog,
     public consentService: ConsentService,
     public configService: AppConfigService
   ) {
+    if(this.activatedRoute != null){
     this.activatedRoute.params.subscribe((params) => {
       if (params["idType"] !== undefined)
         this.idType = params["idType"]
       if (params["idString"] !== undefined)
         this.idString = params["idString"]
     });
+  }else{
+    this.idType = this.inIdType;
+    this.idString = this.inIdString;
+  }
     this.changeTitle();
+    this.fields = configService.data[0].fields.filter(f => !f.hideFromList);
+    this.fields = this.fields.filter(f => f.name !== "Geburtsname" && f.name !== "Wohnort" && f.name !== "PLZ");
   }
 
   ngOnInit() {
@@ -90,9 +153,9 @@ export class IdcardComponent implements OnInit {
     // find id types, that can be read
     this.readIdTypes = this.patientListService.getAllIdTypes("R")
     this.otherTenantIdTypes = this.authorizationService.getTenants()
-    .filter(t => t.id != this.authorizationService.currentTenantId)
-    .map(t => t.idTypes)
-    .reduce((a,b) => a.concat(b));
+      .filter(t => t.id != this.authorizationService.currentTenantId)
+      .map(t => t.idTypes)
+      .reduce((a, b) => a.concat(b));
     this.readIdTypes.push(... this.otherTenantIdTypes)
 
     this.loadPatient();
@@ -111,38 +174,38 @@ export class IdcardComponent implements OnInit {
 
   private loadPatient() {
     this.patientListService.readPatient(new Id(this.idType, this.idString), "R", undefined, this.readIdTypes)
-    .pipe(
-      catchError(e => {
-        if (e instanceof HttpErrorResponse && (e.status == 404)) {
-          this.router.navigate(['/**']).then();
-        }
-        return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_add_patient_token'), e, this.translate))
-      })
-    )
-    .subscribe(
-      patients => {
-        this.patient = this.patientListService.convertToDisplayPatient(patients[0], false, this.authorizationService.getTenants());
-        this.patient.ids = this.patient.ids.filter(id => !this.otherTenantIdTypes.some(t => t == id.idType));
-      });
+      .pipe(
+        catchError(e => {
+          if (e instanceof HttpErrorResponse && (e.status == 404)) {
+            this.router.navigate(['/**']).then();
+          }
+          return throwError(() => new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_add_patient_token'), e, this.translate))
+        })
+      )
+      .subscribe(
+        patients => {
+          this.patient = this.patientListService.convertToDisplayPatient(patients[0], false, this.authorizationService.getTenants());
+          this.patient.ids = this.patient.ids.filter(id => !this.otherTenantIdTypes.some(t => t == id.idType));
+        });
   }
 
   private loadConsents() {
     this.loadingConsents = true;
     this.consentsView = { consentTemplates: new Map, consentRows: [] }
     this.consentService.getConsents(this.idType, this.idString)
-    .subscribe({
-      next: (dataModels) => {
-        this.consentsView = dataModels;
-        this.consentTable.renderRows();
-        this.loadingConsents = false;
-      },
-      error: (error) => this.loadingConsents = false
-    });
+      .subscribe({
+        next: (dataModels) => {
+          this.consentsView = dataModels;
+          this.consentTable.renderRows();
+          this.loadingConsents = false;
+        },
+        error: (error) => this.loadingConsents = false
+      });
   }
 
   deleteConsent(consentId: string) {
     this.consentService.deleteConsent(consentId).pipe(
-        mergeMap(r => this.consentService.getConsents(this.idType, this.idString))
+      mergeMap(r => this.consentService.getConsents(this.idType, this.idString))
     ).subscribe({
       next: dataModels => {
         this.consentsView = dataModels;
@@ -184,14 +247,14 @@ export class IdcardComponent implements OnInit {
 
     dialogRef.beforeClosed().subscribe(dataModel => {
       if (dataModel?.consent) {
-        dataModel.consent.patientId = {idType: this.idType, idString: this.idString};
+        dataModel.consent.patientId = { idType: this.idType, idString: this.idString };
         dataModel.consent.fhirResource.patient = {
           identifier: this.consentService.convertToFhirIdentifier(dataModel.consent.patientId)
         }
         this.updateConsent(dataModel.consent, false, processDone,
           {
-          'patient:identifier': dataModel.consent.fhirResource.patient.identifier?.system + '|' + dataModel.consent.fhirResource.patient.identifier?.value,
-          'policyUri': 'fhir/Questionnaire/' + dataModel.consent.templateId
+            'patient:identifier': dataModel.consent.fhirResource.patient.identifier?.system + '|' + dataModel.consent.fhirResource.patient.identifier?.value,
+            'policyUri': 'fhir/Questionnaire/' + dataModel.consent.templateId
           });
       }
     });
@@ -212,21 +275,21 @@ export class IdcardComponent implements OnInit {
 
       dialogRef.beforeClosed().subscribe(dataModel => {
         if (dataModel?.consent) {
-          dataModel.consent.patientId = {idType: this.idType, idString: this.idString};
+          dataModel.consent.patientId = { idType: this.idType, idString: this.idString };
           this.updateConsent(dataModel.consent, false, processDone);
         }
       });
     })
   }
 
-  updateConsent(dataModel: Consent, force: boolean, processDone: EventEmitter<boolean>, searchParams? :SearchParams) {
+  updateConsent(dataModel: Consent, force: boolean, processDone: EventEmitter<boolean>, searchParams?: SearchParams) {
     this.consentService.updateConsent(dataModel, force || false, searchParams).pipe(
       mergeMap(c =>
         this.consentService.createScansAndProvenance(dataModel, (c as fhir4.Consent).id ?? "")
       ),
-      catchError(e => throwError( () => e))
+      catchError(e => throwError(() => e))
     ).subscribe({
-      next: () => {},
+      next: () => { },
       error: e => {
         processDone.emit(false);
         if (e instanceof MainzellisteError && e.errorMessage == ErrorMessages.CREATE_CONSENT_REJECTED) {
@@ -277,19 +340,19 @@ export class IdcardComponent implements OnInit {
     );
   }
 
-  openViewConsentHistoryDialog(consentId: string, version :number) {
+  openViewConsentHistoryDialog(consentId: string, version: number) {
     this.consentHistoryDialog.open(ConsentHistoryDialogComponent, {
-        width: '900px',
-        disableClose: true,
-        data: {
-          consentId: consentId,
-          consentVersion: version
-        }
-      });
+      width: '900px',
+      disableClose: true,
+      data: {
+        consentId: consentId,
+        consentVersion: version
+      }
+    });
   }
 
-  getIdTypes():IdType[] {
-    if (this.idTypes.length == 0){
+  getIdTypes(): IdType[] {
+    if (this.idTypes.length == 0) {
       this.idTypes = [
         ...this.patientListService.getUniqueIdTypes(false, "C")
           .map(t => { return { name: t, isExternal: false, isAssociated: false } }),
@@ -301,12 +364,12 @@ export class IdcardComponent implements OnInit {
   }
 
   getUnAvailableIdTypes(patient: Patient): IdType[] {
-    let idGenerators : IdGenerator[] = this.configService.getMainzellisteIdGenerators();
-    let associatedIdGenerators : IdGenerator[] = this.configService.getMainzellisteAssociatedIdGenerators();
+    let idGenerators: IdGenerator[] = this.configService.getMainzellisteIdGenerators();
+    let associatedIdGenerators: IdGenerator[] = this.configService.getMainzellisteAssociatedIdGenerators();
     return this.getIdTypes()
-    .filter( t => t.isAssociated && associatedIdGenerators.some(g => g.isPersistent && g.idType == t.name)||
-      idGenerators.some(g => g.isPersistent && g.idType == t.name) &&
-      !patient.ids.some( id => id.idType == t.name));
+      .filter(t => t.isAssociated && associatedIdGenerators.some(g => g.isPersistent && g.idType == t.name) ||
+        idGenerators.some(g => g.isPersistent && g.idType == t.name) &&
+        !patient.ids.some(id => id.idType == t.name));
   }
 
   hasAllIds(): boolean {
@@ -367,9 +430,9 @@ export class IdcardComponent implements OnInit {
 
     new AngularCsv(data, 'ContactInfo', {
       headers: [this.translate.instant("first_name_text"),
-         this.translate.instant("last_name_text"),
-         this.translate.instant("zip_code_text"),
-         this.translate.instant("residence_text")],
+      this.translate.instant("last_name_text"),
+      this.translate.instant("zip_code_text"),
+      this.translate.instant("residence_text")],
       quoteStrings: '',
       delimiter: ';'
     },);
@@ -392,7 +455,28 @@ export class IdcardComponent implements OnInit {
     return fieldMap;
   }
 
-  showDomainsCard():boolean{
+  showDomainsCard(): boolean {
     return this.configService.showDomainsInIDCard() && this.authorizationService.getTenants().length > 1;
   }
+
+  getFilteredFields(fields: {[key: string]: string;}): {[key: string]: string;}{
+    return Object.keys(fields)
+      .filter(key => key !== 'Geburtsname' && key !== 'Wohnort' && key !== 'PLZ')
+      .reduce((obj: { [key: string]: string }, key) => {
+      obj[key] = fields[key];
+      return obj;
+      }, {});
+
+  }
+
+  showSecondartyIDCardDialog(patient: Patient) {
+    const dialogRef = this.secondaryIDCardDialog.open(SecondaryIDCardDialog, {
+      data: {idString: patient.getIdString(this.idType), idType: this.idType},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      
+    });
+  }
+  
 }
