@@ -93,7 +93,7 @@ export class IdcardComponent implements OnInit {
     this.otherTenantIdTypes = this.authorizationService.getTenants()
     .filter(t => t.id != this.authorizationService.currentTenantId)
     .map(t => t.idTypes)
-    .reduce((a,b) => a.concat(b));
+    .reduce((a,b) => a.concat(b), []);
     this.readIdTypes.push(... this.otherTenantIdTypes)
 
     this.loadPatient();
