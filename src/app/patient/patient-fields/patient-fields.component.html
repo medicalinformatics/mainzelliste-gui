@@ -25,7 +25,7 @@
             <mat-label>{{field.i18n | translate}}</mat-label>
             <input *ngIf="readOnly" style="width: 90%; " matInput [readonly]="readOnly"
                    placeholder="{{field.hint}}"
-                   [ngModel]="this.readGenderText(fields[field.name])" [name]="field.name"
+                   [ngModel]="fields[field.name]" [name]="field.name"
                    [required]="field.required" #currentField="ngModel">
             <ng-container *ngIf="!readOnly">
               <mat-select [(value)]="fields[field.name]" (input)="fieldChanged()"
