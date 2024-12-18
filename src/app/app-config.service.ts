@@ -59,6 +59,9 @@ export class AppConfigService {
           this.configurationEnabled = this.data[0].betaFeatures?.configuration ?? false;
           this._showDomainsInIDCard = this.data[0].betaFeatures?.showDomainsInIDCard ?? false;
 
+          if(!this.data[0].genderFieldValues || this.data[0].genderFieldValues.length == 0)
+            this.data[0].genderFieldValues = PatientList.defaultFenderFieldValues
+
           // init layout
           this.layoutFooterLogos = this.data[0].layout?.footerLogos ?? [];
 
@@ -237,7 +240,9 @@ export class AppConfigService {
 
     // set type
     if(!isDateType) {
-      if (mlField.type == MainzellisteFieldType.PlainTextField)
+      if(['sex', 'gender', 'geschlecht'].includes(mlField.name.toLowerCase())){
+        configuredField.type = FieldType.SEX;
+      } else if (mlField.type == MainzellisteFieldType.PlainTextField)
         configuredField.type = FieldType.TEXT
       else if (mlField.type == MainzellisteFieldType.IntegerField) {
         configuredField.type = FieldType.NUMBER;

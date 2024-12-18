@@ -33,7 +33,7 @@ export class PatientFieldsComponent implements OnInit {
   localDateFormat: string;
 
   constructor(
-    fieldService: FieldService,
+    public fieldService: FieldService,
     private translate: TranslateService
     ) {
     this.configuredFields = fieldService.getFields();
@@ -48,6 +48,11 @@ export class PatientFieldsComponent implements OnInit {
 
   slideData(value: string, name: string): void{
       this.slideFieldEvent.emit({value:value, name:name});
+  }
+
+  readGenderText(fieldValue: string){
+    const i18nAttribute = this.fieldService.getGenderFieldValues().find(g => g.value == fieldValue)?.i18n;
+    return i18nAttribute != undefined && i18nAttribute.length > 0? this.translate.instant(i18nAttribute) : "";
   }
 
   public getFieldErrorMessage(fieldName: string, errors: ValidationErrors | null): string {
