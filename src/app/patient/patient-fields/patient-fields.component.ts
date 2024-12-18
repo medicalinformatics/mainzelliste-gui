@@ -50,11 +50,6 @@ export class PatientFieldsComponent implements OnInit {
       this.slideFieldEvent.emit({value:value, name:name});
   }
 
-  readGenderText(fieldValue: string){
-    const i18nAttribute = this.fieldService.getGenderFieldValues().find(g => g.value == fieldValue)?.i18n;
-    return i18nAttribute != undefined && i18nAttribute.length > 0? this.translate.instant(i18nAttribute) : "";
-  }
-
   public getFieldErrorMessage(fieldName: string, errors: ValidationErrors | null): string {
     if (errors?.['pattern'])
       return this.translate.instant('patientFields.error_value_text1') + " \"" + fieldName + "\" " + this.translate.instant('patientFields.error_value_text2');
