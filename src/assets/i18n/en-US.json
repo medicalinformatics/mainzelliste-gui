@@ -42,6 +42,11 @@
 	"health_insurance_text": "Health Insurance",
 	"health_insurance_number_text": "Health Insurance Number",
 
+  "sex_male_text" :  "Male",
+  "sex_female_text" :  "Female",
+  "sex_other_text" :  "Other",
+  "sex_unknown_text" :  "Unknown",
+
   "confirm_delete_dialog.title": "Confirm delete",
   "confirm_delete_dialog.text": "Are you sure you want to delete ${1}?",
   "confirm_delete_dialog.warning": "The data will be completely deleted and cannot be restored.",

@@ -596,6 +596,7 @@ export class PatientListService {
     }
     for(const fieldConfig of this.patientList.fields) {
       switch (fieldConfig.type+"") {
+        case "SEX":
         case "TEXT":{
           if(patient.fields[fieldConfig.mainzellisteField] != undefined) {
             displayPatient.fields[fieldConfig.name] = patient.fields[fieldConfig.mainzellisteField];
@@ -621,6 +622,7 @@ export class PatientListService {
     let result: { [p: string]: string } = {};
     for(const fieldConfig of this.patientList.fields) {
       switch (fieldConfig.type+"") {
+        case "SEX":
         case "TEXT":{
           if(fields[fieldConfig.name] != undefined && permittedFieldNames.some( p => p == fieldConfig.mainzellisteField)) {
             result[fieldConfig.mainzellisteField] = fields[fieldConfig.name];

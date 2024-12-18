@@ -44,6 +44,11 @@
   "health_insurance_text": "Krankenversicherung",
   "health_insurance_number_text": "Krankenversichertennummer",
 
+  "sex_male_text" :  "Männlich",
+  "sex_female_text" :  "Weiblich",
+  "sex_other_text" :  "Divers",
+  "sex_unknown_text" :  "Unbekannt",
+
   "confirm_delete_dialog.title": "Löschvorgang bestätigen",
   "confirm_delete_dialog.text": "Möchten Sie ${1} wirklich löschen?",
   "confirm_delete_dialog.warning": "Die Daten werden vollständig gelöscht und können nicht wiederhergestellt werden.",
