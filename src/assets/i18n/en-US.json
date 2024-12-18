@@ -40,6 +40,7 @@
 	"phone_number_text": "Phone number",
 	"email_text": "E-mail",
 	"health_insurance_text": "Health Insurance",
+  "health_insurance_company_code_text": "Health Insurance company code",
 	"health_insurance_number_text": "Health Insurance Number",
 
   "sex_male_text" :  "Male",

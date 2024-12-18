@@ -42,6 +42,7 @@
   "phone_number_text": "Telefonnummer",
   "email_text": "Email",
   "health_insurance_text": "Krankenversicherung",
+  "health_insurance_company_code_text": "Krankenversicherungsnummer",
   "health_insurance_number_text": "Krankenversichertennummer",
 
   "sex_male_text" :  "Männlich",
