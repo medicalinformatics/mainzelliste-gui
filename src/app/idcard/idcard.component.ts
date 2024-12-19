@@ -122,7 +122,7 @@ export class IdcardComponent implements OnInit {
     )
     .subscribe(
       patients => {
-        this.patient = this.patientListService.convertToDisplayPatient(patients[0], false, this.authorizationService.getTenants());
+        this.patient = this.patientListService.convertToDisplayPatient(patients[0], false, true, this.authorizationService.getTenants());
         this.patient.ids = this.patient.ids.filter(id => !this.otherTenantIdTypes.some(t => t == id.idType));
       });
   }

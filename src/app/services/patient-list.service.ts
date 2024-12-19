@@ -579,7 +579,7 @@ export class PatientListService {
   // Utils
   //-------
 
-  convertToDisplayPatient(patient: Patient, convertDateToLocal?:boolean,
+  convertToDisplayPatient(patient: Patient, convertDateToLocal?:boolean, convertDisplaySex?:boolean,
                           tenants?: { id: string, name: string, idTypes: string[] }[]): Patient {
     let displayPatient = new Patient();
     //ids
@@ -598,9 +598,13 @@ export class PatientListService {
       switch (fieldConfig.type+"") {
         case "SEX": {
           if(patient.fields[fieldConfig.mainzellisteField] != undefined) {
-            const i18nAttribute = this.configService.data[0].genderFieldValues.find(g => g.value == patient.fields[fieldConfig.mainzellisteField])?.i18n;
-            if(i18nAttribute != undefined && i18nAttribute.length > 0)
-              displayPatient.fields[fieldConfig.name] = this.translate.instant(i18nAttribute);
+            if(!convertDisplaySex){
+              displayPatient.fields[fieldConfig.name] = patient.fields[fieldConfig.mainzellisteField];
+            } else {
+              const i18nAttribute = this.configService.data[0].genderFieldValues.find(g => g.value == patient.fields[fieldConfig.mainzellisteField])?.i18n;
+              if(i18nAttribute != undefined && i18nAttribute.length > 0)
+                displayPatient.fields[fieldConfig.name] = this.translate.instant(i18nAttribute);
+            }
           }
           break;
         }
