@@ -293,6 +293,44 @@ export class PatientListService {
     )
   }
 
+  getTentative(tentativeMatchId: number) {
+    return this.sessionService.createToken("readTentatives", {}).pipe(
+      mergeMap( token => this.resolveReadTentative(token.id, tentativeMatchId)),
+      catchError( (error) => {
+        return throwError( () => new Error("failed to fetch tentatives" + `${getErrorMessageFrom(error, this.translate)}`));
+      })
+    )
+  }
+
+  resolveReadTentative(tokenId: string | undefined, tentativeMatchId: number) {
+    return this.httpClient.get<Tentative>(this.patientList.url + "/tentatives/" + tentativeMatchId
+      + "?tokenId=" + tokenId
+    )
+    .pipe(
+      mergeMap(t => this.getPatients(
+          [this.convertIdToFilter(t.assignedPatient), this.convertIdToFilter(t.bestMatchPatient)],
+          0, 0,
+          [...new Set([t.assignedPatient.idType, t.bestMatchPatient.idType])]
+        ).pipe(
+          map(r => {
+            const displayPatients = r.patients
+            .filter(p => p.ids != undefined)
+            .map(patient => this.convertToDisplayPatient(patient, false, []));
+            return {
+              id: t.requestId,
+              assignedPatient: displayPatients.find(p =>
+                p.ids.some(id => id.idType == t.assignedPatient.idType
+                  && id.idString == t.assignedPatient.idString)),
+              bestMatchPatient: displayPatients.find(p =>
+                p.ids.some(id => id.idType == t.bestMatchPatient.idType
+                  && id.idString == t.bestMatchPatient.idString))
+            }
+          })
+        )
+      )
+    )
+  }
+
   getTentatives(pageIndex: number, pageSize: number) {
     return this.sessionService.createToken("readTentatives", {}).pipe(
       mergeMap( token => this.resolveReadTentatives(token.id, pageIndex, pageSize)),

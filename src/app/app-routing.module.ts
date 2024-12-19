@@ -50,7 +50,7 @@ const routes: Routes = [
       { path: 'consent-templates', component: ConsentTemplatesComponent, data: { permission: Permission.CREATE_CONSENT_TEMPLATE } },
       // {path: 'create-consent-template', component: CreateConsentTemplateComponent, data: { permission: Permission.CREATE_CONSENT}},
       { path: 'tentatives', component: TentativeMatchesListComponent, data: { permission: Permission.READ_TENTATIVES } },
-      {path: 'merge-patients', component: MergeSplitPatientComponent, data: { permission: Permission.EDIT_PATIENT, checkIdType:true}},
+      {path: 'resolve-unsure-match/:id', component: MergeSplitPatientComponent, data: { permission: Permission.READ_TENTATIVES }},
 
     ]
   },
