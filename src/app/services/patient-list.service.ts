@@ -308,7 +308,7 @@ export class PatientListService {
 
   resolveReadTentatives(tokenId: string|undefined, pageIndex: number, pageSize: number) {
     return this.httpClient.get<Tentative[]>(this.patientList.url + "/tentatives?"
-      +"tokenId=" + tokenId + "&page=" + pageIndex + "&limit=" + pageSize,
+      +"tokenId=" + tokenId + "&page=" + (pageIndex + 1) + "&limit=" + pageSize,
       {observe: 'response'}
     )
     .pipe(
@@ -321,8 +321,8 @@ export class PatientListService {
           response.tentatives.map(t => [this.convertIdToFilter(t.assignedPatient), this.convertIdToFilter(t.bestMatchPatient)])
           .reduce((accumulator, currentValue) => accumulator.concat(currentValue), []),
           0, 0,
-          response.tentatives.map(t => [t.assignedPatient.idType, t.bestMatchPatient.idType])
-          .reduce((accumulator, currentValue) => accumulator.concat(currentValue).filter(t => !accumulator.includes(t)), [])
+        [...new Set(response.tentatives.map(t => [t.assignedPatient.idType, t.bestMatchPatient.idType])
+          .reduce((accumulator, currentValue) => accumulator.concat(currentValue), []))]
         ).pipe(
           map( r => r.patients
             .filter(p => p.ids != undefined)
