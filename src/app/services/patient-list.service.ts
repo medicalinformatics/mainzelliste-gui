@@ -28,6 +28,7 @@ import {IdGenerator} from "../model/idgenerator";
 import {AddPatientsSingleResponse} from "../model/add-patients-single-response";
 import {TaskResponse} from "../model/task-response";
 import {AddPatientRequest} from "../model/add-patient-request";
+import {Tentative} from "../model/api/tentative";
 
 export interface ReadPatientsResponse {
   patients: Patient[];
@@ -232,7 +233,7 @@ export class PatientListService {
    * @param pageSize page limit
    */
   getPatients(filters: Array<{ field: string, fields: string[], searchCriteria: string, isIdType: boolean }>,
-              pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
+              pageIndex: number, pageSize: number, returnedIdTypes?: string []): Observable<ReadPatientsResponse> {
     // find current tenant id
     let tenantId = this.authorizationService.currentTenantId;
     if(tenantId === undefined || tenantId == Tenant.DEFAULT_ID)
@@ -254,8 +255,13 @@ export class PatientListService {
         searchIds.push({idType: f.field, idString: f.searchCriteria.trim()}));
     }
 
-    let resultIdTypes: string [] = this.getIdTypes("R");
-    this.authorizationService.getTenants().forEach(t => resultIdTypes.push(... t.idTypes));
+    let resultIdTypes = []
+    if(!returnedIdTypes || returnedIdTypes.length == 0) {
+      resultIdTypes = this.getIdTypes("R");
+      this.authorizationService.getTenants().forEach(t => resultIdTypes.push(... t.idTypes));
+    } else {
+      resultIdTypes = returnedIdTypes;
+    }
 
     // create read patients token
     return this.sessionService.createToken("readPatients",
@@ -285,6 +291,74 @@ export class PatientListService {
         }
       })
     )
+  }
+
+  getTentatives(pageIndex: number, pageSize: number) {
+    return this.sessionService.createToken("readTentatives", {}).pipe(
+      mergeMap( token => this.resolveReadTentatives(token.id, pageIndex, pageSize)),
+      catchError( (error) => {
+        if(error.status >= 400 && error.status < 500) {
+          return of({data: [], totalCount: 0});
+        } else {
+          return throwError( () => new Error("failed to fetch tentatives" + `${getErrorMessageFrom(error, this.translate)}`));
+        }
+      })
+    )
+  }
+
+  resolveReadTentatives(tokenId: string|undefined, pageIndex: number, pageSize: number) {
+    return this.httpClient.get<Tentative[]>(this.patientList.url + "/tentatives?"
+      +"tokenId=" + tokenId + "&page=" + pageIndex + "&limit=" + pageSize,
+      {observe: 'response'}
+    )
+    .pipe(
+      map( response => ({
+          tentatives: response.body ?? [],
+          totalCount: parseInt(response.headers.get("X-Total-Count") ?? "0")
+        })
+      ),
+      mergeMap(response => this.getPatients(
+          response.tentatives.map(t => [this.convertIdToFilter(t.assignedPatient), this.convertIdToFilter(t.bestMatchPatient)])
+          .reduce((accumulator, currentValue) => accumulator.concat(currentValue), []),
+          0, 0,
+          response.tentatives.map(t => [t.assignedPatient.idType, t.bestMatchPatient.idType])
+          .reduce((accumulator, currentValue) => accumulator.concat(currentValue).filter(t => !accumulator.includes(t)), [])
+        ).pipe(
+          map( r => r.patients
+            .filter(p => p.ids != undefined)
+            .map(patient => this.convertToDisplayPatient(patient, true, []))
+          ),
+          map(patients => {
+            return {
+              data: response.tentatives.map(t => {
+                const assignedPatient = patients.find(p =>
+                  p.ids.some(id => id.idType == t.assignedPatient.idType
+                    && id.idString == t.assignedPatient.idString))
+                const bestMatchPatient = patients.find(p =>
+                  p.ids.some(id => id.idType == t.bestMatchPatient.idType
+                    && id.idString == t.bestMatchPatient.idString))
+
+                const view: { [key: string]: string } = {};
+                view["id"] = t.requestId;
+                view["timestamp"] = t.timestamp;
+                Object.entries(assignedPatient?.fields ?? {}).forEach(([key, value]) => {
+                  view["p." + key] = value;
+                })
+                Object.entries(bestMatchPatient?.fields ?? {}).forEach(([key, value]) => {
+                  view["b." + key] = value;
+                })
+                return view
+              }),
+              totalCount: response.totalCount
+            }
+          })
+        )
+      )
+    )
+  }
+
+  private convertIdToFilter(id: Id){
+    return { field: id.idType, fields: [], searchCriteria: id.idString, isIdType: true }
   }
 
   convertFiltersToUrl(filters: Array<{ field: string, fields: string[], searchCriteria: string, isIdType: boolean }>) : string{

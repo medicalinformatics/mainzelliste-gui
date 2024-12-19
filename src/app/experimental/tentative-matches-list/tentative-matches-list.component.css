@@ -1,60 +1,53 @@
- #merge {
-  width: 2%;
-   margin-left: 2%;
-   margin-right: 0%;
-   box-shadow: none;
- }
+.table-container {
+  max-width: 100%;
+  overflow: auto;
+}
 
- #patients {
-   width: 46% !important;
-   margin-left: 0%;
-   margin-right: 0%;
-   box-shadow: none;
- }
+#tentatives {
+  width: 100%;
+}
 
- #matches {
-   width: 46% !important;
-   margin-left: 0%;
-   margin-right: 2%;
-   box-shadow: none;
- }
+#tentatives td, #tentatives th {
+  border-right: 1px solid #ddd;
+  padding: 0 10px 0 10px;
+}
 
- mat-column-actions,
- mat-column-actions {
-   width: 3% !important;
- }
+#tentatives tr.mat-row {
+  height: 38px;
+}
 
- #matches td,
- #matches th,
- #patients td,
- #patients th {
-   border: 1px solid #ddd;
-   padding: 0 10px 0 10px;
- }
+#tentatives tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
 
- #matches tr:nth-child(even),
- #patients tr:nth-child(even) {
-   background-color: #f2f2f2;
- }
+#tentatives tr:hover {
+  background-color: #aecbde;
+}
 
- #matches tr:hover,
- #patients tr:hover {
-   background-color: #ADDFFF;
- }
+#tentatives .mat-header-cell {
+  background-color: #053E6A;
+  color: white;
+  font-size: inherit
+}
 
- #matches .mat-header-cell,
- #patients .mat-header-cell {
-   background-color: #053E6A;
-   color: white;
-   font-size: inherit
- }
+#tentatives .mat-column-actions {
+  border-right: 0
+}
 
- #matches .mat-header-cell .mat-checkbox-frame,
- #patients .mat-header-cell .mat-checkbox-frame {
-   border-color: white;
- }
+#tentatives .mat-header-cell .mat-checkbox-frame {
+  border-color: white;
+}
 
- #matches .mat-header-cell .mat-checkbox-frame.mat-checkbox-indeterminate,
- #patients .mat-header-cell .mat-checkbox-frame.mat-checkbox-indeterminate {
-   border-color: #053E6A;
- }
+#tentatives .mat-header-cell .mat-checkbox-frame.mat-checkbox-indeterminate {
+  border-color: #053E6A;
+}
+
+.mat-column-separator {
+  width: 5px;
+}
+
+mat-paginator {
+  float: right;
+  margin-top: 1.5%;
+  background-color: transparent;
+}

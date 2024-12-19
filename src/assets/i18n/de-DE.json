@@ -119,6 +119,7 @@
 	"navigation.bulkPseudonymization": "Bulk-Pseudonymisierung",
   "navigation.consent_template": "Einwilligungsvorlagen",
   "navigation.configuration": "Konfiguration",
+  "navigation.read_tentatives" : "Unsichere Matches",
 
 	"patientlist.filter_search": "Filter/Suche...",
 	"patientlist.button_filter_columns": "Spalten auswählen",
@@ -364,6 +365,10 @@
   "bulkPseudonymization.upload_info_text1": "Bitte wählen Sie eine CSV-Datei mit den Patienten-Daten aus.",
   "bulkPseudonymization.upload_info_text2": "Die Datei muss mindestens die pflicht IDAT-Felder (${fieldName}) und/oder ein externen ID-Typ (${extIdTypes}) als CSV-Header enthalten.",
   "bulkPseudonymization.upload_info_text3": "Leere Zeilen können zu Fehlern führen!",
+
+  "read_tentatives.title" : "Unsichere Matches",
+  "read_tentatives.not_item" : "Kein unsicheres Match gefunden.",
+  "read_tentatives.button_resolve" : "Unsicheres Match lösen",
 
 	"export_data": "Kontaktdaten nach Excel exportieren",
 	"copy_data": "Kontaktdaten in Zwischenablage kopieren"
