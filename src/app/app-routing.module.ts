@@ -49,7 +49,7 @@ const routes: Routes = [
       // {path: 'delete-patients', component: DeleteMultiplePatientsComponent, data : { permission: 'deletePatient' }},
       { path: 'consent-templates', component: ConsentTemplatesComponent, data: { permission: Permission.CREATE_CONSENT_TEMPLATE } },
       // {path: 'create-consent-template', component: CreateConsentTemplateComponent, data: { permission: Permission.CREATE_CONSENT}},
-      { path: 'matches', component: TentativeMatchesListComponent, data: { permission: Permission.EDIT_PATIENT } },
+      { path: 'tentatives', component: TentativeMatchesListComponent, data: { permission: Permission.READ_TENTATIVES } },
       {path: 'merge-patients', component: MergeSplitPatientComponent, data: { permission: Permission.EDIT_PATIENT, checkIdType:true}},
 
     ]
