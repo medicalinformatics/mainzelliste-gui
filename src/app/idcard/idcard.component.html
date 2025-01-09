@@ -170,8 +170,10 @@
         <mat-card-title style="flex-grow: 2;">Secondary Identities</mat-card-title>
       </mat-card-title-group>
       <mat-card-content style="display: flex; flex-direction: row; height: 100%">
-        
-        <mat-card style="margin: 2.5%" *ngFor="let identity of secondaryIdentities">
+        <mat-paginator [length]="secondaryIdentities.length" [pageSize]="pageSize" [pageIndex]="pageIndex" [hidePageSize]="true"
+        aria-label="Select page" (page)="onPageChange($event)">
+      </mat-paginator>
+        <mat-card style="margin: 2.5%" *ngFor="let identity of secondaryIdentities.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)">
           <mat-card-title-group style="margin: 0 0 0 2.5%;">
             <mat-card-title>{{identity.getIdString(idType)}}</mat-card-title>
             <mat-card-subtitle>{{idType}}</mat-card-subtitle>
@@ -182,16 +184,15 @@
               </button>
             </div>
           </mat-card-title-group>
-          <mat-list>
-            <mat-list-item *ngFor="let field of fields" lines="2">
-              <span matListItemTitle>{{identity.fields[field.name]}} </span>
-              <span matListItemLine>{{field.name}}</span>
-            </mat-list-item>
-          </mat-list>
+          <mat-card-content>
+              <mat-list>
+                <mat-list-item *ngFor="let field of fields " lines="2">
+                  <span matListItemTitle>{{identity.fields[field.name]}} </span>
+                  <span matListItemLine>{{field.name}}</span>
+                </mat-list-item>
+              </mat-list>
+          </mat-card-content>
         </mat-card>
-        <mat-paginator [length]="secondaryIdentities.length" [pageSize]="5" [disabled]="true" [hidePageSize]="true"
-          aria-label="Select page">
-        </mat-paginator>
       </mat-card-content>
     </mat-card>
   </div>

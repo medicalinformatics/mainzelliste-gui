@@ -35,6 +35,7 @@ import { FhirResource } from "fhir-kit-client/types/index";
 import { SearchParams } from "fhir-kit-client";
 import { SemanticType, Field } from '../model/field';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
+import { PageEvent } from '@angular/material/paginator';
 
 
 @Component({
@@ -46,6 +47,10 @@ import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 export class IdcardComponent implements OnInit {
   @Input() public inIdType: string ="";
   @Input() public inIdString: string ="";
+
+  //Pageinator
+  public pageIndex= 1;
+  public pageSize = 5;
 
   getFilteredFileds(arg0: { [key: string]: string; }): { [key: string]: any; } {
     throw new Error('Method not implemented.');
@@ -477,6 +482,11 @@ export class IdcardComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       
     });
+  }
+
+  onPageChange(event: PageEvent){
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
   }
   
 }
