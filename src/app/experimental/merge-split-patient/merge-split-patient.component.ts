@@ -1,11 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {Patient} from "../../model/patient";
-import {PatientService} from "../../services/patient.service";
 import {GlobalTitleService} from "../../services/global-title.service";
 import {TranslateService} from "@ngx-translate/core";
 import {PatientListService} from "../../services/patient-list.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from '@angular/material/dialog';
+import {SolveTentativeOperationType} from "../../model/solve-tentative-payload";
+import {ErrorMessage, ErrorMessages} from "../../error/error-messages";
+import {HttpErrorResponse} from "@angular/common/http";
+import {MergeTentativeDialogComponent} from "./dialog/merge-tentative-dialog.component";
 
 @Component({
   selector: 'app-merge-split-patient',
@@ -13,22 +16,27 @@ import {MatDialog} from '@angular/material/dialog';
   styleUrls: ['./merge-split-patient.component.css']
 })
 export class MergeSplitPatientComponent implements OnInit {
+  private readonly solveTentativeErrors: ErrorMessage[] = [
+    ErrorMessages.SOLVE_TENTATIVE_MERGE_FAILED_MAIN_IDENTITY_IS_SECONDARY,
+    ErrorMessages.SOLVE_TENTATIVE_MERGE_FAILED_SECONDARY_IDENTITY_ID_MAIN,
+    ErrorMessages.SOLVE_TENTATIVE_MERGE_FAILED_SECONDARY_IDENTITY_LINKED
+  ]
+
   tentativeMatchId: number = 0;
   patient1: Patient | undefined;
   patient2: Patient | undefined;
   mainPatient: number = 1; // Index of the patient that is the main patient (aka which ID is the main ID)
 
   fields: Array<string> = [];
-  confirm: boolean = false;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly router: Router,
+    private readonly titleService: GlobalTitleService,
+    private readonly patientListService: PatientListService,
+    public mergeTentativeConfirmDialog: MatDialog,
     public translate: TranslateService,
-    private titleService: GlobalTitleService,
-    public patientService: PatientService,
-    private patientListService: PatientListService,
-    public confirmDialog: MatDialog,
-    private router: Router,
+
   ) {
     this.activatedRoute.params.subscribe((params) => {
       this.tentativeMatchId = parseInt(params["id"] ?? "0");
@@ -44,7 +52,7 @@ export class MergeSplitPatientComponent implements OnInit {
   }
 
   changeTitle() {
-    this.titleService.setTitle(this.translate.instant('mergePatients.title'), false, "merge_type");
+    this.titleService.setTitle(this.translate.instant('solve_tentatives.title'), false, "alt_route");
   }
 
   private loadPatient() {
@@ -54,33 +62,36 @@ export class MergeSplitPatientComponent implements OnInit {
     })
   }
 
-  async mergePatients() {
-    let deleteFlag: boolean = false;
-    /* const dialogRef = this.confirmDialog.open(MergePatientConfirmDialog, {
-       width: '900px',
-       data: { mainPatient: this.mainPatient, isDelete: deleteFlag },
-       panelClass: 'dialogClass'
-     });
+  mergePatients(force: boolean) {
+    this.patientListService.solveTentative(this.tentativeMatchId, SolveTentativeOperationType.merge,
+      this.mainPatient == 1 ? this.patient1?.ids[0] : this.patient2?.ids[0], force)
+    .subscribe({
+      next: () => { this.router.navigate(["/tentatives"]).then()},
+      error: e => {
+        if (e instanceof HttpErrorResponse && this.solveTentativeErrors.find(msg => msg.match(e))) {
+          this.openMergeTentativeDialog();
+        }
+      }
+    });
+  }
 
-     dialogRef.afterClosed().subscribe(result => {
-       if (result) {
-         this.confirm = result.confirm ?? false;
-         deleteFlag = result.isDelete;
-
-         if (this.confirm) {
-           let finalPatient = this.mainPatient == 1 ? this.patient1 : this.patient2;
-           this.router.navigate(['/idcard', finalPatient.ids[0].idType, finalPatient.ids[0].idString]);
-         }
-       }
-     });
-     */
+  splitPatients(){
+    this.patientListService.solveTentative(this.tentativeMatchId, SolveTentativeOperationType.split)
+    .subscribe()
   }
 
   setMainPatient(index: number) {
     this.mainPatient = index;
   }
-  getMainPatient() {
-    return this.mainPatient;
-  }
 
+  private openMergeTentativeDialog() {
+    const dialogRef = this.mergeTentativeConfirmDialog.open(MergeTentativeDialogComponent, {
+      data: {},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.mergePatients(true);
+    });
+  }
 }

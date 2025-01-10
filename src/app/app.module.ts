@@ -68,10 +68,19 @@ import {
 import {
   BulkIdGenerationEmptyFieldsDialog
 } from "./bulk-operations/bulk-id-generation/dialog/bulk-id-generation-empty-fields-dialog";
-import { BulkPseudonymizationComponent } from './bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component';
+import {
+  BulkPseudonymizationComponent
+} from './bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component';
 import {EditorModule, TINYMCE_SCRIPT_SRC} from "@tinymce/tinymce-angular";
-import { TentativeMatchesListComponent } from './experimental/tentative-matches-list/tentative-matches-list.component';
-import { MergeSplitPatientComponent } from './experimental/merge-split-patient/merge-split-patient.component';
+import {
+  TentativeMatchesListComponent
+} from './experimental/tentative-matches-list/tentative-matches-list.component';
+import {
+  MergeSplitPatientComponent
+} from './experimental/merge-split-patient/merge-split-patient.component';
+import {
+  MergeTentativeDialogComponent
+} from "./experimental/merge-split-patient/dialog/merge-tentative-dialog.component";
 
 function initializeAppFactory(
     configService: AppConfigService,
@@ -137,7 +146,8 @@ function initializeAppFactory(
     BulkPseudonymizationComponent,
     ConsentTemplatesComponent,
     TentativeMatchesListComponent,
-    MergeSplitPatientComponent
+    MergeSplitPatientComponent,
+    MergeTentativeDialogComponent,
   ],
   imports: [
     SharedModule,

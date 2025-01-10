@@ -37,7 +37,7 @@
     <tr mat-header-row style="height: 0; border: 0;" *matHeaderRowDef="['progress']"></tr>
     <tr class="mat-row" *matNoDataRow>
       <td *ngIf="!loading" class="mat-cell" [attr.colspan]="this.columns.length" style="text-align: center">
-        {{'patientlist.no_patient_found' | translate}}
+        {{'read_tentatives.not_item' | translate}}
       </td>
     </tr>
     <tr mat-row *matRowDef="let row; columns: this.getColumnsNames();"></tr>

@@ -292,8 +292,9 @@
   "error.fetch_patients_job_unauthorized": "Sie haben keine Berechtigung, um die Bulk-Pseudonymisierungsergebnisse zu lesen",
   "error.fetch_patients_job_not_found": "Bulk-Pseudonymisierung ist fehlgeschlagen",
 
-  "errorComponent.error": "Error",
-	"errorComponent.message": "Information",
+  "error.solve_tentative_failed_main_identity_is_secondary": "Die ausgewählte Haupt-Identität ist bereit eine sekundäre Identität eines existierenden Patienten. Möchten Sie stattdessen diesen Patienten als Haupt-Identität übernehmen",
+  "error.solve_tentative_failed_secondary_identity_is_main_identity": "Die angegebenene sekundäre Identität ist eine Haupt-Identität eines existierenden Patienten, mit weiteren sekundären Identitäten. Möchten Sie alle Identitäten als sekundären Identitäten für die ausgewählte Haupt-Identität hinzufügen",
+	"error.solve_tentative_failed_secondary_identity_is_secondary": "Die angegebenene sekundäre Identität ist bereit eine sekundäre Identität eines existierenden Patienten, mit weiteren sekundären Identitäten. Möchten Sie alle Identitäten als sekundären Identitäten für die ausgewählte Haupt-Identität hinzufügen",
 
 	"errorCardComponent.error": "Error: ",
 	"errorDialogComponent.title": "Ups! Etwas ist schief gelaufen!",
@@ -369,6 +370,8 @@
   "read_tentatives.title" : "Unsichere Matches",
   "read_tentatives.not_item" : "Kein unsicheres Match gefunden.",
   "read_tentatives.button_resolve" : "Unsicheres Match lösen",
+
+  "solve_tentatives.title": "Unsicheres Match lösen",
 
 	"export_data": "Kontaktdaten nach Excel exportieren",
 	"copy_data": "Kontaktdaten in Zwischenablage kopieren"

@@ -76,8 +76,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatExpansionModule,
     MatSlideToggleModule,
     DragDropModule,
-    MatSnackBarModule,
-    TranslateModule
+    MatSnackBarModule
   ]
 })
 export class SharedModule {

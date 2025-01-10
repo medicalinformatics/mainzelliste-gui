@@ -346,6 +346,8 @@
   "read_tentatives.not_item" : "No tenatives found.",
   "read_tentatives.button_resolve" : "Resolve tentative Match",
 
+  "solve_tentatives.title": "Resolve tentative Match",
+
 	"export_data": "Export contact information to excel",
 	"copy_data": "Copy contact information to clipboard"
 }

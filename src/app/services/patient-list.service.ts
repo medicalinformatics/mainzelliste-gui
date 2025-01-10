@@ -10,7 +10,7 @@ import {EditPatientTokenData} from "../model/edit-patient-token-data";
 import {DeletePatientTokenData} from "../model/delete-patient-token-data";
 import {Field} from "../model/field";
 import {DatePipe} from "@angular/common";
-import {catchError, filter, map, mergeMap, repeat, retry, take, takeWhile} from "rxjs/operators";
+import {catchError, filter, map, mergeMap, repeat, take} from "rxjs/operators";
 import {firstValueFrom, lastValueFrom, Observable, of, throwError} from "rxjs";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessage, ErrorMessages} from "../error/error-messages";
@@ -29,6 +29,7 @@ import {AddPatientsSingleResponse} from "../model/add-patients-single-response";
 import {TaskResponse} from "../model/task-response";
 import {AddPatientRequest} from "../model/add-patient-request";
 import {Tentative} from "../model/api/tentative";
+import {SolveTentativeOperationType, SolveTentativePayload} from "../model/solve-tentative-payload";
 
 export interface ReadPatientsResponse {
   patients: Patient[];
@@ -393,6 +394,23 @@ export class PatientListService {
         )
       )
     )
+  }
+
+  solveTentative(tentativeMatchId: number, operation: SolveTentativeOperationType, mainPatientId?: Id, force?:boolean){
+    let payload : SolveTentativePayload = {
+      operation : operation,
+      force: force ?? false
+    }
+
+    if(mainPatientId != undefined)
+      payload.main = mainPatientId;
+
+    return this.httpClient.put(this.patientList.url + "/tentatives/" + tentativeMatchId,
+      payload, {
+      headers: new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('mainzellisteApiVersion', '3.2')
+    });
   }
 
   private convertIdToFilter(id: Id){

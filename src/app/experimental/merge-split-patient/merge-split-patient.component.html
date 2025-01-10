@@ -25,13 +25,13 @@
 
         <div class="buttons">
             <div class="iconbutton">
-                <button mat-raised-button class="submit" type="submit" style="clear: both;">
+                <button mat-raised-button class="submit" type="submit" style="clear: both;" (click)="mergePatients(false)">
                     <mat-icon matTooltip="Merge these Patients">call_merge</mat-icon> Merge
                 </button>
             </div>
 
             <div class="iconbutton">
-                <button mat-raised-button class="submit" type="submit" style="clear: both;">
+                <button mat-raised-button class="submit" type="submit" style="clear: both;"(click)="splitPatients()">
                     <mat-icon matTooltip="Split these Patients"><svg xmlns="http://www.w3.org/2000/svg"
                             style="rotate: -90deg;" height="24px" viewBox="0 -960 960 960" width="24px" fill="#294E66">
                             <path
