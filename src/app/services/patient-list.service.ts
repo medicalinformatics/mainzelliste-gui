@@ -298,7 +298,7 @@ export class PatientListService {
     return this.sessionService.createToken("readTentatives", {}).pipe(
       mergeMap( token => this.resolveReadTentative(token.id, tentativeMatchId)),
       catchError( (error) => {
-        return throwError( () => new Error("failed to fetch tentatives" + `${getErrorMessageFrom(error, this.translate)}`));
+        return throwError( () => error instanceof HttpErrorResponse && (error.status == 404) ? error : new Error("failed to fetch tentatives " + `${getErrorMessageFrom(error, this.translate)}`));
       })
     )
   }

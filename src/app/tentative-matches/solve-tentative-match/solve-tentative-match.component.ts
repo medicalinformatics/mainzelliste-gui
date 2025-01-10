@@ -9,6 +9,7 @@ import {SolveTentativeOperationType} from "../../model/solve-tentative-payload";
 import {ErrorMessage, ErrorMessages} from "../../error/error-messages";
 import {HttpErrorResponse} from "@angular/common/http";
 import {MergeTentativeMatchDialogComponent} from "./dialog/merge-tentative-match-dialog.component";
+import {throwError} from "rxjs";
 
 @Component({
   selector: 'app-solve-tentative-match-patient',
@@ -45,7 +46,7 @@ export class SolveTentativeMatchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadPatient();
+    this.loadTentativeMatch();
     this.translate.onLangChange.subscribe(() => {
       this.changeTitle();
     });
@@ -55,10 +56,19 @@ export class SolveTentativeMatchComponent implements OnInit {
     this.titleService.setTitle(this.translate.instant('solve_tentatives.title'), false, "alt_route");
   }
 
-  private loadPatient() {
-    this.patientListService.getTentative(this.tentativeMatchId).subscribe( r => {
-      this.patient1 = r.bestMatchPatient
-      this.patient2 = r.assignedPatient
+  private loadTentativeMatch() {
+    this.patientListService.getTentative(this.tentativeMatchId)
+    .subscribe({
+      next: (r) => {
+        this.patient1 = r.bestMatchPatient
+        this.patient2 = r.assignedPatient
+      },
+      error: e => {
+        if (e instanceof HttpErrorResponse && (e.status == 404)) {
+          this.router.navigate(['/**']).then();
+        }
+        return throwError(() => e)
+      }
     })
   }
 
