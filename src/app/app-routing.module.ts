@@ -22,10 +22,10 @@ import {
 } from "./bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component";
 import {
   TentativeMatchesListComponent
-} from './experimental/tentative-matches-list/tentative-matches-list.component';
+} from "./tentative-matches/tentative-matches-list/tentative-matches-list.component";
 import {
-  MergeSplitPatientComponent
-} from './experimental/merge-split-patient/merge-split-patient.component';
+  SolveTentativeMatchComponent
+} from "./tentative-matches/solve-tentative-match/solve-tentative-match.component";
 
 const routes: Routes = [
   // TODO: All Paths should have english wording.
@@ -50,7 +50,7 @@ const routes: Routes = [
       { path: 'consent-templates', component: ConsentTemplatesComponent, data: { permission: Permission.CREATE_CONSENT_TEMPLATE } },
       // {path: 'create-consent-template', component: CreateConsentTemplateComponent, data: { permission: Permission.CREATE_CONSENT}},
       { path: 'tentatives', component: TentativeMatchesListComponent, data: { permission: Permission.READ_TENTATIVES } },
-      {path: 'resolve-unsure-match/:id', component: MergeSplitPatientComponent, data: { permission: Permission.READ_TENTATIVES }},
+      { path: 'resolve-unsure-match/:id', component: SolveTentativeMatchComponent, data: { permission: Permission.READ_TENTATIVES }},
 
     ]
   },

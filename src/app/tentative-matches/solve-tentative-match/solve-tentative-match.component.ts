@@ -8,14 +8,14 @@ import {MatDialog} from '@angular/material/dialog';
 import {SolveTentativeOperationType} from "../../model/solve-tentative-payload";
 import {ErrorMessage, ErrorMessages} from "../../error/error-messages";
 import {HttpErrorResponse} from "@angular/common/http";
-import {MergeTentativeDialogComponent} from "./dialog/merge-tentative-dialog.component";
+import {MergeTentativeMatchDialogComponent} from "./dialog/merge-tentative-match-dialog.component";
 
 @Component({
-  selector: 'app-merge-split-patient',
-  templateUrl: './merge-split-patient.component.html',
-  styleUrls: ['./merge-split-patient.component.css']
+  selector: 'app-solve-tentative-match-patient',
+  templateUrl: './solve-tentative-match.component.html',
+  styleUrls: ['./solve-tentative-match.component.css']
 })
-export class MergeSplitPatientComponent implements OnInit {
+export class SolveTentativeMatchComponent implements OnInit {
   private readonly solveTentativeErrors: ErrorMessage[] = [
     ErrorMessages.SOLVE_TENTATIVE_MERGE_FAILED_MAIN_IDENTITY_IS_SECONDARY,
     ErrorMessages.SOLVE_TENTATIVE_MERGE_FAILED_SECONDARY_IDENTITY_ID_MAIN,
@@ -85,7 +85,7 @@ export class MergeSplitPatientComponent implements OnInit {
   }
 
   private openMergeTentativeDialog() {
-    const dialogRef = this.mergeTentativeConfirmDialog.open(MergeTentativeDialogComponent, {
+    const dialogRef = this.mergeTentativeConfirmDialog.open(MergeTentativeMatchDialogComponent, {
       data: {},
     });
 

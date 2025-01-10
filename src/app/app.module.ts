@@ -74,13 +74,13 @@ import {
 import {EditorModule, TINYMCE_SCRIPT_SRC} from "@tinymce/tinymce-angular";
 import {
   TentativeMatchesListComponent
-} from './experimental/tentative-matches-list/tentative-matches-list.component';
+} from "./tentative-matches/tentative-matches-list/tentative-matches-list.component";
 import {
-  MergeSplitPatientComponent
-} from './experimental/merge-split-patient/merge-split-patient.component';
+  SolveTentativeMatchComponent
+} from "./tentative-matches/solve-tentative-match/solve-tentative-match.component";
 import {
-  MergeTentativeDialogComponent
-} from "./experimental/merge-split-patient/dialog/merge-tentative-dialog.component";
+  MergeTentativeMatchDialogComponent
+} from "./tentative-matches/solve-tentative-match/dialog/merge-tentative-match-dialog.component";
 
 function initializeAppFactory(
     configService: AppConfigService,
@@ -146,8 +146,8 @@ function initializeAppFactory(
     BulkPseudonymizationComponent,
     ConsentTemplatesComponent,
     TentativeMatchesListComponent,
-    MergeSplitPatientComponent,
-    MergeTentativeDialogComponent,
+    SolveTentativeMatchComponent,
+    MergeTentativeMatchDialogComponent,
   ],
   imports: [
     SharedModule,

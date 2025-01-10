@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MergeSplitPatientComponent } from './merge-split-patient.component';
+import { SolveTentativeMatchComponent } from './solve-tentative-match.component';
 
 describe('MergeSplitPatientComponent', () => {
-  let component: MergeSplitPatientComponent;
-  let fixture: ComponentFixture<MergeSplitPatientComponent>;
+  let component: SolveTentativeMatchComponent;
+  let fixture: ComponentFixture<SolveTentativeMatchComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MergeSplitPatientComponent ]
+      declarations: [ SolveTentativeMatchComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(MergeSplitPatientComponent);
+    fixture = TestBed.createComponent(SolveTentativeMatchComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
