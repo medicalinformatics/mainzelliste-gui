@@ -50,7 +50,7 @@ const routes: Routes = [
       { path: 'consent-templates', component: ConsentTemplatesComponent, data: { permission: Permission.CREATE_CONSENT_TEMPLATE } },
       // {path: 'create-consent-template', component: CreateConsentTemplateComponent, data: { permission: Permission.CREATE_CONSENT}},
       { path: 'tentatives', component: TentativeMatchesListComponent, data: { permission: Permission.READ_TENTATIVES } },
-      { path: 'resolve-unsure-match/:id', component: SolveTentativeMatchComponent, data: { permission: Permission.READ_TENTATIVES }},
+      { path: 'resolve-unsure-match/:id', component: SolveTentativeMatchComponent, data: { permission: Permission.READ_TENTATIVE }},
 
     ]
   },

@@ -34,4 +34,5 @@ export type MiscellaneousPermission =
     | "readConfiguration"
     | "tt_editConfiguration"
     | "tt_readTentatives"
+    | "tt_readTentative"
     | "manageSessionPatients";

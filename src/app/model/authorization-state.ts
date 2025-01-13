@@ -32,6 +32,7 @@ export class AuthorizationState{
   EDIT_CONFIGURATION: boolean = false;
   ADD_PATIENTS: boolean = false;
   READ_TENTATIVES: boolean = false;
+  READ_TENTATIVE: boolean = false;
 
   setPatient(operation: Operation[]){
     this.CREATE_PATIENT = operation.some(o => o == "C");
@@ -76,11 +77,13 @@ export class AuthorizationState{
     this.EDIT_CONFIGURATION = false;
     this.ADD_PATIENTS = false
     this.READ_TENTATIVES = false
+    this.READ_TENTATIVE = false
     permissions.forEach( p => {
       switch (p.miscellaneous){
         case "tt_editConfiguration": this.EDIT_CONFIGURATION = true; break;
         case "tt_addPatients": this.ADD_PATIENTS = true; break;
         case "tt_readTentatives": this.READ_TENTATIVES = true; break;
+        case "tt_readTentative": this.READ_TENTATIVE = true; break;
       }
     });
   }
