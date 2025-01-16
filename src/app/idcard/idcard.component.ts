@@ -47,6 +47,7 @@ import { PageEvent } from '@angular/material/paginator';
 export class IdcardComponent implements OnInit {
   @Input() public inIdType: string ="";
   @Input() public inIdString: string ="";
+  @Input() public showSecondary: boolean = true;
 
   //Pageinator
   public pageIndex= 0;
@@ -146,6 +147,8 @@ export class IdcardComponent implements OnInit {
     this.idType = this.inIdType;
     this.idString = this.inIdString;
   }
+  this.showSecondary = this.showSecondary;
+  
     this.changeTitle();
     this.fields = configService.data[0].fields.filter(f => !f.hideFromList);
     this.fields = this.fields.filter(f => f.name !== "Geburtsname" && f.name !== "Wohnort" && f.name !== "PLZ");
@@ -474,9 +477,9 @@ export class IdcardComponent implements OnInit {
 
   }
 
-  showSecondartyIDCardDialog(patient: Patient) {
+  showSecondaryIDCardDialog(patient: Patient) {
     const dialogRef = this.secondaryIDCardDialog.open(SecondaryIDCardDialog, {
-      data: {idString: patient.getIdString(this.idType), idType: this.idType},
+      data: {idString: patient.getIdString(this.idType), idType: this.idType, showSecondary: false},
     });
 
     dialogRef.afterClosed().subscribe(result => {

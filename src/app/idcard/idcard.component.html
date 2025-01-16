@@ -73,7 +73,7 @@
   </ng-container>
 
   <div style="float: left; margin: 0 20px 14px 0; width: 94%;">
-    <mat-card id="Secondary"
+    <mat-card id="Secondary" *ngIf="showSecondary"
       style="box-sizing: border-box; display: flex; flex-direction: column; flex: 1; ">
       <mat-card-title-group style="margin: 0 0 0 1.25%;">
         <mat-card-title style="flex-grow: 2;">Secondary Identities</mat-card-title>      </mat-card-title-group>
@@ -81,7 +81,7 @@
         <div style="display: flex; flex-wrap:wrap; height: 100%; margin: 0 .75em 0 .75em;">
           <mat-card style="margin: 1%;" class="second-id"
             *ngFor="let identity of secondaryIdentities" 
-            (click)="showSecondartyIDCardDialog(identity)"> <!-- .slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)"-->
+            (click)="showSecondaryIDCardDialog(identity)"> <!-- .slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)"-->
             <mat-card-content>
               <mat-list style="padding-top:0; display:flex; flex-direction: column;">
                 <mat-list-item style="height:fit-content; padding: 5px 5px" *ngFor="let field of fields" lines="2">
