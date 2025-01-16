@@ -49,7 +49,7 @@ export class IdcardComponent implements OnInit {
   @Input() public inIdString: string ="";
 
   //Pageinator
-  public pageIndex= 1;
+  public pageIndex= 0;
   public pageSize = 5;
 
   getFilteredFileds(arg0: { [key: string]: string; }): { [key: string]: any; } {
