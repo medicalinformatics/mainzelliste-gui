@@ -374,5 +374,13 @@
   "solve_tentatives.title": "Unsicheres Match lösen",
 
 	"export_data": "Kontaktdaten nach Excel exportieren",
-	"copy_data": "Kontaktdaten in Zwischenablage kopieren"
+	"copy_data": "Kontaktdaten in Zwischenablage kopieren",
+
+	"tentative.title_patient_1":"Patientendaten 1",
+	"tentative.title_patient_2":"Patientendaten 2",
+	"tentative.patient_data":"Patientendaten",
+	"tentative.label_main_patient":"Haupt-Patient",
+	"tentative.pseudonyms":"Pseudonyme",
+	"tentative.merge":"Merge",
+	"tentative.split":"Split"
 }

@@ -349,5 +349,13 @@
   "solve_tentatives.title": "Resolve tentative Match",
 
 	"export_data": "Export contact information to excel",
-	"copy_data": "Copy contact information to clipboard"
+	"copy_data": "Copy contact information to clipboard",
+
+	"tentative.title_patient_1":"Patientdata 1",
+	"tentative.title_patient_2":"Patientdata 2",
+	"tentative.patient_data":"Patientdata",
+	"tentative.label_main_patient":"Main-Patient",
+	"tentative.pseudonyms":"Pseudonymes",
+	"tentative.merge":"Merge",
+	"tentative.split":"Split"
 }
