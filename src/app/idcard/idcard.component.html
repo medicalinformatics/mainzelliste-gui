@@ -89,13 +89,13 @@
       </ng-container>
 
 
-      <mat-card id="Secondary" *ngIf="showSecondary" style="display: flex; flex-direction: column;">
+      <mat-card id="Histroy" *ngIf="showHistory" style="display: flex; flex-direction: column;">
         <mat-card-title-group style="margin: 0 0 0 1.25%;">
           <mat-card-title style="flex-grow: 2;">History</mat-card-title>
         </mat-card-title-group>
         <mat-card-content style="display: flex; flex-direction: column;">
           <div style="display: flex; flex-wrap: wrap; height: 100%;">
-            <ng-container *ngFor="let identity of secondaryIdentities; let i = index">
+            <ng-container *ngFor="let identity of history; let i = index">
               <mat-card style="margin: 1%;" class="second-id">
                 <mat-card-content>
                   <mat-list style="padding-top: 0; display: flex; flex-direction: column;">
@@ -108,7 +108,7 @@
                   </mat-list>
                 </mat-card-content>
               </mat-card>
-              <mat-icon *ngIf="i < secondaryIdentities.length - 1" style="align-self: center;">arrow_forward</mat-icon>
+              <mat-icon *ngIf="i < history.length - 1" style="align-self: center;">arrow_forward</mat-icon>
             </ng-container>
           </div>
         </mat-card-content>
