@@ -78,26 +78,25 @@ export class IdcardComponent implements OnInit {
   private otherTenantIdTypes: string[] = [];
   fields: Field[];
   public secondaryIdentities: Patient[] = [
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095" },
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "01.01.2021" },
       [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Maximilian", "Geburtsname": "Meier", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095" },
+    new Patient({ "Nachname": "Muster", "Vorname": "Maximilian", "Geburtsname": "Meier", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "02.01.2021" },
       [{ idType: "biobankId", idString: "5678", tentative: true }]),
-    new Patient({ "Nachname": "Mustermann", "Vorname": "Max", "Geburtsname": "Schneider", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095" },
+    new Patient({ "Nachname": "Mustermann", "Vorname": "Max", "Geburtsname": "Schneider", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "03.01.2021" },
       [{ idType: "biobankId", idString: "1234", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "02.01.1980", "Wohnort": "Berlin", "PLZ": "10115" },
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "02.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "04.01.2021" },
       [{ idType: "biobankId", idString: "4321", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Maxim", "Geburtsname": "Fischer", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10116" },
+    new Patient({ "Nachname": "Muster", "Vorname": "Maxim", "Geburtsname": "Fischer", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10116", "Date_Added": "05.01.2021" },
       [{ idType: "biobankId", idString: "6789", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Weber", "Geburtdatum": "03.01.1980", "Wohnort": "Stuttgart", "PLZ": "70173" },
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Weber", "Geburtdatum": "03.01.1980", "Wohnort": "Stuttgart", "PLZ": "70173", "Date_Added": "06.01.2021" },
       [{ idType: "biobankId", idString: "3456", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095" },
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "07.01.2021" },
       [{ idType: "biobankId", idString: "7890", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schneider", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20096" },
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schneider", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20096", "Date_Added": "08.01.2021" },
       [{ idType: "biobankId", idString: "9012", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Müller", "Geburtdatum": "04.01.1980", "Wohnort": "Leipzig", "PLZ": "04109" },
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Müller", "Geburtdatum": "04.01.1980", "Wohnort": "Leipzig", "PLZ": "04109", "Date_Added": "09.01.2021" },
       [{ idType: "biobankId", idString: "3456", tentative: true }]),
-  ];
-  
+];
 
   constructor(
     private translate: TranslateService,
@@ -128,7 +127,11 @@ export class IdcardComponent implements OnInit {
       });
 
     this.showSecondary = this.showSecondary;
-
+    this.secondaryIdentities.sort((a, b) => {
+      const dateA = new Date(a.fields.Date_Added);
+      const dateB = new Date(b.fields.Date_Added);
+      return dateA.getTime() - dateB.getTime();
+    });
     
     this.fieldNames = configService.data[0].fields.filter(f => !f.hideFromList).map(f => f.name);
     this.showAllIds = configService.data[0].showAllIds != undefined && configService.data[0].showAllIds;
@@ -487,4 +490,11 @@ export class IdcardComponent implements OnInit {
     return this.clickedRow === row;
   }
 
+  isFieldChanged(identity: Patient, index: number, fieldName: string): boolean {
+    if (index === 0) {
+      return false; // No previous identity to compare with for the first entry
+    }
+    const previousIdentity = this.secondaryIdentities[index - 1];
+    return identity.fields[fieldName] !== previousIdentity.fields[fieldName];
+  }
 }

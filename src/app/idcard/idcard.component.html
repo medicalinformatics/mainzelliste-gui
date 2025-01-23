@@ -17,9 +17,8 @@
               </button>
             </div>
           </mat-card-title-group>
-          <mat-card-content *ngFor="let field of fields"
-            style="display: flex; flex-direction: column; flex-wrap: wrap; margin: 0 2.5% 0 2.5%;">
-            <p>{{field.i18n | translate}} : {{patient.fields[field.name]}}</p>
+          <mat-card-content *ngFor="let field of fields" style="display: flex; flex-direction: row; flex-wrap: wrap; margin: 0 2.5% 0 2.5%;">
+            <p><b>{{field.i18n | translate}}</b> {{patient.fields[field.name]}}</p>
           </mat-card-content>
         </mat-card>
 
@@ -28,7 +27,7 @@
             <mat-card-title style="flex-grow: 2;">{{'idcard.title_pseudonyms' | translate}}</mat-card-title>
           </mat-card-title-group>
           <mat-card-content *ngFor="let id of patient.ids" style=" margin: 0 2.5% 0 2.5%;">
-            <p>{{id.idType}} : {{id.idString}}</p>
+            <p><b>{{id.idType}}</b> {{id.idString}}</p>
           </mat-card-content>
         </mat-card>
       </div>
@@ -90,25 +89,30 @@
       </ng-container>
 
 
-      <mat-card id="Secondary" *ngIf="showSecondary" style=" display: flex; flex-direction: column; ">
+      <mat-card id="Secondary" *ngIf="showSecondary" style="display: flex; flex-direction: column;">
         <mat-card-title-group style="margin: 0 0 0 1.25%;">
-          <mat-card-title style="flex-grow: 2;">History</mat-card-title> </mat-card-title-group>
+          <mat-card-title style="flex-grow: 2;">History</mat-card-title>
+        </mat-card-title-group>
         <mat-card-content style="display: flex; flex-direction: column;">
-          <div style="display: flex; flex-wrap:wrap; height: 100%;">
-            <mat-card style="margin: 1%;" class="second-id" *ngFor="let identity of secondaryIdentities">
-              <mat-card-content>
-                <mat-list style="padding-top:0; display:flex; flex-direction: column;">
-                  <mat-list-item style="height:fit-content; padding: 5px 5px" *ngFor="let field of fields" lines="2">
-                    <h3 matLine>{{identity.fields[field.name] || '&nbsp;' }}</h3>
-                    <p matLine class="mat-card-subtitle">{{field.i18n | translate}}</p>
-                  </mat-list-item>
-                </mat-list>
-              </mat-card-content>
-            </mat-card>
+          <div style="display: flex; flex-wrap: wrap; height: 100%;">
+            <ng-container *ngFor="let identity of secondaryIdentities; let i = index">
+              <mat-card style="margin: 1%;" class="second-id">
+                <mat-card-content>
+                  <mat-list style="padding-top: 0; display: flex; flex-direction: column;">
+                    <ng-container *ngFor="let field of fields">
+                      <mat-list-item style="height: fit-content; padding: 5px 5px" lines="2" [ngClass]="{'highlight': isFieldChanged(identity, i, field.name)}">
+                        <h3 matLine>{{identity.fields[field.name] || '&nbsp;' }}</h3>
+                        <p matLine class="mat-card-subtitle">{{field.i18n | translate}}</p>
+                      </mat-list-item>
+                    </ng-container>
+                  </mat-list>
+                </mat-card-content>
+              </mat-card>
+              <mat-icon *ngIf="i < secondaryIdentities.length - 1" style="align-self: center;">arrow_forward</mat-icon>
+            </ng-container>
           </div>
         </mat-card-content>
-      </mat-card>
-
+        </mat-card>
 
       <ng-container *ngIf="this.consentService.isServiceEnabled()">
         <mat-card *appHasPermission="Permission.READ_CONSENT" id="consents"
