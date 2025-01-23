@@ -70,7 +70,6 @@ import {
   BulkIdGenerationEmptyFieldsDialog
 } from "./bulk-operations/bulk-id-generation/dialog/bulk-id-generation-empty-fields-dialog";
 import { BulkPseudonymizationComponent } from './bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component';
-import { SecondaryIDCardDialog } from './idcard/dialogs/secondary-idcard-dialog';
 
 function initializeAppFactory(
     configService: AppConfigService,
@@ -123,7 +122,6 @@ function initializeAppFactory(
     PatientlistComponent,
     routingComponents,
     IdcardComponent,
-    SecondaryIDCardDialog,
     PatientlistViewComponent,
     ErrorComponent,
     LogoutComponent,

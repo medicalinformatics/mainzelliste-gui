@@ -25,7 +25,6 @@ import { MainzellisteError } from "../model/mainzelliste-error.model";
 import { ErrorMessages } from "../error/error-messages";
 import { ConsentRejectedDialog } from "../consent/dialogs/consent-rejected-dialog";
 import { ConsentInactivatedDialog } from "../consent/dialogs/consent-inactivated-dialog";
-import { SecondaryIDCardDialog } from './dialogs/secondary-idcard-dialog';
 import { IdGenerator } from "../model/idgenerator";
 import { AppConfigService } from "../app-config.service";
 import {
@@ -35,6 +34,7 @@ import { FhirResource } from "fhir-kit-client/types/index";
 import { SearchParams } from "fhir-kit-client";
 import { SemanticType, Field } from '../model/field';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
+import {LocalStorageService} from "../services/local-storage.service";
 import { PageEvent } from '@angular/material/paginator';
 
 
@@ -45,12 +45,20 @@ import { PageEvent } from '@angular/material/paginator';
 })
 
 export class IdcardComponent implements OnInit {
-  @Input() public inIdType: string ="";
-  @Input() public inIdString: string ="";
   @Input() public showSecondary: boolean = true;
 
+  configuredIdTypes: string[] = [];
+  public defaultIdType: string = "";
+  columns: string[] = [];
+  allColumnNames: string[] = [];
+  showAllIds: boolean;
+  fieldNames: string[];
+  displayedColumns: string[] = [];
+  clickedRow: any;
+
+
   //Pageinator
-  public pageIndex= 0;
+  public pageIndex = 0;
   public pageSize = 5;
 
   getFilteredFileds(arg0: { [key: string]: string; }): { [key: string]: any; } {
@@ -69,53 +77,27 @@ export class IdcardComponent implements OnInit {
   private readIdTypes: string[] = [];
   private otherTenantIdTypes: string[] = [];
   fields: Field[];
-  public secondaryIdentities: Patient[] = [new Patient({ "Nachname": "Fischer", "Vorname": "Peter", "Geburtsname": "", "Geburtsdatum": "23.05.1985", "Wohnort": "Hamburg", "PLZ": "20095" },
-    [{
-      idType: "biobankId", idString: "9101",
-      tentative: true
-    }]),
-    new Patient({ "Nachname": "Schmidt", "Vorname": "Anna", "Geburtsname": "Meier", "Geburtsdatum": "12.11.1990", "Wohnort": "Berlin", "PLZ": "10115" },
-      [{
-        idType: "biobankId", idString: "5678",
-        tentative: true
-      }]),
-    new Patient({ "Nachname": "Müller", "Vorname": "Hans", "Geburtsname": "", "Geburtsdatum": "01.01.1970", "Wohnort": "München", "PLZ": "80331" },
-      [{
-        idType: "biobankId", idString: "1234",
-        tentative: true
-      }]),
-    new Patient({ "Nachname": "Klein", "Vorname": "Klaus", "Geburtsname": "", "Geburtsdatum": "15.07.1980", "Wohnort": "Frankfurt", "PLZ": "60311" },
-      [{
-        idType: "biobankId", idString: "4321",
-        tentative: true
-      }]),
-    new Patient({ "Nachname": "Schneider", "Vorname": "Maria", "Geburtsname": "", "Geburtsdatum": "30.04.1995", "Wohnort": "Düsseldorf", "PLZ": "40213" },
-      [{
-        idType: "biobankId", idString: "6789",
-        tentative: true
-      }]),
-    new Patient({ "Nachname": "Weber", "Vorname": "Thomas", "Geburtsname": "", "Geburtsdatum": "25.09.1988", "Wohnort": "Stuttgart", "PLZ": "70173" },
-      [{
-        idType: "biobankId", idString: "3456",
-        tentative: true
-      }]),
-    new Patient({ "Nachname": "Becker", "Vorname": "Sabine", "Geburtsname": "", "Geburtsdatum": "07.03.1975", "Wohnort": "Köln", "PLZ": "50667" },
-      [{
-        idType: "biobankId", idString: "7890",
-        tentative: true
-      }]),
-    new Patient({ "Nachname": "Hoffmann", "Vorname": "Andreas", "Geburtsname": "", "Geburtsdatum": "18.06.1983", "Wohnort": "Hannover", "PLZ": "30159" },
-      [{
-        idType: "biobankId", idString: "9012",
-        tentative: true
-      }]),
-    new Patient({ "Nachname": "Schulz", "Vorname": "Petra", "Geburtsname": "", "Geburtsdatum": "02.12.1992", "Wohnort": "Leipzig", "PLZ": "04109" },
-      [{
-        idType: "biobankId", idString: "3456",
-        tentative: true
-      }]),
-    ];
-
+  public secondaryIdentities: Patient[] = [
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Muster", "Vorname": "Maximilian", "Geburtsname": "Meier", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095" },
+      [{ idType: "biobankId", idString: "5678", tentative: true }]),
+    new Patient({ "Nachname": "Mustermann", "Vorname": "Max", "Geburtsname": "Schneider", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095" },
+      [{ idType: "biobankId", idString: "1234", tentative: true }]),
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "02.01.1980", "Wohnort": "Berlin", "PLZ": "10115" },
+      [{ idType: "biobankId", idString: "4321", tentative: true }]),
+    new Patient({ "Nachname": "Muster", "Vorname": "Maxim", "Geburtsname": "Fischer", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10116" },
+      [{ idType: "biobankId", idString: "6789", tentative: true }]),
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Weber", "Geburtdatum": "03.01.1980", "Wohnort": "Stuttgart", "PLZ": "70173" },
+      [{ idType: "biobankId", idString: "3456", tentative: true }]),
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095" },
+      [{ idType: "biobankId", idString: "7890", tentative: true }]),
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schneider", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20096" },
+      [{ idType: "biobankId", idString: "9012", tentative: true }]),
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Müller", "Geburtdatum": "04.01.1980", "Wohnort": "Leipzig", "PLZ": "04109" },
+      [{ idType: "biobankId", idString: "3456", tentative: true }]),
+  ];
+  
 
   constructor(
     private translate: TranslateService,
@@ -134,27 +116,33 @@ export class IdcardComponent implements OnInit {
     public newIdDialog: MatDialog,
     public secondaryIDCardDialog: MatDialog,
     public consentService: ConsentService,
-    public configService: AppConfigService
+    public configService: AppConfigService,
+    public localStorageService:LocalStorageService,
+    
   ) {
-    if(this.activatedRoute != null){
-    this.activatedRoute.params.subscribe((params) => {
-      if (params["idType"] !== undefined)
-        this.idType = params["idType"]
-      if (params["idString"] !== undefined)
-        this.idString = params["idString"]
-    });
-  }else{
-    this.idType = this.inIdType;
-    this.idString = this.inIdString;
-  }
-  this.showSecondary = this.showSecondary;
-  
+      this.activatedRoute.params.subscribe((params) => {
+        if (params["idType"] !== undefined)
+          this.idType = params["idType"]
+        if (params["idString"] !== undefined)
+          this.idString = params["idString"]
+      });
+
+    this.showSecondary = this.showSecondary;
+
+    
+    this.fieldNames = configService.data[0].fields.filter(f => !f.hideFromList).map(f => f.name);
+    this.showAllIds = configService.data[0].showAllIds != undefined && configService.data[0].showAllIds;
+
     this.changeTitle();
     this.fields = configService.data[0].fields.filter(f => !f.hideFromList);
-    this.fields = this.fields.filter(f => f.name !== "Geburtsname" && f.name !== "Wohnort" && f.name !== "PLZ");
   }
 
   ngOnInit() {
+    this.configuredIdTypes = this.patientListService.getIdTypes("R");
+    this.defaultIdType = this.patientListService.findDefaultIdType(this.configuredIdTypes);
+
+    this.displayedColumns= [...this.configuredIdTypes, ...this.fields.map(field => field.name)];
+
     // find id types, that can be created
     this.getIdTypes();
 
@@ -174,6 +162,20 @@ export class IdcardComponent implements OnInit {
     //load consent list
     if (this.consentService.isServiceEnabled() && this.authorizationService.hasPermission(Permission.READ_CONSENT))
       this.loadConsents();
+
+    // load columns from browser storage
+    const storedColumns = this.localStorageService.patientListColumns
+    if(storedColumns.length > 0 && storedColumns.every(c => this.allColumnNames.some( e => e == c))){
+      this.columns = storedColumns;
+    } else {
+      let displayIdTypes = this.showAllIds ? this.configuredIdTypes : [this.defaultIdType];
+      this.columns = this.columns.concat(displayIdTypes).concat(this.fieldNames);
+      this.localStorageService.patientListColumns = this.columns
+    }
+  }
+
+  showTenantColumn(){
+    return this.authorizationService.getTenants().length > 1;
   }
 
   changeTitle() {
@@ -467,29 +469,22 @@ export class IdcardComponent implements OnInit {
     return this.configService.showDomainsInIDCard() && this.authorizationService.getTenants().length > 1;
   }
 
-  getFilteredFields(fields: {[key: string]: string;}): {[key: string]: string;}{
-    return Object.keys(fields)
-      .filter(key => key !== 'Geburtsname' && key !== 'Wohnort' && key !== 'PLZ')
-      .reduce((obj: { [key: string]: string }, key) => {
-      obj[key] = fields[key];
-      return obj;
-      }, {});
-
-  }
-
-  showSecondaryIDCardDialog(patient: Patient) {
-    const dialogRef = this.secondaryIDCardDialog.open(SecondaryIDCardDialog, {
-      data: {idString: patient.getIdString(this.idType), idType: this.idType, showSecondary: false},
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      
-    });
-  }
-
-  onPageChange(event: PageEvent){
+  onPageChange(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
   }
   
+  onRowClick(row: any) {
+    this.clickedRow = row;
+  }
+
+  isDifferent(element: any, field: string): boolean {
+    if (!this.clickedRow) return false;
+    return element.fields[field] !== this.clickedRow.fields[field];
+  }
+
+  isClickedRow(row: any): boolean {
+    return this.clickedRow === row;
+  }
+
 }
