@@ -160,12 +160,6 @@ Removes annoying 16px padding on the sides of each mat-list-item
   padding: 0 !important;
 }
 
-/*
-lets user hover over the secodary identites
-*/
-.second-id:hover {
-  background-color: lightgray;
-}
 /* 
  This changes the background of the cells that are differnet in the identities 
 */
