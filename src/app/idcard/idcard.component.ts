@@ -48,6 +48,8 @@ export class IdcardComponent implements OnInit {
   @Input() public showSecondary: boolean = true;
   @Input() public showHistory: boolean = true;
 
+  public height: string = 'auto';
+
   configuredIdTypes: string[] = [];
   public defaultIdType: string = "";
   columns: string[] = [];
@@ -197,6 +199,11 @@ public history: Patient[] = [
       this.columns = this.columns.concat(displayIdTypes).concat(this.fieldNames);
       this.localStorageService.patientListColumns = this.columns
     }
+
+
+    this.height = 40 + (this.fields.length * 30) + 'px';
+   console.log(this.fields.length);
+    console.log(this.height);
   }
 
   showTenantColumn(){
