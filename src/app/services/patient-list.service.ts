@@ -110,7 +110,7 @@ export class PatientListService {
 
 
   getIdTypes(operation?: Operation): Array<string> {
-    if(operation != undefined && !this.authorizationService.isCurrentTenantPermissionsEmpty())
+    if(operation != undefined)
        return this.authorizationService.getAllAllowedUniqueIdTypes(operation);
     else
       return this.configService.getMainzellisteIdTypes();
