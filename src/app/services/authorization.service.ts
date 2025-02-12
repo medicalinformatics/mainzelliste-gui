@@ -188,7 +188,7 @@ export class AuthorizationService {
     }
 
     if(this.configService.isConfigurationEnabled() && claimPermissions.miscellaneous != undefined) {
-      claimPermissions.miscellaneous.filter(m => m == 'tt_editConfiguration')
+      claimPermissions.miscellaneous.filter(m => ['tt_editConfiguration', 'tt_addPatients'].includes(m) )
       .forEach( m => permissions.push({
         type: 'miscellaneous',
         operations: [],
@@ -213,7 +213,7 @@ export class AuthorizationService {
       );
   }
 
-  getTenants(): { id: string, name: string }[] {
+  getTenants(): { id: string, name: string, idTypes: string[] }[] {
     return this.configuredTenants;
   }
 

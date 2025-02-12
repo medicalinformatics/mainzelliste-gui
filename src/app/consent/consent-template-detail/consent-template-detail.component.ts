@@ -1,10 +1,18 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ControlContainer, NgForm, NgModel, ValidationErrors} from "@angular/forms";
-import {ChoiceItem, ConsentTemplate, DisplayItem, Validity} from "../consent-template.model";
+import {
+  ChoiceItem,
+  ChoiceItemAnswer,
+  ConsentTemplate,
+  DisplayItem,
+  Validity
+} from "../consent-template.model";
 import {ConsentService} from "../consent.service";
 import {MatDialog} from "@angular/material/dialog";
 import {TranslateService} from "@ngx-translate/core";
 import {ConsentTemplateValidityPeriodDialog} from "./consent-template-validity-period-dialog";
+import {MatRadioChange} from "@angular/material/radio";
+import {MatSlideToggleChange} from "@angular/material/slide-toggle";
 
 @Component({
   selector: 'app-consent-template-detail',
@@ -85,8 +93,29 @@ export class ConsentTemplateDetailComponent implements OnInit {
   createModule(selectedModuleType: "choice" | "display") {
     this.template.items = this.template.items || [];
     let item = selectedModuleType == "choice" ?
-      new ChoiceItem(this.template.items.length, selectedModuleType, "permit") :
+      new ChoiceItem(this.template.items.length, selectedModuleType, this.template.consentModel? "permit":"deny") :
       new DisplayItem(this.template.items.length, selectedModuleType)
     this.template.items.push(item);
+  }
+
+  consentModelChanged($event: MatRadioChange) {
+    this.changeModulesAnswer($event.value? "permit": "deny")
+  }
+
+  changeModulesAnswer(answer: ChoiceItemAnswer) {
+    this.template.items.filter(i => i instanceof ChoiceItem)
+    .map(i => i as ChoiceItem)
+    .forEach( i => i.answer = answer)
+  }
+
+  disableConsentModel() {
+    return this.template.isMiiFhirConsentConform ?? false;
+  }
+
+  isMiiFhirChanged($event: MatSlideToggleChange) {
+    if($event.checked) {
+      this.template.consentModel = true;
+      this.changeModulesAnswer("permit")
+    }
   }
 }

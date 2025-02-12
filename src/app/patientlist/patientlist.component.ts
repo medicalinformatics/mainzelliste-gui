@@ -6,8 +6,11 @@ import {MatTableDataSource} from "@angular/material/table";
 import {PatientListService} from "../services/patient-list.service";
 import {AppConfigService} from "../app-config.service";
 import {ConsentService} from "../consent/consent.service";
-import { Field } from '../model/field';
+import {Field} from '../model/field';
 import {Permission} from "../model/permission";
+import {AuthorizationService} from "../services/authorization.service";
+import {TranslateService} from "@ngx-translate/core";
+import {LocalStorageService} from "../services/local-storage.service";
 
 @Component({
   selector: 'app-patientlist',
@@ -27,18 +30,21 @@ export class PatientlistComponent implements OnInit{
   fields: Field[];
   fieldNames: string[];
   columns: string[] = [];
+  allColumnNames: string[] = [];
   showAllIds: boolean;
 
   configuredIdTypes: string[] = [];
-  private patientListService: PatientListService;
+  public defaultIdType:  string = "";
 
   constructor(
     public dialog: MatDialog,
-    patientListService: PatientListService,
-    configService: AppConfigService,
-    public consentService: ConsentService
+    private patientListService: PatientListService,
+    private configService: AppConfigService,
+    public authorizationService: AuthorizationService,
+    public consentService: ConsentService,
+    public localStorageService:LocalStorageService,
+    private translate: TranslateService
   ) {
-    this.patientListService = patientListService;
     this.patients = new MatTableDataSource<Patient>([]);
     this.fields = configService.data[0].fields.filter(f => !f.hideFromList);
     this.fieldNames = configService.data[0].fields.filter(f => !f.hideFromList).map(f => f.name);
@@ -92,7 +98,50 @@ export class PatientlistComponent implements OnInit{
 
   ngOnInit(): void {
     this.configuredIdTypes = this.patientListService.getIdTypes("R");
-    let displayIdTypes = this.showAllIds ? this.configuredIdTypes : [this.patientListService.findDefaultIdType(this.configuredIdTypes)];
-    this.columns = this.columns.concat(displayIdTypes).concat(this.fieldNames).concat(["actions"]);
+    this.defaultIdType = this.patientListService.findDefaultIdType(this.configuredIdTypes);
+
+    // find all possible columns
+    this.allColumnNames = this.allColumnNames.concat(this.configuredIdTypes).concat(this.fieldNames);
+    if(this.showTenantColumn())
+      this.allColumnNames.push("tenants");
+    this.allColumnNames.push("actions");
+
+    // load columns from browser storage
+    const storedColumns = this.localStorageService.patientListColumns
+    if(storedColumns.length > 0 && storedColumns.every(c => this.allColumnNames.some( e => e == c))){
+      this.columns = storedColumns;
+    } else {
+      let displayIdTypes = this.showAllIds ? this.configuredIdTypes : [this.defaultIdType];
+      this.columns = this.columns.concat(displayIdTypes).concat(this.fieldNames);
+      if(this.showTenantColumn())
+        this.columns.push("tenants");
+      this.columns.push("actions");
+      this.localStorageService.patientListColumns = this.columns
+    }
+  }
+
+  showTenantColumn(){
+    return this.authorizationService.getTenants().length > 1;
+  }
+
+  getColumnDisplayText(columnName: string) {
+    const field = this.fields.find( f => f.name == columnName);
+    if(field != undefined){
+      return this.translate.instant(field.i18n)
+    } else if(columnName == "actions"){
+      return this.translate.instant('patientlist.headers_actions')
+    } else if(columnName == "tenants"){
+      return this.translate.instant('patientlist.headers_tenants')
+    } else {
+      return columnName
+    }
+  }
+
+  selectColumns(selectedColumns: string []) {
+    this.localStorageService.patientListColumns = selectedColumns;
+  }
+
+  hideColumn(columnName: string) {
+    return columnName == "actions" || columnName == this.defaultIdType;
   }
 }

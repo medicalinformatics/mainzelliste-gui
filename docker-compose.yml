@@ -26,9 +26,13 @@ services:
     depends_on:
       - mainzelliste
   mainzelliste:
+<<<<<<< HEAD
     # image: medicalinformatics/mainzelliste:develop
     # image contains consent management feature
     image: docker.verbis.dkfz.de/ttp/mainzelliste:consent-fhir
+=======
+    image: medicalinformatics/mainzelliste:develop
+>>>>>>> develop
     ports:
       - "8080:8080"
     environment:

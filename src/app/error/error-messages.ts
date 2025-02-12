@@ -153,6 +153,13 @@ export class ErrorMessages {
     'error.search_consent_templates_failed');
 
   ////
+  // DELETE CONSENT TEMPLATE
+  //---------------------
+  public static DELETE_CONSENT_TEMPLATE_REFERRED_BY: ErrorMessage = new ErrorMessage(6004,
+    /\[6004]\s:\s.+/i,
+    "consent_template.error.referred_by");
+
+  ////
   // CONSENT SCAN ERRORS
   //---------------------
   public static FAILED_UPLOAD_CONSENT_SCAN_FILE: ErrorMessage = new ErrorMessage(7001,
@@ -168,4 +175,21 @@ export class ErrorMessages {
   public static SEARCH_CONSENT_PROVENANCE_FAILED: ErrorMessage = new ErrorMessage(8001,
     'SearchConsentProvenanceFailed',
     "error.search_consent_provenance_failed");
+
+  ////
+  // ADD PATIENTS ERRORS
+  //---------------------
+  public static CREATE_PATIENTS_UNAUTHORIZED: ErrorMessage = new ErrorMessage(9001,
+    'Please supply a valid \'addPatients\' token.',
+    "error.create_patients_unauthorized");
+
+  ////
+  // FETCH PATIENTS JOB ERRORS
+  //---------------------------
+  public static FETCH_PATIENTS_JOB_UNAUTHORIZED: ErrorMessage = new ErrorMessage(10001,
+    'please supply a valid \'addPatients\' token',
+    "error.fetch_patients_job_unauthorized");
+  public static FETCH_PATIENTS_JOB_NOTFOUND: ErrorMessage = new ErrorMessage(10002,
+    'job not found',
+    "error.fetch_patients_job_not_found")
 }

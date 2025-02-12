@@ -29,7 +29,7 @@ import {getErrorMessageFrom} from "../error/error-utils";
 import {TokenType} from "../model/token";
 import {TokenData} from "../model/token-data";
 import {UploadConsentFileResponse} from "../model/api/upload-consent-file-response";
-import { APOSTROPHE } from '@angular/cdk/keycodes';
+import * as querystring from "querystring";
 
 @Injectable({
   providedIn: 'root'
@@ -535,6 +535,11 @@ export class ConsentService {
       ErrorMessages.READ_CONSENT_TEMPLATE_FAILED, 'Questionnaire', id);
   }
 
+  public deleteConsentTemplate(id: string): Observable<fhir4.Questionnaire> {
+    return this.executeDeleteFhirOperation<fhir4.Questionnaire>("deleteConsentTemplate", {}, 'Questionnaire', id,
+      ErrorMessages.DELETE_CONSENT_TEMPLATE_REFERRED_BY, { "sureness": true }) as Observable<fhir4.Questionnaire>;
+  }
+
   public mapConsentTemplate(template:ConsentTemplate): fhir4.Questionnaire {
 
     let fhirConsent: fhir4.Consent = {
@@ -563,19 +568,16 @@ export class ConsentService {
         "reference": "Patient/101"
       },
       dateTime: "2020-09-01",
-      policy: [
-        {
-          uri: `fhir/Questionnaire/${template.name}`
-        }
-      ],
+      policy: [],
       provision: {
-        type: "deny",
+        type: template.consentModel? "deny" : "permit",
         period: {
           start: _moment().format("YYYY-MM-DD"),
           end: this.mapValidityToDate(template.validity)
         },
         provision: template.items.filter(i => i instanceof ChoiceItem)
-          .map(i => this.mapChoiceItemToProvision((i as ChoiceItem), template.validity))
+        .map(i => this.mapChoiceItemToProvision((i as ChoiceItem), template.validity))
+        .reduce((a, v) => a.concat(v), [])
       }
     };
 
@@ -649,6 +651,7 @@ export class ConsentService {
         }
       ],
       title: template.title,
+      version: template.version,
       subjectType: ["Consent"],
       item: template.items.map(i => {
         if (i instanceof DisplayItem)
@@ -663,19 +666,20 @@ export class ConsentService {
     };
   }
 
-  private mapChoiceItemToProvision(item: ChoiceItem, validity:Validity): fhir4.ConsentProvision {
-    return {
-      type: "permit",
+  private mapChoiceItemToProvision(item: ChoiceItem, validity:Validity): fhir4.ConsentProvision[] {
+    return item.policies?.map(p => { return {
+      type: item.answer,
       period: {
         start: _moment().format("YYYY-MM-DD"),
-        end: this.mapValidityToDate(validity)
+        end: this.mapValidityToDate(p.validity ?? validity)
       },
-      code: !item.policy ? [] : [
+      code: !p ? [] : [
         {
           coding: [
             {
-              code: item.policy.code,
-              system: item.policySet?.externalId || `/consent-policies/${item.policySet?.id}`
+              code: p.code,
+              system: p.policySet?.externalId || `/consent-policies/${p.policySet?.id}`,
+              display: p.displayText
             }
           ]
         }
@@ -686,7 +690,7 @@ export class ConsentService {
           valueString: `${item.id}`
         }
       ]
-    };
+    }}) ?? [];
   }
 
   private mapChoiceItemToQuestionnaireItem(item: ChoiceItem): fhir4.QuestionnaireItem {
@@ -725,7 +729,7 @@ export class ConsentService {
     let now = _moment();
     return now.add(validityPeriod.day || 0, 'days')
       .add(validityPeriod.month || 0, 'months')
-      .add(validityPeriod.year || 0, 'years')
+      .add(validityPeriod.year ?? 0, 'years')
       .format("YYYY-MM-DD")
   }
 
@@ -782,10 +786,11 @@ export class ConsentService {
       resourceType: string,
       id: string,
       errorMessageType: ErrorMessage,
+      urlParams?: SearchParams
   ): Observable<FhirResource> {
     return this.sessionService.createToken(tokenType, tokenData)
     .pipe(
-        mergeMap(token => this.resolveDeleteFhirResourceToken<F>(token.id, resourceType, id)),
+        mergeMap(token => this.resolveDeleteFhirResourceToken<F>(token.id, resourceType, id, urlParams)),
         catchError((error) => this.handleFailedRequest(resourceType, error, errorMessageType, "delete"))
     )
   }
@@ -864,10 +869,10 @@ export class ConsentService {
       })
   }
 
-  resolveDeleteFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, id:string): Promise<FhirResource | F> => {
+  resolveDeleteFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, id:string, urlParams?: SearchParams): Promise<FhirResource | F> => {
     return this.client.delete({
       resourceType: resourceType,
-      id: id,
+      id: urlParams && Object.keys(urlParams).length > 0 ? id + "?" +  querystring.stringify(urlParams) : id,
       options: { headers: {'Authorization': 'MainzellisteToken ' + tokenId}}
     })
   }

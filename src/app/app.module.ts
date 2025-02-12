@@ -68,6 +68,8 @@ import {
 import {
   BulkIdGenerationEmptyFieldsDialog
 } from "./bulk-operations/bulk-id-generation/dialog/bulk-id-generation-empty-fields-dialog";
+import { BulkPseudonymizationComponent } from './bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component';
+import {EditorModule, TINYMCE_SCRIPT_SRC} from "@tinymce/tinymce-angular";
 
 function initializeAppFactory(
     configService: AppConfigService,
@@ -129,7 +131,8 @@ function initializeAppFactory(
     ConsentTemplatesComponent,
     BulkIdGenerationComponent,
     BulkIdGenerationTableComponent,
-    BulkIdGenerationEmptyFieldsDialog
+    BulkIdGenerationEmptyFieldsDialog,
+    BulkPseudonymizationComponent
   ],
   imports: [
     SharedModule,
@@ -157,7 +160,8 @@ function initializeAppFactory(
     NgxCsvParserModule,
     FileSaverModule,
     NgxMatFileInputModule,
-    MatStepperModule
+    MatStepperModule,
+    EditorModule
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
@@ -177,6 +181,7 @@ function initializeAppFactory(
       useClass: MomentDateAdapter,
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
     },
+    {provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js'}
   ],
   bootstrap: [AppComponent]
 })

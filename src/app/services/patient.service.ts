@@ -324,7 +324,8 @@ export class PatientService {
   }
 
   getDisplayPatients(filters: Array<{ field: string, fields: string[], searchCriteria: string, isIdType: boolean }>,
-                     pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
+                     pageIndex: number, pageSize: number,
+                     tenants?: { id: string, name: string, idTypes: string[] }[]): Observable<ReadPatientsResponse> {
     return this.patientListService.getPatients(filters, pageIndex + 1, pageSize).pipe(
       map((response: ReadPatientsResponse): ReadPatientsResponse => {
           let displayPatients: Patient[]
@@ -333,7 +334,7 @@ export class PatientService {
           } else {
             displayPatients = response.patients
             .filter(p => p.ids != undefined)
-            .map(patient => this.patientListService.convertToDisplayPatient(patient, true));
+            .map(patient => this.patientListService.convertToDisplayPatient(patient, true, true, tenants));
           }
           // override patients
           response.patients = displayPatients;

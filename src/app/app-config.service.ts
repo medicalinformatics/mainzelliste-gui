@@ -31,6 +31,7 @@ export class AppConfigService {
   private copyConcatenatedIdEnabled: boolean = false;
   private copyIdEnabled: boolean = false;
   private configurationEnabled: boolean = false;
+  private _showDomainsInIDCard: boolean = false;
 
   constructor(
     private httpClient: HttpClient,
@@ -56,6 +57,10 @@ export class AppConfigService {
           this.copyConcatenatedIdEnabled = this.data[0].betaFeatures?.copyConcatenatedId ?? false;
           this.copyIdEnabled = this.data[0].betaFeatures?.copyId ?? false;
           this.configurationEnabled = this.data[0].betaFeatures?.configuration ?? false;
+          this._showDomainsInIDCard = this.data[0].betaFeatures?.showDomainsInIDCard ?? false;
+
+          if(!this.data[0].genderFieldValues || this.data[0].genderFieldValues.length == 0)
+            this.data[0].genderFieldValues = PatientList.defaultFenderFieldValues
 
           // init layout
           this.layoutFooterLogos = this.data[0].layout?.footerLogos ?? [];
@@ -89,6 +94,10 @@ export class AppConfigService {
     return this.configurationEnabled;
   }
 
+  public showDomainsInIDCard(): boolean {
+    return this._showDomainsInIDCard;
+  }
+
   getMainzellisteIdTypes(): string[] {
     return this.mainzellisteIdTypes;
   }
@@ -107,6 +116,10 @@ export class AppConfigService {
 
   getMainzellisteFields(): string[] {
     return this.mainzellisteFields;
+  }
+
+  getFields(): Field[] {
+    return this.data[0].fields || []
   }
 
   getMainzellisteClaims(): ClaimsConfig[] {
@@ -227,7 +240,9 @@ export class AppConfigService {
 
     // set type
     if(!isDateType) {
-      if (mlField.type == MainzellisteFieldType.PlainTextField)
+      if(['sex', 'gender', 'geschlecht'].includes(mlField.name.toLowerCase())){
+        configuredField.type = FieldType.SEX;
+      } else if (mlField.type == MainzellisteFieldType.PlainTextField)
         configuredField.type = FieldType.TEXT
       else if (mlField.type == MainzellisteFieldType.IntegerField) {
         configuredField.type = FieldType.NUMBER;
