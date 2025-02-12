@@ -1,17 +1,23 @@
-<h1 mat-dialog-title>{{'configuration.policy.create' | translate}}</h1>
+<h1 mat-dialog-title>{{ 'configuration.policy.create' | translate }}</h1>
 <div mat-dialog-content>
+  <app-error-card [(messages)]="errorMessages"></app-error-card>
+
   <form [formGroup]="policyForm">
     <mat-form-field appearance="outline">
-      <mat-label>{{"configuration.policy.policyCode" | translate}}</mat-label>
+      <mat-label>{{ 'configuration.policy.policyCode' | translate }}</mat-label>
       <input matInput formControlName="code">
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>{{"configuration.policy.policyText" | translate}}</mat-label>
+      <mat-label>{{ 'configuration.policy.policyText' | translate }}</mat-label>
       <input matInput formControlName="text">
     </mat-form-field>
   </form>
 </div>
 <div mat-dialog-actions>
-  <button mat-button mat-dialog-close class="submitBreak">{{'button_cancel' | translate}}</button>
-  <button mat-button (click)="save()" cdkFocusInitial class="submit" [disabled]="!policyForm.valid">{{'button_create' | translate}}</button>
+  <button mat-button mat-dialog-close class="submitBreak">
+    {{ 'button_cancel' | translate }}
+  </button>
+  <button mat-button (click)="save()" cdkFocusInitial class="submit" [disabled]="!policyForm.valid">
+    {{ 'button_create' | translate }}
+  </button>
 </div>

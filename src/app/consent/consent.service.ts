@@ -939,7 +939,7 @@ export class ConsentService {
         mergeMap(token => this.resolvePostToken<T>(token.id, path, body)),
         catchError((error) => {
           if (error.status >= 400 && error.status < 500) {
-            return of([]);
+            return throwError(() => error);
           } else {
             return throwError( () => new Error(`Failed to fetch data from ${path}. Cause: ${getErrorMessageFrom(error, this.translate)}`));
           }

@@ -81,15 +81,13 @@ export class PoliciesComponent implements OnInit {
 
   addPolicySet() {
     const dialogRef = this.dialog.open(PolicySetFormComponent, {
-      width: '20em',
+      width: '15vw',
     });
   
     dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
       if (result) {
-        this.consentService.addPolicySet(result.id, result.name, result.externalId).pipe(take(1)).subscribe(response => {
-          this.loadData(this.paginator.pageIndex, this.paginator.pageSize, false);
-          this.paginator.firstPage();
-        });
+        this.loadData(this.paginator.pageIndex, this.paginator.pageSize, false);
+        this.paginator.firstPage();
       }
     });
   }
@@ -97,14 +95,13 @@ export class PoliciesComponent implements OnInit {
 
   addPolicy(policySetId: string) {
     const dialogRef = this.dialog.open(PolicyFormComponent, {
-      width: '400px',
+      width: '25vw',
+      data: { policySetId }
     });
-
-    dialogRef.afterClosed().subscribe(result => {
+  
+    dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
       if (result) {
-        this.consentService.addPolicy(policySetId, result.code, result.text).subscribe(response => {
-          this.loadData(0, this.defaultPageSize, false);
-        });
+        this.loadData(0, this.defaultPageSize, false);
       }
     });
   }

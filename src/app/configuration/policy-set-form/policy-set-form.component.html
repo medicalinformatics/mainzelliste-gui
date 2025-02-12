@@ -1,5 +1,6 @@
 <h1 mat-dialog-title>{{"configuration.policySet.add" | translate}}</h1>
 <div mat-dialog-content>
+  <app-error-card [(messages)]="errorMessages"></app-error-card>
   <form [formGroup]="policySetForm">
     <mat-form-field appearance="outline">
       <mat-label>{{'configuration.policySet.id' | translate}}</mat-label>
@@ -17,5 +18,7 @@
 </div>
 <div mat-dialog-actions>
   <button mat-button mat-dialog-close class="submitBreak">{{'button_cancel' | translate}}</button>
-  <button mat-button (click)="save()" class="submit" cdkFocusInitial [disabled]="!policySetForm.valid">{{'button_create' | translate}}</button>
+  <button mat-button (click)="save()" class="submit" cdkFocusInitial [disabled]="!policySetForm.valid">
+    {{'button_create' | translate}}
+  </button>
 </div>
