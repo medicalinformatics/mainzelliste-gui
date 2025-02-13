@@ -39,6 +39,14 @@
 	"email_text": "E-mail",
 	"health_insurance_text": "Health Insurance",
 	"health_insurance_number_text": "Health Insurance Number",
+
+  "confirm_delete_dialog.title": "Confirm delete",
+  "confirm_delete_dialog.text": "Are you sure you want to delete ${1}?",
+  "confirm_delete_dialog.warning": "The data will be completely deleted and cannot be restored.",
+  "confirm_delete_dialog.item_patient": "the following patient",
+  "confirm_delete_dialog.item_consent_template": "this consent template",
+  "confirm_delete_dialog.item_consent": "this consent",
+
 	"tentative_dialog_title": "Unsafe case",
 	"tentative_dialog_text1": "A similar patient was found for the data entered, but he cannot be assigned with sufficient certainty.",
 	"tentative_dialog_text2": "To avoid any confusion, please check your entry again! Then:",
@@ -85,6 +93,14 @@
   "consent_template.validity_month": "Months",
   "consent_template.validity_day": "Days",
   "consent_template.consent-model": "Consent Model",
+  "consent_template.policy_set_name": "Policy Set",
+  "consent_template.policy_display_text": "Name",
+  "consent_template.policy_code": "Code",
+  "consent_template.no_policy_found": "No policy found.",
+  "consent_template.policies": "Policies:",
+  "consent_template.add_polices": "Add Policy",
+  "consent_template.error.required_policies": "Please select at least one policy",
+  "consent_template.error.referred_by": "Failed to delete consent template due to existing consents based on this template",
 
   "consent_dialog_history_title": "Consent history",
   "consent_dialog_history_status": "Previous status",
@@ -94,12 +110,13 @@
   "add_consent.inactivated-dialog-text": "The end of the Timeframe of this consent is in the past. The consent status is automatically set as Inactive",
 
   "navigation.info": "Info",
-	"navigation.new_patient": "New patient",
-	"navigation.patientlist": "Patient list",
-	"navigation.bulkIdGeneration": "Bulk ID Generation",
-	"navigation.bulkPseudonymization": "Bulk Pseudonymization",
+  "navigation.new_patient": "New patient",
+  "navigation.patientlist": "Patient list",
+  "navigation.bulkIdGeneration": "Bulk ID Generation",
+  "navigation.bulkPseudonymization": "Bulk Pseudonymization",
   "navigation.consent_template": "Consent Template",
   "navigation.configuration": "Configuration",
+  "navigation.read_tentatives" : "Tentative Matches",
 
 	"patientlist.filter_search": "Filter/Search...",
 	"patientlist.button_filter_columns": "Select columns",
@@ -326,6 +343,20 @@
   "bulkPseudonymization.upload_info_text2": "The file must at least contains the required field names (${fieldName}) and/or one external ID type (${extIdTypes}) as CSV-Header.",
   "bulkPseudonymization.upload_info_text3": "Empty lines can lead to errors!",
 
+  "read_tentatives.title" : "Tentative Matches",
+  "read_tentatives.not_item" : "No tenatives found.",
+  "read_tentatives.button_resolve" : "Resolve tentative Match",
+
+  "solve_tentatives.title": "Resolve tentative Match",
+
 	"export_data": "Export contact information to excel",
-	"copy_data": "Copy contact information to clipboard"
+	"copy_data": "Copy contact information to clipboard",
+
+	"tentative.title_patient_1":"Patientdata 1",
+	"tentative.title_patient_2":"Patientdata 2",
+	"tentative.patient_data":"Patientdata",
+	"tentative.label_main_patient":"Main-Patient",
+	"tentative.pseudonyms":"Pseudonymes",
+	"tentative.merge":"Merge",
+	"tentative.split":"Split"
 }

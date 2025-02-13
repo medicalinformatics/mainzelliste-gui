@@ -1,44 +1,47 @@
-import { Component, Input, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from "@angular/router";
-import { PatientListService } from "../services/patient-list.service";
-import { Patient } from "../model/patient";
-import { GlobalTitleService } from "../services/global-title.service";
-import { Id } from "../model/id";
-import { MatTable } from "@angular/material/table";
-import { MatDialog } from "@angular/material/dialog";
-import { PatientService } from "../services/patient.service";
-import { DeletePatientDialog } from "./dialogs/delete-patient-dialog";
-import { NewIdDialog } from './dialogs/new-id-dialog';
-import { TranslateService } from '@ngx-translate/core';
-import { ConsentDialogComponent } from "../consent/consent-dialog/consent-dialog.component";
-import { ConsentService } from "../consent/consent.service";
-import { Permission } from "../model/permission";
-import { HttpErrorResponse, HttpParams } from "@angular/common/http";
-import { Observable, throwError } from "rxjs";
-import { HttpClient } from '@angular/common/http';
-import { MainzellisteUnknownError } from "../model/mainzelliste-unknown-error";
-import { Consent, ConsentRow, ConsentsView } from "../consent/consent.model";
-import { catchError, mergeMap } from "rxjs/operators";
-import { DeleteConsentDialog } from "./dialogs/delete-consent-dialog";
-import { IdType } from "../model/id-type";
-import { AuthorizationService } from "../services/authorization.service";
-import { MainzellisteError } from "../model/mainzelliste-error.model";
-import { ErrorMessages } from "../error/error-messages";
-import { ConsentRejectedDialog } from "../consent/dialogs/consent-rejected-dialog";
-import { ConsentInactivatedDialog } from "../consent/dialogs/consent-inactivated-dialog";
-import { IdGenerator } from "../model/idgenerator";
-import { AppConfigService } from "../app-config.service";
+import {Component, Input, EventEmitter, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router} from "@angular/router";
+import {PatientListService} from "../services/patient-list.service";
+import {Patient} from "../model/patient";
+import {GlobalTitleService} from "../services/global-title.service";
+import {Id} from "../model/id";
+import {MatTable} from "@angular/material/table";
+import {MatDialog} from "@angular/material/dialog";
+import {PatientService} from "../services/patient.service";
+import {NewIdDialog} from './dialogs/new-id-dialog';
+import {TranslateService} from '@ngx-translate/core';
+import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.component";
+import {ConsentService} from "../consent/consent.service";
+import {Permission} from "../model/permission";
+import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
+import {Consent, ConsentRow, ConsentsView} from "../consent/consent.model";
+import {catchError, mergeMap} from "rxjs/operators";
+import {IdType} from "../model/id-type";
+import {AuthorizationService} from "../services/authorization.service";
+import {MainzellisteError} from "../model/mainzelliste-error.model";
+import {ErrorMessages} from "../error/error-messages";
+import {ConsentRejectedDialog} from "../consent/dialogs/consent-rejected-dialog";
+import {ConsentInactivatedDialog} from "../consent/dialogs/consent-inactivated-dialog";
+import {IdGenerator} from "../model/idgenerator";
+import {AppConfigService} from "../app-config.service";
 import {
   ConsentHistoryDialogComponent
 } from "../consent/consent-history-dialog/consent-history-dialog.component";
-import { FhirResource } from "fhir-kit-client/types/index";
-import { SearchParams } from "fhir-kit-client";
+import {FhirResource} from "fhir-kit-client/types/index";
+import {SearchParams} from "fhir-kit-client";
+import {AngularCsv} from 'angular-csv-ext/dist/Angular-csv';
+import {
+  ConfirmDeleteDialogComponent
+} from "../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
+import { DeletePatientDialog } from "./dialogs/delete-patient-dialog";
+import { HttpErrorResponse, HttpParams } from "@angular/common/http";
+import { Observable, throwError } from "rxjs";
+import { HttpClient } from '@angular/common/http';
 import { SemanticType, Field } from '../model/field';
-import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { LocalStorageService } from "../services/local-storage.service";
 import { PageEvent } from '@angular/material/paginator';
 import { PatientList } from '../model/patientlist';
 import { SessionService } from '../services/session.service';
+
 
 @Component({
   selector: 'app-idcard',
@@ -492,8 +495,10 @@ export class IdcardComponent implements OnInit {
   }
 
   openDeletePatientDialog(): void {
-    const dialogRef = this.deletePatientDialog.open(DeletePatientDialog, {
-      data: {},
+    const dialogRef = this.deletePatientDialog.open(ConfirmDeleteDialogComponent, {
+      data: {
+        itemI18nName: "confirm_delete_dialog.item_patient"
+      },
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -504,8 +509,10 @@ export class IdcardComponent implements OnInit {
 
 
   openDeleteConsentDialog(consentId: string): void {
-    const dialogRef = this.deleteConsentDialog.open(DeleteConsentDialog, {
-      data: {},
+    const dialogRef = this.deleteConsentDialog.open(ConfirmDeleteDialogComponent, {
+      data: {
+        itemI18nName: "confirm_delete_dialog.item_consent"
+      },
     });
 
     dialogRef.afterClosed().subscribe(result => {

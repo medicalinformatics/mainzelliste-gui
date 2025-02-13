@@ -1,4 +1,4 @@
-<table class="patientField" cellspacing="0" ngModelGroup="fields">
+<table class="patientField" cellspacing="0" ngModelGroup="{{'fields'+uniqueId}}">
     <tr *ngFor="let field of configuredFields">
       <td [ngSwitch]="field.type">
         <div style="width: 100%; flex-flow: row" >

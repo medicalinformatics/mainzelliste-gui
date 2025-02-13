@@ -37,6 +37,9 @@ export class Permission {
 
   public static readonly EDIT_CONFIGURATION = new Permission("miscellaneous", "U", "tt_editConfiguration");
   public static readonly ADD_PATIENTS = new Permission("miscellaneous", "C", "tt_addPatients");
+  public static readonly READ_TENTATIVES = new Permission("miscellaneous", "R", "tt_readTentatives");
+  public static readonly READ_TENTATIVE = new Permission("miscellaneous", "R", "tt_readTentative");
+  public static readonly READ_IDENTITIES = new Permission("miscellaneous", "R", "tt_readIdentities");
 
   constructor(
     public type: PermissionType,

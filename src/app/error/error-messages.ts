@@ -153,6 +153,13 @@ export class ErrorMessages {
     'error.search_consent_templates_failed');
 
   ////
+  // DELETE CONSENT TEMPLATE
+  //---------------------
+  public static DELETE_CONSENT_TEMPLATE_REFERRED_BY: ErrorMessage = new ErrorMessage(6004,
+    /\[6004]\s:\s.+/i,
+    "consent_template.error.referred_by");
+
+  ////
   // CONSENT SCAN ERRORS
   //---------------------
   public static FAILED_UPLOAD_CONSENT_SCAN_FILE: ErrorMessage = new ErrorMessage(7001,
@@ -185,4 +192,22 @@ export class ErrorMessages {
   public static FETCH_PATIENTS_JOB_NOTFOUND: ErrorMessage = new ErrorMessage(10002,
     'job not found',
     "error.fetch_patients_job_not_found")
+
+  ////
+  // Solve TENTATIVE MATCH
+  //---------------------
+  // the given main identity already belong to another main identity
+  public static readonly SOLVE_TENTATIVE_MERGE_FAILED_MAIN_IDENTITY_IS_SECONDARY: ErrorMessage = new ErrorMessage(11001,
+    /It is not possible to add a new Identity to the Secondary Identity.(.*)/i,
+    "error.solve_tentative_failed_main_identity_is_secondary");
+
+  // the given secondary identity is already a main identity of existing secondary identities
+  public static readonly SOLVE_TENTATIVE_MERGE_FAILED_SECONDARY_IDENTITY_ID_MAIN: ErrorMessage = new ErrorMessage(11002,
+    /Secondary Identity has multiple Identities itself.(.*)/i,
+    "error.solve_tentative_failed_secondary_identity_is_main_identity");
+
+  // the given secondary identity already belong to another main identity
+  public static readonly SOLVE_TENTATIVE_MERGE_FAILED_SECONDARY_IDENTITY_LINKED: ErrorMessage = new ErrorMessage(11003,
+    /If you attach the Secondary Identity to the new Main Identity(.*)/i,
+    "error.solve_tentative_failed_secondary_identity_is_secondary");
 }

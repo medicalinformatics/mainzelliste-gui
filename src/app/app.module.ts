@@ -69,7 +69,19 @@ import {
 import {
   BulkIdGenerationEmptyFieldsDialog
 } from "./bulk-operations/bulk-id-generation/dialog/bulk-id-generation-empty-fields-dialog";
-import { BulkPseudonymizationComponent } from './bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component';
+import {
+  BulkPseudonymizationComponent
+} from './bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component';
+import {EditorModule, TINYMCE_SCRIPT_SRC} from "@tinymce/tinymce-angular";
+import {
+  TentativeMatchesListComponent
+} from "./tentative-matches/tentative-matches-list/tentative-matches-list.component";
+import {
+  SolveTentativeMatchComponent
+} from "./tentative-matches/solve-tentative-match/solve-tentative-match.component";
+import {
+  MergeTentativeMatchDialogComponent
+} from "./tentative-matches/solve-tentative-match/dialog/merge-tentative-match-dialog.component";
 
 function initializeAppFactory(
     configService: AppConfigService,
@@ -132,7 +144,11 @@ function initializeAppFactory(
     BulkIdGenerationComponent,
     BulkIdGenerationTableComponent,
     BulkIdGenerationEmptyFieldsDialog,
-    BulkPseudonymizationComponent
+    BulkPseudonymizationComponent,
+    ConsentTemplatesComponent,
+    TentativeMatchesListComponent,
+    SolveTentativeMatchComponent,
+    MergeTentativeMatchDialogComponent,
   ],
   imports: [
     SharedModule,
@@ -161,8 +177,8 @@ function initializeAppFactory(
     FileSaverModule,
     NgxMatFileInputModule,
     MatStepperModule,
-    MatListModule,
-
+    EditorModule,
+    MatListModule
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
@@ -182,6 +198,7 @@ function initializeAppFactory(
       useClass: MomentDateAdapter,
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
     },
+    {provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js'}
   ],
   bootstrap: [AppComponent]
 })

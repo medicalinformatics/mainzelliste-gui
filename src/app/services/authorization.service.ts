@@ -188,7 +188,7 @@ export class AuthorizationService {
     }
 
     if(this.configService.isConfigurationEnabled() && claimPermissions.miscellaneous != undefined) {
-      claimPermissions.miscellaneous.filter(m => ['tt_editConfiguration', 'tt_addPatients'].includes(m) )
+      claimPermissions.miscellaneous.filter(m => ['tt_editConfiguration', 'tt_addPatients', 'tt_readTentatives', 'tt_readTentative', 'tt_readIdentities'].includes(m) )
       .forEach( m => permissions.push({
         type: 'miscellaneous',
         operations: [],

@@ -42,7 +42,14 @@
   "health_insurance_text": "Krankenversicherung",
   "health_insurance_number_text": "Krankenversichertennummer",
 
-	"tentative_dialog_title": "Unsicherer Fall",
+  "confirm_delete_dialog.title": "Löschvorgang bestätigen",
+  "confirm_delete_dialog.text": "Möchten Sie ${1} wirklich löschen?",
+  "confirm_delete_dialog.warning": "Die Daten werden vollständig gelöscht und können nicht wiederhergestellt werden.",
+  "confirm_delete_dialog.item_patient": "den folgenden Patient",
+  "confirm_delete_dialog.item_consent_template": "diese Einwilligungsvorlage",
+  "confirm_delete_dialog.item_consent": "diese Einwilligungserklärung",
+
+  "tentative_dialog_title": "Unsicherer Fall",
 	"tentative_dialog_text1": "Zu den eingegeben Daten wurde ein ähnlicher Patient gefunden, der aber nicht mit hinreichender Sicherheit zugeordnet werden kann.",
 	"tentative_dialog_text2": "Um eine Verwechslung auszuschließen, überprüfen Sie bitte nochmals Ihre Eingabe! Dann:",
 	"tentative_dialog_text3": "Falls Sie einen Fehler festgestellt haben, wählen Sie ",
@@ -90,6 +97,14 @@
   "consent_template.validity_month": "Monaten",
   "consent_template.validity_day": "Tage",
   "consent_template.consent-model": "Zustimmungsverfahren",
+  "consent_template.policy_set_name": "Policy Set",
+  "consent_template.policy_display_text": "Name",
+  "consent_template.policy_code": "Code",
+  "consent_template.no_policy_found": "Kein policy gefunden.",
+  "consent_template.policies": "Policies:",
+  "consent_template.add_polices": "Policy hinzufügen",
+  "consent_template.error.required_policies": "Die Eingabe von Policies ist erforderlich",
+  "consent_template.error.referred_by": "Die Einwilligungsvorlage kann nicht gelöscht werden, da bereit Einwilligungserkärungen mittels dieser Vorlage erstellt wurden",
 
   "consent_dialog_history_title": "Einwilligung-Historie",
   "consent_dialog_history_status": "Vorheriger status",
@@ -105,6 +120,7 @@
 	"navigation.bulkPseudonymization": "Bulk-Pseudonymisierung",
   "navigation.consent_template": "Einwilligungsvorlagen",
   "navigation.configuration": "Konfiguration",
+  "navigation.read_tentatives" : "Unsichere Matches",
 
 	"patientlist.filter_search": "Filter/Suche...",
 	"patientlist.button_filter_columns": "Spalten auswählen",
@@ -277,8 +293,9 @@
   "error.fetch_patients_job_unauthorized": "Sie haben keine Berechtigung, um die Bulk-Pseudonymisierungsergebnisse zu lesen",
   "error.fetch_patients_job_not_found": "Bulk-Pseudonymisierung ist fehlgeschlagen",
 
-  "errorComponent.error": "Error",
-	"errorComponent.message": "Information",
+  "error.solve_tentative_failed_main_identity_is_secondary": "Die ausgewählte Haupt-Identität ist bereit eine sekundäre Identität eines existierenden Patienten. Möchten Sie stattdessen diesen Patienten als Haupt-Identität übernehmen",
+  "error.solve_tentative_failed_secondary_identity_is_main_identity": "Die angegebenene sekundäre Identität ist eine Haupt-Identität eines existierenden Patienten, mit weiteren sekundären Identitäten. Möchten Sie alle Identitäten als sekundären Identitäten für die ausgewählte Haupt-Identität hinzufügen",
+	"error.solve_tentative_failed_secondary_identity_is_secondary": "Die angegebenene sekundäre Identität ist bereit eine sekundäre Identität eines existierenden Patienten, mit weiteren sekundären Identitäten. Möchten Sie alle Identitäten als sekundären Identitäten für die ausgewählte Haupt-Identität hinzufügen",
 
 	"errorCardComponent.error": "Error: ",
 	"errorDialogComponent.title": "Ups! Etwas ist schief gelaufen!",
@@ -351,6 +368,20 @@
   "bulkPseudonymization.upload_info_text2": "Die Datei muss mindestens die pflicht IDAT-Felder (${fieldName}) und/oder ein externen ID-Typ (${extIdTypes}) als CSV-Header enthalten.",
   "bulkPseudonymization.upload_info_text3": "Leere Zeilen können zu Fehlern führen!",
 
+  "read_tentatives.title" : "Unsichere Matches",
+  "read_tentatives.not_item" : "Kein unsicheres Match gefunden.",
+  "read_tentatives.button_resolve" : "Unsicheres Match lösen",
+
+  "solve_tentatives.title": "Unsicheres Match lösen",
+
 	"export_data": "Kontaktdaten nach Excel exportieren",
-	"copy_data": "Kontaktdaten in Zwischenablage kopieren"
+	"copy_data": "Kontaktdaten in Zwischenablage kopieren",
+
+	"tentative.title_patient_1":"Patientendaten 1",
+	"tentative.title_patient_2":"Patientendaten 2",
+	"tentative.patient_data":"Patientendaten",
+	"tentative.label_main_patient":"Haupt-Patient",
+	"tentative.pseudonyms":"Pseudonyme",
+	"tentative.merge":"Merge",
+	"tentative.split":"Split"
 }
