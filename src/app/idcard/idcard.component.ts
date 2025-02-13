@@ -1,4 +1,4 @@
-import {Component, Input, EventEmitter, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {PatientListService} from "../services/patient-list.service";
 import {Patient} from "../model/patient";
@@ -12,6 +12,8 @@ import {TranslateService} from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.component";
 import {ConsentService} from "../consent/consent.service";
 import {Permission} from "../model/permission";
+import {HttpErrorResponse} from "@angular/common/http";
+import {throwError} from "rxjs";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {Consent, ConsentRow, ConsentsView} from "../consent/consent.model";
 import {catchError, mergeMap} from "rxjs/operators";
@@ -28,19 +30,11 @@ import {
 } from "../consent/consent-history-dialog/consent-history-dialog.component";
 import {FhirResource} from "fhir-kit-client/types/index";
 import {SearchParams} from "fhir-kit-client";
+import {SemanticType} from '../model/field';
 import {AngularCsv} from 'angular-csv-ext/dist/Angular-csv';
 import {
   ConfirmDeleteDialogComponent
 } from "../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
-import { DeletePatientDialog } from "./dialogs/delete-patient-dialog";
-import { HttpErrorResponse, HttpParams } from "@angular/common/http";
-import { Observable, throwError } from "rxjs";
-import { HttpClient } from '@angular/common/http';
-import { SemanticType, Field } from '../model/field';
-import { LocalStorageService } from "../services/local-storage.service";
-import { PageEvent } from '@angular/material/paginator';
-import { PatientList } from '../model/patientlist';
-import { SessionService } from '../services/session.service';
 
 
 @Component({
@@ -50,31 +44,6 @@ import { SessionService } from '../services/session.service';
 })
 
 export class IdcardComponent implements OnInit {
-  private patientList: PatientList;
-
-
-  @Input() public showSecondary: boolean = true;
-  @Input() public showHistory: boolean = true;
-
-  public height: string = 'auto';
-
-  configuredIdTypes: string[] = [];
-  public defaultIdType: string = "";
-  columns: string[] = [];
-  allColumnNames: string[] = [];
-  showAllIds: boolean;
-  fieldNames: string[];
-  displayedColumns: string[] = [];
-  clickedRow: any;
-
-
-  //Pageinator
-  public pageIndex = 0;
-  public pageSize = 5;
-
-  getFilteredFileds(arg0: { [key: string]: string; }): { [key: string]: any; } {
-    throw new Error('Method not implemented.');
-  }
   public readonly Permission = Permission;
 
   public idString: string = "";
@@ -85,51 +54,9 @@ export class IdcardComponent implements OnInit {
   @ViewChild('consentTable') consentTable!: MatTable<ConsentRow>;
   public loadingConsents: boolean = false;
   public idTypes: IdType[] = [];
-  private readIdTypes: string[] = [];
-  private otherTenantIdTypes: string[] = [];
-  fields: Field[];
-  public secondaryIdentities: Patient[] = [
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "01.01.2021" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Maximilian", "Geburtsname": "Meier", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "02.01.2021" },
-      [{ idType: "biobankId", idString: "5678", tentative: true }]),
-    new Patient({ "Nachname": "Mustermann", "Vorname": "Max", "Geburtsname": "Schneider", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "03.01.2021" },
-      [{ idType: "biobankId", idString: "1234", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "02.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "04.01.2021" },
-      [{ idType: "biobankId", idString: "4321", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Maxim", "Geburtsname": "Fischer", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10116", "Date_Added": "05.01.2021" },
-      [{ idType: "biobankId", idString: "6789", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Weber", "Geburtdatum": "03.01.1980", "Wohnort": "Stuttgart", "PLZ": "70173", "Date_Added": "06.01.2021" },
-      [{ idType: "biobankId", idString: "3456", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "07.01.2021" },
-      [{ idType: "biobankId", idString: "7890", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schneider", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20096", "Date_Added": "08.01.2021" },
-      [{ idType: "biobankId", idString: "9012", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Müller", "Geburtdatum": "04.01.1980", "Wohnort": "Leipzig", "PLZ": "04109", "Date_Added": "09.01.2021" },
-      [{ idType: "biobankId", idString: "3456", tentative: true }]),
-  ];
-  public history: Patient[] = [
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "01.01.2021" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "01.03.2021" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Maximilian", "Geburtsname": "", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "01.06.2021" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Schmitt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "01.09.2021" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "01.12.2021" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10117", "Date_Added": "01.03.2022" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Munich", "PLZ": "80331", "Date_Added": "01.06.2022" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Munich", "PLZ": "80333", "Date_Added": "01.09.2022" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Munich", "PLZ": "80335", "Date_Added": "01.12.2022" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Munich", "PLZ": "80337", "Date_Added": "01.03.2023" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-  ];
+  private readIdTypes: string [] = [];
+  private otherTenantIdTypes: string [] = [];
+
   constructor(
     private translate: TranslateService,
     private activatedRoute: ActivatedRoute,
@@ -145,50 +72,28 @@ export class IdcardComponent implements OnInit {
     public consentRejectedDialog: MatDialog,
     public consentInactivatedDialog: MatDialog,
     public newIdDialog: MatDialog,
-    public secondaryIDCardDialog: MatDialog,
     public consentService: ConsentService,
-    public localStorageService: LocalStorageService,
-    private httpClient: HttpClient,
-    private configService: AppConfigService,
-    private sessionService: SessionService
+    public configService: AppConfigService
   ) {
-    this.patientList = this.configService.data[0];
     this.activatedRoute.params.subscribe((params) => {
       if (params["idType"] !== undefined)
         this.idType = params["idType"]
       if (params["idString"] !== undefined)
         this.idString = params["idString"]
     });
-
-    this.showSecondary = this.showSecondary;
-    this.history.sort((a, b) => {
-      const dateA = new Date(a.fields.Date_Added);
-      const dateB = new Date(b.fields.Date_Added);
-      return dateA.getTime() - dateB.getTime();
-    });
-
-    this.fieldNames = configService.data[0].fields.filter(f => !f.hideFromList).map(f => f.name);
-    this.showAllIds = configService.data[0].showAllIds != undefined && configService.data[0].showAllIds;
-
     this.changeTitle();
-    this.fields = configService.data[0].fields.filter(f => !f.hideFromList);
   }
 
   ngOnInit() {
-    this.configuredIdTypes = this.patientListService.getIdTypes("R");
-    this.defaultIdType = this.patientListService.findDefaultIdType(this.configuredIdTypes);
-
-    this.displayedColumns = [...this.configuredIdTypes, ...this.fields.map(field => field.name)];
-
     // find id types, that can be created
     this.getIdTypes();
 
     // find id types, that can be read
     this.readIdTypes = this.patientListService.getAllIdTypes("R")
     this.otherTenantIdTypes = this.authorizationService.getTenants()
-      .filter(t => t.id != this.authorizationService.currentTenantId)
-      .map(t => t.idTypes)
-      .reduce((a, b) => a.concat(b));
+    .filter(t => t.id != this.authorizationService.currentTenantId)
+    .map(t => t.idTypes)
+    .reduce((a,b) => a.concat(b));
     this.readIdTypes.push(... this.otherTenantIdTypes)
 
     this.loadPatient();
@@ -199,79 +104,6 @@ export class IdcardComponent implements OnInit {
     //load consent list
     if (this.consentService.isServiceEnabled() && this.authorizationService.hasPermission(Permission.READ_CONSENT))
       this.loadConsents();
-
-    // load columns from browser storage
-    const storedColumns = this.localStorageService.patientListColumns
-    if (storedColumns.length > 0 && storedColumns.every(c => this.allColumnNames.some(e => e == c))) {
-      this.columns = storedColumns;
-    } else {
-      let displayIdTypes = this.showAllIds ? this.configuredIdTypes : [this.defaultIdType];
-      this.columns = this.columns.concat(displayIdTypes).concat(this.fieldNames);
-      this.localStorageService.patientListColumns = this.columns
-    }
-
-
-    this.height = 40 + (this.fields.length * 30) + 'px';
-
-    this.getSecondaryIdentities().subscribe({
-      next: (response) => {
-        console.log(response);
-        // this.secondaryIdentities= response;
-      },
-      error: (error) => {
-        this.secondaryIdentities = [];
-        throw error;
-      }
-    })
-  }
-  getSecondaryIdentities() {
-    console.log('getSecondaryIdentities called');
-    return this.sessionService.createToken("readIdentities", {}).pipe(
-      mergeMap(token => {
-        console.log('Token received:', token);
-        return this.readSecondaryIdentities(token.id);
-      }),
-      catchError((error) => {
-        console.error('Error occurred in getSecondaryIdentities:', error);
-        if (error.status >= 400 && error.status < 500) {
-          return throwError(() => new Error("failed to fetch identities"));
-        } else {
-          return throwError(() => new Error("failed to fetch identities"));
-        }
-      })
-    );
-  }
-
-  readSecondaryIdentities(tokenId: string | undefined) {
-    const body = { "idType": this.idType, "idString": this.idString };
-    const params = new HttpParams().set('tokenId', tokenId ?? '');
-
-    console.log('readSecondaryIdentities called with tokenId:', tokenId);
-    console.log('Request body:', body);
-    console.log('Request params:', params.toString());
-
-    return this.httpClient.post<Patient[]>(this.patientList.url + "/identities", body, {
-      params: params,
-      observe: 'response'
-    }).pipe(
-      mergeMap(response => {
-        console.log('Response:', response);
-        if (response.body) {
-          console.log('Response body:', response.body);
-          return response.body;
-        } else {
-          console.error('Failed to fetch tentatives');
-          return throwError(() => new Error("failed to fetch tentatives"));
-        }
-      }),
-      catchError(error => {
-        console.error('Error occurred:', error);
-        return throwError(() => new Error("failed to fetch tentatives"));
-      })
-    );
-  }
-  showTenantColumn() {
-    return this.authorizationService.getTenants().length > 1;
   }
 
   changeTitle() {
@@ -280,38 +112,38 @@ export class IdcardComponent implements OnInit {
 
   private loadPatient() {
     this.patientListService.readPatient(new Id(this.idType, this.idString), "R", undefined, this.readIdTypes)
-      .pipe(
-        catchError(e => {
-          if (e instanceof HttpErrorResponse && (e.status == 404)) {
-            this.router.navigate(['/**']).then();
-          }
-          return throwError(() => new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_add_patient_token'), e, this.translate))
-        })
-      )
-      .subscribe(
-        patients => {
-          this.patient = this.patientListService.convertToDisplayPatient(patients[0], false, this.authorizationService.getTenants());
-          this.patient.ids = this.patient.ids.filter(id => !this.otherTenantIdTypes.some(t => t == id.idType));
-        });
+    .pipe(
+      catchError(e => {
+        if (e instanceof HttpErrorResponse && (e.status == 404)) {
+          this.router.navigate(['/**']).then();
+        }
+        return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_add_patient_token'), e, this.translate))
+      })
+    )
+    .subscribe(
+      patients => {
+        this.patient = this.patientListService.convertToDisplayPatient(patients[0], false, this.authorizationService.getTenants());
+        this.patient.ids = this.patient.ids.filter(id => !this.otherTenantIdTypes.some(t => t == id.idType));
+      });
   }
 
   private loadConsents() {
     this.loadingConsents = true;
     this.consentsView = { consentTemplates: new Map, consentRows: [] }
     this.consentService.getConsents(this.idType, this.idString)
-      .subscribe({
-        next: (dataModels) => {
-          this.consentsView = dataModels;
-          this.consentTable.renderRows();
-          this.loadingConsents = false;
-        },
-        error: (error) => this.loadingConsents = false
-      });
+    .subscribe({
+      next: (dataModels) => {
+        this.consentsView = dataModels;
+        this.consentTable.renderRows();
+        this.loadingConsents = false;
+      },
+      error: (error) => this.loadingConsents = false
+    });
   }
 
   deleteConsent(consentId: string) {
     this.consentService.deleteConsent(consentId).pipe(
-      mergeMap(r => this.consentService.getConsents(this.idType, this.idString))
+        mergeMap(r => this.consentService.getConsents(this.idType, this.idString))
     ).subscribe({
       next: dataModels => {
         this.consentsView = dataModels;
@@ -353,14 +185,14 @@ export class IdcardComponent implements OnInit {
 
     dialogRef.beforeClosed().subscribe(dataModel => {
       if (dataModel?.consent) {
-        dataModel.consent.patientId = { idType: this.idType, idString: this.idString };
+        dataModel.consent.patientId = {idType: this.idType, idString: this.idString};
         dataModel.consent.fhirResource.patient = {
           identifier: this.consentService.convertToFhirIdentifier(dataModel.consent.patientId)
         }
         this.updateConsent(dataModel.consent, false, processDone,
           {
-            'patient:identifier': dataModel.consent.fhirResource.patient.identifier?.system + '|' + dataModel.consent.fhirResource.patient.identifier?.value,
-            'policyUri': 'fhir/Questionnaire/' + dataModel.consent.templateId
+          'patient:identifier': dataModel.consent.fhirResource.patient.identifier?.system + '|' + dataModel.consent.fhirResource.patient.identifier?.value,
+          'policyUri': 'fhir/Questionnaire/' + dataModel.consent.templateId
           });
       }
     });
@@ -381,21 +213,21 @@ export class IdcardComponent implements OnInit {
 
       dialogRef.beforeClosed().subscribe(dataModel => {
         if (dataModel?.consent) {
-          dataModel.consent.patientId = { idType: this.idType, idString: this.idString };
+          dataModel.consent.patientId = {idType: this.idType, idString: this.idString};
           this.updateConsent(dataModel.consent, false, processDone);
         }
       });
     })
   }
 
-  updateConsent(dataModel: Consent, force: boolean, processDone: EventEmitter<boolean>, searchParams?: SearchParams) {
+  updateConsent(dataModel: Consent, force: boolean, processDone: EventEmitter<boolean>, searchParams? :SearchParams) {
     this.consentService.updateConsent(dataModel, force || false, searchParams).pipe(
       mergeMap(c =>
         this.consentService.createScansAndProvenance(dataModel, (c as fhir4.Consent).id ?? "")
       ),
-      catchError(e => throwError(() => e))
+      catchError(e => throwError( () => e))
     ).subscribe({
-      next: () => { },
+      next: () => {},
       error: e => {
         processDone.emit(false);
         if (e instanceof MainzellisteError && e.errorMessage == ErrorMessages.CREATE_CONSENT_REJECTED) {
@@ -446,19 +278,19 @@ export class IdcardComponent implements OnInit {
     );
   }
 
-  openViewConsentHistoryDialog(consentId: string, version: number) {
+  openViewConsentHistoryDialog(consentId: string, version :number) {
     this.consentHistoryDialog.open(ConsentHistoryDialogComponent, {
-      width: '900px',
-      disableClose: true,
-      data: {
-        consentId: consentId,
-        consentVersion: version
-      }
-    });
+        width: '900px',
+        disableClose: true,
+        data: {
+          consentId: consentId,
+          consentVersion: version
+        }
+      });
   }
 
-  getIdTypes(): IdType[] {
-    if (this.idTypes.length == 0) {
+  getIdTypes():IdType[] {
+    if (this.idTypes.length == 0){
       this.idTypes = [
         ...this.patientListService.getUniqueIdTypes(false, "C")
           .map(t => { return { name: t, isExternal: false, isAssociated: false } }),
@@ -470,12 +302,12 @@ export class IdcardComponent implements OnInit {
   }
 
   getUnAvailableIdTypes(patient: Patient): IdType[] {
-    let idGenerators: IdGenerator[] = this.configService.getMainzellisteIdGenerators();
-    let associatedIdGenerators: IdGenerator[] = this.configService.getMainzellisteAssociatedIdGenerators();
+    let idGenerators : IdGenerator[] = this.configService.getMainzellisteIdGenerators();
+    let associatedIdGenerators : IdGenerator[] = this.configService.getMainzellisteAssociatedIdGenerators();
     return this.getIdTypes()
-      .filter(t => t.isAssociated && associatedIdGenerators.some(g => g.isPersistent && g.idType == t.name) ||
-        idGenerators.some(g => g.isPersistent && g.idType == t.name) &&
-        !patient.ids.some(id => id.idType == t.name));
+    .filter( t => t.isAssociated && associatedIdGenerators.some(g => g.isPersistent && g.idType == t.name)||
+      idGenerators.some(g => g.isPersistent && g.idType == t.name) &&
+      !patient.ids.some( id => id.idType == t.name));
   }
 
   hasAllIds(): boolean {
@@ -540,9 +372,9 @@ export class IdcardComponent implements OnInit {
 
     new AngularCsv(data, 'ContactInfo', {
       headers: [this.translate.instant("first_name_text"),
-      this.translate.instant("last_name_text"),
-      this.translate.instant("zip_code_text"),
-      this.translate.instant("residence_text")],
+         this.translate.instant("last_name_text"),
+         this.translate.instant("zip_code_text"),
+         this.translate.instant("residence_text")],
       quoteStrings: '',
       delimiter: ';'
     },);
@@ -565,33 +397,7 @@ export class IdcardComponent implements OnInit {
     return fieldMap;
   }
 
-  showDomainsCard(): boolean {
+  showDomainsCard():boolean{
     return this.configService.showDomainsInIDCard() && this.authorizationService.getTenants().length > 1;
-  }
-
-  onPageChange(event: PageEvent) {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-  }
-
-  onRowClick(row: any) {
-    this.clickedRow = row;
-  }
-
-  isDifferent(element: any, field: string): boolean {
-    if (!this.clickedRow) return false;
-    return element.fields[field] !== this.clickedRow.fields[field];
-  }
-
-  isClickedRow(row: any): boolean {
-    return this.clickedRow === row;
-  }
-
-  isFieldChanged(identity: Patient, index: number, fieldName: string): boolean {
-    if (index === 0) {
-      return false; // No previous identity to compare with for the first entry
-    }
-    const previousIdentity = this.history[index - 1];
-    return identity.fields[fieldName] !== previousIdentity.fields[fieldName];
   }
 }

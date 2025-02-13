@@ -52,7 +52,6 @@ import {TranslateService} from '@ngx-translate/core';
 import {AccessDeniedComponent} from './access-denied/access-denied.component';
 import {NgxMatFileInputModule} from '@angular-material-components/file-input';
 import {MatStepperModule} from '@angular/material/stepper';
-import {MatListModule} from '@angular/material/list';
 import {
   InternationalizedMatPaginatorIntl
 } from "./shared/components/paginator/internationalized-mat-paginator-intl";
@@ -177,8 +176,7 @@ function initializeAppFactory(
     FileSaverModule,
     NgxMatFileInputModule,
     MatStepperModule,
-    EditorModule,
-    MatListModule
+    EditorModule
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
