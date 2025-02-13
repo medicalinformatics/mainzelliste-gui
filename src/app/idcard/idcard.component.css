@@ -19,6 +19,10 @@
 #consents{
   width: 94%;
 }
+#secondary{
+  width: 30%;
+}
+
 
 #consents table {
   margin: 0 1.25% 15px 1.25%;
@@ -105,4 +109,67 @@ mat-card-title{
 
 .mat-card.mat-card-scrollable mat-card-title {
   display: block;
+}
+/*
+style table
+*/
+
+#patientlist {
+  width: 100%;
+}
+
+#patientlist td, #patientlist th {
+  border-right: 1px solid #ddd;
+  padding: 0 10px 0 10px;
+}
+
+#patientlist tr.mat-row{
+  height: 38px;
+}
+
+#patientlist tr:nth-child(even){
+  background-color: #f2f2f2;
+}
+
+#patientlist tr:hover {
+  background-color: #aecbde;
+}
+
+#patientlist .mat-header-cell{
+  background-color: #053E6A;
+  color: white;
+  font-size: inherit
+}
+
+#patientlist .mat-column-actions {
+  border-right: 0
+}
+
+#patientlist .mat-header-cell .mat-checkbox-frame {
+  border-color: white;
+}
+
+#patientlist .mat-header-cell .mat-checkbox-frame.mat-checkbox-indeterminate{
+  border-color: #053E6A;
+}
+/*
+Removes annoying 16px padding on the sides of each mat-list-item
+*/
+::ng-deep .mat-list-base .mat-list-item .mat-list-item-content,
+::ng-deep .mat-list-base .mat-list-option .mat-list-item-content {
+  padding: 0 !important;
+}
+
+/* 
+ This changes the background of the cells that are differnet in the identities 
+*/
+.highlight {
+  background-color: rgb(255, 255, 212) !important;
+}
+
+/* 
+ This changes the background of the clicked row in the identities 
+*/
+.clicked-row {
+  background-color: rgb(183, 215, 225) !important;
 }
