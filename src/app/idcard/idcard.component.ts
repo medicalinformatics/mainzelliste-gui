@@ -26,15 +26,13 @@ import {AppConfigService} from "../app-config.service";
 import {
   ConsentHistoryDialogComponent
 } from "../consent/consent-history-dialog/consent-history-dialog.component";
-import {FhirResource} from "fhir-kit-client/types/index";
 import {SearchParams} from "fhir-kit-client";
 import {AngularCsv} from 'angular-csv-ext/dist/Angular-csv';
 import {
   ConfirmDeleteDialogComponent
 } from "../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
-import { DeletePatientDialog } from "./dialogs/delete-patient-dialog";
 import { HttpErrorResponse, HttpParams } from "@angular/common/http";
-import { Observable, throwError } from "rxjs";
+import { throwError } from "rxjs";
 import { HttpClient } from '@angular/common/http';
 import { SemanticType, Field } from '../model/field';
 import { LocalStorageService } from "../services/local-storage.service";
