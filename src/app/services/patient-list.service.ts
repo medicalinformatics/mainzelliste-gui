@@ -110,7 +110,7 @@ export class PatientListService {
 
 
   getIdTypes(operation?: Operation): Array<string> {
-    if(operation != undefined && !this.authorizationService.isCurrentTenantPermissionsEmpty())
+    if(operation != undefined)
        return this.authorizationService.getAllAllowedUniqueIdTypes(operation);
     else
       return this.configService.getMainzellisteIdTypes();
@@ -579,7 +579,7 @@ export class PatientListService {
   // Utils
   //-------
 
-  convertToDisplayPatient(patient: Patient, convertDateToLocal?:boolean,
+  convertToDisplayPatient(patient: Patient, convertDateToLocal?:boolean, convertDisplaySex?:boolean,
                           tenants?: { id: string, name: string, idTypes: string[] }[]): Patient {
     let displayPatient = new Patient();
     //ids
@@ -596,6 +596,18 @@ export class PatientListService {
     }
     for(const fieldConfig of this.patientList.fields) {
       switch (fieldConfig.type+"") {
+        case "SEX": {
+          if(patient.fields[fieldConfig.mainzellisteField] != undefined) {
+            if(!convertDisplaySex){
+              displayPatient.fields[fieldConfig.name] = patient.fields[fieldConfig.mainzellisteField];
+            } else {
+              const i18nAttribute = this.configService.data[0].genderFieldValues.find(g => g.value == patient.fields[fieldConfig.mainzellisteField])?.i18n;
+              if(i18nAttribute != undefined && i18nAttribute.length > 0)
+                displayPatient.fields[fieldConfig.name] = this.translate.instant(i18nAttribute);
+            }
+          }
+          break;
+        }
         case "TEXT":{
           if(patient.fields[fieldConfig.mainzellisteField] != undefined) {
             displayPatient.fields[fieldConfig.name] = patient.fields[fieldConfig.mainzellisteField];
@@ -621,6 +633,7 @@ export class PatientListService {
     let result: { [p: string]: string } = {};
     for(const fieldConfig of this.patientList.fields) {
       switch (fieldConfig.type+"") {
+        case "SEX":
         case "TEXT":{
           if(fields[fieldConfig.name] != undefined && permittedFieldNames.some( p => p == fieldConfig.mainzellisteField)) {
             result[fieldConfig.mainzellisteField] = fields[fieldConfig.name];

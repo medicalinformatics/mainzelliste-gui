@@ -93,7 +93,7 @@ export class IdcardComponent implements OnInit {
     this.otherTenantIdTypes = this.authorizationService.getTenants()
     .filter(t => t.id != this.authorizationService.currentTenantId)
     .map(t => t.idTypes)
-    .reduce((a,b) => a.concat(b));
+    .reduce((a,b) => a.concat(b), []);
     this.readIdTypes.push(... this.otherTenantIdTypes)
 
     this.loadPatient();
@@ -122,7 +122,7 @@ export class IdcardComponent implements OnInit {
     )
     .subscribe(
       patients => {
-        this.patient = this.patientListService.convertToDisplayPatient(patients[0], false, this.authorizationService.getTenants());
+        this.patient = this.patientListService.convertToDisplayPatient(patients[0], false, true, this.authorizationService.getTenants());
         this.patient.ids = this.patient.ids.filter(id => !this.otherTenantIdTypes.some(t => t == id.idType));
       });
   }
