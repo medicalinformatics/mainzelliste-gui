@@ -46,9 +46,7 @@
     <ng-template matStepLabel>{{'bulkIdGeneration.generate_id_label' | translate}}</ng-template>
     <div class="float-container">
       <div class="float-table">
-        <div>
-          <bulk-id-generation-table *ngIf="step == 1" [csvRecords]="csvRecords"></bulk-id-generation-table>
-        </div>
+        <bulk-id-generation-table *ngIf="step == 1" [csvRecords]="csvRecords"></bulk-id-generation-table>
       </div>
       <div class="float-content">
         <div>

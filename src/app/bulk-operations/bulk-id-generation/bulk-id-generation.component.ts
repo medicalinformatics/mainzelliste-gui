@@ -32,6 +32,7 @@ export class BulkIdGenerationComponent implements OnInit {
   delimiter: string = ",";
   emptyFields: number = 0;
   public isEditable: boolean = true;
+  allowed_length: number = 50000;
 
   @ViewChild("stepper", { static: true }) stepper!: MatStepper;
   @ViewChild("stepTwo", { static: true }) stepTwo!: MatStep;
@@ -85,7 +86,7 @@ export class BulkIdGenerationComponent implements OnInit {
           tempRecords = result;
           if (!this.patientListService.getAllIdTypes("R").includes(tempRecords[0][0])) {
             this.uploadFormGroup.get('uploadField')?.setErrors({invalidIdType:{value:tempRecords[0][0]}})
-          } else if (tempRecords.length > 50001) {
+          } else if (tempRecords.length > this.allowed_length + 1) {
             this.uploadFormGroup.get('uploadField')?.setErrors({invalidFileLength:{value:""}})
           } else if (tempRecords[0].length <= 2 && (tempRecords[0].length == 1 || tempRecords[0][1] == "")) {
             for (let i = 1; i < tempRecords.length; i++) {

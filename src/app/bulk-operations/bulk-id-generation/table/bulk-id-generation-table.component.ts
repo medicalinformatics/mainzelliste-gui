@@ -1,4 +1,6 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
     selector: 'bulk-id-generation-table',
@@ -7,43 +9,39 @@ import { Component, Input, OnInit } from "@angular/core";
 })
 export class BulkIdGenerationTableComponent implements OnInit{
 
+    @ViewChild('paginator') paginator!: MatPaginator;
     @Input() csvRecords!: string[][];
 
     displayedColumns: string[] = ["index", "firstId", "secondId"];
-    idTypes: string [] = ["#", "", ""];
-    displayRecords: string[][] = [];
+    columnId: string [] = ["#", "", ""];
+    element_data: Element[] = [];
+    dataSource = new MatTableDataSource<Element>(this.element_data);
 
     ngOnInit(): void {
         this.setupTableData();
     }
 
-    private setupTableData() {
-        this.copyToDisplay();
-        this.idTypes[1] = this.displayRecords[0][1];
-        for(let i = 1; i < this.displayRecords.length; i++) {
-            this.displayRecords[i - 1][1] = this.displayRecords[i][1];
-        }
-        if(this.displayRecords[0].length == 3) {
-            this.idTypes[2] = this.displayRecords[0][2];
-            for(let i = 1; i < this.displayRecords.length; i++) {
-                this.displayRecords[i - 1][2] = this.displayRecords[i][2];
-            }
-        }
-        if(this.displayRecords.length > 1) {
-            this.displayRecords.pop()
-        }
+    ngAfterViewInit() {
+        this.dataSource.paginator = this.paginator;
     }
 
-    private copyToDisplay() {
-        let i: number = 1;
+    private setupTableData() {
+        this.columnId[1] = this.csvRecords[0][0];
+        if (this.csvRecords[0].length == 2) {
+            this.columnId[2] = this.csvRecords[0][1];
+        }
+        let i: number = 0;
         this.csvRecords.forEach(csvRow => {
-            let data: string[] = [];
-            data.push(i.toString());
-            csvRow.forEach(csvData => {
-                data.push(csvData);
-            });
-            this.displayRecords.push(data);
+            if (i != 0) {
+                this.element_data.push({position: i, id_x: csvRow[0], id_y: csvRow[1]});
+            }
             i++;
         });
     }
+}
+
+export interface Element {
+    position: number;
+    id_x: string;
+    id_y: string;
 }
