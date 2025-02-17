@@ -48,6 +48,68 @@ import { SessionService } from '../services/session.service';
 })
 
 export class IdcardComponent implements OnInit {
+  private patientList: PatientList;
+
+  public height: string = 'auto';
+
+  configuredIdTypes: string[] = [];
+  public defaultIdType: string = "";
+  columns: string[] = [];
+  allColumnNames: string[] = [];
+  showAllIds: boolean;
+  fieldNames: string[];
+  displayedColumns: string[] = [];
+  clickedRow: any;
+
+
+  //Pageinator
+  public pageIndex = 0;
+  public pageSize = 5;
+  fields: Field[];
+
+  public secondaryIdentities: Patient[] = [
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "01.01.2021" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Muster", "Vorname": "Maximilian", "Geburtsname": "Meier", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "02.01.2021" },
+      [{ idType: "biobankId", idString: "5678", tentative: true }]),
+    new Patient({ "Nachname": "Mustermann", "Vorname": "Max", "Geburtsname": "Schneider", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "03.01.2021" },
+      [{ idType: "biobankId", idString: "1234", tentative: true }]),
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "02.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "04.01.2021" },
+      [{ idType: "biobankId", idString: "4321", tentative: true }]),
+    new Patient({ "Nachname": "Muster", "Vorname": "Maxim", "Geburtsname": "Fischer", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10116", "Date_Added": "05.01.2021" },
+      [{ idType: "biobankId", idString: "6789", tentative: true }]),
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Weber", "Geburtdatum": "03.01.1980", "Wohnort": "Stuttgart", "PLZ": "70173", "Date_Added": "06.01.2021" },
+      [{ idType: "biobankId", idString: "3456", tentative: true }]),
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "07.01.2021" },
+      [{ idType: "biobankId", idString: "7890", tentative: true }]),
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schneider", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20096", "Date_Added": "08.01.2021" },
+      [{ idType: "biobankId", idString: "9012", tentative: true }]),
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Müller", "Geburtdatum": "04.01.1980", "Wohnort": "Leipzig", "PLZ": "04109", "Date_Added": "09.01.2021" },
+      [{ idType: "biobankId", idString: "3456", tentative: true }]),
+  ];
+  public history: Patient[] = [
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "01.01.2021" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "01.03.2021" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Muster", "Vorname": "Maximilian", "Geburtsname": "", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "01.06.2021" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Schmitt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "01.09.2021" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "01.12.2021" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10117", "Date_Added": "01.03.2022" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Munich", "PLZ": "80331", "Date_Added": "01.06.2022" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Munich", "PLZ": "80333", "Date_Added": "01.09.2022" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Munich", "PLZ": "80335", "Date_Added": "01.12.2022" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Munich", "PLZ": "80337", "Date_Added": "01.03.2023" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+  ];
+
   public readonly Permission = Permission;
 
   public idString: string = "";
@@ -77,8 +139,11 @@ export class IdcardComponent implements OnInit {
     public consentInactivatedDialog: MatDialog,
     public newIdDialog: MatDialog,
     public consentService: ConsentService,
-    public configService: AppConfigService
+    public configService: AppConfigService,
+    private httpClient: HttpClient,
+    private sessionService: SessionService
   ) {
+    this.patientList = this.configService.data[0];
     this.activatedRoute.params.subscribe((params) => {
       if (params["idType"] !== undefined)
         this.idType = params["idType"]
@@ -86,6 +151,16 @@ export class IdcardComponent implements OnInit {
         this.idString = params["idString"]
     });
     this.changeTitle();
+    
+    this.history.sort((a, b) => {
+      const dateA = new Date(a.fields.Date_Added);
+      const dateB = new Date(b.fields.Date_Added);
+      return dateA.getTime() - dateB.getTime();
+    });
+
+    this.fieldNames = configService.data[0].fields.filter(f => !f.hideFromList).map(f => f.name);
+    this.showAllIds = configService.data[0].showAllIds != undefined && configService.data[0].showAllIds;
+    this.fields = configService.data[0].fields.filter(f => !f.hideFromList);
   }
 
   ngOnInit() {
@@ -108,6 +183,70 @@ export class IdcardComponent implements OnInit {
     //load consent list
     if (this.consentService.isServiceEnabled() && this.authorizationService.hasPermission(Permission.READ_CONSENT))
       this.loadConsents();
+
+    this.configuredIdTypes = this.patientListService.getIdTypes("R");
+    this.defaultIdType = this.patientListService.findDefaultIdType(this.configuredIdTypes);
+
+    this.displayedColumns = [...this.configuredIdTypes, ...this.fields.map(field => field.name)];
+   
+    this.height = 40 + (this.fields.length * 30) + 'px';
+
+    this.getSecondaryIdentities().subscribe({
+      next: (response) => {
+        console.log(response);
+        // this.secondaryIdentities= response;
+      },
+      error: (error) => {
+        this.secondaryIdentities = [];
+        throw error;
+      }
+    })
+  }
+  getSecondaryIdentities() {
+    console.log('getSecondaryIdentities called');
+    return this.sessionService.createToken("readIdentities", {}).pipe(
+      mergeMap(token => {
+        console.log('Token received:', token);
+        return this.readSecondaryIdentities(token.id);
+      }),
+      catchError((error) => {
+        console.error('Error occurred in getSecondaryIdentities:', error);
+        if (error.status >= 400 && error.status < 500) {
+          return throwError(() => new Error("failed to fetch identities"));
+        } else {
+          return throwError(() => new Error("failed to fetch identities"));
+        }
+      })
+    );
+  }
+
+  readSecondaryIdentities(tokenId: string | undefined) {
+    const body = { "idType": this.idType, "idString": this.idString };
+    const params = new HttpParams().set('tokenId', tokenId ?? '');
+
+    console.log('readSecondaryIdentities called with tokenId:', tokenId);
+    console.log('Request body:', body);
+    console.log('Request params:', params.toString());
+
+    return this.httpClient.post<Patient[]>(this.patientList.url + "/identities", body, {
+      params: params,
+      observe: 'response'
+    }).pipe(
+      mergeMap(response => {
+        console.log('Response:', response);
+        if (response.body) {
+          console.log('Response body:', response.body);
+          return response.body;
+        } else {
+          console.error('Failed to fetch tentatives');
+          return throwError(() => new Error("failed to fetch tentatives"));
+        }
+      }),
+      catchError(error => {
+        console.error('Error occurred:', error);
+        return throwError(() => new Error("failed to fetch tentatives"));
+      })
+    );
   }
 
   changeTitle() {
@@ -403,5 +542,30 @@ export class IdcardComponent implements OnInit {
 
   showDomainsCard():boolean{
     return this.configService.showDomainsInIDCard() && this.authorizationService.getTenants().length > 1;
+  }
+  onPageChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+  }
+
+  onRowClick(row: any) {
+    this.clickedRow = row;
+  }
+
+  isDifferent(element: any, field: string): boolean {
+    if (!this.clickedRow) return false;
+    return element.fields[field] !== this.clickedRow.fields[field];
+  }
+
+  isClickedRow(row: any): boolean {
+    return this.clickedRow === row;
+  }
+
+  isFieldChanged(identity: Patient, index: number, fieldName: string): boolean {
+    if (index === 0) {
+      return false; // No previous identity to compare with for the first entry
+    }
+    const previousIdentity = this.history[index - 1];
+    return identity.fields[fieldName] !== previousIdentity.fields[fieldName];
   }
 }
