@@ -87,28 +87,6 @@ export class IdcardComponent implements OnInit {
     new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Müller", "Geburtdatum": "04.01.1980", "Wohnort": "Leipzig", "PLZ": "04109", "Date_Added": "09.01.2021" },
       [{ idType: "biobankId", idString: "3456", tentative: true }]),
   ];
-  public history: Patient[] = [
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "01.01.2021" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "01.03.2021" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Maximilian", "Geburtsname": "", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "01.06.2021" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Schmitt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "01.09.2021" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "01.12.2021" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10117", "Date_Added": "01.03.2022" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Munich", "PLZ": "80331", "Date_Added": "01.06.2022" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Munich", "PLZ": "80333", "Date_Added": "01.09.2022" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Munich", "PLZ": "80335", "Date_Added": "01.12.2022" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Munich", "PLZ": "80337", "Date_Added": "01.03.2023" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-  ];
 
   public readonly Permission = Permission;
 
@@ -151,12 +129,6 @@ export class IdcardComponent implements OnInit {
         this.idString = params["idString"]
     });
     this.changeTitle();
-    
-    this.history.sort((a, b) => {
-      const dateA = new Date(a.fields.Date_Added);
-      const dateB = new Date(b.fields.Date_Added);
-      return dateA.getTime() - dateB.getTime();
-    });
 
     this.fieldNames = configService.data[0].fields.filter(f => !f.hideFromList).map(f => f.name);
     this.showAllIds = configService.data[0].showAllIds != undefined && configService.data[0].showAllIds;
@@ -559,13 +531,5 @@ export class IdcardComponent implements OnInit {
 
   isClickedRow(row: any): boolean {
     return this.clickedRow === row;
-  }
-
-  isFieldChanged(identity: Patient, index: number, fieldName: string): boolean {
-    if (index === 0) {
-      return false; // No previous identity to compare with for the first entry
-    }
-    const previousIdentity = this.history[index - 1];
-    return identity.fields[fieldName] !== previousIdentity.fields[fieldName];
   }
 }

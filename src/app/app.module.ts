@@ -178,8 +178,7 @@ function initializeAppFactory(
     FileSaverModule,
     NgxMatFileInputModule,
     MatStepperModule,
-    EditorModule,
-    MatListModule
+    EditorModule
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},

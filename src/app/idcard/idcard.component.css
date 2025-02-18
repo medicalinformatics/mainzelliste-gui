@@ -150,20 +150,6 @@ style table
 #patientlist .mat-header-cell .mat-checkbox-frame.mat-checkbox-indeterminate{
   border-color: #053E6A;
 }
-/*
-Removes annoying 16px padding on the sides of each mat-list-item
-*/
-::ng-deep .mat-list-base .mat-list-item .mat-list-item-content,
-::ng-deep .mat-list-base .mat-list-option .mat-list-item-content {
-  padding: 0 !important;
-}
-
-/* 
- This changes the background of the cells that are differnet in the identities 
-*/
-.highlight {
-  background-color: rgb(255, 255, 212) !important;
-}
 
 /* 
  This changes the background of the clicked row in the identities 
