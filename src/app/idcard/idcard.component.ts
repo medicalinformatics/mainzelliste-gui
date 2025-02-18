@@ -30,7 +30,7 @@ import {
 } from "../consent/consent-history-dialog/consent-history-dialog.component";
 import {FhirResource} from "fhir-kit-client/types/index";
 import {SearchParams} from "fhir-kit-client";
-import {SemanticType} from '../model/field';
+import {Field, SemanticType} from '../model/field';
 import {AngularCsv} from 'angular-csv-ext/dist/Angular-csv';
 import {
   ConfirmDeleteDialogComponent
@@ -57,6 +57,33 @@ export class IdcardComponent implements OnInit {
   private readIdTypes: string [] = [];
   private otherTenantIdTypes: string [] = [];
 
+  // Dummy data for testing/mockup of edit history
+  public history: Patient[] = [
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "01.01.2021" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "01.03.2021" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Muster", "Vorname": "Maximilian", "Geburtsname": "", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "01.06.2021" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Schmitt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "01.09.2021" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "01.12.2021" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10117", "Date_Added": "01.03.2022" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Munich", "PLZ": "80331", "Date_Added": "01.06.2022" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Munich", "PLZ": "80333", "Date_Added": "01.09.2022" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Munich", "PLZ": "80335", "Date_Added": "01.12.2022" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+    new Patient({ "Nachname": "Schmidt", "Vorname": "Maximilian", "Geburtsname": "Muster", "Geburtdatum": "01.01.1980", "Wohnort": "Munich", "PLZ": "80337", "Date_Added": "01.03.2023" },
+      [{ idType: "biobankId", idString: "9101", tentative: true }]),
+  ];
+  // fields to be displayed in the history cards
+  fields: Field[];
+
+
   constructor(
     private translate: TranslateService,
     private activatedRoute: ActivatedRoute,
@@ -82,6 +109,9 @@ export class IdcardComponent implements OnInit {
         this.idString = params["idString"]
     });
     this.changeTitle();
+
+    // get fields from config
+    this.fields = configService.data[0].fields.filter(f => !f.hideFromList);
   }
 
   ngOnInit() {
@@ -399,5 +429,16 @@ export class IdcardComponent implements OnInit {
 
   showDomainsCard():boolean{
     return this.configService.showDomainsInIDCard() && this.authorizationService.getTenants().length > 1;
+  }
+  showHistoryCard():boolean{
+    return this.history.length > 0;
+  }
+
+  isFieldChanged(identity: Patient, index: number, fieldName: string): boolean {
+    if (index === 0) {
+      return false; // No previous identity to compare with for the first entry
+    }
+    const previousIdentity = this.history[index - 1];
+    return identity.fields[fieldName] !== previousIdentity.fields[fieldName];
   }
 }

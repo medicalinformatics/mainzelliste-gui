@@ -106,3 +106,17 @@ mat-card-title{
 .mat-card.mat-card-scrollable mat-card-title {
   display: block;
 }
+/*
+Removes annoying 16px padding on the sides of each mat-list-item
+*/
+::ng-deep .mat-list-base .mat-list-item .mat-list-item-content,
+::ng-deep .mat-list-base .mat-list-option .mat-list-item-content {
+  padding: 0 !important;
+}
+
+/*
+This changes the background of the cells that are differnet in the history 
+*/
+.highlight {
+  background-color: rgb(255, 255, 212) !important;
+}
