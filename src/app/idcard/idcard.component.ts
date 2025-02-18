@@ -110,6 +110,14 @@ export class IdcardComponent implements OnInit {
     });
     this.changeTitle();
 
+    // sort history by date added in ascending order
+    this.history.sort((a, b) => {
+      const dateA = new Date(a.fields.Date_Added);
+      const dateB = new Date(b.fields.Date_Added);
+      return dateA.getTime() - dateB.getTime();
+    });
+
+
     // get fields from config
     this.fields = configService.data[0].fields.filter(f => !f.hideFromList);
   }
