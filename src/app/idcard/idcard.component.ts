@@ -51,8 +51,6 @@ import { TokenData } from '../model/token-data';
 export class IdcardComponent implements OnInit {
   private patientList: PatientList;
 
-  public height: string = 'auto';
-
   configuredIdTypes: string[] = [];
   public defaultIdType: string = "";
   columns: string[] = [];
@@ -62,11 +60,12 @@ export class IdcardComponent implements OnInit {
   displayedColumns: string[] = [];
   clickedRow: any;
 
+  // required for displayed columns for secondary identities
+  fields: Field[];
 
   //Pageinator
   public pageIndex = 0;
   public pageSize = 5;
-  fields: Field[];
 
   public secondaryIdentities: Patient[] = [
     /*   new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "01.01.2021" },
@@ -163,8 +162,6 @@ export class IdcardComponent implements OnInit {
 
     this.displayedColumns = [...this.configuredIdTypes, ...this.fields.map(field => field.name)];
    
-    this.height = 40 + (this.fields.length * 30) + 'px';
-
     this.getSecondaryIdentities().subscribe({
       next: (response) => {
         console.log("ResponseBody:" + response);

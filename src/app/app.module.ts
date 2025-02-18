@@ -81,8 +81,6 @@ import {
 import {
   MergeTentativeMatchDialogComponent
 } from "./tentative-matches/solve-tentative-match/dialog/merge-tentative-match-dialog.component";
-import { MatListModule } from '@angular/material/list';
-import { ViewPatientComponent } from './patient/view-patient/view-patient.component';
 
 function initializeAppFactory(
     configService: AppConfigService,
