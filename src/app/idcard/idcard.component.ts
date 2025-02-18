@@ -206,25 +206,10 @@ export class IdcardComponent implements OnInit {
     console.log('readSecondaryIdentities called with tokenId:', tokenId);
     console.log('Request params:', params.toString());
 
-    return this.httpClient.get<Patient[]>(this.patientList.url + "/patients/identities",  {
+    return this.httpClient.get(this.patientList.url + "/patients/identities",  {
       params: params,
       observe: 'response'
-    }).pipe(
-      mergeMap(response => {
-        console.log('Response:', response);
-        if (response.body) {
-          console.log('Response body:', response.body);
-          return response.body;
-        } else {
-          console.error('Failed to fetch identities');
-          return throwError(() => new Error("failed to fetch identities"));
-        }
-      }),
-      catchError(error => {
-        console.error('Error occurred:', error);
-        return throwError(() => new Error("failed to fetch identities"));
-      })
-    );
+    });
   }
   showIdentitiesCard() {
     return this.secondaryIdentities.length > 0;
