@@ -44,7 +44,7 @@
       </div>
 
       <!-- Secondary Identities Table -->
-      <mat-card id="Secondary" style=" display: flex; flex-direction: column; ">
+      <mat-card *ngIf="this.showIdentitiesCard()" id="Secondary" style=" display: flex; flex-direction: column; ">
         <mat-card-title-group style="margin: 0 0 0 1.25%;">
           <mat-card-title style="flex-grow: 2;">{{'idcard.title_secondary' | translate}}</mat-card-title>
         </mat-card-title-group>

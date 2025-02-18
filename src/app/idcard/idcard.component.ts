@@ -39,6 +39,7 @@ import { LocalStorageService } from "../services/local-storage.service";
 import { PageEvent } from '@angular/material/paginator';
 import { PatientList } from '../model/patientlist';
 import { SessionService } from '../services/session.service';
+import { TokenData } from '../model/token-data';
 
 
 @Component({
@@ -68,24 +69,25 @@ export class IdcardComponent implements OnInit {
   fields: Field[];
 
   public secondaryIdentities: Patient[] = [
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "01.01.2021" },
-      [{ idType: "biobankId", idString: "9101", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Maximilian", "Geburtsname": "Meier", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "02.01.2021" },
-      [{ idType: "biobankId", idString: "5678", tentative: true }]),
-    new Patient({ "Nachname": "Mustermann", "Vorname": "Max", "Geburtsname": "Schneider", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "03.01.2021" },
-      [{ idType: "biobankId", idString: "1234", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "02.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "04.01.2021" },
-      [{ idType: "biobankId", idString: "4321", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Maxim", "Geburtsname": "Fischer", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10116", "Date_Added": "05.01.2021" },
-      [{ idType: "biobankId", idString: "6789", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Weber", "Geburtdatum": "03.01.1980", "Wohnort": "Stuttgart", "PLZ": "70173", "Date_Added": "06.01.2021" },
-      [{ idType: "biobankId", idString: "3456", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "07.01.2021" },
-      [{ idType: "biobankId", idString: "7890", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schneider", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20096", "Date_Added": "08.01.2021" },
-      [{ idType: "biobankId", idString: "9012", tentative: true }]),
-    new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Müller", "Geburtdatum": "04.01.1980", "Wohnort": "Leipzig", "PLZ": "04109", "Date_Added": "09.01.2021" },
-      [{ idType: "biobankId", idString: "3456", tentative: true }]),
+    /*   new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "01.01.2021" },
+         [{ idType: "biobankId", idString: "9101", tentative: true }]),
+       new Patient({ "Nachname": "Muster", "Vorname": "Maximilian", "Geburtsname": "Meier", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "02.01.2021" },
+         [{ idType: "biobankId", idString: "5678", tentative: true }]),
+       new Patient({ "Nachname": "Mustermann", "Vorname": "Max", "Geburtsname": "Schneider", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "03.01.2021" },
+         [{ idType: "biobankId", idString: "1234", tentative: true }]),
+       new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "02.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "04.01.2021" },
+         [{ idType: "biobankId", idString: "4321", tentative: true }]),
+       new Patient({ "Nachname": "Muster", "Vorname": "Maxim", "Geburtsname": "Fischer", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10116", "Date_Added": "05.01.2021" },
+         [{ idType: "biobankId", idString: "6789", tentative: true }]),
+       new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Weber", "Geburtdatum": "03.01.1980", "Wohnort": "Stuttgart", "PLZ": "70173", "Date_Added": "06.01.2021" },
+         [{ idType: "biobankId", idString: "3456", tentative: true }]),
+       new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "07.01.2021" },
+         [{ idType: "biobankId", idString: "7890", tentative: true }]),
+       new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schneider", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20096", "Date_Added": "08.01.2021" },
+         [{ idType: "biobankId", idString: "9012", tentative: true }]),
+       new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Müller", "Geburtdatum": "04.01.1980", "Wohnort": "Leipzig", "PLZ": "04109", "Date_Added": "09.01.2021" },
+         [{ idType: "biobankId", idString: "3456", tentative: true }]),
+          */
   ];
 
   public readonly Permission = Permission;
@@ -165,7 +167,7 @@ export class IdcardComponent implements OnInit {
 
     this.getSecondaryIdentities().subscribe({
       next: (response) => {
-        console.log(response);
+        console.log("ResponseBody:" + response);
         // this.secondaryIdentities= response;
       },
       error: (error) => {
@@ -175,8 +177,14 @@ export class IdcardComponent implements OnInit {
     })
   }
   getSecondaryIdentities() {
+    const data : TokenData ={
+      "patientId": {
+        "idType": this.idType,
+        "idString": this.idString
+      }
+    }
     console.log('getSecondaryIdentities called');
-    return this.sessionService.createToken("readIdentities", {}).pipe(
+    return this.sessionService.createToken("readIdentities",  data ).pipe(
       mergeMap(token => {
         console.log('Token received:', token);
         return this.readSecondaryIdentities(token.id);
@@ -193,14 +201,12 @@ export class IdcardComponent implements OnInit {
   }
 
   readSecondaryIdentities(tokenId: string | undefined) {
-    const body = { "idType": this.idType, "idString": this.idString };
     const params = new HttpParams().set('tokenId', tokenId ?? '');
 
     console.log('readSecondaryIdentities called with tokenId:', tokenId);
-    console.log('Request body:', body);
     console.log('Request params:', params.toString());
 
-    return this.httpClient.post<Patient[]>(this.patientList.url + "/identities", body, {
+    return this.httpClient.get<Patient[]>(this.patientList.url + "/patients/identities",  {
       params: params,
       observe: 'response'
     }).pipe(
@@ -210,17 +216,19 @@ export class IdcardComponent implements OnInit {
           console.log('Response body:', response.body);
           return response.body;
         } else {
-          console.error('Failed to fetch tentatives');
-          return throwError(() => new Error("failed to fetch tentatives"));
+          console.error('Failed to fetch identities');
+          return throwError(() => new Error("failed to fetch identities"));
         }
       }),
       catchError(error => {
         console.error('Error occurred:', error);
-        return throwError(() => new Error("failed to fetch tentatives"));
+        return throwError(() => new Error("failed to fetch identities"));
       })
     );
   }
-
+  showIdentitiesCard() {
+    return this.secondaryIdentities.length > 0;
+  }
   changeTitle() {
     this.titleService.setTitle(this.translate.instant('idcard.title_id_card'), false, "badge");
   }
