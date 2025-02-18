@@ -30,7 +30,7 @@ import {
 } from "../consent/consent-history-dialog/consent-history-dialog.component";
 import {FhirResource} from "fhir-kit-client/types/index";
 import {SearchParams} from "fhir-kit-client";
-import {SemanticType} from '../model/field';
+import {Field, SemanticType} from '../model/field';
 import {AngularCsv} from 'angular-csv-ext/dist/Angular-csv';
 import {
   ConfirmDeleteDialogComponent
@@ -57,6 +57,11 @@ export class IdcardComponent implements OnInit {
   private readIdTypes: string [] = [];
   private otherTenantIdTypes: string [] = [];
 
+  // fields to be displayed in the patient data
+  fields: Field[];
+  // height of the patient data
+  public height: string = 'auto';
+
   constructor(
     private translate: TranslateService,
     private activatedRoute: ActivatedRoute,
@@ -82,6 +87,9 @@ export class IdcardComponent implements OnInit {
         this.idString = params["idString"]
     });
     this.changeTitle();
+
+    // get fields from config
+    this.fields = configService.data[0].fields.filter(f => !f.hideFromList);
   }
 
   ngOnInit() {
@@ -104,6 +112,8 @@ export class IdcardComponent implements OnInit {
     //load consent list
     if (this.consentService.isServiceEnabled() && this.authorizationService.hasPermission(Permission.READ_CONSENT))
       this.loadConsents();
+//calculate height for patientdata
+    this.height = 40 + (this.fields.length * 30) + 'px';
   }
 
   changeTitle() {
