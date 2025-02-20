@@ -32,7 +32,7 @@ import {
   ConfirmDeleteDialogComponent
 } from "../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
 import { HttpErrorResponse, HttpParams } from "@angular/common/http";
-import { Observable, throwError } from "rxjs";
+import { identity, Observable, throwError } from "rxjs";
 import { HttpClient } from '@angular/common/http';
 import { SemanticType, Field } from '../model/field';
 import { LocalStorageService } from "../services/local-storage.service";
@@ -164,8 +164,9 @@ export class IdcardComponent implements OnInit {
    
     this.getSecondaryIdentities().subscribe({
       next: (response) => {
-        console.log("ResponseBody:" + response);
-        // this.secondaryIdentities= response;
+        console.log("ResponseBody:");
+        console.log(response);
+        console.log(response.fields);
       },
       error: (error) => {
         this.secondaryIdentities = [];
@@ -173,15 +174,15 @@ export class IdcardComponent implements OnInit {
       }
     })
   }
-  getSecondaryIdentities() {
-    const data : TokenData ={
+  getSecondaryIdentities(){
+    const data: TokenData = {
       "patientId": {
         "idType": this.idType,
         "idString": this.idString
       }
     }
     console.log('getSecondaryIdentities called');
-    return this.sessionService.createToken("readIdentities",  data ).pipe(
+    return this.sessionService.createToken("readIdentities", data).pipe(
       mergeMap(token => {
         console.log('Token received:', token);
         return this.readSecondaryIdentities(token.id);
@@ -197,17 +198,45 @@ export class IdcardComponent implements OnInit {
     );
   }
 
-  readSecondaryIdentities(tokenId: string | undefined) {
-    const params = new HttpParams().set('tokenId', tokenId ?? '');
-
-    console.log('readSecondaryIdentities called with tokenId:', tokenId);
-    console.log('Request params:', params.toString());
-
-    return this.httpClient.get(this.patientList.url + "/patients/identities",  {
-      params: params,
+  readSecondaryIdentities(tokenId: string | undefined){
+    return this.httpClient.get<Patient[]>(this.patientList.url + "/patients/identities", {
+      params: new HttpParams().set('tokenId', tokenId ?? ''),
       observe: 'response'
-    });
+    }).pipe(
+      mergeMap(response => {
+        if (response.status == 200) {
+          return this.getPatients(response.body);
+        } else {
+          return throwError(() => new Error("failed to fetch identities"));
+        }
+      }),
+      catchError((error) => {
+        console.error('Error occurred in readSecondaryIdentities:', error);
+        if (error.status >= 400 && error.status < 500) {
+          return throwError(() => new Error("failed to fetch identities"));
+        } else {
+          return throwError(() => new Error("failed to fetch identities"));
+        }
+      })
+    );
   }
+
+  getPatients(response: any) : Patient[]{
+    type Identity = {
+      fields: { [key: string]: string },
+      ids: Id[],
+      main: boolean
+    };
+    let identities: Identity[] = [];
+    let patients: Patient[] = [];
+    console.log(response.body);
+    identities = response.body as Identity[] ?? [];
+    console.log(identities);
+    patients = identities.filter(i => i.main == false).map(i => new Patient(i.fields, i.ids));
+    console.log(patients);
+    return patients;
+  }
+
   showIdentitiesCard() {
     return this.secondaryIdentities.length > 0;
   }
