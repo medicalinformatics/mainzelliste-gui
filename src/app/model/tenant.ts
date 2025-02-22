@@ -1,6 +1,6 @@
 export class Tenant {
-  public static DEFAULT_ID = "default"
-
+  public static readonly DEFAULT_ID = "default"
+  public static readonly ESSENTIAL_MISCELLANEOUS_PERMISSIONS: MiscellaneousPermission[] = ['tt_editConfiguration', 'tt_addPatients']
   constructor(
     public id: string,
     public name: string,

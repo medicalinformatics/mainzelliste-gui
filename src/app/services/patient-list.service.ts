@@ -254,12 +254,14 @@ export class PatientListService {
         searchIds.push({idType: f.field, idString: f.searchCriteria.trim()}));
     }
 
-    let resultIdTypes: string [] = this.getIdTypes("R");
-    this.authorizationService.getTenants().forEach(t => resultIdTypes.push(... t.idTypes));
+    let resultIdTypes = new Set(this.getIdTypes("R"));
+    //Note: find tenant id types to determine to which domain they belong
+    if(this.configService.showDomainsInIDCard())
+      this.authorizationService.getAllTenantIdTypes().forEach( t => resultIdTypes.add(t));
 
     // create read patients token
     return this.sessionService.createToken("readPatients",
-      new ReadPatientsTokenData(searchIds, this.getFieldNames("R"), resultIdTypes))
+      new ReadPatientsTokenData(searchIds, this.getFieldNames("R"), [... resultIdTypes]))
     .pipe(
       // resolve read patients token
       mergeMap(token => this.httpClient.get<Patient[]>(this.patientList.url + "/patients?"
@@ -312,12 +314,12 @@ export class PatientListService {
       throw new Error("idString cant be empty");
     }
 
-    let array: [{idType: string; idString: string}] = [{idType: idType, idString: idString[0]}];
-    for(let i = 1; i < idString.length; i++) {
-      array.push({idType: idType,idString: idString[i]})
+    let ids: {idType: string; idString: string}[] = [];
+    for(const element of idString) {
+      ids.push({idType: idType, idString: element})
     }
 
-    return this.sessionService.createToken("createIds", new CreateIdsTokenData(array, [newIdType]))
+    return this.sessionService.createToken("createIds", new CreateIdsTokenData(ids, [newIdType]))
       .pipe(mergeMap(
         token => this.resolveCreateIdsToken(token.id, newIdType)
         ),
@@ -587,7 +589,9 @@ export class PatientListService {
 
     // tenants
     if((tenants?.length || 0) > 1)
-      displayPatient.tenants = tenants?.filter(t => t.idTypes.some( t => displayPatient.ids.some( id => id.idType == t)))
+      displayPatient.tenants = tenants?.filter(t =>
+        t.id != Tenant.DEFAULT_ID
+        && t.idTypes.some( t => displayPatient.ids.some( id => id.idType == t)))
       .map(t => t.name);
 
     // fields
