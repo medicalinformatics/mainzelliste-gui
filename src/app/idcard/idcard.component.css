@@ -12,11 +12,7 @@
   width: 30%;
 }
 
-#domains{
-  width: 94%;
-}
-
-#consents{
+#domains, #consents, #Secondary{
   width: 94%;
 }
 

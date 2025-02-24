@@ -32,7 +32,7 @@ import {
   ConfirmDeleteDialogComponent
 } from "../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
 import { HttpErrorResponse, HttpParams } from "@angular/common/http";
-import { identity, Observable, throwError } from "rxjs";
+import { identity, Observable, of, throwError } from "rxjs";
 import { HttpClient } from '@angular/common/http';
 import { SemanticType, Field } from '../model/field';
 import { LocalStorageService } from "../services/local-storage.service";
@@ -67,27 +67,7 @@ export class IdcardComponent implements OnInit {
   public pageIndex = 0;
   public pageSize = 5;
 
-  public secondaryIdentities: Patient[] = [
-    /*   new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "01.01.2021" },
-         [{ idType: "biobankId", idString: "9101", tentative: true }]),
-       new Patient({ "Nachname": "Muster", "Vorname": "Maximilian", "Geburtsname": "Meier", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "02.01.2021" },
-         [{ idType: "biobankId", idString: "5678", tentative: true }]),
-       new Patient({ "Nachname": "Mustermann", "Vorname": "Max", "Geburtsname": "Schneider", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "03.01.2021" },
-         [{ idType: "biobankId", idString: "1234", tentative: true }]),
-       new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "02.01.1980", "Wohnort": "Berlin", "PLZ": "10115", "Date_Added": "04.01.2021" },
-         [{ idType: "biobankId", idString: "4321", tentative: true }]),
-       new Patient({ "Nachname": "Muster", "Vorname": "Maxim", "Geburtsname": "Fischer", "Geburtdatum": "01.01.1980", "Wohnort": "Berlin", "PLZ": "10116", "Date_Added": "05.01.2021" },
-         [{ idType: "biobankId", idString: "6789", tentative: true }]),
-       new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Weber", "Geburtdatum": "03.01.1980", "Wohnort": "Stuttgart", "PLZ": "70173", "Date_Added": "06.01.2021" },
-         [{ idType: "biobankId", idString: "3456", tentative: true }]),
-       new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schmidt", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20095", "Date_Added": "07.01.2021" },
-         [{ idType: "biobankId", idString: "7890", tentative: true }]),
-       new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Schneider", "Geburtdatum": "01.01.1980", "Wohnort": "Hamburg", "PLZ": "20096", "Date_Added": "08.01.2021" },
-         [{ idType: "biobankId", idString: "9012", tentative: true }]),
-       new Patient({ "Nachname": "Muster", "Vorname": "Max", "Geburtsname": "Müller", "Geburtdatum": "04.01.1980", "Wohnort": "Leipzig", "PLZ": "04109", "Date_Added": "09.01.2021" },
-         [{ idType: "biobankId", idString: "3456", tentative: true }]),
-          */
-  ];
+  public secondaryIdentities: Patient[] = [];
 
   public readonly Permission = Permission;
 
@@ -161,12 +141,18 @@ export class IdcardComponent implements OnInit {
     this.defaultIdType = this.patientListService.findDefaultIdType(this.configuredIdTypes);
 
     this.displayedColumns = [...this.configuredIdTypes, ...this.fields.map(field => field.name)];
-   
+   console.log(this.displayedColumns);
     this.getSecondaryIdentities().subscribe({
       next: (response) => {
-        console.log("ResponseBody:");
-        console.log(response);
-        console.log(response.fields);
+        this.secondaryIdentities = response.data;
+        this.secondaryIdentities.forEach(patient=>{
+          patient = this.patientListService.convertToDisplayPatient(patient, false, this.authorizationService.getTenants());
+        })
+        console.log(this.secondaryIdentities);
+        console.log("Fields von Secondary identities:");
+        console.log(this.secondaryIdentities[0].fields);
+        console.log("Fields aus config:");
+        console.log(this.fields);
       },
       error: (error) => {
         this.secondaryIdentities = [];
@@ -199,7 +185,7 @@ export class IdcardComponent implements OnInit {
   }
 
   readSecondaryIdentities(tokenId: string | undefined){
-    return this.httpClient.get<Patient[]>(this.patientList.url + "/patients/identities", {
+    return this.httpClient.get(this.patientList.url + "/patients/identities", {
       params: new HttpParams().set('tokenId', tokenId ?? ''),
       observe: 'response'
     }).pipe(
@@ -221,20 +207,18 @@ export class IdcardComponent implements OnInit {
     );
   }
 
-  getPatients(response: any) : Patient[]{
+  getPatients(response: any){
     type Identity = {
       fields: { [key: string]: string },
-      ids: Id[],
+      id: Array<Id>,
       main: boolean
     };
     let identities: Identity[] = [];
     let patients: Patient[] = [];
-    console.log(response.body);
-    identities = response.body as Identity[] ?? [];
+    identities = response as Identity[] ?? [];
     console.log(identities);
-    patients = identities.filter(i => i.main == false).map(i => new Patient(i.fields, i.ids));
-    console.log(patients);
-    return patients;
+    patients = identities.filter(i => i.main == false).map(i => new Patient(i.fields, i.id));
+    return of({data: patients});
   }
 
   showIdentitiesCard() {
