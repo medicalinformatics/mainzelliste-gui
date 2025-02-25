@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
-import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
     selector: 'bulk-id-generation-table',
@@ -14,15 +13,19 @@ export class BulkIdGenerationTableComponent implements OnInit{
 
     displayedColumns: string[] = ["index", "firstId", "secondId"];
     columnId: string [] = ["#", "", ""];
-    element_data: Element[] = [];
-    dataSource = new MatTableDataSource<Element>(this.element_data);
+    element_data: string[][] = [];
+    public defaultPageSize: number = 10;
 
     ngOnInit(): void {
         this.setupTableData();
     }
 
-    ngAfterViewInit() {
-        this.dataSource.paginator = this.paginator;
+    getPageStart(paginator: MatPaginator) {
+        return (paginator != undefined ? paginator.pageIndex * paginator.pageSize : 0);
+    }
+    
+    getPageEnd(paginator: MatPaginator) {
+        return this.getPageStart(paginator) + (paginator != undefined ? paginator.pageSize : this.defaultPageSize);
     }
 
     private setupTableData() {
@@ -33,15 +36,9 @@ export class BulkIdGenerationTableComponent implements OnInit{
         let i: number = 0;
         this.csvRecords.forEach(csvRow => {
             if (i != 0) {
-                this.element_data.push({position: i, id_x: csvRow[0], id_y: csvRow[1]});
+                this.element_data[i - 1] = [i.toString(), csvRow[0], csvRow[1]];
             }
             i++;
         });
     }
-}
-
-export interface Element {
-    position: number;
-    id_x: string;
-    id_y: string;
 }
