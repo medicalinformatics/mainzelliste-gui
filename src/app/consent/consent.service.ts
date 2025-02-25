@@ -958,10 +958,7 @@ export class ConsentService {
       .set('mainzellisteApiVersion', '3.2')
       .set('Authorization', 'MainzellisteToken ' + tokenId);
   
-    return this.httpClient.post<{ total: number, result: T[] }>(this.mainzellisteBaseUrl + "/" + path, body, { headers })
-      .pipe(
-        map(response => response.result)
-      );
+      return this.httpClient.post<T>(this.mainzellisteBaseUrl + "/" + path, body, { headers });
   }
 
 

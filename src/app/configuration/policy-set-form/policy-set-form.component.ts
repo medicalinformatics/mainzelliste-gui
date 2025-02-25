@@ -44,7 +44,6 @@ export class PolicySetFormComponent implements OnInit {
           error: (e) => {
             const errorCode = e?.error?.code || e?.status;
             this.handleError(errorCode, e);
-            //this.errorMessages.push(getErrorMessageFrom(e, this.translate));
           }
         });
     }
