@@ -206,6 +206,8 @@
   "configuration.policy.show": "Policies anzeigen",
   "configuration.policy.create": "Policy hinzufügen",
   "configuration.policySet.add": "Policy-Set hinzufügen",
+  "configuration.policy.error.400": "Feld 'Policy-Code' fehlerhaft. Inhalt enthält Leerzeichen.",
+  "configuration.policySet.error.400": "Feld 'Id' fehlerhaft. Inhalt enthält Leerzeichen.",
 
   
 	"info.title": "Informationen und Hinweise zur Mainzelliste",

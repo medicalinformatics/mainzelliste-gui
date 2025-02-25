@@ -81,12 +81,12 @@ export class PoliciesComponent implements OnInit {
 
   addPolicySet() {
     const dialogRef = this.dialog.open(PolicySetFormComponent, {
-      width: '15vw',
+      width: '30vw',
     });
   
     dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
       if (result) {
-        this.loadData(this.paginator.pageIndex, this.paginator.pageSize, false);
+        this.loadData(0, this.defaultPageSize, false);
         this.paginator.firstPage();
       }
     });
@@ -95,7 +95,7 @@ export class PoliciesComponent implements OnInit {
 
   addPolicy(policySetId: string) {
     const dialogRef = this.dialog.open(PolicyFormComponent, {
-      width: '25vw',
+      width: '30vw',
       data: { policySetId }
     });
   

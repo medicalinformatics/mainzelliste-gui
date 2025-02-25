@@ -42,9 +42,29 @@ export class PolicyFormComponent implements OnInit {
             this.dialogRef.close(response);
           },
           error: (e) => {
-            this.errorMessages.push(getErrorMessageFrom(e, this.translate));
+            const errorCode = e?.error?.code || e?.status;
+            this.handleError(errorCode, e);
           }
         });
     }
+  }
+
+  handleError(errorCode: any, e: any) {
+    let errorMessageKey: string;
+    switch (errorCode) {
+      case 400:
+        errorMessageKey = "configuration.policy.error.400";
+        break;
+      case 409:
+        errorMessageKey = "";
+        break;
+      default:
+        this.errorMessages.push(getErrorMessageFrom(e, this.translate));
+        return
+    }
+    
+    this.translate.get(errorMessageKey).subscribe((translatedMessage) => {
+      this.errorMessages.push(translatedMessage);
+    });
   }
 }

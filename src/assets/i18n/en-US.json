@@ -196,6 +196,8 @@
   "configuration.policy.create": "Add Policy",
   "configuration.policySet.add": "Add Policy Set",
   "configuration.policy.save": "Save",
+  "configuration.policy.error.400": "Invalid field 'Policy Code'. Value contains whitespace.",
+  "configuration.policySet.error.400": "Invalid field 'Id'. Value contains whitespace.",
 
 	"info.title": "Information and notes on the Mainzelliste",
 	"info.notice_add_patient": "Note for creating a patient",
