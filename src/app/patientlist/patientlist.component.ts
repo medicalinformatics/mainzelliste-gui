@@ -121,7 +121,7 @@ export class PatientlistComponent implements OnInit{
   }
 
   showTenantColumn(){
-    return this.authorizationService.getTenants().length > 1;
+    return this.configService.showDomainsInIDCard() && this.authorizationService.getTenants().length > 1;
   }
 
   getColumnDisplayText(columnName: string) {

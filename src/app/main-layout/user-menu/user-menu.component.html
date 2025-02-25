@@ -5,7 +5,7 @@
     <mat-icon>arrow_drop_down</mat-icon>
   </button>
   <mat-menu #profileDropDown="matMenu" xPosition="before">
-    <button mat-menu-item [matMenuTriggerFor]="tenants">
+    <button mat-menu-item [matMenuTriggerFor]="tenants" *ngIf="this.authorizationService.getTenants().length > 1">
       <mat-icon>domain</mat-icon>
       <span>{{'session.tenancy' | translate}}</span>
     </button>

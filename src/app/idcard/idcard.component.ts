@@ -35,6 +35,7 @@ import {AngularCsv} from 'angular-csv-ext/dist/Angular-csv';
 import {
   ConfirmDeleteDialogComponent
 } from "../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
+import {Tenant} from "../model/tenant";
 
 
 @Component({
@@ -89,12 +90,12 @@ export class IdcardComponent implements OnInit {
     this.getIdTypes();
 
     // find id types, that can be read
-    this.readIdTypes = this.patientListService.getAllIdTypes("R")
-    this.otherTenantIdTypes = this.authorizationService.getTenants()
-    .filter(t => t.id != this.authorizationService.currentTenantId)
-    .map(t => t.idTypes)
-    .reduce((a,b) => a.concat(b), []);
-    this.readIdTypes.push(... this.otherTenantIdTypes)
+    let readIdTypesSet = new Set(this.patientListService.getAllIdTypes("R"));
+    if(this.configService.showDomainsInIDCard() && this.authorizationService.currentTenantId != Tenant.DEFAULT_ID) {
+      this.otherTenantIdTypes = this.authorizationService.getAllTenantIdTypes(true);
+      this.authorizationService.getAllTenantIdTypes().forEach( t => this.otherTenantIdTypes.push(t));
+    }
+    this.readIdTypes = [... readIdTypesSet];
 
     this.loadPatient();
     this.translate.onLangChange.subscribe(() => {
