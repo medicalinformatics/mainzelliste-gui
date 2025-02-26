@@ -140,24 +140,21 @@ export class IdcardComponent implements OnInit {
     this.configuredIdTypes = this.patientListService.getIdTypes("R");
     this.defaultIdType = this.patientListService.findDefaultIdType(this.configuredIdTypes);
 
-    this.displayedColumns = [...this.configuredIdTypes, ...this.fields.map(field => field.name)];
-   console.log(this.displayedColumns);
-    this.getSecondaryIdentities().subscribe({
+    this.displayedColumns = [this.defaultIdType, ...this.fields.map(field => field.name)];
+    this.getSecondaryIdentities().pipe(
+      catchError(e => {
+        this.secondaryIdentities = [];
+      throw e;
+      } )
+    ).subscribe({
       next: (response) => {
         this.secondaryIdentities = response.data;
-        this.secondaryIdentities.forEach(patient=>{
-          patient = this.patientListService.convertToDisplayPatient(patient, false, this.authorizationService.getTenants());
-        })
-        console.log(this.secondaryIdentities);
-        console.log("Fields von Secondary identities:");
-        console.log(this.secondaryIdentities[0].fields);
-        console.log("Fields aus config:");
-        console.log(this.fields);
+        this.secondaryIdentities = this.secondaryIdentities.map(patient => 
+          this.patientListService.convertToDisplayPatient(patient, false, this.authorizationService.getTenants())
+        );
+        console.log(this.secondaryIdentities);        
       },
-      error: (error) => {
-        this.secondaryIdentities = [];
-        throw error;
-      }
+     
     })
   }
   getSecondaryIdentities(){
@@ -210,14 +207,14 @@ export class IdcardComponent implements OnInit {
   getPatients(response: any){
     type Identity = {
       fields: { [key: string]: string },
-      id: Array<Id>,
+      id: Id,
       main: boolean
     };
     let identities: Identity[] = [];
     let patients: Patient[] = [];
+    console.log(response);
     identities = response as Identity[] ?? [];
-    console.log(identities);
-    patients = identities.filter(i => i.main == false).map(i => new Patient(i.fields, i.id));
+    patients = identities.filter(i => i.main == false).map(i => new Patient(i.fields,[i.id]));
     return of({data: patients});
   }
 
@@ -243,6 +240,7 @@ export class IdcardComponent implements OnInit {
         this.patient = this.patientListService.convertToDisplayPatient(patients[0], false, this.authorizationService.getTenants());
         this.patient.ids = this.patient.ids.filter(id => !this.otherTenantIdTypes.some(t => t == id.idType));
       });
+      
   }
 
   private loadConsents() {
