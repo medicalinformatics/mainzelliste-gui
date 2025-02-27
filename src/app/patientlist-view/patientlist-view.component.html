@@ -25,7 +25,7 @@
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
-  <app-patientlist [patients]="patientsMatTableData" [loading]="loading"></app-patientlist>
+  <app-patientlist [patients]="patientsMatTableData" [loading]="loading" [searchFilter]="this.filters"></app-patientlist>
   <mat-paginator
     [length]="pageNumber"
     [pageSize]="10"

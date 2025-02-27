@@ -130,6 +130,7 @@
 
 	"patientlist.filter_search": "Filter/Suche...",
 	"patientlist.button_filter_columns": "Spalten auswählen",
+  "patientlist.button_export": "Exportieren",
 	"patientlist.headers_tenants": "Domänen",
 	"patientlist.headers_actions": "Aktionen",
 	"patientlist.no_patient_found": "Kein Patient gefunden.",
@@ -142,6 +143,15 @@
 	"patientlist_view.paginator_previous_page_label": "Vorherige Seite",
 	"patientlist_view.paginator_first_page_label": "Erste Seite",
 	"patientlist_view.paginator_last_page_label": "Letzte Seite",
+
+  "ExportPatientsDialog.mat_title": "Patienten exportieren",
+  "ExportPatientsDialog.text": "Wählen Sie eines oder mehrere Felder aus der Liste aus:",
+  "ExportPatientsDialog.button-export": "Exportieren",
+  "ExportPatientsDialog.separator": "CSV Feldtrennzeichen",
+  "ExportPatientsDialog.separator-comma": ", (Komma)",
+  "ExportPatientsDialog.separator-semicolon": "; (Semikolon)",
+  "ExportPatientsDialog.separator-text": "Wählen Sie ein Feldtrennzeichen aus:",
+  "ExportPatientsDialog.export_done": "Es wurden ${} Patienten erfolgreich exportiert",
 
   "session.tenancy": "Domäne",
 	"session.language_english": "Englisch",
