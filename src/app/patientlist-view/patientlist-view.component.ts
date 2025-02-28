@@ -14,6 +14,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {AuthorizationService} from "../services/authorization.service";
 import {NgxCsvParser, NgxCSVParserError} from "ngx-csv-parser";
 import {CardError} from "../error/card-error";
+import {FilterItem} from "../model/filter-item";
 
 export interface FilterConfig {
   display: string,
@@ -51,7 +52,7 @@ export class PatientlistViewComponent implements OnInit {
   // available searching keys used in autocomplete options
   availableFilteringKeys: Observable<FilterConfig[]> = of([]);
   // chip items : entered searching keywords
-  filters: Array<{ display: string, field: string, fields: string[], searchCriteria: string | string[], isIdType: boolean }> = [];
+  filters: Array<FilterItem> = [];
   uploadCSVinProgress: boolean = false;
 
   constructor(

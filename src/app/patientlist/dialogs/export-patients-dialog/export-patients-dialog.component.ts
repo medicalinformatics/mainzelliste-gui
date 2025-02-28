@@ -6,6 +6,7 @@ import _moment from "moment/moment";
 import {MatSelectionList, MatSelectionListChange} from "@angular/material/list";
 import {TranslateService} from "@ngx-translate/core";
 import {animate, style, transition, trigger} from "@angular/animations";
+import {FilterItem} from "../../../model/filter-item";
 
 @Component({
   selector: 'app-export-patients-dialog',
@@ -35,7 +36,7 @@ export class ExportPatientsDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<ExportPatientsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data : {
       fieldNames: string[],
-      searchFilter: Array<{ display: string, field: string, fields: string[], searchCriteria: string | string[], isIdType: boolean }>
+      searchFilter: Array<FilterItem>
     },
     public patientService: PatientService,
     public translate: TranslateService

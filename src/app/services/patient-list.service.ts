@@ -28,6 +28,7 @@ import {IdGenerator} from "../model/idgenerator";
 import {AddPatientsSingleResponse} from "../model/add-patients-single-response";
 import {TaskResponse} from "../model/task-response";
 import {AddPatientRequest} from "../model/add-patient-request";
+import {FilterItem} from "../model/filter-item";
 
 export interface ReadPatientsResponse {
   patients: Patient[];
@@ -231,7 +232,7 @@ export class PatientListService {
    * @param pageIndex page number
    * @param pageSize page limit
    */
-  getPatients(filters: Array<{ field: string, fields: string[], searchCriteria: string| string[], isIdType: boolean }>,
+  getPatients(filters: Array<FilterItem>,
               pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
     // find current tenant id
     let tenantId = this.authorizationService.currentTenantId;
@@ -293,7 +294,7 @@ export class PatientListService {
     )
   }
 
-  convertFiltersToUrl(filters: Array<{ field: string, fields: string[], searchCriteria: string | string[], isIdType: boolean }>) : string{
+  convertFiltersToUrl(filters: Array<FilterItem>) : string{
     return filters.filter(o => !o.isIdType && typeof(o.searchCriteria) === 'string')
     .map(o => {
       if(o.field == "birthday" && o.fields != undefined) {
