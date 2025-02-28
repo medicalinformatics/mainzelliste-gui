@@ -96,6 +96,7 @@ export class PatientlistViewComponent implements OnInit {
           this.filterInput.nativeElement.value = "";
           this.filterCtrl.setValue("");
           this.filterAutoCompleteTrigger.closePanel();
+          this.paginator.firstPage();
           // load patients
           this.loadPatients(0, this.paginator.pageSize).then();
           // // Clear the input value
@@ -113,6 +114,7 @@ export class PatientlistViewComponent implements OnInit {
     if (index >= 0) {
       // remove filter from mat-chip
       this.filters.splice(index, 1);
+      this.paginator.firstPage();
       // load patients
       this.loadPatients(0, this.paginator.pageSize).then();
     }
@@ -169,7 +171,9 @@ export class PatientlistViewComponent implements OnInit {
 
   async loadPatients(pageIndex: number, pageSize: number) {
     this.loading = true;
-    this.patientService.getDisplayPatients(this.filters, pageIndex, pageSize, this.authorizationService.getTenants()).subscribe({
+    this.patientService.getDisplayPatients(this.filters, pageIndex, pageSize,
+        this.filters.some( f => typeof (f.searchCriteria) !== 'string'),
+        this.authorizationService.getTenants()).subscribe({
       next: (response) => {
         this.patientsMatTableData.data = response.patients;
         this.pageNumber = parseInt(response.totalCount);
@@ -234,6 +238,7 @@ export class PatientlistViewComponent implements OnInit {
           this.uploadCSVinProgress = false;
           this.filterInput.nativeElement.value = "";
           this.filterCtrl.setValue("");
+          this.paginator.firstPage();
           // load patients
           this.loadPatients(0, this.paginator.pageSize).then();
         },

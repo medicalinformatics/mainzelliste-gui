@@ -232,8 +232,7 @@ export class PatientListService {
    * @param pageIndex page number
    * @param pageSize page limit
    */
-  getPatients(filters: Array<FilterItem>,
-              pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
+  getPatients(filters: Array<FilterItem>, pageIndex: number, pageSize: number, ignoreOrder:boolean): Observable<ReadPatientsResponse> {
     // find current tenant id
     let tenantId = this.authorizationService.currentTenantId;
     if(tenantId === undefined || tenantId == Tenant.DEFAULT_ID)
@@ -272,6 +271,7 @@ export class PatientListService {
       mergeMap(token => this.httpClient.get<Patient[]>(this.patientList.url + "/patients?"
         +"tokenId=" + token.id
         + (tenantId.length == 0 ? "":"&tenantId="+tenantId)
+          + "&ignoreOrder=" + ignoreOrder
         + "&page=" + pageIndex + "&limit=" + pageSize + "&"
         + this.convertFiltersToUrl(filters), {observe: 'response'})
       .pipe(

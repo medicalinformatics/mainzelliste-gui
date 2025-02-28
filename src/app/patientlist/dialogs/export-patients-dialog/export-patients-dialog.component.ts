@@ -51,7 +51,7 @@ export class ExportPatientsDialogComponent implements OnInit {
 
   onExport(selectionFields: MatSelectionList):void {
     this.inProgress = true;
-    this.patientService.getDisplayPatients(this.data.searchFilter, -1, 0).subscribe(response => {
+    this.patientService.getDisplayPatients(this.data.searchFilter, -1, 0, true).subscribe(response => {
       this.csvRecords[0] = selectionFields._value ?? selectionFields.selectedOptions.selected.map(s => s.value);
       response.patients.forEach((patient, r) => {
         this.csvRecords.push([]);
