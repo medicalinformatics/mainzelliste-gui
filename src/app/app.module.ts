@@ -70,6 +70,8 @@ import {
 } from "./bulk-operations/bulk-id-generation/dialog/bulk-id-generation-empty-fields-dialog";
 import { BulkPseudonymizationComponent } from './bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component';
 import {EditorModule, TINYMCE_SCRIPT_SRC} from "@tinymce/tinymce-angular";
+import { ExportPatientsDialogComponent } from './patientlist/dialogs/export-patients-dialog/export-patients-dialog.component';
+import {MatListModule} from "@angular/material/list";
 
 function initializeAppFactory(
     configService: AppConfigService,
@@ -132,7 +134,8 @@ function initializeAppFactory(
     BulkIdGenerationComponent,
     BulkIdGenerationTableComponent,
     BulkIdGenerationEmptyFieldsDialog,
-    BulkPseudonymizationComponent
+    BulkPseudonymizationComponent,
+    ExportPatientsDialogComponent
   ],
   imports: [
     SharedModule,
@@ -161,7 +164,8 @@ function initializeAppFactory(
     FileSaverModule,
     NgxMatFileInputModule,
     MatStepperModule,
-    EditorModule
+    EditorModule,
+    MatListModule
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},

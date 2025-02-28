@@ -11,6 +11,10 @@ import {Permission} from "../model/permission";
 import {AuthorizationService} from "../services/authorization.service";
 import {TranslateService} from "@ngx-translate/core";
 import {LocalStorageService} from "../services/local-storage.service";
+import {
+  ExportPatientsDialogComponent
+} from "./dialogs/export-patients-dialog/export-patients-dialog.component";
+import {FilterItem} from "../model/filter-item";
 
 @Component({
   selector: 'app-patientlist',
@@ -23,6 +27,7 @@ export class PatientlistComponent implements OnInit{
   public readonly Permission = Permission;
   @Input() patients: MatTableDataSource<Patient>;
   @Input() loading: boolean = false;
+  @Input() searchFilter: Array<FilterItem> = [];
   selection: SelectionModel<Patient>;
   @Output() selectedPatients: EventEmitter<Patient[]> = new EventEmitter<Patient[]>();
   @Output() filterData = '';
@@ -43,7 +48,8 @@ export class PatientlistComponent implements OnInit{
     public authorizationService: AuthorizationService,
     public consentService: ConsentService,
     public localStorageService:LocalStorageService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    public exportPatientsDialog: MatDialog
   ) {
     this.patients = new MatTableDataSource<Patient>([]);
     this.fields = configService.data[0].fields.filter(f => !f.hideFromList);
@@ -143,5 +149,14 @@ export class PatientlistComponent implements OnInit{
 
   hideColumn(columnName: string) {
     return columnName == "actions" || columnName == this.defaultIdType;
+  }
+
+  public openExportPatientsDialog() {
+    this.exportPatientsDialog.open(ExportPatientsDialogComponent, {
+      data: {
+        fieldNames: this.configuredIdTypes.concat(this.fieldNames),
+        searchFilter: this.searchFilter
+      }
+    });
   }
 }

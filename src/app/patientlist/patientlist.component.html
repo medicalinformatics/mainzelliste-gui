@@ -1,4 +1,4 @@
-<div style="display:flex; justify-content: space-between; align-items:center; margin-bottom: 8px;">
+<div style="display:flex; align-items:center; margin-bottom: 8px;">
   <div>
     <button mat-button (click)="columnFilter.open()" color="primary" style="position: relative;">
       <mat-icon matPrefix>view_column</mat-icon> {{"patientlist.button_filter_columns" | translate}}
@@ -14,8 +14,10 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-
   </div>
+  <button mat-button color="primary" (click)="this.openExportPatientsDialog()">
+    <mat-icon fontSet="material-symbols-outlined" matPrefix>file_export</mat-icon> {{"patientlist.button_export" | translate}}
+  </button>
 </div>
 <section class="table-container mat-elevation-z8" tabindex="0">
   <table id="patientlist" mat-table [dataSource]="patients">
