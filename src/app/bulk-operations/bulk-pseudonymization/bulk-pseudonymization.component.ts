@@ -133,7 +133,7 @@ export class BulkPseudonymizationComponent implements OnInit {
         } else {
           this.uploadFormGroup.get('uploadField')?.setErrors({
             csvError: {
-              value: this.translate.instant("bulkPseudonymization.upload_error_invalid_file")
+              value: this.translate.instant("CSVFileUploader.upload_error_invalid_file")
             }
           })
           this.step = 0;
@@ -152,18 +152,18 @@ export class BulkPseudonymizationComponent implements OnInit {
         map( records => {
           if (records instanceof NgxCSVParserError) {
             console.log(records.message)
-            throw new FieldError(this.translate, "bulkPseudonymization.upload_error_invalid_file");
+            throw new FieldError(this.translate, "CSVFileUploader.upload_error_invalid_file");
           }
           this.csvRecords = records;
           const csvHeaders = records[0] as string[]
 
           // check empty headers
           if(records.length == 0 || csvHeaders.length == 0)
-            throw new FieldError(this.translate, "bulkPseudonymization.upload_error_no_header");
+            throw new FieldError(this.translate, "CSVFileUploader.upload_error_no_header");
 
           // check empty rows
           if(records.length <=1)
-            throw new FieldError(this.translate, "bulkPseudonymization.upload_error_empty");
+            throw new FieldError(this.translate, "CSVFileUploader.upload_error_empty");
 
           // check undefined headers
           const fieldsIndexes = csvHeaders.map((h, i) => this.fieldNames.includes(h.trim())? i : -1).filter( i => i >= 0)
@@ -204,7 +204,7 @@ export class BulkPseudonymizationComponent implements OnInit {
           this.readingInProgress = false
           console.log(e)
           const invalidHeaderMessage = this.undefinedHeaders.length == 0 ? "" : ". " +
-            this.translate.instant("bulkPseudonymization.upload_error_some_unknown_header")
+            this.translate.instant("CSVFileUploader.upload_error_some_unknown_header")
             .replace("${}", this.undefinedHeaders.join(", "))
           this.uploadFormGroup.get('uploadField')?.setErrors({csvError: {value: e.message + invalidHeaderMessage}})
           this.step = 0;

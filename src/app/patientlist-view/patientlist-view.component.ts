@@ -197,20 +197,20 @@ export class PatientlistViewComponent implements OnInit {
           map(records => {
             if (records instanceof NgxCSVParserError) {
               console.log(records.message)
-              throw new CardError(this.translate, "bulkPseudonymization.upload_error_invalid_file");
+              throw new CardError(this.translate, "CSVFileUploader.upload_error_invalid_file");
             }
             const csvHeaders = records[0] as string[]
             if (records.length == 0 || csvHeaders.length == 0)
-              throw new CardError(this.translate, "bulkPseudonymization.upload_error_no_header");
+              throw new CardError(this.translate, "CSVFileUploader.upload_error_no_header");
 
             // check empty rows
             if (records.length <= 1)
-              throw new CardError(this.translate, "bulkPseudonymization.upload_error_empty");
+              throw new CardError(this.translate, "CSVFileUploader.upload_error_empty");
 
             const configuredIdTypes = this.patientService.getConfigureIdTypes()
             const invalidHeaders = csvHeaders.filter(c => c.length != 0 && !configuredIdTypes.includes(c));
             if (invalidHeaders.length > 0)
-              throw new CardError(this.translate, "bulkPseudonymization.upload_error_some_unknown_header", invalidHeaders.join(", "));
+              throw new CardError(this.translate, "CSVFileUploader.upload_error_some_unknown_header", invalidHeaders.join(", "));
 
             let filterConfigs: FilterConfig[] = this.configuredFilteringKeys
             .filter(f => f.isIdType && csvHeaders.includes(f.field));
