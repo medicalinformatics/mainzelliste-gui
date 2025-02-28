@@ -12,6 +12,8 @@ import {map, startWith} from 'rxjs/operators';
 import {GlobalTitleService} from "../services/global-title.service";
 import {TranslateService} from '@ngx-translate/core';
 import {AuthorizationService} from "../services/authorization.service";
+import {NgxCsvParser, NgxCSVParserError} from "ngx-csv-parser";
+import {CardError} from "../error/card-error";
 
 export interface FilterConfig {
   display: string,
@@ -49,13 +51,15 @@ export class PatientlistViewComponent implements OnInit {
   // available searching keys used in autocomplete options
   availableFilteringKeys: Observable<FilterConfig[]> = of([]);
   // chip items : entered searching keywords
-  filters: Array<{ display: string, field: string, fields: string[], searchCriteria: string, isIdType: boolean }> = [];
+  filters: Array<{ display: string, field: string, fields: string[], searchCriteria: string | string[], isIdType: boolean }> = [];
+  uploadCSVinProgress: boolean = false;
 
   constructor(
     public translate: TranslateService,
     patientService: PatientService,
     public authorizationService: AuthorizationService,
-    private titleService: GlobalTitleService
+    private titleService: GlobalTitleService,
+    private ngxCsvParser: NgxCsvParser,
   ) {
     this.patientService = patientService;
     this.patientsMatTableData = new MatTableDataSource<Patient>([]);
@@ -181,5 +185,68 @@ export class PatientlistViewComponent implements OnInit {
 
   async handlePageEvent(event: PageEvent) {
     await this.loadPatients(event.pageIndex, event.pageSize);
+  }
+
+  onUploadSearchIDsFromCSV($event: Event) {
+    this.filterAutoCompleteTrigger.closePanel();
+    this.uploadCSVinProgress = true;
+    const target = $event.target as HTMLInputElement;
+    const files = target.files as FileList;
+    if(files != null && files.length >0) {
+      this.ngxCsvParser.parse(files[0], {header: false, delimiter: ";", encoding: 'utf8'}).pipe(
+          map(records => {
+            if (records instanceof NgxCSVParserError) {
+              console.log(records.message)
+              throw new CardError(this.translate, "bulkPseudonymization.upload_error_invalid_file");
+            }
+            const csvHeaders = records[0] as string[]
+            if (records.length == 0 || csvHeaders.length == 0)
+              throw new CardError(this.translate, "bulkPseudonymization.upload_error_no_header");
+
+            // check empty rows
+            if (records.length <= 1)
+              throw new CardError(this.translate, "bulkPseudonymization.upload_error_empty");
+
+            const configuredIdTypes = this.patientService.getConfigureIdTypes()
+            const invalidHeaders = csvHeaders.filter(c => c.length != 0 && !configuredIdTypes.includes(c));
+            if (invalidHeaders.length > 0)
+              throw new CardError(this.translate, "bulkPseudonymization.upload_error_some_unknown_header", invalidHeaders.join(", "));
+
+            let filterConfigs: FilterConfig[] = this.configuredFilteringKeys
+            .filter(f => f.isIdType && csvHeaders.includes(f.field));
+
+            // add search filters
+            filterConfigs.forEach(filterConfig => {
+              const i = csvHeaders.indexOf(filterConfig.field);
+              filterConfig.hidden = true;
+              this.filters.push({
+                display: filterConfig.display,
+                field: filterConfig.field,
+                fields: filterConfig.fields,
+                searchCriteria: records.filter((l, j) => j > 0).map( l => l[i]),
+                isIdType: filterConfig.isIdType
+              });
+            });
+          })
+       ).subscribe({
+        next: (requests): void => {
+          this.uploadCSVinProgress = false;
+          this.filterInput.nativeElement.value = "";
+          this.filterCtrl.setValue("");
+          // load patients
+          this.loadPatients(0, this.paginator.pageSize).then();
+        },
+        error: (e:CardError): void => {
+          this.uploadCSVinProgress = false;
+          this.filterInput.nativeElement.value = "";
+          this.filterCtrl.setValue("");
+          throw e;
+        }
+      });
+    }
+  }
+
+  public isString(searchValue: string | string []): boolean {
+    return typeof (searchValue) === 'string';
   }
 }

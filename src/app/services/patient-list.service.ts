@@ -231,7 +231,7 @@ export class PatientListService {
    * @param pageIndex page number
    * @param pageSize page limit
    */
-  getPatients(filters: Array<{ field: string, fields: string[], searchCriteria: string, isIdType: boolean }>,
+  getPatients(filters: Array<{ field: string, fields: string[], searchCriteria: string| string[], isIdType: boolean }>,
               pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
     // find current tenant id
     let tenantId = this.authorizationService.currentTenantId;
@@ -250,8 +250,12 @@ export class PatientListService {
       else
         searchIds = [{idType: "*", idString: "*"}];
     } else {
-      filters.filter(f => f.isIdType).forEach(f =>
-        searchIds.push({idType: f.field, idString: f.searchCriteria.trim()}));
+      filters.filter(f => f.isIdType).forEach(f => {
+        if(typeof(f.searchCriteria) === 'string')
+          searchIds.push({idType: f.field, idString: f.searchCriteria.trim()});
+        else
+          (f.searchCriteria as string[]).forEach( v => searchIds.push({idType: f.field, idString: v.trim()}))
+      });
     }
 
     let resultIdTypes = new Set(this.getIdTypes("R"));
@@ -289,18 +293,18 @@ export class PatientListService {
     )
   }
 
-  convertFiltersToUrl(filters: Array<{ field: string, fields: string[], searchCriteria: string, isIdType: boolean }>) : string{
-    return filters.filter(o => !o.isIdType)
+  convertFiltersToUrl(filters: Array<{ field: string, fields: string[], searchCriteria: string | string[], isIdType: boolean }>) : string{
+    return filters.filter(o => !o.isIdType && typeof(o.searchCriteria) === 'string')
     .map(o => {
       if(o.field == "birthday" && o.fields != undefined) {
-        let moment = _moment(o.searchCriteria.trim(), _moment().localeData().longDateFormat('L'));
+        let moment = _moment((o.searchCriteria as string).trim(), _moment().localeData().longDateFormat('L'));
         if (moment.isValid()) {
           let dateArray: number[] = [moment.date(), moment.month() + 1, moment.year()];
           return o.fields.map((f,i) =>  f + "=" + dateArray[i]).join("&");
-        }else
+        } else
           return "";
-      }else {
-        return o.field + "=" + o.searchCriteria.trim()
+      } else {
+        return o.field + "=" + (o.searchCriteria as string).trim()
       }
     }).join("&")
   }

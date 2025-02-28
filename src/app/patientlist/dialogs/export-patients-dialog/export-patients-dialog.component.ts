@@ -35,7 +35,7 @@ export class ExportPatientsDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<ExportPatientsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data : {
       fieldNames: string[],
-      searchFilter: Array<{ display: string, field: string, fields: string[], searchCriteria: string, isIdType: boolean }>
+      searchFilter: Array<{ display: string, field: string, fields: string[], searchCriteria: string | string[], isIdType: boolean }>
     },
     public patientService: PatientService,
     public translate: TranslateService

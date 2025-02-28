@@ -26,7 +26,7 @@ export class PatientlistComponent implements OnInit{
   public readonly Permission = Permission;
   @Input() patients: MatTableDataSource<Patient>;
   @Input() loading: boolean = false;
-  @Input() searchFilter: Array<{ display: string, field: string, fields: string[], searchCriteria: string, isIdType: boolean }> = [];
+  @Input() searchFilter: Array<{ display: string, field: string, fields: string[], searchCriteria: string | string[], isIdType: boolean }> = [];
   selection: SelectionModel<Patient>;
   @Output() selectedPatients: EventEmitter<Patient[]> = new EventEmitter<Patient[]>();
   @Output() filterData = '';

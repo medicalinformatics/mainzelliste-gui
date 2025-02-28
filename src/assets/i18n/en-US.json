@@ -131,6 +131,7 @@
 	"patientlist.headers_actions": "Actions",
 	"patientlist.no_patient_found": "No patient found.",
 	"patientlist.search_placeholder": "Search...",
+	"patientlist.add_search_ids_from_file": "Add search IDs from CSV-File",
 
 	"patientlist_view.paginator_current_page_label_text1": "Page",
 	"patientlist_view.paginator_current_page_label_text2": "of",
