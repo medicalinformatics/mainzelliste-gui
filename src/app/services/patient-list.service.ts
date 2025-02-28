@@ -282,14 +282,12 @@ export class PatientListService {
         )
       )),
       catchError( (error) => {
-        if(error.status >= 400 && error.status < 500) {
-          return of({
-            patients: [],
-            totalCount: "0"
-          });
-        } else {
-          return throwError( () => new Error(this.translate.instant('error.patient_list_service_get_patients') + `${getErrorMessageFrom(error, this.translate)}`));
-        }
+        if(error.status < 400 && error.status >= 500)
+          console.log("Failed to fetch patients. Cause: " + `${getErrorMessageFrom(error, this.translate)}`);
+        return of({
+          patients: [],
+          totalCount: "0"
+        });
       })
     )
   }
