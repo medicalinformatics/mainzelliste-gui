@@ -32,10 +32,9 @@ import {
   ConfirmDeleteDialogComponent
 } from "../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
 import { HttpErrorResponse, HttpParams } from "@angular/common/http";
-import { identity, Observable, of, throwError } from "rxjs";
+import { of, throwError } from "rxjs";
 import { HttpClient } from '@angular/common/http';
 import { SemanticType, Field } from '../model/field';
-import { LocalStorageService } from "../services/local-storage.service";
 import { PageEvent } from '@angular/material/paginator';
 import { PatientList } from '../model/patientlist';
 import { SessionService } from '../services/session.service';
@@ -51,8 +50,6 @@ import { TokenData } from '../model/token-data';
 export class IdcardComponent implements OnInit {
   private patientList: PatientList;
 
-  configuredIdTypes: string[] = [];
-  public defaultIdType: string = "";
   columns: string[] = [];
   allColumnNames: string[] = [];
   showAllIds: boolean;
@@ -137,10 +134,7 @@ export class IdcardComponent implements OnInit {
     if (this.consentService.isServiceEnabled() && this.authorizationService.hasPermission(Permission.READ_CONSENT))
       this.loadConsents();
 
-    this.configuredIdTypes = this.patientListService.getIdTypes("R");
-    this.defaultIdType = this.patientListService.findDefaultIdType(this.configuredIdTypes);
-
-    this.displayedColumns = [this.defaultIdType, ...this.fields.map(field => field.name)];
+    this.displayedColumns = [...this.fields.map(field => field.name)];
     this.getSecondaryIdentities().pipe(
       catchError(e => {
         this.secondaryIdentities = [];

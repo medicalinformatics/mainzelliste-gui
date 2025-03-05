@@ -68,7 +68,7 @@
           translate}}</mat-card-title>
         <mat-card-content style="display: flex; flex-direction: column; height: 100%">
           <mat-chip-list style="margin: 0 0 7px 1.4%;">
-            <mat-chip *ngFor="let domainName of patient.tenants"> {{domainName}}</mat-chip>
+            <mat-chip *ngFor="let domainName of patient.tenants">{{domainName}}</mat-chip>
           </mat-chip-list>
         </mat-card-content>
       </mat-card>
@@ -76,21 +76,15 @@
 
     <!-- Secondary Identities Table -->
      <ng-container *ngIf="this.showIdentitiesCard()">
-    <mat-card  id="Secondary" style=" display: flex; flex-direction: column; margin: 0 20px 14px 0; ">
+    <mat-card  id="secondary" style="box-sizing: border-box; display: flex; flex-direction: column; margin: 0 20px 14px 0; ">
       <mat-card-title-group style="margin: 0 0 0 1.25%;">
         <mat-card-title style="flex-grow: 2;">{{'idcard.title_secondary' | translate}}</mat-card-title>
       </mat-card-title-group>
-      <mat-card-content style=" margin: 0 1.25% 0 1.25%;">
-        <table id="patientlist" mat-table
+      <mat-card-content style="margin: 0 1.25% 0 1.25%;">
+        <table id="patientlist" mat-table 
           [dataSource]="secondaryIdentities | slice:(pageIndex * pageSize):((pageIndex + 1) * pageSize)" matSort
           matSortActive="idType" matSortDirection="asc" matSortDisableClear>
-          <!-- ID Type Columns -->
-          <ng-container matColumnDef="{{this.defaultIdType}}">
-            <th mat-header-cell *matHeaderCellDef style="flex-flow: row;"> {{this.defaultIdType}} </th>
-            <td mat-cell *matCellDef="let element" [ngClass]="{'highlight': isDifferent(element, this.defaultIdType)}">
-              {{element.getIdString(this.defaultIdType)}}
-             </td>
-          </ng-container>
+
 
           <!-- Field Columns -->
           <ng-container *ngFor="let field of fields" matColumnDef="{{field.name}}">
