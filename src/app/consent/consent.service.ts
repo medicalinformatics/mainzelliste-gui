@@ -30,6 +30,7 @@ import {TokenType} from "../model/token";
 import {TokenData} from "../model/token-data";
 import {UploadConsentFileResponse} from "../model/api/upload-consent-file-response";
 import * as querystring from "querystring";
+import {AuthorizationService} from "../services/authorization.service";
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +45,7 @@ export class ConsentService {
 
   constructor(
     private sessionService: SessionService,
+    private authorizationService:AuthorizationService,
     private appConfigService: AppConfigService,
     private translate: TranslateService,
     private httpClient: HttpClient
@@ -404,7 +406,9 @@ export class ConsentService {
                 })
             .pipe(
                 map(fhirConsents => {
-                  return fhirConsents.map(r => {
+                  return fhirConsents.filter(
+                    r => consentTemplates.has(this.findConsentTemplateId(r?.policy ?? []))
+                  ).map(r => {
                     let templateId: string = this.findConsentTemplateId(r?.policy ?? []);
                     let endDate = r?.provision?.period?.end;
                     let startDate = r?.provision?.period?.start;
@@ -473,7 +477,7 @@ export class ConsentService {
   }
 
   public getConsentTemplateTitleMap(): Observable<Map<string, string>> {
-    return this.getConsentTemplatesResources({'_elements': 'id,title', 'status': 'active'})
+    return this.getConsentTemplatesResources({'_elements': 'id,title,identifier', 'status': 'active'})
       .pipe(
         map(entries => {
           let result: Map<string, string> = new Map();
@@ -487,12 +491,15 @@ export class ConsentService {
    * return a map of content templates
    */
   private getConsentTemplatesResources(searchParam?:SearchParams): Observable<Map<string, fhir4.Questionnaire>> {
+    const consentTemplateIds = this.authorizationService.getTenantConsentTemplate();
     return this.searchFhirResources<fhir4.Questionnaire>("searchConsentTemplates", {},
       'Questionnaire', ErrorMessages.SEARCH_CONSENT_TEMPLATES_FAILED, searchParam)
       .pipe(
         map(resources => {
           let result = new Map();
-          resources.forEach(r => result.set(r?.id, r!));
+          resources.filter(r => consentTemplateIds.length == 0 ||
+            consentTemplateIds.includes(this.getResourceIdentifier(r?.identifier)))
+            .forEach(r => result.set(r?.id, r!));
           return result;
         })
       );

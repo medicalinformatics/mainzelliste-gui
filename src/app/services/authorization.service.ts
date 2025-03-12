@@ -36,6 +36,7 @@ export class AuthorizationService {
         .map(e => {
           return new Tenant(e.permissions.tenant.id, e.permissions.tenant.name, e.roles,
             e.permissions.tenant?.idTypes || [],
+            e.permissions.tenant?.consentTemplateIds || [],
             this.convertClaimPermissions(e.permissions))
         })
     if(this.currentTenantId.length == 0 || this.configuredTenants.every(t => t.id != this.currentTenantId)) {
@@ -329,5 +330,13 @@ export class AuthorizationService {
       .filter(t => this.userRoles.some(r => t.roles.includes(r)))
       .map(r => r.idTypes)
       .reduce((accumulator, currentValue) => accumulator.concat(currentValue.filter(e => !accumulator.includes(e))), []);
+  }
+
+  getTenantConsentTemplate(): string[] {
+    return this.configuredTenants
+    .filter(c => c.id == this.currentTenantId)
+    .filter(t => this.userRoles.some(r => t.roles.includes(r)))
+    .map(r => r.consentTemplateIds)
+    .reduce((accumulator, currentValue) => accumulator.concat(currentValue.filter(e => !accumulator.includes(e))), []);
   }
 }

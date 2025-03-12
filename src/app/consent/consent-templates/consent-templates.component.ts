@@ -13,6 +13,7 @@ import {Permission} from "../../model/permission";
 import {
   ConfirmDeleteDialogComponent
 } from "../../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
+import {AuthorizationService} from "../../services/authorization.service";
 
 @Component({
   selector: 'app-consent-templates',
@@ -31,6 +32,7 @@ export class ConsentTemplatesComponent implements OnInit {
 
   constructor(
     public consentService: ConsentService,
+    public authorizationService: AuthorizationService,
     private router: Router,
     private titleService: GlobalTitleService,
     public consentTemplateDialog: MatDialog,
