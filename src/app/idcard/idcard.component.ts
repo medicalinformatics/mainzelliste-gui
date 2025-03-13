@@ -143,23 +143,6 @@ export class IdcardComponent implements OnInit {
     });
   }
 
-  deleteConsent(consentId: string) {
-    this.consentService.deleteConsent(consentId).pipe(
-        mergeMap(r => this.consentService.getConsents(this.idType, this.idString))
-    ).subscribe({
-      next: dataModels => {
-        this.consentsView = dataModels;
-        this.consentTable.renderRows();
-        this.loadingConsents = false;
-      },
-      error: () => this.loadingConsents = false
-    });
-  }
-
-  deletePatient() {
-    this.patientService.deletePatient(this.patient).then(() => this.router.navigate(['/patientlist']).then());
-  }
-
   generateId(idType: string, idString: string, newIdType: string) {
     this.patientListService.generateId(idType?.length > 0 ? idType : this.idType,
       idString?.length > 0 ? idString : this.idString, newIdType).subscribe(() => {
@@ -330,29 +313,30 @@ export class IdcardComponent implements OnInit {
   }
 
   openDeletePatientDialog(): void {
-    const dialogRef = this.deletePatientDialog.open(ConfirmDeleteDialogComponent, {
+    this.deletePatientDialog.open(ConfirmDeleteDialogComponent, {
       data: {
-        itemI18nName: "confirm_delete_dialog.item_patient"
+        itemI18nName: "confirm_delete_dialog.item_patient",
+        callbackObservable: this.patientService.deletePatient(this.patient)
       },
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
+    })
+    .afterClosed().subscribe(result => {
       if (result)
-        this.deletePatient();
+        this.router.navigate(['/patientlist']).then();
     });
   }
 
 
   openDeleteConsentDialog(consentId: string): void {
-    const dialogRef = this.deleteConsentDialog.open(ConfirmDeleteDialogComponent, {
+    this.deleteConsentDialog.open(ConfirmDeleteDialogComponent, {
       data: {
-        itemI18nName: "confirm_delete_dialog.item_consent"
+        itemI18nName: "confirm_delete_dialog.item_consent",
+        callbackObservable: this.consentService.deleteConsent(consentId)
       },
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result)
-        this.deleteConsent(consentId);
+    })
+    .afterClosed().subscribe(result => {
+      if (result) {
+        this.loadConsents();
+      }
     });
   }
 
@@ -371,7 +355,6 @@ export class IdcardComponent implements OnInit {
         plz: fieldMap[SemanticType.POSTAL_CODE]
       }
     ]
-    console.log(data);
 
     new AngularCsv(data, 'ContactInfo', {
       headers: [this.translate.instant("first_name_text"),
