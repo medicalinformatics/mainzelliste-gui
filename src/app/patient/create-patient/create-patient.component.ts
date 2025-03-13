@@ -229,11 +229,15 @@ export class CreatePatientComponent implements OnInit {
     const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
       width: '900px',
       disableClose: true,
-      data: {consent: this.consent, isSaveButton:true}
+      data: {
+        consent: this.consent,
+        isSaveButton: true,
+        updateConsentObservable: (consent: Consent) => of(consent)
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.consent = result?.consent;
+      this.consent = result?.dataModel;
     });
   }
 }
