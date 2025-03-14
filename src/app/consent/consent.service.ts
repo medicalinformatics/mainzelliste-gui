@@ -181,22 +181,6 @@ export class ConsentService {
    * @param fhirConsent fhir consent resource
    */
   private deserializeConsentDataModelFrom(questionnaire: fhir4.Questionnaire, fhirConsent: fhir4.Consent | undefined): Consent {
-    if (questionnaire == undefined) {
-      this.handleError<any>(this.translate.instant('error.consent_service_questionnaire_not_found'));
-      return {
-        id: "",
-        title: "NOT FOUND",
-        createdAt: new Date(),
-        validFrom: _moment(),
-        period: 0,
-        items: [],
-        status: "active",
-        templateId: "0",
-        scans: new Map<string, string>(),
-        scanUrls: new Map<string, string>()
-      };
-    }
-
     let initNewDataModel = false;
     if (questionnaire.contained == undefined || questionnaire.contained.length > 1
       || questionnaire.contained.length == 0) {
@@ -253,7 +237,7 @@ export class ConsentService {
     let fhirPeriod = fhirConsent?.provision?.period;
     let period;
     let validFrom = _moment();
-    if (fhirPeriod == undefined || !fhirPeriod.end || fhirPeriod.end.trim().length < 1) {
+    if (!fhirPeriod?.end || fhirPeriod.end.trim().length < 1) {
       period = 0;
     } else if ((!fhirPeriod.start || fhirPeriod.start.trim().length < 1)) {
       period = new Date(fhirPeriod.end).getTime() - validFrom.toDate().getTime();
@@ -262,21 +246,21 @@ export class ConsentService {
       period = new Date(fhirPeriod.end).getTime() - new Date(fhirPeriod.start).getTime();
     }
 
-    return {
-      id: fhirConsent?.id,
-      title: questionnaire?.title || "",
-      createdAt: new Date(fhirConsent?.dateTime || ""),
-      validFrom: validFrom,
-      period: period,
-      items: items,
-      status: fhirConsent?.status || "active",
-      fhirResource: fhirConsent,
-      version: fhirConsent?.meta?.versionId,
-      templateId: questionnaire?.id || "0",
-      scans: new Map<string, string>(),
-      scanUrls: new Map<string, string>(),
-      templateFhirResource: questionnaire?.contained[0] as fhir4.Consent || undefined
-    };
+    return new Consent(
+      questionnaire?.title ?? "",
+      new Date(fhirConsent?.dateTime ?? ""),
+      period,
+      items,
+      fhirConsent?.status || "active",
+      questionnaire?.id ?? "0",
+      new Map<string, string>(),
+      new Map<string, string>(),
+      fhirConsent?.id,
+      fhirConsent?.meta?.versionId,
+      validFrom,
+      undefined, undefined,
+      fhirConsent,
+      questionnaire?.contained[0] as fhir4.Consent || undefined)
   }
 
   public extractTemplateMap(fhirConsent: fhir4.Consent): Map<string, fhir4.CodeableConcept[]> {
