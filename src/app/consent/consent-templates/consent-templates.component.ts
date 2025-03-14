@@ -13,6 +13,7 @@ import {Permission} from "../../model/permission";
 import {
   ConfirmDeleteDialogComponent
 } from "../../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
+import {AuthorizationService} from "../../services/authorization.service";
 
 @Component({
   selector: 'app-consent-templates',
@@ -31,6 +32,7 @@ export class ConsentTemplatesComponent implements OnInit {
 
   constructor(
     public consentService: ConsentService,
+    public authorizationService: AuthorizationService,
     private router: Router,
     private titleService: GlobalTitleService,
     public consentTemplateDialog: MatDialog,
@@ -89,28 +91,16 @@ export class ConsentTemplatesComponent implements OnInit {
 
   protected readonly Permission = Permission;
 
-  private deleteTemplate(templateId: string) {
-    this.consentService.deleteConsentTemplate(templateId).subscribe({
-      next: r => {
-        this.loadTemplates(this.paginator.pageIndex, this.paginator.pageSize);
-      },
-      error: (error) => {
-        this.loading = false
-        throw error;
-      }
-    })
-  }
-
   public openDeleteTemplateDialog(templateId: string): void {
-    const dialogRef = this.confirmDeleteDialog.open(ConfirmDeleteDialogComponent, {
+    this.confirmDeleteDialog.open(ConfirmDeleteDialogComponent, {
       data: {
-        itemI18nName: "confirm_delete_dialog.item_consent_template"
+        itemI18nName: "confirm_delete_dialog.item_consent_template",
+        callbackObservable: this.consentService.deleteConsentTemplate(templateId)
       },
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
+    })
+    .afterClosed().subscribe(result => {
       if (result)
-        this.deleteTemplate(templateId);
+        this.loadTemplates(this.paginator.pageIndex, this.paginator.pageSize);
     });
   }
 }

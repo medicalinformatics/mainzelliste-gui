@@ -1,7 +1,7 @@
 <div ngModelGroup="consentTemplateDetails">
   <!-- Name -->
   <mat-form-field class="templateInputField" [ngStyle]="{'width': '45%', 'margin-bottom': displayError(name) ? '0.25em' : '-1.25em' }">
-    <mat-label>Name</mat-label>
+    <mat-label>{{"consent_template.name" | translate}}</mat-label>
     <input pattern="[A-Za-z\d\-_\.$#]{1,255}" style="width: 45%;" matInput placeholder=""
            [(ngModel)]="this.template.name"
            [name]="'name'" #name="ngModel" required="true">
@@ -9,8 +9,10 @@
       {{ getFieldErrorMessage("name", name.errors) }}
     </mat-error>
   </mat-form-field>
+
+  <!-- Version-->
   <mat-form-field class="templateVersion" [ngStyle]="{'margin-bottom': displayError(version) ? '0.65em' : '-1.25em' }">
-    <mat-label>Version</mat-label>
+    <mat-label>{{'consent_template.version' | translate}}</mat-label>
     <input pattern="[A-Za-z\d\-_\.]{1,255}" matInput placeholder=""
            [(ngModel)]="this.template.version"
            [name]="'version'" #version="ngModel">
@@ -19,9 +21,9 @@
     </mat-error>
   </mat-form-field>
 
-  <!-- Titel-->
+  <!-- Title-->
   <mat-form-field class="templateInputField" [ngStyle]="{'margin-bottom': displayError(title) ? '0.25em' : '-1.25em' }">
-    <mat-label>Titel</mat-label>
+    <mat-label>{{'consent_template.title' | translate}}</mat-label>
     <input style="width: 45%;" matInput placeholder=""
            [(ngModel)]="this.template.title" [name]="'title'" #title="ngModel" required="true">
     <mat-error *ngIf="displayError(title)">
@@ -31,8 +33,8 @@
 
   <!-- Organization-->
   <mat-form-field class="templateInputField"
-                  [ngStyle]="{'margin-bottom': displayError(title) ? '0.25em' : '-1.25em' }">
-    <mat-label>Verantwortliche Einrichtung</mat-label>
+                  [ngStyle]="{'margin-bottom': displayError(organization) ? '0.25em' : '-1.25em' }">
+    <mat-label>{{'consent_template.organization' | translate}}</mat-label>
     <input style="width: 45%;" matInput placeholder=""
            [(ngModel)]="this.template.organization" [name]="'organization'" #organization="ngModel">
   </mat-form-field>
@@ -40,7 +42,7 @@
 <!--  &lt;!&ndash; ResearchStudy&ndash;&gt;-->
 <!--  <mat-form-field class="templateInputField"-->
 <!--                  [ngStyle]="{'margin-bottom': displayError(title) ? '0.25em' : '-1.25em' }">-->
-<!--    <mat-label>Forschungsprojekt</mat-label>-->
+<!--    <mat-label>{{'consent_template.research_study' | translate}}</mat-label>-->
 <!--    <input style="width: 45%;" matInput placeholder=""-->
 <!--           [(ngModel)]="this.template.researchStudy" [name]="'researchStudy'" #researchStudy="ngModel">-->
 <!--  </mat-form-field>-->
@@ -48,7 +50,7 @@
   <!-- Validity-->
   <mat-form-field class="templateInputField"
                   [ngStyle]="{'margin-bottom': displayError(validityPeriod) ? '0.25em' : '-1.25em' }">
-    <mat-label>Gültigkeitsdauer</mat-label>
+    <mat-label>{{'consent_template.validityPeriod' | translate}}</mat-label>
     <input matInput style="width: 90%; " placeholder="0 Jahren - 0 Monaten - 0 Tagen"
            [(ngModel)]="this.templateValidityPeriod"
            [appEmptyConsentTemplateValidityPeriod]="this.template.validity"
@@ -62,15 +64,13 @@
   </mat-form-field>
 
   <!-- MII Conform Toggle-->
-  <mat-slide-toggle color="primary"
-                    (change)="this.isMiiFhirChanged($event)"
-                    style="clear: both; float:left; margin-top: 20px; margin-bottom: 1.25em"
-                    [(ngModel)]="this.template.isMiiFhirConsentConform"
-                    [name]="'isMiiFhir'">basiert auf MII Broad Consent
+  <mat-slide-toggle color="primary" (change)="this.isMiiFhirChanged($event)"
+                    style="clear: both; float:left; margin-top: 20px; margin-bottom: 1.25em" [(ngModel)]="this.template.isMiiFhirConsentConform" [name]="'isMiiFhir'">
+    {{'consent_template.based_on_mii_broad_consent' | translate}}
   </mat-slide-toggle>
   <mat-form-field style="clear:both; float: left; width: 300px; padding-bottom: 0; margin: 0 0 -1.25em;"
                   *ngIf="this.template.isMiiFhirConsentConform">
-    <mat-label>Version des MII Broad Consent</mat-label>
+    <mat-label>{{'consent_template.mii_broad_consent_version' | translate}}</mat-label>
     <mat-select [(ngModel)]="this.template.policy" required="true" [name]="'miiFhirVersion'">
       <mat-option *ngFor="let version of this.miiFhirBroadConsentVersions"
                   value="{{version.code}}">{{version.name}}</mat-option>
@@ -79,7 +79,7 @@
 
   <!-- Opt-In/out -->
   <div style="clear: both; float: left; margin-top: 20px; margin-bottom: 1.25em;">
-    <label id="opt-radio-group-label"><h4>{{"consent_template.consent-model" | translate}}</h4></label>
+    <label id="opt-radio-group-label"><h4>{{"consent_template.consent_model" | translate}}</h4></label>
     <mat-radio-group aria-labelledby="opt-radio-group-label" color="primary"
                      [(ngModel)]="this.template.consentModel" [name]="'optIn'"
                      [disabled]="disableConsentModel()"
@@ -90,7 +90,7 @@
   </div>
 
   <!-- Modules -->
-  <h4 style="margin-top: 20px; clear:both; float: left;">Module hinzufügen: </h4>
+  <h4 style="margin-top: 20px; clear:both; float: left;">{{"consent_template.add_module" | translate}}:</h4>
 
   <!-- modules -->
   <app-consent-template-modules [templateModules]="this.template.items"></app-consent-template-modules>
@@ -99,13 +99,14 @@
   <div
     style="clear:both; float: left; width: 300px;  margin-top: 20px; margin-bottom: 40px; display: flex; flex-wrap: nowrap;">
     <mat-form-field class="templateInputField">
-      <mat-label>Moduletyp</mat-label>
+      <mat-label>{{'consent_template.module_type' | translate}}</mat-label>
       <mat-select required="false" [(value)]="selectedModuleType">
         <mat-option *ngFor="let moduleType of this.moduleTypes"
-                    [value]="moduleType.type">{{moduleType.display}}</mat-option>
+                    [value]="moduleType.type">{{moduleType.i18n | translate}}</mat-option>
       </mat-select>
     </mat-form-field>
-    <button mat-icon-button color="primary" aria-label="Module hinzufügen"
+    <button mat-icon-button color="primary"
+            [matTooltip]="'consent_template.add_module' | translate"
             (click)="this.createModule(selectedModuleType)"
             style="margin-top: 9px; margin-left: 8px">
       <mat-icon>add</mat-icon>

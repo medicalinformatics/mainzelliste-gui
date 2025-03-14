@@ -27,7 +27,6 @@ export class AppConfigService {
   private mainzellisteClaims: ClaimsConfig[] = [];
   private version: string = "";
   private layoutFooterLogos: FooterLogo[] = [];
-  private consentEnabled: boolean = false;
   private copyConcatenatedIdEnabled: boolean = false;
   private copyIdEnabled: boolean = false;
   private configurationEnabled: boolean = false;
@@ -53,7 +52,6 @@ export class AppConfigService {
           this.data = r;
 
           // init feature toggle
-          this.consentEnabled = this.data[0].betaFeatures?.consent ?? false;
           this.copyConcatenatedIdEnabled = this.data[0].betaFeatures?.copyConcatenatedId ?? false;
           this.copyIdEnabled = this.data[0].betaFeatures?.copyId ?? false;
           this.configurationEnabled = this.data[0].betaFeatures?.configuration ?? false;
@@ -76,10 +74,6 @@ export class AppConfigService {
         error: _e => reject(new Error(this.translate.instant('error.app_config_service_config_not_found')))
       });
     });
-  }
-
-  isConsentEnabled(): boolean {
-    return this.consentEnabled;
   }
 
   isCopyConcatenatedIdEnabled(): boolean {

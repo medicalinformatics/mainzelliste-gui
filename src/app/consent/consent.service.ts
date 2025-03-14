@@ -30,6 +30,7 @@ import {TokenType} from "../model/token";
 import {TokenData} from "../model/token-data";
 import {UploadConsentFileResponse} from "../model/api/upload-consent-file-response";
 import * as querystring from "querystring";
+import {AuthorizationService} from "../services/authorization.service";
 
 @Injectable({
   providedIn: 'root'
@@ -44,16 +45,13 @@ export class ConsentService {
 
   constructor(
     private sessionService: SessionService,
+    private authorizationService:AuthorizationService,
     private appConfigService: AppConfigService,
     private translate: TranslateService,
     private httpClient: HttpClient
   ) {
     this.mainzellisteBaseUrl = this.appConfigService.data[0].url.toString();
     this.client = new Client({baseUrl: this.mainzellisteBaseUrl + "/fhir"});
-  }
-
-  public isServiceEnabled(): boolean {
-    return this.appConfigService.isConsentEnabled();
   }
 
   /**
@@ -179,22 +177,6 @@ export class ConsentService {
    * @param fhirConsent fhir consent resource
    */
   private deserializeConsentDataModelFrom(questionnaire: fhir4.Questionnaire, fhirConsent: fhir4.Consent | undefined): Consent {
-    if (questionnaire == undefined) {
-      this.handleError<any>(this.translate.instant('error.consent_service_questionnaire_not_found'));
-      return {
-        id: "",
-        title: "NOT FOUND",
-        createdAt: new Date(),
-        validFrom: _moment(),
-        period: 0,
-        items: [],
-        status: "active",
-        templateId: "0",
-        scans: new Map<string, string>(),
-        scanUrls: new Map<string, string>()
-      };
-    }
-
     let initNewDataModel = false;
     if (questionnaire.contained == undefined || questionnaire.contained.length > 1
       || questionnaire.contained.length == 0) {
@@ -251,7 +233,7 @@ export class ConsentService {
     let fhirPeriod = fhirConsent?.provision?.period;
     let period;
     let validFrom = _moment();
-    if (fhirPeriod == undefined || !fhirPeriod.end || fhirPeriod.end.trim().length < 1) {
+    if (!fhirPeriod?.end || fhirPeriod.end.trim().length < 1) {
       period = 0;
     } else if ((!fhirPeriod.start || fhirPeriod.start.trim().length < 1)) {
       period = new Date(fhirPeriod.end).getTime() - validFrom.toDate().getTime();
@@ -260,21 +242,21 @@ export class ConsentService {
       period = new Date(fhirPeriod.end).getTime() - new Date(fhirPeriod.start).getTime();
     }
 
-    return {
-      id: fhirConsent?.id,
-      title: questionnaire?.title || "",
-      createdAt: new Date(fhirConsent?.dateTime || ""),
-      validFrom: validFrom,
-      period: period,
-      items: items,
-      status: fhirConsent?.status || "active",
-      fhirResource: fhirConsent,
-      version: fhirConsent?.meta?.versionId,
-      templateId: questionnaire?.id || "0",
-      scans: new Map<string, string>(),
-      scanUrls: new Map<string, string>(),
-      templateFhirResource: questionnaire?.contained[0] as fhir4.Consent || undefined
-    };
+    return new Consent(
+      questionnaire?.title ?? "",
+      new Date(fhirConsent?.dateTime ?? ""),
+      period,
+      items,
+      fhirConsent?.status || "active",
+      questionnaire?.id ?? "0",
+      new Map<string, string>(),
+      new Map<string, string>(),
+      fhirConsent?.id,
+      fhirConsent?.meta?.versionId,
+      validFrom,
+      undefined, undefined,
+      fhirConsent,
+      questionnaire?.contained[0] as fhir4.Consent || undefined)
   }
 
   public extractTemplateMap(fhirConsent: fhir4.Consent): Map<string, fhir4.CodeableConcept[]> {
@@ -404,7 +386,9 @@ export class ConsentService {
                 })
             .pipe(
                 map(fhirConsents => {
-                  return fhirConsents.map(r => {
+                  return fhirConsents.filter(
+                    r => consentTemplates.has(this.findConsentTemplateId(r?.policy ?? []))
+                  ).map(r => {
                     let templateId: string = this.findConsentTemplateId(r?.policy ?? []);
                     let endDate = r?.provision?.period?.end;
                     let startDate = r?.provision?.period?.start;
@@ -473,7 +457,7 @@ export class ConsentService {
   }
 
   public getConsentTemplateTitleMap(): Observable<Map<string, string>> {
-    return this.getConsentTemplatesResources({'_elements': 'id,title', 'status': 'active'})
+    return this.getConsentTemplatesResources({'_elements': 'id,title,identifier', 'status': 'active'})
       .pipe(
         map(entries => {
           let result: Map<string, string> = new Map();
@@ -487,12 +471,15 @@ export class ConsentService {
    * return a map of content templates
    */
   private getConsentTemplatesResources(searchParam?:SearchParams): Observable<Map<string, fhir4.Questionnaire>> {
+    const consentTemplateIds = this.authorizationService.getTenantConsentTemplate();
     return this.searchFhirResources<fhir4.Questionnaire>("searchConsentTemplates", {},
       'Questionnaire', ErrorMessages.SEARCH_CONSENT_TEMPLATES_FAILED, searchParam)
       .pipe(
         map(resources => {
           let result = new Map();
-          resources.forEach(r => result.set(r?.id, r!));
+          resources.filter(r => consentTemplateIds.length == 0 ||
+            consentTemplateIds.includes(this.getResourceIdentifier(r?.identifier)))
+            .forEach(r => result.set(r?.id, r!));
           return result;
         })
       );

@@ -1,4 +1,3 @@
-import {Questionnaire} from "fhir/r4";
 import {Moment} from "moment/moment";
 
 /**
@@ -22,6 +21,24 @@ export class Consent {
     public fhirResource?: fhir4.Consent,
     public templateFhirResource?: fhir4.Consent
   ) {
+  }
+  clone(){
+    return new Consent(this.title,
+      this.createdAt,
+      this.period,
+      this.items.map( i => i instanceof ConsentChoiceItem ?
+        new ConsentChoiceItem(i.linkId??"", i.text, i.answer): i),
+      this.status,
+      this.templateId,
+      new Map(this.scans),
+      new Map(this.scanUrls),
+      this.id,
+      this.version,
+      this.validFrom?.clone(),
+      this.validUntil,
+      this.patientId,
+      this.fhirResource,
+      this.templateFhirResource)
   }
 }
 

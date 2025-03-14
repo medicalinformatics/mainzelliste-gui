@@ -547,7 +547,7 @@ export class PatientListService {
   }
 
   deletePatient(patient: Patient) {
-    return lastValueFrom(this.sessionService.createToken(
+    return this.sessionService.createToken(
       "deletePatient",
       new DeletePatientTokenData(
         {idType: patient.ids[0].idType, idString: patient.ids[0].idString}
@@ -555,7 +555,7 @@ export class PatientListService {
     )
     .pipe(
       mergeMap(token => this.resolveDeletePatientToken(token.id))
-    ));
+    );
   }
 
   resolveDeletePatientToken(tokenId: string | undefined): Observable<any> {
