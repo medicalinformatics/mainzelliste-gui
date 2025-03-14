@@ -28,7 +28,7 @@
         </mat-option>
       </mat-autocomplete>
       <input type="file" accept="application/csv" style="display: none" (change)="onUploadSearchIDsFromCSV($event)" #fileUploader>
-      <button mat-icon-button (click)="fileUploader.click()" [disabled]="this.uploadCSVinProgress"
+      <button mat-icon-button (click)="fileUploader.click(); this.filterAutoCompleteTrigger.closePanel();" [disabled]="this.uploadCSVinProgress"
               matTooltip="{{'patientlist.add_search_ids_from_file' | translate}}" matSuffix>
         <mat-icon *ngIf="!this.uploadCSVinProgress" color="primary" [ngStyle]="{'transform':'scale(0.8)'}">publish</mat-icon>
         <mat-icon *ngIf="this.uploadCSVinProgress" color="primary">
