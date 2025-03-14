@@ -162,7 +162,7 @@ export class AuthorizationService {
       })
     }
 
-    if (this.configService.isConsentEnabled() && claimPermissions.resources.patient.resources.consent != undefined) {
+    if (claimPermissions.resources.patient.resources.consent != undefined) {
       permissions.push({
         type: 'consent',
         operations: claimPermissions.resources.patient.resources.consent.operations
@@ -182,7 +182,7 @@ export class AuthorizationService {
       }
     }
 
-    if (this.configService.isConsentEnabled() && claimPermissions.resources.consentTemplate != undefined) {
+    if (claimPermissions.resources.consentTemplate != undefined) {
       permissions.push({
         type: 'consentTemplate',
         operations: claimPermissions.resources.consentTemplate.operations

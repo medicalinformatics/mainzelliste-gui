@@ -104,7 +104,7 @@ export class IdcardComponent implements OnInit {
     });
 
     //load consent list
-    if (this.consentService.isServiceEnabled() && this.authorizationService.hasPermission(Permission.READ_CONSENT))
+    if (this.authorizationService.hasPermission(Permission.READ_CONSENT))
       this.loadConsents();
   }
 
