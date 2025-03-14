@@ -86,10 +86,14 @@
   "consent_status.inactive": "Inactive",
   "consent_status.entered-in-error": "Error",
 
+  "consent_template_dialog.title" : "Create Consent Template",
+
+  "consent_template_list.title" : "Consent Template",
   "consent_template_list.button_new_template": "New Template",
 
-	"consent_template_status.draft": "Draft",
+  "consent_template_status.draft": "Draft",
 	"consent_template_status.active": "Active",
+
   "consent_template.id": "Id",
 	"consent_template.name": "Name",
   "consent_template.version": "Version",

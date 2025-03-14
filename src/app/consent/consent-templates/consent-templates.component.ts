@@ -14,6 +14,7 @@ import {
   ConfirmDeleteDialogComponent
 } from "../../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
 import {AuthorizationService} from "../../services/authorization.service";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-consent-templates',
@@ -33,17 +34,25 @@ export class ConsentTemplatesComponent implements OnInit {
   constructor(
     public consentService: ConsentService,
     public authorizationService: AuthorizationService,
-    private router: Router,
-    private titleService: GlobalTitleService,
+    private readonly router: Router,
+    private readonly titleService: GlobalTitleService,
+    private readonly translate: TranslateService,
     public consentTemplateDialog: MatDialog,
     public confirmDeleteDialog: MatDialog
   ) {
-    this.titleService.setTitle("Einwilligungsvorlagen", false);
+    this.changeTitle();
     this.templatesMatTableData = new MatTableDataSource<ConsentTemplateFhirWrapper>([]);
   }
 
   ngOnInit(): void {
     this.loadTemplates(0, this.defaultPageSize);
+    this.translate.onLangChange.subscribe(() => {
+      this.changeTitle();
+    })
+  }
+
+  changeTitle() {
+    this.titleService.setTitle(this.translate.instant('consent_template_list.title'));
   }
 
   loadTemplates(pageIndex: number, pageSize: number) {

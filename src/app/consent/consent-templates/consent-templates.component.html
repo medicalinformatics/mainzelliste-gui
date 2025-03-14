@@ -4,7 +4,7 @@ flex-flow: column;">
     <button mat-raised-button *appHasPermission="Permission.CREATE_CONSENT_TEMPLATE" class="submit"
             style="clear: both; float: right;"
             (click)="openConsentTemplateDialog()">{{"consent_template_list.button_new_template" | translate}}
-      <mat-icon matTooltip="Einwilligungsvorlage Erstellen">assignment_add</mat-icon>
+      <mat-icon matTooltip="{{'consent_template_dialog.title' | translate}}">assignment_add</mat-icon>
     </button>
   </div>
   <div class="mat-elevation-z8">

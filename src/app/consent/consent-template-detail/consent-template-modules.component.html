@@ -10,8 +10,8 @@
         style="display: flex; align-items: center; column-gap: 3px; margin-bottom: 8px;">
         <mat-icon style="transform: scale(1.1);">{{this.module.type == 'display' ? 'notes'
           : 'help_center'}}</mat-icon>
-        {{this.module.type == 'display' ? 'consent_template.module_type_text'
-        : 'consent_template.module_type_question' | translate }}</mat-card-subtitle>
+        {{ 'consent_template.module_type_' + (this.module.type == 'display' ? 'text' : 'question')
+        | translate }}</mat-card-subtitle>
       <div></div>
       <button mat-icon-button class="edit-module-button" color="primary"
               style="float: right; margin-left: auto; margin-right: 10px;"

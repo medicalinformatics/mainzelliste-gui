@@ -88,12 +88,15 @@
   "consent_status.inactive": "Inaktiv",
   "consent_status.entered-in-error": "Fehlerhaft",
 
-	"consent_template_status.draft": "Entwurf",
+  "consent_template_dialog.title" : "Einwilligungsvorlage erstellen",
+
+  "consent_template_list.title" : "Einwilligungsvorlagen",
+  "consent_template_list.button_new_template": "Neue Vorlage",
+
+  "consent_template_status.draft": "Entwurf",
 	"consent_template_status.active": "Aktiv",
 
-  "consent_template_list.button_new_template": "Neue Vorlage",
-  "consent_template_list.table.id": "Id",
-
+  "consent_template.id": "Id",
   "consent_template.name": "Name",
   "consent_template.version": "Version",
   "consent_template.title": "Titel",
