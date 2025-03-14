@@ -40,11 +40,11 @@ export class ConsentTemplateDetailComponent implements OnInit {
   public moduleTypes = [
     {
       type: "choice",
-      display: "Frage",
+      i18n: "consent_template.module_type_question",
     },
     {
       type: "display",
-      display: "Text",
+      i18n: "consent_template.module_type_text",
     }
   ]
 
