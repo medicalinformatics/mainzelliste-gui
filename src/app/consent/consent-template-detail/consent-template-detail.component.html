@@ -9,6 +9,8 @@
       {{ getFieldErrorMessage("name", name.errors) }}
     </mat-error>
   </mat-form-field>
+
+  <!-- Version-->
   <mat-form-field class="templateVersion" [ngStyle]="{'margin-bottom': displayError(version) ? '0.65em' : '-1.25em' }">
     <mat-label>Version</mat-label>
     <input pattern="[A-Za-z\d\-_\.]{1,255}" matInput placeholder=""
@@ -31,7 +33,7 @@
 
   <!-- Organization-->
   <mat-form-field class="templateInputField"
-                  [ngStyle]="{'margin-bottom': displayError(title) ? '0.25em' : '-1.25em' }">
+                  [ngStyle]="{'margin-bottom': displayError(organization) ? '0.25em' : '-1.25em' }">
     <mat-label>Verantwortliche Einrichtung</mat-label>
     <input style="width: 45%;" matInput placeholder=""
            [(ngModel)]="this.template.organization" [name]="'organization'" #organization="ngModel">

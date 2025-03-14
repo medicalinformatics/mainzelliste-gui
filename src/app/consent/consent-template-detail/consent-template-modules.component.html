@@ -18,7 +18,7 @@
         <mat-icon matTooltip="editieren">delete</mat-icon>
       </button>
     </mat-card-title-group>
-    <mat-card-content [ngStyle]="{'margin-bottom': module.type == 'display' ? '15px' : '0'}" [ngSwitch]="module.constructor.name">
+    <mat-card-content [ngSwitch]="module.constructor.name">
       <!-- display mode -->
       <div *ngIf="this.editedModule == undefined || this.editedModule?.id != module.id">
         <h3 *ngIf=" module.type == 'choice'"><b>{{$any(module).policy?.text}}</b></h3>
@@ -128,9 +128,10 @@
         </ng-container>
       </div>
     </mat-card-content>
-    <mat-card-actions *ngIf="this.editedModule != undefined && this.editedModule?.id == module.id">
-      <button mat-button type="submit" (click)="this.save(module)" [disabled]="!moduleCtrl?.valid || false">Speichen</button>
-      <button mat-button (click)="this.cancel()">Abbrechen</button>
+    <mat-card-actions *ngIf="this.editedModule != undefined && this.editedModule?.id == module.id"
+    style="margin-left: 1px">
+      <button mat-stroked-button color="primary" type="submit" (click)="this.save(module)" [disabled]="!moduleCtrl?.valid || false">Speichen</button>
+      <button mat-stroked-button (click)="this.cancel()">Abbrechen</button>
     </mat-card-actions>
     <mat-card-footer *ngIf="module.type == 'choice' && this.editedModule?.id != module.id
     && (this.toChoiceItem(module).policies?.length == 0)">
