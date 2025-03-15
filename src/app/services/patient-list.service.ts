@@ -28,6 +28,7 @@ import {IdGenerator} from "../model/idgenerator";
 import {AddPatientsSingleResponse} from "../model/add-patients-single-response";
 import {TaskResponse} from "../model/task-response";
 import {AddPatientRequest} from "../model/add-patient-request";
+import {FilterItem} from "../model/filter-item";
 
 export interface ReadPatientsResponse {
   patients: Patient[];
@@ -231,8 +232,7 @@ export class PatientListService {
    * @param pageIndex page number
    * @param pageSize page limit
    */
-  getPatients(filters: Array<{ field: string, fields: string[], searchCriteria: string, isIdType: boolean }>,
-              pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
+  getPatients(filters: Array<FilterItem>, pageIndex: number, pageSize: number, ignoreOrder:boolean): Observable<ReadPatientsResponse> {
     // find current tenant id
     let tenantId = this.authorizationService.currentTenantId;
     if(tenantId === undefined || tenantId == Tenant.DEFAULT_ID)
@@ -250,8 +250,12 @@ export class PatientListService {
       else
         searchIds = [{idType: "*", idString: "*"}];
     } else {
-      filters.filter(f => f.isIdType).forEach(f =>
-        searchIds.push({idType: f.field, idString: f.searchCriteria.trim()}));
+      filters.filter(f => f.isIdType).forEach(f => {
+        if(typeof(f.searchCriteria) === 'string')
+          searchIds.push({idType: f.field, idString: f.searchCriteria.trim()});
+        else
+          (f.searchCriteria as string[]).forEach( v => searchIds.push({idType: f.field, idString: v.trim()}))
+      });
     }
 
     let resultIdTypes = new Set(this.getIdTypes("R"));
@@ -267,6 +271,7 @@ export class PatientListService {
       mergeMap(token => this.httpClient.get<Patient[]>(this.patientList.url + "/patients?"
         +"tokenId=" + token.id
         + (tenantId.length == 0 ? "":"&tenantId="+tenantId)
+          + "&ignoreOrder=" + ignoreOrder
         + "&page=" + pageIndex + "&limit=" + pageSize + "&"
         + this.convertFiltersToUrl(filters), {observe: 'response'})
       .pipe(
@@ -277,30 +282,28 @@ export class PatientListService {
         )
       )),
       catchError( (error) => {
-        if(error.status >= 400 && error.status < 500) {
-          return of({
-            patients: [],
-            totalCount: "0"
-          });
-        } else {
-          return throwError( () => new Error(this.translate.instant('error.patient_list_service_get_patients') + `${getErrorMessageFrom(error, this.translate)}`));
-        }
+        if(error.status < 400 && error.status >= 500)
+          console.log("Failed to fetch patients. Cause: " + `${getErrorMessageFrom(error, this.translate)}`);
+        return of({
+          patients: [],
+          totalCount: "0"
+        });
       })
     )
   }
 
-  convertFiltersToUrl(filters: Array<{ field: string, fields: string[], searchCriteria: string, isIdType: boolean }>) : string{
-    return filters.filter(o => !o.isIdType)
+  convertFiltersToUrl(filters: Array<FilterItem>) : string{
+    return filters.filter(o => !o.isIdType && typeof(o.searchCriteria) === 'string')
     .map(o => {
       if(o.field == "birthday" && o.fields != undefined) {
-        let moment = _moment(o.searchCriteria.trim(), _moment().localeData().longDateFormat('L'));
+        let moment = _moment((o.searchCriteria as string).trim(), _moment().localeData().longDateFormat('L'));
         if (moment.isValid()) {
           let dateArray: number[] = [moment.date(), moment.month() + 1, moment.year()];
           return o.fields.map((f,i) =>  f + "=" + dateArray[i]).join("&");
-        }else
+        } else
           return "";
-      }else {
-        return o.field + "=" + o.searchCriteria.trim()
+      } else {
+        return o.field + "=" + (o.searchCriteria as string).trim()
       }
     }).join("&")
   }
@@ -544,7 +547,7 @@ export class PatientListService {
   }
 
   deletePatient(patient: Patient) {
-    return lastValueFrom(this.sessionService.createToken(
+    return this.sessionService.createToken(
       "deletePatient",
       new DeletePatientTokenData(
         {idType: patient.ids[0].idType, idString: patient.ids[0].idString}
@@ -552,7 +555,7 @@ export class PatientListService {
     )
     .pipe(
       mergeMap(token => this.resolveDeletePatientToken(token.id))
-    ));
+    );
   }
 
   resolveDeletePatientToken(tokenId: string | undefined): Observable<any> {

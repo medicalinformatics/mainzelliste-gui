@@ -6,6 +6,7 @@ export class Tenant {
     public name: string,
     public roles: string[],
     public idTypes: string[],
+    public consentTemplateIds: string[],
     public permissions: TenantPermission[]
   ) {
   }
