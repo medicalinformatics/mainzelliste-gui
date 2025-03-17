@@ -31,7 +31,6 @@ export class BulkIdGenerationComponent implements OnInit {
   generated = false;
   dataModel: string = "";
   idType: string = "";
-  idStrings: string[] = [];
   patients: Patient[] = [];
   data: string = "";
   delimiter: string = ",";
@@ -117,9 +116,6 @@ export class BulkIdGenerationComponent implements OnInit {
           this.readingInProgress = false
           this.csvRecords = records;
           this.idType = this.csvRecords[0][0];
-          for(let i = 1; i < this.csvRecords.length; i++) {
-            this.idStrings[i-1] = this.csvRecords[i][0];
-          }
           this.stepper.next();
           this.step = 1;
         },
@@ -133,9 +129,10 @@ export class BulkIdGenerationComponent implements OnInit {
     });
   }
 
-  generateNewIds(idT: string) {
-    this.csvRecords[0][1] = idT;
-    this.patientListService.generateIdArray(this.idType, this.idStrings, idT).subscribe(ids => {
+  generateNewIds(newIdType: string) {
+    this.csvRecords[0][1] = newIdType;
+    const idStrings = this.csvRecords.filter((r,i) => i>0).map( row => row[0])
+    this.patientListService.generateIdArray(this.idType, idStrings, newIdType).subscribe(ids => {
       this.newEntrys(ids);
       if(this.emptyFields == 0) {
         this.generated = true;
