@@ -1,17 +1,17 @@
 #stepper {
-    width: 1200px;
-    /*margin: 0 auto;*/
-    background-color: #FAFAFA;
+  width: 1200px;
+  background-color: #FAFAFA;
+  text-align: center
 }
 
 .float-table {
-    width: 700px;
-    padding: 40px;
-    float: left;
+  width: 700px;
+  padding: 40px;
+  float: left;
 }
 
 .float-content {
-    width: 280px;
-    padding: 40px;
-    float: left;
+  width: 280px;
+  padding: 40px;
+  float: left;
 }

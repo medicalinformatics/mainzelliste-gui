@@ -35,13 +35,7 @@ export class MessageCardComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: { [property: string]: SimpleChange }) {
     if(changes['message']) {
-      if (changes['message'].currentValue.length > 0) {
-        console.log("message changed ")
-        this.showMessage = true;
-      } else {
-        console.log("message changed with empty")
-        this.showMessage = false;
-      }
+      this.showMessage = changes['message'].currentValue.length > 0
     }
   }
 }

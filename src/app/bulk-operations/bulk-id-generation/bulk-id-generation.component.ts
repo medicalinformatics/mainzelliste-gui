@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {NgxCsvParser} from 'ngx-csv-parser';
+import {NgxCsvParser, NgxCSVParserError} from 'ngx-csv-parser';
 import {saveAs} from 'file-saver';
 import {FormBuilder, Validators} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
@@ -11,6 +11,8 @@ import {GlobalTitleService} from "../../services/global-title.service";
 import {PatientListService} from "../../services/patient-list.service";
 import {Patient} from "../../model/patient";
 import {BulkIdGenerationEmptyFieldsDialog} from "./dialog/bulk-id-generation-empty-fields-dialog";
+import {FieldError} from "../../error/field-error";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-bulk-id-generation',
@@ -21,14 +23,17 @@ export class BulkIdGenerationComponent implements OnInit {
 
   validFileTypes: string[] = ["text/csv", "application/vnd.ms-excel"];
   csvRecords: string[][] = [];
+
+  /** stats*/
   step: number = 3;
+  readingInProgress: boolean = false;
+
   generated = false;
   dataModel: string = "";
   idType: string = "";
   idStrings: string[] = [];
   patients: Patient[] = [];
   data: string = "";
-  public file: any;
   delimiter: string = ",";
   emptyFields: number = 0;
   public isEditable: boolean = true;
@@ -65,11 +70,14 @@ export class BulkIdGenerationComponent implements OnInit {
 
       this.uploadFormGroup.get('uploadField')?.valueChanges.subscribe((file: any) => {
         if (file != null) {
-          this.file = file;
           if(this.validFileTypes.includes(file.type)) {
             this.readCsv(file);
           } else {
-            this.uploadFormGroup.get('uploadField')?.setErrors({invalidFileType:{value:file.type}})
+            this.uploadFormGroup.get('uploadField')?.setErrors({
+              csvError: {
+                value: this.translate.instant("bulkIdGeneration.upload_error_file_type")
+              }
+            })
             this.step = 0;
           }
         }
@@ -77,41 +85,48 @@ export class BulkIdGenerationComponent implements OnInit {
     }
 
   readCsv(file: any) {
-    let tempRecords: any;
+    this.readingInProgress = true
     file.text().then((content: string) => {
       this.delimiter = content.includes(";") ? ";" : ",";
       this.ngxCsvParser.parse(file, { header: false, delimiter: this.delimiter, encoding: 'utf8' })
-      .pipe().subscribe({
-        next: (result): void => {
-          tempRecords = result;
-          if (!this.patientListService.getAllIdTypes("R").includes(tempRecords[0][0])) {
-            this.uploadFormGroup.get('uploadField')?.setErrors({invalidIdType:{value:tempRecords[0][0]}})
-          } else if (tempRecords.length > this.allowed_length + 1) {
-            this.uploadFormGroup.get('uploadField')?.setErrors({invalidFileLength:{value:""}})
-          } else if (tempRecords[0].length <= 2 && (tempRecords[0].length == 1 || tempRecords[0][1] == "")) {
-            for (let i = 1; i < tempRecords.length; i++) {
-              if (tempRecords[i].length >= 3 || !(tempRecords[i].length == 1 || tempRecords[i][1] == "") || tempRecords[i][0] == "") {
-                this.uploadFormGroup.get('uploadField')?.setErrors({invalidIds:{value:""}})
-                break;
+      .pipe(
+        map(records => {
+          if (records instanceof NgxCSVParserError) {
+            console.log(records.message)
+            throw new FieldError(this.translate, "CSVFileUploader.upload_error_invalid_file");
+          }
+
+          //validate
+          if (!this.patientListService.getAllIdTypes("R").includes(records[0][0])) {
+            throw new FieldError(this.translate, 'bulkIdGeneration.upload_error_read_permission', records[0][0]);
+          } else if (records.length > this.allowed_length + 1) {
+            throw new FieldError(this.translate, 'bulkIdGeneration.upload_error_file_length');
+          } else if (records[0].length <= 2 && (records[0].length == 1 || records[0][1] == "")) {
+            for (let i = 1; i < records.length; i++) {
+              if (records[i].length >= 3 || !(records[i].length == 1 || records[i][1] == "") || records[i][0] == "") {
+                throw new FieldError(this.translate, 'bulkIdGeneration.upload_error_ids');
               }
             }
           } else {
-            this.uploadFormGroup.get('uploadField')?.setErrors({invalidIdTypeList:{value:""}})
+            throw new FieldError(this.translate, 'bulkIdGeneration.upload_error_id_type');
           }
-          if (!this.uploadFormGroup.get('uploadField')?.invalid) {
-            this.csvRecords = tempRecords;
-            this.idType = this.csvRecords[0][0];
-            for(let i = 1; i < this.csvRecords.length; i++) {
-              this.idStrings[i-1] = this.csvRecords[i][0];
-            }
-            this.stepper.next();
-            this.step = 1;
-          } else {
-            this.step = 0;
+          return records;
+        })
+      ).subscribe({
+        next: (records): void => {
+          this.readingInProgress = false
+          this.csvRecords = records;
+          this.idType = this.csvRecords[0][0];
+          for(let i = 1; i < this.csvRecords.length; i++) {
+            this.idStrings[i-1] = this.csvRecords[i][0];
           }
+          this.stepper.next();
+          this.step = 1;
         },
-        error: (): void => {
-          console.log('Error1');
+        error: (e:FieldError): void => {
+          this.readingInProgress = false
+          console.log(e)
+          this.uploadFormGroup.get('uploadField')?.setErrors({csvError: {value: e.message}})
           this.step = 0;
         }
       });
@@ -186,7 +201,6 @@ export class BulkIdGenerationComponent implements OnInit {
 
   private reset() {
     this.uploadFormGroup.get('uploadField')?.reset();
-    this.file = undefined;
     this.csvRecords = [];
     this.select.value = '';
     this.dataModel = '';
