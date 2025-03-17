@@ -13,11 +13,23 @@ import {Patient} from "../../model/patient";
 import {BulkIdGenerationEmptyFieldsDialog} from "./dialog/bulk-id-generation-empty-fields-dialog";
 import {FieldError} from "../../error/field-error";
 import {map} from "rxjs/operators";
+import {animate, style, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'app-bulk-id-generation',
   templateUrl: './bulk-id-generation.component.html',
-  styleUrls: ['./bulk-id-generation.component.css']
+  styleUrls: ['./bulk-id-generation.component.css'],
+  animations: [
+    trigger('infoDialogTrigger', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('300ms', style({ opacity: 1 })),
+      ]),
+      transition(':leave', [
+        animate('100ms', style({ opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class BulkIdGenerationComponent implements OnInit {
 
@@ -27,6 +39,8 @@ export class BulkIdGenerationComponent implements OnInit {
   /** stats*/
   step: number = 3;
   readingInProgress: boolean = false;
+  generationInProgress: boolean = false;
+  generationStatus: string = ""
 
   generated = false;
   dataModel: string = "";
@@ -130,10 +144,14 @@ export class BulkIdGenerationComponent implements OnInit {
   }
 
   generateNewIds(newIdType: string) {
+    this.generationInProgress = true;
     this.csvRecords[0][1] = newIdType;
+    this.generationStatus = this.translate.instant("bulkIdGeneration.progress_status_start");
     const idStrings = this.csvRecords.filter((r,i) => i>0).map( row => row[0])
     this.patientListService.generateIdArray(this.idType, idStrings, newIdType).subscribe(ids => {
+      this.generationStatus = this.translate.instant("bulkPseudonymization.progress_status_prepare_result");
       this.newEntrys(ids);
+      this.generationInProgress = false;
       if(this.emptyFields == 0) {
         this.generated = true;
         this.step = 2;

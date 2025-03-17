@@ -367,6 +367,7 @@
 	"bulkIdGeneration.upload_info_text2": "Die Datei muss den ID-Typ als erste Zeile und die Patienten-IDs in den weiteren Zeilen enthalten.",
 	"bulkIdGeneration.upload_info_text3": "Leere Zeilen können zu Fehlern führen!",
 	"bulkIdGeneration.upload_info_text4": "Bei größeren Datensätzen können die Ladezeiten einige Sekunden betragen.",
+  "bulkIdGeneration.progress_status_start": "IDs werden generiert",
 
 	"bulkIdGenerationEmptyFieldsDialog.text1": " Patienten konnten nicht gefunden werden.",
 	"bulkIdGenerationEmptyFieldsDialog.text2": "Für nicht gefundene Patienten wurden keine neuen IDs generiert.",
@@ -380,8 +381,8 @@
   "bulkPseudonymization.upload_error_unknown_header": "Alle CSV-Header-Werte sind unbekannt",
   "bulkPseudonymization.upload_error_required_header": "Die Eingabe von Pflichtfelder ['${}'] als CSV-Header ist erforderlich",
   "bulkPseudonymization.button_stepper_pseudonymize": "Pseudonymisieren",
-  "bulkPseudonymization.progess_status_start": "Patienten werden pseudonymisiert",
-  "bulkPseudonymization.progess_status_prepare_result": "CSV-Datei wird erstellt",
+  "bulkPseudonymization.progress_status_start": "Patienten werden pseudonymisiert",
+  "bulkPseudonymization.progress_status_prepare_result": "CSV-Datei wird erstellt",
   "bulkPseudonymization.pseudonymization_in_progress": "Dieser Vorgang kann einige Minuten in Anspruch nehmen.",
   "bulkPseudonymization.pseudonymization_done": "Es wurden ${} Patienten erfolgreich pseudonymisiert",
 
