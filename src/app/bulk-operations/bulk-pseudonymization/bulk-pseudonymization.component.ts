@@ -214,12 +214,13 @@ export class BulkPseudonymizationComponent implements OnInit {
   }
 
   addPatients() {
+    this.undefinedHeaders = [];
     this.addingInProgress = true;
-    this.addingStatus = this.translate.instant("bulkPseudonymization.progess_status_start");
+    this.addingStatus = this.translate.instant("bulkPseudonymization.progress_status_start");
     this.patientListService.addPatients(this.addPatientRequests,this.selectedInternalIdTypes, false)
     .subscribe({
       next: (responses): void => {
-        this.addingStatus = this.translate.instant("bulkPseudonymization.progess_status_prepare_result");
+        this.addingStatus = this.translate.instant("bulkPseudonymization.progress_status_prepare_result");
         const l = this.csvRecords[0].length;
         this.csvRecords[0] = this.csvRecords[0].concat(this.selectedInternalIdTypes).concat("error");
         this.addPatientRequests.forEach((r, j) => {

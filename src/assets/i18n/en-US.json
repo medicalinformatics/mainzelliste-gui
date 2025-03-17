@@ -337,6 +337,7 @@
 	"bulkIdGeneration.upload_error_file_type": "Please select a file with an appropriate file type",
 	"bulkIdGeneration.upload_error_id_type": "Please make sure to specify only one ID type in the file",
 	"bulkIdGeneration.upload_error_ids": "Could not recognize an ID in every row",
+	"bulkIdGeneration.upload_error_file_length": "The file may only contain a maximum of 50.000 entries.",
 	"bulkIdGeneration.upload_error_read_permission": "The ID type is invalid or you do not have permission to read in IDs of this ID type",
 	"bulkIdGeneration.download_label": "Download CSV file",
 	"bulkIdGeneration.generate_id_label": "Generate new IDs",
@@ -344,6 +345,8 @@
 	"bulkIdGeneration.upload_info_text1": "Please select a CSV file with the patient IDs.",
 	"bulkIdGeneration.upload_info_text2": "The file must contain the ID type as the first line and the patient IDs in the remaining lines.",
 	"bulkIdGeneration.upload_info_text3": "Empty lines can lead to errors!",
+	"bulkIdGeneration.upload_info_text4": "Loading times may take a few seconds for larger datasets.",
+  "bulkIdGeneration.progress_status_start": "Generation of IDs",
 
 	"bulkIdGenerationEmptyFieldsDialog.text1": " patients were not found.",
 	"bulkIdGenerationEmptyFieldsDialog.text2": "No new IDs were generated for patients not found.",
@@ -357,8 +360,8 @@
   "bulkPseudonymization.upload_error_unknown_header": "CSV-Header values are unknown",
   "bulkPseudonymization.upload_error_required_header": "Missing required patient field names ['${}'] in the CSV-Header",
   "bulkPseudonymization.button_stepper_pseudonymize": "Pseudonymize",
-  "bulkPseudonymization.progess_status_start": "Pseudonymization of patients",
-  "bulkPseudonymization.progess_status_prepare_result": "Creating CSV file",
+  "bulkPseudonymization.progress_status_start": "Pseudonymization of patients",
+  "bulkPseudonymization.progress_status_prepare_result": "Creating CSV file",
   "bulkPseudonymization.pseudonymization_in_progress": "In progress, this may take a few minutes.",
   "bulkPseudonymization.pseudonymization_done": "${} patients were successfully pseudonymized",
 

@@ -3,21 +3,9 @@
   <mat-step [stepControl]="uploadFormGroup" [editable]="isEditable">
     <form [formGroup]="uploadFormGroup">
       <ng-template matStepLabel>{{'bulkPseudonymization.upload_label' | translate}}</ng-template>
-      <mat-card @infoDialogTrigger *ngIf="this.showInfoCard && fileInput.ngControl.hasError('csvError')" style=" width: 50%; margin: 10px auto 30px auto; background: #fff6f6;">
-        <mat-card-title-group>
-          <button mat-icon-button class="mini-icon-button" (click)="this.hideInfoDialog()">
-            <mat-icon style="color: #555958;">close</mat-icon>
-          </button>
-        </mat-card-title-group>
-        <mat-card-content style="display: flex; justify-content: start; flex-direction: row;
-        align-items: center; margin: 0 15px 18px 15px; text-align: center; gap: 10px">
-          <mat-icon
-            style="color: #a80b1e; font-size: 50px; height: 50px; width: 50px; flex-shrink: 0">
-            report
-          </mat-icon>
-          <h3 style=" color: #3c3939; flex-grow: 2;">{{fileInput.ngControl.getError('csvError').value}}</h3>
-        </mat-card-content>
-      </mat-card>
+      <app-message-card [type]="'error'"
+                        [message]="fileInput.ngControl.getError('csvError')?.value || ''">
+      </app-message-card>
       <div style="margin: 1% auto 0 auto; width: 66%;">{{'bulkPseudonymization.upload_info_text1' | translate}}
         <br/>
         {{ this.translate.instant('bulkPseudonymization.upload_info_text2')
@@ -34,11 +22,7 @@
             [placeholder]="'file.csv'"
             [accept]="'text/csv,.csv'"
             [formControlName]="'uploadField'"
-            (selectionchange)="this.showInfoCard = true"
           ></ngx-mat-file-input>
-<!--          <mat-error *ngIf="fileInput.ngControl.hasError('csvError')">-->
-<!--            {{fileInput.ngControl.getError('csvError').value}}-->
-<!--          </mat-error>-->
         </mat-form-field>
         <mat-spinner *ngIf="this.readingInProgress" style="margin-left: 10px; margin-top: 18px;" diameter="28"></mat-spinner>
       </div>
@@ -47,20 +31,10 @@
   <mat-step #stepTwo [editable]="isEditable">
     <ng-template matStepLabel>{{'bulkPseudonymization.generate_id_label' | translate}}</ng-template>
     <div class="float-container">
-      <mat-card @infoDialogTrigger *ngIf="!this.addingInProgress && this.showInfoCard && this.undefinedHeaders.length > 0" style=" width: 50%; margin: 10px auto 30px auto; background: rgb(251, 248, 238);">
-        <mat-card-title-group>
-          <button mat-icon-button class="mini-icon-button" (click)="this.hideInfoDialog()">
-            <mat-icon style="color: #555958;">close</mat-icon>
-          </button>
-        </mat-card-title-group>
-        <mat-card-content style="display: flex; justify-content: start; flex-direction: row;
-        align-items: center; margin: 0 15px 18px 15px; text-align: center; gap: 10px">
-          <mat-icon style="color: #e6c155; font-size: 50px; height: 50px; width: 50px; flex-shrink: 0">
-            warning
-          </mat-icon>
-          <h3 style=" color: #3c3939; flex-grow: 2;">{{this.translate.instant("CSVFileUploader.upload_error_some_unknown_header").replace("${}", this.undefinedHeaders)}}</h3>
-        </mat-card-content>
-      </mat-card>
+      <app-message-card [type]="'warn'"
+                        [message]="this.undefinedHeaders.length == 0 ? '' :
+                              this.translate.instant('CSVFileUploader.upload_error_some_unknown_header').replace('${}', this.undefinedHeaders)">
+      </app-message-card>
       <mat-card *ngIf="this.addingInProgress" style=" width: 50%; margin: 0 auto;">
         <mat-card-content style="display: flex; justify-content: center; flex-direction: column; text-align: center; margin: 13px 0;">
           <div>
