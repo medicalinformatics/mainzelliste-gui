@@ -214,6 +214,7 @@ export class BulkPseudonymizationComponent implements OnInit {
   }
 
   addPatients() {
+    this.undefinedHeaders = [];
     this.addingInProgress = true;
     this.addingStatus = this.translate.instant("bulkPseudonymization.progess_status_start");
     this.patientListService.addPatients(this.addPatientRequests,this.selectedInternalIdTypes, false)
