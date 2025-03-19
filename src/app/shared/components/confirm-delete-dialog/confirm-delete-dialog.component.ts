@@ -21,7 +21,7 @@ export class ConfirmDeleteDialogComponent {
       callbackObservable: Observable<any>
     }
   ) {
-    this.message = translate.instant("confirm_delete_dialog.text").replace("${1}",
+    this.message = translate.instant("confirm_delete_dialog.text").replace("${0}",
       translate.instant(dataModel.itemI18nName))
   }
 

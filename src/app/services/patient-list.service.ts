@@ -399,7 +399,7 @@ export class PatientListService {
           if (errorMessage == ErrorMessages.CREATE_PATIENT_INVALID_FIELD) {
             let fieldName: string = errorMessage.findVariables(e)[0];
             let field = this.patientList.fields.find(f => f.mainzellisteField == fieldName);
-            return throwError( () => new MainzellisteError(errorMessage, field?.name));
+            return throwError( () => new MainzellisteError(errorMessage, field?.name ?? ""));
           } else if( errorMessage == ErrorMessages.CREATE_PATIENT_INVALID_EXT_ID) {
             return throwError( () => new MainzellisteError(errorMessage, errorMessage.findVariables(e)[1]));
           } else {
@@ -533,7 +533,7 @@ export class PatientListService {
           if (errorMessage == ErrorMessages.CREATE_PATIENT_INVALID_FIELD || errorMessage == ErrorMessages.EDIT_PATIENT_EMPTY_FIELD) {
             let fieldName: string = errorMessage.findVariables(e)[0];
             let field = this.patientList.fields.find(f => f.mainzellisteField == fieldName);
-            return throwError( () => new MainzellisteError(errorMessage, field?.name));
+            return throwError( () => new MainzellisteError(errorMessage, field?.name ?? ""));
           } else if( errorMessage == ErrorMessages.CREATE_PATIENT_INVALID_EXT_ID) {
             return throwError( () => new MainzellisteError(errorMessage, errorMessage.findVariables(e)[1]));
           } else {

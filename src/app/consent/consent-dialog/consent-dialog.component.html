@@ -1,10 +1,12 @@
 <h1 mat-dialog-title *ngIf="!dataModel.readonly">{{'consentDialog.title_consent' | translate}}</h1>
+<app-error-card [(messages)]="errorMessages"></app-error-card>
 <form #consentForm="ngForm">
   <div mat-dialog-content>
     <app-consent-detail [(consent)]="dataModel.consent"
                         [templates]="dataModel.templates"
                         [readOnly]="dataModel.readonly"
                         [edit]="dataModel.edit"
+                        [(errorMessages)]="errorMessages"
     ></app-consent-detail>
   </div>
   <div mat-dialog-actions>

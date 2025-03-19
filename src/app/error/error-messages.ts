@@ -22,11 +22,14 @@ export class ErrorMessage {
     return this.message instanceof RegExp? result : [];
   }
 
-  public getMessage(translate:TranslateService, messageVariable?:string) : string {
-    if(messageVariable != undefined && messageVariable.length > 0) {
-      return translate.instant(this.i18n).replace("${1}", messageVariable);
-    } else
-      return translate.instant(this.i18n);
+  public getMessage(translate:TranslateService, messageVariables : string[]) : string {
+    let message:string = translate.instant(this.i18n);
+    if(messageVariables?.length > 0) {
+      messageVariables.forEach( (v,i) =>
+        message = message.replace("${" + i + "}", v)
+      )
+    }
+    return message;
   }
 }
 
@@ -163,7 +166,7 @@ export class ErrorMessages {
   // CONSENT SCAN ERRORS
   //---------------------
   public static FAILED_UPLOAD_CONSENT_SCAN_FILE: ErrorMessage = new ErrorMessage(7001,
-    /Failed to upload File '(.*)'/i,
+    /Failed to upload File '(.*)'. Reason: Max file size \[(.+) kB] exceeded/i,
     "error.consent_upload_scan_failed");
   public static READ_CONSENT_SCAN_FAILED: ErrorMessage = new ErrorMessage(7002,
     'ReadConsentScanFailed',
