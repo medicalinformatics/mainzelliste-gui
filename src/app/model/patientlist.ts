@@ -54,5 +54,6 @@ export interface BetaFeatures {
   copyId?: boolean
   configuration?:boolean
   showDomainsInIDCard?:boolean
+  disableBulkIdGeneration?:boolean
 }
 

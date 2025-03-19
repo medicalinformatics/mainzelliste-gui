@@ -32,6 +32,7 @@ export class AppConfigService {
   private copyIdEnabled: boolean = false;
   private configurationEnabled: boolean = false;
   private _showDomainsInIDCard: boolean = false;
+  private disableBulkIdGeneration: boolean = false;
 
   constructor(
     private httpClient: HttpClient,
@@ -57,6 +58,7 @@ export class AppConfigService {
           this.copyConcatenatedIdEnabled = this.data[0].betaFeatures?.copyConcatenatedId ?? false;
           this.copyIdEnabled = this.data[0].betaFeatures?.copyId ?? false;
           this.configurationEnabled = this.data[0].betaFeatures?.configuration ?? false;
+          this.disableBulkIdGeneration = this.data[0].betaFeatures?.disableBulkIdGeneration ?? false;
           this._showDomainsInIDCard = this.data[0].betaFeatures?.showDomainsInIDCard ?? false;
 
           if(!this.data[0].genderFieldValues || this.data[0].genderFieldValues.length == 0)
@@ -92,6 +94,10 @@ export class AppConfigService {
 
   isConfigurationEnabled(): boolean {
     return this.configurationEnabled;
+  }
+
+  isBulkIdGenerationDisabled(): boolean {
+    return this.disableBulkIdGeneration;
   }
 
   public showDomainsInIDCard(): boolean {
