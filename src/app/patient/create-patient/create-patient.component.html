@@ -11,7 +11,8 @@
                                [removeEmptyId]="true" [permittedOperation]="'C'"></app-external-pseudonyms>
     </div>
     <br>
-    <div style="width: 90%; max-width: 700px;" ngModelGroup="internalIdTypes"
+    <div *ngIf="!this.appConfigService.isIdSelectionDisabled()"
+         style="width: 90%; max-width: 700px;" ngModelGroup="internalIdTypes"
          #internalIdTypesModelGroup="ngModelGroup">
       <h4>{{'createPatient.add_pseudonym_type' | translate}}</h4>
       <mat-form-field color="primary" style="width: 76.5%">
