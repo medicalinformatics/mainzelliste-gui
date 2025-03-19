@@ -23,7 +23,8 @@
         "copyConcatenatedId": false,
         "copyId": true,
         "configuration": false,
-        "showDomainsInIDCard": false
+        "showDomainsInIDCard": false,
+        "disableBulkIdGeneration": ${ML_UI_DISABLE_BULK_ID}
       }
     }
   ]
