@@ -12,6 +12,8 @@ import {Observable} from "rxjs";
 export class ConsentDialogComponent implements OnInit {
 
   public inProgress: boolean = false
+  errorMessages: string[] = [];
+
   constructor(
     public dialogRef: MatDialogRef<ConsentDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public dataModel: {

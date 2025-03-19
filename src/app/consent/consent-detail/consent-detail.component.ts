@@ -17,6 +17,7 @@ import {HttpEventType} from "@angular/common/http";
 import {map} from "rxjs/operators";
 import {AuthorizationService} from "../../services/authorization.service";
 import {TranslateService} from "@ngx-translate/core";
+import {getErrorMessageFrom} from "../../error/error-utils";
 
 @Component({
   selector: 'app-consent-detail',
@@ -31,6 +32,8 @@ export class ConsentDetailComponent implements OnInit {
   @Input() consent!: Consent;
   @Input() templates!: Map<string, string>;
   @Output() consentChange = new EventEmitter<Consent>();
+  @Input() errorMessages: string[] = [];
+  @Output() errorMessagesChange = new EventEmitter<string[]>();
   @ViewChild('templateSelection') templateSelection!: MatSelect;
   localDateFormat:string;
   uploadInProgress: boolean = false;
@@ -117,8 +120,8 @@ export class ConsentDetailComponent implements OnInit {
     const files = target.files as FileList;
     if(files != null && files.length >0) {
       this.uploadInProgress = true;
-      this.uploadSubscription = this.consentService.uploadConsentScanFile(files[0], () => this.resetUploadScan()).subscribe(
-        event => {
+      this.uploadSubscription = this.consentService.uploadConsentScanFile(files[0], () => this.resetUploadScan()).subscribe({
+        next: event => {
           if (event.type == HttpEventType.UploadProgress) {
             this.uploadProgress = Math.round(100 * (event.loaded / (event.total ?? 1)));
           } else if(event.type == HttpEventType.Response) {
@@ -127,7 +130,14 @@ export class ConsentDetailComponent implements OnInit {
               throw new Error("failed to upload File")
             this.consent.scanUrls.set( files[0].name, fileUrl);
           }
-        })
+        },
+        error: e => {
+          this.errorMessages.push(getErrorMessageFrom(e, this.translate))
+          this.errorMessagesChange.emit(this.errorMessages);
+        },
+        complete: () => {
+        }
+      })
     }
   }
 

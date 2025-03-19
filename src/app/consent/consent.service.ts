@@ -932,11 +932,11 @@ export class ConsentService {
     })
     .pipe(
       catchError(e => {
-        if (e instanceof HttpErrorResponse && (e.status == 400)) {
+        if (e instanceof HttpErrorResponse && (e.status == 403)) {
           const errorMessage = this.uploadConsentScanErrorMessages.find(msg => msg.match(e))
           // find error message arguments
           if( errorMessage == ErrorMessages.FAILED_UPLOAD_CONSENT_SCAN_FILE) {
-            return throwError( () => new MainzellisteError(errorMessage, errorMessage.findVariables(e)[1]));
+            return throwError( () => new MainzellisteError(errorMessage, ...errorMessage.findVariables(e)));
           } else {
             throwError( () => errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
           }
