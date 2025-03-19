@@ -20,6 +20,7 @@ import {Consent} from "../../consent/consent.model";
 import {ConsentService} from "../../consent/consent.service";
 import {Permission} from "../../model/permission";
 import {Operation} from "../../model/tenant";
+import { AppConfigService } from 'src/app/app-config.service';
 
 export interface IdTypSelection {
   idType: string,
@@ -66,7 +67,8 @@ export class CreatePatientComponent implements OnInit {
     private router: Router,
     private titleService: GlobalTitleService,
     public tentativeDialog: MatDialog,
-    public consentService: ConsentService
+    public consentService: ConsentService,
+    public appConfigService: AppConfigService
   ) {
     this.patientService = patientService;
     this.patientListService = patientListService;

@@ -55,5 +55,6 @@ export interface BetaFeatures {
   configuration?:boolean
   showDomainsInIDCard?:boolean
   disableBulkIdGeneration?:boolean
+  disableIdSelection?:boolean
 }
 

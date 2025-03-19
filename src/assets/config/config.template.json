@@ -25,7 +25,8 @@
         "copyId": true,
         "configuration": false,
         "showDomainsInIDCard": false,
-        "disableBulkIdGeneration": ${ML_UI_DISABLE_BULK_ID}
+        "disableBulkIdGeneration": ${ML_UI_DISABLE_BULK_ID},
+        "disableIdSelection": ${ML_UI_DISABLE_ID_SELECTION}
       }
     }
   ]
