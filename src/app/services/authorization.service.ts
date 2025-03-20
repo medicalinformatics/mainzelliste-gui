@@ -235,6 +235,10 @@ export class AuthorizationService {
     return this.localStorageService.tenantId;
   }
 
+  getCurrentUITenant(){
+    return this.configuredTenants.find( t => t.id == this.localStorageService.tenantId)?.name ?? "";
+  }
+
   hasPermission(permission: Permission): boolean {
     return this.hasAnyPermissions([permission]);
   }

@@ -46,4 +46,8 @@ export class UserMenuComponent {
     this.authorizationService.currentTenantId = tenantId;
     this.router.navigate([`/patientlist`]).then();
   }
+
+  getCurrentTenant() {
+    return this.authorizationService.getCurrentUITenant();
+  }
 }
