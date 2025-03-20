@@ -299,6 +299,7 @@
 	"error.create_consent_rejected": "Failed to create consent. Cause: '${0}'",
 	"error.read_consent_failed": "Failed to read consent. Cause: '${0}'",
 	"error.delete_consent_failed": "Consent not found",
+  "error.delete_consent_scans_failed": "Following scanned documents not found: '${0}'",
 	"error.create_consent_template_rejected": "Failed to create consent template. Cause: '${0}'",
 	"error.read_consent_template_failed": "Failed to read consent template. Cause: '${0}'",
 	"error.search_consent_templates_failed": "Failed to find consent templates. Cause: '${0}'",

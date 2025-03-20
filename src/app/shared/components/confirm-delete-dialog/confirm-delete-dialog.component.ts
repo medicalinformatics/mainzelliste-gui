@@ -36,6 +36,7 @@ export class ConfirmDeleteDialogComponent {
       error: e => {
         this.dialogRef.close();
         this.inProgress = false;
+        throw e;
       },
       complete: () => {
         this.dialogRef.close(true);
