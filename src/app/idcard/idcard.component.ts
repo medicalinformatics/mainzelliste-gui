@@ -16,7 +16,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {Observable, of, throwError} from "rxjs";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {Consent, ConsentRow, ConsentsView} from "../consent/consent.model";
-import {catchError, filter, map, mergeMap} from "rxjs/operators";
+import {catchError, map, mergeMap} from "rxjs/operators";
 import {IdType} from "../model/id-type";
 import {AuthorizationService} from "../services/authorization.service";
 import {MainzellisteError} from "../model/mainzelliste-error.model";

@@ -312,6 +312,7 @@
   "error.create_consent_rejected": "Einwilligung konnte nicht erstellt werden. Cause: '${0}'",
   "error.read_consent_failed": "Einwilligungserklärung konnte nicht gelesen werden. Ursache: '${0}'",
 	"error.delete_consent_failed": "Einwilligung konnte nicht gefunden werden.",
+  "error.delete_consent_scans_failed": "Folgende gescannte Dokumenten konnten nicht gelöscht werden: '${0}'",
 	"error.create_consent_template_rejected": "Einwilligungsvorlage konnte nicht erstellt werden. Ursache: '${0}'",
   "error.read_consent_template_failed": "Einwilligungsvorlage konnte nicht gelesen werden. Ursache: '${0}'",
   "error.search_consent_templates_failed": "Einwilligungsvorlagen konnten nicht gefunden werden. Ursache: '${0}'",
