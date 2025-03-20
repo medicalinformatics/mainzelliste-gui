@@ -158,12 +158,20 @@ export class ConsentDetailComponent implements OnInit {
   }
 
   downloadScan(id: string) {
-    this.consentService.getConsentScan(id).subscribe( doc => {
-      const downloadLink = document.createElement('a');
-      downloadLink.href = "data:application/pdf;base64," + doc.content[0].attachment.data;
-      downloadLink.download = id + ".pdf";
-      downloadLink.click();
-  });
+    this.consentService.getConsentScan(id).subscribe({
+      next: doc => {
+        const downloadLink = document.createElement('a');
+        downloadLink.href = "data:application/pdf;base64," + doc.content[0].attachment.data;
+        downloadLink.download = id + ".pdf";
+        downloadLink.click();
+      },
+      error: e => {
+        this.errorMessages.push(getErrorMessageFrom(e, this.translate))
+        this.errorMessagesChange.emit(this.errorMessages);
+      },
+      complete: () => {
+      }
+    });
   }
 }
 
