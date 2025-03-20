@@ -1,6 +1,5 @@
 <form #patientForm="ngForm">
 <div style="height:100%;width:100%;">
-  <div style=" width: 50%">
     <h4>{{'createPatient.enter_patient_data' | translate}}</h4>
     <app-patient-fields (fieldEvent)="fieldsChanged($event)"
                         [fields]="patient.fields"></app-patient-fields>
@@ -64,6 +63,5 @@
         <mat-icon *ngIf="creatingInProgress" style="margin-left: 10px"><mat-spinner diameter="20"></mat-spinner></mat-icon>
       </button>
     </div>
-  </div>
 </div>
 </form>
