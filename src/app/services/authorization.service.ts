@@ -134,6 +134,7 @@ export class AuthorizationService {
       })
       this.authorizationState.setMiscellaneous(currentTenant.permissions
         .filter(p => p.type == "miscellaneous")
+        .map(p => p.miscellaneous)
       );
     }
   }
@@ -189,7 +190,7 @@ export class AuthorizationService {
       })
     }
 
-    if(this.configService.isConfigurationEnabled() && claimPermissions.miscellaneous != undefined) {
+    if(claimPermissions.miscellaneous != undefined) {
       claimPermissions.miscellaneous.filter(m => Tenant.ESSENTIAL_MISCELLANEOUS_PERMISSIONS.includes(m) )
       .forEach( m => permissions.push({
         type: 'miscellaneous',
