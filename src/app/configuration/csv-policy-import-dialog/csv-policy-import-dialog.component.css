@@ -1,0 +1,73 @@
+.upload-container {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+.upload-container:hover {
+  border-color: #999;
+}
+
+.message-container {
+  text-align: center;
+  padding: 20px;
+  font-size: 16px;
+}
+
+.file-name {
+  font-weight: bold;
+  color: #1976d2;
+  font-size: 1.1rem;
+}
+
+.loading-spinner,
+.error-messages {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.error-messages {
+  color: red;
+}
+
+.dialog-actions {
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.action-buttons.single {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.action-buttons.double {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.action-buttons.understood {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 600px) {
+  .upload-container,
+  .message-container {
+    padding: 10px;
+  }
+  mat-dialog-content {
+    padding: 10px;
+  }
+  button {
+    font-size: 14px;
+  }
+}

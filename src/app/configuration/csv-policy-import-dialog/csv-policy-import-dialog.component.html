@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>{{ 'configuration.policy.csv.title' | translate }}</h2>
+<mat-dialog-content>
+  <div *ngIf="errorMessages.length > 0" class="error-messages">
+    <div *ngFor="let error of errorMessages">{{ error }}</div>
+  </div>
+
+  <div *ngIf="!selectedFile || (selectedFile && !fileValid)" class="upload-container" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+    <p>{{ 'configuration.policy.csv.add' | translate }}</p>
+    <input type="file" accept=".csv" (change)="onFileSelected($event)" hidden #fileInput>
+    <button mat-raised-button (click)="fileInput.click()">{{ 'configuration.policy.csv.select' | translate }}</button>
+  </div>
+
+  <div *ngIf="selectedFile && fileValid && !importResult" class="message-container">
+    <p>{{ 'configuration.policy.csv.selectedFile' | translate }}<strong class="file-name">{{ selectedFileName }}</strong></p>
+  </div>
+
+  <div *ngIf="importResult" class="message-container">
+    <p>{{ 'configuration.policy.csv.successSummary' | translate: { added: importResult.added, total: totalRows } }}</p>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions">
+  <div *ngIf="!selectedFile" class="action-buttons single">
+    <button mat-button (click)="dialogRef.close()">{{ 'configuration.policy.csv.cancel' | translate }}</button>
+  </div>
+
+  <div *ngIf="selectedFile && !importResult && !isLoading" class="action-buttons double">
+    <button mat-button (click)="dialogRef.close()">{{ 'configuration.policy.csv.cancel' | translate }}</button>
+    <button *ngIf="fileValid" mat-raised-button color="primary" (click)="confirmImport()">{{ 'configuration.policy.csv.confirm' | translate }}</button>
+  </div>
+
+  <div *ngIf="importResult && !isLoading" class="action-buttons understood">
+    <button mat-raised-button color="primary" (click)="dialogRef.close()">{{ 'configuration.policy.csv.understood' | translate }}</button>
+  </div>
+</mat-dialog-actions>
