@@ -808,6 +808,8 @@ export class ConsentService {
       const errorMessageType = errorMessageTypes.find(msg => msg.matchFhirMessage(errorMessage))
       if(errorMessageType)
         return throwError( () => new MainzellisteError(errorMessageType, ...errorMessageType.findVariablesFromFhirMessage(errorMessage)));
+      else // fallback
+        return throwError( () => new MainzellisteError(errorMessageTypes[0], errorMessage));
     }
     return throwError( () => new MainzellisteUnknownError(`Failed to ${errorPrefix} resource fhir/${resourceType}.
                     Cause: ${getErrorMessageFrom(error, this.translate)}`, error, this.translate))

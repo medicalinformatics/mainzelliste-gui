@@ -150,6 +150,11 @@ export class IdcardComponent implements OnInit {
       });
   }
 
+  generateNewId(idType: string, idString: string, newIdType: string) {
+    return this.patientListService.generateId(idType?.length > 0 ? idType : this.idType,
+      idString?.length > 0 ? idString : this.idString, newIdType);
+  }
+
   hasAllTemplateIds(): boolean {
     return [...this.consentsView.consentTemplates.keys()].every(templateId =>
       this.consentsView.consentRows.some(v => v.templateId == templateId))
@@ -301,14 +306,17 @@ export class IdcardComponent implements OnInit {
   }
 
   openNewIdDialog(): void {
-    const dialogRef = this.newIdDialog.open(NewIdDialog, {
-      data: this.patientListService.getRelatedAssociatedIdsMapFrom(this.getUnAvailableIdTypes(this.patient), this.patient.ids, true, "R")
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result != null) {
-        this.generateId(result.externalId?.idType ?? "", result.externalId?.idString ?? "", result.resultIdType);
+    this.newIdDialog.open(NewIdDialog, {
+      disableClose: true,
+      data: {
+        relatedAssociatedIdsMap: this.patientListService.getRelatedAssociatedIdsMapFrom(this.getUnAvailableIdTypes(this.patient), this.patient.ids, true, "R"),
+        generateIdObservable: (externalId: Id, newIdType: string) => this.generateNewId(
+          externalId?.idType ?? "", externalId?.idString ?? "", newIdType)
       }
+    }).beforeClosed().subscribe(result => {
+      if(!result)
+        return;
+      this.loadPatient();
     })
   }
 
