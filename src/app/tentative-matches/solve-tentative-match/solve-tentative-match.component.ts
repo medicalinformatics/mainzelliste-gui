@@ -10,6 +10,7 @@ import {ErrorMessage, ErrorMessages} from "../../error/error-messages";
 import {HttpErrorResponse} from "@angular/common/http";
 import {MergeTentativeMatchDialogComponent} from "./dialog/merge-tentative-match-dialog.component";
 import {throwError} from "rxjs";
+import { Field } from 'src/app/model/field';
 
 @Component({
   selector: 'app-solve-tentative-match-patient',
@@ -26,9 +27,10 @@ export class SolveTentativeMatchComponent implements OnInit {
   tentativeMatchId: number = 0;
   patient1: Patient | undefined;
   patient2: Patient | undefined;
+  defaultPatient: Patient = new Patient();
   mainPatient: number = 1; // Index of the patient that is the main patient (aka which ID is the main ID)
 
-  fields: Array<string> = [];
+  fields: Field[] = [];
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
@@ -87,7 +89,14 @@ export class SolveTentativeMatchComponent implements OnInit {
 
   splitPatients(){
     this.patientListService.solveTentative(this.tentativeMatchId, SolveTentativeOperationType.split)
-    .subscribe()
+    .subscribe({
+      next: () => { this.router.navigate(["/tentatives"]).then()},
+      error: e => {
+        if (e instanceof HttpErrorResponse && this.solveTentativeErrors.find(msg => msg.match(e))) {
+          this.openMergeTentativeDialog();
+        }
+      }
+    });
   }
 
   setMainPatient(index: number) {
