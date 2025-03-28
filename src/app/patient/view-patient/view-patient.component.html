@@ -4,7 +4,12 @@
         <b>{{field.i18n | translate}}</b>
       </td>
       <td style="text-align: left; padding-left: 10px;">
+        <span *ngIf="isDate(field.type)">
+        {{patientFields[field.name] | date:'dd.MM.yyyy'}}
+      </span>
+      <span *ngIf="!isDate(field.type)">
         {{patientFields[field.name]}}
+      </span>
       </td>
     </tr>
   </table>

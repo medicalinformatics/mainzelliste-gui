@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Field } from 'src/app/model/field';
+import { Field, FieldType } from 'src/app/model/field';
 import {FieldService} from "../../services/field.service";
 import {TranslateService} from '@ngx-translate/core';
 
@@ -10,6 +10,7 @@ import {TranslateService} from '@ngx-translate/core';
 })
 
 export class ViewPatientComponent implements OnInit {
+
 
  fields: Field[] = [];
   @Input() patientFields:  {[key: string]: any} = {};
@@ -30,6 +31,10 @@ export class ViewPatientComponent implements OnInit {
 
   fieldChanged(){
     this.fieldEvent.emit(this.fields);
+  }
+
+  isDate(field: FieldType): any {
+    return field == FieldType.DATE;
   }
 
 }
