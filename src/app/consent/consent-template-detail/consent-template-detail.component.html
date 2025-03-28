@@ -2,7 +2,7 @@
   <!-- Name -->
   <mat-form-field class="templateInputField" [ngStyle]="{'width': '45%', 'margin-bottom': displayError(name) ? '0.25em' : '-1.25em' }">
     <mat-label>{{"consent_template.name" | translate}}</mat-label>
-    <input pattern="[A-Za-z\d\-_\.$#]{1,255}" style="width: 45%;" matInput placeholder=""
+    <input pattern="[A-Za-z\d\-_\.$#]{1,255}" matInput placeholder=""
            [(ngModel)]="this.template.name"
            [name]="'name'" #name="ngModel" required="true">
     <mat-error *ngIf="displayError(name)">
@@ -24,7 +24,7 @@
   <!-- Title-->
   <mat-form-field class="templateInputField" [ngStyle]="{'margin-bottom': displayError(title) ? '0.25em' : '-1.25em' }">
     <mat-label>{{'consent_template.title' | translate}}</mat-label>
-    <input style="width: 45%;" matInput placeholder=""
+    <input matInput placeholder=""
            [(ngModel)]="this.template.title" [name]="'title'" #title="ngModel" required="true">
     <mat-error *ngIf="displayError(title)">
       {{ getFieldErrorMessage("title", title.errors) }}
@@ -35,7 +35,7 @@
   <mat-form-field class="templateInputField"
                   [ngStyle]="{'margin-bottom': displayError(organization) ? '0.25em' : '-1.25em' }">
     <mat-label>{{'consent_template.organization' | translate}}</mat-label>
-    <input style="width: 45%;" matInput placeholder=""
+    <input matInput placeholder=""
            [(ngModel)]="this.template.organization" [name]="'organization'" #organization="ngModel">
   </mat-form-field>
 
@@ -43,7 +43,7 @@
 <!--  <mat-form-field class="templateInputField"-->
 <!--                  [ngStyle]="{'margin-bottom': displayError(title) ? '0.25em' : '-1.25em' }">-->
 <!--    <mat-label>{{'consent_template.research_study' | translate}}</mat-label>-->
-<!--    <input style="width: 45%;" matInput placeholder=""-->
+<!--    <input matInput placeholder=""-->
 <!--           [(ngModel)]="this.template.researchStudy" [name]="'researchStudy'" #researchStudy="ngModel">-->
 <!--  </mat-form-field>-->
 
