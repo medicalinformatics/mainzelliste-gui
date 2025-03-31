@@ -112,8 +112,10 @@ export class IdcardComponent implements OnInit {
     //load consent list
     if (this.consentService.isServiceEnabled() && this.authorizationService.hasPermission(Permission.READ_CONSENT))
       this.loadConsents();
-//calculate height for patientdata
-    this.height = 40 + (this.fields.length * 30) + 'px';
+    //calculate height for patientdata
+    this.height = this.fields.length > 7 || this.patient.ids.length > 7
+                  ? 250 + 'px' 
+                  : 40 + (Math.max(this.fields.length, this.patient.ids.length) * 30) + 'px';
   }
 
   changeTitle() {
