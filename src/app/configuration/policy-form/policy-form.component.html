@@ -3,13 +3,19 @@
   <app-error-card [(messages)]="errorMessages"></app-error-card>
 
   <form [formGroup]="policyForm">
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" [ngStyle]="{'margin-bottom': displayError(policyForm.controls.code) ? '0.25em' : '-1.25em' }">
       <mat-label>{{ 'configuration.policy.policyCode' | translate }}</mat-label>
       <input matInput formControlName="code">
+      <mat-error *ngIf="displayError(policyForm.controls.code)">
+        {{ getFieldErrorMessage("policyCode", policyForm.controls.code.errors) }}
+      </mat-error>
     </mat-form-field>
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" [ngStyle]="{'margin-bottom': displayError(policyForm.controls.text) ? '0.25em' : '-1.25em' }">
       <mat-label>{{ 'configuration.policy.policyText' | translate }}</mat-label>
       <input matInput formControlName="text">
+      <mat-error *ngIf="displayError(policyForm.controls.text)">
+        {{ getFieldErrorMessage("policyText", policyForm.controls.text.errors) }}
+      </mat-error>
     </mat-form-field>
   </form>
 </div>
