@@ -976,7 +976,7 @@ export class ConsentService {
     return this.createFhirResource<fhir4.DocumentReference>("addConsentScan", {}, 'DocumentReference', resource);
   }
 
-  addConsentProvenance(id: string | undefined, docRefIds: (string | undefined)[]) {
+  addConsentProvenance(id: string | undefined, docRefIds: (string | undefined)[], patientId: {idType: string; idString: string;} | undefined) {
     if(docRefIds == undefined || docRefIds.length == 0)
       return of();
     let resource : fhir4.Provenance = {
@@ -1009,18 +1009,18 @@ export class ConsentService {
       )),
       signature: [
         {
-          "type":  [
+          type:  [
             {
-              "system": "urn:iso-astm:E1762-95:2013",
-              "code": "1.2.840.10065.1.12.1.7",
-              "display": "Consent Signature"
+              system: "urn:iso-astm:E1762-95:2013",
+              code: "1.2.840.10065.1.12.1.7",
+              display: "Consent Signature"
             }
           ],
-          "when": "12/11/2020 09:39:07",
-          "who": {
-            "reference": "Patient/9b4a702d-162c-428a-8c5d-8b98af21b693"
+          when: _moment().format("YYYY-MM-DDThh:mm:ssZ"),
+          who: {
+            identifier: this.convertToFhirIdentifier(patientId)
           },
-          "data": "RGllcyBpc3QgZWluIFBsYXR6aGFsdGVyIGbDvHIgZWluZSBnZXNjYW5udCB1bmQgQmFzZTY0LWVuY29kaWVydGUgVW50ZXJzY2hyaWZ0Lg=="
+          data: "RGllcyBpc3QgZWluIFBsYXR6aGFsdGVyIGbDvHIgZWluZSBnZXNjYW5udCB1bmQgQmFzZTY0LWVuY29kaWVydGUgVW50ZXJzY2hyaWZ0Lg=="
         }
       ]
     }
@@ -1034,7 +1034,7 @@ export class ConsentService {
     ).pipe(
       map(docRefs => docRefs?.map(docRef => (docRef as fhir4.DocumentReference).id) || []),
       mergeMap(docRefIds =>
-        this.addConsentProvenance(consentId, docRefIds)
+        this.addConsentProvenance(consentId, docRefIds, consent?.patientId)
       )
     )
   }
