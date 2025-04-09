@@ -22,8 +22,7 @@ export class ConsentDialogComponent implements OnInit {
       updateConsentObservable: (consent: Consent) => Observable<any>,
       isSaveButton: boolean,
       readonly: boolean,
-      submitting: boolean,
-      edit:boolean
+      submitting: boolean
     }) {
   }
 

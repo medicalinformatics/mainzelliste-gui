@@ -27,7 +27,6 @@ import {getErrorMessageFrom} from "../../error/error-utils";
 })
 export class ConsentDetailComponent implements OnInit {
 
-  @Input() edit: boolean = false;
   @Input() readOnly: boolean = false;
   @Input() submitting: boolean = false;
   @Input() consent!: Consent;
@@ -59,7 +58,7 @@ export class ConsentDetailComponent implements OnInit {
         .subscribe(r => this.templates = r);
 
     //reset selection if no template selected
-    if (!this.consent?.id && (!this.edit && !this.readOnly && this.templateSelection)) {
+    if (!this.consent?.id && (!this.readOnly && this.templateSelection)) {
       this.templateSelection.options.forEach((data: MatOption) => data.deselect());
     }
 
@@ -75,7 +74,7 @@ export class ConsentDetailComponent implements OnInit {
   }
 
   initDataModel(consentTemplateId: MatSelectChange) {
-    if(!this.edit && !this.readOnly) {
+    if(!this.readOnly) {
       this.consentService.getNewConsentDataModel(consentTemplateId.value || "0")
       .subscribe(consentDataModel => {
         this.consent = consentDataModel;

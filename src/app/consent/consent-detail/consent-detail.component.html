@@ -1,4 +1,4 @@
-<div *ngIf="!edit && (!readOnly || submitting) ">
+<div *ngIf="!readOnly || submitting">
   <h4>{{'consentDetail.select_consent_template' | translate}}</h4>
   <div>
     <mat-form-field style="width: 400px">
@@ -12,7 +12,7 @@
     </mat-form-field>
   </div>
 </div>
-<mat-divider *ngIf="consent && !edit && (!readOnly || submitting)" style="margin-bottom: 1.34375em"></mat-divider>
+<mat-divider *ngIf="consent && (!readOnly || submitting)" style="margin-bottom: 1.34375em"></mat-divider>
 <mat-card *ngIf="consent">
   <h2 style="text-align: center">{{consent.title | uppercase}}</h2>
   <div *ngFor="let item of consent.items; index as i">
