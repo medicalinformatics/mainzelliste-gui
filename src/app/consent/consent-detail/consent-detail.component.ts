@@ -29,6 +29,7 @@ export class ConsentDetailComponent implements OnInit {
 
   @Input() edit: boolean = false;
   @Input() readOnly: boolean = false;
+  @Input() submitting: boolean = false;
   @Input() consent!: Consent;
   @Input() templates!: Map<string, string>;
   @Output() consentChange = new EventEmitter<Consent>();
