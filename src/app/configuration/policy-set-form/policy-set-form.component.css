@@ -9,3 +9,32 @@
   .submit:disabled{
     background-color: rgba(0, 0, 0, .12);
 }
+
+.upload-container {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  margin-top: 24px;
+}
+
+.upload-container p {
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #666;
+}
+
+.file-name {
+  font-weight: bold;
+  color: #3f51b5;
+}
+
+.message-container {
+  margin-top: 16px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}

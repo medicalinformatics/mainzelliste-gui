@@ -20,6 +20,7 @@ import { PoliciesComponent } from './policies/policies.component';
 import { PolicyDialogComponent } from './policy-dialog/policy-dialog.component';
 import { PolicySetFormComponent } from './policy-set-form/policy-set-form.component';
 import { PolicyFormComponent } from './policy-form/policy-form.component';
+import { CsvPolicyImportDialogComponent } from './csv-policy-import-dialog/csv-policy-import-dialog.component';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { PolicyFormComponent } from './policy-form/policy-form.component';
     PoliciesComponent,
     PolicyDialogComponent,
     PolicySetFormComponent,
-    PolicyFormComponent
+    PolicyFormComponent,
+    CsvPolicyImportDialogComponent
   ]
 })
 export class ConfigurationModule {

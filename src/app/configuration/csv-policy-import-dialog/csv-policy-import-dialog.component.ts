@@ -1,20 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConsentService } from 'src/app/consent/consent.service';
 import { take } from 'rxjs/operators';
-import { getErrorMessageFrom } from 'src/app/error/error-utils';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-policy-set-form',
-  templateUrl: './policy-set-form.component.html',
-  styleUrls: ['./policy-set-form.component.css']
+  selector: 'app-csv-policy-import-dialog',
+  templateUrl: './csv-policy-import-dialog.component.html',
+  styleUrls: ['./csv-policy-import-dialog.component.css']
 })
-export class PolicySetFormComponent implements OnInit {
-  policySetForm: FormGroup;
+export class CsvPolicyImportDialogComponent {
   errorMessages: string[] = [];
-
   isLoading: boolean = false;
   selectedFile: File | null = null;
   selectedFileName: string = '';
@@ -24,59 +19,10 @@ export class PolicySetFormComponent implements OnInit {
   fileValid: boolean = true;
 
   constructor(
-    private fb: FormBuilder,
-    public dialogRef: MatDialogRef<PolicySetFormComponent>,
-    private consentService: ConsentService,
-    private translate: TranslateService,
-  ) {
-    this.policySetForm = this.fb.group({
-      id: ['', Validators.required],
-      name: ['', Validators.required],
-      externalId: ['']
-    });
-  }
-
-  ngOnInit(): void {}
-
-  save() {
-    if (this.policySetForm.valid) {
-      this.errorMessages = [];
-      const { id, name, externalId } = this.policySetForm.value;
-      this.consentService.addPolicySet(id, name, externalId)
-        .pipe(take(1))
-        .subscribe({
-          next: (response) => {
-            if (this.selectedFile && this.fileValid && this.fileContent) {
-              this.confirmImport(response.id);
-            } else {
-              this.dialogRef.close(response);
-            }
-          },
-          error: (e) => {
-            const errorCode = e?.error?.code || e?.status;
-            this.handleError(errorCode, e);
-          }
-        });
-    }
-  }
-
-  handleError(errorCode: any, e: any) {
-    let errorMessageKey: string;
-    switch (errorCode) {
-      case 400:
-        errorMessageKey = "configuration.policySet.error.400";
-        break;
-      case 409:
-        errorMessageKey = "configuration.policySet.error.409";
-        break;
-      default:
-        this.errorMessages.push(getErrorMessageFrom(e, this.translate));
-        return;
-    }
-    this.translate.get(errorMessageKey).subscribe((translatedMessage) => {
-      this.errorMessages.push(translatedMessage);
-    });
-  }
+    public dialogRef: MatDialogRef<CsvPolicyImportDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { policySetId: string },
+    private consentService: ConsentService
+  ) {}
 
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
@@ -92,7 +38,7 @@ export class PolicySetFormComponent implements OnInit {
       this.handleFile(file);
     }
   }
-
+  
   onDragOver(event: DragEvent) {
     event.preventDefault();
   }
@@ -131,7 +77,7 @@ export class PolicySetFormComponent implements OnInit {
     }
     return policies;
   }
-
+  
   validatePolicies(policies: Array<{ code: string, name: string }>): string[] {
     const errors: string[] = [];
     const codeCounts = new Map<string, number>();
@@ -152,7 +98,7 @@ export class PolicySetFormComponent implements OnInit {
     return errors;
   }
 
-  confirmImport(policySetId: string) {
+  confirmImport() {
     if (!this.fileValid) {
       return;
     }
@@ -168,26 +114,22 @@ export class PolicySetFormComponent implements OnInit {
       this.errorMessages.push('No valid policies found in the file.');
       return;
     }
-    this.addPolicies(policySetId, policies);
+    this.addPolicies(policies);
   }
 
-  addPolicies(policySetId: string, policies: Array<{ code: string, name: string }>) {
+  addPolicies(policies: Array<{ code: string, name: string }>) {
     this.isLoading = true;
     let addedCount = 0;
     let failedCount = 0;
-    const requests = policies.map(async policy => {
-      try {
-        await this.consentService.addPolicy(policySetId, policy.code, policy.name)
-          .pipe(take(1)).toPromise();
-        addedCount++;
-      } catch {
-        failedCount++;
-      }
+    const requests = policies.map(policy => {
+      return this.consentService.addPolicy(this.data.policySetId, policy.code, policy.name)
+        .pipe(take(1)).toPromise()
+        .then(() => { addedCount++; })
+        .catch(() => { failedCount++; });
     });
     Promise.all(requests).then(() => {
       this.isLoading = false;
       this.importResult = { added: addedCount, failed: failedCount };
-      this.dialogRef.close({ policySetId, importResult: this.importResult });
     });
   }
 }
