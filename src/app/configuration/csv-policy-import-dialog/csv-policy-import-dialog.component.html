@@ -1,8 +1,6 @@
 <h2 mat-dialog-title>{{ 'configuration.policy.csv.title' | translate }}</h2>
 <mat-dialog-content>
-  <div *ngIf="errorMessages.length > 0" class="error-messages">
-    <div *ngFor="let error of errorMessages">{{ error }}</div>
-  </div>
+  <app-error-card [(messages)]="errorMessages"></app-error-card>
 
   <div *ngIf="!selectedFile || (selectedFile && !fileValid)" class="upload-container" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
     <p>{{ 'configuration.policy.csv.add' | translate }}</p>
@@ -25,15 +23,19 @@
 
 <mat-dialog-actions class="dialog-actions">
   <div *ngIf="!selectedFile" class="action-buttons single">
-    <button mat-button (click)="dialogRef.close()">{{ 'configuration.policy.csv.cancel' | translate }}</button>
+    <button mat-button mat-dialog-close class="submitBreak">
+      {{ 'button_cancel' | translate }}
+    </button>
   </div>
 
   <div *ngIf="selectedFile && !importResult && !isLoading" class="action-buttons double">
-    <button mat-button (click)="dialogRef.close()">{{ 'configuration.policy.csv.cancel' | translate }}</button>
-    <button *ngIf="fileValid" mat-raised-button color="primary" (click)="confirmImport()">{{ 'configuration.policy.csv.confirm' | translate }}</button>
+    <button mat-button mat-dialog-close class="submitBreak">
+      {{ 'button_cancel' | translate }}
+    </button>
+    <button *ngIf="fileValid" mat-button class="submit" (click)="confirmImport()">{{ 'configuration.policy.csv.confirm' | translate }}</button>
   </div>
 
   <div *ngIf="importResult && !isLoading" class="action-buttons understood">
-    <button mat-raised-button color="primary" (click)="dialogRef.close()">{{ 'configuration.policy.csv.understood' | translate }}</button>
+    <button mat-button class="submit" (click)="dialogRef.close()">{{ 'configuration.policy.csv.understood' | translate }}</button>
   </div>
 </mat-dialog-actions>

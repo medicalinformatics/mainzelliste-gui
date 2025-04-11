@@ -1,24 +1,56 @@
-<h1 mat-dialog-title>{{"configuration.policySet.add" | translate}}</h1>
+<h1 mat-dialog-title>{{ "configuration.policySet.add" | translate }}</h1>
+
 <div mat-dialog-content>
   <app-error-card [(messages)]="errorMessages"></app-error-card>
+
   <form [formGroup]="policySetForm">
     <mat-form-field appearance="outline">
-      <mat-label>{{'configuration.policySet.id' | translate}}</mat-label>
+      <mat-label>{{ 'configuration.policySet.id' | translate }}</mat-label>
       <input matInput formControlName="id">
     </mat-form-field>
+
     <mat-form-field appearance="outline">
-      <mat-label>{{'configuration.policySet.name' | translate}}</mat-label>
+      <mat-label>{{ 'configuration.policySet.name' | translate }}</mat-label>
       <input matInput formControlName="name">
     </mat-form-field>
+
     <mat-form-field appearance="outline">
-      <mat-label>{{'configuration.policySet.externalId' | translate}}</mat-label>
+      <mat-label>{{ 'configuration.policySet.externalId' | translate }}</mat-label>
       <input matInput formControlName="externalId">
     </mat-form-field>
   </form>
+  <h3 class="upload-title">{{ 'configuration.policy.csv.title' | translate }}</h3>
+  <div class="upload-container" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+    <p>{{ 'configuration.policy.csv.add' | translate }}</p>
+    <input type="file" accept=".csv" (change)="onFileSelected($event)" hidden #fileInput>
+    <button mat-raised-button (click)="fileInput.click()">
+      {{ 'configuration.policy.csv.select' | translate }}
+    </button>
+  </div>
+
+  <div *ngIf="selectedFile && fileValid && !importResult" class="message-container">
+    <p>
+      {{ 'configuration.policy.csv.selectedFile' | translate }}
+      <strong class="file-name">{{ selectedFileName }}</strong>
+    </p>
+  </div>
+
+  <div *ngIf="importResult" class="message-container">
+    <p>
+      {{ 'configuration.policy.csv.successSummary' | translate: { added: importResult.added, total: totalRows } }}
+    </p>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
 </div>
+
 <div mat-dialog-actions>
-  <button mat-button mat-dialog-close class="submitBreak">{{'button_cancel' | translate}}</button>
+  <button mat-button mat-dialog-close class="submitBreak">
+    {{ 'button_cancel' | translate }}
+  </button>
   <button mat-button (click)="save()" class="submit" cdkFocusInitial [disabled]="!policySetForm.valid">
-    {{'button_create' | translate}}
+    {{ 'button_create' | translate }}
   </button>
 </div>

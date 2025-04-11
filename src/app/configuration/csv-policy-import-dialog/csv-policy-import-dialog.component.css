@@ -35,10 +35,12 @@
 }
 
 .dialog-actions {
-  padding: 16px;
+  padding: 1em;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-left: 0px;
+  padding-right: 0px
 }
 
 .action-buttons.single {
@@ -57,6 +59,7 @@
   width: 100%;
   display: flex;
   justify-content: flex-end;
+  align-self: right;
 }
 
 @media (max-width: 600px) {
