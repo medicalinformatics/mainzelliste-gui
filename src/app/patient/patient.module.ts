@@ -3,8 +3,7 @@ import {CommonModule} from '@angular/common';
 import {SharedModule} from "../shared/shared.module";
 import {
   CreatePatientComponent,
-  CreatePatientTentativeDialog,
-  SimilarPatientDialog
+  CreatePatientTentativeDialog
 } from "./create-patient/create-patient.component";
 import {
   EditPatientComponent,
@@ -27,6 +26,9 @@ import {
 } from './patient-pseudonyms/dialogs/show-related-id-dialog/show-related-id-dialog.component';
 import {DeleteConsentDialog} from "../idcard/dialogs/delete-consent-dialog";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { SimilarPatientDialog } from './create-patient/similar-patient-dialog';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
@@ -37,6 +39,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     ClipboardModule,
     RouterModule,
     ScrollingModule,
+    MatTableModule,
+    MatIconModule,
     MatProgressSpinnerModule
   ],
   exports: [

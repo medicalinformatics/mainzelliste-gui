@@ -21,6 +21,7 @@
 	"button_confirm": "Confirm",
 	"button_publish": "Publish",
   "button_create": "Create",
+  "button_continue": "Continue",
 
 	"radio_button_yes": "Yes",
 	"radio_button_no": "No",
@@ -49,7 +50,7 @@
 	"tentative_dialog_text9": "If you are sure that the data entered is correct, but the patient has already been entered previously, please contact the patient list administrator.",
 
 	"similar_patient_button": "Search similar patients",
-	"similar_patient_dialog_title": "Similar patient found",
+	"similar_patient_dialog_title1": "Similar patient found",
 	"similar_patient_dialog_text1": "There are Similar Patients in the system. Please review the following patients before proceeding.",
 	"similar_patient_dialog_title2": "No similar patient found",
 	"similar_patient_dialog_text2": "There are no similar patients in the system. Please proceed with the creation of the new patient.",

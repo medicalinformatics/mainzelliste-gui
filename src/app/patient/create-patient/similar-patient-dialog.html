@@ -1,28 +1,38 @@
 <h1 mat-dialog-title>Similar Patients</h1>
 <div mat-dialog-content>
     <div *ngIf="resultsFound">
-        <h4> {{'similar_patient_dialog_title' | translate}}</h4>
-        <div>{{'similar_patient_dialog_text' | translate}}</div>
-        <li>
-            <div *ngFor="let patient of patients">
-                <div>
-                    <h4>{{patient.fields.lastname}}</h4>
-                    <p>{{patient.fields.name}}</p>
-                    <p>{{patient.fields.birthdate}}</p>
-                </div>
-                <button mat-button><mat-icon></mat-icon></button>
-            </div>
-        </li>
+        <h4> {{'similar_patient_dialog_title1' | translate}}</h4>
+        <div>{{'similar_patient_dialog_text1' | translate}}</div>
+        <table id="patientlist" mat-table [dataSource]="[match]">
+            <!-- Field Columns -->
+            <ng-container *ngFor="let field of fields" matColumnDef="{{field.name}}">
+                <th mat-header-cell *matHeaderCellDef>{{field.i18n | translate}}</th>
+                <td mat-cell *matCellDef="let match">
+                    {{match.fields[field.name]}} </td>
+            </ng-container>
+
+            <!-- Header Row -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <!-- Data Row -->
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> Action </th>
+                <td mat-cell *matCellDef="let match">
+                    <button mat-button (click)="goToPatientIdCard(match)">
+                        <mat-icon>fact_check</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+        </table>
     </div>
     <div *ngIf="!resultsFound">
         <h4>{{'similar_patient_dialog_title2' | translate}}</h4>
         <div>{{'similar_patient_dialog_text2' | translate}}</div>
-
     </div>
-
 
 </div>
 <div mat-dialog-actions>
-    <button mat-raised-button class="submitBreak" (click)="cancel()">{{'button_correct' | translate}}</button>
-    <button mat-raised-button class="submit" [mat-dialog-close]="true">{{'button_confirm' | translate}}</button>
+    <button mat-raised-button class="submit" (click)="cancel()">{{'button_continue' | translate}}</button>
 </div>

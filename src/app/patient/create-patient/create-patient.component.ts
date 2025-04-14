@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { Patient } from "../../model/patient";
 import { PatientService } from "../../services/patient.service";
 import { Router } from "@angular/router";
@@ -10,7 +10,7 @@ import { ErrorNotificationService } from "../../services/error-notification.serv
 import { GlobalTitleService } from "../../services/global-title.service";
 import { forkJoin, Observable, of } from "rxjs";
 import { concatMap, map, mergeMap, retryWhen, startWith, switchMap } from "rxjs/operators";
-import { MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { MainzellisteError } from "../../model/mainzelliste-error.model";
 import { ErrorMessages } from "../../error/error-messages";
 import { UserAuthService } from "../../services/user-auth.service";
@@ -20,6 +20,8 @@ import { Consent } from "../../consent/consent.model";
 import { ConsentService } from "../../consent/consent.service";
 import { Permission } from "../../model/permission";
 import { Operation } from "../../model/tenant";
+import {Id} from"../../model/id";
+import { SimilarPatientDialog } from './similar-patient-dialog';
 
 export interface IdTypSelection {
   idType: string,
@@ -223,6 +225,17 @@ export class CreatePatientComponent implements OnInit {
     return !emptyFields && !patientForm.form.valid || emptyFields && (emptyIds || !isIdsValid);
   }
 
+  openSimilarPatientDialog(): void {
+    const dialogRef = this.tentativeDialog.open(SimilarPatientDialog, {
+      data: { patient: new Patient() }, //give current patient info
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        console.log(result);
+    });
+  }
+
   openConsentDialog() {
     const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
       width: '900px',
@@ -235,17 +248,6 @@ export class CreatePatientComponent implements OnInit {
     });
   }
 
-  openSimilarPatientDialog(): void {
-    const dialogRef = this.tentativeDialog.open(SimilarPatientDialog, {
-      data: { patients: [] },
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result)
-        console.log(result);
-
-    });
-  }
 }
 
 @Component({
@@ -258,26 +260,6 @@ export class CreatePatientTentativeDialog {
   ) {
   }
 
-  cancel(): void {
-    this.dialogRef.close();
-  }
-}
-
-
-@Component({
-  selector: 'similar-patient-dialog',
-  templateUrl: 'similar-patient-dialog.html',
-})
-export class SimilarPatientDialog {
-  patients: Array<Patient> = [];
-  resultsFound: boolean = this.patients.length > 0;
-  constructor(
-    public dialogRef: MatDialogRef<SimilarPatientDialog>
-  ) {
-  }
-  goToPatientIdCard(id: string) {
-  
-}
   cancel(): void {
     this.dialogRef.close();
   }
