@@ -81,6 +81,7 @@ import {
 import {
   MergeTentativeMatchDialogComponent
 } from "./tentative-matches/solve-tentative-match/dialog/merge-tentative-match-dialog.component";
+import { IdentityDialogComponent } from './tentative-matches/solve-tentative-match/dialog/secondary-identities-dialog.component';
 
 function initializeAppFactory(
     configService: AppConfigService,
@@ -148,6 +149,7 @@ function initializeAppFactory(
     TentativeMatchesListComponent,
     SolveTentativeMatchComponent,
     MergeTentativeMatchDialogComponent,
+    IdentityDialogComponent,
   ],
   imports: [
     SharedModule,
