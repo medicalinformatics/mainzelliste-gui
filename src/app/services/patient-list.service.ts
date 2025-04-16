@@ -234,7 +234,7 @@ export class PatientListService {
    * @param pageIndex page number
    * @param pageSize page limit
    */
-  getPatients(filters: Array<FilterItem>, pageIndex: number, pageSize: number, ignoreOrder:boolean): Observable<ReadPatientsResponse> {
+  getPatients(filters: Array<FilterItem>, pageIndex: number, pageSize: number, ignoreOrder:boolean, returnedIdTypes?: string []): Observable<ReadPatientsResponse> {
     // find current tenant id
     let tenantId = this.authorizationService.currentTenantId;
     if(tenantId === undefined || tenantId == Tenant.DEFAULT_ID)
@@ -314,22 +314,22 @@ export class PatientListService {
     )
     .pipe(
       mergeMap(t => this.getPatients(
-          [this.convertIdToFilter(t.assignedPatient), this.convertIdToFilter(t.bestMatchPatient)],
-          0, 0,
-          [...new Set([t.assignedPatient.idType, t.bestMatchPatient.idType])]
+          [this.convertIdToFilter(t.assignedPatient.id), this.convertIdToFilter(t.bestMatchPatient.id)],
+          0, 0, false,
+          [...new Set([t.assignedPatient.id.idType, t.bestMatchPatient.id.idType])]
         ).pipe(
           map(r => {
             const displayPatients = r.patients
             .filter(p => p.ids != undefined)
-            .map(patient => this.convertToDisplayPatient(patient, false, []));
+            .map(patient => this.convertToDisplayPatient(patient, false, true,[]));
             return {
               id: t.requestId,
               assignedPatient: displayPatients.find(p =>
-                p.ids.some(id => id.idType == t.assignedPatient.idType
-                  && id.idString == t.assignedPatient.idString)),
+                p.ids.some(id => id.idType == t.assignedPatient.id.idType
+                  && id.idString == t.assignedPatient.id.idString)),
               bestMatchPatient: displayPatients.find(p =>
-                p.ids.some(id => id.idType == t.bestMatchPatient.idType
-                  && id.idString == t.bestMatchPatient.idString))
+                p.ids.some(id => id.idType == t.bestMatchPatient.id.idType
+                  && id.idString == t.bestMatchPatient.id.idString))
             }
           })
         )
@@ -362,25 +362,25 @@ export class PatientListService {
         })
       ),
       mergeMap(response => this.getPatients(
-          response.tentatives.map(t => [this.convertIdToFilter(t.assignedPatient), this.convertIdToFilter(t.bestMatchPatient)])
+          response.tentatives.map(t => [this.convertIdToFilter(t.assignedPatient.id), this.convertIdToFilter(t.bestMatchPatient.id)])
           .reduce((accumulator, currentValue) => accumulator.concat(currentValue), []),
-          0, 0,
-        [...new Set(response.tentatives.map(t => [t.assignedPatient.idType, t.bestMatchPatient.idType])
+          0, 0, false,
+        [...new Set(response.tentatives.map(t => [t.assignedPatient.id.idType, t.bestMatchPatient.id.idType])
           .reduce((accumulator, currentValue) => accumulator.concat(currentValue), []))]
         ).pipe(
           map( r => r.patients
             .filter(p => p.ids != undefined)
-            .map(patient => this.convertToDisplayPatient(patient, true, []))
+            .map(patient => this.convertToDisplayPatient(patient, true, true, []))
           ),
           map(patients => {
             return {
               data: response.tentatives.map(t => {
                 const assignedPatient = patients.find(p =>
-                  p.ids.some(id => id.idType == t.assignedPatient.idType
-                    && id.idString == t.assignedPatient.idString))
+                  p.ids.some(id => id.idType == t.assignedPatient.id.idType
+                    && id.idString == t.assignedPatient.id.idString))
                 const bestMatchPatient = patients.find(p =>
-                  p.ids.some(id => id.idType == t.bestMatchPatient.idType
-                    && id.idString == t.bestMatchPatient.idString))
+                  p.ids.some(id => id.idType == t.bestMatchPatient.id.idType
+                    && id.idString == t.bestMatchPatient.id.idString))
 
                 const view: { [key: string]: string } = {};
                 view["id"] = t.requestId;
@@ -419,7 +419,7 @@ export class PatientListService {
   }
 
   private convertIdToFilter(id: Id): FilterItem {
-    return { field: id.idType, fields: [], searchCriteria: id.idString, isIdType: true }
+    return { display: "", field: id.idType, fields: [], searchCriteria: id.idString, isIdType: true }
   }
 
   convertFiltersToUrl(filters: Array<FilterItem>) : string{
