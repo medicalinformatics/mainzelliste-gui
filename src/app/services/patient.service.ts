@@ -8,6 +8,7 @@ import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessages} from "../error/error-messages";
 import {Id} from "../model/id";
 import {Operation} from "../model/tenant";
+import {FilterItem} from "../model/filter-item";
 
 @Injectable({
   providedIn: 'root'
@@ -323,10 +324,9 @@ export class PatientService {
   constructor(private patientListService: PatientListService) {
   }
 
-  getDisplayPatients(filters: Array<{ field: string, fields: string[], searchCriteria: string, isIdType: boolean }>,
-                     pageIndex: number, pageSize: number,
+  getDisplayPatients(filters: Array<FilterItem>, pageIndex: number, pageSize: number, ignoreOrder: boolean,
                      tenants?: { id: string, name: string, idTypes: string[] }[]): Observable<ReadPatientsResponse> {
-    return this.patientListService.getPatients(filters, pageIndex + 1, pageSize).pipe(
+    return this.patientListService.getPatients(filters, pageIndex + 1, pageSize, ignoreOrder).pipe(
       map((response: ReadPatientsResponse): ReadPatientsResponse => {
           let displayPatients: Patient[]
           if (response.patients.length == 0) {
@@ -334,7 +334,7 @@ export class PatientService {
           } else {
             displayPatients = response.patients
             .filter(p => p.ids != undefined)
-            .map(patient => this.patientListService.convertToDisplayPatient(patient, true, tenants));
+            .map(patient => this.patientListService.convertToDisplayPatient(patient, true, true, tenants));
           }
           // override patients
           response.patients = displayPatients;

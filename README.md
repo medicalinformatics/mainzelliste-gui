@@ -100,7 +100,6 @@ secrets:
       ],
       "debug": false,
       "betaFeatures": {
-        "consent": false,
         "copyConcatenatedId": false,
         "copyId": true,
         "configuration": true,

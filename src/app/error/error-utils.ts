@@ -7,7 +7,7 @@ export function getErrorMessageFrom(error: any, translate: TranslateService) : s
     error = error.rejection;
   }
   if(error instanceof MainzellisteError)
-    return error.errorMessage.getMessage(translate, error.messageVariable);
+    return error.errorMessage.getMessage(translate, error.messageVariables);
   else
     return error?.message || translate.instant('error.get_error_message_from_undefined_error');
 }

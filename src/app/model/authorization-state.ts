@@ -73,21 +73,11 @@ export class AuthorizationState{
     this.DELETE_CONSENT_TEMPLATE = operation.some(o => o == "D");
   }
 
-  setMiscellaneous(permissions: TenantPermission[]) {
-    //set default values
-    this.EDIT_CONFIGURATION = false;
-    this.ADD_PATIENTS = false
-    this.READ_TENTATIVES = false
-    this.READ_TENTATIVE = false
-    this.READ_IDENTITIES = false
-    permissions.forEach( p => {
-      switch (p.miscellaneous){
-        case "tt_editConfiguration": this.EDIT_CONFIGURATION = true; break;
-        case "tt_addPatients": this.ADD_PATIENTS = true; break;
-        case "tt_readTentatives": this.READ_TENTATIVES = true; break;
-        case "tt_readTentative": this.READ_TENTATIVE = true; break;
-        case "tt_readIdentities": this.READ_IDENTITIES = true; break;
-      }
-    });
+  setMiscellaneous(permissions: (MiscellaneousPermission|undefined)[]) {
+    this.ADD_PATIENTS = permissions.some( p => p == "tt_addPatients");
+    this.EDIT_CONFIGURATION = permissions.some( p => p == "tt_editConfiguration");
+    this.READ_TENTATIVE = permissions.some( p => p == "tt_readTentative");
+    this.READ_TENTATIVES = permissions.some( p => p == "tt_readTentatives");
+    this.READ_IDENTITIES = permissions.some( p => p == "tt_readIdentities");
   }
 }

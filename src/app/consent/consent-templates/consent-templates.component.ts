@@ -13,6 +13,8 @@ import {Permission} from "../../model/permission";
 import {
   ConfirmDeleteDialogComponent
 } from "../../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
+import {AuthorizationService} from "../../services/authorization.service";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-consent-templates',
@@ -31,17 +33,26 @@ export class ConsentTemplatesComponent implements OnInit {
 
   constructor(
     public consentService: ConsentService,
-    private router: Router,
-    private titleService: GlobalTitleService,
+    public authorizationService: AuthorizationService,
+    private readonly router: Router,
+    private readonly titleService: GlobalTitleService,
+    private readonly translate: TranslateService,
     public consentTemplateDialog: MatDialog,
     public confirmDeleteDialog: MatDialog
   ) {
-    this.titleService.setTitle("Einwilligungsvorlagen", false);
+    this.changeTitle();
     this.templatesMatTableData = new MatTableDataSource<ConsentTemplateFhirWrapper>([]);
   }
 
   ngOnInit(): void {
     this.loadTemplates(0, this.defaultPageSize);
+    this.translate.onLangChange.subscribe(() => {
+      this.changeTitle();
+    })
+  }
+
+  changeTitle() {
+    this.titleService.setTitle(this.translate.instant('consent_template_list.title'));
   }
 
   loadTemplates(pageIndex: number, pageSize: number) {
@@ -89,28 +100,16 @@ export class ConsentTemplatesComponent implements OnInit {
 
   protected readonly Permission = Permission;
 
-  private deleteTemplate(templateId: string) {
-    this.consentService.deleteConsentTemplate(templateId).subscribe({
-      next: r => {
-        this.loadTemplates(this.paginator.pageIndex, this.paginator.pageSize);
-      },
-      error: (error) => {
-        this.loading = false
-        throw error;
-      }
-    })
-  }
-
   public openDeleteTemplateDialog(templateId: string): void {
-    const dialogRef = this.confirmDeleteDialog.open(ConfirmDeleteDialogComponent, {
+    this.confirmDeleteDialog.open(ConfirmDeleteDialogComponent, {
       data: {
-        itemI18nName: "confirm_delete_dialog.item_consent_template"
+        itemI18nName: "confirm_delete_dialog.item_consent_template",
+        callbackObservable: this.consentService.deleteConsentTemplate(templateId)
       },
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
+    })
+    .afterClosed().subscribe(result => {
       if (result)
-        this.deleteTemplate(templateId);
+        this.loadTemplates(this.paginator.pageIndex, this.paginator.pageSize);
     });
   }
 }

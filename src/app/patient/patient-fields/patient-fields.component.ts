@@ -34,7 +34,7 @@ export class PatientFieldsComponent implements OnInit {
   localDateFormat: string;
 
   constructor(
-    fieldService: FieldService,
+    public fieldService: FieldService,
     private translate: TranslateService
     ) {
     this.configuredFields = fieldService.getFields();

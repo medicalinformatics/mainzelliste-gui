@@ -73,6 +73,10 @@ import {
 } from './bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component';
 import {EditorModule, TINYMCE_SCRIPT_SRC} from "@tinymce/tinymce-angular";
 import {
+  ExportPatientsDialogComponent
+} from './patientlist/dialogs/export-patients-dialog/export-patients-dialog.component';
+import {MatListModule} from "@angular/material/list";
+import {
   TentativeMatchesListComponent
 } from "./tentative-matches/tentative-matches-list/tentative-matches-list.component";
 import {
@@ -81,7 +85,9 @@ import {
 import {
   MergeTentativeMatchDialogComponent
 } from "./tentative-matches/solve-tentative-match/dialog/merge-tentative-match-dialog.component";
-import { IdentityDialogComponent } from './tentative-matches/solve-tentative-match/dialog/secondary-identities-dialog.component';
+import {
+  IdentityDialogComponent
+} from './tentative-matches/solve-tentative-match/dialog/secondary-identities-dialog.component';
 
 function initializeAppFactory(
     configService: AppConfigService,
@@ -145,6 +151,7 @@ function initializeAppFactory(
     BulkIdGenerationTableComponent,
     BulkIdGenerationEmptyFieldsDialog,
     BulkPseudonymizationComponent,
+    ExportPatientsDialogComponent,
     ConsentTemplatesComponent,
     TentativeMatchesListComponent,
     SolveTentativeMatchComponent,
@@ -178,7 +185,8 @@ function initializeAppFactory(
     FileSaverModule,
     NgxMatFileInputModule,
     MatStepperModule,
-    EditorModule
+    EditorModule,
+    MatListModule
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
