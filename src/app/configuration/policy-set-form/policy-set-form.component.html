@@ -2,13 +2,19 @@
 <div mat-dialog-content>
   <app-error-card [(messages)]="errorMessages"></app-error-card>
   <form [formGroup]="policySetForm">
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" [ngStyle]="{'margin-bottom': displayError(policySetForm.controls.id) ? '0.25em' : '-1.25em' }">
       <mat-label>{{'configuration.policySet.id' | translate}}</mat-label>
       <input matInput formControlName="id">
+      <mat-error *ngIf="displayError(policySetForm.controls.id)">
+        {{ getFieldErrorMessage("id", policySetForm.controls.id.errors) }}
+      </mat-error>
     </mat-form-field>
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" [ngStyle]="{'margin-bottom': displayError(policySetForm.controls.name) ? '0.25em' : '-1.25em' }">
       <mat-label>{{'configuration.policySet.name' | translate}}</mat-label>
       <input matInput formControlName="name">
+      <mat-error *ngIf="displayError(policySetForm.controls.name)">
+        {{ getFieldErrorMessage("text", policySetForm.controls.name.errors) }}
+      </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>{{'configuration.policySet.externalId' | translate}}</mat-label>

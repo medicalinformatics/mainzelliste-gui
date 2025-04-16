@@ -224,6 +224,7 @@
   "configuration.policy.policies": "Policies",
   "configuration.policy.policyCode": "Policy-Code",
   "configuration.policy.policyText": "Policy-Text",
+  "configuration.policy.close": "Schließen",
   "configuration.policy.show": "Policies anzeigen",
   "configuration.policy.create": "Policy hinzufügen",
   "configuration.policySet.add": "Policy-Set hinzufügen",

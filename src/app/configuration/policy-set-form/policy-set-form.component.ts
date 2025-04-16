@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ConsentService } from 'src/app/consent/consent.service';
 import { take } from 'rxjs/operators';
@@ -22,7 +22,7 @@ export class PolicySetFormComponent implements OnInit {
     private translate: TranslateService,
   ) {
     this.policySetForm = this.fb.group({
-      id: ['', Validators.required],
+      id: ['', [Validators.required, Validators.pattern('\\S+')]],
       name: ['', Validators.required],
       externalId: ['']
     });
@@ -66,4 +66,20 @@ export class PolicySetFormComponent implements OnInit {
       this.errorMessages.push(translatedMessage);
     });
   }
+
+  displayError(field: any) {
+    return field.invalid &&
+      (field.dirty || field.touched) &&
+      (field.errors?.['pattern'] || field.errors?.['required']);
+  }
+  
+  getFieldErrorMessage(fieldName: string, errors: ValidationErrors | null) {
+    if (errors?.['pattern']) 
+      return `${this.translate.instant('patientFields.error_value_text1')} ${this.translate.instant('configuration.policySet.' + fieldName)} ${this.translate.instant('patientFields.error_value_text2')}`;
+    else if (errors?.['required'])
+      return `${this.translate.instant('patientFields.error_mandatory_text1')} ${this.translate.instant('configuration.policySet.' + fieldName)} ${this.translate.instant('patientFields.error_mandatory_text2')}`;
+    else 
+      return 'fehler';
+  }
+  
 }
