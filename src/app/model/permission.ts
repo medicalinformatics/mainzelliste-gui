@@ -35,6 +35,9 @@ export class Permission {
   public static readonly EDIT_CONSENT_TEMPLATE = new Permission("consentTemplate", "U");
   public static readonly DELETE_CONSENT_TEMPLATE = new Permission("consentTemplate", "D");
 
+  public static readonly DELETE_CONSENT_POLICY = new Permission("policy", "D");
+  public static readonly DELETE_CONSENT_POLICYSET = new Permission("policySet", "D");
+
   public static readonly EDIT_CONFIGURATION = new Permission("miscellaneous", "U", "tt_editConfiguration");
   public static readonly ADD_PATIENTS = new Permission("miscellaneous", "C", "tt_addPatients");
 

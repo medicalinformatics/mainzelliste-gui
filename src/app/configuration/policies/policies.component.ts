@@ -8,7 +8,9 @@ import { PolicyDialogComponent } from '../policy-dialog/policy-dialog.component'
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { PolicySetFormComponent } from '../policy-set-form/policy-set-form.component';
 import { PolicyFormComponent } from '../policy-form/policy-form.component';
-import { take } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
+import { forkJoin, of } from 'rxjs';
+import { ConfirmDeleteDialogComponent } from 'src/app/shared/components/confirm-delete-dialog/confirm-delete-dialog.component';
 
 @Component({
   selector: 'app-policies',
@@ -72,7 +74,7 @@ export class PoliciesComponent implements OnInit {
   openPolicyDialog(policySetId: string) {
     this.consentService.getPolicies(policySetId).subscribe(policies => {
       this.dialog.open(PolicyDialogComponent, {
-        data: { policies: policies },
+        data: { policies: policies, policySetId: policySetId },
         maxWidth: '66vw',
         width: '66vw'
       });
@@ -105,4 +107,30 @@ export class PoliciesComponent implements OnInit {
       }
     });
   }
+  deletePolicySet(policySet: any): void {
+    const policies = policySet.policies || [];
+    const deletePolicies$ = policies.length
+      ? forkJoin(
+          policies.map((policy: any) =>
+            this.consentService.deletePolicy(policy.code, policySet.id)
+          )
+        )
+      : of(null);
+    const deletionObservable = deletePolicies$.pipe(
+      switchMap(() => this.consentService.deletePolicySet(policySet.id))
+    );
+  this.dialog.open(ConfirmDeleteDialogComponent, {
+    data: {
+      itemI18nName: "confirm_delete_dialog.item_consent_policySet",
+      callbackObservable: deletionObservable
+    }
+  })
+  .afterClosed()
+  .subscribe(result => {
+    if (result) {
+      this.dataSource.data = this.dataSource.data.filter((ps: any) => ps.id !== policySet.id);
+    }
+  });
+}
+
 }

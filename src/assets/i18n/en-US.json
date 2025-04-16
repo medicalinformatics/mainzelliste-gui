@@ -54,6 +54,8 @@
   "confirm_delete_dialog.item_patient": "the following patient",
   "confirm_delete_dialog.item_consent_template": "this consent template",
   "confirm_delete_dialog.item_consent": "this consent",
+  "confirm_delete_dialog.item_consent_policy": "this policy",
+  "confirm_delete_dialog.item_consent_policySet": "this policy set and all the policies contained in it",
 
 	"tentative_dialog_title": "Unsafe case",
 	"tentative_dialog_text1": "A similar patient was found for the data entered, but he cannot be assigned with sufficient certainty.",
@@ -219,6 +221,7 @@
   "configuration.policy.show": "Show Policies",
   "configuration.policy.create": "Add Policy",
   "configuration.policySet.add": "Add Policy Set",
+  "configuration.policySet.delete": "Delete Policy Set",
   "configuration.policy.save": "Save",
   "configuration.policy.error.400": "Invalid field 'Policy Code'. Value contains whitespace.",
   "configuration.policySet.error.400": "Invalid field 'Id'. Value contains whitespace.",

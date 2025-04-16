@@ -922,6 +922,38 @@ export class ConsentService {
     return this.postData<ConsentPolicySet>("addConsentPolicySet", {}, "consent-policies", body)
   }
 
+  deletePolicy(policyCode: string, policySetId: string): Observable<any>  {
+    return this.sessionService.createToken(
+      "deleteConsentPolicy",{}
+    )
+    .pipe(
+      mergeMap(token => this.resolveDeletePolicyToken(token.id, policyCode, policySetId))
+    );
+  }
+
+  resolveDeletePolicyToken(tokenId: string | undefined, policyCode: string, policySetId: string): Observable<any> {
+    return this.httpClient.delete(this.mainzellisteBaseUrl + "/consent-policies/" + policySetId + "/policy/" + policyCode, {
+      headers: new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('mainzellisteApiVersion', '3.2')
+      .set('Authorization', 'MainzellisteToken ' + tokenId)
+    })
+    .pipe(
+      catchError(e => {
+        // if (e instanceof HttpErrorResponse && (e.status == 404)) {
+        //   const errorMessage = this.deletePatientErrorMessages.find(msg => msg.match(e))
+        //   // find error message arguments
+        //   if( errorMessage == ErrorMessages.DELETE_PATIENT_NOT_FOUND) {
+        //     return throwError( () => new MainzellisteError(errorMessage));
+        //   } else {
+        //     return throwError( () => errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
+        //   }
+        // }
+        return throwError( () => e);
+      })
+    );
+  }
+
   deletePolicySet(id: string): Observable<any>  {
     return this.sessionService.createToken(
       "deleteConsentPolicySet",{}

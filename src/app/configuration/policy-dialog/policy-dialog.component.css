@@ -58,6 +58,11 @@
 .mat-dialog-content {
     overflow: auto;
   }
+
+  .mat-column-actions {
+    width: 10%;
+    text-align: right;
+  }
   
   table {
     width: 100%;

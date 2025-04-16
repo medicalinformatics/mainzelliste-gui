@@ -56,6 +56,8 @@
   "confirm_delete_dialog.item_patient": "den folgenden Patient",
   "confirm_delete_dialog.item_consent_template": "diese Einwilligungsvorlage",
   "confirm_delete_dialog.item_consent": "diese Einwilligungserklärung",
+  "confirm_delete_dialog.item_consent_policy": "diese Policy",
+  "confirm_delete_dialog.item_consent_policySet": "dieses Policy-Set und alle zugehörigen Policies",
 
   "tentative_dialog_title": "Unsicherer Fall",
 	"tentative_dialog_text1": "Zu den eingegeben Daten wurde ein ähnlicher Patient gefunden, der aber nicht mit hinreichender Sicherheit zugeordnet werden kann.",
@@ -228,6 +230,7 @@
   "configuration.policy.show": "Policies anzeigen",
   "configuration.policy.create": "Policy hinzufügen",
   "configuration.policySet.add": "Policy-Set hinzufügen",
+  "configuration.policySet.delete": "Policy-Set löschen",
   "configuration.policy.error.400": "Feld 'Policy-Code' fehlerhaft. Inhalt enthält Leerzeichen.",
   "configuration.policySet.error.400": "Feld 'Id' fehlerhaft. Inhalt enthält Leerzeichen.",
 
