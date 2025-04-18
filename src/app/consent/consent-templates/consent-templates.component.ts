@@ -15,6 +15,8 @@ import {
 } from "../../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
 import {AuthorizationService} from "../../services/authorization.service";
 import {TranslateService} from "@ngx-translate/core";
+import {ConsentTemplate} from "../consent-template.model";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-consent-templates',
@@ -88,7 +90,11 @@ export class ConsentTemplatesComponent implements OnInit {
   openConsentTemplateDialog() {
     const dialogRef = this.consentTemplateDialog.open(ConsentTemplateDialogComponent, {
       width: '1100px',
-      maxHeight: '95vw'
+      maxHeight: '95vw',
+      data: {
+        template: ConsentTemplate.createEmpty(),
+        readonly: false
+      }
     });
 
     dialogRef.afterClosed().subscribe(consentTemplate => {
@@ -111,6 +117,23 @@ export class ConsentTemplatesComponent implements OnInit {
       if (result)
         this.loadTemplates(this.paginator.pageIndex, this.paginator.pageSize);
     });
+  }
+
+  openViewDialog(id: string) {
+    this.consentService.getConsentTemplate(id).pipe(
+      map(q => this.consentService.deserializeConsentTemplate(q))
+    )
+    .subscribe(
+      c => this.consentTemplateDialog.open(ConsentTemplateDialogComponent, {
+        width: '1100px',
+        maxHeight: '95vw',
+        disableClose: true,
+        data: {
+          template: c,
+          readonly: true
+        }
+      })
+    );
   }
 }
 

@@ -3,7 +3,7 @@
      [ngStyle]="{'width': '100%', 'display': 'flex', 'flex-direction': 'column', 'row-gap': '10px',
      'margin-bottom': templateModules.length > 0 ? '10px' : '0px'}">
   <mat-card *ngFor="let module of templateModules; index as i" cdkDrag
-            [cdkDragDisabled]="this.editedModule != undefined">
+            [cdkDragDisabled]="readonly || this.editedModule != undefined">
     <mat-card-title-group class="module-header">
       <mat-card-title></mat-card-title>
       <mat-card-subtitle
@@ -13,12 +13,12 @@
         {{ 'consent_template.module_type_' + (this.module.type == 'display' ? 'text' : 'question')
         | translate }}</mat-card-subtitle>
       <div></div>
-      <button mat-icon-button class="edit-module-button" color="primary"
+      <button *ngIf="!readonly" mat-icon-button class="edit-module-button" color="primary"
               style="float: right; margin-left: auto; margin-right: 10px;"
               (click)="this.editModule(module)" [disabled]="this.editedModule != undefined">
         <mat-icon [matTooltip]="'button_edit' | translate">edit</mat-icon>
       </button>
-      <button mat-icon-button class="edit-module-button" color="primary" style="float: right"
+      <button *ngIf="!readonly" mat-icon-button class="edit-module-button" color="primary" style="float: right"
               (click)="this.deleteModule(module)">
         <mat-icon [matTooltip]="'button_delete' | translate">delete</mat-icon>
       </button>

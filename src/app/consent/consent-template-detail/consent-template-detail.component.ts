@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {ControlContainer, NgForm, NgModel, ValidationErrors} from "@angular/forms";
 import {
   ChoiceItem,
@@ -13,16 +13,19 @@ import {TranslateService} from "@ngx-translate/core";
 import {ConsentTemplateValidityPeriodDialog} from "./consent-template-validity-period-dialog";
 import {MatRadioChange} from "@angular/material/radio";
 import {MatSlideToggleChange} from "@angular/material/slide-toggle";
+import {ConsentPolicySet} from "../../model/consent-policy-set";
 
 @Component({
   selector: 'app-consent-template-detail',
   templateUrl: './consent-template-detail.component.html',
   styleUrls: ['./consent-template-detail.component.css'],
-  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
+  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ],
+  encapsulation: ViewEncapsulation.None
 })
 export class ConsentTemplateDetailComponent implements OnInit {
 
   @Input() template!: ConsentTemplate;
+  @Input() readonly!: boolean;
 
   public miiFhirBroadConsentVersions = [
     {name: "1.6d", code: "urn:oid:2.16.840.1.113883.3.1937.777.24.2.1790"},
@@ -56,6 +59,19 @@ export class ConsentTemplateDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.templateValidityPeriod = this.getValidityPeriodText(this.template.validity);
+    if(this.readonly){
+      // reload policies and policy test display test
+      this.consentService.getPolicySets().subscribe( sets => {
+        this.template.items.filter(i => i instanceof ChoiceItem)
+        .map( item => item as ChoiceItem)
+        .forEach( item => {
+          item.policies?.forEach( policyView => {
+            policyView.policySet = this.findPolicySet(policyView.policySet, sets) ?? policyView.policySet;
+          });
+        })
+      });
+    }
   }
 
   //
@@ -117,5 +133,14 @@ export class ConsentTemplateDetailComponent implements OnInit {
       this.template.consentModel = true;
       this.changeModulesAnswer("permit")
     }
+  }
+
+  private findPolicySet(policySet: ConsentPolicySet, sets: ConsentPolicySet[]) {
+    return sets.find( set => policySet.id.length > 0 && set.id == policySet.id ||
+    policySet.externalId.length > 0 && set.externalId == policySet.externalId);
+  }
+
+  public getFieldClass(className: string){
+    return className + (this.readonly ? " templateInputFieldDisabled" : "");
   }
 }
