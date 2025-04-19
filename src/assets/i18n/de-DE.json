@@ -5,6 +5,8 @@
   "button_view_consent": "Einwilligung ansehen",
 	"button_delete_consent": "Einwilligung löschen",
   "button_open_consent_history": "Einwilligung-Historie ansehen",
+  "button_view_consent_template": "Einwilligungsvorlage ansehen",
+  "button_delete_consent_template": "Einwilligungsvorlage löschen",
   "button_add_consent_scan": "PDF-Datei hinzufügen",
   "button_generate_id": "ID generieren",
 	"button_delete": "Löschen",
@@ -88,7 +90,8 @@
   "consent_status.inactive": "Inaktiv",
   "consent_status.entered-in-error": "Fehlerhaft",
 
-  "consent_template_dialog.title" : "Einwilligungsvorlage erstellen",
+  "consent_template_add_dialog.title" : "Einwilligungsvorlage erstellen",
+  "consent_template_view_dialog.title" : "Einwilligungsvorlage",
 
   "consent_template_list.title" : "Einwilligungsvorlagen",
   "consent_template_list.button_new_template": "Neue Vorlage",
@@ -110,7 +113,7 @@
   "consent_template.validity_month": "Monaten",
   "consent_template.validity_day": "Tage",
   "consent_template.consent_model": "Zustimmungsverfahren",
-  "consent_template.add_module": "Module hinzufügen",
+  "consent_template.modules": "Modules",
   "consent_template.module_type": "Moduletyp",
   "consent_template.module_type_question": "Frage",
   "consent_template.module_type_text": "Text",
@@ -230,7 +233,6 @@
   "configuration.policy.error.400": "Feld 'Policy-Code' fehlerhaft. Inhalt enthält Leerzeichen.",
   "configuration.policySet.error.400": "Feld 'Id' fehlerhaft. Inhalt enthält Leerzeichen.",
 
-  
 	"info.title": "Informationen und Hinweise zur Mainzelliste",
 	"info.notice_add_patient": "Hinweis für die Erstellung eines Patienten",
 	"info.add_patient_text1": "Diese Anwendung gibt für die von Ihnen im Folgenden einzugebenden Stammdaten einen Personenidentifikator (PID) zurück. Dabei wird der bekannte Patientenbestand durchsucht; bei einem Treffer wird der bestehende PID zurueckgegeben.",

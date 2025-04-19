@@ -1,5 +1,4 @@
 import {ConsentPolicySet} from "../model/consent-policy-set";
-import {ConsentPolicy} from "../model/consent-policy";
 
 export class ConsentTemplate {
   name?: string;
@@ -14,6 +13,16 @@ export class ConsentTemplate {
   consentModel: boolean = true;
   items: Item[] = [];
   isMiiFhirConsentConform?: boolean = false;
+
+  static createEmpty():ConsentTemplate {
+    return {
+      items: [],
+      validity: {day: 0, month: 0, year: 0},
+      status: "draft",
+      policy: "urn:oid:2.16.840.1.113883.3.1937.777.24.2.1790",
+      consentModel: true
+    }
+  }
 }
 
 export interface Item {
@@ -31,9 +40,11 @@ export class DisplayItem implements Item {
   constructor(
       id: number,
       type: ItemType,
+      text?: string
   ) {
     this.id = id;
     this.type = type;
+    this.text = text ?? "";
   }
 
   clone(): DisplayItem {
@@ -53,11 +64,15 @@ export class ChoiceItem implements Item {
   constructor(
       id: number,
       type: ItemType,
-      answer: ChoiceItemAnswer
+      answer: ChoiceItemAnswer,
+      text?: string,
+      policies?: PolicyView[]
   ) {
     this.id = id;
     this.type = type;
     this.answer = answer;
+    this.text = text ?? "";
+    this.policies =  policies ?? [];
   }
 
   clone(): ChoiceItem {
