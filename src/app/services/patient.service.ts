@@ -14,6 +14,7 @@ import { SessionService } from './session.service';
 import { PatientList } from '../model/patientlist';
 import { AppConfigService } from '../app-config.service';
 import { Identity} from '../model/identity'
+import { FilterItem } from '../model/filter-item';
 
 @Injectable({
   providedIn: 'root'
@@ -344,12 +345,8 @@ export class PatientService {
           displayPatients = this.patientListService.isDebugModeEnabled() ? this.mockUpData : [];
         } else {
           displayPatients = response.patients
-            .filter(p => p.ids != undefined)
-            .map(patient => this.patientListService.convertToDisplayPatient(patient, true, true, tenants));
-          }
-          // override patients
-          response.patients = displayPatients;
-          return response;
+          .filter(p => p.ids != undefined)
+          .map(patient => this.patientListService.convertToDisplayPatient(patient, true, true, tenants));
         }
         // override patients
         response.patients = displayPatients;

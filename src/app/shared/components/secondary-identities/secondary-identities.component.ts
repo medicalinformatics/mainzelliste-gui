@@ -67,7 +67,7 @@ export class SecondaryIdentitiesComponent implements OnInit {
       next: (response) => {
         this.secondaryIdentities = response.data;
         this.secondaryIdentities = this.secondaryIdentities.map(patient =>
-          this.patientListService.convertToDisplayPatient(patient, false, this.authorizationService.getTenants())
+          this.patientListService.convertToDisplayPatient(patient, false, false, this.authorizationService.getTenants())
         );
       },
 

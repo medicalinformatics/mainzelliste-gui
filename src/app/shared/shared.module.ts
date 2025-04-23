@@ -64,7 +64,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
     MatProgressSpinnerModule
   ],
-  declarations: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent, ConfirmDeleteDialogComponent, MessageCardComponent, SecondaryIdentitiesComponent
+  declarations: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent, ConfirmDeleteDialogComponent, MessageCardComponent, SecondaryIdentitiesComponent],
   exports: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent,SecondaryIdentitiesComponent,
     CommonModule,
     FormsModule,

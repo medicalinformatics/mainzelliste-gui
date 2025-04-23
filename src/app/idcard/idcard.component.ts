@@ -33,6 +33,9 @@ import {
 } from "../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
 import {Tenant} from "../model/tenant";
 import {ComponentType} from "@angular/cdk/portal";
+import { Observable, of, throwError } from 'rxjs';
+import { Field, SemanticType } from '../model/field';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-idcard',
