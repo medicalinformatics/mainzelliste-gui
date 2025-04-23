@@ -714,10 +714,10 @@ export class PatientListService {
     let displayPatient = new Patient();
     //ids
     displayPatient.ids = patient.ids;
+    
     // tenants
     if((tenants?.length || 0) > 1)
-      displayPatient.tenants = tenants?.filter(t => t.idTypes.some( t => {
-      displayPatient.ids.some( id => id.idType == t)}))
+      displayPatient.tenants = tenants?.filter(t => t.idTypes.some( t => {displayPatient.ids.some( id => id.idType == t)}))
       .map(t => t.name);
 
     // fields

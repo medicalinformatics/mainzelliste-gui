@@ -20,16 +20,11 @@
         [fields]="patient.fields"></app-patient-fields>
     </mat-card>
 
-    <mat-card id="pseudonyme"
-      style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; flex: 1">
-      <mat-card-title style="margin: 0 0 0 2.5%; align-self: start">{{'idcard.title_pseudonyms' |
-        translate}}</mat-card-title>
-      <app-patient-pseudonyms style="overflow: auto; height: 100%; margin: 0 0 0 2.5%;" [readOnly]=true
-        [ids]="patient.ids" [permittedOperation]="'R'"
-        (generateId)="this.generateId($event.idType, $event.idString, $event.newIdType)"></app-patient-pseudonyms>
+    <mat-card id="pseudonyme" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; flex: 1">
+      <mat-card-title style="margin: 0 0 0 2.5%; align-self: start">{{'idcard.title_pseudonyms' | translate}}</mat-card-title>
+      <app-view-pseudonyms [ids]="patient.ids"></app-view-pseudonyms>
     </mat-card>
   </div>
-
   <section style="display: flex; flex: 1 1 1%; margin-left:2%; flex-flow: column;">
     <!--      <button mat-fab style="background-color:#053E6A; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">-->
     <!--        <mat-icon matTooltip="Drucken">print</mat-icon>-->
@@ -38,37 +33,35 @@
     <!--      <button mat-fab style="background-color:#053E6A; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">-->
     <!--        <mat-icon matTooltip="ID hinzufügen">subtitles</mat-icon>-->
     <!--      </button>-->
-
-    <button mat-fab *appHasAnyPermissions="[Permission.EDIT_PATIENT]" [routerLink]="['/edit-patient', idType, idString]"
-      [state]="{patient: patient}" style="background-color:#ffd60a; color:white; margin-bottom: 15px;"
-      aria-label="Example icon button with a delete icon">
-      <mat-icon matTooltip="{{'button_edit' | translate}}">edit</mat-icon>
-    </button>
-    <button mat-fab *appHasPermission="Permission.DELETE_PATIENT" (click)="openDeletePatientDialog()"
-      style="background-color:#da1e37; color:white; margin-bottom: 15px"
-      aria-label="Example icon button with a delete icon">
-      <mat-icon matTooltip="{{'button_delete' | translate}}">delete</mat-icon>
-    </button>
-    <button *appHasPermission="Permission.GENERATE_IDS" [disabled]="this.hasAllIds()" mat-fab
-      (click)="openNewIdDialog()" [ngClass]="this.hasAllIds() ? '': 'idcard-button'" style="margin-bottom: 15px">
-      <mat-icon matTooltip="{{'button_generate_id' | translate}}">add_box</mat-icon>
-    </button>
-    <ng-container *ngIf="this.consentService.isServiceEnabled()">
-      <button mat-fab *appHasPermission="Permission.CREATE_CONSENT" [disabled]="this.hasAllTemplateIds()"
-        (click)="openAddNewConsentDialog()" [ngClass]="this.hasAllTemplateIds() ? '': 'idcard-button'">
-        <mat-icon matTooltip="{{'button_add_consent' | translate}}">assignment_turned_in</mat-icon>
+    <button mat-fab *appHasAnyPermissions="[Permission.EDIT_PATIENT]"
+    [routerLink]="['/edit-patient', idType, idString]" [state]="{patient: patient}"
+    style="background-color:#ffd60a; color:white; margin-bottom: 15px;"
+    aria-label="Example icon button with a delete icon">
+    <mat-icon matTooltip="{{'button_edit' | translate}}">edit</mat-icon>
+  </button>
+  <button mat-fab *appHasPermission="Permission.DELETE_PATIENT" (click)="openDeletePatientDialog()"
+    style="background-color:#da1e37; color:white; margin-bottom: 15px"
+    aria-label="Example icon button with a delete icon">
+    <mat-icon matTooltip="{{'button_delete' | translate}}">delete</mat-icon>
+  </button>
+  <button *appHasPermission="Permission.GENERATE_IDS" [disabled]="this.hasAllIds()" mat-fab
+    (click)="openNewIdDialog()" [ngClass]="this.hasAllIds() ? '': 'idcard-button'" style="margin-bottom: 15px">
+    <mat-icon matTooltip="{{'button_generate_id' | translate}}">add_box</mat-icon>
+  </button>
+  <ng-container *ngIf="this.consentService.isServiceEnabled()">
+    <button mat-fab *appHasPermission="Permission.CREATE_CONSENT" [disabled]="this.hasAllTemplateIds()"
+      (click)="openAddNewConsentDialog()" [ngClass]="this.hasAllTemplateIds() ? '': 'idcard-button'">
+      <mat-icon matTooltip="{{'button_add_consent' | translate}}">assignment_turned_in</mat-icon>
       </button>
     </ng-container>
   </section>
 
   <ng-container *ngIf="this.showDomainsCard()">
-    <mat-card id="domains"
-      style="box-sizing: border-box; display: flex; flex-direction: column; margin: 0 20px 14px 0;">
-      <mat-card-title style="margin: 0 1.25%; align-self: start;">{{'patientlist.headers_tenants' |
-        translate}}</mat-card-title>
+    <mat-card id="domains" style="box-sizing: border-box; display: flex; flex-direction: column; margin: 0 20px 14px 0;">
+      <mat-card-title style="margin: 0 1.25%; align-self: start;">{{'patientlist.headers_tenants' | translate}}</mat-card-title>
       <mat-card-content style="display: flex; flex-direction: column; height: 100%">
         <mat-chip-list style="margin: 0 0 7px 1.4%;">
-          <mat-chip *ngFor="let domainName of patient.tenants">{{domainName}}</mat-chip>
+          <mat-chip *ngFor="let domainName of patient.tenants"> {{domainName}}</mat-chip>
         </mat-chip-list>
       </mat-card-content>
     </mat-card>
@@ -82,8 +75,7 @@
   <ng-container *ngIf="this.consentService.isServiceEnabled()">
     <mat-card *appHasPermission="Permission.READ_CONSENT" id="consents"
       style="box-sizing: border-box; display: flex; flex-direction: column;">
-      <mat-card-title style="margin: 0 1.25%; align-self: start;">{{'idcard.consent_title' |
-        translate}}</mat-card-title>
+      <mat-card-title style="margin: 0 1.25%; align-self: start;">{{'idcard.consent_title' | translate}}</mat-card-title>
       <mat-card-content style="display: flex; flex-direction: column; height: 100%">
         <table #consentTable mat-table [dataSource]="consentsView.consentRows" class="mat-elevation-z8">
           <ng-container matColumnDef="date">
