@@ -2,12 +2,17 @@ import {Injectable} from '@angular/core';
 import {Patient} from "../model/patient";
 import {PatientListService, ReadPatientsResponse} from "./patient-list.service";
 import {Field} from "../model/field";
-import {map} from "rxjs/operators";
-import {Observable} from "rxjs";
+import {catchError, map, mergeMap} from "rxjs/operators";
+import {Observable, of, throwError} from "rxjs";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessages} from "../error/error-messages";
 import {Id} from "../model/id";
 import {Operation} from "../model/tenant";
+import { TokenData } from '../model/token-data';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { SessionService } from './session.service';
+import { PatientList } from '../model/patientlist';
+import { AppConfigService } from '../app-config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -319,8 +324,14 @@ export class PatientService {
       PLZ: '36452'
     }, [new Id("Pseudonym", "KMNH76FC")])
   ];
+  private patientList: PatientList;
 
-  constructor(private patientListService: PatientListService) {
+  constructor(
+    private patientListService: PatientListService,
+    private httpClient: HttpClient,
+    private configService: AppConfigService,
+    private sessionService: SessionService) {
+      this.patientList = this.configService.data[0];
   }
 
   getDisplayPatients(filters: Array<{ field: string, fields: string[], searchCriteria: string, isIdType: boolean }>,
@@ -362,4 +373,67 @@ export class PatientService {
   getConfigureIdTypes(): Array<string> {
     return this.patientListService.getAllIdTypes("R");
   }
+
+  getSecondaryIdentities(idType: string, idString:string){
+     const data: TokenData = {
+          "patientId": {
+            "idType": idType,
+            "idString": idString
+          }
+        }
+        console.log('getSecondaryIdentities called');
+        return this.sessionService.createToken("readIdentities", data).pipe(
+          mergeMap(token => {
+            console.log('Token received:', token);
+            return this.readSecondaryIdentities(token.id);
+          }),
+          catchError((error) => {
+            console.error('Error occurred in getSecondaryIdentities:', error);
+            if (error.status >= 400 && error.status < 500) {
+              return throwError(() => new Error("failed to fetch identities"));
+            } else {
+              return throwError(() => new Error("failed to fetch identities"));
+            }
+          })
+        );
+      }
+    
+      readSecondaryIdentities(tokenId: string | undefined) {
+        return this.httpClient.get(this.patientList.url + "/patients/identities", {
+          params: new HttpParams().set('tokenId', tokenId ?? ''),
+          observe: 'response'
+        }).pipe(
+          mergeMap(response => {
+            if (response.status == 200) {
+              return this.getPatients(response.body);
+            } else {
+              return throwError(() => new Error("failed to fetch identities"));
+            }
+          }),
+          catchError((error) => {
+            console.error('Error occurred in readSecondaryIdentities:', error);
+            if (error.status >= 400 && error.status < 500) {
+              return throwError(() => new Error("failed to fetch identities"));
+            } else {
+              return throwError(() => new Error("failed to fetch identities"));
+            }
+          })
+        );
+      }
+    
+      getPatients(response: any) {
+        type Identity = {
+          fields: { [key: string]: string },
+          id: Id,
+          main: boolean
+        };
+        let identities: Identity[] = [];
+        let patients: Patient[] = [];
+        identities = response as Identity[] ?? [];
+        patients = identities.filter(i => i.main == false).map(i => new Patient(i.fields, [i.id]));
+        return of({ data: patients });
+      }
+    
 }
+
+

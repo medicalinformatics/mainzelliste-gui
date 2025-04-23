@@ -31,15 +31,11 @@ import {AngularCsv} from 'angular-csv-ext/dist/Angular-csv';
 import {
   ConfirmDeleteDialogComponent
 } from "../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
-import { HttpErrorResponse, HttpParams } from "@angular/common/http";
-import { of, throwError } from "rxjs";
+import { HttpErrorResponse } from "@angular/common/http";
+import { throwError } from "rxjs";
 import { HttpClient } from '@angular/common/http';
 import { SemanticType, Field } from '../model/field';
-import { PageEvent } from '@angular/material/paginator';
-import { PatientList } from '../model/patientlist';
 import { SessionService } from '../services/session.service';
-import { TokenData } from '../model/token-data';
-
 
 @Component({
   selector: 'app-idcard',
@@ -48,7 +44,6 @@ import { TokenData } from '../model/token-data';
 })
 
 export class IdcardComponent implements OnInit {
-  private patientList: PatientList;
 
   columns: string[] = [];
   allColumnNames: string[] = [];
@@ -95,11 +90,8 @@ export class IdcardComponent implements OnInit {
     public consentInactivatedDialog: MatDialog,
     public newIdDialog: MatDialog,
     public consentService: ConsentService,
-    public configService: AppConfigService,
-    private httpClient: HttpClient,
-    private sessionService: SessionService
+    public configService: AppConfigService
   ) {
-    this.patientList = this.configService.data[0];
     this.activatedRoute.params.subscribe((params) => {
       if (params["idType"] !== undefined)
         this.idType = params["idType"]
@@ -135,83 +127,8 @@ export class IdcardComponent implements OnInit {
       this.loadConsents();
 
     this.displayedColumns = [...this.fields.map(field => field.name)];
-    this.getSecondaryIdentities().pipe(
-      catchError(e => {
-        this.secondaryIdentities = [];
-      throw e;
-      } )
-    ).subscribe({
-      next: (response) => {
-        this.secondaryIdentities = response.data;
-        this.secondaryIdentities = this.secondaryIdentities.map(patient => 
-          this.patientListService.convertToDisplayPatient(patient, false, this.authorizationService.getTenants())
-        );
-        console.log(this.secondaryIdentities);        
-      },
-     
-    })
   }
-  getSecondaryIdentities(){
-    const data: TokenData = {
-      "patientId": {
-        "idType": this.idType,
-        "idString": this.idString
-      }
-    }
-    console.log('getSecondaryIdentities called');
-    return this.sessionService.createToken("readIdentities", data).pipe(
-      mergeMap(token => {
-        console.log('Token received:', token);
-        return this.readSecondaryIdentities(token.id);
-      }),
-      catchError((error) => {
-        console.error('Error occurred in getSecondaryIdentities:', error);
-        if (error.status >= 400 && error.status < 500) {
-          return throwError(() => new Error("failed to fetch identities"));
-        } else {
-          return throwError(() => new Error("failed to fetch identities"));
-        }
-      })
-    );
-  }
-
-  readSecondaryIdentities(tokenId: string | undefined){
-    return this.httpClient.get(this.patientList.url + "/patients/identities", {
-      params: new HttpParams().set('tokenId', tokenId ?? ''),
-      observe: 'response'
-    }).pipe(
-      mergeMap(response => {
-        if (response.status == 200) {
-          return this.getPatients(response.body);
-        } else {
-          return throwError(() => new Error("failed to fetch identities"));
-        }
-      }),
-      catchError((error) => {
-        console.error('Error occurred in readSecondaryIdentities:', error);
-        if (error.status >= 400 && error.status < 500) {
-          return throwError(() => new Error("failed to fetch identities"));
-        } else {
-          return throwError(() => new Error("failed to fetch identities"));
-        }
-      })
-    );
-  }
-
-  getPatients(response: any){
-    type Identity = {
-      fields: { [key: string]: string },
-      id: Id,
-      main: boolean
-    };
-    let identities: Identity[] = [];
-    let patients: Patient[] = [];
-    console.log(response);
-    identities = response as Identity[] ?? [];
-    patients = identities.filter(i => i.main == false).map(i => new Patient(i.fields,[i.id]));
-    return of({data: patients});
-  }
-
+  
   showIdentitiesCard() {
     return this.secondaryIdentities.length > 0;
   }
@@ -509,22 +426,5 @@ export class IdcardComponent implements OnInit {
 
   showDomainsCard():boolean{
     return this.configService.showDomainsInIDCard() && this.authorizationService.getTenants().length > 1;
-  }
-  onPageChange(event: PageEvent) {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-  }
-
-  onRowClick(row: any) {
-    this.clickedRow = row;
-  }
-
-  isDifferent(element: any, field: string): boolean {
-    if (!this.clickedRow) return false;
-    return element.fields[field] !== this.clickedRow.fields[field];
-  }
-
-  isClickedRow(row: any): boolean {
-    return this.clickedRow === row;
   }
 }
