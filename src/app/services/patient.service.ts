@@ -13,6 +13,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { SessionService } from './session.service';
 import { PatientList } from '../model/patientlist';
 import { AppConfigService } from '../app-config.service';
+import { Identity} from '../model/identity'
 
 @Injectable({
   providedIn: 'root'
@@ -419,11 +420,6 @@ export class PatientService {
   }
 
   getPatients(response: any) {
-    type Identity = {
-      fields: { [key: string]: string },
-      id: Id,
-      main: boolean
-    };
     let identities: Identity[] = [];
     let patients: Patient[] = [];
     identities = response as Identity[] ?? [];
