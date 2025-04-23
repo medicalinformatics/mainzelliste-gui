@@ -29,7 +29,7 @@ export class ConsentTemplateDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<ConsentTemplateDetailComponent>,
     public consentService: ConsentService,
-    private translate: TranslateService
+    private readonly translate: TranslateService
   ) {
   }
 

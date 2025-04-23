@@ -9,7 +9,12 @@ div {
   font-weight: normal;
 }
 
-span {
+.domain-name {
+  color: #494949;
+  font-size: 16px;
+}
+
+.menu-item {
   color: #494949;
   font-family: Tahoma;
   font-size: 16px;

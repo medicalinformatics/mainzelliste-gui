@@ -11,6 +11,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {MergeTentativeMatchDialogComponent} from "./dialog/merge-tentative-match-dialog.component";
 import {throwError} from "rxjs";
 import { Field } from 'src/app/model/field';
+import { IdentityDialogComponent } from './dialog/secondary-identities-dialog.component';
 
 @Component({
   selector: 'app-solve-tentative-match-patient',
@@ -38,6 +39,7 @@ export class SolveTentativeMatchComponent implements OnInit {
     private readonly titleService: GlobalTitleService,
     private readonly patientListService: PatientListService,
     public mergeTentativeConfirmDialog: MatDialog,
+    public identityDialog: MatDialog,
     public translate: TranslateService,
 
   ) {
@@ -103,6 +105,10 @@ export class SolveTentativeMatchComponent implements OnInit {
     this.mainPatient = index;
   }
 
+  getIdString(patient: Patient | undefined): string {
+    return patient?.ids?.[0]?.idString ?? '';
+  }
+
   private openMergeTentativeDialog() {
     const dialogRef = this.mergeTentativeConfirmDialog.open(MergeTentativeMatchDialogComponent, {
       data: {},
@@ -113,4 +119,16 @@ export class SolveTentativeMatchComponent implements OnInit {
         this.mergePatients(true);
     });
   }
-}
+
+  openIdentityDialog(idString : String){
+    const dialogRef = this.identityDialog.open(IdentityDialogComponent, {
+      width: '400px',
+      data: { idString: idString }
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Dialog closed', result);
+    });
+  }
+  }
+

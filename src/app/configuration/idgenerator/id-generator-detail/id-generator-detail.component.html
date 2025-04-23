@@ -1,6 +1,6 @@
 <div ngModelGroup="idGeneratorDetail">
   <!-- idGenerator-->
-  <mat-form-field class="idGeneratorInputField" [ngStyle]="{'margin-bottom': displayError(idType) ? '0.25em' : '-1.25em' }">
+  <mat-form-field class="idGeneratorInputField" [ngStyle]="{'margin-bottom': '-1.25em' }">
     <mat-label>{{'configuration.idGenerator.idGenerator' | translate}}</mat-label>
     <mat-select [(ngModel)]="this.dataModel.idGenerator"
                 (selectionChange)="this.idGeneratorSelected($event.value)"
@@ -11,13 +11,13 @@
     </mat-select>
   </mat-form-field>
 
-  <!-- Name-->
+  <!-- ID Type -->
   <mat-form-field class="idGeneratorInputField" [ngStyle]="{'margin-bottom': displayError(idType) ? '0.25em' : '-1.25em' }">
     <mat-label>{{'configuration.idGenerator.idType' | translate}}</mat-label>
     <input style="width: 45%;" matInput placeholder=""
            [(ngModel)]="this.dataModel.idType" [name]="'idType'" #idType="ngModel" required="true">
     <mat-error *ngIf="displayError(idType)">
-      {{ getFieldErrorMessage("title", idType.errors) }}
+      {{ getFieldErrorMessage("idType", idType.errors) }}
     </mat-error>
   </mat-form-field>
 
@@ -41,32 +41,32 @@
         <mat-label>K1</mat-label>
         <input type="number" min="1" matInput placeholder=""
                [(ngModel)]="$any(this.dataModel.parameters).k1" [name]="'k1'" #k1="ngModel" required="true">
-        <mat-error *ngIf="displayError(idType)">
-          {{ getFieldErrorMessage("k1", idType.errors) }}
+        <mat-error *ngIf="displayError(k1)">
+          {{ getFieldErrorMessage("k1", k1.errors) }}
         </mat-error>
       </mat-form-field>
       <mat-form-field class="idGeneratorInputField" [ngStyle]="{'margin-bottom': displayError(k2) ? '0.25em' : '-1.25em' }">
         <mat-label>k2</mat-label>
         <input type="number" min="1" matInput placeholder=""
                [(ngModel)]="$any(this.dataModel.parameters).k2" [name]="'k2'" #k2="ngModel" required="true">
-        <mat-error *ngIf="displayError(idType)">
-          {{ getFieldErrorMessage("k2", idType.errors) }}
+        <mat-error *ngIf="displayError(k2)">
+          {{ getFieldErrorMessage("k2", k2.errors) }}
         </mat-error>
       </mat-form-field>
       <mat-form-field class="idGeneratorInputField" [ngStyle]="{'margin-bottom': displayError(k3) ? '0.25em' : '-1.25em' }">
         <mat-label>k3</mat-label>
         <input type="number" min="1" matInput placeholder=""
                [(ngModel)]="$any(this.dataModel.parameters).k3" [name]="'k3'" #k3="ngModel" required="true">
-        <mat-error *ngIf="displayError(idType)">
-          {{ getFieldErrorMessage("k3", idType.errors) }}
+        <mat-error *ngIf="displayError(k3)">
+          {{ getFieldErrorMessage("k3", k2.errors) }}
         </mat-error>
       </mat-form-field>
       <mat-form-field class="idGeneratorInputField">
         <mat-label>rndwidth</mat-label>
         <input type="number" min="0" matInput placeholder=""
                [(ngModel)]="$any(this.dataModel.parameters).rndwidth" [name]="'rndwidth'" #rndwidth="ngModel" required="true">
-        <mat-error *ngIf="displayError(idType)">
-          {{ getFieldErrorMessage("rndwidth", idType.errors) }}
+        <mat-error *ngIf="displayError(rndwidth)">
+          {{ getFieldErrorMessage("rndwidth", rndwidth.errors) }}
         </mat-error>
       </mat-form-field>
     </ng-container>

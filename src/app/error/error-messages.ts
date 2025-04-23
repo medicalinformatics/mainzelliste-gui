@@ -14,6 +14,18 @@ export class ErrorMessage {
     return this.message instanceof RegExp ? errorMessage.match(this.message) : this.message == errorMessage;
   }
 
+  public matchFhirMessage(errorMessage: string): boolean {
+    return this.message instanceof RegExp ?
+      (errorMessage.match(this.message)?.length ?? []) > 0 : this.message == errorMessage;
+  }
+
+  public findVariablesFromFhirMessage(errorMessage: string): string[] {
+    let result: string[] = errorMessage.match(this.message) ?? [];
+    if(result.length > 1)
+      result.shift();
+    return this.message instanceof RegExp? result : [];
+  }
+
   public findVariables(errorResponse: HttpErrorResponse): string[] {
     let errorMessage = !errorResponse.error.message ? errorResponse.error : errorResponse.error.message;
     let result: string[] = errorMessage.match(this.message);
@@ -22,11 +34,14 @@ export class ErrorMessage {
     return this.message instanceof RegExp? result : [];
   }
 
-  public getMessage(translate:TranslateService, messageVariable?:string) : string {
-    if(messageVariable != undefined && messageVariable.length > 0) {
-      return translate.instant(this.i18n).replace("${1}", messageVariable);
-    } else
-      return translate.instant(this.i18n);
+  public getMessage(translate:TranslateService, messageVariables : string[]) : string {
+    let message:string = translate.instant(this.i18n);
+    if(messageVariables?.length > 0) {
+      messageVariables.forEach( (v,i) =>
+        message = message.replace("${" + i + "}", v)
+      )
+    }
+    return message;
   }
 }
 
@@ -163,11 +178,14 @@ export class ErrorMessages {
   // CONSENT SCAN ERRORS
   //---------------------
   public static FAILED_UPLOAD_CONSENT_SCAN_FILE: ErrorMessage = new ErrorMessage(7001,
-    /Failed to upload File '(.*)'/i,
+    /Failed to upload File '(.*)'. Reason: Max file size \[(.+) kB] exceeded/i,
     "error.consent_upload_scan_failed");
   public static READ_CONSENT_SCAN_FAILED: ErrorMessage = new ErrorMessage(7002,
     'ReadConsentScanFailed',
     "error.read_consent_scan_failed");
+  public static DELETE_CONSENT_SCANS_FAILED: ErrorMessage = new ErrorMessage(7003,
+    /\[7003]\s:\s.+\s:(.*)/i,
+    "error.delete_consent_scans_failed");
 
   ////
   // CONSENT PROVENANCE ERRORS

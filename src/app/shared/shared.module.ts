@@ -28,6 +28,8 @@ import { ConfirmDeleteDialogComponent } from './components/confirm-delete-dialog
 import { SecondaryIdentitiesComponent} from './components/secondary-identities/secondary-identities.component'
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { MessageCardComponent } from './components/message-card/message-card.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -59,9 +61,11 @@ export function HttpLoaderFactory(http: HttpClient) {
         useFactory: HttpLoaderFactory,
         deps: [HttpClient]
       }
-    })],
-  declarations: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent, ConfirmDeleteDialogComponent, SecondaryIdentitiesComponent],
-  exports: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent, SecondaryIdentitiesComponent,
+    }),
+    MatProgressSpinnerModule
+  ],
+  declarations: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent, ConfirmDeleteDialogComponent, MessageCardComponent, SecondaryIdentitiesComponent
+  exports: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent,SecondaryIdentitiesComponent,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -81,7 +85,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatExpansionModule,
     MatSlideToggleModule,
     DragDropModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    TranslateModule, MessageCardComponent
   ]
 })
 export class SharedModule {
