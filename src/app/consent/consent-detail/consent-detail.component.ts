@@ -30,6 +30,7 @@ export class ConsentDetailComponent implements OnInit {
   @Input() errorMessages: string[] = [];
   @Output() errorMessagesChange = new EventEmitter<string[]>();
   @ViewChild('templateSelection') templateSelection!: MatSelect;
+  consentLoaded: boolean = true;
   localDateFormat:string;
   uploadInProgress: boolean = false;
   uploadProgress: number = 0;
@@ -53,9 +54,11 @@ export class ConsentDetailComponent implements OnInit {
       this.consentService.getConsentTemplateTitleMap()
         .subscribe(r => this.templates = r);
 
-    //reset selection if no template selected
-    if (!this.consent?.id && (!this.readOnly && this.templateSelection)) {
-      this.templateSelection.options.forEach((data: MatOption) => data.deselect());
+    if (!this.consent?.id && !this.readOnly) {
+      this.consentLoaded = false;
+      //reset selection if no template selected
+      if (this.templateSelection)
+        this.templateSelection.options.forEach((data: MatOption) => data.deselect());
     }
 
     // load scans id
