@@ -5,8 +5,9 @@ import {MatSelectChange} from "@angular/material/select";
 import {ConsentPolicy} from "../../model/consent-policy";
 import {ConsentPolicySet} from "../../model/consent-policy-set";
 import {ConsentService} from "../consent.service";
-import {PolicyView, Validity} from "../consent-template.model";
+import {PolicyView} from "../consent-template.model";
 import {NgModel, ValidationErrors} from "@angular/forms";
+import {Validity} from "../consent-validity-period";
 
 
 @Component({
@@ -25,7 +26,7 @@ export class ConsentTemplatePolicyDialog implements OnInit {
 
   public policiesLoading: boolean = false;
 
-  public validityPeriod: Validity = {month: 0, day: 0};
+  public validityPeriod: Validity = {month: 0, day: 0, year: 0};
   public validityDays: number[] = Array(32).fill(0).map((x, i) => i++)
   public validityMonths: number[] = Array(13).fill(0).map((x, i) => i++)
 

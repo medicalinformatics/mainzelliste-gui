@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ChoiceItem, Item, PolicyView, Validity} from "../consent-template.model";
+import {ChoiceItem, Item, PolicyView} from "../consent-template.model";
 import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
 import {ConsentPolicy} from "../../model/consent-policy";
 import {ConsentService} from "../consent.service";
@@ -11,6 +11,7 @@ import {ConsentTemplatePolicyDialog} from "./consent-template-policy-dialog";
 import {EditorComponent} from "@tinymce/tinymce-angular";
 import {Permission} from "../../model/permission";
 import {TranslateService} from "@ngx-translate/core";
+import {Validity} from "../consent-validity-period";
 
 @Component({
   selector: 'app-consent-template-modules',

@@ -1,11 +1,12 @@
 import {ConsentPolicySet} from "../model/consent-policy-set";
+import {Validity} from "./consent-validity-period";
 
 export class ConsentTemplate {
   name?: string;
   version?:string;
   title?: string;
   status: "draft" | "active" | "retired" | "unknown" = "draft";
-  validity: Validity = {month: 0, day: 0};
+  validity: Validity = {month: 0, day: 0, year: 0};
   organization?: string;
   researchStudy?: string;
   policy?: string;
@@ -86,12 +87,6 @@ export class ChoiceItem implements Item {
 export type ItemType = "choice" | "display";
 
 export type ChoiceItemAnswer = "deny" | "permit";
-
-export interface Validity {
-  day: number,
-  month: number,
-  year?: number
-}
 
 export interface PolicyView {
   policySet: ConsentPolicySet,

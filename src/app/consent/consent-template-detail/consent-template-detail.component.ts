@@ -4,8 +4,7 @@ import {
   ChoiceItem,
   ChoiceItemAnswer,
   ConsentTemplate,
-  DisplayItem,
-  Validity
+  DisplayItem
 } from "../consent-template.model";
 import {ConsentService} from "../consent.service";
 import {MatDialog} from "@angular/material/dialog";
@@ -14,6 +13,7 @@ import {ConsentTemplateValidityPeriodDialog} from "./consent-template-validity-p
 import {MatRadioChange} from "@angular/material/radio";
 import {MatSlideToggleChange} from "@angular/material/slide-toggle";
 import {ConsentPolicySet} from "../../model/consent-policy-set";
+import {Validity} from "../consent-validity-period";
 
 @Component({
   selector: 'app-consent-template-detail',

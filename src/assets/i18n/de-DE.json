@@ -191,7 +191,7 @@
   "consentDetail.valid_unlimited": "für einen unbegrenzten Zeitraum",
   "consentDetail.scans": "Gescannte Dokumenten:",
 
-  "error.consentDetail.validity_date": "Gültigkeitszeitraum liegt in der vergangenheit",
+  "error.consentDetail.validity_date": "Gültigkeitszeitraum is ungültig",
 
 	"deletePatient.title_patient_data": "Patientendaten",
 	"deletePatient.title_pseudonyms": "Pseudonyme",

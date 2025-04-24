@@ -24,8 +24,7 @@ import {
   ChoiceItem,
   ConsentTemplate,
   DisplayItem,
-  PolicyView,
-  Validity
+  PolicyView
 } from "./consent-template.model";
 import {catchError, finalize, map, mergeMap, reduce} from "rxjs/operators";
 import {ConsentPolicySet} from "../model/consent-policy-set";
@@ -38,6 +37,8 @@ import {UploadConsentFileResponse} from "../model/api/upload-consent-file-respon
 import * as querystring from "querystring";
 import {AuthorizationService} from "../services/authorization.service";
 import {DateTime} from "luxon";
+import {StringUtils} from "../shared/utils/string-utils";
+import {ConsentValidityPeriod, Validity} from "./consent-validity-period";
 
 @Injectable({
   providedIn: 'root'
@@ -69,25 +70,15 @@ export class ConsentService {
    */
   public serializeConsentDataModelToFhir(dataModel: Consent, force: boolean) {
     if (dataModel.fhirResource !== undefined) {
-      //set fhir consent date
-      let datePipe: DatePipe = new DatePipe('en-US');
-      dataModel.fhirResource.dateTime = datePipe.transform(dataModel.createdAt, 'yyyy-MM-dd')!;
+      //set fhir consent date in following pattern 'yyyy-MM-dd'
+      dataModel.fhirResource.dateTime = DateTime.fromJSDate(dataModel.createdAt).toISODate() ?? undefined;
 
       //set validity period
-      let period = dataModel.fhirResource?.provision?.period;
-      if (period == undefined || !period.end || period.end.trim().length < 1) {
-        dataModel.fhirResource.provision!.period = {
-          start: datePipe.transform(dataModel.validFrom?.toDate(), 'yyyy-MM-dd') || undefined
-        }
-      } else {
-        let periodAsDate = 0;
-        if ((period.start && period.start.trim().length > 0))
-          periodAsDate = new Date(period.end).getTime() - new Date(period.start).getTime();
-        dataModel.fhirResource.provision!.period = {
-          start: datePipe.transform(dataModel.validFrom?.toDate(), 'yyyy-MM-dd') || undefined,
-          end: datePipe.transform(new Date((dataModel.validFrom?.toDate().getTime() || 0) + periodAsDate), 'yyyy-MM-dd') || undefined
-        }
+      dataModel.fhirResource.provision!.period = {
+        start: dataModel.validityPeriod.validFrom?.toISODate() ?? undefined,
+        end: dataModel.validityPeriod.validUntil?.toISODate() ?? undefined,
       }
+
       // is Mii fhir profile
       let isMiiResource = dataModel.fhirResource.meta?.profile?.some( url => url === "https://www.medizininformatik-initiative.de/fhir/modul-consent/StructureDefinition/mii-pr-consent-einwilligung") || false
 
@@ -198,19 +189,17 @@ export class ConsentService {
       initNewDataModel = true;
     }
 
-    let templateMap: Map<string, fhir4.CodeableConcept[]>  = this.extractTemplateMap(!fhirConsent ? fhirConsent : questionnaire.contained[0] as fhir4.Consent);
+    let questionIdsToPoliciesMap: Map<string, fhir4.CodeableConcept[]>  = this.extractQuestionIdsToPoliciesMap(questionnaire.contained[0] as fhir4.Consent);
 
     // init template items: display text and questions
-    let items: ConsentItem[] = [];
-    questionnaire.item?.forEach(item => {
+    let items: ConsentItem[] = questionnaire.item?.filter( i => ['display', 'choice'].includes(i.type))
+    .map(item => {
       if (item.type == 'display') {
-        let displayItem: ConsentDisplayItem = new ConsentDisplayItem(item.linkId, item.text || "")
-        items.push(displayItem);
-      } else if (item.type == 'choice') {
-
+        return new ConsentDisplayItem(item.linkId, item.text ?? "");
+      } else {
         let answer: "deny" | "permit" | undefined;
 
-        let templateCodes : fhir4.CodeableConcept[] = templateMap.get(item.linkId) ?? [];
+        let templateCodes : fhir4.CodeableConcept[] = questionIdsToPoliciesMap.get(item.linkId) ?? [];
 
         // find provision codes and type with the current linkedId
         let codes = fhirConsent?.provision?.provision?.filter(p =>
@@ -231,29 +220,31 @@ export class ConsentService {
         // TODO support mixed response of codes belonging to the same modules
         answer = codes.every( i =>  i.answer) && codes.length == templateCodes.length ? 'permit' : 'deny';
 
-        items.push(new ConsentChoiceItem(item.linkId, item.text ?? "", answer));
-      } else {
-        throw Error(`questionnaire item type [${item.type}] not support yet`)
+        return new ConsentChoiceItem(item.linkId, item.text ?? "", answer);
       }
-    })
+    }) ?? [];
 
     // calculate period from consent resource
     let fhirPeriod = fhirConsent?.provision?.period;
-    let period;
-    let validFrom = _moment();
-    if (!fhirPeriod?.end || fhirPeriod.end.trim().length < 1) {
-      period = 0;
-    } else if ((!fhirPeriod.start || fhirPeriod.start.trim().length < 1)) {
-      period = new Date(fhirPeriod.end).getTime() - validFrom.toDate().getTime();
-    } else {
-      validFrom = !initNewDataModel ? _moment(fhirPeriod.start) : validFrom;
-      period = new Date(fhirPeriod.end).getTime() - new Date(fhirPeriod.start).getTime();
+    let validityPeriod: ConsentValidityPeriod = { validFrom : DateTime.now() };
+
+    if (fhirPeriod?.end && !StringUtils.isEmpty(fhirPeriod.end)) {
+      if (!fhirPeriod?.start || StringUtils.isEmpty(fhirPeriod.start)) {
+        // fixed end date
+        validityPeriod.validUntil = DateTime.fromISO(fhirPeriod.end);
+      } else {
+        // defined period
+        validityPeriod.period = this.deserializeTemplateValidity(fhirPeriod?.start ?? "", fhirPeriod?.end ?? "");
+        if(!initNewDataModel)
+          validityPeriod.validFrom = DateTime.fromISO(fhirPeriod.start);
+        validityPeriod.validUntil = this.addPeriodToDate(validityPeriod.validFrom.toISODate() ?? "", validityPeriod.period)
+      }
     }
 
     return new Consent(
       questionnaire?.title ?? "",
       new Date(fhirConsent?.dateTime ?? ""),
-      period,
+      validityPeriod,
       items,
       fhirConsent?.status || "active",
       questionnaire?.id ?? "0",
@@ -261,13 +252,12 @@ export class ConsentService {
       new Map<string, string>(),
       fhirConsent?.id,
       fhirConsent?.meta?.versionId,
-      validFrom,
-      undefined, undefined,
+      undefined,
       fhirConsent,
       questionnaire?.contained[0] as fhir4.Consent || undefined)
   }
 
-  public extractTemplateMap(fhirConsent: fhir4.Consent): Map<string, fhir4.CodeableConcept[]> {
+  public extractQuestionIdsToPoliciesMap(fhirConsent: fhir4.Consent): Map<string, fhir4.CodeableConcept[]> {
     return fhirConsent.provision?.provision?.map(p => {
       return {linkId: this.extractLinkId(p.extension), codes: p?.code || []}
     })
@@ -770,7 +760,7 @@ export class ConsentService {
     }
   }
 
-  deserializeTemplateValidity(startDate:string, endDate:string): Validity{
+  deserializeTemplateValidity(startDate:string, endDate:string): Validity {
     const start = DateTime.fromISO(startDate)
     // include the last day
     const end = DateTime.fromISO(endDate).plus({ days: 1 })
@@ -778,19 +768,18 @@ export class ConsentService {
     return {
       day: duration.days ?? 0,
       month: duration.months ?? 0,
-      year: duration.years
+      year: duration.years ?? 0
     }
   }
 
   mapValidityToDate(validityPeriod: Validity): string {
-    return this.addPeriodToDate(DateTime.now().toISODate(), validityPeriod);
+    return this.addPeriodToDate(DateTime.now().toISODate(), validityPeriod).toISODate() ?? "";
   }
 
-  addPeriodToDate(startDate: string, period: Validity): string {
+  addPeriodToDate(startDate: string, period: Validity): DateTime {
     return DateTime.fromISO(startDate)
     .plus({ days: period.day ?? 0, months: period.month ?? 0, years: period.year ?? 0 })
-    .minus({day: 1})
-    .toISODate() ?? "";
+    .minus({day: 1});
   }
 
   public createFhirResource<F extends FhirResource>(tokenType: TokenType, tokenData: TokenData, resourceType: string, resource: F) : Observable<FhirResource> {

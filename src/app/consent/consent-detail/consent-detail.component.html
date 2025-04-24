@@ -39,6 +39,7 @@
   </div>
   <br>
   <br>
+ <!-- consent validation period -->
   <div class="form-group">
     <label>{{'consentDetail.valid_from' | translate}}</label>
     <mat-form-field appearance="fill" style="width: 150px; margin: 0 7px 0 7px">
@@ -46,17 +47,20 @@
       <input matInput
              [matDatepicker]="picker"
              placeholder="{{localDateFormat}}"
-             [appInvalidConsentPeriod]="this.consent.period"
-             [(ngModel)]="this.consent.validFrom"
+             [appInvalidConsentPeriod]="this.consent.validityPeriod"
+             [(ngModel)]="this.consent.validityPeriod.validFrom"
+             (dateInput)="dateChanged($event)"
              name="date"
              #date="ngModel"
              [disabled]="readOnly"
       >
       <mat-datepicker-toggle *ngIf="!readOnly" matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker [disabled]="readOnly"></mat-datepicker>
-      <mat-error>{{'error.consentDetail.validity_date' | translate}}</mat-error>
+      <mat-error *ngIf="this.displayError(date)">
+        {{'error.consentDetail.validity_date' | translate}}
+      </mat-error>
     </mat-form-field>
-    <label><strong>{{getConsentExpiration()}}</strong></label>
+    <label><strong>{{getConsentExpirationDate()}}</strong></label>
   </div>
 </mat-card>
 <br>
