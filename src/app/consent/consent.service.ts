@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {forkJoin, lastValueFrom, Observable, of, range, throwError} from 'rxjs';
 import Client from 'fhir-kit-client'
 import {SessionService} from "../services/session.service";
@@ -39,6 +39,7 @@ import {AuthorizationService} from "../services/authorization.service";
 import {DateTime} from "luxon";
 import {StringUtils} from "../shared/utils/string-utils";
 import {ConsentValidityPeriod, Validity} from "./consent-validity-period";
+import {MAT_DATE_LOCALE} from "@angular/material/core";
 
 @Injectable({
   providedIn: 'root'
@@ -57,7 +58,8 @@ export class ConsentService {
     private authorizationService:AuthorizationService,
     private appConfigService: AppConfigService,
     private translate: TranslateService,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    @Inject(MAT_DATE_LOCALE) private _locale: string
   ) {
     this.mainzellisteBaseUrl = this.appConfigService.data[0].url.toString();
     this.client = new Client({baseUrl: this.mainzellisteBaseUrl + "/fhir"});
@@ -350,7 +352,8 @@ export class ConsentService {
       map(r => {
         return {
           id: id,
-          lastUpdated: new Date(r?.meta?.lastUpdated ?? "").toLocaleString(),
+          lastUpdated: new Date(r?.meta?.lastUpdated ?? "").toLocaleString(this._locale,
+            {year: "numeric", month: "2-digit", day: "2-digit", hour: "numeric", minute: "numeric", second: "numeric"}),
           version: parseInt(r?.meta?.versionId ?? "1"),
           status: r?.status || "active"
         }
@@ -388,19 +391,15 @@ export class ConsentService {
                     r => consentTemplates.has(this.findConsentTemplateId(r?.policy ?? []))
                   ).map(r => {
                     let templateId: string = this.findConsentTemplateId(r?.policy ?? []);
-                    let endDate = r?.provision?.period?.end;
-                    let startDate = r?.provision?.period?.start;
-                    let validFrom: string = startDate && startDate.trim().length > 0 ? _moment(startDate).toDate().toLocaleDateString() : "??";
-                    let validUntil: Date | undefined = endDate && endDate?.trim().length > 0 ? new Date(endDate) : undefined;
-                    let period = this.translate.instant("consent_list.unlimited_period");
-                    if (validUntil) {
-                      period = validFrom + " - " + new Date(validUntil).toLocaleDateString();
-                    }
+                    let validFrom = StringUtils.convertDateFromISOToLocale(r?.provision?.period?.start, this._locale, true);
+                    let validUntil = StringUtils.parseISODate( r?.provision?.period?.end);
+                    let period = !validUntil ? this.translate.instant("consent_list.unlimited_period"):
+                      validFrom + " - " + StringUtils.convertDateToLocale(validUntil, this._locale, true);
                     return {
-                      id: r?.id || "",
+                      id: r?.id ?? "",
                       templateId: templateId,
                       title: consentTemplates.get(templateId) ?? "",
-                      createdAt: new Date(r?.dateTime ?? "").toLocaleDateString(),
+                      createdAt: StringUtils.convertDateFromISOToLocale(r?.dateTime, this._locale, true) ?? "??",
                       validityPeriod: period,
                       version: parseInt(r?.meta?.versionId ?? "1"),
                       status: this.consentStatusToString(r?.status ?? "active", validUntil)
