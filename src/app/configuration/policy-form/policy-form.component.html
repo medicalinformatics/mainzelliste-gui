@@ -1,8 +1,7 @@
 <h1 mat-dialog-title>{{ 'configuration.policy.create' | translate }}</h1>
+<app-error-card [(messages)]="errorMessages"></app-error-card>
+<form [formGroup]="policyForm">
 <div mat-dialog-content>
-  <app-error-card [(messages)]="errorMessages"></app-error-card>
-
-  <form [formGroup]="policyForm">
     <mat-form-field appearance="outline" [ngStyle]="{'margin-bottom': displayError(policyForm.controls.code) ? '0.25em' : '-1.25em' }">
       <mat-label>{{ 'configuration.policy.policyCode' | translate }}</mat-label>
       <input matInput formControlName="code">
@@ -10,14 +9,13 @@
         {{ getFieldErrorMessage("policyCode", policyForm.controls.code.errors) }}
       </mat-error>
     </mat-form-field>
-    <mat-form-field appearance="outline" [ngStyle]="{'margin-bottom': displayError(policyForm.controls.text) ? '0.25em' : '-1.25em' }">
+    <mat-form-field appearance="outline">
       <mat-label>{{ 'configuration.policy.policyText' | translate }}</mat-label>
       <input matInput formControlName="text">
       <mat-error *ngIf="displayError(policyForm.controls.text)">
         {{ getFieldErrorMessage("policyText", policyForm.controls.text.errors) }}
       </mat-error>
     </mat-form-field>
-  </form>
 </div>
 <div mat-dialog-actions>
   <button mat-button mat-dialog-close class="submitBreak">
@@ -27,3 +25,4 @@
     {{ 'button_create' | translate }}
   </button>
 </div>
+</form>
