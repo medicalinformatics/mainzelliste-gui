@@ -229,12 +229,14 @@
   "configuration.policy.close": "Schließen",
   "configuration.policy.show": "Policies anzeigen",
   "configuration.policy.create": "Policy hinzufügen",
+  "configuration.policy.empty": "Kein Policy gefunden.",
   "configuration.policySet.add": "Policy-Set hinzufügen",
   "configuration.policySet.delete": "Policy-Set löschen",
+  "configuration.policySet.empty": "Kein Policy-Set gefunden.",
   "configuration.policy.error.400": "Feld 'Policy-Code' fehlerhaft. Inhalt enthält Leerzeichen.",
   "configuration.policySet.error.400": "Feld 'Id' fehlerhaft. Inhalt enthält Leerzeichen.",
 
-  
+
 	"info.title": "Informationen und Hinweise zur Mainzelliste",
 	"info.notice_add_patient": "Hinweis für die Erstellung eines Patienten",
 	"info.add_patient_text1": "Diese Anwendung gibt für die von Ihnen im Folgenden einzugebenden Stammdaten einen Personenidentifikator (PID) zurück. Dabei wird der bekannte Patientenbestand durchsucht; bei einem Treffer wird der bestehende PID zurueckgegeben.",

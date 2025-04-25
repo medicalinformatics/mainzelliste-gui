@@ -220,9 +220,10 @@
   "configuration.policy.close": "Close",
   "configuration.policy.show": "Show Policies",
   "configuration.policy.create": "Add Policy",
+  "configuration.policy.empty": "no Policy found.",
   "configuration.policySet.add": "Add Policy Set",
   "configuration.policySet.delete": "Delete Policy Set",
-  "configuration.policy.save": "Save",
+  "configuration.policySet.empty": "no Policy-Set found.",
   "configuration.policy.error.400": "Invalid field 'Policy Code'. Value contains whitespace.",
   "configuration.policySet.error.400": "Invalid field 'Id'. Value contains whitespace.",
 
