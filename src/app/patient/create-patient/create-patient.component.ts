@@ -20,6 +20,7 @@ import {Consent} from "../../consent/consent.model";
 import {ConsentService} from "../../consent/consent.service";
 import {Permission} from "../../model/permission";
 import {Operation} from "../../model/tenant";
+import {SimilarPatientDialog} from './similar-patient-dialog';
 
 export interface IdTypSelection {
   idType: string,
@@ -223,6 +224,17 @@ export class CreatePatientComponent implements OnInit {
     let emptyIds = !this.patient.ids.some(id => id.idString.length > 0);
     let isIdsValid = patientForm.form.get('externalIds')?.valid ?? true;
     return !emptyFields && !patientForm.form.valid || emptyFields && (emptyIds || !isIdsValid);
+  }
+
+  openSimilarPatientDialog(): void {
+    const dialogRef = this.tentativeDialog.open(SimilarPatientDialog, {
+      data: { patient: new Patient() }, //give current patient info
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        console.log(result);
+    });
   }
 
   openConsentDialog() {
