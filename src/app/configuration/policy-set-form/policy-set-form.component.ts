@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ConsentService } from 'src/app/consent/consent.service';
 import { take } from 'rxjs/operators';
@@ -14,6 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class PolicySetFormComponent implements OnInit {
   policySetForm: FormGroup;
   errorMessages: string[] = [];
+  saving: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -33,7 +34,8 @@ export class PolicySetFormComponent implements OnInit {
   save() {
     if (this.policySetForm.valid) {
       this.errorMessages = [];
-
+      this.saving = true;
+      this.policySetForm.disable();
       const { id, name, externalId } = this.policySetForm.value;
       this.consentService.addPolicySet(id, name, externalId)
         .pipe(take(1))
@@ -42,29 +44,12 @@ export class PolicySetFormComponent implements OnInit {
             this.dialogRef.close(response);
           },
           error: (e) => {
-            const errorCode = e?.error?.code || e?.status;
-            this.handleError(errorCode, e);
+            this.errorMessages.push(getErrorMessageFrom(e, this.translate));
+            this.policySetForm.enable();
+            this.saving = false;
           }
         });
     }
-  }
-  handleError(errorCode: any, e: any) {
-    let errorMessageKey: string;
-    switch (errorCode) {
-      case 400:
-        errorMessageKey = "configuration.policySet.error.400";
-        break;
-      case 409:
-        errorMessageKey = "";
-        break;
-      default:
-        this.errorMessages.push(getErrorMessageFrom(e, this.translate));
-        return
-    }
-
-    this.translate.get(errorMessageKey).subscribe((translatedMessage) => {
-      this.errorMessages.push(translatedMessage);
-    });
   }
 
   displayError(field: any) {
@@ -72,14 +57,14 @@ export class PolicySetFormComponent implements OnInit {
       (field.dirty || field.touched) &&
       (field.errors?.['pattern'] || field.errors?.['required']);
   }
-  
+
   getFieldErrorMessage(fieldName: string, errors: ValidationErrors | null) {
-    if (errors?.['pattern']) 
+    if (errors?.['pattern'])
       return `${this.translate.instant('patientFields.error_value_text1')} ${this.translate.instant('configuration.policySet.' + fieldName)} ${this.translate.instant('patientFields.error_value_text2')}`;
     else if (errors?.['required'])
       return `${this.translate.instant('patientFields.error_mandatory_text1')} ${this.translate.instant('configuration.policySet.' + fieldName)} ${this.translate.instant('patientFields.error_mandatory_text2')}`;
-    else 
+    else
       return 'fehler';
   }
-  
+
 }

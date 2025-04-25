@@ -226,6 +226,7 @@
   "configuration.policySet.empty": "no Policy-Set found.",
   "configuration.policy.error.400": "Invalid field 'Policy Code'. Value contains whitespace.",
   "configuration.policySet.error.400": "Invalid field 'Id'. Value contains whitespace.",
+  "configuration.policySet.error.409": "Policy-Set with the given 'Id' already exist",
 
 	"info.title": "Information and notes on the Mainzelliste",
 	"info.notice_add_patient": "Note for creating a patient",

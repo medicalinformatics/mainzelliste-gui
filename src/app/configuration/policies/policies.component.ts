@@ -64,6 +64,7 @@ export class PoliciesComponent implements OnInit {
   openPolicyDialog(policySetId: string) {
     this.consentService.getPolicies(policySetId).subscribe(policies => {
       this.dialog.open(PolicyDialogComponent, {
+        disableClose: true,
         data: { policies: policies, policySetId: policySetId },
         maxWidth: '66vw',
         width: '66vw'
@@ -73,6 +74,7 @@ export class PoliciesComponent implements OnInit {
 
   addPolicySet() {
     const dialogRef = this.dialog.open(PolicySetFormComponent, {
+      disableClose: true,
       width: '30vw',
     });
 
@@ -86,6 +88,7 @@ export class PoliciesComponent implements OnInit {
 
   addPolicy(policySetId: string) {
     const dialogRef = this.dialog.open(PolicyFormComponent, {
+      disableClose: true,
       width: '30vw',
       data: { policySetId }
     });
@@ -106,6 +109,7 @@ export class PoliciesComponent implements OnInit {
       switchMap(() => this.consentService.deletePolicySet(policySet.id))
     );
     this.dialog.open(ConfirmDeleteDialogComponent, {
+      disableClose: true,
       data: {
         itemI18nName: "confirm_delete_dialog.item_consent_policySet",
         callbackObservable: deletionObservable

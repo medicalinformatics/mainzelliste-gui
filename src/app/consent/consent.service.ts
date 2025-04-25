@@ -917,7 +917,7 @@ export class ConsentService {
       )
   }
 
-  public addPolicySet(id: String, name: String, externalId: String): Observable<any> {
+  public addPolicySet(id: string, name: string, externalId: string): Observable<any> {
     let body = JSON.stringify({ id, name, externalId });
     return this.postData<ConsentPolicySet>("addConsentPolicySet", {}, "consent-policies", body)
   }
@@ -992,22 +992,22 @@ export class ConsentService {
     return this.postData<ConsentPolicy>("addConsentPolicy", {}, path, body)
   }
 
-  public postData<T>(tokenType: TokenType, tokenData: TokenData, path : string, body: String) {
-    console.log(tokenData, tokenType, path, body);
+  public postData<T>(tokenType: TokenType, tokenData: TokenData, path : string, body: string) {
     return this.sessionService.createToken(tokenType, tokenData)
       .pipe(
         mergeMap(token => this.resolvePostToken<T>(token.id, path, body)),
-        catchError((error) => {
-          if (error.status >= 400 && error.status < 500) {
-            return throwError(() => error);
-          } else {
-            return throwError( () => new Error(`Failed to fetch data from ${path}. Cause: ${getErrorMessageFrom(error, this.translate)}`));
-          }
+        catchError(e => {
+          // handle failed token creation
+          if (e instanceof HttpErrorResponse && (e.status == 409) && ErrorMessages.CREATE_POLICY_SET_CONFLICT.match(e))
+            return throwError( () => new MainzellisteError(ErrorMessages.CREATE_POLICY_SET_CONFLICT));
+          else if (!(e instanceof MainzellisteError) && !(e instanceof MainzellisteUnknownError))
+            return throwError( () => new MainzellisteUnknownError("failed to create resource", e, this.translate));
+          return throwError( () => e);
         })
-      )
+      );
   }
 
-  public resolvePostToken<T>(tokenId: string | undefined, path: string, body: String) {
+  public resolvePostToken<T>(tokenId: string | undefined, path: string, body: string) {
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('mainzellisteApiVersion', '3.2')

@@ -210,4 +210,11 @@ export class ErrorMessages {
   public static FETCH_PATIENTS_JOB_NOTFOUND: ErrorMessage = new ErrorMessage(10002,
     'job not found',
     "error.fetch_patients_job_not_found")
+
+  ////
+  // CONSENT SCAN ERRORS
+  //---------------------
+  public static CREATE_POLICY_SET_CONFLICT: ErrorMessage = new ErrorMessage(11001,
+    /'PolicySet' resource with the key .+ already exists/i,
+    "configuration.policySet.error.409");
 }

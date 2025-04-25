@@ -235,7 +235,7 @@
   "configuration.policySet.empty": "Kein Policy-Set gefunden.",
   "configuration.policy.error.400": "Feld 'Policy-Code' fehlerhaft. Inhalt enthält Leerzeichen.",
   "configuration.policySet.error.400": "Feld 'Id' fehlerhaft. Inhalt enthält Leerzeichen.",
-
+  "configuration.policySet.error.409": "Policy-Set mit dem angegebenen 'Id' existiert bereits",
 
 	"info.title": "Informationen und Hinweise zur Mainzelliste",
 	"info.notice_add_patient": "Hinweis für die Erstellung eines Patienten",
