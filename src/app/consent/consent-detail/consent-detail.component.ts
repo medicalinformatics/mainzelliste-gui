@@ -17,6 +17,7 @@ import {HttpEventType} from "@angular/common/http";
 import {map} from "rxjs/operators";
 import {AuthorizationService} from "../../services/authorization.service";
 import {TranslateService} from "@ngx-translate/core";
+import {getErrorMessageFrom} from "../../error/error-utils";
 
 @Component({
   selector: 'app-consent-detail',
@@ -26,11 +27,13 @@ import {TranslateService} from "@ngx-translate/core";
 })
 export class ConsentDetailComponent implements OnInit {
 
-  @Input() edit: boolean = false;
   @Input() readOnly: boolean = false;
+  @Input() submitting: boolean = false;
   @Input() consent!: Consent;
   @Input() templates!: Map<string, string>;
   @Output() consentChange = new EventEmitter<Consent>();
+  @Input() errorMessages: string[] = [];
+  @Output() errorMessagesChange = new EventEmitter<string[]>();
   @ViewChild('templateSelection') templateSelection!: MatSelect;
   localDateFormat:string;
   uploadInProgress: boolean = false;
@@ -55,7 +58,7 @@ export class ConsentDetailComponent implements OnInit {
         .subscribe(r => this.templates = r);
 
     //reset selection if no template selected
-    if (!this.consent?.id && (!this.edit && !this.readOnly && this.templateSelection)) {
+    if (!this.consent?.id && (!this.readOnly && this.templateSelection)) {
       this.templateSelection.options.forEach((data: MatOption) => data.deselect());
     }
 
@@ -71,7 +74,7 @@ export class ConsentDetailComponent implements OnInit {
   }
 
   initDataModel(consentTemplateId: MatSelectChange) {
-    if(!this.edit && !this.readOnly) {
+    if(!this.readOnly) {
       this.consentService.getNewConsentDataModel(consentTemplateId.value || "0")
       .subscribe(consentDataModel => {
         this.consent = consentDataModel;
@@ -117,8 +120,8 @@ export class ConsentDetailComponent implements OnInit {
     const files = target.files as FileList;
     if(files != null && files.length >0) {
       this.uploadInProgress = true;
-      this.uploadSubscription = this.consentService.uploadConsentScanFile(files[0], () => this.resetUploadScan()).subscribe(
-        event => {
+      this.uploadSubscription = this.consentService.uploadConsentScanFile(files[0], () => this.resetUploadScan()).subscribe({
+        next: event => {
           if (event.type == HttpEventType.UploadProgress) {
             this.uploadProgress = Math.round(100 * (event.loaded / (event.total ?? 1)));
           } else if(event.type == HttpEventType.Response) {
@@ -127,7 +130,14 @@ export class ConsentDetailComponent implements OnInit {
               throw new Error("failed to upload File")
             this.consent.scanUrls.set( files[0].name, fileUrl);
           }
-        })
+        },
+        error: e => {
+          this.errorMessages.push(getErrorMessageFrom(e, this.translate))
+          this.errorMessagesChange.emit(this.errorMessages);
+        },
+        complete: () => {
+        }
+      })
     }
   }
 
@@ -148,12 +158,20 @@ export class ConsentDetailComponent implements OnInit {
   }
 
   downloadScan(id: string) {
-    this.consentService.getConsentScan(id).subscribe( doc => {
-      const downloadLink = document.createElement('a');
-      downloadLink.href = "data:application/pdf;base64," + doc.content[0].attachment.data;
-      downloadLink.download = id + ".pdf";
-      downloadLink.click();
-  });
+    this.consentService.getConsentScan(id).subscribe({
+      next: doc => {
+        const downloadLink = document.createElement('a');
+        downloadLink.href = "data:application/pdf;base64," + doc.content[0].attachment.data;
+        downloadLink.download = id + ".pdf";
+        downloadLink.click();
+      },
+      error: e => {
+        this.errorMessages.push(getErrorMessageFrom(e, this.translate))
+        this.errorMessagesChange.emit(this.errorMessages);
+      },
+      complete: () => {
+      }
+    });
   }
 }
 

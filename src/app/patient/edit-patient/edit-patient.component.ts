@@ -50,7 +50,8 @@ export class EditPatientComponent implements OnInit {
 
   ngOnInit() {
     this.patientListService.readPatient(new Id(this.idType, this.idString), "R").subscribe(patients => {
-      this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
+      this.patient = this.patientListService.convertToDisplayPatient(patients[0], false,
+        !this.authorizationService.hasPermission(Permission.EDIT_FIELDS));
     });
     this.translate.onLangChange.subscribe(() => {
       this.changeTitle();

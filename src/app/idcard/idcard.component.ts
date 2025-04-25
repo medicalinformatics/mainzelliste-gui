@@ -1,24 +1,22 @@
-import {Component, EventEmitter, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {PatientListService} from "../services/patient-list.service";
 import {Patient} from "../model/patient";
 import {GlobalTitleService} from "../services/global-title.service";
 import {Id} from "../model/id";
 import {MatTable} from "@angular/material/table";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {PatientService} from "../services/patient.service";
-import {DeletePatientDialog} from "./dialogs/delete-patient-dialog";
 import {NewIdDialog} from './dialogs/new-id-dialog';
 import {TranslateService} from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.component";
 import {ConsentService} from "../consent/consent.service";
 import {Permission} from "../model/permission";
 import {HttpErrorResponse} from "@angular/common/http";
-import {throwError} from "rxjs";
+import {Observable, of, throwError} from "rxjs";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {Consent, ConsentRow, ConsentsView} from "../consent/consent.model";
-import {catchError, mergeMap} from "rxjs/operators";
-import {DeleteConsentDialog} from "./dialogs/delete-consent-dialog";
+import {catchError, map, mergeMap} from "rxjs/operators";
 import {IdType} from "../model/id-type";
 import {AuthorizationService} from "../services/authorization.service";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
@@ -32,6 +30,14 @@ import {
 } from "../consent/consent-history-dialog/consent-history-dialog.component";
 import {FhirResource} from "fhir-kit-client/types/index";
 import {SearchParams} from "fhir-kit-client";
+import {SemanticType} from '../model/field';
+import {AngularCsv} from 'angular-csv-ext/dist/Angular-csv';
+import {
+  ConfirmDeleteDialogComponent
+} from "../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
+import {Tenant} from "../model/tenant";
+import {ComponentType} from "@angular/cdk/portal";
+
 
 @Component({
   selector: 'app-idcard',
@@ -46,10 +52,12 @@ export class IdcardComponent implements OnInit {
   public idType: string = "";
   public patient: Patient = new Patient();
   public displayedConsentColumns: string[] = ['date', 'title', 'period', 'version', 'status', 'actions'];
-  public consentsView: ConsentsView =  { consentTemplates : new Map, consentRows: [] };
+  public consentsView: ConsentsView = { consentTemplates: new Map, consentRows: [] };
   @ViewChild('consentTable') consentTable!: MatTable<ConsentRow>;
   public loadingConsents: boolean = false;
   public idTypes: IdType[] = [];
+  private readIdTypes: string [] = [];
+  private otherTenantIdTypes: string [] = [];
 
   constructor(
     private translate: TranslateService,
@@ -79,14 +87,24 @@ export class IdcardComponent implements OnInit {
   }
 
   ngOnInit() {
+    // find id types, that can be created
     this.getIdTypes();
+
+    // find id types, that can be read
+    let readIdTypesSet = new Set(this.patientListService.getAllIdTypes("R"));
+    if(this.configService.showDomainsInIDCard() && this.authorizationService.currentTenantId != Tenant.DEFAULT_ID) {
+      this.otherTenantIdTypes = this.authorizationService.getAllTenantIdTypes(true);
+      this.authorizationService.getAllTenantIdTypes().forEach( t => this.otherTenantIdTypes.push(t));
+    }
+    this.readIdTypes = [... readIdTypesSet];
+
     this.loadPatient();
     this.translate.onLangChange.subscribe(() => {
       this.changeTitle();
     });
 
     //load consent list
-    if(this.consentService.isServiceEnabled() && this.authorizationService.hasPermission(Permission.READ_CONSENT))
+    if (this.authorizationService.hasPermission(Permission.READ_CONSENT))
       this.loadConsents();
   }
 
@@ -95,64 +113,54 @@ export class IdcardComponent implements OnInit {
   }
 
   private loadPatient() {
-    this.patientListService.readPatient(new Id(this.idType, this.idString), "R")
+    this.patientListService.readPatient(new Id(this.idType, this.idString), "R", undefined, this.readIdTypes)
     .pipe(
       catchError(e => {
         if (e instanceof HttpErrorResponse && (e.status == 404)) {
           this.router.navigate(['/**']).then();
         }
-        return throwError(new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_add_patient_token'), e, this.translate))
+        return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_add_patient_token'), e, this.translate))
       })
     )
     .subscribe(
       patients => {
-        this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
+        this.patient = this.patientListService.convertToDisplayPatient(patients[0], false, true, this.authorizationService.getTenants());
+        this.patient.ids = this.patient.ids.filter(id => !this.otherTenantIdTypes.some(t => t == id.idType));
       });
   }
 
   private loadConsents() {
     this.loadingConsents = true;
-    this.consentsView = { consentTemplates : new Map, consentRows: [] }
+    this.consentsView = { consentTemplates: new Map, consentRows: [] }
     this.consentService.getConsents(this.idType, this.idString)
-      .subscribe(dataModels => {
-          this.consentsView = dataModels;
-          this.consentTable.renderRows();
-          this.loadingConsents = false;
-        },
-        error => this.loadingConsents = false);
+    .subscribe({
+      next: (dataModels) => {
+        this.consentsView = dataModels;
+        this.consentTable.renderRows();
+        this.loadingConsents = false;
+      },
+      error: (error) => this.loadingConsents = false
+    });
   }
 
-  deleteConsent(consentId: string) {
-    this.consentService.deleteConsent(consentId).pipe(
-        mergeMap(r => this.consentService.getConsents(this.idType, this.idString))
-    ).subscribe(
-        dataModels => {
-          this.consentsView = dataModels;
-          this.consentTable.renderRows();
-          this.loadingConsents = false;
-        },
-        error => this.loadingConsents = false
-    );
-  }
-
-  deletePatient() {
-    this.patientService.deletePatient(this.patient).then(() => this.router.navigate(['/patientlist']).then());
-  }
-
-  generateId(idType:string, idString:string, newIdType: string) {
+  generateId(idType: string, idString: string, newIdType: string) {
     this.patientListService.generateId(idType?.length > 0 ? idType : this.idType,
-      idString?.length> 0 ? idString : this.idString, newIdType).subscribe(() => {
+      idString?.length > 0 ? idString : this.idString, newIdType).subscribe(() => {
         this.loadPatient()
       });
   }
 
+  generateNewId(idType: string, idString: string, newIdType: string) {
+    return this.patientListService.generateId(idType?.length > 0 ? idType : this.idType,
+      idString?.length > 0 ? idString : this.idString, newIdType);
+  }
+
   hasAllTemplateIds(): boolean {
     return [...this.consentsView.consentTemplates.keys()].every(templateId =>
-        this.consentsView.consentRows.some(v => v.templateId == templateId))
+      this.consentsView.consentRows.some(v => v.templateId == templateId))
   }
 
   openAddNewConsentDialog() {
-    let processDone = new EventEmitter<boolean>();
     const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
       width: '900px',
       disableClose: true,
@@ -160,89 +168,91 @@ export class IdcardComponent implements OnInit {
         templates: new Map([...this.consentsView.consentTemplates].filter(e =>
           !this.consentsView.consentRows.some(r => r.templateId == e[0])),
         ),
-        processDone: processDone
+        updateConsentObservable: (dataModel: Consent) => this.getUpdateConsentObservable(
+          of(dataModel).pipe(
+            map(consent => {
+              consent.patientId = {idType: this.idType, idString: this.idString};
+              if (consent.fhirResource) {
+                consent.fhirResource.patient = {
+                  identifier: this.consentService.convertToFhirIdentifier(consent.patientId)
+                }
+              }
+              return consent;
+            })),
+          false,
+          consent => {
+            return {
+              'patient:identifier': consent.fhirResource?.patient?.identifier?.system + '|' + consent?.fhirResource?.patient?.identifier?.value,
+              'policyUri': 'fhir/Questionnaire/' + consent.templateId
+            }
+          })
       }
     });
 
-    dialogRef.beforeClosed().subscribe(dataModel => {
-      if (dataModel?.consent) {
-        dataModel.consent.patientId = {idType: this.idType, idString: this.idString};
-        dataModel.consent.fhirResource.patient = {
-          identifier: this.consentService.convertToFhirIdentifier(dataModel.consent.patientId)
-        }
-        this.updateConsent(dataModel.consent, false, processDone,
-          {
-          'patient:identifier': dataModel.consent.fhirResource.patient.identifier?.system + '|' + dataModel.consent.fhirResource.patient.identifier?.value,
-          'policyUri': 'fhir/Questionnaire/' + dataModel.consent.templateId
-          });
-      }
-    });
+    this.afterConsentUpdate(dialogRef);
   }
 
   openChangeConsentDialog(consentId: string) {
-    let processDone = new EventEmitter<boolean>();
-    this.consentService.readConsent(consentId).subscribe( c => {
+    this.consentService.readConsent(consentId).subscribe(c => {
       const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
         width: '900px',
         disableClose: true,
         data: {
           consent: c,
           edit: true,
-          processDone: processDone
+          updateConsentObservable: (consent: Consent) => this.getUpdateConsentObservable(
+            of(consent).pipe(
+              map(consent => {
+              consent.patientId = {idType: this.idType, idString: this.idString};
+              return consent;
+            })),
+            false)
         }
       });
 
-      dialogRef.beforeClosed().subscribe(dataModel => {
-        if (dataModel?.consent) {
-          dataModel.consent.patientId = {idType: this.idType, idString: this.idString};
-          this.updateConsent(dataModel.consent, false, processDone);
-        }
-      });
+      this.afterConsentUpdate(dialogRef);
     })
   }
 
-  updateConsent(dataModel: Consent, force: boolean, processDone: EventEmitter<boolean>, searchParams? :SearchParams) {
-    this.consentService.updateConsent(dataModel, force || false, searchParams).pipe(
-      mergeMap(c =>
-        this.consentService.createScansAndProvenance(dataModel, (c as fhir4.Consent).id ?? "")
-      ),
-      catchError(e => throwError(e))
-    ).subscribe(
-      () => {},
-      e => {
-        processDone.emit(false);
-        if (e instanceof MainzellisteError && e.errorMessage == ErrorMessages.CREATE_CONSENT_REJECTED) {
-          this.openConsentRejectedDialog(dataModel, processDone);
-        } else if (e instanceof MainzellisteError && e.errorMessage == ErrorMessages.CREATE_CONSENT_INACTIVE) {
-          this.openConsentInactivatedDialog(dataModel, processDone);
+  getUpdateConsentObservable(observable : Observable<any>, force: boolean,
+                             searchParamsProvider? : (dataModel: Consent) => SearchParams) {
+    return observable.pipe(
+      mergeMap(consent => this.consentService.updateConsent(consent, force || false,  searchParamsProvider ? searchParamsProvider(consent) : undefined).pipe(
+        mergeMap(c =>
+          this.consentService.createScansAndProvenance(consent, (c as fhir4.Consent).id ?? "")
+        ),
+        catchError(e => throwError( () => { return { error: e, dataModel: consent}}))
+      ))
+    )
+  }
+
+  afterConsentUpdate(dialogRef: MatDialogRef<any, any>){
+    dialogRef.beforeClosed().subscribe(result => {
+      if(!result)
+        return
+      else if(result.error){
+        if (result.error instanceof MainzellisteError && result.error.errorMessage == ErrorMessages.CREATE_CONSENT_REJECTED) {
+          this.openConsentConfirmationDialog(result.dataModel, this.consentRejectedDialog, ConsentRejectedDialog);
+        } else if (result.error instanceof MainzellisteError && result.error.errorMessage == ErrorMessages.CREATE_CONSENT_INACTIVE) {
+          this.openConsentConfirmationDialog(result.dataModel, this.consentInactivatedDialog, ConsentInactivatedDialog);
         }
-      },
-      () => {
-        processDone.emit(true)
+      } else {
         this.loadConsents()
       }
-    );
-  }
-
-  private openConsentRejectedDialog(dataModel: Consent, processDone: EventEmitter<boolean>) {
-    const dialogRef = this.consentRejectedDialog.open(ConsentRejectedDialog, {
-      data: {},
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result)
-        this.updateConsent(dataModel, true, processDone);
     });
   }
 
-  private openConsentInactivatedDialog(dataModel: Consent, processDone: EventEmitter<boolean>) {
-    const dialogRef = this.consentInactivatedDialog.open(ConsentInactivatedDialog, {
-      data: {},
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result)
-        this.updateConsent(dataModel, true, processDone);
+  private openConsentConfirmationDialog<T>(dataModel: Consent, consentConfirmationDialog: MatDialog, component: ComponentType<T>) {
+    consentConfirmationDialog.open(component, {
+      data: {
+        updateConsentObservable: this.getUpdateConsentObservable(of(dataModel), true)
+      }})
+    .beforeClosed().subscribe({
+      next: () => {},
+      error: e => {},
+      complete: () => {
+        this.loadConsents();
+      }
     });
   }
 
@@ -274,9 +284,9 @@ export class IdcardComponent implements OnInit {
     if (this.idTypes.length == 0){
       this.idTypes = [
         ...this.patientListService.getUniqueIdTypes(false, "C")
-        .map(t => { return {name: t, isExternal: false, isAssociated: false } }),
+          .map(t => { return { name: t, isExternal: false, isAssociated: false } }),
         ...this.patientListService.getAssociatedIdTypes(false, "C")
-        .map(t => { return {name: t, isExternal: false, isAssociated: true } })
+          .map(t => { return { name: t, isExternal: false, isAssociated: true } })
       ];
     }
     return this.idTypes;
@@ -296,37 +306,92 @@ export class IdcardComponent implements OnInit {
   }
 
   openNewIdDialog(): void {
-    const dialogRef = this.newIdDialog.open(NewIdDialog, {
-      data: this.patientListService.getRelatedAssociatedIdsMapFrom(this.getUnAvailableIdTypes(this.patient), this.patient.ids, true, "R")
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result != null) {
-        this.generateId(result.externalId?.idType ?? "", result.externalId?.idString ?? "", result.resultIdType);
+    this.newIdDialog.open(NewIdDialog, {
+      disableClose: true,
+      data: {
+        relatedAssociatedIdsMap: this.patientListService.getRelatedAssociatedIdsMapFrom(this.getUnAvailableIdTypes(this.patient), this.patient.ids, true, "R"),
+        generateIdObservable: (externalId: Id, newIdType: string) => this.generateNewId(
+          externalId?.idType ?? "", externalId?.idString ?? "", newIdType)
       }
+    }).beforeClosed().subscribe(result => {
+      if(!result)
+        return;
+      this.loadPatient();
     })
   }
 
   openDeletePatientDialog(): void {
-    const dialogRef = this.deletePatientDialog.open(DeletePatientDialog, {
-      data: {},
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
+    this.deletePatientDialog.open(ConfirmDeleteDialogComponent, {
+      data: {
+        itemI18nName: "confirm_delete_dialog.item_patient",
+        callbackObservable: this.patientService.deletePatient(this.patient)
+      },
+    })
+    .afterClosed().subscribe(result => {
       if (result)
-        this.deletePatient();
+        this.router.navigate(['/patientlist']).then();
     });
   }
 
 
   openDeleteConsentDialog(consentId: string): void {
-    const dialogRef = this.deleteConsentDialog.open(DeleteConsentDialog, {
-      data: {},
+    this.deleteConsentDialog.open(ConfirmDeleteDialogComponent, {
+      data: {
+        itemI18nName: "confirm_delete_dialog.item_consent",
+        callbackObservable: this.consentService.deleteConsent(consentId)
+      },
+    })
+    .afterClosed().subscribe(result => {
+      if (result) {
+        this.loadConsents();
+      }
     });
+  }
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result)
-        this.deleteConsent(consentId);
+  getContactInfo() {
+    const fieldMap = this.getFieldMap();
+    return `${fieldMap[SemanticType.FIRSTNAME]} ${fieldMap[SemanticType.LASTNAME]}\n${fieldMap[SemanticType.POSTAL_CODE]} ${fieldMap[SemanticType.CITY]}`;
+  }
+
+  exportCSV() {
+    const fieldMap = this.getFieldMap();
+    var data = [
+      {
+        firstName: fieldMap[SemanticType.FIRSTNAME],
+        lastName: fieldMap[SemanticType.LASTNAME],
+        residence: fieldMap[SemanticType.CITY],
+        plz: fieldMap[SemanticType.POSTAL_CODE]
+      }
+    ]
+
+    new AngularCsv(data, 'ContactInfo', {
+      headers: [this.translate.instant("first_name_text"),
+         this.translate.instant("last_name_text"),
+         this.translate.instant("zip_code_text"),
+         this.translate.instant("residence_text")],
+      quoteStrings: '',
+      delimiter: ';'
+    },);
+  }
+
+  getFieldMap() {
+    const contact = this.patient.fields;
+    const fieldMap: { [key: string]: string } = {
+      [SemanticType.FIRSTNAME]: "",
+      [SemanticType.LASTNAME]: "",
+      [SemanticType.POSTAL_CODE]: "",
+      [SemanticType.CITY]: ""
+    };
+
+    this.patientService.getConfiguredFields("R").forEach(fieldConfig => {
+      if (fieldMap.hasOwnProperty(fieldConfig.semantic)) {
+        fieldMap[fieldConfig.semantic] = contact[fieldConfig.name];
+      }
     });
+    return fieldMap;
+  }
+
+  showDomainsCard():boolean{
+    return this.configService.showDomainsInIDCard() && this.authorizationService.getTenants().length > 1;
   }
 }

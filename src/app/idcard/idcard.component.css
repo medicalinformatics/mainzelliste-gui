@@ -12,20 +12,22 @@
   width: 30%;
 }
 
+#domains{
+  width: 94%;
+}
+
 #consents{
   width: 94%;
 }
 
 #consents table {
-  margin: 0 2.5% 15px 2.5%;
-  width: 95%;
+  margin: 0 1.25% 15px 1.25%;
 }
 
 mat-card-title{
   transform: scale(0.9);
   padding-top: 1%;
-  padding-bottom: 2%;
-  font-family: Arial;
+  padding-bottom: 25px;
 }
 
 .consent-row:hover {
@@ -104,4 +106,3 @@ mat-card-title{
 .mat-card.mat-card-scrollable mat-card-title {
   display: block;
 }
-

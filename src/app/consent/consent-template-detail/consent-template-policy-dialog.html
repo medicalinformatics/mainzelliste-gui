@@ -1,0 +1,63 @@
+<h1 mat-dialog-title>{{'consent_template.add_polices' | translate}}</h1>
+<div mat-dialog-content style="padding-bottom: 20px;">
+  <mat-form-field class="templateInputField">
+    <mat-label>{{'consent_template.policy_set_name' | translate}}</mat-label>
+    <mat-select [(value)]="this.selectedPolicySetId" [required]="true"
+                (selectionChange)="this.fetchPolicies($event)">
+      <mat-option *ngFor="let policySet of this.policySets" [value]="policySet.id">
+        {{policySet.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="templateInputField">
+    <mat-label>{{'consent_template.policies' | translate}}</mat-label>
+    <mat-spinner *ngIf="this.policiesLoading" matPrefix class="spinner" diameter="20"
+                 style="padding-right: 0.5em"></mat-spinner>
+    <mat-select [(ngModel)]="this.selectedPolicy" [required]="true"
+                [disabled]="this.selectedPolicySetId == undefined" name="'policy'">
+      <mat-option *ngFor="let policy of this.getPolicies()" [value]="policy">{{policy.text}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div class="templateInputField">
+    <mat-label style="float: left; margin-top: 8px">{{"consent_template.validityPeriod" | translate}}</mat-label>
+    <mat-form-field
+      [ngStyle]="{'clear': 'both', 'float': 'left', 'margin-bottom': displayError(year) ? '1.25em' : '-1.25em' }">
+      <mat-label>{{"consent_template.validity_year" | translate}}</mat-label>
+      <input matInput pattern="\d*" type="number" min="0" placeholder=""
+             [(ngModel)]="this.validityPeriod.year" [name]="'year'" #year="ngModel">
+      <mat-error *ngIf="displayError(year)">
+        {{getFieldErrorMessage("validity_year", year.errors)}}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field style="float: left; width: 100px; margin-left: 15px">
+      <mat-label>{{"consent_template.validity_month" | translate}}</mat-label>
+      <mat-select [(value)]="this.validityPeriod.month">
+        <mat-option *ngFor="let i of validityMonths" value="{{i}}">{{i}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field style=" float: left; width: 70px; margin-left: 15px">
+      <mat-label>{{"consent_template.validity_day" | translate}}</mat-label>
+      <mat-select [(value)]="this.validityPeriod.day">
+        <mat-option *ngFor="let i of validityDays" value="{{i}}">{{i}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button class="submitBreak" (click)="onCancel()">
+    {{'button_cancel' | translate}}
+  </button>
+  <button
+    mat-raised-button
+    class="submit"
+    type="submit"
+    (click)="onSave()"
+    [disabled]="selectedPolicy == undefined  || this.selectedPolicySetId == undefined
+    && (!this.validityPeriod.year || this.validityPeriod.year <= 0) &&
+    (!this.validityPeriod.month || this.validityPeriod.month == 0) &&
+    (!this.validityPeriod.day || this.validityPeriod.day == 0)"
+  >
+    {{'button_add' | translate}}
+  </button>
+</div>
+

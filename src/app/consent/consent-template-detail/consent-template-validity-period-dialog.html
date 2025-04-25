@@ -3,21 +3,19 @@
   <br />
         <mat-form-field
           [ngStyle]="{'clear': 'both', 'float': 'left', 'margin-bottom': displayError(year) ? '1.25em' : '-1.25em' }">
-          <mat-label>Jahren</mat-label>
+          <mat-label>{{"consent_template.validity_year" | translate}}</mat-label>
           <input matInput pattern="\d*" type="number" min="0" placeholder=""
                  [(ngModel)]="this.validityPeriod.year" [name]="'year'" #year="ngModel">
-          <mat-error *ngIf="displayError(year)">
-            {{getFieldErrorMessage("validity_year", year.errors)}}
-          </mat-error>
+          <mat-error *ngIf="displayError(year)">{{getFieldErrorMessage("validity_year", year.errors)}}</mat-error>
         </mat-form-field>
         <mat-form-field style="float: left; width: 100px; margin-left: 15px">
-          <mat-label>Monaten</mat-label>
+          <mat-label>{{"consent_template.validity_month" | translate}}</mat-label>
           <mat-select [(value)]="this.validityPeriod.month">
             <mat-option *ngFor="let i of validityMonths" value="{{i}}">{{i}}</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field style=" float: left; width: 70px; margin-left: 15px">
-          <mat-label>Tage</mat-label>
+          <mat-label>{{"consent_template.validity_day" | translate}}</mat-label>
           <mat-select [(value)]="this.validityPeriod.day">
             <mat-option *ngFor="let i of validityDays" value="{{i}}">{{i}}</mat-option>
           </mat-select>

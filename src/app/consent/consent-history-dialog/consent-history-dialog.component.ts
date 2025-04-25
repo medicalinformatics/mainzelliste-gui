@@ -31,14 +31,14 @@ export class ConsentHistoryDialogComponent implements OnInit {
   ngOnInit(): void {
     this.inProgress = true;
     this.consentService.readConsentHistory(this.dataModel.consentId, this.dataModel.consentVersion)
-    .subscribe(consentHistoryRows => {
-        console.log(consentHistoryRows)
+    .subscribe({
+      next: consentHistoryRows => {
         this.consentHistoryRows = consentHistoryRows;
         this.consentHistoryTable.renderRows();
         this.inProgress = false;
       },
-      error => this.inProgress = false
-    );
+      error: () => this.inProgress = false
+    });
   }
 
   onCancel(): void {

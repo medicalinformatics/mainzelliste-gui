@@ -61,11 +61,17 @@ mat-paginator{
 }
 
 .mat-column-id {
-  width: 250px;
+  width: 300px;
   text-align: left;
 }
 
 .mat-column-status {
   width: 150px;
   text-align: center;
+}
+
+.mat-column-actions {
+  width: 105px;
+  text-align: right;
+  padding-right: 3px;
 }

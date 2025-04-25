@@ -1,0 +1,19 @@
+#stepper {
+  width: 1200px;
+  background-color: #FAFAFA;
+  text-align: center
+}
+
+.float-table {
+  width: 700px;
+  margin: 0 auto;
+}
+
+.float-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 500px;
+  margin: 0 auto;
+  padding: 40px 0 30px 0;
+}

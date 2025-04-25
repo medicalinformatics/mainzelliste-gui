@@ -38,9 +38,11 @@ import {
   MomentDateAdapter
 } from "@angular/material-moment-adapter";
 import {ClipboardModule} from "@angular/cdk/clipboard";
-import {from} from "rxjs";
+import {firstValueFrom, from} from "rxjs";
 import {UserAuthService} from "./services/user-auth.service";
 import {NewIdDialog} from './idcard/dialogs/new-id-dialog';
+import {NgxCsvParserModule} from 'ngx-csv-parser';
+import {FileSaverModule} from 'ngx-filesaver';
 import {SharedModule} from "./shared/shared.module";
 import {ConsentModule} from "./consent/consent.module";
 import {MainLayoutModule} from "./main-layout/main-layout.module";
@@ -48,11 +50,28 @@ import {PatientModule} from "./patient/patient.module";
 import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.component";
 import {TranslateService} from '@ngx-translate/core';
 import {AccessDeniedComponent} from './access-denied/access-denied.component';
-import {InternationalizedMatPaginatorIntl} from "./shared/components/paginator/internationalized-mat-paginator-intl";
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import {NgxMatFileInputModule} from '@angular-material-components/file-input';
+import {MatStepperModule} from '@angular/material/stepper';
+import {
+  InternationalizedMatPaginatorIntl
+} from "./shared/components/paginator/internationalized-mat-paginator-intl";
+import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {ConsentTemplatesComponent} from './consent/consent-templates/consent-templates.component';
 import {ConfigurationModule} from "./configuration/configuration.module";
 import {LocalStorageService} from "./services/local-storage.service";
+import {
+  BulkIdGenerationComponent
+} from "./bulk-operations/bulk-id-generation/bulk-id-generation.component";
+import {
+  BulkIdGenerationTableComponent
+} from "./bulk-operations/bulk-id-generation/table/bulk-id-generation-table.component";
+import {
+  BulkIdGenerationEmptyFieldsDialog
+} from "./bulk-operations/bulk-id-generation/dialog/bulk-id-generation-empty-fields-dialog";
+import { BulkPseudonymizationComponent } from './bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component';
+import {EditorModule, TINYMCE_SCRIPT_SRC} from "@tinymce/tinymce-angular";
+import { ExportPatientsDialogComponent } from './patientlist/dialogs/export-patients-dialog/export-patients-dialog.component';
+import {MatListModule} from "@angular/material/list";
 
 function initializeAppFactory(
     configService: AppConfigService,
@@ -66,7 +85,7 @@ function initializeAppFactory(
     .then(config => {
       from(keycloak.keycloakEvents$).subscribe(event => userAuthService.notifyKeycloakEvent(event));
       translate.setDefaultLang(config[0].defaultLanguage || "en-US");
-      return translate.use(localStorageService.language).toPromise()
+      return firstValueFrom(translate.use(localStorageService.language))
         .then(() => keycloak.init({
           config: {
             url: config[0].oAuthConfig?.url ?? "",
@@ -111,7 +130,12 @@ function initializeAppFactory(
     NewIdDialog,
     AccessDeniedComponent,
     PageNotFoundComponent,
-    ConsentTemplatesComponent
+    ConsentTemplatesComponent,
+    BulkIdGenerationComponent,
+    BulkIdGenerationTableComponent,
+    BulkIdGenerationEmptyFieldsDialog,
+    BulkPseudonymizationComponent,
+    ExportPatientsDialogComponent
   ],
   imports: [
     SharedModule,
@@ -135,7 +159,13 @@ function initializeAppFactory(
     MatProgressBarModule,
     ClipboardModule,
     ConsentModule,
-    ConfigurationModule
+    ConfigurationModule,
+    NgxCsvParserModule,
+    FileSaverModule,
+    NgxMatFileInputModule,
+    MatStepperModule,
+    EditorModule,
+    MatListModule
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
@@ -155,6 +185,7 @@ function initializeAppFactory(
       useClass: MomentDateAdapter,
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
     },
+    {provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js'}
   ],
   bootstrap: [AppComponent]
 })

@@ -37,10 +37,10 @@ export class ConfigurationService {
         catchError(e => {
           // handle failed token creation
           if (e instanceof HttpErrorResponse && (e.status == 404) && ErrorMessages.ML_SESSION_NOT_FOUND.match(e))
-            return throwError(new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND));
+            return throwError( () => new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND));
           else if (!(e instanceof MainzellisteError) && !(e instanceof MainzellisteUnknownError))
-            return throwError(new MainzellisteUnknownError("failed to create editConfiguration token", e, this.translate));
-          return throwError(e);
+            return throwError( () => new MainzellisteUnknownError("failed to create editConfiguration token", e, this.translate));
+          return throwError( () => e);
         }));
   }
 
@@ -51,7 +51,7 @@ export class ConfigurationService {
         {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')}
     )
     .pipe(
-        catchError((e) => throwError(new Error(""))),
+        catchError((e) => throwError( () => new Error(""))),
     );
   }
 }

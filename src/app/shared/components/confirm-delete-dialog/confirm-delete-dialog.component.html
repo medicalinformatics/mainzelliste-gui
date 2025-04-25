@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>
+  {{'confirm_delete_dialog.title' | translate}}
+</h1>
+<div mat-dialog-content>
+  <h3 style="text-align: justify">{{this.message}}</h3>
+  <br />
+  <h4 style="font-weight: 100; text-align: justify">
+    {{'confirm_delete_dialog.warning' | translate}}
+  </h4>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button class="submitBreak" (click)="cancel()">
+    {{'button_cancel' | translate}}
+  </button>
+  <button mat-raised-button class="submit" [disabled]="inProgress" type="submit" (click)="onDelete()">
+    {{'button_delete' | translate}}
+    <mat-icon *ngIf="inProgress"><mat-spinner diameter="20"></mat-spinner></mat-icon>
+  </button>
+</div>

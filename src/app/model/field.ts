@@ -1,7 +1,17 @@
 export enum FieldType {
   TEXT = "TEXT",
+  SEX = "SEX",
   DATE = "DATE",
   NUMBER = "NUMBER",
+}
+export enum SemanticType{
+  FIRSTNAME = "firstname",
+  LASTNAME = "lastname",
+  BIRTH_NAME = "birthName",
+  SEX = "sex",
+  POSTAL_CODE = "postalCode",
+  CITY = "city",
+  UNDEFINED = "undefined"
 }
 export class Field {
   constructor(
@@ -9,6 +19,7 @@ export class Field {
     public name: string,
     public mainzellisteField: string,
     public mainzellisteFields: string[],
+    public semantic: SemanticType,
     public type: FieldType,
     public required: boolean,
     public validator: string,

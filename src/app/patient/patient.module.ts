@@ -10,7 +10,6 @@ import {
   EditPatientTentativeDialog
 } from "./edit-patient/edit-patient.component";
 import {DeletePatientComponent} from "./delete-patient/delete-patient.component";
-import {DeletePatientDialog} from "../idcard/dialogs/delete-patient-dialog";
 import {PatientFieldsComponent} from "./patient-fields/patient-fields.component";
 import {PatientPseudonymsComponent} from "./patient-pseudonyms/patient-pseudonyms.component";
 import {ExternalPseudonymsComponent} from "./external-pseudonyms/external-pseudonyms.component";
@@ -24,7 +23,6 @@ import {
 import {
   ShowRelatedIdDialog
 } from './patient-pseudonyms/dialogs/show-related-id-dialog/show-related-id-dialog.component';
-import {DeleteConsentDialog} from "../idcard/dialogs/delete-consent-dialog";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { SimilarPatientDialog } from './create-patient/similar-patient-dialog';
 import { MatTableModule } from '@angular/material/table';
@@ -57,10 +55,8 @@ import { MatIconModule } from '@angular/material/icon';
     EditPatientComponent,
     EditPatientTentativeDialog,
     DeletePatientComponent,
-    DeletePatientDialog,
     GenerateIdDialog,
-    ShowRelatedIdDialog,
-    DeleteConsentDialog
+    ShowRelatedIdDialog
   ]
 })
 export class PatientModule {

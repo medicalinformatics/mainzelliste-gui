@@ -91,19 +91,19 @@ secrets:
       "mainIdType": "pid",
       "showAllIds": false,
       "fields": [
-        { "i18n": "first_name_text", "name": "Vorname", "mainzellisteField": "vorname"},
-        { "i18n": "last_name_text", "name": "Nachname", "mainzellisteField": "nachname"},
-        { "i18n": "birth_name_text", "name": "Geburtsname", "mainzellisteField": "geburtsname"},
-        { "i18n": "birth_date_text", "name": "Geburtdatum", "mainzellisteFields": ["geburtstag", "geburtsmonat", "geburtsjahr"]},
-        { "i18n": "residence_text", "name": "Wohnort", "mainzellisteField": "ort"},
-        { "i18n": "zip_code_text", "name": "PLZ", "mainzellisteField": "plz"}
+         { "i18n": "first_name_text", "name": "Vorname", "mainzellisteField": "vorname", "semantic": "firstname"},
+         { "i18n": "last_name_text", "name": "Nachname", "mainzellisteField": "nachname", "semantic": "lastname"},
+         { "i18n": "birth_name_text", "name": "Geburtsname", "mainzellisteField": "geburtsname", "semantic": "birthName"},
+         { "i18n": "birth_date_text", "name": "Geburtdatum", "mainzellisteFields": ["geburtstag", "geburtsmonat", "geburtsjahr"], "semantic": "undefined"},
+         { "i18n": "residence_text", "name": "Wohnort", "mainzellisteField": "ort", "semantic": "postalCode"},
+         { "i18n": "zip_code_text", "name": "PLZ", "mainzellisteField": "plz", "semantic": "city"}
       ],
       "debug": false,
       "betaFeatures": {
-        "consent": false,
         "copyConcatenatedId": false,
         "copyId": true,
-        "configuration": true
+        "configuration": true,
+        "showDomainsInIDCard": false
       }
     }
   ]
