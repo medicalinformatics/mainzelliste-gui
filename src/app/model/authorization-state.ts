@@ -29,6 +29,9 @@ export class AuthorizationState{
   EDIT_CONSENT_TEMPLATE: boolean = false;
   DELETE_CONSENT_TEMPLATE: boolean = false;
 
+  DELETE_CONSENT_POLICY: boolean = false;
+  DELETE_CONSENT_POLICYSET: boolean = false;
+
   EDIT_CONFIGURATION: boolean = false;
   ADD_PATIENTS: boolean = false;
 
@@ -68,6 +71,14 @@ export class AuthorizationState{
     this.READ_CONSENT_TEMPLATE = operation.some(o => o == "R");
     this.EDIT_CONSENT_TEMPLATE = operation.some(o => o == "U");
     this.DELETE_CONSENT_TEMPLATE = operation.some(o => o == "D");
+  }
+
+  setPolicy(operation: Operation[]){
+    this.DELETE_CONSENT_POLICY = operation.some(o => o == "D");
+  }
+
+  setPolicySet(operation: Operation[]){
+    this.DELETE_CONSENT_POLICYSET = operation.some(o => o == "D");
   }
 
   setMiscellaneous(permissions: (MiscellaneousPermission|undefined)[]) {

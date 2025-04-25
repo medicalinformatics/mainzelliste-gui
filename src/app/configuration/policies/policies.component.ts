@@ -11,6 +11,7 @@ import { PolicyFormComponent } from '../policy-form/policy-form.component';
 import { switchMap, take } from 'rxjs/operators';
 import { forkJoin, of } from 'rxjs';
 import { ConfirmDeleteDialogComponent } from 'src/app/shared/components/confirm-delete-dialog/confirm-delete-dialog.component';
+import { Permission } from 'src/app/model/permission';
 
 @Component({
   selector: 'app-policies',
@@ -107,6 +108,8 @@ export class PoliciesComponent implements OnInit {
       }
     });
   }
+  protected readonly Permission = Permission;
+
   deletePolicySet(policySet: any): void {
     const policies = policySet.policies || [];
     const deletePolicies$ = policies.length

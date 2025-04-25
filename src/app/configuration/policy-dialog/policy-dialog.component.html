@@ -23,7 +23,7 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let policy">
-        <button mat-icon-button class="ml-icon-button"
+        <button mat-icon-button *appHasPermission="Permission.DELETE_CONSENT_POLICY" class="ml-icon-button"
         [matTooltip]="'button_delete' | translate"
         (click)="deletePolicy(policy)">
           <mat-icon>delete</mat-icon>

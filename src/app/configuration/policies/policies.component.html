@@ -44,7 +44,7 @@
         <button mat-icon-button [matTooltip]="'configuration.policy.create' | translate" (click)="addPolicy(element.id)">
           <mat-icon>add_moderator</mat-icon>
         </button>
-        <button mat-icon-button [matTooltip]="'configuration.policySet.delete' | translate" (click)="deletePolicySet(element)">
+        <button mat-icon-button *appHasPermission="Permission.DELETE_CONSENT_POLICYSET" [matTooltip]="'configuration.policySet.delete' | translate" (click)="deletePolicySet(element)">
           <mat-icon>delete</mat-icon>
         </button>
       </div>

@@ -131,6 +131,10 @@ export class AuthorizationService {
           this.authorizationState.setConsent(permission.operations);
         else if(permission.type ==  "consentTemplate")
           this.authorizationState.setConsentTemplate(permission.operations);
+        else if(permission.type ==  "policy")
+          this.authorizationState.setPolicy(permission.operations);
+        else if(permission.type ==  "policySet")
+          this.authorizationState.setPolicySet(permission.operations);
       })
       this.authorizationState.setMiscellaneous(currentTenant.permissions
         .filter(p => p.type == "miscellaneous")
@@ -187,6 +191,20 @@ export class AuthorizationService {
       permissions.push({
         type: 'consentTemplate',
         operations: claimPermissions.resources.consentTemplate.operations
+      })
+    }
+
+    if(claimPermissions.resources.policy != undefined) {
+      permissions.push({
+        type: 'policy',
+        operations: claimPermissions.resources.policy.operations
+      })
+    }
+
+    if(claimPermissions.resources.policySet != undefined) {
+      permissions.push({
+        type: 'policySet',
+        operations: claimPermissions.resources.policySet.operations
       })
     }
 
