@@ -136,9 +136,7 @@ export class SimilarPatientDialog {
             )
             .subscribe(
                 patients => {
-                    console.log(patients);
                     this.match = this.patientListService.convertToDisplayPatient(patients[0]);
-                    console.log(this.match)
                 }
              );
     }

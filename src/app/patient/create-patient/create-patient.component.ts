@@ -1,27 +1,26 @@
-import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
-import { Patient } from "../../model/patient";
-import { PatientService } from "../../services/patient.service";
-import { Router } from "@angular/router";
-import { FormControl, NgForm } from "@angular/forms";
-import { PatientListService } from "../../services/patient-list.service";
-import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
-import { MatChipInputEvent, MatChipList } from "@angular/material/chips";
-import { ErrorNotificationService } from "../../services/error-notification.service";
-import { GlobalTitleService } from "../../services/global-title.service";
-import { forkJoin, Observable, of } from "rxjs";
-import { concatMap, map, mergeMap, retryWhen, startWith, switchMap } from "rxjs/operators";
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
-import { MainzellisteError } from "../../model/mainzelliste-error.model";
-import { ErrorMessages } from "../../error/error-messages";
-import { UserAuthService } from "../../services/user-auth.service";
-import { TranslateService } from '@ngx-translate/core';
-import { ConsentDialogComponent } from "../../consent/consent-dialog/consent-dialog.component";
-import { Consent } from "../../consent/consent.model";
-import { ConsentService } from "../../consent/consent.service";
-import { Permission } from "../../model/permission";
-import { Operation } from "../../model/tenant";
-import {Id} from"../../model/id";
-import { SimilarPatientDialog } from './similar-patient-dialog';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Patient} from "../../model/patient";
+import {PatientService} from "../../services/patient.service";
+import {Router} from "@angular/router";
+import {FormControl, NgForm} from "@angular/forms";
+import {PatientListService} from "../../services/patient-list.service";
+import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
+import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
+import {ErrorNotificationService} from "../../services/error-notification.service";
+import {GlobalTitleService} from "../../services/global-title.service";
+import {forkJoin, Observable, of} from "rxjs";
+import {concatMap, map, mergeMap, retryWhen, startWith, switchMap} from "rxjs/operators";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MainzellisteError} from "../../model/mainzelliste-error.model";
+import {ErrorMessages} from "../../error/error-messages";
+import {UserAuthService} from "../../services/user-auth.service";
+import {TranslateService} from '@ngx-translate/core';
+import {ConsentDialogComponent} from "../../consent/consent-dialog/consent-dialog.component";
+import {Consent} from "../../consent/consent.model";
+import {ConsentService} from "../../consent/consent.service";
+import {Permission} from "../../model/permission";
+import {Operation} from "../../model/tenant";
+import {SimilarPatientDialog} from './similar-patient-dialog';
 
 export interface IdTypSelection {
   idType: string,
@@ -34,7 +33,7 @@ export interface IdTypSelection {
   templateUrl: './create-patient.component.html',
   styleUrls: ['./create-patient.component.css']
 })
-export class CreatePatientComponent implements OnInit {
+export class CreatePatientComponent  implements OnInit {
   public readonly Permission = Permission;
   @Input() fields: Array<string> = [];
 
@@ -44,7 +43,7 @@ export class CreatePatientComponent implements OnInit {
   patient: Patient = new Patient();
   patientService: PatientService;
   patientListService: PatientListService;
-  userAuthService: UserAuthService;
+  userAuthService : UserAuthService;
   consent?: Consent;
 
   internalIdTypeSelection: IdTypSelection[] = [];
@@ -63,7 +62,7 @@ export class CreatePatientComponent implements OnInit {
     public consentDialog: MatDialog,
     patientService: PatientService,
     patientListService: PatientListService,
-    userAuthService: UserAuthService,
+    userAuthService : UserAuthService,
     public errorNotificationService: ErrorNotificationService,
     private router: Router,
     private titleService: GlobalTitleService,
@@ -81,14 +80,14 @@ export class CreatePatientComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let internalIdTypes = this.patientListService.getAllInternalIdTypes("C");
+    let internalIdTypes  = this.patientListService.getAllInternalIdTypes( "C");
     let mainIdType = this.patientListService.findDefaultIdType(internalIdTypes);
     this.selectedInternalIdTypes.push(mainIdType);
 
     this.internalIdTypeSelection = internalIdTypes
-      .map(t => {
-        return { idType: t, added: mainIdType == t }
-      });
+    .map(t => {
+      return {idType: t, added: mainIdType == t}
+    });
 
     this.filteredInternalIdTypes = this.chipListInputCtrl.valueChanges.pipe(
       startWith(''),
@@ -99,7 +98,7 @@ export class CreatePatientComponent implements OnInit {
         else if (typeof searchValue !== "string")
           searchValue = value.idType
         return this.internalIdTypeSelection
-          .filter(e => !e.added && e.idType.toLowerCase().includes(searchValue.toLowerCase()))
+        .filter(e => !e.added && e.idType.toLowerCase().includes(searchValue.toLowerCase()))
       }),
     );
 
@@ -116,10 +115,10 @@ export class CreatePatientComponent implements OnInit {
       concatMap(p => this.patientService.createPatient(p, this.selectedInternalIdTypes, sureness)),
       retryWhen(
         error => error.pipe(
-          switchMap((e) => {
-            if (e instanceof MainzellisteError) {
+          switchMap( (e) => {
+            if(e instanceof MainzellisteError) {
               // handle session timeout
-              if (e.errorMessage == ErrorMessages.ML_SESSION_NOT_FOUND)
+              if( e.errorMessage == ErrorMessages.ML_SESSION_NOT_FOUND)
                 return this.userAuthService.retryLogin(this.router.url)
               // handle tentative
               else if (e.errorMessage == ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH) {
@@ -133,7 +132,7 @@ export class CreatePatientComponent implements OnInit {
           })
         )
       ),
-      mergeMap(newId => {
+      mergeMap( newId => {
         if (this.consent !== undefined) {
           this.consent.patientId = newId;
           return this.consentService.addConsent(this.consent).pipe(
@@ -177,7 +176,7 @@ export class CreatePatientComponent implements OnInit {
       idTypeSelection.added = true;
       this.chipListInputCtrl.setValue(null);
       this.chipList.errorState = false;
-      this.chipListInputCtrl.updateValueAndValidity({ onlySelf: false, emitEvent: true });
+      this.chipListInputCtrl.updateValueAndValidity({onlySelf: false, emitEvent: true});
     }
   }
 
@@ -189,17 +188,17 @@ export class CreatePatientComponent implements OnInit {
     const value = (idType || '').trim();
 
     this.internalIdTypeSelection
-      .filter(e => e.idType == value)
-      .forEach(e => {
-        e.added = false;
-      })
+    .filter(e => e.idType == value)
+    .forEach(e => {
+      e.added = false;
+    })
 
     // remove id type from selected id types
     let index = this.selectedInternalIdTypes.findIndex(e => e == value);
     if (index > -1) {
       this.selectedInternalIdTypes.splice(index, 1);
       this.chipList.errorState = this.selectedInternalIdTypes.length == 0;
-      this.chipListInputCtrl.updateValueAndValidity({ onlySelf: false, emitEvent: true });
+      this.chipListInputCtrl.updateValueAndValidity({onlySelf: false, emitEvent: true});
     }
   }
 
@@ -240,14 +239,13 @@ export class CreatePatientComponent implements OnInit {
     const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
       width: '900px',
       disableClose: true,
-      data: { consent: this.consent, isSaveButton: true }
+      data: {consent: this.consent, isSaveButton:true}
     });
 
     dialogRef.afterClosed().subscribe(result => {
       this.consent = result?.consent;
     });
   }
-
 }
 
 @Component({
