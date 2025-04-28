@@ -20,6 +20,7 @@ import {take} from 'rxjs/operators';
 export class PolicyFormComponent implements OnInit {
   policyForm: FormGroup;
   errorMessages: string[] = [];
+  saving: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -40,6 +41,8 @@ export class PolicyFormComponent implements OnInit {
     if (this.policyForm.valid) {
       this.errorMessages = [];
       const { code, text } = this.policyForm.value;
+      this.saving = true;
+      this.policyForm.disable();
 
       this.consentService.addPolicy(this.data.policySetId, code, text)
         .pipe(take(1))
@@ -48,30 +51,12 @@ export class PolicyFormComponent implements OnInit {
             this.dialogRef.close(response);
           },
           error: (e) => {
-            const errorCode = e?.error?.code || e?.status;
-            this.handleError(errorCode, e);
+            this.errorMessages.push(getErrorMessageFrom(e, this.translate));
+            this.policyForm.enable();
+            this.saving = false;
           }
         });
     }
-  }
-
-  handleError(errorCode: any, e: any) {
-    let errorMessageKey: string;
-    switch (errorCode) {
-      case 400:
-        errorMessageKey = "configuration.policy.error.400";
-        break;
-      case 409:
-        errorMessageKey = "";
-        break;
-      default:
-        this.errorMessages.push(getErrorMessageFrom(e, this.translate));
-        return
-    }
-
-    this.translate.get(errorMessageKey).subscribe((translatedMessage) => {
-      this.errorMessages.push(translatedMessage);
-    });
   }
 
   displayError(field: AbstractControl<any>) {

@@ -234,8 +234,11 @@
   "configuration.policySet.delete": "Policy-Set löschen",
   "configuration.policySet.empty": "Kein Policy-Set gefunden.",
   "configuration.policy.error.400": "Feld 'Policy-Code' fehlerhaft. Inhalt enthält Leerzeichen.",
+  "configuration.policy.error.409": "Policy mit dem angegebenen 'Code' existiert bereits",
+  "configuration.policy.error.delete": "Policy konnte nicht gelöscht werden, da sie in der Einwilligungsvorlage '${0}' verwendet wird",
   "configuration.policySet.error.400": "Feld 'Id' fehlerhaft. Inhalt enthält Leerzeichen.",
   "configuration.policySet.error.409": "Policy-Set mit dem angegebenen 'Id' existiert bereits",
+  "configuration.policySet.error.delete": "Policy-Set konnte nicht gelöscht werden, da sie in der Einwilligungsvorlage '${0}' verwendet wird",
 
 	"info.title": "Informationen und Hinweise zur Mainzelliste",
 	"info.notice_add_patient": "Hinweis für die Erstellung eines Patienten",
@@ -341,10 +344,10 @@
   "error.fetch_patients_job_unauthorized": "Sie haben keine Berechtigung, um die Bulk-Pseudonymisierungsergebnisse zu lesen",
   "error.fetch_patients_job_not_found": "Bulk-Pseudonymisierung ist fehlgeschlagen",
 
-  "errorComponent.error": "Error",
+  "errorComponent.error": "Fehler",
 	"errorComponent.message": "Information",
 
-	"errorCardComponent.error": "Error: ",
+	"errorCardComponent.error": "Fehler: ",
 	"errorDialogComponent.title": "Ups! Etwas ist schief gelaufen!",
 	"errorDialogComponent.text1": "Beim Versuch, die Anwendung zu laden, ist ",
 	"errorDialogComponent.text2": " aufgetreten",

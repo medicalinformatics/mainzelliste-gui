@@ -225,8 +225,11 @@
   "configuration.policySet.delete": "Delete Policy Set",
   "configuration.policySet.empty": "no Policy-Set found.",
   "configuration.policy.error.400": "Invalid field 'Policy Code'. Value contains whitespace.",
+  "configuration.policy.error.409": "Policy with the given 'Code' already exist",
+  "configuration.policy.error.delete": "Failed to delete policy due to existing usage in the consent template '${0}'",
   "configuration.policySet.error.400": "Invalid field 'Id'. Value contains whitespace.",
-  "configuration.policySet.error.409": "Policy-Set with the given 'Id' already exist",
+  "configuration.policySet.error.409": "Policy set with the given 'Id' already exist",
+  "configuration.policySet.error.delete": "Failed to delete policy set due to existing usage in the consent template '${0}'",
 
 	"info.title": "Information and notes on the Mainzelliste",
 	"info.notice_add_patient": "Note for creating a patient",

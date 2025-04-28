@@ -75,7 +75,7 @@ export class PoliciesComponent implements OnInit {
   addPolicySet() {
     const dialogRef = this.dialog.open(PolicySetFormComponent, {
       disableClose: true,
-      width: '30vw',
+      width: '25vw',
     });
 
     dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
@@ -89,7 +89,7 @@ export class PoliciesComponent implements OnInit {
   addPolicy(policySetId: string) {
     const dialogRef = this.dialog.open(PolicyFormComponent, {
       disableClose: true,
-      width: '30vw',
+      width: '25vw',
       data: { policySetId }
     });
 

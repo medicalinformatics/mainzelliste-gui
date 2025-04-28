@@ -340,7 +340,7 @@ export class ConsentService {
     return this.sessionService.createToken("readConsent", {}, version)
     .pipe(
       mergeMap(token => this.resolveReadConsentHistory(token.id, id, version)),
-      catchError((error) => this.handleFailedRequest("Consent", error, [ErrorMessages.READ_CONSENT_FAILED], "read"))
+      catchError((error) => this.handleFailedFhirRequest("Consent", error, [ErrorMessages.READ_CONSENT_FAILED], "read"))
     );
   }
 
@@ -729,7 +729,7 @@ export class ConsentService {
     return this.sessionService.createToken(tokenType, tokenData)
       .pipe(
         mergeMap(token => this.resolveEditFhirResourceToken(token.id, resourceType, resource, searchParams)),
-        catchError((error) => this.handleFailedRequest(resourceType, error, [ErrorMessages.CREATE_CONSENT_REJECTED], "update"))
+        catchError((error) => this.handleFailedFhirRequest(resourceType, error, [ErrorMessages.CREATE_CONSENT_REJECTED], "update"))
       )
   }
 
@@ -763,7 +763,7 @@ export class ConsentService {
     return this.sessionService.createToken(tokenType, tokenData)
     .pipe(
         mergeMap(token => this.resolveReadFhirResourceToken<F>(token.id, resourceType, id, version)),
-        catchError((error) => this.handleFailedRequest(resourceType, error, errorMessageTypes, "read"))
+        catchError((error) => this.handleFailedFhirRequest(resourceType, error, errorMessageTypes, "read"))
     )
   }
 
@@ -778,7 +778,7 @@ export class ConsentService {
     return this.sessionService.createToken(tokenType, tokenData)
     .pipe(
         mergeMap(token => this.resolveDeleteFhirResourceToken<F>(token.id, resourceType, id, urlParams)),
-        catchError((error) => this.handleFailedRequest(resourceType, error, errorMessageTypes, "delete"))
+        catchError((error) => this.handleFailedFhirRequest(resourceType, error, errorMessageTypes, "delete"))
     )
   }
 
@@ -794,11 +794,11 @@ export class ConsentService {
     return this.sessionService.createToken(tokenType, tokenData)
     .pipe(
         mergeMap(token => resolveToken(token.id, resourceType, searchParam)),
-        catchError((error) => this.handleFailedRequest(resourceType, error, errorMessageTypes, errorPrefix))
+        catchError((error) => this.handleFailedFhirRequest(resourceType, error, errorMessageTypes, errorPrefix))
     )
   }
 
-  private handleFailedRequest(resourceType: string, error: any, errorMessageTypes: ErrorMessage[], errorPrefix: string) {
+  private handleFailedFhirRequest(resourceType: string, error: any, errorMessageTypes: ErrorMessage[], errorPrefix: string) {
     if (error.response?.data != undefined) {
       let errorMessage = "";
       for (const issue of (error.response.data as fhir4.OperationOutcome).issue) {
@@ -919,7 +919,8 @@ export class ConsentService {
 
   public addPolicySet(id: string, name: string, externalId: string): Observable<any> {
     let body = JSON.stringify({ id, name, externalId });
-    return this.postData<ConsentPolicySet>("addConsentPolicySet", {}, "consent-policies", body)
+    return this.postData<ConsentPolicySet>("addConsentPolicySet", {}, "consent-policies", body,
+      [ErrorMessages.CREATE_POLICY_SET_CONFLICT], "policy-set")
   }
 
   deletePolicy(policyCode: string, policySetId: string): Observable<any>  {
@@ -939,18 +940,9 @@ export class ConsentService {
       .set('Authorization', 'MainzellisteToken ' + tokenId)
     })
     .pipe(
-      catchError(e => {
-        // if (e instanceof HttpErrorResponse && (e.status == 404)) {
-        //   const errorMessage = this.deletePatientErrorMessages.find(msg => msg.match(e))
-        //   // find error message arguments
-        //   if( errorMessage == ErrorMessages.DELETE_PATIENT_NOT_FOUND) {
-        //     return throwError( () => new MainzellisteError(errorMessage));
-        //   } else {
-        //     return throwError( () => errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
-        //   }
-        // }
-        return throwError( () => e);
-      })
+      catchError(e => this.handleFailedRequest("delete", e,
+        [ErrorMessages.DELETE_POLICY_REJECTED], "policy")
+      )
     );
   }
 
@@ -971,40 +963,28 @@ export class ConsentService {
       .set('Authorization', 'MainzellisteToken ' + tokenId)
     })
     .pipe(
-      catchError(e => {
-        // if (e instanceof HttpErrorResponse && (e.status == 404)) {
-        //   const errorMessage = this.deletePatientErrorMessages.find(msg => msg.match(e))
-        //   // find error message arguments
-        //   if( errorMessage == ErrorMessages.DELETE_PATIENT_NOT_FOUND) {
-        //     return throwError( () => new MainzellisteError(errorMessage));
-        //   } else {
-        //     return throwError( () => errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
-        //   }
-        // }
-        return throwError( () => e);
-      })
+      catchError(e => this.handleFailedRequest("delete", e,
+        [ErrorMessages.DELETE_POLICY_SET_REJECTED], "policy set")
+      )
     );
   }
 
-  public addPolicy(setId: String, code: String, text: String): Observable<any> {
+  public addPolicy(setId: string, code: string, text: string): Observable<any> {
     let body = JSON.stringify({ code, text });
     let path = "consent-policies/" + setId + "/policy";
-    return this.postData<ConsentPolicy>("addConsentPolicy", {}, path, body)
+    return this.postData<ConsentPolicy>("addConsentPolicy", {}, path, body,
+      [ErrorMessages.CREATE_POLICY_CONFLICT], "policy")
   }
 
-  public postData<T>(tokenType: TokenType, tokenData: TokenData, path : string, body: string) {
+  public postData<T>(tokenType: TokenType, tokenData: TokenData, path : string, body: string,
+                     errorMessageTypes: ErrorMessage[], operationName: string) {
     return this.sessionService.createToken(tokenType, tokenData)
       .pipe(
         mergeMap(token => this.resolvePostToken<T>(token.id, path, body)),
-        catchError(e => {
-          // handle failed token creation
-          if (e instanceof HttpErrorResponse && (e.status == 409) && ErrorMessages.CREATE_POLICY_SET_CONFLICT.match(e))
-            return throwError( () => new MainzellisteError(ErrorMessages.CREATE_POLICY_SET_CONFLICT));
-          else if (!(e instanceof MainzellisteError) && !(e instanceof MainzellisteUnknownError))
-            return throwError( () => new MainzellisteUnknownError("failed to create resource", e, this.translate));
-          return throwError( () => e);
-        })
-      );
+        catchError(e => this.handleFailedRequest("create", e,
+          errorMessageTypes, operationName)
+        )
+      )
   }
 
   public resolvePostToken<T>(tokenId: string | undefined, path: string, body: string) {
@@ -1136,29 +1116,17 @@ export class ConsentService {
       [ErrorMessages.READ_CONSENT_SCAN_FAILED], 'DocumentReference', consentScanId, version);
   }
 
-  //////////////////////////////
-  ////    DRAFT
-  //////////////////////////////
+  ////
+  // Utils
+  /////////////////
 
-
-  /**
-   * Handle operation that failed.
-   */
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-
-      // TODO: better job of transforming error for user consumption
-      this.log(`${operation} failed: ${error.message}`);
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
-  }
-
-  private log(message: string) {
-    // this.messageService.add(`ConsentService: ${message}`);
+  private handleFailedRequest(resourcePathName: string, error: any, errorMessageTypes: ErrorMessage[], operationName: string) {
+    if (error instanceof HttpErrorResponse ) {
+      const errorMessage = errorMessageTypes.find(msg => msg.match(error))
+      if(errorMessage)
+        return throwError( () => new MainzellisteError(errorMessage, ...errorMessage.findVariables(error)));
+    }
+    return throwError( () => new MainzellisteUnknownError(`Failed to ${operationName} resource ${resourcePathName}.
+                    Cause: ${getErrorMessageFrom(error, this.translate)}`, error, this.translate))
   }
 }

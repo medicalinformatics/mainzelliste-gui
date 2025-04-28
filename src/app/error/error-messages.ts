@@ -212,9 +212,23 @@ export class ErrorMessages {
     "error.fetch_patients_job_not_found")
 
   ////
-  // CONSENT SCAN ERRORS
+  // POLICY SET ERRORS
   //---------------------
-  public static CREATE_POLICY_SET_CONFLICT: ErrorMessage = new ErrorMessage(11001,
+  public static readonly CREATE_POLICY_SET_CONFLICT: ErrorMessage = new ErrorMessage(11001,
     /'PolicySet' resource with the key .+ already exists/i,
     "configuration.policySet.error.409");
+  public static readonly DELETE_POLICY_SET_REJECTED: ErrorMessage = new ErrorMessage(11002,
+    /Cannot delete policy set because it is being referenced by consent template '(.+)'/i,
+    "configuration.policySet.error.delete");
+
+  ////
+  // POLICY ERRORS
+  //---------------------
+  public static readonly CREATE_POLICY_CONFLICT: ErrorMessage = new ErrorMessage(12001,
+    /'Policy' resource with the key .+ already exists/i,
+    "configuration.policy.error.409");
+
+  public static readonly DELETE_POLICY_REJECTED: ErrorMessage = new ErrorMessage(12002,
+    /Cannot delete policy because it is being referenced by consent template '(.+)'/i,
+    "configuration.policy.error.delete");
 }

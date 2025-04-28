@@ -22,8 +22,8 @@
     </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-button mat-dialog-close class="submitBreak">{{'button_cancel' | translate}}</button>
-  <button mat-button (click)="save()" class="submit" cdkFocusInitial [disabled]="!policySetForm.valid || saving">
+  <button mat-raised-button mat-dialog-close class="submitBreak">{{'button_cancel' | translate}}</button>
+  <button mat-raised-button (click)="save()" class="submit" cdkFocusInitial [disabled]="!policySetForm.valid || saving">
     {{'button_create' | translate}}
     <mat-icon *ngIf="saving"><mat-spinner diameter="20"></mat-spinner></mat-icon>
   </button>
