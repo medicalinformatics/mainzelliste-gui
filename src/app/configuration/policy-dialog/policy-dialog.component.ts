@@ -3,7 +3,6 @@ import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Permission } from "../../model/permission";
 import { ConsentService } from 'src/app/consent/consent.service';
-import { Observable } from 'rxjs';
 import { ConfirmDeleteDialogComponent } from 'src/app/shared/components/confirm-delete-dialog/confirm-delete-dialog.component';
 
 @Component({
