@@ -1,24 +1,31 @@
 <h1 mat-dialog-title>{{"configuration.policySet.add" | translate}}</h1>
+<app-error-card [(messages)]="errorMessages"></app-error-card>
+<form [formGroup]="policySetForm">
 <div mat-dialog-content>
-  <app-error-card [(messages)]="errorMessages"></app-error-card>
-  <form [formGroup]="policySetForm">
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" [ngStyle]="{'margin-bottom': displayError(policySetForm.controls.id) ? '0.25em' : '-1.25em' }">
       <mat-label>{{'configuration.policySet.id' | translate}}</mat-label>
       <input matInput formControlName="id">
+      <mat-error *ngIf="displayError(policySetForm.controls.id)">
+        {{ getFieldErrorMessage("id", policySetForm.controls.id.errors) }}
+      </mat-error>
     </mat-form-field>
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" [ngStyle]="{'margin-bottom': displayError(policySetForm.controls.name) ? '0.25em' : '-1.25em' }">
       <mat-label>{{'configuration.policySet.name' | translate}}</mat-label>
       <input matInput formControlName="name">
+      <mat-error *ngIf="displayError(policySetForm.controls.name)">
+        {{ getFieldErrorMessage("name", policySetForm.controls.name.errors) }}
+      </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>{{'configuration.policySet.externalId' | translate}}</mat-label>
       <input matInput formControlName="externalId">
     </mat-form-field>
-  </form>
 </div>
 <div mat-dialog-actions>
-  <button mat-button mat-dialog-close class="submitBreak">{{'button_cancel' | translate}}</button>
-  <button mat-button (click)="save()" class="submit" cdkFocusInitial [disabled]="!policySetForm.valid">
+  <button mat-raised-button mat-dialog-close class="submitBreak">{{'button_cancel' | translate}}</button>
+  <button mat-raised-button (click)="save()" class="submit" cdkFocusInitial [disabled]="!policySetForm.valid || saving">
     {{'button_create' | translate}}
+    <mat-icon *ngIf="saving"><mat-spinner diameter="20"></mat-spinner></mat-icon>
   </button>
 </div>
+</form>
