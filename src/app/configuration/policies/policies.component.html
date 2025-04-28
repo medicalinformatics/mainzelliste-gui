@@ -1,4 +1,4 @@
-<div class="header-container">
+<div class="header-container" *appHasPermission="Permission.CREATE_CONSENT_POLICY_SET">
   <button mat-raised-button class="add-policy-set-button" (click)="addPolicySet()">
     {{'configuration.policySet.add' | translate}}
     <mat-icon>add</mat-icon>
@@ -34,17 +34,19 @@
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element">
       <div style="display: flex; flex-flow: row; justify-content: right;">
-        <button mat-icon-button [matTooltip]="'configuration.policy.show' | translate"
+        <button mat-icon-button *appHasPermission="Permission.READ_CONSENT_POLICY"
+                [matTooltip]="'configuration.policy.show' | translate"
                 color="primary" class="ml-icon-button"
                 (click)="openPolicyDialog(element.id)">
           <mat-icon>list_alt</mat-icon>
         </button>
-        <button mat-icon-button [matTooltip]="'configuration.policy.create' | translate"
+        <button mat-icon-button *appHasPermission="Permission.CREAT_CONSENT_POLICY"
+                [matTooltip]="'configuration.policy.create' | translate"
                 color="primary" class="ml-icon-button"
                 (click)="addPolicy(element.id)">
           <mat-icon>add_moderator</mat-icon>
         </button>
-        <button mat-icon-button *appHasPermission="Permission.DELETE_CONSENT_POLICYSET"
+        <button mat-icon-button *appHasPermission="Permission.DELETE_CONSENT_POLICY_SET"
                 color="primary" class="ml-icon-button"
                 [matTooltip]="'configuration.policySet.delete' | translate"
                 (click)="deletePolicySet(element)">

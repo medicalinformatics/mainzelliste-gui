@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {GlobalTitleService} from "../../services/global-title.service";
 import {TranslateService} from "@ngx-translate/core";
+import {Permission} from "../../model/permission";
 
 @Component({
   selector: 'app-configuration',
@@ -8,6 +9,7 @@ import {TranslateService} from "@ngx-translate/core";
   styleUrls: ['./configuration.component.css']
 })
 export class ConfigurationComponent implements OnInit {
+  protected readonly Permission = Permission;
 
   constructor(
     public translate: TranslateService,
