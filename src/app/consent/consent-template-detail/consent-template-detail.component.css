@@ -3,7 +3,7 @@ mat-form-field.templateInputField {
   padding-bottom: 0;
   margin: 0 0 -1.25em 0;
   clear: both;
-  float:left;
+  float: left;
 }
 mat-form-field.templateVersion
 {
@@ -15,4 +15,10 @@ mat-form-field.templateVersion
 }
 .mat-radio-button ~ .mat-radio-button {
   margin-left: 16px;
+}
+
+.mat-form-field.templateInputFieldDisabled .mat-form-field-outline
+{
+  color: rgba(0,0,0,.12);
+  cursor: pointer;
 }

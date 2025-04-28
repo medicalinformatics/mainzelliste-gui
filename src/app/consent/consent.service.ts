@@ -20,7 +20,13 @@ import {ErrorMessage, ErrorMessages} from "../error/error-messages";
 import _moment from "moment";
 import {ConsentTemplateFhirWrapper} from "../model/consent-template-fhir-wrapper";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
-import {ChoiceItem, ConsentTemplate, DisplayItem, Validity} from "./consent-template.model";
+import {
+  ChoiceItem,
+  ConsentTemplate,
+  DisplayItem,
+  PolicyView,
+  Validity
+} from "./consent-template.model";
 import {catchError, finalize, map, mergeMap, reduce} from "rxjs/operators";
 import {ConsentPolicySet} from "../model/consent-policy-set";
 import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
@@ -31,6 +37,7 @@ import {TokenData} from "../model/token-data";
 import {UploadConsentFileResponse} from "../model/api/upload-consent-file-response";
 import * as querystring from "querystring";
 import {AuthorizationService} from "../services/authorization.service";
+import {DateTime} from "luxon";
 
 @Injectable({
   providedIn: 'root'
@@ -38,10 +45,11 @@ import {AuthorizationService} from "../services/authorization.service";
 
 export class ConsentService {
   private readonly mainzellisteBaseUrl: string;
-  private client: Client;
-  private uploadConsentScanErrorMessages: ErrorMessage[] = [
+  private readonly client: Client;
+  private readonly uploadConsentScanErrorMessages: ErrorMessage[] = [
     ErrorMessages.FAILED_UPLOAD_CONSENT_SCAN_FILE
   ];
+  private static readonly POLICY_SET_PATH: string = "/consent-policies/";
 
   constructor(
     private sessionService: SessionService,
@@ -665,7 +673,7 @@ export class ConsentService {
           coding: [
             {
               code: p.code,
-              system: p.policySet?.externalId || `/consent-policies/${p.policySet?.id}`,
+              system: p.policySet?.externalId || `${ConsentService.POLICY_SET_PATH}${p.policySet?.id}`,
               display: p.displayText
             }
           ]
@@ -712,12 +720,77 @@ export class ConsentService {
     };
   }
 
+  public deserializeConsentTemplate(questionnaire: fhir4.Questionnaire) : ConsentTemplate{
+    if(questionnaire.contained == undefined || questionnaire.contained.length == 0)
+      return ConsentTemplate.createEmpty();
+    const containedConsent: fhir4.Consent = questionnaire.contained[0] as fhir4.Consent
+    return {
+      name: this.getResourceIdentifier(questionnaire.identifier),
+      version: questionnaire.version ?? "",
+      title: questionnaire.title ?? "",
+      status: questionnaire.status,
+      items: questionnaire.item?.filter(item => item.type == 'display' || item.type == 'choice')
+      .map((item, i) => item.type == 'display' ?
+        new DisplayItem(i, 'display', item.text) :
+        new ChoiceItem(i, 'choice', containedConsent.provision?.type == "deny"? 'deny' :'permit',
+            item.text, containedConsent.provision?.provision?.filter(p =>
+              p.extension?.some( ext => ext.url == "http://hl7.org/fhir/StructureDefinition/originalText"
+                && ext.valueString == item.linkId)
+            )
+            .map( p => this.deserializeTemplatePolicies( p.code ?? [], this.deserializeTemplateValidity(p.period?.start ?? "", p.period?.end ?? "")))
+            .reduce((a,b) => a.concat(b), [])
+          )
+      ) ?? [],
+      validity: this.deserializeTemplateValidity(containedConsent.provision?.period?.start ?? "",
+        containedConsent.provision?.period?.end ?? ""),
+      organization: containedConsent.organization != undefined && containedConsent?.organization.length > 0 ?
+        containedConsent?.organization[0]?.display : "",
+      policy: ConsentTemplate.createEmpty().policy,
+      // if true is "opt in" otherwise "opt-out"
+      consentModel: containedConsent.provision?.type == "deny",
+      isMiiFhirConsentConform: containedConsent.meta?.profile?.some(p => p == "https://www.medizininformatik-initiative.de/fhir/modul-consent/StructureDefinition/mii-pr-consent-einwilligung")
+    }
+  }
+
+  deserializeTemplatePolicies(codes: fhir4.CodeableConcept[], validity: Validity): PolicyView[] {
+    return codes.map( c =>  c.coding ?? [])
+    .filter(c => c.length > 0)
+    .map( c => this.deserializeTemplatePolicy(c[0], validity));
+  }
+
+  deserializeTemplatePolicy(coding: fhir4.Coding, validity: Validity): PolicyView {
+    const isInternalId = coding.system?.startsWith(ConsentService.POLICY_SET_PATH);
+    const setId =  isInternalId? coding.system?.substring(ConsentService.POLICY_SET_PATH.length) ?? "" : "";
+    const setExtId = isInternalId ? "" : coding.system ?? "";
+    return {
+      policySet: new ConsentPolicySet(setId, setExtId, ""),
+      displayText: coding.display ?? "",
+      code: coding.code ?? "",
+      validity: validity
+    }
+  }
+
+  deserializeTemplateValidity(startDate:string, endDate:string): Validity{
+    const start = DateTime.fromISO(startDate)
+    // include the last day
+    const end = DateTime.fromISO(endDate).plus({ days: 1 })
+    const duration = end.diff(start, ['years', 'months', 'days']).toObject()
+    return {
+      day: duration.days ?? 0,
+      month: duration.months ?? 0,
+      year: duration.years
+    }
+  }
+
   mapValidityToDate(validityPeriod: Validity): string {
-    let now = _moment();
-    return now.add(validityPeriod.day || 0, 'days')
-      .add(validityPeriod.month || 0, 'months')
-      .add(validityPeriod.year ?? 0, 'years')
-      .format("YYYY-MM-DD")
+    return this.addPeriodToDate(DateTime.now().toISODate(), validityPeriod);
+  }
+
+  addPeriodToDate(startDate: string, period: Validity): string {
+    return DateTime.fromISO(startDate)
+    .plus({ days: period.day ?? 0, months: period.month ?? 0, years: period.year ?? 0 })
+    .minus({day: 1})
+    .toISODate() ?? "";
   }
 
   public createFhirResource<F extends FhirResource>(tokenType: TokenType, tokenData: TokenData, resourceType: string, resource: F) : Observable<FhirResource> {

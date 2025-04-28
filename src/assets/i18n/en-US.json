@@ -5,6 +5,8 @@
 	"button_view_consent": "View consent",
 	"button_delete_consent": "Delete consent",
   "button_open_consent_history": "View consent history",
+  "button_view_consent_template": "View consent template",
+  "button_delete_consent_template": "Delete consent template",
   "button_add_consent_scan": "Add PDF file",
 	"button_generate_id": "Generate ID",
 	"button_delete": "Delete",
@@ -88,7 +90,8 @@
   "consent_status.inactive": "Inactive",
   "consent_status.entered-in-error": "Error",
 
-  "consent_template_dialog.title" : "Create Consent Template",
+  "consent_template_add_dialog.title" : "Create Consent Template",
+  "consent_template_view_dialog.title" : "Consent Template",
 
   "consent_template_list.title" : "Consent Template",
   "consent_template_list.button_new_template": "New Template",
@@ -110,7 +113,7 @@
   "consent_template.validity_month": "Months",
   "consent_template.validity_day": "Days",
   "consent_template.consent_model": "Consent Model",
-  "consent_template.add_module": "Add Module",
+  "consent_template.modules": "Modules",
   "consent_template.module_type": "Module type",
   "consent_template.module_type_question": "Question",
   "consent_template.module_type_text": "Text",

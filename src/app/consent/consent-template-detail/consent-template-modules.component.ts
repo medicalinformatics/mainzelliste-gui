@@ -24,6 +24,7 @@ export class ConsentTemplateModulesComponent implements OnInit {
   protected readonly Object = Object;
 
   @Input() templateModules!: Item[];
+  @Input() readonly!: boolean;
 
   public cachedPoliciesMap: Map<string, {policySet: ConsentPolicySet, policies: ConsentPolicy[]}> = new Map()
   public editedModule: Item | undefined;
