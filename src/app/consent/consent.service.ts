@@ -54,11 +54,11 @@ export class ConsentService {
   private static readonly POLICY_SET_PATH: string = "/consent-policies/";
 
   constructor(
-    private sessionService: SessionService,
-    private authorizationService:AuthorizationService,
-    private appConfigService: AppConfigService,
-    private translate: TranslateService,
-    private httpClient: HttpClient,
+    private readonly sessionService: SessionService,
+    private readonly authorizationService:AuthorizationService,
+    private readonly appConfigService: AppConfigService,
+    private readonly translate: TranslateService,
+    private readonly httpClient: HttpClient,
     @Inject(MAT_DATE_LOCALE) private _locale: string
   ) {
     this.mainzellisteBaseUrl = this.appConfigService.data[0].url.toString();
@@ -92,26 +92,30 @@ export class ConsentService {
         if (i.answer == 'permit')
           rejected = false;
 
+        // find all provisions from the template with the same module id (i.linkId)
         let templateProvisions = dataModel.templateFhirResource?.provision?.provision?.filter(p => this.containLinkId(p, i.linkId)) ?? [];
 
-        // find provisions with the given linkedId
-        let useLinkId = false;
+        let useModuleIdExtension = false;
+        // filter
         let provisions = dataModel.fhirResource?.provision?.provision?.filter(p => {
-          useLinkId = p.extension?.some(ext => ext.url = "http://hl7.org/fhir/StructureDefinition/originalText") ?? false;
-          return useLinkId ? p.extension?.some(ext =>
-              ext.url == "http://hl7.org/fhir/StructureDefinition/originalText" &&
-              ext.valueString == i.linkId) :
+          useModuleIdExtension = p.extension?.some(ext => ext.url = "http://hl7.org/fhir/StructureDefinition/originalText") ?? false;
+          return useModuleIdExtension ? this.containLinkId(p, i.linkId) :
             p.code?.every(c => templateProvisions.some( tp => tp.code?.some(tc => this.compareCodes(tc, c))))
         }) ?? [];
 
-        // else find codes related to the search module
-
-        // set provision type : denied or permit
         for(let p of provisions) {
+          // set provision type : denied or permit
           p.type = i.answer;
+          // set validity period
+          if (p.period) {
+            p.period = {
+              start : dataModel.fhirResource?.provision?.period?.start,
+              end : this.calculateProvisionEndDate(p.period, dataModel.fhirResource?.provision?.period)
+            }
+          }
         }
 
-        // add missing policies or provisions
+        // add missing policies from template
         if(!isMiiResource || i.answer == 'permit'){
           if(dataModel.fhirResource != null && dataModel.fhirResource?.provision != undefined && dataModel.fhirResource?.provision.provision == undefined)
               dataModel.fhirResource.provision.provision = [];
@@ -126,11 +130,20 @@ export class ConsentService {
             if(nonExistingPolicies.length > 0){
               let provision = templateProvision
               provision.code = nonExistingPolicies;
-              if(!useLinkId)
-                provision.extension = provision.extension?.filter(ext => ext.url != "http://hl7.org/fhir/StructureDefinition/originalText")?? []
-              dataModel.fhirResource?.provision?.provision?.push(provision);
               // set answer
               provision.type = i.answer;
+              // set validity period
+              if (provision.period) {
+                provision.period = {
+                  start : dataModel.fhirResource?.provision?.period?.start,
+                  end : this.calculateProvisionEndDate(provision.period, dataModel.fhirResource?.provision?.period)
+                }
+              }
+              //remove the extension with module id (linkId)
+              if(!useModuleIdExtension)
+                provision.extension = provision.extension?.filter(ext => ext.url != "http://hl7.org/fhir/StructureDefinition/originalText")?? []
+
+              dataModel.fhirResource?.provision?.provision?.push(provision);
             }
           }
         }
@@ -172,6 +185,17 @@ export class ConsentService {
       ext.valueString == moduleId)
   }
 
+  private calculateProvisionEndDate(provisionValidityPeriod: fhir4.Period,
+                                    consentValidityPeriod: fhir4.Period | undefined) : string | undefined {
+    if (!provisionValidityPeriod?.end || StringUtils.isEmpty(provisionValidityPeriod.end))
+      return consentValidityPeriod?.end
+    else if (provisionValidityPeriod?.start && !StringUtils.isEmpty(provisionValidityPeriod?.start)) {
+      const validityPeriod = this.deserializeTemplateValidity(provisionValidityPeriod.start, provisionValidityPeriod.end);
+      return this.addPeriodToDate(consentValidityPeriod?.start ?? "", validityPeriod).toISODate() ?? undefined;
+    } else
+      return undefined;
+  }
+
   /**
    * deserialize consent template (fhir Questionnaire resource) and consent fhir resource to ui data model
    * @param questionnaire fhir consent template resource
@@ -206,9 +230,7 @@ export class ConsentService {
         // find provision codes and type with the current linkedId
         let codes = fhirConsent?.provision?.provision?.filter(p =>
           p.extension?.some(ext => ext.url = "http://hl7.org/fhir/StructureDefinition/originalText") ?
-            p.extension.some(ext =>
-              ext.url == "http://hl7.org/fhir/StructureDefinition/originalText" &&
-              ext.valueString == item.linkId) :
+            this.containLinkId(p, item.linkId) :
             p.code?.every(c => templateCodes.some( tc => this.compareCodes(tc, c)))
         )
         .reduce((previousValue, currentValue) => {
@@ -781,6 +803,11 @@ export class ConsentService {
     .minus({day: 1});
   }
 
+  //////////////////////////////
+  ////    FHIR-Utils
+  //////////////////////////////
+  // TODO move to new service
+
   public createFhirResource<F extends FhirResource>(tokenType: TokenType, tokenData: TokenData, resourceType: string, resource: F) : Observable<FhirResource> {
     return this.executeFhirOperation<F>(tokenType, tokenData, resourceType, resource, this.resolveAddFhirResourceToken, "create");
   }
@@ -1013,6 +1040,9 @@ export class ConsentService {
       return this.httpClient.post<T>(this.mainzellisteBaseUrl + "/" + path, body, { headers });
   }
 
+  //////////////////////////////
+  ////    Consent-Scans
+  //////////////////////////////
 
   uploadConsentScanFile(file: File, callback: () => void){
     return this.sessionService.createToken("addConsentScan", {})
@@ -1131,31 +1161,5 @@ export class ConsentService {
   getConsentScan(consentScanId:string, version? :string){
     return this.readFhirResources<fhir4.DocumentReference>("readConsentScan", {},
       [ErrorMessages.READ_CONSENT_SCAN_FAILED], 'DocumentReference', consentScanId, version);
-  }
-
-  //////////////////////////////
-  ////    DRAFT
-  //////////////////////////////
-
-
-  /**
-   * Handle operation that failed.
-   */
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-
-      // TODO: better job of transforming error for user consumption
-      this.log(`${operation} failed: ${error.message}`);
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
-  }
-
-  private log(message: string) {
-    // this.messageService.add(`ConsentService: ${message}`);
   }
 }
