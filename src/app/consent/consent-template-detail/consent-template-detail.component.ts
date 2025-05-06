@@ -33,7 +33,7 @@ export class ConsentTemplateDetailComponent implements OnInit {
     {name: "1.7.2", code:  "urn:oid:2.16.840.1.113883.3.1937.777.24.2.2079"}
   ]
 
-  public templateValidityPeriod: string = this.getValidityPeriodText(new Validity());
+  public templateValidityPeriod: string = new Validity().toLocalText(this.translate);
 
   //TODO dropDow for Scope http://terminology.hl7.org/CodeSystem/consentscope
   //TODO dropDow for category: http://hl7.org/fhir/R4/valueset-consent-category.html
@@ -59,7 +59,7 @@ export class ConsentTemplateDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.templateValidityPeriod = this.getValidityPeriodText(this.template.validity);
+    this.templateValidityPeriod = this.template.validity.toLocalText(this.translate);
     if(this.readonly){
       // reload policies and policy test display test
       this.consentService.getPolicySets().subscribe( sets => {
@@ -91,10 +91,6 @@ export class ConsentTemplateDetailComponent implements OnInit {
       return "fehler";
   }
 
-  getValidityPeriodText(validityPeriod: Validity){
-    return  validityPeriod.years + ' Jahren - ' + validityPeriod.months + ' Monaten - ' + validityPeriod.days  + ' Tagen';
-  }
-
   openValidityPeriodDialog() {
     const dialogRef = this.validityPeriodDialog.open(ConsentTemplateValidityPeriodDialog,
       { data: this.template.validity, minWidth: '500px'});
@@ -102,7 +98,7 @@ export class ConsentTemplateDetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe(validityPeriod => {
       if (validityPeriod) {
         this.template.validity = validityPeriod;
-        this.templateValidityPeriod = this.getValidityPeriodText(validityPeriod);
+        this.templateValidityPeriod = validityPeriod.toLocalText(this.translate);
       }
     });
   }

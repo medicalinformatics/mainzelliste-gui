@@ -143,8 +143,4 @@ export class ConsentTemplateModulesComponent implements OnInit {
     }
     this.policiesTableData.data = (this.editedModule as ChoiceItem).policies ?? []
   }
-
-  public getValidityPeriodText(validityPeriod: Validity){
-    return  validityPeriod?.years + ' Jahren - ' + validityPeriod?.months + ' Monaten - ' + validityPeriod?.days  + ' Tagen';
-  }
 }
