@@ -17,15 +17,9 @@ import {FhirResource, SearchParams} from "fhir-kit-client/types/index"
 import {TranslateService} from '@ngx-translate/core';
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessage, ErrorMessages} from "../error/error-messages";
-import _moment from "moment";
 import {ConsentTemplateFhirWrapper} from "../model/consent-template-fhir-wrapper";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
-import {
-  ChoiceItem,
-  ConsentTemplate,
-  DisplayItem,
-  PolicyView
-} from "./consent-template.model";
+import {ChoiceItem, ConsentTemplate, DisplayItem, PolicyView} from "./consent-template.model";
 import {catchError, finalize, map, mergeMap, reduce} from "rxjs/operators";
 import {ConsentPolicySet} from "../model/consent-policy-set";
 import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
@@ -547,7 +541,7 @@ export class ConsentService {
   }
 
   public mapConsentTemplate(template:ConsentTemplate): fhir4.Questionnaire {
-
+    const today:string = DateTime.now().toISODate();
     let fhirConsent: fhir4.Consent = {
       resourceType: "Consent",
       id: "100",
@@ -578,11 +572,11 @@ export class ConsentService {
       provision: {
         type: template.consentModel? "deny" : "permit",
         period: {
-          start: _moment().format("YYYY-MM-DD"),
-          end: this.mapValidityToDate(template.validity)
+          start: today,
+          end: this.mapValidityToDate(template.validity, today)
         },
         provision: template.items.filter(i => i instanceof ChoiceItem)
-        .map(i => this.mapChoiceItemToProvision((i as ChoiceItem), template.validity))
+        .map(i => this.mapChoiceItemToProvision((i as ChoiceItem), template.validity, today))
         .reduce((a, v) => a.concat(v), [])
       }
     };
@@ -672,12 +666,12 @@ export class ConsentService {
     };
   }
 
-  private mapChoiceItemToProvision(item: ChoiceItem, validity:Validity): fhir4.ConsentProvision[] {
+  private mapChoiceItemToProvision(item: ChoiceItem, validity:Validity, starDate: string): fhir4.ConsentProvision[] {
     return item.policies?.map(p => { return {
       type: item.answer,
       period: {
-        start: _moment().format("YYYY-MM-DD"),
-        end: this.mapValidityToDate(p.validity ?? validity)
+        start: starDate,
+        end: this.mapValidityToDate(p.validity ?? validity, starDate)
       },
       code: !p ? [] : [
         {
@@ -793,8 +787,8 @@ export class ConsentService {
     }
   }
 
-  mapValidityToDate(validityPeriod: Validity): string {
-    return this.addPeriodToDate(DateTime.now().toISODate(), validityPeriod).toISODate() ?? "";
+  mapValidityToDate(validityPeriod: Validity, startDate: string): string {
+    return this.addPeriodToDate(startDate, validityPeriod).toISODate() ?? "";
   }
 
   addPeriodToDate(startDate: string, period: Validity): DateTime {
@@ -1118,7 +1112,7 @@ export class ConsentService {
           reference: "Consent/" + id
         }
       ],
-      recorded: _moment().format("YYYY-MM-DDThh:mm:ssZ"),
+      recorded: DateTime.now().toISO(),
       agent: [
         {
           who: {
