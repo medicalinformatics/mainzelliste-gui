@@ -33,7 +33,7 @@ export class ConsentTemplateDetailComponent implements OnInit {
     {name: "1.7.2", code:  "urn:oid:2.16.840.1.113883.3.1937.777.24.2.2079"}
   ]
 
-  public templateValidityPeriod: string = this.getValidityPeriodText({day: 0, month: 0, year: 0});
+  public templateValidityPeriod: string = this.getValidityPeriodText(new Validity());
 
   //TODO dropDow for Scope http://terminology.hl7.org/CodeSystem/consentscope
   //TODO dropDow for category: http://hl7.org/fhir/R4/valueset-consent-category.html
@@ -92,7 +92,7 @@ export class ConsentTemplateDetailComponent implements OnInit {
   }
 
   getValidityPeriodText(validityPeriod: Validity){
-    return  validityPeriod.year + ' Jahren - ' + validityPeriod.month + ' Monaten - ' + validityPeriod.day  + ' Tagen';
+    return  validityPeriod.years + ' Jahren - ' + validityPeriod.months + ' Monaten - ' + validityPeriod.days  + ' Tagen';
   }
 
   openValidityPeriodDialog() {

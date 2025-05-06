@@ -145,6 +145,6 @@ export class ConsentTemplateModulesComponent implements OnInit {
   }
 
   public getValidityPeriodText(validityPeriod: Validity){
-    return  validityPeriod?.year + ' Jahren - ' + validityPeriod?.month + ' Monaten - ' + validityPeriod?.day  + ' Tagen';
+    return  validityPeriod?.years + ' Jahren - ' + validityPeriod?.months + ' Monaten - ' + validityPeriod?.days  + ' Tagen';
   }
 }

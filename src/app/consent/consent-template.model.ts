@@ -6,7 +6,7 @@ export class ConsentTemplate {
   version?:string;
   title?: string;
   status: "draft" | "active" | "retired" | "unknown" = "draft";
-  validity: Validity = {month: 0, day: 0, year: 0};
+  validity: Validity = new Validity();
   organization?: string;
   researchStudy?: string;
   policy?: string;
@@ -18,7 +18,7 @@ export class ConsentTemplate {
   static createEmpty():ConsentTemplate {
     return {
       items: [],
-      validity: {day: 0, month: 0, year: 0},
+      validity: new Validity(),
       status: "draft",
       policy: "urn:oid:2.16.840.1.113883.3.1937.777.24.2.1790",
       consentModel: true

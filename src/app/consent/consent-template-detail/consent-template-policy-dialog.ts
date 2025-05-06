@@ -26,7 +26,7 @@ export class ConsentTemplatePolicyDialog implements OnInit {
 
   public policiesLoading: boolean = false;
 
-  public validityPeriod: Validity = {month: 0, day: 0, year: 0};
+  public validityPeriod: Validity = new Validity();
   public validityDays: number[] = Array(32).fill(0).map((x, i) => i++)
   public validityMonths: number[] = Array(13).fill(0).map((x, i) => i++)
 
@@ -101,9 +101,9 @@ export class ConsentTemplatePolicyDialog implements OnInit {
         displayText: this.selectedPolicy?.text,
         code: this.selectedPolicy?.code,
         validity: {
-          year: this.validityPeriod?.year,
-          month: this.validityPeriod?.month ?? 0,
-          day: this.validityPeriod?.day ?? 0
+          year: this.validityPeriod?.years,
+          month: this.validityPeriod?.months ?? 0,
+          day: this.validityPeriod?.days ?? 0
         }
       },
       cachedPoliciesMap: this.dataModel.cachedPoliciesMap,
