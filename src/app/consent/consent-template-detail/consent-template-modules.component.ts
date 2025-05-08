@@ -26,6 +26,7 @@ export class ConsentTemplateModulesComponent implements OnInit {
 
   @Input() templateModules!: Item[];
   @Input() readonly!: boolean;
+  @Input() mainValidityPeriod!: Validity;
 
   public cachedPoliciesMap: Map<string, {policySet: ConsentPolicySet, policies: ConsentPolicy[]}> = new Map()
   public editedModule: Item | undefined;
@@ -119,6 +120,7 @@ export class ConsentTemplateModulesComponent implements OnInit {
             (accumulator??[]).concat(currentValue ?? []), []) ?? [])
           .concat((this.editedModule as ChoiceItem).policies ?? []),
           cachedPoliciesMap: this.cachedPoliciesMap,
+          mainValidityPeriod: this.mainValidityPeriod
         },
         minWidth: '450px'
       });

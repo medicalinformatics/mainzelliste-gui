@@ -125,6 +125,7 @@
   "consent_template.add_polices": "Policy hinzufügen",
   "consent_template.error.required_policies": "Die Eingabe von Policies ist erforderlich",
   "consent_template.error.referred_by": "Die Einwilligungsvorlage kann nicht gelöscht werden, da bereit Einwilligungserkärungen mittels dieser Vorlage erstellt wurden",
+  "consent_template.error.policy_period_exceed": "Die Gültigkeitsdauer darf die Gültigkeitsdauer des Dokumentes \"${}\" nicht überschreiten",
 
   "consent_dialog_history_title": "Einwilligung-Historie",
   "consent_dialog_history_status": "Vorheriger status",

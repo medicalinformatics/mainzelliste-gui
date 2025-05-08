@@ -27,4 +27,10 @@ export class Validity {
     this.months = month ?? 0;
     this.years = year ?? 0;
   }
+
+  public isGreaterThan(period:Validity){
+    return this.years > period.years ||
+      this.years == period.years && (this.months > period.months ||
+        this.months == period.months && this.days > period.days)
+  }
 }

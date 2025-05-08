@@ -33,10 +33,11 @@ export class ConsentTemplatePolicyDialog implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<ConsentTemplatePolicyDialog>,
     public consentService: ConsentService,
-    private translate: TranslateService,
+    public translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) public dataModel: {
       addedPolicyViews: PolicyView[],
       cachedPoliciesMap: Map<string, {policySet: ConsentPolicySet, policies: ConsentPolicy[]}>,
+      mainValidityPeriod: Validity
     }
   ) {
   }

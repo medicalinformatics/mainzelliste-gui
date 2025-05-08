@@ -123,6 +123,7 @@
   "consent_template.add_polices": "Add Policy",
   "consent_template.error.required_policies": "Please select at least one policy",
   "consent_template.error.referred_by": "Failed to delete consent template due to existing consents based on this template",
+  "consent_template.error.policy_period_exceed": "Validity period must not exceed the validity period of the document \"${}\"",
 
   "consent_dialog_history_title": "Consent history",
   "consent_dialog_history_status": "Previous status",

@@ -107,7 +107,11 @@
   <h3 style="margin-top: 20px; clear:both; float: left;">{{"consent_template.modules" | translate}}:</h3>
 
   <!-- modules -->
-  <app-consent-template-modules [templateModules]="this.template.items" [readonly]="readonly"></app-consent-template-modules>
+  <app-consent-template-modules [templateModules]="this.template.items"
+                                [readonly]="readonly"
+                                [mainValidityPeriod]="this.template.validity"
+  >
+  </app-consent-template-modules>
 
   <!-- add module -->
   <div *ngIf="!readonly"  [ngStyle]="{ 'margin-top': this.template.items.length == 0 ? '5px':'20px'}"
