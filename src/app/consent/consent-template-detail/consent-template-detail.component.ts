@@ -14,6 +14,7 @@ import {MatRadioChange} from "@angular/material/radio";
 import {MatSlideToggleChange} from "@angular/material/slide-toggle";
 import {ConsentPolicySet} from "../../model/consent-policy-set";
 import {Validity} from "../consent-validity-period";
+import {AppConfigService} from "../../app-config.service";
 
 @Component({
   selector: 'app-consent-template-detail',
@@ -26,14 +27,6 @@ export class ConsentTemplateDetailComponent implements OnInit {
 
   @Input() template!: ConsentTemplate;
   @Input() readonly!: boolean;
-
-  public miiFhirBroadConsentVersions = [
-    {name: "1.6d", code: "urn:oid:2.16.840.1.113883.3.1937.777.24.2.1790"},
-    {name: "1.6f", code:  "urn:oid:2.16.840.1.113883.3.1937.777.24.2.1791"},
-    {name: "1.7.2", code:  "urn:oid:2.16.840.1.113883.3.1937.777.24.2.2079"}
-  ]
-
-  public templateValidityPeriod: string = new Validity().toLocalText(this.translate);
 
   //TODO dropDow for Scope http://terminology.hl7.org/CodeSystem/consentscope
   //TODO dropDow for category: http://hl7.org/fhir/R4/valueset-consent-category.html
@@ -53,13 +46,13 @@ export class ConsentTemplateDetailComponent implements OnInit {
 
   constructor(
     public consentService: ConsentService,
-    private validityPeriodDialog: MatDialog,
-    private translate: TranslateService
+    public configService:AppConfigService,
+    private readonly validityPeriodDialog: MatDialog,
+    public translate: TranslateService
   ) {
   }
 
   ngOnInit(): void {
-    this.templateValidityPeriod = this.template.validity.toLocalText(this.translate);
     if(this.readonly){
       // reload policies and policy test display test
       this.consentService.getPolicySets().subscribe( sets => {
@@ -74,8 +67,6 @@ export class ConsentTemplateDetailComponent implements OnInit {
     }
   }
 
-  //
-  // Handle Error
   displayError(field: NgModel) {
     return field.invalid &&
       (field.dirty || field.touched) &&
@@ -98,7 +89,6 @@ export class ConsentTemplateDetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe(validityPeriod => {
       if (validityPeriod) {
         this.template.validity = validityPeriod;
-        this.templateValidityPeriod = validityPeriod.toLocalText(this.translate);
       }
     });
   }
@@ -128,6 +118,7 @@ export class ConsentTemplateDetailComponent implements OnInit {
     if($event.checked) {
       this.template.consentModel = true;
       this.changeModulesAnswer("permit")
+      this.template.validity.set(0,0,30);
     }
   }
 

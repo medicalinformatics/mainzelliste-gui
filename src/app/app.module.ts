@@ -114,7 +114,8 @@ function initializeAppFactory(
         .then(idGenerators => idGenerators != undefined ? configService.fetchMainzellisteAssociatedIdGenerators() : undefined)
         .then(idGenerators => idGenerators != undefined ? configService.fetchMainzellisteFields() : undefined)
         .then(fields => fields != undefined ? configService.fetchClaims() : undefined)
-        .then(claims => configService.fetchVersion());
+        .then(claims => configService.fetchVersion())
+        .then(versions => configService.readConsentTerminology());
     });
 }
 

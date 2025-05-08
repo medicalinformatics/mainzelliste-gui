@@ -13,14 +13,18 @@ export class Validity {
   years: number = 0;
 
   constructor(day?: number, month?: number, year?: number) {
-    this.days = day ?? 0;
-    this.months = month ?? 0;
-    this.years = year ?? 0;
+    this.set(day, month, year);
   }
 
   public toLocalText(translate: TranslateService) {
     return `${this.years}  ${translate.instant("consent_template.validity_years")} -
     ${this.months} ${translate.instant("consent_template.validity_months")} -
     ${this.days}  ${translate.instant("consent_template.validity_days")}`;
+  }
+
+  public set(day?: number, month?: number, year?: number) {
+    this.days = day ?? 0;
+    this.months = month ?? 0;
+    this.years = year ?? 0;
   }
 }
