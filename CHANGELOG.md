@@ -1,8 +1,12 @@
 # Changelog
 ## Unreleased
 ### Features
-- resource based refined permissions
-- multitenancy
+- Patient List with a search filter and csv export.
+- Consent management
+- Resource based refined permissions
+- Multitenancy
+- Bulk ID generation
+- Bulk pseudonymization
 ## [0.0.3] - 2023-12-12
 ### Fix
 - support idtypes array in CreateIds token

@@ -26,10 +26,10 @@ the docker image of the ui uses several environment variables :
 ### Version Compatibility
 Choosing the right version of the [Mainzelliste](http://mainzelliste.de) backend.
 
-| Mainzelliste-UI      | Mainzelliste (backend) |
-|----------------------|------------------------|
-| 0.0.4  (Beta)        | 12.x                   |
-| 0.0.5  (development) | 13.x (development)     |
+| Mainzelliste-UI | Mainzelliste (backend) |
+|-----------------|------------------------|
+| 1.0.0           | 1.13.x                 |
+| 0.0.4  (Beta)   | 1.12.x                 |
 
 ### Running on Linux
 1. copy the file `.env.default` to `.env` and set the environment variable `HOST` to the server name or ip address.
@@ -94,9 +94,9 @@ secrets:
          { "i18n": "first_name_text", "name": "Vorname", "mainzellisteField": "vorname", "semantic": "firstname"},
          { "i18n": "last_name_text", "name": "Nachname", "mainzellisteField": "nachname", "semantic": "lastname"},
          { "i18n": "birth_name_text", "name": "Geburtsname", "mainzellisteField": "geburtsname", "semantic": "birthName"},
-         { "i18n": "birth_date_text", "name": "Geburtdatum", "mainzellisteFields": ["geburtstag", "geburtsmonat", "geburtsjahr"], "semantic": "undefined"},
-         { "i18n": "residence_text", "name": "Wohnort", "mainzellisteField": "ort", "semantic": "postalCode"},
-         { "i18n": "zip_code_text", "name": "PLZ", "mainzellisteField": "plz", "semantic": "city"}
+         { "i18n": "birth_date_text", "name": "Geburtdatum", "mainzellisteFields": ["geburtstag", "geburtsmonat", "geburtsjahr"], "semantic": "birthday"},
+         { "i18n": "residence_text", "name": "Wohnort", "mainzellisteField": "ort", "semantic": "city"},
+         { "i18n": "zip_code_text", "name": "PLZ", "mainzellisteField": "plz", "semantic": "postalCode"}
       ],
       "debug": false,
       "betaFeatures": {
