@@ -671,14 +671,14 @@ export class ConsentService {
       type: item.answer,
       period: {
         start: starDate,
-        end: this.mapValidityToDate(p.validity ?? validity, starDate)
+        end: this.mapValidityToDate((!p.validity || p.validity.isEmpty())? validity : p.validity, starDate)
       },
       code: !p ? [] : [
         {
           coding: [
             {
               code: p.code,
-              system: p.policySet?.externalId || `${ConsentService.POLICY_SET_PATH}${p.policySet?.id}`,
+              system: p.policySet?.isExternal ? p.policySet?.id : `${ConsentService.POLICY_SET_PATH}${p.policySet?.id}`,
               display: p.displayText
             }
           ]
@@ -765,10 +765,9 @@ export class ConsentService {
 
   deserializeTemplatePolicy(coding: fhir4.Coding, validity: Validity): PolicyView {
     const isInternalId = coding.system?.startsWith(ConsentService.POLICY_SET_PATH);
-    const setId =  isInternalId? coding.system?.substring(ConsentService.POLICY_SET_PATH.length) ?? "" : "";
-    const setExtId = isInternalId ? "" : coding.system ?? "";
+    const setId =  (isInternalId? coding.system?.substring(ConsentService.POLICY_SET_PATH.length) : coding.system) ?? "";
     return {
-      policySet: new ConsentPolicySet(setId, setExtId, ""),
+      policySet: new ConsentPolicySet(setId, "", !isInternalId),
       displayText: coding.display ?? "",
       code: coding.code ?? "",
       validity: validity
@@ -995,8 +994,8 @@ export class ConsentService {
       )
   }
 
-  public addPolicySet(id: String, name: String, externalId: String): Observable<any> {
-    let body = JSON.stringify({ id, name, externalId });
+  public addPolicySet(id: string, name: string): Observable<any> {
+    let body = JSON.stringify({ id, name });
     return this.postData<ConsentPolicySet>("addConsentPolicySet", {}, "consent-policies", body)
   }
 

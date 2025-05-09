@@ -33,4 +33,9 @@ export class Validity {
       this.years == period.years && (this.months > period.months ||
         this.months == period.months && this.days > period.days)
   }
+
+  public isEmpty(){
+    return (!this.years || this.years == 0) && (!this.months || this.months == 0)
+      && (!this.days || this.days == 0)
+  }
 }

@@ -123,8 +123,7 @@ export class ConsentTemplateDetailComponent implements OnInit {
   }
 
   private findPolicySet(policySet: ConsentPolicySet, sets: ConsentPolicySet[]) {
-    return sets.find( set => policySet.id.length > 0 && set.id == policySet.id ||
-    policySet.externalId.length > 0 && set.externalId == policySet.externalId);
+    return sets.find( set => policySet.id.length > 0 && set.id == policySet.id );
   }
 
   public getFieldClass(className: string){

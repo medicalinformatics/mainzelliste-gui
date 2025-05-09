@@ -23,8 +23,7 @@ export class PolicySetFormComponent implements OnInit {
   ) {
     this.policySetForm = this.fb.group({
       id: ['', Validators.required],
-      name: ['', Validators.required],
-      externalId: ['']
+      name: ['', Validators.required]
     });
   }
 
@@ -34,8 +33,8 @@ export class PolicySetFormComponent implements OnInit {
     if (this.policySetForm.valid) {
       this.errorMessages = [];
 
-      const { id, name, externalId } = this.policySetForm.value;
-      this.consentService.addPolicySet(id, name, externalId)
+      const { id, name } = this.policySetForm.value;
+      this.consentService.addPolicySet(id, name)
         .pipe(take(1))
         .subscribe({
           next: (response) => {

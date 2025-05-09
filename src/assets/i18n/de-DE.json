@@ -223,7 +223,6 @@
 
   "configuration.tab_policies": "Policy Sets",
   "configuration.policySet.id": "Id",
-  "configuration.policySet.externalId": "Externe Id",
   "configuration.policySet.name": "Name",
   "configuration.policy.policies": "Policies",
   "configuration.policy.policyCode": "Policy-Code",

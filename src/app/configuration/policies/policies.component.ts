@@ -16,9 +16,8 @@ import { take } from 'rxjs/operators';
   styleUrls: ['./policies.component.css']
 })
 export class PoliciesComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'name', 'externalId', 'actions'];
+  displayedColumns: string[] = ['id', 'name', 'actions'];
   dataSource: MatTableDataSource<any>;
-  expandedElement: any | null;
   loading: boolean = false;
   defaultPageSize: number = 8;
   totalCount: number = 100000;
@@ -39,7 +38,7 @@ export class PoliciesComponent implements OnInit {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Items per page';
-  }  
+  }
 
   loadData(pageIndex: number, pageSize: number, fetch: boolean) {
     this.loading = true;
@@ -54,7 +53,6 @@ export class PoliciesComponent implements OnInit {
     policySetsObservable.subscribe(policySets => {
       let data = policySets.map(policySet => ({
         id: policySet.id,
-        externalId: policySet.externalId,
         name: policySet.name,
         policiesDataSource: new MatTableDataSource<any>([])
       }));
@@ -83,7 +81,7 @@ export class PoliciesComponent implements OnInit {
     const dialogRef = this.dialog.open(PolicySetFormComponent, {
       width: '30vw',
     });
-  
+
     dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
       if (result) {
         this.loadData(0, this.defaultPageSize, false);
@@ -91,14 +89,14 @@ export class PoliciesComponent implements OnInit {
       }
     });
   }
-  
+
 
   addPolicy(policySetId: string) {
     const dialogRef = this.dialog.open(PolicyFormComponent, {
       width: '30vw',
       data: { policySetId }
     });
-  
+
     dialogRef.afterClosed().pipe(take(1)).subscribe(result => {
       if (result) {
         this.loadData(0, this.defaultPageSize, false);
