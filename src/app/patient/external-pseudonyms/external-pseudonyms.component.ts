@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Id} from "../../model/id";
 import {IdTypSelection} from "../create-patient/create-patient.component";
 import {MatSelect} from "@angular/material/select";
@@ -6,6 +6,12 @@ import {addIfNotExist, removeFrom} from "../../utils/array-utils";
 import {PatientListService} from "../../services/patient-list.service";
 import {ControlContainer, NgForm} from "@angular/forms";
 import {AppConfigService} from "../../app-config.service";
+import {Operation} from "../../model/tenant";
+import {MatDialog} from "@angular/material/dialog";
+import {GenerateIdDialog} from "./dialogs/generate-id/generate-id-dialog.component";
+import {
+  ShowRelatedIdDialog
+} from "../patient-pseudonyms/dialogs/show-related-id-dialog/show-related-id-dialog.component";
 
 @Component({
   selector: 'app-external-pseudonyms',
@@ -19,12 +25,16 @@ export class ExternalPseudonymsComponent implements OnChanges {
   @Input() readOnly: boolean = false;
   @Input() removeEmptyId: boolean = false;
   @Input() side: string = "none";
+  @Input() permittedOperation?: Operation;
+  @Output() generateId = new EventEmitter<{idType:string, idString:string, newIdType: string}>();
 
   externalIdTypes: IdTypSelection[] = [];
 
   constructor(
     private patientListService: PatientListService,
-    public config: AppConfigService
+    public config: AppConfigService,
+    public generateIdDialog: MatDialog,
+    public showRelatedIdDialog: MatDialog
   ) {
   }
 
@@ -39,7 +49,9 @@ export class ExternalPseudonymsComponent implements OnChanges {
 
   addExternalIdField(selectedExternalIdType: MatSelect) {
     //add external id to patient model
-    addIfNotExist(new Id(selectedExternalIdType.value, ''), this.ids, e => e.idType == selectedExternalIdType.value);
+    addIfNotExist(new Id(selectedExternalIdType.value, ''), this.ids,
+        e => !this.isAssociatedIdType(selectedExternalIdType.value) && e.idType == selectedExternalIdType.value
+    );
 
     this.externalIdTypes.filter(t => t.idType == selectedExternalIdType.value)
     .forEach(t => t.added = true);
@@ -63,26 +75,67 @@ export class ExternalPseudonymsComponent implements OnChanges {
   getExternalIdTypes(): IdTypSelection[] {
     //init.
     if (this.externalIdTypes.length == 0) {
-      this.externalIdTypes = this.patientListService.getIdGenerators()
-      .filter(g => g.isExternal)
-      .map(g => {
-        return {idType: g.idType, added: false}
-      });
+      this.externalIdTypes = [
+        ...this.patientListService.getUniqueIdTypes(true, this.permittedOperation)
+          .map(t => { return {idType: t, added: false, associated: false } }),
+        ...this.patientListService.getAssociatedIdTypes(true, this.permittedOperation)
+          .map(t => { return {idType: t, added: false, associated: true } })];
     }
     return this.externalIdTypes;
   }
 
   getExternalIdMatSelectData(): string[] {
-    return this.getExternalIdTypes().filter(t => !t.added).map(t => t.idType);
+    return this.getExternalIdTypes()
+    .filter(t => t.associated && this.permittedOperation != 'U' || !t.associated && !t.added)
+    .map(t => t.idType);
   }
 
   getExternalIds(): Id[] {
     return this.ids.filter(id =>
-      this.getExternalIdTypes().some(t => t.idType == id.idType && t.added)
+      this.getExternalIdTypes().some(t => t.idType == id.idType && (t.added || t.associated))
     );
+  }
+
+  isAssociatedIdType(idType: string){
+    return this.getExternalIdTypes().some( t => t.idType == idType && t.associated)
   }
 
   public getConcatenated(id: Id): string {
     return id.idType + "." + id.idString;
+  }
+
+  getAssociatedIdTypes(idType: string):string[] {
+    return this.patientListService.getRelatedAssociatedIdTypes(idType, false, "C");
+  }
+
+  openGenerateIdDialog(externalId:Id): void {
+    const dialogRef = this.generateIdDialog.open(GenerateIdDialog, {
+      data: {
+        externalId: externalId,
+        idTypes: this.getAssociatedIdTypes(externalId.idType)
+      },
+      width: '450px'
+    });
+
+    dialogRef.afterClosed().subscribe(idType => {
+      if (idType != null && this.generateId != undefined) {
+        this.generateId.emit({idType: externalId.idType, idString: externalId.idString, newIdType: idType});
+      }
+    })
+  }
+  openRelatedDialog(id: Id) {
+    this.patientListService.findRelatedIds(id, this.ids).subscribe( ids => this.showRelatedIdDialog.open(ShowRelatedIdDialog, {
+      data: ids,
+      disableClose: true,
+      minWidth: 300
+    }))
+  }
+
+  getFieldName(key: Id) {
+    return key.idType + this.ids.indexOf(key);
+  }
+
+  public getFieldClass(className: string){
+    return className + (this.readOnly ? " inputFieldDisabled" : "");
   }
 }

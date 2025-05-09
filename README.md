@@ -4,7 +4,11 @@
 [![Build](https://github.com/medicalinformatics/mainzelliste-gui/actions/workflows/ci.yml/badge.svg)](https://github.com/medicalinformatics/mainzelliste-gui/actions/workflows/ci.yml)
 [![Docker Pulls](https://img.shields.io/docker/pulls/medicalinformatics/mainzelliste-gui.svg)](https://hub.docker.com/r/medicalinformatics/mainzelliste-gui/)
 
-With the Mainzelliste UI your can easily manage your patient list, creating new ID, editing patient fields or deleting patient.   
+Mainzelliste offers an intuitive web interface that makes managing patient data simple and efficient. 
+Easily create new patient IDs, update patient fields, or remove patient as needed.
+In addition, Mainzelliste supports comprehensive consent management and enables bulk operations such 
+as large-scale pseudonymization and automated ID generation—ideal for handling high volumes of data 
+in clinical and research environments.
 
 ![Mainzelliste UI Screenshot](./doc/images/mainzelliste-ui-screenshot-browser.png)
 ## Installation Guidelines
@@ -28,11 +32,17 @@ Choosing the right version of the [Mainzelliste](http://mainzelliste.de) backend
 
 | Mainzelliste-UI | Mainzelliste (backend) |
 |-----------------|------------------------|
-| 0.x  (Beta)     | 12.x                   |
+| 1.0.0           | 1.13.x                 |
+| 0.0.4  (Beta)   | 1.12.x                 |
 
 ### Running on Linux
 1. copy the file `.env.default` to `.env` and set the environment variable `HOST` to the server name or ip address.
-2. run ``docker-compose up -d``
+2. set your server name or ip address (`{HOST}`) in keyclok configuration
+```bash
+chmod u+x prepare-keycloak-import-file.sh
+./prepare-keycloak-import-file.sh {HOST}
+```
+3. run ``docker-compose up -d``
 
 #### Running in production mode behind a reverse proxy
 Adjust your docker compose file, depending on the configuration of the reverse proxy:
@@ -50,7 +60,7 @@ Adjust your docker compose file, depending on the configuration of the reverse p
      1. adjust both env. variables `KEYCLOAK_URL` and `MAINZELLISTE_URL`
 
 #### Override the default configuration file
-For more configuration eg. defining new user roles, your can override the [default configuration file](./src/assets/config/config.template.json) using the docker secret ``mainzelliste-gui.docker.conf``
+For more configuration your can override the [default configuration file](./src/assets/config/config.template.json) using the docker secret ``mainzelliste-gui.docker.conf``
 ```yaml
 services: 
   mainzelliste-gui:
@@ -82,36 +92,29 @@ secrets:
         "realm": "mainzelliste",
         "clientId": "mainzelliste-ui"
       },
-      "roles" : [
-        {
-          "name": "admin",
-          "permissions": ["addPatient","readPatients","editPatient","deletePatient","addConsent","searchConsents","readConsent", "editConsent"]
-        },
-        {
-          "name": "study-nurse",
-          "permissions": ["addPatient","readPatients","addConsent","searchConsents","readConsent"]
-        }
-      ],
       "mainIdType": "pid",
       "showAllIds": false,
       "fields": [
-        { "i18n": "first_name_text", "name": "Vorname", "mainzellisteField": "vorname"},
-        { "i18n": "last_name_text", "name": "Nachname", "mainzellisteField": "nachname"},
-        { "i18n": "birth_name_text", "name": "Geburtsname", "mainzellisteField": "geburtsname"},
-        { "i18n": "birth_date_text", "name": "Geburtdatum", "mainzellisteFields": ["geburtstag", "geburtsmonat", "geburtsjahr"]},
-        { "i18n": "residence_text", "name": "Wohnort", "mainzellisteField": "plz"},
-        { "i18n": "zip_code_text", "name": "PLZ", "mainzellisteField": "ort"}
+         { "i18n": "first_name_text", "name": "Vorname", "mainzellisteField": "vorname", "semantic": "firstname"},
+         { "i18n": "last_name_text", "name": "Nachname", "mainzellisteField": "nachname", "semantic": "lastname"},
+         { "i18n": "birth_name_text", "name": "Geburtsname", "mainzellisteField": "geburtsname", "semantic": "birthName"},
+         { "i18n": "birth_date_text", "name": "Geburtdatum", "mainzellisteFields": ["geburtstag", "geburtsmonat", "geburtsjahr"], "semantic": "birthday"},
+         { "i18n": "residence_text", "name": "Wohnort", "mainzellisteField": "ort", "semantic": "city"},
+         { "i18n": "zip_code_text", "name": "PLZ", "mainzellisteField": "plz", "semantic": "postalCode"}
       ],
       "debug": false,
       "betaFeatures": {
-        "consent": false
+        "copyConcatenatedId": false,
+        "copyId": true,
+        "configuration": true,
+        "showDomainsInIDCard": false
       }
     }
   ]
 }
 ```
 6. Run `ng serve` for a dev server. Navigate to `http://localhost:4200`. The app will automatically reload if you change any of the source files.
-7. You can now login with an admin user `username:demo and password:demo` or with other user e.g study nurse `username: study-nurse and password:demo` with restricted privileges
+7. You can now login with an admin user `username:admin and password:demo` or with other user e.g study nurse `username: study-nurse and password:demo` with restricted privileges
 
 #### Setup keycloak configuration manually
 1. Create new realm **mainzelliste**
@@ -162,6 +165,16 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 ### Running end-to-end tests
 
 Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+
+### Export Keycloak Configuration
+In order to export realm configuration including all users to one file, just run "bash" in keycloak container and execute the following command:
+```bash
+./opt/keycloak/bin/kc.sh export --file ~/mainzelliste-realm.json --users realm_file --realm mainzelliste
+```
+Now you can just copy the file to the resource order "resources/keycloak/import/" 
+```bash
+docker cp {keycloak-container-id}:/opt/keycloak/mainzelliste-realm.json ./resources/keycloak/import/
+```
 
 ### Further help
 

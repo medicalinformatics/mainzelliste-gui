@@ -4,7 +4,14 @@ import {ConsentService} from "../consent.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Consent} from "../consent.model";
 import {GlobalTitleService} from "../../services/global-title.service";
-import { TranslateService } from '@ngx-translate/core';
+import {TranslateService} from '@ngx-translate/core';
+import {MainzellisteError} from "../../model/mainzelliste-error.model";
+import {ErrorMessages} from "../../error/error-messages";
+import {MatDialog} from "@angular/material/dialog";
+import {ConsentRejectedDialog} from "../dialogs/consent-rejected-dialog";
+import {ConsentInactivatedDialog} from "../dialogs/consent-inactivated-dialog";
+import {catchError, map, mergeMap} from "rxjs/operators";
+import {forkJoin, throwError} from "rxjs";
 
 @Component({
   selector: 'app-edit-consent',
@@ -25,7 +32,9 @@ export class EditConsentComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private titleService: GlobalTitleService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private consentRejectedDialog: MatDialog,
+    private consentInactivatedDialog: MatDialog
   ) {
     this.changeTitle();
   }
@@ -41,16 +50,54 @@ export class EditConsentComponent implements OnInit {
     this.idType = this.route.snapshot.paramMap.get('idType') ?? "";
     this.idString = this.route.snapshot.paramMap.get('idString') ?? "";
     this.consentId = this.route.snapshot.paramMap.get('id') ?? "";
-    this.consentService.readConsent(this.consentId).then(c => this.dataModel = c);
+    //TODO handle consent not found -> redirect page not found
+    this.consentService.readConsent(this.consentId).subscribe(c => this.dataModel = c);
   }
 
-  async editConsent() {
+  editConsent(force?: boolean) {
     this.dataModel.patientId = {idType: this.idType, idString: this.idString};
-    await this.consentService.editConsent(this.dataModel);
-    await this.router.navigate(["/idcard", this.idType, this.idString]);
+    this.consentService.updateConsent(this.dataModel, force || false)
+    .pipe(
+        mergeMap(c =>
+            this.consentService.createScansAndProvenance(this.dataModel, (c as fhir4.Consent).id || "")
+        ),
+        catchError(e => throwError(() => e))
+    ).subscribe({
+      next: () => { this.router.navigate(["/idcard", this.idType, this.idString])},
+      error: e => {
+        if (e instanceof MainzellisteError && e.errorMessage == ErrorMessages.CREATE_CONSENT_REJECTED) {
+          this.openConsentRejectedDialog();
+        } else if (e instanceof MainzellisteError && e.errorMessage == ErrorMessages.CREATE_CONSENT_INACTIVE) {
+          this.openConsentInactivatedDialog();
+        }
+      }
+    });
   }
 
   async cancel() {
     await this.router.navigate(["/idcard", this.idType, this.idString]);
   }
+
+  private openConsentRejectedDialog() {
+    const dialogRef = this.consentRejectedDialog.open(ConsentRejectedDialog, {
+      data: {},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.editConsent(true);
+    });
+  }
+
+  private openConsentInactivatedDialog() {
+    const dialogRef = this.consentInactivatedDialog.open(ConsentInactivatedDialog, {
+      data: {},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        this.editConsent(true);
+    });
+  }
 }
+

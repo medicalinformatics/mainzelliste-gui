@@ -5,6 +5,11 @@ import {ControlContainer, NgForm} from "@angular/forms";
 import {Id} from "../../model/id";
 import {ExternalPseudonymsComponent} from "../external-pseudonyms/external-pseudonyms.component";
 import {AppConfigService} from "../../app-config.service";
+import {Operation} from "../../model/tenant";
+import {MatDialog} from "@angular/material/dialog";
+import {
+  ShowRelatedIdDialog
+} from "./dialogs/show-related-id-dialog/show-related-id-dialog.component";
 
 @Component({
   selector: 'app-patient-pseudonyms',
@@ -19,9 +24,10 @@ export class PatientPseudonymsComponent{
   @Input() fields: { [key: string]: any } = {};
   @Input() readOnly: boolean = false;
   @Input() side: string = "none";
+  @Input() permittedOperation?: Operation;
 
   @Output() slideFieldEvent = new EventEmitter<{ name: string, value: string }>();
-  @Output() pseudonymEvent = new EventEmitter<{ name: string, value: string }>();
+  @Output() generateId = new EventEmitter<{idType:string, idString:string, newIdType: string}>();
 
   @ViewChild(ExternalPseudonymsComponent) externalPseudonymsComponent!: ExternalPseudonymsComponent
 
@@ -30,7 +36,8 @@ export class PatientPseudonymsComponent{
 
   constructor(
     private patientListService: PatientListService,
-    public config: AppConfigService
+    public config: AppConfigService,
+    public showRelatedIdDialog: MatDialog
   ) {
   }
 
@@ -41,10 +48,9 @@ export class PatientPseudonymsComponent{
   getInternalIdTypes(): IdTypSelection[] {
     if (this.internalIdTypes.length == 0) {
       //init.
-      this.internalIdTypes = this.patientListService.getIdGenerators()
-      .filter(g => !g.isExternal)
-      .map(g => {
-        return {idType: g.idType, added: false}
+      this.internalIdTypes = this.patientListService.getAllInternalIdTypes("R")
+      .map(t => {
+        return {idType: t, added: false}
       });
     }
     return this.internalIdTypes;
@@ -57,9 +63,7 @@ export class PatientPseudonymsComponent{
   getExternalIdTypes(): string[] {
     //init.
     if (this.externalIdTypes.length == 0) {
-      this.externalIdTypes = this.patientListService.getIdGenerators()
-      .filter(g => g.isExternal)
-      .map(g => g.idType);
+      this.externalIdTypes = this.patientListService.getAllExternalIdTypes(this.permittedOperation);
     }
     return this.externalIdTypes;
   }
@@ -72,5 +76,25 @@ export class PatientPseudonymsComponent{
 
   public getConcatenated(id: Id): string {
     return id.idType + "." + id.idString;
+  }
+
+  forwardGenerateIdEvent(event: { idType: string, idString: string, newIdType: string }) {
+    this.generateId.emit({
+      idType: event.idType,
+      idString: event.idString,
+      newIdType: event.newIdType
+    });
+  }
+
+  openRelatedDialog(id: Id) {
+    this.patientListService.findRelatedIds(id, this.ids).subscribe( ids => this.showRelatedIdDialog.open(ShowRelatedIdDialog, {
+      data: ids,
+      disableClose: true,
+      minWidth: 300
+    }))
+  }
+
+  public getFieldClass(className: string){
+    return className + (this.readOnly ? " inputFieldDisabled" : "");
   }
 }

@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>{{ (this.dataModel.readonly ? "consent_template_view_dialog.title" : "consent_template_add_dialog.title") | translate}}</h1>
+<app-error-card [(messages)]="errorMessages"></app-error-card>
+<form #consentTemplateForm="ngForm">
+  <div mat-dialog-content style="max-height: 80vh;">
+    <app-consent-template-detail [template]="dataModel.template"
+                                 [readonly]="dataModel.readonly"
+    ></app-consent-template-detail>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button class="submitBreak" (click)="onCancel()">{{(!dataModel.readonly ? 'button_cancel':'button_close') | translate}}</button>
+    <button mat-raised-button class="submit" type="submit"
+            *ngIf="!this.dataModel.readonly" (click)="onSave(true)"
+            [disabled]="disable(consentTemplateForm) || saving">{{"button_publish" | translate}}
+      <mat-icon *ngIf="saving"><mat-spinner diameter="20"></mat-spinner></mat-icon>
+    </button>
+  </div>
+</form>

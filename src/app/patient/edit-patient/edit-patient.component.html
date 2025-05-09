@@ -1,27 +1,29 @@
 <form #patientForm="ngForm">
 <div style="width: 100%; height: 100%">
   <div
-    style=" background:none; margin-top:0.5%; flex: 1 1 70%; display: flex; flex-flow: row; justify-content: space-around; align-items: stretch; justify-content: space-around; gap: 0 1%">
+    style=" background:none; margin-top:0.5%; flex: 1 1 94%; display: flex; flex-flow: row; justify-content: space-around; align-items: stretch; justify-content: space-around; gap: 0 1%">
     <mat-card class="patientendatenMatCard"
               style="flex: 1 1 25%; display: flex;  flex-flow: column">
       <mat-card-title>{{'editPatient.title_patient_data' | translate}}</mat-card-title>
-      <app-patient-fields [readOnly]=false (fieldEvent)="fieldsChanged($event)" [fields]="patient.fields"></app-patient-fields>
+      <app-patient-fields [readOnly]="!this.authorizationService.hasPermission(Permission.EDIT_FIELDS)"
+                          (fieldEvent)="fieldsChanged($event)" [fields]="patient.fields"></app-patient-fields>
     </mat-card>
 
     <mat-card class="pseudonyme"
               style="flex: 1 1 25%; display: flex;  flex-flow: column">
       <mat-card-title>{{'editPatient.title_pseudonyms' | translate}}</mat-card-title>
-      <app-patient-pseudonyms [readOnly]=false [ids]="patient.ids"></app-patient-pseudonyms>
+      <app-patient-pseudonyms [readOnly]="!this.authorizationService.hasPermission(Permission.EDIT_EXT_IDS)"
+                              [ids]="patient.ids" [permittedOperation]="'U'"></app-patient-pseudonyms>
     </mat-card>
 
-    <section style="display: flex; flex: 1 1 1%; margin-left:2%; flex-flow: column;">
+    <section style="display: flex; margin-left:2%; flex-flow: column;">
       <button mat-fab (click)="editPatient(false)" color="submit"
               style="margin-bottom: 15px;"
               aria-label="Example icon button with a delete icon"
-              [disabled]="!patientForm.form.valid">
+              [disabled]="this.disable(patientForm)">
         <mat-icon matTooltip="{{'button_save' | translate}}">done</mat-icon>
       </button>
-      <button mat-fab [routerLink]="['/patientlist']"
+      <button mat-fab [routerLink]="['/idcard', this.idType, this.idString]"
               style="background-color:#888888; color:white;">
         <mat-icon matTooltip="{{'button_cancel' | translate}}">close</mat-icon>
       </button>

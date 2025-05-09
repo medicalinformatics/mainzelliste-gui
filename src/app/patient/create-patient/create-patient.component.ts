@@ -8,20 +8,23 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
 import {ErrorNotificationService} from "../../services/error-notification.service";
 import {GlobalTitleService} from "../../services/global-title.service";
-import {Observable, of} from "rxjs";
-import {concatMap, map, retryWhen, startWith, switchMap} from "rxjs/operators";
+import {Observable, of, retry} from "rxjs";
+import {concatMap, map, mergeMap, startWith} from "rxjs/operators";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MainzellisteError} from "../../model/mainzelliste-error.model";
 import {ErrorMessages} from "../../error/error-messages";
 import {UserAuthService} from "../../services/user-auth.service";
-import { TranslateService } from '@ngx-translate/core';
+import {TranslateService} from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../../consent/consent-dialog/consent-dialog.component";
 import {Consent} from "../../consent/consent.model";
 import {ConsentService} from "../../consent/consent.service";
+import {Permission} from "../../model/permission";
+import {Operation} from "../../model/tenant";
 
 export interface IdTypSelection {
   idType: string,
   added: boolean,
+  associated?: boolean
 }
 
 @Component({
@@ -29,7 +32,8 @@ export interface IdTypSelection {
   templateUrl: './create-patient.component.html',
   styleUrls: ['./create-patient.component.css']
 })
-export class CreatePatientComponent  implements OnInit {
+export class CreatePatientComponent implements OnInit {
+  public readonly Permission = Permission;
   @Input() fields: Array<string> = [];
 
   externalIdTypesFormControl = new FormControl('');
@@ -41,7 +45,7 @@ export class CreatePatientComponent  implements OnInit {
   userAuthService : UserAuthService;
   consent?: Consent;
 
-  internalIdTypes: IdTypSelection[] = [];
+  internalIdTypeSelection: IdTypSelection[] = [];
   /** selected chip data model */
   selectedInternalIdTypes: string[] = [];
   /** autocomplete data model */
@@ -50,6 +54,7 @@ export class CreatePatientComponent  implements OnInit {
   chipListInputData: string = "";
 
   externalIdTypes: IdTypSelection[] = [];
+  public creatingInProgress: boolean = false;
 
   constructor(
     public translate: TranslateService,
@@ -74,12 +79,13 @@ export class CreatePatientComponent  implements OnInit {
   }
 
   ngOnInit(): void {
-    this.selectedInternalIdTypes.push(this.patientListService.getMainIdType());
+    let internalIdTypes  = this.patientListService.getAllInternalIdTypes( "C");
+    let mainIdType = this.patientListService.findDefaultIdType(internalIdTypes);
+    this.selectedInternalIdTypes.push(mainIdType);
 
-    this.internalIdTypes = this.patientListService.getIdGenerators()
-    .filter(g => !g.isExternal)
-    .map(g => {
-      return {idType: g.idType, added: this.patientListService.getMainIdType() == g.idType}
+    this.internalIdTypeSelection = internalIdTypes
+    .map(t => {
+      return {idType: t, added: mainIdType == t}
     });
 
     this.filteredInternalIdTypes = this.chipListInputCtrl.valueChanges.pipe(
@@ -90,7 +96,7 @@ export class CreatePatientComponent  implements OnInit {
           searchValue = "";
         else if (typeof searchValue !== "string")
           searchValue = value.idType
-        return this.internalIdTypes
+        return this.internalIdTypeSelection
         .filter(e => !e.added && e.idType.toLowerCase().includes(searchValue.toLowerCase()))
       }),
     );
@@ -103,31 +109,46 @@ export class CreatePatientComponent  implements OnInit {
   createNewPatient(sureness: boolean) {
     this.errorNotificationService.clearMessages();
     //create patient
+    this.creatingInProgress = true;
     of(this.patient).pipe(
       concatMap(p => this.patientService.createPatient(p, this.selectedInternalIdTypes, sureness)),
-      retryWhen(
-        error => error.pipe(
-          switchMap( (e) => {
-            if(e instanceof MainzellisteError) {
-              // handle session timeout
-              if( e.errorMessage == ErrorMessages.ML_SESSION_NOT_FOUND)
-                return this.userAuthService.retryLogin(this.router.url)
-              // handle tentative
-              else if (e.errorMessage == ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH) {
-                this.openCreatePatientTentativeDialog();
-                // do not emit any value in order to send a complete notification on subscription
-                return of();
+      retry({
+        delay: e => {
+              if (e instanceof MainzellisteError) {
+                // handle session timeout
+                if (e.errorMessage == ErrorMessages.ML_SESSION_NOT_FOUND)
+                  return this.userAuthService.retryLogin(this.router.url)
+                // handle tentative
+                else if (e.errorMessage == ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH) {
+                  this.openCreatePatientTentativeDialog();
+                  // do not emit any value in order to send a complete notification on subscription
+                  this.creatingInProgress = false;
+                  return of();
+                }
               }
+              throw e;
             }
-            throw e;
-          })
-        )
-      )
-    ).toPromise().then(newId => {
-      if(this.consent){
-        this.consent.patientId = newId;
-        this.consentService.addConsent(this.consent).then();
-      } this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
+      }),
+      mergeMap( newId => {
+        if (this.consent !== undefined) {
+          this.consent.patientId = newId;
+          return this.consentService.addConsent(this.consent)
+          .pipe(
+            // create document reference
+            mergeMap(c => {
+              if((this.consent?.scanUrls?.size || 0) > 0)
+                return this.consentService.createScansAndProvenance(this.consent, (c as fhir4.Consent).id || "")
+              else
+                return of(newId);
+            }),
+            map(c => newId)
+          );
+        } else
+          return of(newId);
+      })
+    ).subscribe(newId => {
+      this.creatingInProgress = false;
+      this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
     })
   }
 
@@ -146,7 +167,7 @@ export class CreatePatientComponent  implements OnInit {
     }
 
     // Clear the input value
-    $event.chipInput!.clear();
+    $event.chipInput.clear();
   }
 
   private addInternalIdType(idType: string) {
@@ -160,10 +181,14 @@ export class CreatePatientComponent  implements OnInit {
     }
   }
 
+  getExternalIdTypes(permittedOperation: Operation): string[] {
+    return this.patientListService.getIdGenerators(true, permittedOperation).map(g => g.idType);
+  }
+
   removeInternalIdType(idType: string) {
     const value = (idType || '').trim();
 
-    this.internalIdTypes
+    this.internalIdTypeSelection
     .filter(e => e.idType == value)
     .forEach(e => {
       e.added = false;
@@ -179,7 +204,7 @@ export class CreatePatientComponent  implements OnInit {
   }
 
   private findIdType(idType: string): IdTypSelection | undefined {
-    return this.internalIdTypes.find(e => e.idType == idType && !e.added);
+    return this.internalIdTypeSelection.find(e => e.idType == idType && !e.added);
   }
 
   openCreatePatientTentativeDialog(): void {
@@ -201,14 +226,24 @@ export class CreatePatientComponent  implements OnInit {
   }
 
   openConsentDialog() {
-    const dialogRef = this.consentDialog.open(ConsentDialogComponent, {
+    this.consentDialog.open(ConsentDialogComponent, {
       width: '900px',
-      data: this.consent
+      disableClose: true,
+      data: {
+        consent: !this.consent? this.consent : this.consent.clone(),
+        edit: this.consent != undefined,
+        isSaveButton: true,
+        updateConsentObservable: (consent: Consent) => of(consent)
+      }
+    })
+    .afterClosed().subscribe(result => {
+      if(result)
+        this.consent = result?.dataModel;
     });
+  }
 
-    dialogRef.afterClosed().subscribe(result => {
-      this.consent = result;
-    });
+  deleteConsent() {
+    this.consent = undefined;
   }
 }
 

@@ -1,31 +1,33 @@
-<div *ngIf="!edit">
+<div *ngIf="!readOnly && !consentLoaded">
   <h4>{{'consentDetail.select_consent_template' | translate}}</h4>
   <div>
     <mat-form-field style="width: 400px">
       <mat-label>{{'consentDetail.consent_template' | translate}}</mat-label>
       <mat-select #templateSelection
-                  (selectionChange)="initDataModel(templateSelection.value)"
-                  [value]="getSelectedTemplate()" required>
-        <mat-option *ngFor="let consentTemplate of consentTemplates | keyvalue "
-                    [value]="consentTemplate.key">{{consentTemplate.value.title}}</mat-option>
+                  (selectionChange)="initDataModel($event)"
+                  [value]="this.getCurrentTemplateId()" required
+                  [disabled]="submitting">
+        <mat-option *ngFor="let consentTemplate of templates | keyvalue "
+                    [value]="consentTemplate.key">{{consentTemplate.value}}</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
-<!--  <mat-divider *ngIf="dataModel" style="margin-bottom: 1.34375em;  width: 430px"></mat-divider>-->
 </div>
-<mat-card *ngIf="dataModel">
-  <h2 style="text-align: center">{{dataModel.title | uppercase}}</h2>
-  <div *ngFor="let item of dataModel.items; index as i">
+<mat-divider *ngIf="consent && !readOnly && !consentLoaded" style="margin-bottom: 1.34375em"></mat-divider>
+<mat-card *ngIf="consent">
+  <h2 style="text-align: center">{{consent.title | uppercase}}</h2>
+  <div *ngFor="let item of consent.items; index as i">
     <div [ngSwitch]="getTypeOf(item)">
       <div class="form-group">
         <div *ngSwitchCase="'ConsentDisplayItem'" [innerHTML]="item.text"></div>
         <div style="padding-bottom: 10px" *ngSwitchCase="'ConsentChoiceItem'">
           <mat-card>
-            <div [innerHTML]="item.text"></div>
+            <div style="margin-bottom: 10px;" [innerHTML]="item.text"></div>
             <mat-radio-group [(ngModel)]="toChoiceItem(item).answer"
                              aria-label="Select an option" id="question-{{i}}"
                              name="question-{{i}}"
                              style ="display:flex; gap:40px"
+                             [disabled]="readOnly || submitting"
             color="primary">
               <mat-radio-button value="permit">{{'radio_button_yes' | translate}}</mat-radio-button>
               <mat-radio-button value="deny">{{'radio_button_no' | translate}}</mat-radio-button>
@@ -37,16 +39,81 @@
     </div>
   </div>
   <br>
+  <br>
+ <!-- consent validation period -->
   <div class="form-group">
-    <label>{{'consentDetail.validity_label' | translate}}</label>
-    <mat-form-field appearance="fill">
+    <label>{{'consentDetail.valid_from' | translate}}</label>
+    <mat-form-field appearance="fill" style="width: 150px; margin: 0 7px 0 7px">
       <mat-label>{{'consentDetail.validity_date_label' | translate}}</mat-label>
-      <input matInput [matDatepicker]="picker"
+      <input matInput
+             [matDatepicker]="picker"
              placeholder="{{localDateFormat}}"
-             [(ngModel)]="this.validFrom" name="date">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
+             [appInvalidConsentPeriod]="this.consent.validityPeriod"
+             [(ngModel)]="this.consent.validityPeriod.validFrom"
+             (dateInput)="dateChanged($event)"
+             name="date"
+             #date="ngModel"
+             [disabled]="readOnly || submitting"
+      >
+      <mat-datepicker-toggle [disabled]="submitting" *ngIf="!readOnly" matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker [disabled]="readOnly || submitting"></mat-datepicker>
+      <mat-error *ngIf="this.displayError(date)">
+        {{'error.consentDetail.validity_date' | translate}}
+      </mat-error>
     </mat-form-field>
-    <label><strong>{{getConsentExpiration()}}</strong></label>
+    <label><strong>{{getConsentExpirationDate()}}</strong></label>
   </div>
 </mat-card>
+<br>
+<ng-container *appHasAnyPermissions="[Permission.ADD_CONSENT_SCANS, Permission.READ_CONSENT_SCANS]">
+  <h4 *ngIf="consent && (!readOnly || this.consentScans.size > 0)">{{'consentDetail.scans' | translate}}</h4>
+</ng-container>
+<!-- upload and list scanned documents -->
+<ng-container *ngIf="consent && !readOnly">
+  <div class="form-group" *appHasPermission="Permission.ADD_CONSENT_SCANS">
+    <mat-chip-list style="margin-bottom: 13px" *ngFor="let file of this.consent.scanUrls | keyvalue">
+      <mat-chip style=" margin-bottom: 13px" [disabled]="submitting">
+        <mat-icon style="height: 18px; width: 18px; font-size: 18px; margin-right: 6px;">picture_as_pdf</mat-icon>
+        {{file.key}}
+        <button matChipRemove *ngIf="!readOnly" [disabled]="submitting">
+          <mat-icon (click)="this.deleteUploadedScan(file.key)">delete</mat-icon>
+        </button>
+      </mat-chip>
+    </mat-chip-list>
+    <input type="file"  accept="application/pdf" style="display: none" (change)="onScansSelected($event)" #fileUploader>
+    <div style="width: 150px; display: flex; justify-content: space-between;
+          align-items: center; margin-bottom: 13px;" *ngIf="this.uploadInProgress">
+      <section style="display: flex; align-content: center; align-items: center;">
+        <mat-progress-bar style="width: 140px; height: 20px"
+                          [mode]="'determinate'"
+                          [value]="this.uploadProgress">
+        </mat-progress-bar>
+        <div style="position: absolute; padding: 10px; color: white;"> {{this.uploadProgress}}% </div>
+        <button mat-icon-button>
+          <mat-icon (click)="cancelUploadScan()">delete_forever</mat-icon>
+        </button>
+      </section>
+    </div>
+    <button mat-raised-button (click)="fileUploader.click()" [disabled]="submitting" style="margin-top: 5px">
+      <mat-icon>note_add</mat-icon>
+      {{'button_add_consent_scan' | translate }}
+    </button>
+  </div>
+  <br>
+</ng-container>
+
+<!-- list scanned documents -->
+<ng-container *ngIf="consent && readOnly">
+  <div class="form-group" *appHasPermission="Permission.READ_CONSENT_SCANS">
+    <mat-chip-list style="margin-bottom: 13px" *ngFor="let file of this.consentScans | keyvalue">
+      <mat-chip style=" margin-bottom: 13px">
+        <mat-icon style="height: 18px; width: 18px; font-size: 18px; margin-right: 6px;">picture_as_pdf</mat-icon>
+        {{file.key}}
+        <button matChipRemove #downloadbuttom>
+          <mat-icon (click)="this.downloadScan(file.key)">download</mat-icon>
+        </button>
+      </mat-chip>
+    </mat-chip-list>
+  </div>
+  <br>
+</ng-container>

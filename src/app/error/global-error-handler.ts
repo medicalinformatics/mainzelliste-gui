@@ -4,6 +4,7 @@ import {ErrorNotificationService} from "../services/error-notification.service";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {getErrorMessageFrom} from "./error-utils";
 import { TranslateService } from '@ngx-translate/core';
+import {CardError} from "./card-error";
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
@@ -17,16 +18,11 @@ export class GlobalErrorHandler implements ErrorHandler {
 
   handleError(error: any): void {
     console.log("Global Error Handler: ", error)
-    //unwrapping uncaught promise rejection
-    if(error.promise && error.rejection){
-      error = error.rejection;
-    }
-    if(error instanceof MainzellisteError) {
-      this.errorNotificationService.addMessage(error.errorMessage.getMessage(this.translate, error.messageVariable));
+    let message: string = getErrorMessageFrom(error, this.translate);
+    if(error instanceof MainzellisteError || error instanceof CardError) {
+      this.errorNotificationService.addMessage(message);
     } else {
-      this.zone.run(() =>
-        this.errorDialogService.openDialog(error?.message || this.translate.instant('error.get_error_message_from_undefined_error'))
-      );
+      this.zone.run(() => this.errorDialogService.openDialog(message));
     }
   }
 }

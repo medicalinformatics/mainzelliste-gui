@@ -1,4 +1,12 @@
 # Changelog
+## [1.0.0] - 2025-05-09
+### Feature
+- Patient List with a search filter and csv export.
+- Consent management
+- Resource based refined permissions
+- Multitenancy
+- Bulk ID generation
+- Bulk pseudonymization
 ## [0.0.4] - 2024-02-09
 ### Feature
 - 404 page not found

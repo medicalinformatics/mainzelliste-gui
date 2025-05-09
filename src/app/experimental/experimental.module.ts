@@ -8,6 +8,7 @@ import {AppModule} from "../app.module";
 import {HistorieComponent} from "./historie/historie.component";
 import {DeleteMultiplePatientsComponent} from "./delete-multiple-patients/delete-multiple-patients.component";
 import {RouterModule} from "@angular/router";
+import {PatientModule} from "../patient/patient.module";
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import {RouterModule} from "@angular/router";
         CommonModule,
         SharedModule,
         AppModule,
-        RouterModule
+        RouterModule,
+        PatientModule
     ]
 })
 export class ExperimentalModule {

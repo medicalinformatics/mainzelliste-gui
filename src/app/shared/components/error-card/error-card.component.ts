@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {ErrorNotificationService} from "../../../services/error-notification.service";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-error-card',
@@ -8,13 +8,31 @@ import {ErrorNotificationService} from "../../../services/error-notification.ser
 })
 export class ErrorCardComponent implements OnInit {
 
-  constructor(public errorNotificationService: ErrorNotificationService) {
+  @Input() messages: string[] = [];
+  @Output() messagesChange = new EventEmitter<string[]>();
+  widthPageMap: Map<string,string> = new Map([
+    ["add-new-patient", "41%"],
+    ["edit-patient", "92%"],
+    ["idcard", "94%"],
+  ]);
+
+  constructor(
+    private router: Router) {
   }
 
   ngOnInit(): void {
   }
 
-  closeError(message : string){
-    this.errorNotificationService.removeMessage(message);
+  public getWidth(): string {
+    let urlSegment = this.router.url.split('/');
+    return urlSegment.length < 2 ? "100%" : this.widthPageMap.get(urlSegment[1]) ?? "100%";
+  }
+
+  closeError(message: string) {
+    let index: number = this.messages.indexOf(message);
+    if (index > -1)
+      this.messages.splice(index, 1);
+    else
+      console.error("message '" + message + "'not found in error array");
   }
 }

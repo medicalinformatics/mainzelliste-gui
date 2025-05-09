@@ -1,5 +1,5 @@
 <table style="width: 100%; max-width: 700px;" ngModelGroup="externalIds">
-  <tr *ngFor="let externalId of getExternalIds() ">
+  <tr *ngFor="let id of getExternalIds()">
     <td style="width: 100%; flex-flow: row">
       <div style="display: flex; flex-wrap: nowrap;">
         <button *ngIf="side!='none'" style=" margin-top:4%; border:none; background:none;"
@@ -7,37 +7,49 @@
 <!--                (click)="slideData(fields[externalId.idType], externalId.idString)">-->
           <mat-icon>arrow_circle_{{side}}</mat-icon>
         </button>
-        <mat-form-field class="inputField">
-          <mat-label>{{externalId.idType}}</mat-label>
+        <mat-form-field [class]="getFieldClass('inputField')">
+          <mat-label>{{id.idType}}</mat-label>
           <input style="width: 90%"
-                 [(ngModel)]="externalId.idString" [name]="externalId.idType"
-                 matInput [readonly]="readOnly"
-                 value="{{externalId.idString}}">
+                 [(ngModel)]="id.idString" [name]="this.getFieldName(id)"
+                 matInput [readonly]="readOnly || this.permittedOperation != 'C' && this.isAssociatedIdType(id.idType)"
+                 value="{{id.idString}}">
           <span matSuffix style="display:flex; flex-flow: row; justify-content:flex-end; column-gap:6px; row-gap: 0px">
-            <button mat-icon-button *ngIf="readOnly && this.config.isCopyIdEnabled()" [cdkCopyToClipboard]="externalId.idString"
+            <button mat-icon-button *ngIf="readOnly && this.config.isCopyIdEnabled()" [cdkCopyToClipboard]="id.idString"
                     [ngStyle]="{'width': '24px', 'height': '24px'}"
-                    [matTooltip]="externalId.idString" matSuffix>
+                    [matTooltip]="id.idString" matSuffix>
               <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
             </button>
             <button mat-icon-button *ngIf="readOnly && this.config.isCopyConcatenatedIdEnabled()"
-                    [cdkCopyToClipboard]="this.getConcatenated(externalId)"
+                    [cdkCopyToClipboard]="this.getConcatenated(id)"
                     [ngStyle]="{'width': '24px', 'height': '24px'}"
-                    [matTooltip]="this.getConcatenated(externalId)" matSuffix>
+                    [matTooltip]="this.getConcatenated(id)" matSuffix>
               <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">copy_all</mat-icon>
+            </button>
+            <button mat-icon-button *ngIf="readOnly"
+                    [ngStyle]="{'width': '24px', 'height': '24px'}"
+                    matTooltip="{{'patientPseudonyms.related_id_button' | translate}}"
+                    (click)="this.openRelatedDialog(id)">
+              <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">hub</mat-icon>
             </button>
           </span>
         </mat-form-field>
-        <button *ngIf="!readOnly" mat-icon-button color="primary"
+        <button *ngIf="!readOnly && (this.permittedOperation == 'C' || !this.isAssociatedIdType(id.idType))" mat-icon-button color="primary"
                 aria-label="Externes Pseudonym entfernen"
-                (click)="this.removeExternalIdField(externalId.idType)"
-                style="margin-top: 9px; margin-left: 8px">
+                (click)="this.removeExternalIdField(id.idType)"
+                style="margin-top: 9px;">
           <mat-icon>delete</mat-icon>
+        </button>
+        <button *ngIf="readOnly && this.getAssociatedIdTypes(id.idType).length > 0 && this.generateId != undefined" mat-icon-button color="primary"
+                matTooltip="{{'button_generate_id' | translate}}"
+                (click)="this.openGenerateIdDialog(id)"
+                style="margin-top: 9px;">
+          <mat-icon>add_box</mat-icon>
         </button>
       </div>
     </td>
   </tr>
   <!-- external id types dropdown menu-->
-  <tr *ngIf="this.getExternalIdMatSelectData().length > 0 && !readOnly">
+  <tr *ngIf="!readOnly && this.getExternalIdMatSelectData().length > 0">
     <td>
       <div style="display: flex; flex-wrap: nowrap;">
         <mat-form-field class="inputField">

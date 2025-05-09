@@ -22,6 +22,11 @@ nav{
 .sidenav-menu-item mat-icon{
   margin-right: 0.5em;
 }
+.menu-divider {
+  padding: 0 10px 10px 10px;
+  margin: 0 12px;
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
 
 td{
   padding-top: 1em;

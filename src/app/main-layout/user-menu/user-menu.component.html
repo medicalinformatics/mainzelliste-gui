@@ -1,21 +1,45 @@
 <div>
-  <button class="profileButton" mat-button [matMenuTriggerFor]="profileDropDown">
-    <mat-icon>account_circle</mat-icon>
-    {{this.userAuthService.getUserName()}}
-    <mat-icon>arrow_drop_down</mat-icon>
-  </button>
-  <mat-menu #profileDropDown="matMenu" xPosition="before">
-    <button mat-menu-item [matMenuTriggerFor]="languages">
-      <mat-icon>language</mat-icon>
-      <span>{{'session.menu_language' | translate}}</span>
+  <div *ngIf="this.authorizationService.getTenants().length > 1">
+    <button class="profileButton" mat-button [matMenuTriggerFor]="tenantsDropDown">
+      <div style="display: flex;align-items: center;">
+        <mat-icon style="padding-bottom: 4px">domain</mat-icon>
+        &nbsp;{{'session.tenancy' | translate}}&nbsp;<span class="domain-name"> ({{this.getCurrentTenant()}})</span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </div>
     </button>
-    <button mat-menu-item (click)="this.userAuthService.logout()">
-      <mat-icon>logout</mat-icon>
-      <span>{{'session.menu_logout' | translate}}</span>
+    <mat-menu #tenantsDropDown="matMenu" xPosition="before">
+      <button mat-menu-item *ngFor="let tenant of this.getTenants()"
+              [disabled]="tenant.id == this.authorizationService.currentTenantId"
+              (click)="setTenant(tenant.id)">{{tenant.name}}
+      </button>
+    </mat-menu>
+  </div>
+  <div>
+    <button class="profileButton" mat-button [matMenuTriggerFor]="profileDropDown">
+      <mat-icon>account_circle</mat-icon>
+      {{this.userAuthService.getUserName()}}
+      <mat-icon>arrow_drop_down</mat-icon>
     </button>
-  </mat-menu>
-  <mat-menu #languages="matMenu">
-    <button *ngIf="this.translate.currentLang != 'de-DE'" mat-menu-item (click)="useLanguage('de-DE')">{{'session.language_german' | translate}}</button>
-    <button *ngIf="this.translate.currentLang != 'en-US'" mat-menu-item (click)="useLanguage('en-US')">{{'session.language_english' | translate}}</button>
-  </mat-menu>
+    <mat-menu #profileDropDown="matMenu" xPosition="before">
+<!--      <button mat-menu-item [matMenuTriggerFor]="tenants" *ngIf="this.authorizationService.getTenants().length > 1">-->
+<!--        <mat-icon>domain</mat-icon>-->
+<!--        <span class="menu-item">{{'session.tenancy' | translate}}</span>-->
+<!--      </button>-->
+      <button mat-menu-item [matMenuTriggerFor]="languages">
+        <mat-icon>language</mat-icon>
+        <span class="menu-item">{{'session.menu_language' | translate}}</span>
+      </button>
+      <button mat-menu-item (click)="this.userAuthService.logout()">
+        <mat-icon>logout</mat-icon>
+        <span class="menu-item">{{'session.menu_logout' | translate}}</span>
+      </button>
+    </mat-menu>
+    <mat-menu #tenants="matMenu">
+      <button *ngFor="let tenant of this.getTenants()" [disabled]="tenant.id == this.authorizationService.currentTenantId" mat-menu-item (click)="setTenant(tenant.id)">{{tenant.name}}</button>
+    </mat-menu>
+    <mat-menu #languages="matMenu">
+      <button *ngIf="this.translate.currentLang != 'de-DE'" mat-menu-item (click)="useLanguage('de-DE')">{{'session.language_german' | translate}}</button>
+      <button *ngIf="this.translate.currentLang != 'en-US'" mat-menu-item (click)="useLanguage('en-US')">{{'session.language_english' | translate}}</button>
+    </mat-menu>
+  </div>
 </div>

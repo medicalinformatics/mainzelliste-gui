@@ -7,6 +7,8 @@ import {Observable} from "rxjs";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessages} from "../error/error-messages";
 import {Id} from "../model/id";
+import {Operation} from "../model/tenant";
+import {FilterItem} from "../model/filter-item";
 
 @Injectable({
   providedIn: 'root'
@@ -322,9 +324,9 @@ export class PatientService {
   constructor(private patientListService: PatientListService) {
   }
 
-  getDisplayPatients(filters: Array<{ field: string, fields: string[], searchCriteria: string, isIdType: boolean }>,
-                     pageIndex: number, pageSize: number): Observable<ReadPatientsResponse> {
-    return this.patientListService.getPatients(filters, pageIndex + 1, pageSize).pipe(
+  getDisplayPatients(filters: Array<FilterItem>, pageIndex: number, pageSize: number, ignoreOrder: boolean,
+                     tenants?: { id: string, name: string, idTypes: string[] }[]): Observable<ReadPatientsResponse> {
+    return this.patientListService.getPatients(filters, pageIndex + 1, pageSize, ignoreOrder).pipe(
       map((response: ReadPatientsResponse): ReadPatientsResponse => {
           let displayPatients: Patient[]
           if (response.patients.length == 0) {
@@ -332,7 +334,7 @@ export class PatientService {
           } else {
             displayPatients = response.patients
             .filter(p => p.ids != undefined)
-            .map(patient => this.patientListService.convertToDisplayPatient(patient, true));
+            .map(patient => this.patientListService.convertToDisplayPatient(patient, true, true, tenants));
           }
           // override patients
           response.patients = displayPatients;
@@ -349,15 +351,15 @@ export class PatientService {
     return this.patientListService.addPatient(patient, idTypes, sureness);
   }
 
-  async deletePatient(patient: Patient){
-     this.patientListService.deletePatient(patient).then().catch(error => {console.log(error)})
+  deletePatient(patient: Patient){
+     return this.patientListService.deletePatient(patient);
   }
 
-  getConfiguredFields(): Array<Field> {
-    return this.patientListService.getConfiguredFields();
+  getConfiguredFields(operation: Operation): Array<Field> {
+    return this.patientListService.getConfiguredFields(operation);
   }
 
   getConfigureIdTypes(): Array<string> {
-    return this.patientListService.getIdTypes();
+    return this.patientListService.getAllIdTypes("R");
   }
 }

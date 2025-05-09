@@ -6,8 +6,10 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {GlobalTitleService} from "../../services/global-title.service";
 import {MatDialog} from "@angular/material/dialog";
 import {Id} from "../../model/id";
-import {DeletePatientDialog} from "../../idcard/dialogs/delete-patient-dialog";
-import { TranslateService } from '@ngx-translate/core';
+import {TranslateService} from '@ngx-translate/core';
+import {
+  ConfirmDeleteDialogComponent
+} from "../../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
 
 @Component({
   selector: 'app-delete-patient',
@@ -45,7 +47,7 @@ export class DeletePatientComponent implements OnInit {
     this.translate.onLangChange.subscribe(() => {
       this.changeTitle();
     });
-    this.patientListService.readPatient(new Id(this.idType, this.idString)).then(patients => {
+    this.patientListService.readPatient(new Id(this.idType, this.idString), "R").subscribe(patients => {
       this.patient = this.patientListService.convertToDisplayPatient(patients[0]);
     });
   }
@@ -55,13 +57,15 @@ export class DeletePatientComponent implements OnInit {
   }
 
   async deletePatient() {
-    await this.patientService.deletePatient(this.patient)
-    .then(() => this.router.navigate(['/patientlist']).then());
+    this.patientService.deletePatient(this.patient)
+    .subscribe(() => this.router.navigate(['/patientlist']).then());
   }
 
   openDeletePatientDialog(): void {
-    const dialogRef = this.dialog.open(DeletePatientDialog, {
-      data: {},
+    const dialogRef = this.dialog.open(ConfirmDeleteDialogComponent, {
+      data: {
+        itemI18nName: "confirm_delete_dialog.item_patient"
+      },
     });
 
     dialogRef.afterClosed().subscribe(result => {

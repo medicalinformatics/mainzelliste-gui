@@ -1,16 +1,45 @@
-<button mat-button *appHasPermission="'readPatients'" [routerLink]="['/patientlist']" class="sidenav-menu-item">
+<button mat-button *appHasPermission="Permission.READ_PATIENT" [routerLink]="['/patientlist']" class="sidenav-menu-item">
   <mat-icon>list</mat-icon>
   <span>{{'navigation.patientlist' | translate}}</span>
 </button>
-<button mat-button *appHasPermission="'addPatient'" [routerLink]="['/add-new-patient']" class="sidenav-menu-item">
+<button mat-button *appHasPermission="Permission.CREATE_PATIENT" [routerLink]="['/add-new-patient']" class="sidenav-menu-item">
   <mat-icon>person_add_alt</mat-icon>
   <span>{{'navigation.new_patient' | translate}}</span>
 </button>
+
+<mat-divider *ngIf="this.authorizationService.authorizationState.GENERATE_IDS
+  || this.authorizationService.authorizationState.ADD_PATIENTS " class="menu-divider"></mat-divider>
+<button mat-button *ngIf="this.authorizationService.authorizationState.GENERATE_IDS" [routerLink]="['/bulk-id-generation']" class="sidenav-menu-item">
+  <mat-icon>library_add</mat-icon>
+  <span>{{'navigation.bulkIdGeneration' | translate}}</span>
+</button>
+<button mat-button *ngIf="this.authorizationService.authorizationState.ADD_PATIENTS" [routerLink]="['/bulk-pseudonymization']" class="sidenav-menu-item">
+  <mat-icon>group_add</mat-icon>
+  <span>{{'navigation.bulkPseudonymization' | translate}}</span>
+</button>
+
 <!--<button mat-button [routerLink]="['/audittrail']" class="sidenav-menu-item">-->
 <!--  <mat-icon>list_alt</mat-icon>-->
 <!--  <span>Audit-Trail</span>-->
 <!--</button>-->
+<ng-container *ngIf="this.authorizationService.authorizationState.CREATE_CONSENT_TEMPLATE">
+  <mat-divider class="menu-divider"></mat-divider>
+  <button mat-button [routerLink]="['/consent-templates']" class="sidenav-menu-item">
+    <mat-icon>assignment</mat-icon>
+    <span>{{'navigation.consent_template' | translate}}</span>
+  </button>
+</ng-container>
+<mat-divider class="menu-divider"></mat-divider>
+<ng-container *ngIf="this.appConfigService.isConfigurationEnabled()">
+  <button mat-button *ngIf="this.authorizationService.authorizationState.EDIT_CONFIGURATION
+  || this.authorizationService.authorizationState.READ_CONSENT_POLICY_SET"
+          [routerLink]="['/configuration']" class="sidenav-menu-item">
+    <mat-icon>settings</mat-icon>
+    <span>{{'navigation.configuration' | translate}}</span>
+  </button>
+</ng-container>
 <button mat-button [routerLink]="['/info']" class="sidenav-menu-item">
   <mat-icon>info</mat-icon>
   <span>{{'navigation.info' | translate}}</span>
 </button>
+

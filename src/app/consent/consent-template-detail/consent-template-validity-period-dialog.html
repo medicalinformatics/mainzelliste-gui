@@ -1,0 +1,40 @@
+<h1 mat-dialog-title>{{'consent_template.validityPeriod' | translate}}</h1>
+<div mat-dialog-content>
+  <br />
+        <mat-form-field
+          [ngStyle]="{'clear': 'both', 'float': 'left', 'margin-bottom': displayError(year) ? '1.25em' : '-1.25em' }">
+          <mat-label>{{"consent_template.validity_years" | translate}}</mat-label>
+          <input matInput pattern="\d*" type="number" min="0" placeholder=""
+                 [(ngModel)]="this.validityPeriod.years" [name]="'year'" #year="ngModel">
+          <mat-error *ngIf="displayError(year)">{{getFieldErrorMessage("validity_year", year.errors)}}</mat-error>
+        </mat-form-field>
+        <mat-form-field style="float: left; width: 100px; margin-left: 15px">
+          <mat-label>{{"consent_template.validity_months" | translate}}</mat-label>
+          <mat-select [(value)]="this.validityPeriod.months">
+            <mat-option *ngFor="let i of validityMonths" value="{{i}}">{{i}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field style=" float: left; width: 70px; margin-left: 15px">
+          <mat-label>{{"consent_template.validity_days" | translate}}</mat-label>
+          <mat-select [(value)]="this.validityPeriod.days">
+            <mat-option *ngFor="let i of validityDays" value="{{i}}">{{i}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+</div>
+<div mat-dialog-actions style="margin-top: 3%;">
+  <button mat-raised-button class="submitBreak" (click)="onCancel()">
+    {{'button_cancel' | translate}}
+  </button>
+  <button
+    mat-raised-button
+    class="submit"
+    type="submit"
+    (click)="onSave()"
+    [disabled]="(!validityPeriod.years || validityPeriod.years <= 0) &&
+    (!validityPeriod.months || validityPeriod.months == 0) &&
+    (!validityPeriod.days || validityPeriod.days == 0)"
+  >
+    {{'button_save' | translate}}
+  </button>
+</div>
+
