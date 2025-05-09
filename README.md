@@ -4,7 +4,11 @@
 [![Build](https://github.com/medicalinformatics/mainzelliste-gui/actions/workflows/ci.yml/badge.svg)](https://github.com/medicalinformatics/mainzelliste-gui/actions/workflows/ci.yml)
 [![Docker Pulls](https://img.shields.io/docker/pulls/medicalinformatics/mainzelliste-gui.svg)](https://hub.docker.com/r/medicalinformatics/mainzelliste-gui/)
 
-With the Mainzelliste UI your can easily manage your patient list, creating new ID, editing patient fields or deleting patient.   
+Mainzelliste offers an intuitive web interface that makes managing patient data simple and efficient. 
+Easily create new patient IDs, update patient fields, or remove patient as needed.
+In addition, Mainzelliste supports comprehensive consent management and enables bulk operations such 
+as large-scale pseudonymization and automated ID generation—ideal for handling high volumes of data 
+in clinical and research environments.
 
 ![Mainzelliste UI Screenshot](./doc/images/mainzelliste-ui-screenshot-browser.png)
 ## Installation Guidelines
