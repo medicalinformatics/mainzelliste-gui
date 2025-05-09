@@ -30,10 +30,6 @@ mat-card-title{
   padding-bottom: 25px;
 }
 
-.consent-row:hover {
-  background-color: #dddddd;
-}
-
 .idcard-button.mat-fab.mat-accent {
   background-color: #053E6A;
   color:white;
