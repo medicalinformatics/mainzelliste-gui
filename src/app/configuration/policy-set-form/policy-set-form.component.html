@@ -9,7 +9,7 @@
         {{ getFieldErrorMessage("id", policySetForm.controls.id.errors) }}
       </mat-error>
     </mat-form-field>
-    <mat-form-field appearance="outline" [ngStyle]="{'margin-bottom': displayError(policySetForm.controls.name) ? '0.25em' : '-1.25em' }">
+    <mat-form-field appearance="outline">
       <mat-label>{{'configuration.policySet.name' | translate}}</mat-label>
       <input matInput formControlName="name">
       <mat-error *ngIf="displayError(policySetForm.controls.name)">
