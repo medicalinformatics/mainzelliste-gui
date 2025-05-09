@@ -1,10 +1,16 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ConsentService } from 'src/app/consent/consent.service';
-import { getErrorMessageFrom } from 'src/app/error/error-utils';
-import { TranslateService } from '@ngx-translate/core';
-import { take } from 'rxjs/operators';
+import {Component, Inject, OnInit} from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {ConsentService} from 'src/app/consent/consent.service';
+import {getErrorMessageFrom} from 'src/app/error/error-utils';
+import {TranslateService} from '@ngx-translate/core';
+import {take} from 'rxjs/operators';
 
 @Component({
   selector: 'app-policy-form',
@@ -14,6 +20,7 @@ import { take } from 'rxjs/operators';
 export class PolicyFormComponent implements OnInit {
   policyForm: FormGroup;
   errorMessages: string[] = [];
+  saving: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -23,7 +30,7 @@ export class PolicyFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { policySetId: string }
   ) {
     this.policyForm = this.fb.group({
-      code: ['', Validators.required],
+      code: ['', [Validators.required, Validators.pattern('\\S+')]],
       text: ['', Validators.required]
     });
   }
@@ -34,7 +41,9 @@ export class PolicyFormComponent implements OnInit {
     if (this.policyForm.valid) {
       this.errorMessages = [];
       const { code, text } = this.policyForm.value;
-      
+      this.saving = true;
+      this.policyForm.disable();
+
       this.consentService.addPolicy(this.data.policySetId, code, text)
         .pipe(take(1))
         .subscribe({
@@ -42,29 +51,26 @@ export class PolicyFormComponent implements OnInit {
             this.dialogRef.close(response);
           },
           error: (e) => {
-            const errorCode = e?.error?.code || e?.status;
-            this.handleError(errorCode, e);
+            this.errorMessages.push(getErrorMessageFrom(e, this.translate));
+            this.policyForm.enable();
+            this.saving = false;
           }
         });
     }
   }
 
-  handleError(errorCode: any, e: any) {
-    let errorMessageKey: string;
-    switch (errorCode) {
-      case 400:
-        errorMessageKey = "configuration.policy.error.400";
-        break;
-      case 409:
-        errorMessageKey = "";
-        break;
-      default:
-        this.errorMessages.push(getErrorMessageFrom(e, this.translate));
-        return
-    }
-    
-    this.translate.get(errorMessageKey).subscribe((translatedMessage) => {
-      this.errorMessages.push(translatedMessage);
-    });
+  displayError(field: AbstractControl<any>) {
+    return field.invalid &&
+      (field.dirty || field.touched) &&
+      (field.errors?.['pattern'] || field.errors?.['required']);
+  }
+
+  getFieldErrorMessage(fieldName: string, errors: ValidationErrors | null) {
+    if (errors?.['pattern'])
+      return `${this.translate.instant('patientFields.error_value_text1')} ${this.translate.instant('configuration.policy.' + fieldName)} ${this.translate.instant('patientFields.error_value_text2')}`;
+    else if (errors?.['required'])
+      return `${this.translate.instant('patientFields.error_mandatory_text1')} ${this.translate.instant('configuration.policy.' + fieldName)} ${this.translate.instant('patientFields.error_mandatory_text2')}`;
+    else
+      return "fehler";
   }
 }
