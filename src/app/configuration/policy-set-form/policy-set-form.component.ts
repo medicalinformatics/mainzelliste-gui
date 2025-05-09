@@ -24,8 +24,7 @@ export class PolicySetFormComponent implements OnInit {
   ) {
     this.policySetForm = this.fb.group({
       id: ['', [Validators.required, Validators.pattern('\\S+')]],
-      name: ['', Validators.required],
-      externalId: ['']
+      name: ['', Validators.required]
     });
   }
 
@@ -37,7 +36,7 @@ export class PolicySetFormComponent implements OnInit {
       this.saving = true;
       this.policySetForm.disable();
       const { id, name, externalId } = this.policySetForm.value;
-      this.consentService.addPolicySet(id, name, externalId)
+      this.consentService.addPolicySet(id, name)
         .pipe(take(1))
         .subscribe({
           next: (response) => {

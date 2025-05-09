@@ -109,9 +109,9 @@
   "consent_template.based_on_mii_broad_consent": "based on MII Broad Consent",
   "consent_template.mii_broad_consent_version": "Version of MII Broad Consent",
   "consent_template.validityPeriod": "Validity period",
-  "consent_template.validity_year": "Years",
-  "consent_template.validity_month": "Months",
-  "consent_template.validity_day": "Days",
+  "consent_template.validity_years": "Years",
+  "consent_template.validity_months": "Months",
+  "consent_template.validity_days": "Days",
   "consent_template.consent_model": "Consent Model",
   "consent_template.modules": "Modules",
   "consent_template.module_type": "Module type",
@@ -125,6 +125,7 @@
   "consent_template.add_polices": "Add Policy",
   "consent_template.error.required_policies": "Please select at least one policy",
   "consent_template.error.referred_by": "Failed to delete consent template due to existing consents based on this template",
+  "consent_template.error.policy_period_exceed": "Validity period must not exceed the validity period of the document \"${}\"",
 
   "consent_dialog_history_title": "Consent history",
   "consent_dialog_history_status": "Previous status",
@@ -188,7 +189,7 @@
   "consentDetail.valid_unlimited": " for an unlimited period of time",
   "consentDetail.scans": "Scanned documents:",
 
-  "error.consentDetail.validity_date": "Validity period lies in the past",
+  "error.consentDetail.validity_date": "Validity period is invalid",
 
 	"deletePatient.title_patient_data": "Patient data",
 	"deletePatient.title_pseudonyms": "Pseudonyms",
@@ -215,7 +216,6 @@
 
   "configuration.tab_policies": "Policy Sets",
   "configuration.policySet.id": "Id",
-  "configuration.policySet.externalId": "External Id",
   "configuration.policySet.name": "Name",
   "configuration.policy.policies": "Policies",
   "configuration.policy.policyCode": "Policy Code",

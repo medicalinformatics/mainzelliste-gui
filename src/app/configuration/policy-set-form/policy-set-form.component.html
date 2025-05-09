@@ -16,10 +16,6 @@
         {{ getFieldErrorMessage("name", policySetForm.controls.name.errors) }}
       </mat-error>
     </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>{{'configuration.policySet.externalId' | translate}}</mat-label>
-      <input matInput formControlName="externalId">
-    </mat-form-field>
 </div>
 <div mat-dialog-actions>
   <button mat-raised-button mat-dialog-close class="submitBreak">{{'button_cancel' | translate}}</button>

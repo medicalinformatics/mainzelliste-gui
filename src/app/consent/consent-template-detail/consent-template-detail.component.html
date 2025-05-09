@@ -65,8 +65,8 @@
   <mat-form-field [class]="getFieldClass('templateInputField')"
                   [ngStyle]="{'margin-bottom': displayError(validityPeriod) ? '0.25em' : '-1.25em' }">
     <mat-label>{{'consent_template.validityPeriod' | translate}}</mat-label>
-    <input matInput style="width: 90%; " placeholder="0 Jahren - 0 Monaten - 0 Tagen"
-           [(ngModel)]="this.templateValidityPeriod"
+    <input matInput style="width: 90%; "
+           [ngModel]="this.template.validity.toLocalText(this.translate)"
            [appEmptyConsentTemplateValidityPeriod]="this.template.validity"
            [readonly]="true" [required]="true" [name]="'validityPeriod'" #validityPeriod="ngModel">
     <mat-error *ngIf="displayError(validityPeriod)">
@@ -86,7 +86,7 @@
                   *ngIf="this.template.isMiiFhirConsentConform">
     <mat-label>{{'consent_template.mii_broad_consent_version' | translate}}</mat-label>
     <mat-select [(ngModel)]="this.template.policy" required="true" [name]="'miiFhirVersion'" [disabled]="readonly">
-      <mat-option *ngFor="let version of this.miiFhirBroadConsentVersions"
+      <mat-option *ngFor="let version of this.configService.getConsentTerminology().miiBroadConsentVersions"
                   value="{{version.code}}">{{version.name}}</mat-option>
     </mat-select>
   </mat-form-field>
@@ -104,14 +104,19 @@
   </div>
 
   <!-- Modules -->
-  <h4 style="margin-top: 20px; clear:both; float: left;">{{"consent_template.modules" | translate}}:</h4>
+  <h3 style="margin-top: 20px; clear:both; float: left;">{{"consent_template.modules" | translate}}:</h3>
 
   <!-- modules -->
-  <app-consent-template-modules [templateModules]="this.template.items" [readonly]="readonly"></app-consent-template-modules>
+  <app-consent-template-modules [templateModules]="this.template.items"
+                                [readonly]="readonly"
+                                [mainValidityPeriod]="this.template.validity"
+  >
+  </app-consent-template-modules>
 
   <!-- add module -->
-  <div *ngIf="!readonly"
-    style="clear:both; float: left; width: 300px;  margin-top: 20px; margin-bottom: 40px; display: flex; flex-wrap: nowrap;">
+  <div *ngIf="!readonly"  [ngStyle]="{ 'margin-top': this.template.items.length == 0 ? '5px':'20px'}"
+    style="clear:both; float: left; width: 300px; margin-bottom: 40px; display: flex; flex-wrap: nowrap;"
+  >
     <mat-form-field class="templateInputField">
       <mat-label>{{'consent_template.module_type' | translate}}</mat-label>
       <mat-select required="false" [(value)]="selectedModuleType">

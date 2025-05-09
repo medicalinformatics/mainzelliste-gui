@@ -111,9 +111,9 @@
   "consent_template.based_on_mii_broad_consent": "basiert auf MII Broad Consent",
   "consent_template.mii_broad_consent_version": "Version des MII Broad Consent",
   "consent_template.validityPeriod": "Gültigkeitsdauer",
-  "consent_template.validity_year": "Jahren",
-  "consent_template.validity_month": "Monaten",
-  "consent_template.validity_day": "Tage",
+  "consent_template.validity_years": "Jahren",
+  "consent_template.validity_months": "Monaten",
+  "consent_template.validity_days": "Tage",
   "consent_template.consent_model": "Zustimmungsverfahren",
   "consent_template.modules": "Modules",
   "consent_template.module_type": "Moduletyp",
@@ -127,6 +127,7 @@
   "consent_template.add_polices": "Policy hinzufügen",
   "consent_template.error.required_policies": "Die Eingabe von Policies ist erforderlich",
   "consent_template.error.referred_by": "Die Einwilligungsvorlage kann nicht gelöscht werden, da bereit Einwilligungserkärungen mittels dieser Vorlage erstellt wurden",
+  "consent_template.error.policy_period_exceed": "Die Gültigkeitsdauer darf die Gültigkeitsdauer des Dokumentes \"${}\" nicht überschreiten",
 
   "consent_dialog_history_title": "Einwilligung-Historie",
   "consent_dialog_history_status": "Vorheriger status",
@@ -193,7 +194,7 @@
   "consentDetail.valid_unlimited": "für einen unbegrenzten Zeitraum",
   "consentDetail.scans": "Gescannte Dokumenten:",
 
-  "error.consentDetail.validity_date": "Gültigkeitszeitraum liegt in der vergangenheit",
+  "error.consentDetail.validity_date": "Gültigkeitszeitraum is ungültig",
 
 	"deletePatient.title_patient_data": "Patientendaten",
 	"deletePatient.title_pseudonyms": "Pseudonyme",
@@ -224,7 +225,6 @@
 
   "configuration.tab_policies": "Policy Sets",
   "configuration.policySet.id": "Id",
-  "configuration.policySet.externalId": "Externe Id",
   "configuration.policySet.name": "Name",
   "configuration.policy.policies": "Policies",
   "configuration.policy.policyCode": "Policy-Code",

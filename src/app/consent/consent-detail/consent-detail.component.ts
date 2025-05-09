@@ -4,13 +4,7 @@ import {ConsentService} from "../consent.service";
 import {MAT_DATE_LOCALE, MatOption} from "@angular/material/core";
 import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "../consent.model";
 import _moment from "moment";
-import {
-  AbstractControl,
-  ControlContainer,
-  NgForm,
-  ValidationErrors,
-  ValidatorFn
-} from "@angular/forms";
+import {ControlContainer, NgForm, NgModel} from "@angular/forms";
 import {Permission} from "../../model/permission";
 import {Subscription} from "rxjs";
 import {HttpEventType} from "@angular/common/http";
@@ -18,6 +12,7 @@ import {map} from "rxjs/operators";
 import {AuthorizationService} from "../../services/authorization.service";
 import {TranslateService} from "@ngx-translate/core";
 import {getErrorMessageFrom} from "../../error/error-utils";
+import {MatDatepickerInputEvent} from "@angular/material/datepicker";
 
 @Component({
   selector: 'app-consent-detail',
@@ -35,6 +30,7 @@ export class ConsentDetailComponent implements OnInit {
   @Input() errorMessages: string[] = [];
   @Output() errorMessagesChange = new EventEmitter<string[]>();
   @ViewChild('templateSelection') templateSelection!: MatSelect;
+  consentLoaded: boolean = true;
   localDateFormat:string;
   uploadInProgress: boolean = false;
   uploadProgress: number = 0;
@@ -42,11 +38,12 @@ export class ConsentDetailComponent implements OnInit {
   consentScans: Map<string,string> = new Map<string, string>();
 
   constructor(
-      private consentService: ConsentService,
-      private authorizationService: AuthorizationService,
-      private translate :TranslateService,
+      private readonly consentService: ConsentService,
+      private readonly authorizationService: AuthorizationService,
+      private readonly translate :TranslateService,
       @Inject(MAT_DATE_LOCALE) private _locale: string
   ) {
+    //TODO migrate to luxon
     _moment.locale(this._locale);
     this.localDateFormat = _moment().localeData().longDateFormat('L');
   }
@@ -57,9 +54,11 @@ export class ConsentDetailComponent implements OnInit {
       this.consentService.getConsentTemplateTitleMap()
         .subscribe(r => this.templates = r);
 
-    //reset selection if no template selected
-    if (!this.consent?.id && (!this.readOnly && this.templateSelection)) {
-      this.templateSelection.options.forEach((data: MatOption) => data.deselect());
+    if (!this.consent?.id && !this.readOnly) {
+      this.consentLoaded = false;
+      //reset selection if no template selected
+      if (this.templateSelection)
+        this.templateSelection.options.forEach((data: MatOption) => data.deselect());
     }
 
     // load scans id
@@ -84,12 +83,20 @@ export class ConsentDetailComponent implements OnInit {
     }
   }
 
-  getConsentExpiration(): string {
-    return this.consent.period == 0 ?
-      this.translate.instant('consentDetail.valid_unlimited') :
-      this.translate.instant('consentDetail.valid_until')
-      + new Date((this.consent.validFrom?.toDate().getTime() || 0)
-        + this.consent.period).toLocaleDateString();
+  getConsentExpirationDate(): string {
+    if(!this.consent.validityPeriod.validFrom?.isValid) {
+      return ""
+    } else if (!this.consent.validityPeriod.period) {
+      // unlimited validity
+      if (!this.consent.validityPeriod.validUntil) {
+        return this.translate.instant('consentDetail.valid_unlimited');
+      } else { // fixed date
+        return this.consent.validityPeriod.validUntil?.toJSDate().toLocaleDateString() ?? "";
+      }
+    } else { // defined period
+      return this.translate.instant('consentDetail.valid_until')
+        + this.consent.validityPeriod.validUntil?.toJSDate().toLocaleDateString();
+    }
   }
 
   /** Utils Method **/
@@ -173,10 +180,15 @@ export class ConsentDetailComponent implements OnInit {
       }
     });
   }
-}
 
-export function invalidPeriodEndDateValidator(consentPeriod: number): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    return control.value + consentPeriod< new Date().getTime() ? { invalidPeriodEndDate: { value: control.value } } : null;
-  };
+  displayError(field: NgModel) {
+    return field.invalid && (field.dirty || field.touched) && field.errors?.invalidPeriodStartDate?.value;
+  }
+
+  dateChanged($event: MatDatepickerInputEvent<any, any>) {
+    if (this.consent.validityPeriod.period && $event.value){
+      console.log("changed" + $event.value.toISODate())
+      this.consent.validityPeriod.validUntil = this.consentService.addPeriodToDate($event.value.toISODate(), this.consent.validityPeriod.period);
+    }
+  }
 }

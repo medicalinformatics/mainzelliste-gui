@@ -19,7 +19,7 @@ import {Permission} from 'src/app/model/permission';
   styleUrls: ['./policies.component.css']
 })
 export class PoliciesComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'name', 'externalId', 'actions'];
+  displayedColumns: string[] = ['id', 'name', 'actions'];
   dataSource: MatTableDataSource<any>;
   loading: boolean = false;
   defaultPageSize: number = 10;
@@ -48,7 +48,6 @@ export class PoliciesComponent implements OnInit {
     this.consentService.getPolicySets().subscribe(policySets => {
       let data = policySets.map(policySet => ({
         id: policySet.id,
-        externalId: policySet.externalId,
         name: policySet.name
       }));
       this.dataSource = new MatTableDataSource(data.slice(startFrom, endTo));

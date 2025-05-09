@@ -51,9 +51,9 @@ export class ConsentTemplateDialogComponent {
 
   public disable(consentTemplateForm: NgForm): boolean {
     return (!consentTemplateForm.valid ||
-        (!this.dataModel.template.validity.year || this.dataModel.template.validity.year <= 0) &&
-        (!this.dataModel.template.validity.month || this.dataModel.template.validity.month == 0) &&
-        (!this.dataModel.template.validity.day || this.dataModel.template.validity.day == 0)) ||
+        (!this.dataModel.template.validity.years || this.dataModel.template.validity.years <= 0) &&
+        (!this.dataModel.template.validity.months || this.dataModel.template.validity.months == 0) &&
+        (!this.dataModel.template.validity.days || this.dataModel.template.validity.days == 0)) ||
       !this.dataModel.template.items.some(e => e.type == 'choice') ||
       this.dataModel.template.items.filter(e => e.type == 'choice').map( e => e as ChoiceItem).some(e => e.policies?.length == 0) ||
       this.dataModel.template.items.some(e => e.type == 'display' && (e.text == undefined || e.text.trim().length == 0) ||

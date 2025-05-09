@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ChoiceItem, Item, PolicyView, Validity} from "../consent-template.model";
+import {ChoiceItem, Item, PolicyView} from "../consent-template.model";
 import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
 import {ConsentPolicy} from "../../model/consent-policy";
 import {ConsentService} from "../consent.service";
@@ -11,6 +11,7 @@ import {ConsentTemplatePolicyDialog} from "./consent-template-policy-dialog";
 import {EditorComponent} from "@tinymce/tinymce-angular";
 import {Permission} from "../../model/permission";
 import {TranslateService} from "@ngx-translate/core";
+import {Validity} from "../consent-validity-period";
 
 @Component({
   selector: 'app-consent-template-modules',
@@ -25,6 +26,7 @@ export class ConsentTemplateModulesComponent implements OnInit {
 
   @Input() templateModules!: Item[];
   @Input() readonly!: boolean;
+  @Input() mainValidityPeriod!: Validity;
 
   public cachedPoliciesMap: Map<string, {policySet: ConsentPolicySet, policies: ConsentPolicy[]}> = new Map()
   public editedModule: Item | undefined;
@@ -118,6 +120,7 @@ export class ConsentTemplateModulesComponent implements OnInit {
             (accumulator??[]).concat(currentValue ?? []), []) ?? [])
           .concat((this.editedModule as ChoiceItem).policies ?? []),
           cachedPoliciesMap: this.cachedPoliciesMap,
+          mainValidityPeriod: this.mainValidityPeriod
         },
         minWidth: '450px'
       });
@@ -141,9 +144,5 @@ export class ConsentTemplateModulesComponent implements OnInit {
       (this.editedModule as ChoiceItem).policies?.splice(index, 1);
     }
     this.policiesTableData.data = (this.editedModule as ChoiceItem).policies ?? []
-  }
-
-  public getValidityPeriodText(validityPeriod: Validity){
-    return  validityPeriod?.year + ' Jahren - ' + validityPeriod?.month + ' Monaten - ' + validityPeriod?.day  + ' Tagen';
   }
 }
