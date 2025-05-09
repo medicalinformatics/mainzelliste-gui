@@ -139,7 +139,7 @@
 	"navigation.patientlist": "Patient list",
 	"navigation.bulkIdGeneration": "Bulk ID Generation",
 	"navigation.bulkPseudonymization": "Bulk Pseudonymization",
-  "navigation.consent_template": "Consent Template",
+  "navigation.consent_template": "Consent Templates",
   "navigation.configuration": "Configuration",
 
 	"patientlist.filter_search": "Filter/Search...",
