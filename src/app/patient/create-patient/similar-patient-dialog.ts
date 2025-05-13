@@ -84,15 +84,7 @@ export class SimilarPatientDialog {
         );
     }
     resolveCheckMatch(tokenId: string | undefined) {
-        let patient: Patient = new Patient();
-        patient.fields = {
-            vorname: "Alf",
-            nachname: "Klemt",
-            geburtsname: "Salz",
-            geburtsjahr: "1989",
-            geburtsmonat: "08",
-            geburtstag: "02"
-        }
+        let patient: Patient = this.patient;
         let body = new URLSearchParams();
         for (const name in patient.fields) {
             body.set(name, patient.fields[name]);
