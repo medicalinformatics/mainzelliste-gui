@@ -31,7 +31,9 @@
 </ng-container>
 <mat-divider class="menu-divider"></mat-divider>
 <ng-container *ngIf="this.appConfigService.isConfigurationEnabled()">
-  <button mat-button *ngIf="this.authorizationService.authorizationState.EDIT_CONFIGURATION" [routerLink]="['/configuration']" class="sidenav-menu-item">
+  <button mat-button *ngIf="this.authorizationService.authorizationState.EDIT_CONFIGURATION
+  || this.authorizationService.authorizationState.READ_CONSENT_POLICY_SET"
+          [routerLink]="['/configuration']" class="sidenav-menu-item">
     <mat-icon>settings</mat-icon>
     <span>{{'navigation.configuration' | translate}}</span>
   </button>

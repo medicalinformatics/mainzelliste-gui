@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {forkJoin, lastValueFrom, Observable, of, range, throwError} from 'rxjs';
 import Client from 'fhir-kit-client'
 import {SessionService} from "../services/session.service";
@@ -17,16 +17,9 @@ import {FhirResource, SearchParams} from "fhir-kit-client/types/index"
 import {TranslateService} from '@ngx-translate/core';
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessage, ErrorMessages} from "../error/error-messages";
-import _moment from "moment";
 import {ConsentTemplateFhirWrapper} from "../model/consent-template-fhir-wrapper";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
-import {
-  ChoiceItem,
-  ConsentTemplate,
-  DisplayItem,
-  PolicyView,
-  Validity
-} from "./consent-template.model";
+import {ChoiceItem, ConsentTemplate, DisplayItem, PolicyView} from "./consent-template.model";
 import {catchError, finalize, map, mergeMap, reduce} from "rxjs/operators";
 import {ConsentPolicySet} from "../model/consent-policy-set";
 import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
@@ -38,6 +31,9 @@ import {UploadConsentFileResponse} from "../model/api/upload-consent-file-respon
 import * as querystring from "querystring";
 import {AuthorizationService} from "../services/authorization.service";
 import {DateTime} from "luxon";
+import {StringUtils} from "../shared/utils/string-utils";
+import {ConsentValidityPeriod, Validity} from "./consent-validity-period";
+import {MAT_DATE_LOCALE} from "@angular/material/core";
 
 @Injectable({
   providedIn: 'root'
@@ -52,11 +48,12 @@ export class ConsentService {
   private static readonly POLICY_SET_PATH: string = "/consent-policies/";
 
   constructor(
-    private sessionService: SessionService,
-    private authorizationService:AuthorizationService,
-    private appConfigService: AppConfigService,
-    private translate: TranslateService,
-    private httpClient: HttpClient
+    private readonly sessionService: SessionService,
+    private readonly authorizationService:AuthorizationService,
+    private readonly appConfigService: AppConfigService,
+    private readonly translate: TranslateService,
+    private readonly httpClient: HttpClient,
+    @Inject(MAT_DATE_LOCALE) private _locale: string
   ) {
     this.mainzellisteBaseUrl = this.appConfigService.data[0].url.toString();
     this.client = new Client({baseUrl: this.mainzellisteBaseUrl + "/fhir"});
@@ -69,25 +66,15 @@ export class ConsentService {
    */
   public serializeConsentDataModelToFhir(dataModel: Consent, force: boolean) {
     if (dataModel.fhirResource !== undefined) {
-      //set fhir consent date
-      let datePipe: DatePipe = new DatePipe('en-US');
-      dataModel.fhirResource.dateTime = datePipe.transform(dataModel.createdAt, 'yyyy-MM-dd')!;
+      //set fhir consent date in following pattern 'yyyy-MM-dd'
+      dataModel.fhirResource.dateTime = DateTime.fromJSDate(dataModel.createdAt).toISODate() ?? undefined;
 
       //set validity period
-      let period = dataModel.fhirResource?.provision?.period;
-      if (period == undefined || !period.end || period.end.trim().length < 1) {
-        dataModel.fhirResource.provision!.period = {
-          start: datePipe.transform(dataModel.validFrom?.toDate(), 'yyyy-MM-dd') || undefined
-        }
-      } else {
-        let periodAsDate = 0;
-        if ((period.start && period.start.trim().length > 0))
-          periodAsDate = new Date(period.end).getTime() - new Date(period.start).getTime();
-        dataModel.fhirResource.provision!.period = {
-          start: datePipe.transform(dataModel.validFrom?.toDate(), 'yyyy-MM-dd') || undefined,
-          end: datePipe.transform(new Date((dataModel.validFrom?.toDate().getTime() || 0) + periodAsDate), 'yyyy-MM-dd') || undefined
-        }
+      dataModel.fhirResource.provision!.period = {
+        start: dataModel.validityPeriod.validFrom?.toISODate() ?? undefined,
+        end: dataModel.validityPeriod.validUntil?.toISODate() ?? undefined,
       }
+
       // is Mii fhir profile
       let isMiiResource = dataModel.fhirResource.meta?.profile?.some( url => url === "https://www.medizininformatik-initiative.de/fhir/modul-consent/StructureDefinition/mii-pr-consent-einwilligung") || false
 
@@ -99,26 +86,30 @@ export class ConsentService {
         if (i.answer == 'permit')
           rejected = false;
 
+        // find all provisions from the template with the same module id (i.linkId)
         let templateProvisions = dataModel.templateFhirResource?.provision?.provision?.filter(p => this.containLinkId(p, i.linkId)) ?? [];
 
-        // find provisions with the given linkedId
-        let useLinkId = false;
+        let useModuleIdExtension = false;
+        // filter
         let provisions = dataModel.fhirResource?.provision?.provision?.filter(p => {
-          useLinkId = p.extension?.some(ext => ext.url = "http://hl7.org/fhir/StructureDefinition/originalText") ?? false;
-          return useLinkId ? p.extension?.some(ext =>
-              ext.url == "http://hl7.org/fhir/StructureDefinition/originalText" &&
-              ext.valueString == i.linkId) :
+          useModuleIdExtension = p.extension?.some(ext => ext.url = "http://hl7.org/fhir/StructureDefinition/originalText") ?? false;
+          return useModuleIdExtension ? this.containLinkId(p, i.linkId) :
             p.code?.every(c => templateProvisions.some( tp => tp.code?.some(tc => this.compareCodes(tc, c))))
         }) ?? [];
 
-        // else find codes related to the search module
-
-        // set provision type : denied or permit
         for(let p of provisions) {
+          // set provision type : denied or permit
           p.type = i.answer;
+          // set validity period
+          if (p.period) {
+            p.period = {
+              start : dataModel.fhirResource?.provision?.period?.start,
+              end : this.calculateProvisionEndDate(p.period, dataModel.fhirResource?.provision?.period)
+            }
+          }
         }
 
-        // add missing policies or provisions
+        // add missing policies from template
         if(!isMiiResource || i.answer == 'permit'){
           if(dataModel.fhirResource != null && dataModel.fhirResource?.provision != undefined && dataModel.fhirResource?.provision.provision == undefined)
               dataModel.fhirResource.provision.provision = [];
@@ -133,11 +124,20 @@ export class ConsentService {
             if(nonExistingPolicies.length > 0){
               let provision = templateProvision
               provision.code = nonExistingPolicies;
-              if(!useLinkId)
-                provision.extension = provision.extension?.filter(ext => ext.url != "http://hl7.org/fhir/StructureDefinition/originalText")?? []
-              dataModel.fhirResource?.provision?.provision?.push(provision);
               // set answer
               provision.type = i.answer;
+              // set validity period
+              if (provision.period) {
+                provision.period = {
+                  start : dataModel.fhirResource?.provision?.period?.start,
+                  end : this.calculateProvisionEndDate(provision.period, dataModel.fhirResource?.provision?.period)
+                }
+              }
+              //remove the extension with module id (linkId)
+              if(!useModuleIdExtension)
+                provision.extension = provision.extension?.filter(ext => ext.url != "http://hl7.org/fhir/StructureDefinition/originalText")?? []
+
+              dataModel.fhirResource?.provision?.provision?.push(provision);
             }
           }
         }
@@ -179,6 +179,17 @@ export class ConsentService {
       ext.valueString == moduleId)
   }
 
+  private calculateProvisionEndDate(provisionValidityPeriod: fhir4.Period,
+                                    consentValidityPeriod: fhir4.Period | undefined) : string | undefined {
+    if (!provisionValidityPeriod?.end || StringUtils.isEmpty(provisionValidityPeriod.end))
+      return consentValidityPeriod?.end
+    else if (provisionValidityPeriod?.start && !StringUtils.isEmpty(provisionValidityPeriod?.start)) {
+      const validityPeriod = this.deserializeTemplateValidity(provisionValidityPeriod.start, provisionValidityPeriod.end);
+      return this.addPeriodToDate(consentValidityPeriod?.start ?? "", validityPeriod).toISODate() ?? undefined;
+    } else
+      return undefined;
+  }
+
   /**
    * deserialize consent template (fhir Questionnaire resource) and consent fhir resource to ui data model
    * @param questionnaire fhir consent template resource
@@ -198,26 +209,22 @@ export class ConsentService {
       initNewDataModel = true;
     }
 
-    let templateMap: Map<string, fhir4.CodeableConcept[]>  = this.extractTemplateMap(!fhirConsent ? fhirConsent : questionnaire.contained[0] as fhir4.Consent);
+    let questionIdsToPoliciesMap: Map<string, fhir4.CodeableConcept[]>  = this.extractQuestionIdsToPoliciesMap(questionnaire.contained[0] as fhir4.Consent);
 
     // init template items: display text and questions
-    let items: ConsentItem[] = [];
-    questionnaire.item?.forEach(item => {
+    let items: ConsentItem[] = questionnaire.item?.filter( i => ['display', 'choice'].includes(i.type))
+    .map(item => {
       if (item.type == 'display') {
-        let displayItem: ConsentDisplayItem = new ConsentDisplayItem(item.linkId, item.text || "")
-        items.push(displayItem);
-      } else if (item.type == 'choice') {
-
+        return new ConsentDisplayItem(item.linkId, item.text ?? "");
+      } else {
         let answer: "deny" | "permit" | undefined;
 
-        let templateCodes : fhir4.CodeableConcept[] = templateMap.get(item.linkId) ?? [];
+        let templateCodes : fhir4.CodeableConcept[] = questionIdsToPoliciesMap.get(item.linkId) ?? [];
 
         // find provision codes and type with the current linkedId
         let codes = fhirConsent?.provision?.provision?.filter(p =>
           p.extension?.some(ext => ext.url = "http://hl7.org/fhir/StructureDefinition/originalText") ?
-            p.extension.some(ext =>
-              ext.url == "http://hl7.org/fhir/StructureDefinition/originalText" &&
-              ext.valueString == item.linkId) :
+            this.containLinkId(p, item.linkId) :
             p.code?.every(c => templateCodes.some( tc => this.compareCodes(tc, c)))
         )
         .reduce((previousValue, currentValue) => {
@@ -231,29 +238,31 @@ export class ConsentService {
         // TODO support mixed response of codes belonging to the same modules
         answer = codes.every( i =>  i.answer) && codes.length == templateCodes.length ? 'permit' : 'deny';
 
-        items.push(new ConsentChoiceItem(item.linkId, item.text ?? "", answer));
-      } else {
-        throw Error(`questionnaire item type [${item.type}] not support yet`)
+        return new ConsentChoiceItem(item.linkId, item.text ?? "", answer);
       }
-    })
+    }) ?? [];
 
     // calculate period from consent resource
     let fhirPeriod = fhirConsent?.provision?.period;
-    let period;
-    let validFrom = _moment();
-    if (!fhirPeriod?.end || fhirPeriod.end.trim().length < 1) {
-      period = 0;
-    } else if ((!fhirPeriod.start || fhirPeriod.start.trim().length < 1)) {
-      period = new Date(fhirPeriod.end).getTime() - validFrom.toDate().getTime();
-    } else {
-      validFrom = !initNewDataModel ? _moment(fhirPeriod.start) : validFrom;
-      period = new Date(fhirPeriod.end).getTime() - new Date(fhirPeriod.start).getTime();
+    let validityPeriod: ConsentValidityPeriod = { validFrom : DateTime.now() };
+
+    if (fhirPeriod?.end && !StringUtils.isEmpty(fhirPeriod.end)) {
+      if (!fhirPeriod?.start || StringUtils.isEmpty(fhirPeriod.start)) {
+        // fixed end date
+        validityPeriod.validUntil = DateTime.fromISO(fhirPeriod.end);
+      } else {
+        // defined period
+        validityPeriod.period = this.deserializeTemplateValidity(fhirPeriod?.start ?? "", fhirPeriod?.end ?? "");
+        if(!initNewDataModel)
+          validityPeriod.validFrom = DateTime.fromISO(fhirPeriod.start);
+        validityPeriod.validUntil = this.addPeriodToDate(validityPeriod.validFrom.toISODate() ?? "", validityPeriod.period)
+      }
     }
 
     return new Consent(
       questionnaire?.title ?? "",
       new Date(fhirConsent?.dateTime ?? ""),
-      period,
+      validityPeriod,
       items,
       fhirConsent?.status || "active",
       questionnaire?.id ?? "0",
@@ -261,13 +270,12 @@ export class ConsentService {
       new Map<string, string>(),
       fhirConsent?.id,
       fhirConsent?.meta?.versionId,
-      validFrom,
-      undefined, undefined,
+      undefined,
       fhirConsent,
       questionnaire?.contained[0] as fhir4.Consent || undefined)
   }
 
-  public extractTemplateMap(fhirConsent: fhir4.Consent): Map<string, fhir4.CodeableConcept[]> {
+  public extractQuestionIdsToPoliciesMap(fhirConsent: fhir4.Consent): Map<string, fhir4.CodeableConcept[]> {
     return fhirConsent.provision?.provision?.map(p => {
       return {linkId: this.extractLinkId(p.extension), codes: p?.code || []}
     })
@@ -348,7 +356,7 @@ export class ConsentService {
     return this.sessionService.createToken("readConsent", {}, version)
     .pipe(
       mergeMap(token => this.resolveReadConsentHistory(token.id, id, version)),
-      catchError((error) => this.handleFailedRequest("Consent", error, [ErrorMessages.READ_CONSENT_FAILED], "read"))
+      catchError((error) => this.handleFailedFhirRequest("Consent", error, [ErrorMessages.READ_CONSENT_FAILED], "read"))
     );
   }
 
@@ -360,7 +368,8 @@ export class ConsentService {
       map(r => {
         return {
           id: id,
-          lastUpdated: new Date(r?.meta?.lastUpdated ?? "").toLocaleString(),
+          lastUpdated: new Date(r?.meta?.lastUpdated ?? "").toLocaleString(this._locale,
+            {year: "numeric", month: "2-digit", day: "2-digit", hour: "numeric", minute: "numeric", second: "numeric"}),
           version: parseInt(r?.meta?.versionId ?? "1"),
           status: r?.status || "active"
         }
@@ -398,19 +407,15 @@ export class ConsentService {
                     r => consentTemplates.has(this.findConsentTemplateId(r?.policy ?? []))
                   ).map(r => {
                     let templateId: string = this.findConsentTemplateId(r?.policy ?? []);
-                    let endDate = r?.provision?.period?.end;
-                    let startDate = r?.provision?.period?.start;
-                    let validFrom: string = startDate && startDate.trim().length > 0 ? _moment(startDate).toDate().toLocaleDateString() : "??";
-                    let validUntil: Date | undefined = endDate && endDate?.trim().length > 0 ? new Date(endDate) : undefined;
-                    let period = this.translate.instant("consent_list.unlimited_period");
-                    if (validUntil) {
-                      period = validFrom + " - " + new Date(validUntil).toLocaleDateString();
-                    }
+                    let validFrom = StringUtils.convertDateFromISOToLocale(r?.provision?.period?.start, this._locale, true);
+                    let validUntil = StringUtils.parseISODate( r?.provision?.period?.end);
+                    let period = !validUntil ? this.translate.instant("consent_list.unlimited_period"):
+                      validFrom + " - " + StringUtils.convertDateToLocale(validUntil, this._locale, true);
                     return {
-                      id: r?.id || "",
+                      id: r?.id ?? "",
                       templateId: templateId,
                       title: consentTemplates.get(templateId) ?? "",
-                      createdAt: new Date(r?.dateTime ?? "").toLocaleDateString(),
+                      createdAt: StringUtils.convertDateFromISOToLocale(r?.dateTime, this._locale, true) ?? "??",
                       validityPeriod: period,
                       version: parseInt(r?.meta?.versionId ?? "1"),
                       status: this.consentStatusToString(r?.status ?? "active", validUntil)
@@ -536,7 +541,7 @@ export class ConsentService {
   }
 
   public mapConsentTemplate(template:ConsentTemplate): fhir4.Questionnaire {
-
+    const today:string = DateTime.now().toISODate();
     let fhirConsent: fhir4.Consent = {
       resourceType: "Consent",
       id: "100",
@@ -567,11 +572,11 @@ export class ConsentService {
       provision: {
         type: template.consentModel? "deny" : "permit",
         period: {
-          start: _moment().format("YYYY-MM-DD"),
-          end: this.mapValidityToDate(template.validity)
+          start: today,
+          end: this.mapValidityToDate(template.validity, today)
         },
         provision: template.items.filter(i => i instanceof ChoiceItem)
-        .map(i => this.mapChoiceItemToProvision((i as ChoiceItem), template.validity))
+        .map(i => this.mapChoiceItemToProvision((i as ChoiceItem), template.validity, today))
         .reduce((a, v) => a.concat(v), [])
       }
     };
@@ -661,19 +666,19 @@ export class ConsentService {
     };
   }
 
-  private mapChoiceItemToProvision(item: ChoiceItem, validity:Validity): fhir4.ConsentProvision[] {
+  private mapChoiceItemToProvision(item: ChoiceItem, validity:Validity, starDate: string): fhir4.ConsentProvision[] {
     return item.policies?.map(p => { return {
       type: item.answer,
       period: {
-        start: _moment().format("YYYY-MM-DD"),
-        end: this.mapValidityToDate(p.validity ?? validity)
+        start: starDate,
+        end: this.mapValidityToDate((!p.validity || p.validity.isEmpty())? validity : p.validity, starDate)
       },
       code: !p ? [] : [
         {
           coding: [
             {
               code: p.code,
-              system: p.policySet?.externalId || `${ConsentService.POLICY_SET_PATH}${p.policySet?.id}`,
+              system: p.policySet?.isExternal ? p.policySet?.id : `${ConsentService.POLICY_SET_PATH}${p.policySet?.id}`,
               display: p.displayText
             }
           ]
@@ -760,38 +765,37 @@ export class ConsentService {
 
   deserializeTemplatePolicy(coding: fhir4.Coding, validity: Validity): PolicyView {
     const isInternalId = coding.system?.startsWith(ConsentService.POLICY_SET_PATH);
-    const setId =  isInternalId? coding.system?.substring(ConsentService.POLICY_SET_PATH.length) ?? "" : "";
-    const setExtId = isInternalId ? "" : coding.system ?? "";
+    const setId =  (isInternalId? coding.system?.substring(ConsentService.POLICY_SET_PATH.length) : coding.system) ?? "";
     return {
-      policySet: new ConsentPolicySet(setId, setExtId, ""),
+      policySet: new ConsentPolicySet(setId, "", !isInternalId),
       displayText: coding.display ?? "",
       code: coding.code ?? "",
       validity: validity
     }
   }
 
-  deserializeTemplateValidity(startDate:string, endDate:string): Validity{
+  deserializeTemplateValidity(startDate: string, endDate: string): Validity {
     const start = DateTime.fromISO(startDate)
     // include the last day
-    const end = DateTime.fromISO(endDate).plus({ days: 1 })
+    const end = DateTime.fromISO(endDate).plus({days: 1})
     const duration = end.diff(start, ['years', 'months', 'days']).toObject()
-    return {
-      day: duration.days ?? 0,
-      month: duration.months ?? 0,
-      year: duration.years
-    }
+    return new Validity(duration.days ?? 0, duration.months ?? 0, duration.years ?? 0);
   }
 
-  mapValidityToDate(validityPeriod: Validity): string {
-    return this.addPeriodToDate(DateTime.now().toISODate(), validityPeriod);
+  mapValidityToDate(validityPeriod: Validity, startDate: string): string {
+    return this.addPeriodToDate(startDate, validityPeriod).toISODate() ?? "";
   }
 
-  addPeriodToDate(startDate: string, period: Validity): string {
+  addPeriodToDate(startDate: string, period: Validity): DateTime {
     return DateTime.fromISO(startDate)
-    .plus({ days: period.day ?? 0, months: period.month ?? 0, years: period.year ?? 0 })
-    .minus({day: 1})
-    .toISODate() ?? "";
+    .plus({ days: period.days ?? 0, months: period.months ?? 0, years: period.years ?? 0 })
+    .minus({day: 1});
   }
+
+  //////////////////////////////
+  ////    FHIR-Utils
+  //////////////////////////////
+  // TODO move to new service
 
   public createFhirResource<F extends FhirResource>(tokenType: TokenType, tokenData: TokenData, resourceType: string, resource: F) : Observable<FhirResource> {
     return this.executeFhirOperation<F>(tokenType, tokenData, resourceType, resource, this.resolveAddFhirResourceToken, "create");
@@ -802,7 +806,7 @@ export class ConsentService {
     return this.sessionService.createToken(tokenType, tokenData)
       .pipe(
         mergeMap(token => this.resolveEditFhirResourceToken(token.id, resourceType, resource, searchParams)),
-        catchError((error) => this.handleFailedRequest(resourceType, error, [ErrorMessages.CREATE_CONSENT_REJECTED], "update"))
+        catchError((error) => this.handleFailedFhirRequest(resourceType, error, [ErrorMessages.CREATE_CONSENT_REJECTED], "update"))
       )
   }
 
@@ -836,7 +840,7 @@ export class ConsentService {
     return this.sessionService.createToken(tokenType, tokenData)
     .pipe(
         mergeMap(token => this.resolveReadFhirResourceToken<F>(token.id, resourceType, id, version)),
-        catchError((error) => this.handleFailedRequest(resourceType, error, errorMessageTypes, "read"))
+        catchError((error) => this.handleFailedFhirRequest(resourceType, error, errorMessageTypes, "read"))
     )
   }
 
@@ -851,7 +855,7 @@ export class ConsentService {
     return this.sessionService.createToken(tokenType, tokenData)
     .pipe(
         mergeMap(token => this.resolveDeleteFhirResourceToken<F>(token.id, resourceType, id, urlParams)),
-        catchError((error) => this.handleFailedRequest(resourceType, error, errorMessageTypes, "delete"))
+        catchError((error) => this.handleFailedFhirRequest(resourceType, error, errorMessageTypes, "delete"))
     )
   }
 
@@ -867,11 +871,11 @@ export class ConsentService {
     return this.sessionService.createToken(tokenType, tokenData)
     .pipe(
         mergeMap(token => resolveToken(token.id, resourceType, searchParam)),
-        catchError((error) => this.handleFailedRequest(resourceType, error, errorMessageTypes, errorPrefix))
+        catchError((error) => this.handleFailedFhirRequest(resourceType, error, errorMessageTypes, errorPrefix))
     )
   }
 
-  private handleFailedRequest(resourceType: string, error: any, errorMessageTypes: ErrorMessage[], errorPrefix: string) {
+  private handleFailedFhirRequest(resourceType: string, error: any, errorMessageTypes: ErrorMessage[], errorPrefix: string) {
     if (error.response?.data != undefined) {
       let errorMessage = "";
       for (const issue of (error.response.data as fhir4.OperationOutcome).issue) {
@@ -990,33 +994,77 @@ export class ConsentService {
       )
   }
 
-  public addPolicySet(id: String, name: String, externalId: String): Observable<any> {
-    let body = JSON.stringify({ id, name, externalId });
-    return this.postData<ConsentPolicySet>("addConsentPolicySet", {}, "consent-policies", body)
+  public addPolicySet(id: string, name: string): Observable<any> {
+    let body = JSON.stringify({ id, name });
+    return this.postData<ConsentPolicySet>("addConsentPolicySet", {}, "consent-policies", body,
+      [ErrorMessages.CREATE_POLICY_SET_CONFLICT], "policy-set")
   }
 
-  public addPolicy(setId: String, code: String, text: String): Observable<any> {
+  deletePolicy(policyCode: string, policySetId: string): Observable<any>  {
+    return this.sessionService.createToken(
+      "deleteConsentPolicy",{}
+    )
+    .pipe(
+      mergeMap(token => this.resolveDeletePolicyToken(token.id, policyCode, policySetId))
+    );
+  }
+
+  resolveDeletePolicyToken(tokenId: string | undefined, policyCode: string, policySetId: string): Observable<any> {
+    return this.httpClient.delete(this.mainzellisteBaseUrl + "/consent-policies/" + policySetId + "/policy/" + policyCode, {
+      headers: new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('mainzellisteApiVersion', '3.2')
+      .set('Authorization', 'MainzellisteToken ' + tokenId)
+    })
+    .pipe(
+      catchError(e => this.handleFailedRequest("delete", e,
+        [ErrorMessages.DELETE_POLICY_REJECTED], "policy")
+      )
+    );
+  }
+
+  deletePolicySet(id: string): Observable<any>  {
+    return this.sessionService.createToken(
+      "deleteConsentPolicySet",{}
+    )
+    .pipe(
+      mergeMap(token => this.resolveDeletePolicySetToken(token.id, id))
+    );
+  }
+
+  resolveDeletePolicySetToken(tokenId: string | undefined, id: string): Observable<any> {
+    return this.httpClient.delete(this.mainzellisteBaseUrl + "/consent-policies/" + id, {
+      headers: new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('mainzellisteApiVersion', '3.2')
+      .set('Authorization', 'MainzellisteToken ' + tokenId)
+    })
+    .pipe(
+      catchError(e => this.handleFailedRequest("delete", e,
+        [ErrorMessages.DELETE_POLICY_SET_REJECTED], "policy set")
+      )
+    );
+  }
+
+  public addPolicy(setId: string, code: string, text: string): Observable<any> {
     let body = JSON.stringify({ code, text });
     let path = "consent-policies/" + setId + "/policy";
-    return this.postData<ConsentPolicy>("addConsentPolicy", {}, path, body)
+    return this.postData<ConsentPolicy>("addConsentPolicy", {}, path, body,
+      [ErrorMessages.CREATE_POLICY_CONFLICT], "policy")
   }
 
-  public postData<T>(tokenType: TokenType, tokenData: TokenData, path : string, body: String) {
-    console.log(tokenData, tokenType, path, body);
+  public postData<T>(tokenType: TokenType, tokenData: TokenData, path : string, body: string,
+                     errorMessageTypes: ErrorMessage[], operationName: string) {
     return this.sessionService.createToken(tokenType, tokenData)
       .pipe(
         mergeMap(token => this.resolvePostToken<T>(token.id, path, body)),
-        catchError((error) => {
-          if (error.status >= 400 && error.status < 500) {
-            return throwError(() => error);
-          } else {
-            return throwError( () => new Error(`Failed to fetch data from ${path}. Cause: ${getErrorMessageFrom(error, this.translate)}`));
-          }
-        })
+        catchError(e => this.handleFailedRequest("create", e,
+          errorMessageTypes, operationName)
+        )
       )
   }
 
-  public resolvePostToken<T>(tokenId: string | undefined, path: string, body: String) {
+  public resolvePostToken<T>(tokenId: string | undefined, path: string, body: string) {
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('mainzellisteApiVersion', '3.2')
@@ -1025,6 +1073,9 @@ export class ConsentService {
       return this.httpClient.post<T>(this.mainzellisteBaseUrl + "/" + path, body, { headers });
   }
 
+  //////////////////////////////
+  ////    Consent-Scans
+  //////////////////////////////
 
   uploadConsentScanFile(file: File, callback: () => void){
     return this.sessionService.createToken("addConsentScan", {})
@@ -1100,7 +1151,7 @@ export class ConsentService {
           reference: "Consent/" + id
         }
       ],
-      recorded: _moment().format("YYYY-MM-DDThh:mm:ssZ"),
+      recorded: DateTime.now().toISO(),
       agent: [
         {
           who: {
@@ -1145,29 +1196,17 @@ export class ConsentService {
       [ErrorMessages.READ_CONSENT_SCAN_FAILED], 'DocumentReference', consentScanId, version);
   }
 
-  //////////////////////////////
-  ////    DRAFT
-  //////////////////////////////
+  ////
+  // Utils
+  /////////////////
 
-
-  /**
-   * Handle operation that failed.
-   */
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-
-      // TODO: better job of transforming error for user consumption
-      this.log(`${operation} failed: ${error.message}`);
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
-  }
-
-  private log(message: string) {
-    // this.messageService.add(`ConsentService: ${message}`);
+  private handleFailedRequest(resourcePathName: string, error: any, errorMessageTypes: ErrorMessage[], operationName: string) {
+    if (error instanceof HttpErrorResponse ) {
+      const errorMessage = errorMessageTypes.find(msg => msg.match(error))
+      if(errorMessage)
+        return throwError( () => new MainzellisteError(errorMessage, ...errorMessage.findVariables(error)));
+    }
+    return throwError( () => new MainzellisteUnknownError(`Failed to ${operationName} resource ${resourcePathName}.
+                    Cause: ${getErrorMessageFrom(error, this.translate)}`, error, this.translate))
   }
 }

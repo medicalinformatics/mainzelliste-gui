@@ -91,6 +91,7 @@ export class ConsentTemplatesComponent implements OnInit {
     const dialogRef = this.consentTemplateDialog.open(ConsentTemplateDialogComponent, {
       width: '1100px',
       maxHeight: '95vw',
+      disableClose: true,
       data: {
         template: ConsentTemplate.createEmpty(),
         readonly: false

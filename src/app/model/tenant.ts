@@ -18,7 +18,7 @@ export interface TenantPermission {
   miscellaneous?: MiscellaneousPermission
 }
 
-export type PermissionType = "default" | "patient" | "consent" | "provision" | "scans" | "consentTemplate" | "ids" | "externalIds" | "fields" | "miscellaneous";
+export type PermissionType = "default" | "patient" | "consent" | "provision" | "scans" | "consentTemplate" | "policy" | "policySet" | "ids" | "externalIds" | "fields" | "miscellaneous";
 
 export type Operation = "C" | "R" | "U" | "D";
 
