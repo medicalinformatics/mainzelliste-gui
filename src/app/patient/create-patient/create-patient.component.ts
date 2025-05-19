@@ -228,7 +228,7 @@ export class CreatePatientComponent implements OnInit {
 
   openSimilarPatientDialog(): void {
     const dialogRef = this.tentativeDialog.open(SimilarPatientDialog, {
-      data: { patient: new Patient() }, //give current patient info
+      data: { patient: this.patient }, //give current patient info
     });
 
     dialogRef.afterClosed().subscribe(result => {

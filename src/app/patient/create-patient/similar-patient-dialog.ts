@@ -34,8 +34,6 @@ export class SimilarPatientDialog {
         public configService: AppConfigService,
         public dialogRef: MatDialogRef<SimilarPatientDialog>,
         @Inject(MAT_DIALOG_DATA) public data: any,
-        private httpClient: HttpClient,
-        private sessionService: SessionService,
         private patientListService: PatientListService,
         private router: Router
     ) {
@@ -44,7 +42,8 @@ export class SimilarPatientDialog {
         this.patient = data.patient || [];
         this.displayedColumns = [...this.fields.map(field => field.name)];
         this.displayedColumns.push("action");
-        this.loadMatches().subscribe({
+        console.log(this.patient);
+        this.patientListService.getMatches(this.patient).subscribe({
             next: response => {
                 let similarityScore = response.data[0].similarityScore;
                 if (similarityScore > 0.8) {
@@ -62,57 +61,6 @@ export class SimilarPatientDialog {
     goToPatientIdCard(match : Patient) {
         this.dialogRef.close();
         this.router.navigate(["/idcard",match.ids[0].idType, match.getIdString(match.ids[0].idType)]).then();
-    }
-
-    loadMatches() {
-        console.log('getCheckMatch called');
-        return this.sessionService.createToken("checkMatch", new AddPatientTokenData(
-            ["biobankId"]
-        )).pipe(
-            mergeMap(token => {
-                console.log('Token received:', token);
-                return this.resolveCheckMatch(token.id);
-            }),
-            catchError((error) => {
-                console.error('Error occurred in getCheckMatch:', error);
-                if (error.status >= 400 && error.status < 500) {
-                    return throwError(() => new Error("failed to fetch matches"));
-                } else {
-                    return throwError(() => new Error("failed to fetch matches"));
-                }
-            })
-        );
-    }
-    resolveCheckMatch(tokenId: string | undefined) {
-        let patient: Patient = this.patient;
-        let body = new URLSearchParams();
-        for (const name in patient.fields) {
-            body.set(name, patient.fields[name]);
-        }
-        return this.httpClient.post(this.patientList.url + "/patients/checkMatch/" + tokenId, body, {
-            headers: new HttpHeaders()
-                .set('Content-Type', 'application/x-www-form-urlencoded')
-                .set('mainzellisteApiVersion', '3.2')
-        }).pipe(
-            mergeMap(response => {
-                type checkMatch = {
-                    biobankId?: string;
-                    similarityScore: number;
-                };
-
-                let result: checkMatch[] = response as checkMatch[];
-                return of({ data: result });
-            }),
-            catchError((error) => {
-                console.error('Error occurred in getCheckMatch:', error);
-                if (error.status >= 400 && error.status < 500) {
-                    return throwError(() => new Error("failed to fetch matches"));
-                } else {
-                    return throwError(() => new Error("failed to fetch matches"));
-                }
-            })
-        );
-
     }
 
     loadPatient(idString: string) {
