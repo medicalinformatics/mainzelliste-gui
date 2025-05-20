@@ -661,10 +661,10 @@ export class PatientListService {
     return result;
   }
 
-  public getMatches(patient: Patient) {
+  public getMatches(patient: Patient, mainIdType:string ) {
       console.log('getCheckMatch called');
       return this.sessionService.createToken("checkMatch", new AddPatientTokenData(
-          ["biobankId"]
+          [mainIdType]
       )).pipe(
           mergeMap(token => {
               console.log('Token received:', token);

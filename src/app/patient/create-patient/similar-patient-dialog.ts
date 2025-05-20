@@ -27,6 +27,7 @@ export class SimilarPatientDialog {
     resultsFound: boolean = false;
     displayedColumns: string[] = [];
     fields: Field[];
+    mainIdType: string = "";
     constructor(
         private translate: TranslateService,
         public configService: AppConfigService,
@@ -40,8 +41,9 @@ export class SimilarPatientDialog {
         this.patient = data.patient || [];
         this.displayedColumns = [...this.fields.map(field => field.name)];
         this.displayedColumns.push("action");
+        this.mainIdType = data.mainIdType
         console.log(this.patient);
-        this.patientListService.getMatches(this.patient).subscribe({
+        this.patientListService.getMatches(this.patient,this.mainIdType).subscribe({
             next: response => {
                 let similarityScore = response.data[0].similarityScore;
                 if (similarityScore > 0.8) {
@@ -63,7 +65,7 @@ export class SimilarPatientDialog {
 
     loadPatient(idString: string) {
         console.log("loadPatient called")
-        this.patientListService.readPatient(new Id("biobankId", idString), "R")
+        this.patientListService.readPatient(new Id(this.mainIdType, idString), "R")
             .pipe(
                 catchError(e => {
                     if (e instanceof HttpErrorResponse && (e.status == 404)) {
