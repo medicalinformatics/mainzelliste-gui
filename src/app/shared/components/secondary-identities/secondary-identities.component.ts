@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { PatientListService } from "src/app/services/patient-list.service";
 import { Patient } from "src/app/model/patient";
@@ -32,28 +32,23 @@ export class SecondaryIdentitiesComponent implements OnInit {
 
   public secondaryIdentities: Patient[] = [];
 
-  public idString: string = "";
-  public idType: string = "";
+  @Input() idType:  string = "";
+  @Input() idString:  string = "";
   public patient: Patient = new Patient();
   public displayedConsentColumns: string[] = ['date', 'title', 'period', 'version', 'status', 'actions'];
 
+  @Input() showNoIdentities: boolean = false;
   constructor(
-    private activatedRoute: ActivatedRoute,
     private patientListService: PatientListService,
     private authorizationService: AuthorizationService,
     private configService: AppConfigService,
     private patientService: PatientService,
   ) {
-    this.activatedRoute.params.subscribe((params) => {
-      if (params["idType"] !== undefined)
-        this.idType = params["idType"]
-      if (params["idString"] !== undefined)
-        this.idString = params["idString"]
-    });
-
     this.fieldNames = configService.data[0].fields.filter(f => !f.hideFromList).map(f => f.name);
     this.showAllIds = configService.data[0].showAllIds != undefined && configService.data[0].showAllIds;
     this.fields = configService.data[0].fields.filter(f => !f.hideFromList);
+    console.log(this.idString);
+    console.log(this.idType)
   }
 
   ngOnInit() {
@@ -76,6 +71,10 @@ export class SecondaryIdentitiesComponent implements OnInit {
 
   getSecondaryIdentities() {
     return this.patientService.getSecondaryIdentities(this.idType, this.idString);
+  }
+
+  showIdentitiesCard() {
+    return this.secondaryIdentities.length > 0;
   }
 
   onPageChange(event: PageEvent) {

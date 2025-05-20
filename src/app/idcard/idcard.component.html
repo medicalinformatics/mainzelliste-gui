@@ -16,8 +16,7 @@
           </button>
         </div>
       </mat-card-title-group>
-      <app-patient-fields style="overflow: auto; height: 100%; margin: 0 0 0 2.5%;" [readOnly]=true
-        [fields]="patient.fields"></app-patient-fields>
+      <view-patient-fields [patientFields]="patient.fields"></view-patient-fields>
     </mat-card>
 
     <mat-card id="pseudonyme" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; flex: 1">
@@ -67,10 +66,14 @@
   </ng-container>
 
   <!-- Secondary Identities Table -->
-  <ng-container *ngIf="this.showIdentitiesCard()">
-    <app-secondary-identities></app-secondary-identities>
-  </ng-container>
-
+   <mat-card id="secondary" style="box-sizing: border-box; display: flex; flex-direction: column; margin: 0 20px 14px 0; ">
+    <mat-card-title-group style="margin: 0 0 0 1.25%;">
+      <mat-card-title style="flex-grow: 2;">{{'idcard.title_secondary' | translate}}</mat-card-title>
+    </mat-card-title-group>
+    <mat-card-content style="margin: 0 1.25% 0 1.25%;">
+      <app-secondary-identities idString="{{idString}}" idType="{{idType}}" ></app-secondary-identities>
+    </mat-card-content>
+  </mat-card>
 
   <mat-card *appHasPermission="Permission.READ_CONSENT" id="consents"
     style="box-sizing: border-box; display: flex; flex-direction: column;">

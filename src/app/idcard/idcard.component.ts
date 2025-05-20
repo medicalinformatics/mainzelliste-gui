@@ -129,9 +129,6 @@ export class IdcardComponent implements OnInit {
     this.displayedColumns = [...this.fields.map(field => field.name)];
   }
   
-  showIdentitiesCard() {
-    return this.secondaryIdentities.length > 0;
-  }
   changeTitle() {
     this.titleService.setTitle(this.translate.instant('idcard.title_id_card'), false, "badge");
   }

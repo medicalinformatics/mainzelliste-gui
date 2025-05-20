@@ -1,6 +1,7 @@
 <h2 mat-dialog-title>Secondary Identities</h2>
 <mat-dialog-content>
-  <!-- Table -->
+  <app-secondary-identities idString="{{idString}}" idType="{{idType}}"
+    [showNoIdentities]=true></app-secondary-identities>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button (click)="closeDialog()">{{'button_close' | translate}}</button>

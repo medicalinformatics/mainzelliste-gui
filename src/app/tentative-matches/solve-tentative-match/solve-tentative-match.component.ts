@@ -108,6 +108,9 @@ export class SolveTentativeMatchComponent implements OnInit {
   getIdString(patient: Patient | undefined): string {
     return patient?.ids?.[0]?.idString ?? '';
   }
+   getIdType(patient: Patient | undefined): string {
+    return patient?.ids?.[0]?.idType ?? '';
+  }
 
   private openMergeTentativeDialog() {
     const dialogRef = this.mergeTentativeConfirmDialog.open(MergeTentativeMatchDialogComponent, {
@@ -120,10 +123,10 @@ export class SolveTentativeMatchComponent implements OnInit {
     });
   }
 
-  openIdentityDialog(idString : String){
+  openIdentityDialog(idString : String, idType: String){
     const dialogRef = this.identityDialog.open(IdentityDialogComponent, {
       width: '400px',
-      data: { idString: idString }
+      data: { idString: idString, idType: idType}
     });
   
     dialogRef.afterClosed().subscribe(result => {

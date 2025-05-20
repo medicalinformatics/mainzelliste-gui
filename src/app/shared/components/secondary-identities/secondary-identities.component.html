@@ -1,9 +1,6 @@
+<ng-container *ngIf="this.showIdentitiesCard()">
 <!-- Secondary Identities Table -->
-<mat-card id="secondary" style="box-sizing: border-box; display: flex; flex-direction: column; margin: 0 20px 14px 0; ">
-  <mat-card-title-group style="margin: 0 0 0 1.25%;">
-    <mat-card-title style="flex-grow: 2;">{{'idcard.title_secondary' | translate}}</mat-card-title>
-  </mat-card-title-group>
-  <mat-card-content style="margin: 0 1.25% 0 1.25%;">
+
     <table id="patientlist" mat-table
       [dataSource]="secondaryIdentities | slice:(pageIndex * pageSize):((pageIndex + 1) * pageSize)" matSort
       matSortActive="idType" matSortDirection="asc" matSortDisableClear>
@@ -31,5 +28,8 @@
     <mat-paginator [length]="secondaryIdentities.length" [pageSize]="pageSize" [pageIndex]="pageIndex"
       [hidePageSize]="true" aria-label="Select page" (page)="onPageChange($event)"
       style="padding:0; align-self: flex-start;"></mat-paginator>
-  </mat-card-content>
-</mat-card>
+
+</ng-container>
+ <ng-container *ngIf="!this.showIdentitiesCard()">
+   <p>No Identities</p>
+   </ng-container>

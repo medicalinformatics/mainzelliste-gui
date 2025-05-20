@@ -10,7 +10,7 @@
                     <label for="patient1">{{'tentative.label_main_patient'|translate}}</label>
                 </mat-card-subtitle>
                 <div>
-                    <button mat-button (click)="openIdentityDialog(getIdString(patient1))">
+                    <button mat-button (click)="openIdentityDialog(getIdString(patient1), getIdType(patient1))">
                         Secondary Identities
                     </button>
                 </div>
@@ -59,7 +59,7 @@
                     <label for="patient2">{{'tentative.label_main_patient'|translate}}</label>
                 </mat-card-subtitle>
                 <div>
-                    <button mat-button (click)="openIdentityDialog(getIdString(patient2))">
+                    <button mat-button (click)="openIdentityDialog(getIdString(patient2), getIdType(patient2))">
                         Secondary Identities
                     </button>
                 </div>
