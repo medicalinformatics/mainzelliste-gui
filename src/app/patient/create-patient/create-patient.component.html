@@ -68,7 +68,7 @@
         </button>
         <button mat-raised-button class="submit" type="submit" style="clear: both; float: left;"
             [disabled]="this.disable(patientForm) || creatingInProgress" (click)="openSimilarPatientDialog()">
-            Check for Similar Patients
+            {{'similar_patient_button' | translate}}
             <mat-icon *ngIf="creatingInProgress" style="margin-left: 10px"><mat-spinner
                 diameter="20"></mat-spinner></mat-icon>
           </button>

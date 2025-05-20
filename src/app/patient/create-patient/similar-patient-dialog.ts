@@ -1,18 +1,16 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from "@angular/common/http";
+import { HttpErrorResponse } from "@angular/common/http";
 import { Component, Inject } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import { of, throwError } from "rxjs";
-import { mergeMap, catchError } from "rxjs/operators";
+import { throwError } from "rxjs";
+import { catchError } from "rxjs/operators";
 import { AppConfigService } from "src/app/app-config.service";
-import { AddPatientTokenData } from "src/app/model/add-patient-token-data";
 import { Field } from "src/app/model/field";
 import { Id } from "src/app/model/id";
 import { MainzellisteUnknownError } from "src/app/model/mainzelliste-unknown-error";
 import { Patient } from "src/app/model/patient";
 import { PatientList } from "src/app/model/patientlist";
 import { PatientListService } from "src/app/services/patient-list.service";
-import { SessionService } from "src/app/services/session.service";
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
