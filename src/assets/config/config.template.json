@@ -20,8 +20,10 @@
       ],
       "debug": ${ML_UI_DEBUG_MODE},
       "betaFeatures": {
-        "copyConcatenatedId": false,
-        "copyId": true,
+        "consent": ${ML_UI_ENABLE_CONSENT},
+        "copyConcatenatedId": true,
+        "copyConcatenateSeparation": ": ",
+        "copyId": false,
         "configuration": false,
         "showDomainsInIDCard": false,
         "disableBulkIdGeneration": ${ML_UI_DISABLE_BULK_ID},
