@@ -50,6 +50,7 @@ export interface OAuthConfig {
 
 export interface BetaFeatures {
   copyConcatenatedId?: boolean
+  copyConcatenateSeparation?: string
   copyId?: boolean
   configuration?:boolean
   showDomainsInIDCard?:boolean
