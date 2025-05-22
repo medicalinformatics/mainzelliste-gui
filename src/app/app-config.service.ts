@@ -30,6 +30,7 @@ export class AppConfigService {
   private consentEnabled: boolean = false;
   private copyConcatenatedIdEnabled: boolean = false;
   private copyIdEnabled: boolean = false;
+  private copyConcatenateSeparation: string = ".";
   private configurationEnabled: boolean = false;
   private _showDomainsInIDCard: boolean = false;
   private disableBulkIdGeneration: boolean = false;
@@ -58,6 +59,7 @@ export class AppConfigService {
           this.consentEnabled = this.data[0].betaFeatures?.consent ?? false;
           this.copyConcatenatedIdEnabled = this.data[0].betaFeatures?.copyConcatenatedId ?? false;
           this.copyIdEnabled = this.data[0].betaFeatures?.copyId ?? false;
+          this.copyConcatenateSeparation = this.data[0].betaFeatures?.copyConcatenateSeparation ?? ".";
           this.configurationEnabled = this.data[0].betaFeatures?.configuration ?? false;
           this.disableBulkIdGeneration = this.data[0].betaFeatures?.disableBulkIdGeneration ?? false;
           this.disableIdSelection = this.data[0].betaFeatures?.disableIdSelection ?? false;
@@ -92,6 +94,10 @@ export class AppConfigService {
 
   isCopyIdEnabled(): boolean {
     return this.copyIdEnabled;
+  }
+
+  getCopyConcatenateSeparation(): string {
+    return this.copyConcatenateSeparation;
   }
 
   isConfigurationEnabled(): boolean {
