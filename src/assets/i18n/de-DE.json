@@ -274,6 +274,7 @@
 
 	"patientPseudonyms.external": "Externe Pseudonyme:",
   "patientPseudonyms.related_id_button": "Zugeordnete IDs anzeigen",
+  "patientPseudonyms.jump_to_mdat_system": "In das Dokumentationssystem springen",
 
 	"patientFields.error_value_text1": "Der Wert für das Feld",
 	"patientFields.error_value_text2": "ist ungültig",

@@ -26,6 +26,8 @@
         "copyId": false,
         "configuration": false,
         "showDomainsInIDCard": false,
+        "onkostarUrl": "${ML_UI_ONKOSTAR_URL}",
+        "onkostarTribe": "${ML_UI_ONKOSTAR_TRIBE}",
         "disableBulkIdGeneration": ${ML_UI_DISABLE_BULK_ID},
         "disableIdSelection": ${ML_UI_DISABLE_ID_SELECTION}
       }
