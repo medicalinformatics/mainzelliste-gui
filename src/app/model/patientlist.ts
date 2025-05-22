@@ -57,5 +57,7 @@ export interface BetaFeatures {
   showDomainsInIDCard?:boolean
   disableBulkIdGeneration?:boolean
   disableIdSelection?:boolean
+  onkostarUrl?:string
+  onkostarTribe?:string
 }
 
