@@ -264,6 +264,7 @@
 	"info.audit_trail_text6": "are recorded in the audit trail. The time of the action is recorded and stated. The folder symbol takes you to the patient's ID card for further details about the campaign.",
 	"patientPseudonyms.external": "External pseudonyms:",
 	"patientPseudonyms.related_id_button": "Show related IDs",
+	"patientPseudonyms.jump_to_mdat_system": "Jump to Registry",
 	"patientFields.error_value_text1": "The value for the field",
 	"patientFields.error_value_text2": "is invalid",
 	"patientFields.error_mandatory_text1": "Entering the field",
