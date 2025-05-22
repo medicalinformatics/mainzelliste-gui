@@ -57,8 +57,6 @@ export class AppConfigService {
           // set configuration
           this.data = r;
 
-          console.log(this.data)
-
           // init feature toggle
           this.consentEnabled = this.data[0].betaFeatures?.consent ?? false;
           this.copyConcatenatedIdEnabled = this.data[0].betaFeatures?.copyConcatenatedId ?? false;
