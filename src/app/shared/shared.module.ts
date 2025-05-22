@@ -25,6 +25,8 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import { ConfirmDeleteDialogComponent } from './components/confirm-delete-dialog/confirm-delete-dialog.component';
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { MessageCardComponent } from './components/message-card/message-card.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -54,8 +56,10 @@ export function HttpLoaderFactory(http: HttpClient) {
         useFactory: HttpLoaderFactory,
         deps: [HttpClient]
       }
-    })],
-  declarations: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent, ConfirmDeleteDialogComponent],
+    }),
+    MatProgressSpinnerModule
+  ],
+  declarations: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent, ConfirmDeleteDialogComponent, MessageCardComponent],
   exports: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent,
     CommonModule,
     FormsModule,
@@ -77,7 +81,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatSlideToggleModule,
     DragDropModule,
     MatSnackBarModule,
-    TranslateModule
+    TranslateModule, MessageCardComponent
   ]
 })
 export class SharedModule {

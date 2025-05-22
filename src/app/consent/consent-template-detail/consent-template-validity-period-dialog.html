@@ -3,22 +3,20 @@
   <br />
         <mat-form-field
           [ngStyle]="{'clear': 'both', 'float': 'left', 'margin-bottom': displayError(year) ? '1.25em' : '-1.25em' }">
-          <mat-label>Jahren</mat-label>
+          <mat-label>{{"consent_template.validity_years" | translate}}</mat-label>
           <input matInput pattern="\d*" type="number" min="0" placeholder=""
-                 [(ngModel)]="this.validityPeriod.year" [name]="'year'" #year="ngModel">
-          <mat-error *ngIf="displayError(year)">
-            {{getFieldErrorMessage("validity_year", year.errors)}}
-          </mat-error>
+                 [(ngModel)]="this.validityPeriod.years" [name]="'year'" #year="ngModel">
+          <mat-error *ngIf="displayError(year)">{{getFieldErrorMessage("validity_year", year.errors)}}</mat-error>
         </mat-form-field>
         <mat-form-field style="float: left; width: 100px; margin-left: 15px">
-          <mat-label>Monaten</mat-label>
-          <mat-select [(value)]="this.validityPeriod.month">
+          <mat-label>{{"consent_template.validity_months" | translate}}</mat-label>
+          <mat-select [(value)]="this.validityPeriod.months">
             <mat-option *ngFor="let i of validityMonths" value="{{i}}">{{i}}</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field style=" float: left; width: 70px; margin-left: 15px">
-          <mat-label>Tage</mat-label>
-          <mat-select [(value)]="this.validityPeriod.day">
+          <mat-label>{{"consent_template.validity_days" | translate}}</mat-label>
+          <mat-select [(value)]="this.validityPeriod.days">
             <mat-option *ngFor="let i of validityDays" value="{{i}}">{{i}}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -32,9 +30,9 @@
     class="submit"
     type="submit"
     (click)="onSave()"
-    [disabled]="(!validityPeriod.year || validityPeriod.year <= 0) &&
-    (!validityPeriod.month || validityPeriod.month == 0) &&
-    (!validityPeriod.day || validityPeriod.day == 0)"
+    [disabled]="(!validityPeriod.years || validityPeriod.years <= 0) &&
+    (!validityPeriod.months || validityPeriod.months == 0) &&
+    (!validityPeriod.days || validityPeriod.days == 0)"
   >
     {{'button_save' | translate}}
   </button>

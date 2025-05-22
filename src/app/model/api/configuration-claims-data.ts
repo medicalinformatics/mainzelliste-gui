@@ -14,7 +14,8 @@ export interface ClaimPermissions {
 export interface ClaimPermissionsTenant {
   id: string,
   name: string,
-  idTypes: string[]
+  idTypes: string[],
+  consentTemplateIds: string[]
 }
 
 export interface ClaimPermissionsResources {

@@ -7,7 +7,7 @@
 <!--                (click)="slideData(fields[externalId.idType], externalId.idString)">-->
           <mat-icon>arrow_circle_{{side}}</mat-icon>
         </button>
-        <mat-form-field class="inputField">
+        <mat-form-field [class]="getFieldClass('inputField')">
           <mat-label>{{id.idType}}</mat-label>
           <input style="width: 90%"
                  [(ngModel)]="id.idString" [name]="this.getFieldName(id)"

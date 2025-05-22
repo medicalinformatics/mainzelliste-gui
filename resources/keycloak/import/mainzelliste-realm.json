@@ -252,7 +252,7 @@
       "account-console" : [ ],
       "mainzelliste-ui" : [ {
         "id" : "3e4bef61-c70d-4e83-a542-d2ef4c705435",
-        "name" : "biobank-study-nurse",
+        "name" : "onkobio-study-nurse",
         "description" : "",
         "composite" : false,
         "clientRole" : true,
@@ -260,7 +260,7 @@
         "attributes" : { }
       }, {
         "id" : "6ede606c-fec6-4304-9bb1-6c6a857df247",
-        "name" : "alpha-study-nurse",
+        "name" : "epican-study-nurse",
         "description" : "",
         "composite" : false,
         "clientRole" : true,
@@ -268,7 +268,7 @@
         "attributes" : { }
       }, {
         "id" : "dd9b198f-8df2-4f9e-9ff4-cc78c38d1802",
-        "name" : "alpha-admin",
+        "name" : "epican-admin",
         "description" : "",
         "composite" : false,
         "clientRole" : true,
@@ -276,7 +276,7 @@
         "attributes" : { }
       }, {
         "id" : "d26f40ee-b38d-45ed-86dd-ba696ac7f37e",
-        "name" : "biobank-admin",
+        "name" : "onkobio-admin",
         "description" : "",
         "composite" : false,
         "clientRole" : true,
@@ -448,7 +448,7 @@
   }, {
     "id" : "3ee6810a-2f75-49e1-a900-a5d2354db640",
     "createdTimestamp" : 1713442622371,
-    "username" : "alpha-admin",
+    "username" : "epican-admin",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
@@ -464,14 +464,14 @@
     "requiredActions" : [ ],
     "realmRoles" : [ "default-roles-mainzelliste" ],
     "clientRoles" : {
-      "mainzelliste-ui" : [ "alpha-admin" ]
+      "mainzelliste-ui" : [ "epican-admin" ]
     },
     "notBefore" : 0,
     "groups" : [ ]
   }, {
     "id" : "7fb551b7-51e8-4849-a1c2-c7309cee74c9",
     "createdTimestamp" : 1711617881220,
-    "username" : "biobank-admin",
+    "username" : "onkobio-admin",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
@@ -487,14 +487,14 @@
     "requiredActions" : [ ],
     "realmRoles" : [ "default-roles-mainzelliste" ],
     "clientRoles" : {
-      "mainzelliste-ui" : [ "biobank-admin" ]
+      "mainzelliste-ui" : [ "onkobio-admin" ]
     },
     "notBefore" : 0,
     "groups" : [ ]
   }, {
     "id" : "fec385e9-1f42-45f6-88c4-6bfae38df54a",
     "createdTimestamp" : 1711617919034,
-    "username" : "biobank-study-nurse",
+    "username" : "onkobio-study-nurse",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
@@ -510,7 +510,7 @@
     "requiredActions" : [ ],
     "realmRoles" : [ "default-roles-mainzelliste" ],
     "clientRoles" : {
-      "mainzelliste-ui" : [ "biobank-study-nurse" ]
+      "mainzelliste-ui" : [ "onkobio-study-nurse" ]
     },
     "notBefore" : 0,
     "groups" : [ ]
@@ -530,7 +530,7 @@
   }, {
     "id" : "33f0f2bb-2466-4066-9bfc-b52e3ed4a303",
     "createdTimestamp" : 1699456184751,
-    "username" : "alpha-study-nurse",
+    "username" : "epican-study-nurse",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
@@ -546,7 +546,7 @@
     "requiredActions" : [ ],
     "realmRoles" : [ "default-roles-mainzelliste" ],
     "clientRoles" : {
-      "mainzelliste-ui" : [ "alpha-study-nurse" ]
+      "mainzelliste-ui" : [ "epican-study-nurse" ]
     },
     "notBefore" : 0,
     "groups" : [ ]

@@ -3,13 +3,19 @@
   <mat-step [stepControl]="uploadFormGroup" [editable]="isEditable">
     <form [formGroup]="uploadFormGroup">
       <ng-template matStepLabel>{{'bulkIdGeneration.upload_label' | translate}}</ng-template>
-      <div style="margin-top: 1%">{{'bulkIdGeneration.upload_info_text1' | translate}}
+      <app-message-card [type]="'error'"
+                        [message]="fileInput.ngControl.getError('csvError')?.value || ''">
+      </app-message-card>
+      <div style="margin: 1% auto 0 auto; width: 66%;">{{'bulkIdGeneration.upload_info_text1' | translate}}
         <br/>
         {{'bulkIdGeneration.upload_info_text2' | translate}}
         <br/>
-        {{'bulkIdGeneration.upload_info_text3' | translate}}</div>
-      <div style="margin-top: 1%">
-        <mat-form-field>
+        {{'bulkIdGeneration.upload_info_text3' | translate}}
+        <br/>
+        {{'bulkIdGeneration.upload_info_text4' | translate}}
+      </div>
+      <div style="margin-top: 1%; display: flex; justify-content: center;">
+        <mat-form-field style="float: left;">
           <ngx-mat-file-input
             #fileInput
             [multiple]="false"
@@ -17,77 +23,69 @@
             [accept]="'text/csv,.csv'"
             [formControlName]="'uploadField'"
           ></ngx-mat-file-input>
-          <mat-error *ngIf="fileInput.ngControl.hasError('required')">
-            {{'bulkIdGeneration.upload_error_file_required' | translate}}
-          </mat-error>
-          <mat-error *ngIf="fileInput.ngControl.hasError('invalidFileType')">
-            {{'bulkIdGeneration.upload_error_file_type' | translate}}
-          </mat-error>
-          <mat-error *ngIf="fileInput.ngControl.hasError('invalidIdTypeList')">
-            {{'bulkIdGeneration.upload_error_id_type' | translate}}
-          </mat-error>
-          <mat-error *ngIf="fileInput.ngControl.hasError('invalidIds')">
-            {{'bulkIdGeneration.upload_error_ids' | translate}}
-          </mat-error>
-          <mat-error *ngIf="fileInput.ngControl.hasError('invalidIdType')">
-            {{'bulkIdGeneration.upload_error_read_permission' | translate}}
-          </mat-error>
         </mat-form-field>
+        <mat-spinner *ngIf="this.readingInProgress" style="margin-left: 10px; margin-top: 18px;" diameter="28"></mat-spinner>
       </div>
     </form>
   </mat-step>
   <mat-step #stepTwo [editable]="isEditable">
     <ng-template matStepLabel>{{'bulkIdGeneration.generate_id_label' | translate}}</ng-template>
+    <div>
+      <mat-card *ngIf="this.generationInProgress" style=" width: 50%; margin: 0 auto;">
+        <mat-card-content style="display: flex; justify-content: center; flex-direction: column; text-align: center; margin: 13px 0;">
+          <div>
+            <span>{{this.generationStatus}} ...</span>
+            <mat-progress-bar mode="indeterminate" style="margin-top: 15px; margin-bottom: 15px;"></mat-progress-bar>
+            <span style="color: #8f8f8f;">{{"bulkPseudonymization.pseudonymization_in_progress" | translate}}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
     <div class="float-container">
-      <div class="float-table">
-        <div>
-          <bulk-id-generation-table *ngIf="step == 1" [csvRecords]="csvRecords"></bulk-id-generation-table>
-        </div>
-      </div>
       <div class="float-content">
         <div>
           <mat-form-field style="width: 245px;">
             <mat-label>{{'bulkIdGeneration.id_type_label' | translate}}</mat-label>
-            <mat-select #select (selectionChange)="dataModel = $event.value">
+            <mat-select [disabled]="this.generationInProgress" #select (selectionChange)="dataModel = $event.value">
               <mat-option *ngFor="let idType of geIdTypes(this.idType)" [value]="idType">
                 {{idType}}
               </mat-option>
             </mat-select>
           </mat-form-field>
         </div>
-        <div>
+        <div style="display: flex; justify-content: center;">
           <button id="back" mat-raised-button
+                  [disabled]="this.generationInProgress"
                   (click)="backToFirst()">{{'button_stepper_back' | translate}}</button>
           <button style="margin-left: 10px"
                   mat-raised-button
                   class="submit"
                   (click)="generateNewIds(dataModel)"
-                  [disabled]="dataModel == ''">
+                  [disabled]="this.generationInProgress || dataModel == ''">
             {{'button_stepper_generate_ids' | translate}}
           </button>
         </div>
+      </div>
+      <div class="float-table">
+        <bulk-id-generation-table *ngIf="!this.generationInProgress && step == 1" [csvRecords]="csvRecords"></bulk-id-generation-table>
       </div>
     </div>
   </mat-step>
   <mat-step #stepThree>
     <ng-template matStepLabel>{{'bulkIdGeneration.download_label' | translate}}</ng-template>
     <div class="float-container">
-      <div class="float-table">
-        <div>
-          <bulk-id-generation-table *ngIf="step == 2" [csvRecords]="csvRecords"></bulk-id-generation-table>
-        </div>
-      </div>
       <div class="float-content">
-        <div>
-          <button
-            id="downloadFile"
-            class="submit"
-            mat-raised-button
-            (click)="downloadCSV()">
-            <mat-icon style="margin-right: 0.2em;">download</mat-icon>
-            <span>{{'button_stepper_download_csv' | translate}}</span>
-          </button>
-        </div>
+        <button style="width: 230px; align-self: center;"
+          id="downloadFile"
+          class="submit"
+          mat-raised-button
+          (click)="downloadCSV()">
+          <mat-icon style="margin-right: 0.2em;">download</mat-icon>
+          <span>{{'button_stepper_download_csv' | translate}}</span>
+        </button>
+      </div>
+      <div class="float-table">
+        <bulk-id-generation-table *ngIf="step == 2" [csvRecords]="csvRecords"></bulk-id-generation-table>
       </div>
     </div>
   </mat-step>

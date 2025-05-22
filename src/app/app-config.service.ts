@@ -10,6 +10,7 @@ import {MainzellisteUnknownError} from './model/mainzelliste-unknown-error';
 import {TranslateService} from '@ngx-translate/core';
 import {ClaimsConfig} from "./model/api/configuration-claims-data";
 import {IdGenerator} from "./model/idgenerator";
+import {ConsentTerminology} from "./model/consent-terminology";
 
 export interface AssociatedIds {
   [key: string] : [IdGenerator]
@@ -27,7 +28,6 @@ export class AppConfigService {
   private mainzellisteClaims: ClaimsConfig[] = [];
   private version: string = "";
   private layoutFooterLogos: FooterLogo[] = [];
-  private consentEnabled: boolean = false;
   private copyConcatenatedIdEnabled: boolean = false;
   private copyIdEnabled: boolean = false;
   private copyConcatenateSeparation: string = ".";
@@ -37,6 +37,9 @@ export class AppConfigService {
   private _showDomainsInIDCard: boolean = false;
   private disableBulkIdGeneration: boolean = false;
   private disableIdSelection: boolean = false;
+
+  private consentTerminology!: ConsentTerminology;
+
 
   constructor(
     private httpClient: HttpClient,
@@ -51,14 +54,15 @@ export class AppConfigService {
     //TODO cache backend configurations
     return new Promise<PatientList[]>((resolve, reject) => {
       this.httpClient.get<AppConfig>('assets/config/config.json')
-      .pipe(map(r => Object.assign([], r.patientLists || [])))
+      .pipe(
+        map(r => Object.assign([], r.patientLists || []))
+      )
       .subscribe({
         next: r => {
           // set configuration
           this.data = r;
 
           // init feature toggle
-          this.consentEnabled = this.data[0].betaFeatures?.consent ?? false;
           this.copyConcatenatedIdEnabled = this.data[0].betaFeatures?.copyConcatenatedId ?? false;
           this.copyIdEnabled = this.data[0].betaFeatures?.copyId ?? false;
           this.copyConcatenateSeparation = this.data[0].betaFeatures?.copyConcatenateSeparation ?? ".";
@@ -86,10 +90,6 @@ export class AppConfigService {
         error: _e => reject(new Error(this.translate.instant('error.app_config_service_config_not_found')))
       });
     });
-  }
-
-  isConsentEnabled(): boolean {
-    return this.consentEnabled;
   }
 
   isCopyConcatenatedIdEnabled(): boolean {
@@ -173,6 +173,10 @@ export class AppConfigService {
     return this.layoutFooterLogos;
   }
 
+  getConsentTerminology(){
+    return this.consentTerminology;
+  }
+
   public fetchVersion(): Promise<{distname: string, version: string}> {
     return lastValueFrom(this.httpClient.get<{distname: string, version: string}>(this.data[0].url + "/", {
       headers: new HttpHeaders()
@@ -239,6 +243,20 @@ export class AppConfigService {
               })
           ));
     }
+
+  readConsentTerminology() {
+    return firstValueFrom(
+      this.httpClient.get<ConsentTerminology>('assets/consent/mii-broad-consent-versions.json')
+      .pipe(
+        catchError((e) => throwError(() => new Error("Can't init consent " +
+          "terminology. Failed to find file 'assets/consent/mii-broad-consent-versions.json'"))),
+        map(terminology => {
+          this.consentTerminology = terminology;
+          return terminology;
+        })
+      )
+    );
+  }
 
   public fetchMainzellisteFields(): Promise<MainzellisteField[]> {
     let fieldEndpointUrl = this.data[0].url + "/configuration/fields";

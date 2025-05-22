@@ -1,18 +1,17 @@
 import {Injectable} from '@angular/core';
 import {
-    ActivatedRoute,
-    ActivatedRouteSnapshot,
-    CanActivateChild,
-    Router,
-    RouterStateSnapshot,
-    UrlSegment,
-    UrlTree
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  CanActivateChild,
+  Router,
+  RouterStateSnapshot,
+  UrlSegment,
+  UrlTree
 } from '@angular/router';
 import {KeycloakAuthGuard, KeycloakService} from 'keycloak-angular';
 import {Observable} from "rxjs";
 import {UserAuthService} from "../services/user-auth.service";
 import {AuthorizationService} from "../services/authorization.service";
-import {Permission} from "../model/permission";
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +21,8 @@ export class AuthGuard extends KeycloakAuthGuard implements CanActivateChild {
     protected readonly router: Router,
     protected readonly activatedRouter: ActivatedRoute,
     protected readonly keycloak: KeycloakService,
-    private authorizationService: AuthorizationService,
-    private userAuthService: UserAuthService
+    private readonly authorizationService: AuthorizationService,
+    private readonly userAuthService: UserAuthService
   ) {
     super(router, keycloak);
   }

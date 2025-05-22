@@ -2,7 +2,7 @@
   background: #e8b7b7;
   padding: 0.5rem 1rem;
   font-family: monospace;
-  word-break: break-all;
+  word-break: break-word;
   border-radius: 5px;
   margin-bottom: 3px;
   display: flex;

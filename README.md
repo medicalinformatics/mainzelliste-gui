@@ -4,7 +4,11 @@
 [![Build](https://github.com/medicalinformatics/mainzelliste-gui/actions/workflows/ci.yml/badge.svg)](https://github.com/medicalinformatics/mainzelliste-gui/actions/workflows/ci.yml)
 [![Docker Pulls](https://img.shields.io/docker/pulls/medicalinformatics/mainzelliste-gui.svg)](https://hub.docker.com/r/medicalinformatics/mainzelliste-gui/)
 
-With the Mainzelliste UI your can easily manage your patient list, creating new ID, editing patient fields or deleting patient.   
+Mainzelliste offers an intuitive web interface that makes managing patient data simple and efficient. 
+Easily create new patient IDs, update patient fields, or remove patient as needed.
+In addition, Mainzelliste supports comprehensive consent management and enables bulk operations such 
+as large-scale pseudonymization and automated ID generation—ideal for handling high volumes of data 
+in clinical and research environments.
 
 ![Mainzelliste UI Screenshot](./doc/images/mainzelliste-ui-screenshot-browser.png)
 ## Installation Guidelines
@@ -26,10 +30,10 @@ the docker image of the ui uses several environment variables :
 ### Version Compatibility
 Choosing the right version of the [Mainzelliste](http://mainzelliste.de) backend.
 
-| Mainzelliste-UI      | Mainzelliste (backend) |
-|----------------------|------------------------|
-| 0.0.4  (Beta)        | 12.x                   |
-| 0.0.5  (development) | 13.x (development)     |
+| Mainzelliste-UI | Mainzelliste (backend) |
+|-----------------|------------------------|
+| 1.0.0           | 1.13.x                 |
+| 0.0.4  (Beta)   | 1.12.x                 |
 
 ### Running on Linux
 1. copy the file `.env.default` to `.env` and set the environment variable `HOST` to the server name or ip address.
@@ -94,13 +98,12 @@ secrets:
          { "i18n": "first_name_text", "name": "Vorname", "mainzellisteField": "vorname", "semantic": "firstname"},
          { "i18n": "last_name_text", "name": "Nachname", "mainzellisteField": "nachname", "semantic": "lastname"},
          { "i18n": "birth_name_text", "name": "Geburtsname", "mainzellisteField": "geburtsname", "semantic": "birthName"},
-         { "i18n": "birth_date_text", "name": "Geburtdatum", "mainzellisteFields": ["geburtstag", "geburtsmonat", "geburtsjahr"], "semantic": "undefined"},
-         { "i18n": "residence_text", "name": "Wohnort", "mainzellisteField": "ort", "semantic": "postalCode"},
-         { "i18n": "zip_code_text", "name": "PLZ", "mainzellisteField": "plz", "semantic": "city"}
+         { "i18n": "birth_date_text", "name": "Geburtdatum", "mainzellisteFields": ["geburtstag", "geburtsmonat", "geburtsjahr"], "semantic": "birthday"},
+         { "i18n": "residence_text", "name": "Wohnort", "mainzellisteField": "ort", "semantic": "city"},
+         { "i18n": "zip_code_text", "name": "PLZ", "mainzellisteField": "plz", "semantic": "postalCode"}
       ],
       "debug": false,
       "betaFeatures": {
-        "consent": false,
         "copyConcatenatedId": false,
         "copyId": true,
         "configuration": true,

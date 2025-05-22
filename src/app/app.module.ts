@@ -33,10 +33,10 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {GlobalErrorHandler} from "./error/global-error-handler";
 import {
-  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
-  MAT_MOMENT_DATE_FORMATS,
-  MomentDateAdapter
-} from "@angular/material-moment-adapter";
+  MAT_LUXON_DATE_ADAPTER_OPTIONS,
+  MAT_LUXON_DATE_FORMATS,
+  LuxonDateAdapter
+} from "@angular/material-luxon-adapter";
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {firstValueFrom, from} from "rxjs";
 import {UserAuthService} from "./services/user-auth.service";
@@ -70,6 +70,8 @@ import {
 } from "./bulk-operations/bulk-id-generation/dialog/bulk-id-generation-empty-fields-dialog";
 import { BulkPseudonymizationComponent } from './bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component';
 import {EditorModule, TINYMCE_SCRIPT_SRC} from "@tinymce/tinymce-angular";
+import { ExportPatientsDialogComponent } from './patientlist/dialogs/export-patients-dialog/export-patients-dialog.component';
+import {MatListModule} from "@angular/material/list";
 
 function initializeAppFactory(
     configService: AppConfigService,
@@ -112,7 +114,8 @@ function initializeAppFactory(
         .then(idGenerators => idGenerators != undefined ? configService.fetchMainzellisteAssociatedIdGenerators() : undefined)
         .then(idGenerators => idGenerators != undefined ? configService.fetchMainzellisteFields() : undefined)
         .then(fields => fields != undefined ? configService.fetchClaims() : undefined)
-        .then(claims => configService.fetchVersion());
+        .then(claims => configService.fetchVersion())
+        .then(versions => configService.readConsentTerminology());
     });
 }
 
@@ -132,7 +135,8 @@ function initializeAppFactory(
     BulkIdGenerationComponent,
     BulkIdGenerationTableComponent,
     BulkIdGenerationEmptyFieldsDialog,
-    BulkPseudonymizationComponent
+    BulkPseudonymizationComponent,
+    ExportPatientsDialogComponent
   ],
   imports: [
     SharedModule,
@@ -161,7 +165,8 @@ function initializeAppFactory(
     FileSaverModule,
     NgxMatFileInputModule,
     MatStepperModule,
-    EditorModule
+    EditorModule,
+    MatListModule
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
@@ -175,11 +180,11 @@ function initializeAppFactory(
     {provide: ErrorHandler, useClass: GlobalErrorHandler},
     {provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher},
     {provide: MAT_DATE_LOCALE, useValue: 'de-DE'},
-    {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
+    {provide: MAT_DATE_FORMATS, useValue: MAT_LUXON_DATE_FORMATS},
     {
       provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+      useClass: LuxonDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_LUXON_DATE_ADAPTER_OPTIONS]
     },
     {provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js'}
   ],

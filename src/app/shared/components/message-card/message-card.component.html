@@ -1,0 +1,15 @@
+<mat-card @messageDialogTrigger *ngIf="this.showMessage"
+          style=" width: 50%; margin: 10px auto 30px auto; background: #fff6f6;">
+  <mat-card-title-group>
+    <button mat-icon-button class="mini-icon-button" (click)="this.closeMessage()">
+      <mat-icon style="color: #555958;">close</mat-icon>
+    </button>
+  </mat-card-title-group>
+  <mat-card-content style="display: flex; justify-content: start; flex-direction: row;
+        align-items: center; margin: 0 15px 18px 15px; text-align: center; gap: 10px">
+    <mat-icon [ngStyle]="{color: this.type == 'warn' ? '#e6c155' : '#a80b1e' } " style="font-size: 50px; height: 50px; width: 50px; flex-shrink: 0">
+      {{ this.type == 'warn' ? "warning" : "report"}}
+    </mat-icon>
+    <h3 style=" color: #3c3939; flex-grow: 2;">{{this.message}}</h3>
+  </mat-card-content>
+</mat-card>

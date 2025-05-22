@@ -1,11 +1,10 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {ControlContainer, NgForm, NgModel, ValidationErrors} from "@angular/forms";
 import {
   ChoiceItem,
   ChoiceItemAnswer,
   ConsentTemplate,
-  DisplayItem,
-  Validity
+  DisplayItem
 } from "../consent-template.model";
 import {ConsentService} from "../consent.service";
 import {MatDialog} from "@angular/material/dialog";
@@ -13,24 +12,21 @@ import {TranslateService} from "@ngx-translate/core";
 import {ConsentTemplateValidityPeriodDialog} from "./consent-template-validity-period-dialog";
 import {MatRadioChange} from "@angular/material/radio";
 import {MatSlideToggleChange} from "@angular/material/slide-toggle";
+import {ConsentPolicySet} from "../../model/consent-policy-set";
+import {Validity} from "../consent-validity-period";
+import {AppConfigService} from "../../app-config.service";
 
 @Component({
   selector: 'app-consent-template-detail',
   templateUrl: './consent-template-detail.component.html',
   styleUrls: ['./consent-template-detail.component.css'],
-  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
+  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ],
+  encapsulation: ViewEncapsulation.None
 })
 export class ConsentTemplateDetailComponent implements OnInit {
 
   @Input() template!: ConsentTemplate;
-
-  public miiFhirBroadConsentVersions = [
-    {name: "1.6d", code: "urn:oid:2.16.840.1.113883.3.1937.777.24.2.1790"},
-    {name: "1.6f", code:  "urn:oid:2.16.840.1.113883.3.1937.777.24.2.1791"},
-    {name: "1.7.2", code:  "urn:oid:2.16.840.1.113883.3.1937.777.24.2.2079"}
-  ]
-
-  public templateValidityPeriod: string = this.getValidityPeriodText({day: 0, month: 0, year: 0});
+  @Input() readonly!: boolean;
 
   //TODO dropDow for Scope http://terminology.hl7.org/CodeSystem/consentscope
   //TODO dropDow for category: http://hl7.org/fhir/R4/valueset-consent-category.html
@@ -40,26 +36,37 @@ export class ConsentTemplateDetailComponent implements OnInit {
   public moduleTypes = [
     {
       type: "choice",
-      display: "Frage",
+      i18n: "consent_template.module_type_question",
     },
     {
       type: "display",
-      display: "Text",
+      i18n: "consent_template.module_type_text",
     }
   ]
 
   constructor(
     public consentService: ConsentService,
-    private validityPeriodDialog: MatDialog,
-    private translate: TranslateService
+    public configService:AppConfigService,
+    private readonly validityPeriodDialog: MatDialog,
+    public translate: TranslateService
   ) {
   }
 
   ngOnInit(): void {
+    if(this.readonly){
+      // reload policies and policy test display test
+      this.consentService.getPolicySets().subscribe( sets => {
+        this.template.items.filter(i => i instanceof ChoiceItem)
+        .map( item => item as ChoiceItem)
+        .forEach( item => {
+          item.policies?.forEach( policyView => {
+            policyView.policySet = this.findPolicySet(policyView.policySet, sets) ?? policyView.policySet;
+          });
+        })
+      });
+    }
   }
 
-  //
-  // Handle Error
   displayError(field: NgModel) {
     return field.invalid &&
       (field.dirty || field.touched) &&
@@ -75,10 +82,6 @@ export class ConsentTemplateDetailComponent implements OnInit {
       return "fehler";
   }
 
-  getValidityPeriodText(validityPeriod: Validity){
-    return  validityPeriod.year + ' Jahren - ' + validityPeriod.month + ' Monaten - ' + validityPeriod.day  + ' Tagen';
-  }
-
   openValidityPeriodDialog() {
     const dialogRef = this.validityPeriodDialog.open(ConsentTemplateValidityPeriodDialog,
       { data: this.template.validity, minWidth: '500px'});
@@ -86,7 +89,6 @@ export class ConsentTemplateDetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe(validityPeriod => {
       if (validityPeriod) {
         this.template.validity = validityPeriod;
-        this.templateValidityPeriod = this.getValidityPeriodText(validityPeriod);
       }
     });
   }
@@ -116,6 +118,15 @@ export class ConsentTemplateDetailComponent implements OnInit {
     if($event.checked) {
       this.template.consentModel = true;
       this.changeModulesAnswer("permit")
+      this.template.validity.set(0,0,30);
     }
+  }
+
+  private findPolicySet(policySet: ConsentPolicySet, sets: ConsentPolicySet[]) {
+    return sets.find( set => policySet.id.length > 0 && set.id == policySet.id );
+  }
+
+  public getFieldClass(className: string){
+    return className + (this.readonly ? " templateInputFieldDisabled" : "");
   }
 }

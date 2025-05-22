@@ -57,8 +57,8 @@ export class DeletePatientComponent implements OnInit {
   }
 
   async deletePatient() {
-    await this.patientService.deletePatient(this.patient)
-    .then(() => this.router.navigate(['/patientlist']).then());
+    this.patientService.deletePatient(this.patient)
+    .subscribe(() => this.router.navigate(['/patientlist']).then());
   }
 
   openDeletePatientDialog(): void {

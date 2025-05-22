@@ -1,8 +1,8 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef,} from "@angular/material/dialog";
-import {Validity} from "../consent-template.model";
 import {NgModel, ValidationErrors} from "@angular/forms";
 import {TranslateService} from "@ngx-translate/core";
+import {Validity} from "../consent-validity-period";
 
 
 @Component({

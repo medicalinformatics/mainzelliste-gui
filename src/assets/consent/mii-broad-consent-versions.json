@@ -1,0 +1,60 @@
+{
+  "miiBroadConsentVersions": [
+    {
+      "name": "1.6d",
+      "code": "urn:oid:2.16.840.1.113883.3.1937.777.24.2.1790"
+    },
+    {
+      "name": "1.6d Komplettwiderruf",
+      "code": "urn:oid:2.16.840.1.113883.3.1937.777.24.2.2718"
+    },
+    {
+      "name": "1.6d Teilwiderruf",
+      "code": "urn:oid:2.16.840.1.113883.3.1937.777.24.2.2719"
+    },
+    {
+      "name": "1.6f",
+      "code": "urn:oid:2.16.840.1.113883.3.1937.777.24.2.1791"
+    },
+    {
+      "name": "1.6f Komplettwiderruf",
+      "code": "urn:oid:2.16.840.1.113883.3.1937.777.24.2.2720"
+    },
+    {
+      "name": "1.6f Teilwiderruf",
+      "code": "urn:oid:2.16.840.1.113883.3.1937.777.24.2.2721"
+    },
+    {
+      "name": "1.7.2",
+      "code": "urn:oid:2.16.840.1.113883.3.1937.777.24.2.2079"
+    },
+    {
+      "name": "1.7.2 Komplettwiderruf",
+      "code": "urn:oid:2.16.840.1.113883.3.1937.777.24.2.2722"
+    },
+    {
+      "name": "1.7.2 Teilwiderruf",
+      "code": "urn:oid:2.16.840.1.113883.3.1937.777.24.2.2723"
+    },
+    {
+      "name": "1.7.2 (Eltern und Sorgeberechtigte für Minderjährige v1.1)",
+      "code": "urn:oid:2.16.840.1.113883.3.1937.777.24.2.3542"
+    },
+    {
+      "name": "1.7.2 (7-11 Minderjährige v1.1)",
+      "code": "urn:oid:2.16.840.1.113883.3.1937.777.24.2.3543"
+    },
+    {
+      "name": "1.7.2 (12-17 Minderjährige v1.1)",
+      "code": "urn:oid:2.16.840.1.113883.3.1937.777.24.2.3544"
+    },
+    {
+      "name": "Zusatzmodul ACRIBiS (Z2)",
+      "code": "urn:oid:2.16.840.1.113883.3.1937.777.24.2.4031"
+    },
+    {
+      "name": "Zusatzmodul Patientenbefragung (Z3)",
+      "code": "urn:oid:2.16.840.1.113883.3.1937.777.24.2.4036"
+    }
+  ]
+}

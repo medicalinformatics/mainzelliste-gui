@@ -3,14 +3,14 @@ import {ErrorMessage} from "../error/error-messages";
 export class MainzellisteError extends Error {
 
   public errorMessage: ErrorMessage;
-  public messageVariable;
+  public messageVariables: string[];
 
   constructor(
     message: ErrorMessage,
-    messageVariable?: string
+    ...messageVariables: string[]
   ) {
     super(message.message.toString());
     this.errorMessage = message;
-    this.messageVariable = messageVariable
+    this.messageVariables = messageVariables
   }
 }

@@ -6,5 +6,8 @@
 </div>
 <div mat-dialog-actions>
   <button mat-raised-button class="submitBreak" (click)="cancel()">{{'button_cancel' | translate}}</button>
-  <button mat-raised-button class="submit" [mat-dialog-close]="true">{{'button_confirm' | translate}}</button>
+  <button mat-raised-button class="submit" [disabled]="inProgress" type="submit" (click)="onSave()">
+    {{'button_confirm' | translate}}
+    <mat-icon *ngIf="inProgress"><mat-spinner diameter="20"></mat-spinner></mat-icon>
+  </button>
 </div>

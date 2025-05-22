@@ -16,6 +16,10 @@ import {MatTableModule} from "@angular/material/table";
 import { IdGeneratorDetailComponent } from './idgenerator/id-generator-detail/id-generator-detail.component';
 import { ConfigurationComponent } from './configuration/configuration.component';
 import {MatTabsModule} from "@angular/material/tabs";
+import { PoliciesComponent } from './policies/policies.component';
+import { PolicyDialogComponent } from './policy-dialog/policy-dialog.component';
+import { PolicySetFormComponent } from './policy-set-form/policy-set-form.component';
+import { PolicyFormComponent } from './policy-form/policy-form.component';
 
 
 @NgModule({
@@ -37,7 +41,11 @@ import {MatTabsModule} from "@angular/material/tabs";
     IdGeneratorsComponent,
     IdGeneratorDialogComponent,
     IdGeneratorDetailComponent,
-    ConfigurationComponent
+    ConfigurationComponent,
+    PoliciesComponent,
+    PolicyDialogComponent,
+    PolicySetFormComponent,
+    PolicyFormComponent
   ]
 })
 export class ConfigurationModule {

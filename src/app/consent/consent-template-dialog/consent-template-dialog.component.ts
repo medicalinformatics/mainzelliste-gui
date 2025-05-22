@@ -1,6 +1,6 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, Inject, ViewChild} from '@angular/core';
 import {ConsentDetailComponent} from "../consent-detail/consent-detail.component";
-import {MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {ConsentTemplateDetailComponent} from "../consent-template-detail/consent-template-detail.component";
 import {ChoiceItem, ConsentTemplate} from "../consent-template.model";
 import {NgForm} from "@angular/forms";
@@ -16,20 +16,17 @@ import {getErrorMessageFrom} from "../../error/error-utils";
 export class ConsentTemplateDialogComponent {
 
   @ViewChild(ConsentDetailComponent) consentTemplateDetail!: ConsentTemplateDetailComponent;
-  public dataModel: ConsentTemplate = {
-    items: [],
-    validity: {day: 0, month: 0, year: 0},
-    status: "draft",
-    policy: "urn:oid:2.16.840.1.113883.3.1937.777.24.2.1790",
-    consentModel: true
-  }
   public saving: boolean = false;
   errorMessages: string[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<ConsentTemplateDetailComponent>,
+    @Inject(MAT_DIALOG_DATA) public dataModel: {
+      template: ConsentTemplate,
+      readonly: boolean
+    },
     public consentService: ConsentService,
-    private translate: TranslateService
+    private readonly translate: TranslateService
   ) {
   }
 
@@ -38,12 +35,11 @@ export class ConsentTemplateDialogComponent {
   }
 
   onSave(isActive: boolean) {
-    //consentTemplateForm.form.disable();
     this.saving = true;
-    this.dataModel.status = isActive ? 'active' : 'draft'
-    this.consentService.addConsentTemplate(this.dataModel)
+    this.dataModel.template.status = isActive ? 'active' : 'draft'
+    this.consentService.addConsentTemplate(this.dataModel.template)
       .then(r => {
-        this.dialogRef.close(this.dataModel);
+        this.dialogRef.close(this.dataModel.template);
         this.saving = false;
       })
       .catch(error => {
@@ -55,12 +51,12 @@ export class ConsentTemplateDialogComponent {
 
   public disable(consentTemplateForm: NgForm): boolean {
     return (!consentTemplateForm.valid ||
-        (!this.dataModel.validity.year || this.dataModel.validity.year <= 0) &&
-        (!this.dataModel.validity.month || this.dataModel.validity.month == 0) &&
-        (!this.dataModel.validity.day || this.dataModel.validity.day == 0)) ||
-      !this.dataModel.items.some(e => e.type == 'choice') ||
-      this.dataModel.items.filter(e => e.type == 'choice').map( e => e as ChoiceItem).some(e => e.policies?.length == 0) ||
-      this.dataModel.items.some(e => e.type == 'display' && (e.text == undefined || e.text.trim().length == 0) ||
+        (!this.dataModel.template.validity.years || this.dataModel.template.validity.years <= 0) &&
+        (!this.dataModel.template.validity.months || this.dataModel.template.validity.months == 0) &&
+        (!this.dataModel.template.validity.days || this.dataModel.template.validity.days == 0)) ||
+      !this.dataModel.template.items.some(e => e.type == 'choice') ||
+      this.dataModel.template.items.filter(e => e.type == 'choice').map( e => e as ChoiceItem).some(e => e.policies?.length == 0) ||
+      this.dataModel.template.items.some(e => e.type == 'display' && (e.text == undefined || e.text.trim().length == 0) ||
         e.type == 'choice' && (e as ChoiceItem).policies?.length == 0);
   }
 }

@@ -78,6 +78,10 @@ export class PatientFieldsComponent implements OnInit {
           (field.errors?.['pattern'] || field.errors?.['required']);
     }
   }
+
+  public getFieldClass(className: string){
+    return className + (this.readOnly ? " inputFieldDisabled" : "");
+  }
 }
 
 export class DirtyErrorStateMatcher implements ErrorStateMatcher {

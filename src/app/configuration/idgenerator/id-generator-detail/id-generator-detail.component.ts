@@ -38,9 +38,9 @@ export class IdGeneratorDetailComponent implements OnInit {
 
   getFieldErrorMessage(fieldName: string, errors: ValidationErrors | null) {
     if (errors?.['pattern'])
-      return `${this.translate.instant('patientFields.error_value_text1')} ${this.translate.instant('consent_template.' + fieldName)} ${this.translate.instant('patientFields.error_value_text2')}`;
+      return `${this.translate.instant('patientFields.error_value_text1')} ${this.translate.instant('configuration.idGenerator.' + fieldName)} ${this.translate.instant('patientFields.error_value_text2')}`;
     else if (errors?.['required'])
-      return `${this.translate.instant('patientFields.error_mandatory_text1')} ${this.translate.instant('consent_template.' + fieldName)} ${this.translate.instant('patientFields.error_mandatory_text2')}`;
+      return `${this.translate.instant('patientFields.error_mandatory_text1')} ${this.translate.instant('configuration.idGenerator.' + fieldName)} ${this.translate.instant('patientFields.error_mandatory_text2')}`;
     else
       return "fehler";
   }

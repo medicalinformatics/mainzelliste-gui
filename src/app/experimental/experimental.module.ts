@@ -9,11 +9,10 @@ import {HistorieComponent} from "./historie/historie.component";
 import {DeleteMultiplePatientsComponent} from "./delete-multiple-patients/delete-multiple-patients.component";
 import {RouterModule} from "@angular/router";
 import {PatientModule} from "../patient/patient.module";
-import {CreateConsentTemplateComponent} from "./create-consent-template/create-consent-template.component";
 
 
 @NgModule({
-    declarations: [AudittrailComponent, MergePatientsComponent, SimilarPatientComponent, HistorieComponent, DeleteMultiplePatientsComponent, CreateConsentTemplateComponent],
+    declarations: [AudittrailComponent, MergePatientsComponent, SimilarPatientComponent, HistorieComponent, DeleteMultiplePatientsComponent],
     imports: [
         CommonModule,
         SharedModule,

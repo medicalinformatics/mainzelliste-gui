@@ -5,7 +5,6 @@ import {NavigationStart, Router} from "@angular/router";
 import {Observable} from "rxjs";
 import {filter} from 'rxjs/operators';
 import {UserAuthService} from "./services/user-auth.service";
-import {TranslateService} from '@ngx-translate/core';
 
 
 @Component({

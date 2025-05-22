@@ -22,16 +22,18 @@
 <!--  <mat-icon>list_alt</mat-icon>-->
 <!--  <span>Audit-Trail</span>-->
 <!--</button>-->
-<ng-container *ngIf="this.appConfigService.isConsentEnabled()">
-  <mat-divider *ngIf="this.authorizationService.authorizationState.CREATE_CONSENT_TEMPLATE" class="menu-divider"></mat-divider>
-  <button *ngIf="this.authorizationService.authorizationState.CREATE_CONSENT_TEMPLATE"  mat-button [routerLink]="['/consent-templates']" class="sidenav-menu-item">
+<ng-container *ngIf="this.authorizationService.authorizationState.CREATE_CONSENT_TEMPLATE">
+  <mat-divider class="menu-divider"></mat-divider>
+  <button mat-button [routerLink]="['/consent-templates']" class="sidenav-menu-item">
     <mat-icon>assignment</mat-icon>
-    <span>{{'navigation.consent_template' | translate}}<sup style="font-size: 11px; font-weight: lighter;"> BETA</sup></span>
+    <span>{{'navigation.consent_template' | translate}}</span>
   </button>
 </ng-container>
 <mat-divider class="menu-divider"></mat-divider>
 <ng-container *ngIf="this.appConfigService.isConfigurationEnabled()">
-  <button mat-button *ngIf="this.authorizationService.authorizationState.EDIT_CONFIGURATION" [routerLink]="['/configuration']" class="sidenav-menu-item">
+  <button mat-button *ngIf="this.authorizationService.authorizationState.EDIT_CONFIGURATION
+  || this.authorizationService.authorizationState.READ_CONSENT_POLICY_SET"
+          [routerLink]="['/configuration']" class="sidenav-menu-item">
     <mat-icon>settings</mat-icon>
     <span>{{'navigation.configuration' | translate}}</span>
   </button>

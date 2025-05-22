@@ -5,7 +5,9 @@
           <button id="arrow" *ngIf="side!='none'" [ngStyle]="{float:side}" (click)="slideData(fields[field.name], field.name)">
             <mat-icon>arrow_circle_{{side}}</mat-icon>
           </button>
-          <mat-form-field *ngSwitchCase="'DATE'" class="inputField" appearance="outline">
+          <mat-form-field *ngSwitchCase="'DATE'"
+                          [class]="getFieldClass('inputField')"
+                          appearance="outline">
             <mat-label>{{field.i18n | translate}}</mat-label>
             <input matInput style="width: 90%;" [readonly]="readOnly"
                    [matDatepicker]="picker"
@@ -21,7 +23,9 @@
               <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
             </button>
           </mat-form-field>
-          <mat-form-field *ngSwitchCase="'SEX'"  class="inputField" [ngStyle]="{'margin-bottom': '-1.25em' }">
+          <mat-form-field *ngSwitchCase="'SEX'"
+                          [class]="getFieldClass('inputField')"
+                          [ngStyle]="{'margin-bottom': '-1.25em' }">
             <mat-label>{{field.i18n | translate}}</mat-label>
             <input *ngIf="readOnly" style="width: 90%; " matInput [readonly]="readOnly"
                    placeholder="{{field.hint}}"
@@ -38,7 +42,8 @@
               <mat-icon id="copyIconSex" [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
             </button>
           </mat-form-field>
-          <mat-form-field *ngSwitchDefault  class="inputField" [ngStyle]="{'margin-bottom': displayError(currentField) ? '0.25em' : '-1.25em' }">
+          <mat-form-field *ngSwitchDefault [class]="getFieldClass('inputField')"
+                          [ngStyle]="{'margin-bottom': displayError(currentField) ? '0.25em' : '-1.25em' }">
             <mat-label>{{field.i18n | translate}}</mat-label>
             <input style="width: 90%; " [readonly]="readOnly" matInput (input)="fieldChanged()"
                    placeholder="{{field.hint}}" [(ngModel)]="fields[field.name]" [name]="field.name"
