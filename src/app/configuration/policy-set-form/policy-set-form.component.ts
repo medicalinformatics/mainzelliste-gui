@@ -16,9 +16,8 @@ export class PolicySetFormComponent implements OnInit {
   errorMessages: string[] = [];
 
   isLoading: boolean = false;
-  selectedFile: File | null = null;
-  selectedFileName: string = '';
-  fileContent: string = '';
+  selectedFiles: File[] = [];
+  fileContents: string[] = [];
   importResult: { added: number; failed: number } | null = null;
   totalRows: number = 0;
   fileValid: boolean = true;
@@ -46,7 +45,7 @@ export class PolicySetFormComponent implements OnInit {
         .pipe(take(1))
         .subscribe({
           next: (response) => {
-            if (this.selectedFile && this.fileValid && this.fileContent) {
+            if (this.selectedFiles.length > 0 && this.fileValid && this.fileContents.length > 0) {
               this.confirmImport(response.id);
             } else {
               this.dialogRef.close(response);
@@ -79,39 +78,61 @@ export class PolicySetFormComponent implements OnInit {
   }
 
   onFileSelected(event: any) {
-    const file: File = event.target.files[0];
-    if (file) {
+  const files: FileList = event.target.files;
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    if (!this.selectedFiles.some(f => f.name === file.name)) {
       this.handleFile(file);
     }
   }
+}
 
   onDrop(event: DragEvent) {
-    event.preventDefault();
-    if (event.dataTransfer && event.dataTransfer.files.length > 0) {
-      const file = event.dataTransfer.files[0];
-      this.handleFile(file);
+  event.preventDefault();
+  if (event.dataTransfer && event.dataTransfer.files.length > 0) {
+    const files = event.dataTransfer.files;
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (!this.selectedFiles.some(f => f.name === file.name)) {
+        this.handleFile(file);
+      }
     }
   }
+}
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
   }
 
+  removeFile(fileName: string) {
+    const index = this.selectedFiles.findIndex(f => f.name === fileName);
+    if (index !== -1) {
+      this.selectedFiles.splice(index, 1);
+      this.fileContents.splice(index, 1);
+    }
+  }
+
   handleFile(file: File) {
-    this.selectedFile = file;
-    this.selectedFileName = file.name;
     const reader = new FileReader();
     reader.onload = (e: any) => {
-      this.fileContent = e.target.result;
-      const policies = this.parseCSV(this.fileContent);
+      const fileContent = e.target.result;
+      const policies = this.parseCSV(fileContent);
       const validationErrors = this.validatePolicies(policies);
+
       if (validationErrors.length > 0) {
-        this.errorMessages = validationErrors;
-        this.fileValid = false;
-      } else {
-        this.errorMessages = [];
-        this.fileValid = true;
+        const groupedErrors: { [key: string]: string } = {};
+        validationErrors.forEach(err => {
+          if (!groupedErrors[err]) {
+            groupedErrors[err] = `${file.name}: ${err}`;
+          }
+        });
+        this.errorMessages = Object.values(groupedErrors);
+        return;
       }
+
+      this.fileContents.push(fileContent);
+      this.selectedFiles.push(file);
+      this.fileValid = true;
     };
     reader.readAsText(file);
   }
@@ -126,7 +147,7 @@ export class PolicySetFormComponent implements OnInit {
       if (code && name) {
         policies.push({ code: code.trim(), name: name.trim() });
       } else {
-        this.errorMessages.push(`Line format error: ${line}`);
+        this.errorMessages.push(this.translate.instant('configuration.policySet.csv.error.invalid_format'));
       }
     }
     return policies;
@@ -139,14 +160,14 @@ export class PolicySetFormComponent implements OnInit {
     policies.forEach(policy => {
       const code = policy.code;
       if (/\s/.test(code)) {
-        errors.push(`Policy code "${code}" should not contain any whitespace.`);
+        errors.push(this.translate.instant('configuration.policySet.csv.error.whitespace'));
       }
       codeCounts.set(code, (codeCounts.get(code) || 0) + 1);
     });
 
     for (const [code, count] of codeCounts.entries()) {
       if (count > 1) {
-        errors.push(`Policy code "${code}" appears ${count} times.`);
+        errors.push(this.translate.instant('configuration.policySet.csv.error.duplicate'));
       }
     }
     return errors;
@@ -156,16 +177,16 @@ export class PolicySetFormComponent implements OnInit {
     if (!this.fileValid) {
       return;
     }
-    if (!this.fileContent) {
+    if (this.fileContents.length === 0) {
       this.errorMessages.push('No file content found.');
       return;
     }
     this.errorMessages = [];
     this.importResult = null;
-    const policies = this.parseCSV(this.fileContent);
+    const policies = this.fileContents.map(content => this.parseCSV(content)).reduce((acc, val) => acc.concat(val), []);
     this.totalRows = policies.length;
     if (policies.length === 0) {
-      this.errorMessages.push('No valid policies found in the file.');
+      this.errorMessages.push('No valid policies found in the files.');
       return;
     }
     this.addPolicies(policySetId, policies);

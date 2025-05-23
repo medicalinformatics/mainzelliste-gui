@@ -2,14 +2,10 @@
 <mat-dialog-content>
   <app-error-card [(messages)]="errorMessages"></app-error-card>
 
-  <div *ngIf="!selectedFile || (selectedFile && !fileValid)" class="upload-container" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+  <div class="upload-container" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
     <p>{{ 'configuration.policy.csv.add' | translate }}</p>
-    <input type="file" accept=".csv" (change)="onFileSelected($event)" hidden #fileInput>
+    <input type="file" accept=".csv" (change)="onFileSelected($event)" hidden #fileInput multiple>
     <button mat-raised-button (click)="fileInput.click()">{{ 'configuration.policy.csv.select' | translate }}</button>
-  </div>
-
-  <div *ngIf="selectedFile && fileValid && !importResult" class="message-container">
-    <p>{{ 'configuration.policy.csv.selectedFile' | translate }}<strong class="file-name">{{ selectedFileName }}</strong></p>
   </div>
 
   <div *ngIf="importResult" class="message-container">
@@ -19,16 +15,28 @@
   <div *ngIf="isLoading" class="loading-spinner">
     <mat-spinner diameter="40"></mat-spinner>
   </div>
+
+  <div *ngIf="selectedFiles.length > 0" class="file-list">
+    <h4>{{ 'configuration.policy.csv.selectedFiles' | translate }}</h4>
+    <ul>
+      <li *ngFor="let file of selectedFiles">
+        <span class="file-name">{{ file.name }}</span>
+        <button mat-icon-button color="warn" (click)="removeFile(file.name)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </li>
+    </ul>
+  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions class="dialog-actions">
-  <div *ngIf="!selectedFile" class="action-buttons single">
+  <div *ngIf="!selectedFiles" class="action-buttons single">
     <button mat-button mat-dialog-close class="submitBreak">
       {{ 'button_cancel' | translate }}
     </button>
   </div>
 
-  <div *ngIf="selectedFile && !importResult && !isLoading" class="action-buttons double">
+  <div *ngIf="selectedFiles && !importResult && !isLoading" class="action-buttons double">
     <button mat-button mat-dialog-close class="submitBreak">
       {{ 'button_cancel' | translate }}
     </button>

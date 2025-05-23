@@ -1,7 +1,6 @@
 <h1 mat-dialog-title>{{ "configuration.policySet.add" | translate }}</h1>
 
 <div mat-dialog-content>
-  <app-error-card [(messages)]="errorMessages"></app-error-card>
 
   <form [formGroup]="policySetForm">
     <mat-form-field appearance="outline">
@@ -20,19 +19,25 @@
     </mat-form-field>
   </form>
   <h3 class="upload-title">{{ 'configuration.policy.csv.title' | translate }}</h3>
+  <app-error-card [(messages)]="errorMessages"></app-error-card>
   <div class="upload-container" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
     <p>{{ 'configuration.policy.csv.add' | translate }}</p>
-    <input type="file" accept=".csv" (change)="onFileSelected($event)" hidden #fileInput>
+    <input type="file" accept=".csv" (change)="onFileSelected($event)" hidden #fileInput multiple>
     <button mat-raised-button (click)="fileInput.click()">
       {{ 'configuration.policy.csv.select' | translate }}
     </button>
   </div>
 
-  <div *ngIf="selectedFile && fileValid && !importResult" class="message-container">
-    <p>
-      {{ 'configuration.policy.csv.selectedFile' | translate }}
-      <strong class="file-name">{{ selectedFileName }}</strong>
-    </p>
+  <div *ngIf="selectedFiles.length > 0" class="file-list">
+    <h4>{{ 'configuration.policy.csv.selectedFiles' | translate }}</h4>
+    <ul>
+      <li *ngFor="let file of selectedFiles">
+        <span class="file-name">{{ file.name }}</span>
+        <button mat-icon-button color="warn" (click)="removeFile(file.name)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </li>
+    </ul>
   </div>
 
   <div *ngIf="importResult" class="message-container">

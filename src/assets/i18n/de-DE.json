@@ -214,9 +214,13 @@
   "configuration.policy.csv.select": "Datei auswählen",
   "configuration.policy.csv.cancel": "Abbrechen",
   "configuration.policy.csv.selectedFile":"Sie haben folgende Datei ausgewählt: ",
+  "configuration.policy.csv.selectedFiles": "Sie haben folgende Dateien ausgewählt: ",
   "configuration.policy.csv.confirm":"Bestätigen",
   "configuration.policy.csv.successSummary": "{{added}} von {{total}} Policies wurden erfolgreich hinzugefügt.",
   "configuration.policy.csv.understood":"Verstanden",
+  "configuration.policySet.csv.error.whitespace": "Die Datei enthält Policy-Codes mit Leerzeichen.",
+  "configuration.policySet.csv.error.duplicate": "Die Datei enthält duplizierte Policy-Codes.",
+  "configuration.policySet.csv.error.invalid": "Die Datei enthält ungültige Policy-Codes.",
 
   
 	"info.title": "Informationen und Hinweise zur Mainzelliste",
