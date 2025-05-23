@@ -1,0 +1,49 @@
+<h2 mat-dialog-title>{{ 'configuration.policy.csv.title' | translate }}</h2>
+<mat-dialog-content>
+  <app-error-card [(messages)]="errorMessages"></app-error-card>
+
+  <div class="upload-container" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+    <p>{{ 'configuration.policy.csv.add' | translate }}</p>
+    <input type="file" accept=".csv" (change)="onFileSelected($event)" hidden #fileInput multiple>
+    <button mat-raised-button (click)="fileInput.click()">{{ 'configuration.policy.csv.select' | translate }}</button>
+  </div>
+
+  <div *ngIf="importResult" class="message-container">
+    <p>{{ 'configuration.policy.csv.successSummary' | translate: { added: importResult.added, total: totalRows } }}</p>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <div *ngIf="selectedFiles.length > 0" class="file-list">
+    <h4>{{ 'configuration.policy.csv.selectedFiles' | translate }}</h4>
+    <ul>
+      <li *ngFor="let file of selectedFiles">
+        <span class="file-name">{{ file.name }}</span>
+        <button mat-icon-button color="warn" (click)="removeFile(file.name)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </li>
+    </ul>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions">
+  <div *ngIf="!selectedFiles" class="action-buttons single">
+    <button mat-button mat-dialog-close class="submitBreak">
+      {{ 'button_cancel' | translate }}
+    </button>
+  </div>
+
+  <div *ngIf="selectedFiles && !importResult && !isLoading" class="action-buttons double">
+    <button mat-button mat-dialog-close class="submitBreak">
+      {{ 'button_cancel' | translate }}
+    </button>
+    <button *ngIf="fileValid" mat-button class="submit" (click)="confirmImport()">{{ 'configuration.policy.csv.confirm' | translate }}</button>
+  </div>
+
+  <div *ngIf="importResult && !isLoading" class="action-buttons understood">
+    <button mat-button class="submit" (click)="dialogRef.close()">{{ 'configuration.policy.csv.understood' | translate }}</button>
+  </div>
+</mat-dialog-actions>

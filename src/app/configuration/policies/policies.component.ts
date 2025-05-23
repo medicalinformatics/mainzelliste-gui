@@ -9,6 +9,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { PolicySetFormComponent } from '../policy-set-form/policy-set-form.component';
 import { PolicyFormComponent } from '../policy-form/policy-form.component';
 import { take } from 'rxjs/operators';
+import { CsvPolicyImportDialogComponent } from '../csv-policy-import-dialog/csv-policy-import-dialog.component';
 
 @Component({
   selector: 'app-policies',
@@ -105,4 +106,12 @@ export class PoliciesComponent implements OnInit {
       }
     });
   }
+
+  openCsvImportDialog(policySetId: string) {
+    this.dialog.open(CsvPolicyImportDialogComponent, {
+      data: { policySetId },
+      width: '30vw'
+    });
+  }
+
 }
