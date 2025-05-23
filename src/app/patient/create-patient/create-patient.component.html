@@ -1,6 +1,5 @@
 <form #patientForm="ngForm">
 <div style="height:100%;width:100%;">
-  <div style=" width: 50%">
     <h4>{{'createPatient.enter_patient_data' | translate}}</h4>
     <app-patient-fields (fieldEvent)="fieldsChanged($event)"
                         [fields]="patient.fields"></app-patient-fields>
@@ -11,7 +10,8 @@
                                [removeEmptyId]="true" [permittedOperation]="'C'"></app-external-pseudonyms>
     </div>
     <br>
-    <div style="width: 90%; max-width: 700px;" ngModelGroup="internalIdTypes"
+    <div *ngIf="!this.appConfigService.isIdSelectionDisabled()"
+         style="width: 90%; max-width: 700px;" ngModelGroup="internalIdTypes"
          #internalIdTypesModelGroup="ngModelGroup">
       <h4>{{'createPatient.add_pseudonym_type' | translate}}</h4>
       <mat-form-field color="primary" style="width: 76.5%">
@@ -67,6 +67,5 @@
         <mat-icon *ngIf="creatingInProgress" style="margin-left: 10px"><mat-spinner diameter="20"></mat-spinner></mat-icon>
       </button>
     </div>
-  </div>
 </div>
 </form>
