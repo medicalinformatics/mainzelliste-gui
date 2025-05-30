@@ -411,5 +411,7 @@
 	"tentative.label_main_patient":"Main-Patient",
 	"tentative.pseudonyms":"Pseudonymes",
 	"tentative.merge":"Merge",
-	"tentative.split":"Split"
+	"tentative.split":"Split",
+	"tentative.identites": "Secondary Identities"
+
 }

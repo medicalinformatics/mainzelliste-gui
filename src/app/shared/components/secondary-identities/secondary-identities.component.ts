@@ -5,7 +5,7 @@ import { Patient } from "src/app/model/patient";
 import { catchError } from "rxjs/operators";
 import { AuthorizationService } from "src/app/services/authorization.service";
 import { AppConfigService } from "src/app/app-config.service";
-import { Field } from 'src/app/model/field';
+import { Field, FieldType } from 'src/app/model/field';
 import { PageEvent } from '@angular/material/paginator';
 import { PatientService } from 'src/app/services/patient.service';
 
@@ -94,4 +94,9 @@ export class SecondaryIdentitiesComponent implements OnInit {
   isClickedRow(row: any): boolean {
     return this.clickedRow === row;
   }
+
+  isDate(field: FieldType): any {
+    return field == FieldType.DATE; 
+  }
+
 }

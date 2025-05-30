@@ -430,6 +430,7 @@
 	"tentative.patient_data":"Patientendaten",
 	"tentative.label_main_patient":"Haupt-Patient",
 	"tentative.pseudonyms":"Pseudonyme",
-	"tentative.merge":"Merge",
-	"tentative.split":"Split"
+	"tentative.merge":"Mergen",
+	"tentative.split":"Spliten",
+	"tentative.identites": "Sekündäre Identitäten"
 }

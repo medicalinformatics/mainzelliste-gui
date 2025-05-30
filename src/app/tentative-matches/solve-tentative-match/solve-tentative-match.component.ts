@@ -125,7 +125,6 @@ export class SolveTentativeMatchComponent implements OnInit {
 
   openIdentityDialog(idString : String, idType: String){
     const dialogRef = this.identityDialog.open(IdentityDialogComponent, {
-      width: '400px',
       data: { idString: idString, idType: idType}
     });
   

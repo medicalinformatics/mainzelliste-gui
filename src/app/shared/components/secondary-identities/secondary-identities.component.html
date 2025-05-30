@@ -10,7 +10,13 @@
       <ng-container *ngFor="let field of fields" matColumnDef="{{field.name}}">
         <th mat-header-cell *matHeaderCellDef>{{field.i18n | translate}}</th>
         <td mat-cell *matCellDef="let element" [ngClass]="{'highlight': isDifferent(element, field.name)}">
-          {{element.fields[field.name]}} </td>
+         <span *ngIf="isDate(field.type)">
+        {{element.fields[field.name] | date:'dd.MM.yyyy'}}
+      </span>
+      <span *ngIf="!isDate(field.type)">
+       {{element.fields[field.name]}}
+      </span>
+           </td>
       </ng-container>
 
       <!-- Header Row -->

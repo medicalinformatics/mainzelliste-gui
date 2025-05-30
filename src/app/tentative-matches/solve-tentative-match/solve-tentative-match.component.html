@@ -9,11 +9,6 @@
                     <input type='radio' name='test' id="patient1" value='1' (click)="setMainPatient(1)" checked>
                     <label for="patient1">{{'tentative.label_main_patient'|translate}}</label>
                 </mat-card-subtitle>
-                <div>
-                    <button mat-button (click)="openIdentityDialog(getIdString(patient1), getIdType(patient1))">
-                        Secondary Identities
-                    </button>
-                </div>
                 <div class="pseudonyme">
                     <mat-card-title class="subtitle">{{'tentative.pseudonyms'|translate}}</mat-card-title>
                     <div style="flex-flow: row">
@@ -25,6 +20,11 @@
                 <mat-card-title class="subtitle">{{'tentative.patient_data'|translate}}</mat-card-title>
                 <view-patient-fields [patientFields]="patient1?.fields ?? {}"></view-patient-fields>
             </div>
+            <div>
+                <button mat-raised-button (click)="openIdentityDialog(getIdString(patient1), getIdType(patient1))">
+                    {{'tentative.identites'|translate}}
+                </button>
+            </div>    
         </mat-card>
 
         <div class="buttons">
@@ -58,11 +58,6 @@
                     <input type='radio' name='test' id="patient2" value='2' (click)="setMainPatient(2)">
                     <label for="patient2">{{'tentative.label_main_patient'|translate}}</label>
                 </mat-card-subtitle>
-                <div>
-                    <button mat-button (click)="openIdentityDialog(getIdString(patient2), getIdType(patient2))">
-                        Secondary Identities
-                    </button>
-                </div>
                 <div class="pseudonyme">
                     <mat-card-title class="subtitle">Pseudonyme</mat-card-title>
                     <!-- TODO: justify-content to flex-end-->
@@ -78,6 +73,11 @@
                 <div style="flex: 1 1 100%; display: grid; justify-content: center; flow:right;">
                     <view-patient-fields [patientFields]="patient2?.fields ?? {}"></view-patient-fields>
                 </div>
+            </div>
+            <div>
+                <button mat-raised-button (click)="openIdentityDialog(getIdString(patient2), getIdType(patient2))">
+                    {{'tentative.identites'|translate}}
+                </button>
             </div>
         </mat-card>
 
