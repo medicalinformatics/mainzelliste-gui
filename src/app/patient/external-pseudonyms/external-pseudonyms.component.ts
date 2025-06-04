@@ -101,7 +101,7 @@ export class ExternalPseudonymsComponent implements OnChanges {
   }
 
   public getConcatenated(id: Id): string {
-    return id.idType + "." + id.idString;
+    return id.idType + this.config.getCopyConcatenateSeparation() + id.idString;
   }
 
   getAssociatedIdTypes(idType: string):string[] {

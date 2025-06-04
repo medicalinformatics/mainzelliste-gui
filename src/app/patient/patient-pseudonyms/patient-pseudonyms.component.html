@@ -26,6 +26,14 @@
                     (click)="this.openRelatedDialog(pseudonym)">
               <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">hub</mat-icon>
             </button>
+            <a mat-icon-button *ngIf="readOnly"
+                    [ngStyle]="{'width': '24px', 'height': '24px'}"
+                    matTooltip="{{'patientPseudonyms.jump_to_mdat_system' | translate}}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="{{this.config.getOnkostarUrl()}}/onkostar/index.html?personenstamm={{this.config.getOnkostarTribe()}}&pid=pid%3A%20{{pseudonym.idString}}">
+              <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">open_in_new</mat-icon>
+            </a>
           </span>
         </mat-form-field>
       </div>
