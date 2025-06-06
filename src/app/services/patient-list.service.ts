@@ -693,12 +693,7 @@ export class PatientListService {
               .set('mainzellisteApiVersion', '3.2')
       }).pipe(
           mergeMap(response => {
-              type checkMatch = {
-                  biobankId?: string;
-                  similarityScore: number;
-              };
-              let result: checkMatch[] = response as checkMatch[];
-              return of({ data: result });
+              return of({ data: response as any[] });
           }),
           catchError((error) => {
               console.error('Error occurred in getCheckMatch:', error);

@@ -76,7 +76,9 @@
 
 	"similar_patient_button":"Ähnliche Patienten suchen",
 	"similar_patient_dialog_title1": "Ähnlicher Patient gefunden",
-	"similar_patient_dialog_text1": "Es gibt ähnliche Patienten im System. Bitte überprüfen Sie die folgenden Patienten, bevor Sie fortfahren.",
+	"similar_patient_dialog_text1_1": "Es gibt ähnliche Patienten im System. Bitte überprüfen Sie die folgenden Patienten, bevor Sie fortfahren.",
+	"similar_patient_dialog_text1_2": "Der Grad der Ähnlichkeit wird im SimilarityScore angezeigt. Ein SimilarityScore von über 0,95 zeigt eine nahezu identische Übereinstimmung an und wird rot hervorgehoben.",
+	"similar_patient_dialog_text1_3": "Ein Score zwischen 0,95 und 0,7, der gelb hervorgehoben ist, bedeutet, dass es sich um eine wahrscheinliche Übereinstimmung handelt. Ein Score unter 0,7 wird grün angezeigt und bedeutet keine Übereinstimmung.",
 	"similar_patient_dialog_title2": "Kein ähnlicher Patient gefunden",
 	"similar_patient_dialog_text2": "Es gibt keine ähnlichen Patienten im System. Bitte fahren Sie mit der Erstellung des neuen Patienten fort.",
 
@@ -371,9 +373,6 @@
 
   	"page_not_found.title": "Seite nicht gefunden",
   	"page_not_found.message": "Die gesuchte Seite konnte nicht gefunden werden",
-
-  "page_not_found.title": "Seite nicht gefunden",
-  "page_not_found.message": "Die gesuchte Seite konnte nicht gefunden werden",
 
 	"patientlistView.title": "Patientenliste",
 

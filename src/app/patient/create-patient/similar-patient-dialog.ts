@@ -5,7 +5,7 @@ import { Router } from "@angular/router";
 import { throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { AppConfigService } from "src/app/app-config.service";
-import { Field } from "src/app/model/field";
+import { Field, FieldType } from "src/app/model/field";
 import { Id } from "src/app/model/id";
 import { MainzellisteUnknownError } from "src/app/model/mainzelliste-unknown-error";
 import { Patient } from "src/app/model/patient";
@@ -28,6 +28,7 @@ export class SimilarPatientDialog {
     displayedColumns: string[] = [];
     fields: Field[];
     mainIdType: string = "";
+    similarityScore: number = 0;
     constructor(
         private translate: TranslateService,
         public configService: AppConfigService,
@@ -41,14 +42,15 @@ export class SimilarPatientDialog {
         this.patient = data.patient || [];
         this.displayedColumns = [...this.fields.map(field => field.name)];
         this.displayedColumns.push("action");
-        this.mainIdType = data.mainIdType
+        this.displayedColumns.unshift("similarity");
+        this.mainIdType = data.mainIdType;
         console.log(this.patient);
         this.patientListService.getMatches(this.patient,this.mainIdType).subscribe({
             next: response => {
-                let similarityScore = response.data[0].similarityScore;
-                if (similarityScore > 0.8) {
+                this.similarityScore = response.data[0].similarityScore;
+                if (this.similarityScore > 0.8) {
                     this.resultsFound = true;
-                    let id = response.data[0].biobankId ?? ""
+                    let id: string = response.data[0][data.mainIdType] as string ?? ""
                     this.loadPatient(id);
                 } else {
                     this.resultsFound = false;
@@ -83,5 +85,19 @@ export class SimilarPatientDialog {
 
     cancel(): void {
         this.dialogRef.close();
+    }
+
+    isDate(field: FieldType): any {
+        return field == FieldType.DATE; 
+    }
+
+    getColor(score: number): string {
+        if (score > 0.95) {
+            return 'lightcoral';
+        } else if (score > 0.7) {
+            return 'lightyellow';
+        } else {
+            return 'lightgreen';
+        }
     }
 }
