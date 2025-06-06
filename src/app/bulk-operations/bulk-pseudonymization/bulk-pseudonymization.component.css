@@ -44,3 +44,41 @@ mat-paginator{
   margin-top: 1.5%;
   background-color: transparent;
 }
+.pseudonymize-action-group {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  margin-top: 0;
+  margin-bottom: 18px;
+  width: 100%;
+  box-sizing: border-box;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.unsafe-matches-checkbox {
+  margin-bottom: 1.5em;
+  margin-top: 0;
+  margin-left: 0;
+  margin-right: 0;
+  align-self: flex-start;
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 0;
+}
+
+.button-row-left {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.button-row-right {
+  display: flex;
+  justify-content: flex-end;
+}
