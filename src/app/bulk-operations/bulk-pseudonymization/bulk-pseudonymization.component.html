@@ -76,16 +76,30 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-        <div style="display: flex; justify-content: center;">
-          <button id="back" mat-raised-button
-                  [disabled]="this.addingInProgress"
-                  (click)="backToFirst()">{{'button_stepper_back' | translate}}</button>
-          <button style="margin-left: 10px"mat-raised-button
-                  class="submit"
-                  (click)="addPatients()"
-                  [disabled]="this.addingInProgress || this.selectedInternalIdTypes.length == 0">
-            {{'bulkPseudonymization.button_stepper_pseudonymize' | translate}}
-          </button>
+        <div class="pseudonymize-action-group">
+          <mat-checkbox class="unsafe-matches-checkbox"
+                        color="primary"
+                        [(ngModel)]="allowUnsafeMatches"
+                        [disabled]="addingInProgress">
+            {{ 'bulkPseudonymization.tentative_matches' | translate }}
+          </mat-checkbox>
+          <div class="button-row">
+            <div class="button-row-left">
+              <button id="back" mat-raised-button
+                      [disabled]="this.addingInProgress"
+                      (click)="backToFirst()">
+                {{'button_stepper_back' | translate}}
+              </button>
+            </div>
+            <div class="button-row-right">
+              <button mat-raised-button
+                      class="submit"
+                      (click)="addPatients()"
+                      [disabled]="this.addingInProgress || this.selectedInternalIdTypes.length == 0">
+                {{'bulkPseudonymization.button_stepper_pseudonymize' | translate}}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       <ng-container *ngIf="!this.addingInProgress && step == 1">
