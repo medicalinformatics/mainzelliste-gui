@@ -57,6 +57,4 @@ export interface BetaFeatures {
   disableBulkIdGeneration?:boolean
   disableIdSelection?:boolean
   onkostarUrl?:string
-  onkostarTribe?:string
 }
-
