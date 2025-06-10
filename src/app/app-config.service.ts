@@ -30,9 +30,13 @@ export class AppConfigService {
   private layoutFooterLogos: FooterLogo[] = [];
   private copyConcatenatedIdEnabled: boolean = false;
   private copyIdEnabled: boolean = false;
+  private copyConcatenateSeparation: string = ".";
+  private onkostarUrl: string = "";
   private configurationEnabled: boolean = false;
   private _showDomainsInIDCard: boolean = false;
   private consentTerminology!: ConsentTerminology;
+  private disableBulkIdGeneration: boolean = false;
+  private disableIdSelection: boolean = false;
 
   constructor(
     private httpClient: HttpClient,
@@ -58,7 +62,11 @@ export class AppConfigService {
           // init feature toggle
           this.copyConcatenatedIdEnabled = this.data[0].betaFeatures?.copyConcatenatedId ?? false;
           this.copyIdEnabled = this.data[0].betaFeatures?.copyId ?? false;
+          this.copyConcatenateSeparation = this.data[0].betaFeatures?.copyConcatenateSeparation ?? ".";
           this.configurationEnabled = this.data[0].betaFeatures?.configuration ?? false;
+          this.disableBulkIdGeneration = this.data[0].betaFeatures?.disableBulkIdGeneration ?? false;
+          this.disableIdSelection = this.data[0].betaFeatures?.disableIdSelection ?? false;
+          this.onkostarUrl = this.data[0].betaFeatures?.onkostarUrl ?? "";
           this._showDomainsInIDCard = this.data[0].betaFeatures?.showDomainsInIDCard ?? false;
 
           if(!this.data[0].genderFieldValues || this.data[0].genderFieldValues.length == 0)
@@ -88,8 +96,20 @@ export class AppConfigService {
     return this.copyIdEnabled;
   }
 
+  getCopyConcatenateSeparation(): string {
+    return this.copyConcatenateSeparation;
+  }
+
   isConfigurationEnabled(): boolean {
     return this.configurationEnabled;
+  }
+
+  isBulkIdGenerationDisabled(): boolean {
+    return this.disableBulkIdGeneration;
+  }
+
+  isIdSelectionDisabled(): boolean {
+    return this.disableIdSelection;
   }
 
   public showDomainsInIDCard(): boolean {
@@ -126,6 +146,10 @@ export class AppConfigService {
 
   getMainzellisteUrl(): string {
     return this.data[0].url.toString();
+  }
+
+  getOnkostarUrl(): string {
+    return this.onkostarUrl;
   }
 
   isDebugModeEnabled(): boolean {
