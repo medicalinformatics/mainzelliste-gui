@@ -32,7 +32,6 @@ export class AppConfigService {
   private copyIdEnabled: boolean = false;
   private copyConcatenateSeparation: string = ".";
   private onkostarUrl: string = "";
-  private onkostarTribe: string = "";
   private configurationEnabled: boolean = false;
   private _showDomainsInIDCard: boolean = false;
   private consentTerminology!: ConsentTerminology;
@@ -68,7 +67,6 @@ export class AppConfigService {
           this.disableBulkIdGeneration = this.data[0].betaFeatures?.disableBulkIdGeneration ?? false;
           this.disableIdSelection = this.data[0].betaFeatures?.disableIdSelection ?? false;
           this.onkostarUrl = this.data[0].betaFeatures?.onkostarUrl ?? "";
-          this.onkostarTribe = this.data[0].betaFeatures?.onkostarTribe ?? "";
           this._showDomainsInIDCard = this.data[0].betaFeatures?.showDomainsInIDCard ?? false;
 
           if(!this.data[0].genderFieldValues || this.data[0].genderFieldValues.length == 0)
@@ -150,13 +148,8 @@ export class AppConfigService {
     return this.data[0].url.toString();
   }
 
-  // TODO: Verify that we get an URL
   getOnkostarUrl(): string {
     return this.onkostarUrl;
-  }
-
-  getOnkostarTribe(): string {
-    return this.onkostarTribe;
   }
 
   isDebugModeEnabled(): boolean {
