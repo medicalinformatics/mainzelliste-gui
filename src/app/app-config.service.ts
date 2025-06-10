@@ -11,6 +11,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {ClaimsConfig} from "./model/api/configuration-claims-data";
 import {IdGenerator} from "./model/idgenerator";
 import {ConsentTerminology} from "./model/consent-terminology";
+import {ConfigurationMatcherResponse} from "./model/api/configuration-matcher-response";
 
 export interface AssociatedIds {
   [key: string] : [IdGenerator]
@@ -26,6 +27,7 @@ export class AppConfigService {
   private mainzellisteIdTypes: string[] = [];
   private mainzellisteFields: string[] = [];
   private mainzellisteClaims: ClaimsConfig[] = [];
+  private mainzellisteRLMatcher: ConfigurationMatcherResponse = {name: "Epilink", thresholdMatch: 0.95, thresholdNonMatch: 0.7};
   private version: string = "";
   private layoutFooterLogos: FooterLogo[] = [];
   private copyConcatenatedIdEnabled: boolean = false;
@@ -124,6 +126,10 @@ export class AppConfigService {
     return this.mainzellisteClaims;
   }
 
+  getMainzellisteRLMatcher(): ConfigurationMatcherResponse {
+    return this.mainzellisteRLMatcher;
+  }
+
   getMainzellisteUrl(): string {
     return this.data[0].url.toString();
   }
@@ -177,6 +183,18 @@ export class AppConfigService {
         this.mainzellisteIdGenerators = idGenerators
         this.mainzellisteIdTypes = idGenerators.map( g => g.idType);
         return idGenerators;
+      })
+    ));
+  }
+
+  fetchMainzellisteRLMatcher() {
+    return lastValueFrom(this.httpClient.get<ConfigurationMatcherResponse>(this.data[0].url + "/configuration/matcher",
+      {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
+    .pipe(
+      catchError((e) => throwError( () => new Error("failed to fetch Matcher configuration"))),
+      map(matcher => {
+        this.mainzellisteRLMatcher = matcher
+        return matcher;
       })
     ));
   }

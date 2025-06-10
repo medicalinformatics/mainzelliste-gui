@@ -44,29 +44,33 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
+        <br>
+      </div>
+      <div *appHasPermission="Permission.CREATE_CONSENT" style="width: 90%; max-width: 700px;
+        display: flex; align-items: center; margin-bottom: 40px;">
+        <button style="float: left; margin-right: 0;" mat-raised-button
+                (click)="openConsentDialog()">
+          <mat-icon>{{!consent ? 'add' : 'edit'}}</mat-icon>
+          {{this.consent?.title || this.translate.instant('button_add_consent')}}
+        </button>
+        <button *ngIf="consent" mat-icon-button color="primary"
+                [matTooltip]="'button_delete_consent' | translate"
+                (click)="this.deleteConsent()" style="float:left;">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
       <br>
-    </div>
-    <div *appHasPermission="Permission.CREATE_CONSENT" style="width: 90%; max-width: 700px;
-      display: flex; align-items: center; margin-bottom: 40px;">
-      <button style="float: left; margin-right: 0;" mat-raised-button
-              (click)="openConsentDialog()">
-        <mat-icon>{{!consent ? 'add' : 'edit'}}</mat-icon>
-        {{this.consent?.title || this.translate.instant('button_add_consent')}}
-      </button>
-      <button *ngIf="consent" mat-icon-button color="primary"
-              [matTooltip]="'button_delete_consent' | translate"
-              (click)="this.deleteConsent()" style="float:left;">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </div>
-    <br>
-    <div style="width: 90%; max-width: 700px;">
-      <button mat-raised-button class="submit" type="submit" style="clear: both; float: left;"
-              [disabled]="this.disable(patientForm) || creatingInProgress"
-              (click)="createNewPatient(false)">{{'button_request' | translate}}
-        <mat-icon *ngIf="creatingInProgress" style="margin-left: 10px"><mat-spinner diameter="20"></mat-spinner></mat-icon>
-      </button>
+      <div style="width: 90%; max-width: 700px; display: flex; flex-direction: row;">
+        <button mat-raised-button class="submit" type="submit" style="clear: both; float: left;"
+                [disabled]="this.disable(patientForm) || creatingInProgress"
+                (click)="createNewPatient(false)">{{'button_request' | translate}}
+          <mat-icon *ngIf="creatingInProgress" style="margin-left: 10px"><mat-spinner diameter="20"></mat-spinner></mat-icon>
+        </button>
+        <button mat-raised-button class="submit" type="submit" style="clear: both; float: left;"
+            [disabled]="this.disable(patientForm) || creatingInProgress" (click)="openSimilarPatientDialog()">
+            {{'similar_patient_button' | translate}}
+          </button>
+      </div>
     </div>
   </div>
-</div>
 </form>
