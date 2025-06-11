@@ -1,3 +1,140 @@
 mat-form-field {
   width: 100%;
 }
+
+.upload-container {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.upload-container p {
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #666;
+}
+
+.file-list {
+  margin-top: 16px;
+  background: #f7fafd;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.07);
+  padding: 20px 16px;
+}
+
+.file-list h4 {
+  display: block;
+  font-size: 1.1rem;
+  color: #222;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.file-list h4::before {
+  content: none;
+  display: none;
+}
+
+.file-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.file-list li {
+  display: flex;
+  align-items: center;
+  background: #e3f2fd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  gap: 10px;
+  transition: background 0.2s;
+}
+
+.file-list li:hover {
+  background: #bbdefb;
+}
+
+.file-name {
+  font-weight: 500;
+  color: #1976d2;
+  flex: 1;
+  font-size: 1rem;
+  word-break: break-all;
+}
+
+.file-list button[mat-icon-button] {
+  margin-left: 8px;
+}
+
+.message-container {
+  margin-top: 16px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.file-list {
+  margin-top: 32px;
+  background: #f7fafd;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.07);
+  padding: 20px 16px;
+}
+
+.file-list h4 {
+  display: block;
+  font-size: 1.1rem;
+  color: #222;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.file-list h4::before {
+  content: none;
+  display: none;
+}
+
+.file-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.file-list li {
+  display: flex;
+  align-items: center;
+  background: #e3f2fd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  gap: 10px;
+  transition: background 0.2s;
+}
+
+.file-list li:hover {
+  background: #bbdefb;
+}
+
+.file-name {
+  font-weight: 500;
+  color: #1976d2;
+  flex: 1;
+  font-size: 1rem;
+  word-break: break-all;
+}
+
+.file-list button[mat-icon-button] {
+  margin-left: 8px;
+}

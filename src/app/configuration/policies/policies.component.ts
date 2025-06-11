@@ -12,6 +12,9 @@ import {
   ConfirmDeleteDialogComponent
 } from 'src/app/shared/components/confirm-delete-dialog/confirm-delete-dialog.component';
 import {Permission} from 'src/app/model/permission';
+import {
+  CsvPolicyImportDialogComponent
+} from '../csv-policy-import-dialog/csv-policy-import-dialog.component';
 
 @Component({
   selector: 'app-policies',
@@ -121,4 +124,12 @@ export class PoliciesComponent implements OnInit {
       }
     });
   }
+
+  openCsvImportDialog(policySetId: string) {
+    this.dialog.open(CsvPolicyImportDialogComponent, {
+      data: { policySetId },
+      width: '30vw'
+    });
+  }
+
 }
