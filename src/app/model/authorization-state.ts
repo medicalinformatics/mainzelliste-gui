@@ -29,6 +29,14 @@ export class AuthorizationState{
   EDIT_CONSENT_TEMPLATE: boolean = false;
   DELETE_CONSENT_TEMPLATE: boolean = false;
 
+  READ_CONSENT_POLICY: boolean = false;
+  CREATE_CONSENT_POLICY: boolean = false;
+  DELETE_CONSENT_POLICY: boolean = false;
+
+  READ_CONSENT_POLICY_SET: boolean = false;
+  CREATE_CONSENT_POLICY_SET: boolean = false;
+  DELETE_CONSENT_POLICY_SET: boolean = false;
+
   EDIT_CONFIGURATION: boolean = false;
   ADD_PATIENTS: boolean = false;
 
@@ -70,15 +78,20 @@ export class AuthorizationState{
     this.DELETE_CONSENT_TEMPLATE = operation.some(o => o == "D");
   }
 
-  setMiscellaneous(permissions: TenantPermission[]) {
-    //set default values
-    this.EDIT_CONFIGURATION = false;
-    this.ADD_PATIENTS = false
-    permissions.forEach( p => {
-      switch (p.miscellaneous){
-        case "tt_editConfiguration": this.EDIT_CONFIGURATION = true; break;
-        case "tt_addPatients": this.ADD_PATIENTS = true; break;
-      }
-    });
+  setPolicy(operation: Operation[]){
+    this.CREATE_CONSENT_POLICY = operation.some(o => o == "C");
+    this.READ_CONSENT_POLICY = operation.some(o => o == "R");
+    this.DELETE_CONSENT_POLICY = operation.some(o => o == "D");
+  }
+
+  setPolicySet(operation: Operation[]){
+    this.CREATE_CONSENT_POLICY_SET = operation.some(o => o == "C");
+    this.READ_CONSENT_POLICY_SET = operation.some(o => o == "R");
+    this.DELETE_CONSENT_POLICY_SET = operation.some(o => o == "D");
+  }
+
+  setMiscellaneous(permissions: (MiscellaneousPermission|undefined)[]) {
+    this.ADD_PATIENTS = permissions.some( p => p == "tt_addPatients");
+    this.EDIT_CONFIGURATION = permissions.some( p => p == "tt_editConfiguration");
   }
 }

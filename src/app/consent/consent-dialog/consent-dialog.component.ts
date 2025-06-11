@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {ConsentDetailComponent} from "../consent-detail/consent-detail.component";
 import {Consent} from "../consent.model";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-consent-dialog',
@@ -11,17 +11,18 @@ import {Consent} from "../consent.model";
 
 export class ConsentDialogComponent implements OnInit {
 
-  @ViewChild(ConsentDetailComponent) consentDetail!: ConsentDetailComponent;
   public inProgress: boolean = false
+  errorMessages: string[] = [];
+
   constructor(
     public dialogRef: MatDialogRef<ConsentDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public dataModel: {
       consent: Consent,
       templates: Map<string, string>,
+      updateConsentObservable: (consent: Consent) => Observable<any>,
       isSaveButton: boolean,
       readonly: boolean,
-      edit:boolean,
-      processDone: EventEmitter<boolean>
+      submitting: boolean
     }) {
   }
 
@@ -32,10 +33,24 @@ export class ConsentDialogComponent implements OnInit {
   }
 
   onSave() {
-    if(this.dataModel.processDone)
-      this.inProgress = true;
-    this.dialogRef.close(this.dataModel);
-    if(this.dataModel.processDone)
-      this.dataModel.processDone.subscribe(r => this.inProgress = false)
+    this.inProgress = true;
+    this.dataModel.submitting = true;
+    this.dataModel.updateConsentObservable(this.dataModel.consent).subscribe({
+      next: () => {},
+      error: e => {
+        this.dialogRef.close({
+          error: e.error,
+          dataModel: this.dataModel.consent
+        });
+        this.dataModel.submitting = false;
+        this.inProgress = false;
+      },
+      complete: () => {
+        this.dialogRef.close({
+          dataModel: this.dataModel.consent
+        });
+        this.inProgress = false;
+      }
+    });
   }
 }

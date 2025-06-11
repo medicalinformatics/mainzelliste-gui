@@ -134,4 +134,8 @@ export class ExternalPseudonymsComponent implements OnChanges {
   getFieldName(key: Id) {
     return key.idType + this.ids.indexOf(key);
   }
+
+  public getFieldClass(className: string){
+    return className + (this.readOnly ? " inputFieldDisabled" : "");
+  }
 }

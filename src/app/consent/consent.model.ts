@@ -1,5 +1,4 @@
-import {Questionnaire} from "fhir/r4";
-import {Moment} from "moment/moment";
+import {ConsentValidityPeriod} from "./consent-validity-period";
 
 /**
  * model consent dialog
@@ -8,7 +7,7 @@ export class Consent {
   constructor(
     public title: string,
     public createdAt: Date,
-    public period: number,
+    public validityPeriod: ConsentValidityPeriod,
     public items: ConsentItem[],
     public status: ConsentStatus,
     public templateId: string,
@@ -16,12 +15,26 @@ export class Consent {
     public scanUrls: Map<string, string> = new Map<string, string>(),
     public id?: string,
     public version?: string,
-    public validFrom?: Moment,
-    public validUntil?: Date,
     public patientId?: { idType: string, idString: string },
     public fhirResource?: fhir4.Consent,
     public templateFhirResource?: fhir4.Consent
   ) {
+  }
+  clone(){
+    return new Consent(this.title,
+      this.createdAt,
+      this.validityPeriod,
+      this.items.map( i => i instanceof ConsentChoiceItem ?
+        new ConsentChoiceItem(i.linkId??"", i.text, i.answer): i),
+      this.status,
+      this.templateId,
+      new Map(this.scans),
+      new Map(this.scanUrls),
+      this.id,
+      this.version,
+      this.patientId,
+      this.fhirResource,
+      this.templateFhirResource)
   }
 }
 

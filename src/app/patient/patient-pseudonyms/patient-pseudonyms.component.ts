@@ -93,4 +93,8 @@ export class PatientPseudonymsComponent{
       minWidth: 300
     }))
   }
+
+  public getFieldClass(className: string){
+    return className + (this.readOnly ? " inputFieldDisabled" : "");
+  }
 }
