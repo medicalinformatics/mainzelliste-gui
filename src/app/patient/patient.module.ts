@@ -24,6 +24,8 @@ import {
   ShowRelatedIdDialog
 } from './patient-pseudonyms/dialogs/show-related-id-dialog/show-related-id-dialog.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { ViewPatientComponent } from './view-patient/view-patient.component';
+import { ViewPseudonymsComponent } from './view-pseudonyms/view-pseudonyms.component';
 
 
 @NgModule({
@@ -38,7 +40,9 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
   ],
   exports: [
     PatientFieldsComponent,
-    PatientPseudonymsComponent
+    PatientPseudonymsComponent,
+    ViewPatientComponent,
+    ViewPseudonymsComponent
   ],
   declarations: [
     PatientFieldsComponent,
@@ -50,7 +54,9 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     EditPatientTentativeDialog,
     DeletePatientComponent,
     GenerateIdDialog,
-    ShowRelatedIdDialog
+    ShowRelatedIdDialog,
+    ViewPatientComponent,
+    ViewPseudonymsComponent
   ]
 })
 export class PatientModule {
