@@ -1,4 +1,4 @@
-import {DateTime} from "luxon";
+import {DateTime, Duration} from "luxon";
 import {TranslateService} from "@ngx-translate/core";
 
 export interface ConsentValidityPeriod {
@@ -11,9 +11,10 @@ export class Validity {
   days: number = 0;
   months: number = 0;
   years: number = 0;
+  duration: Duration | undefined;
 
-  constructor(day?: number, month?: number, year?: number) {
-    this.set(day, month, year);
+  constructor(day?: number, month?: number, year?: number, duration?: Duration) {
+    this.set(day, month, year, duration);
   }
 
   public toLocalText(translate: TranslateService) {
@@ -22,10 +23,11 @@ export class Validity {
     ${this.days}  ${translate.instant("consent_template.validity_days")}`;
   }
 
-  public set(day?: number, month?: number, year?: number) {
+  public set(day?: number, month?: number, year?: number, duration?: Duration) {
     this.days = day ?? 0;
     this.months = month ?? 0;
     this.years = year ?? 0;
+    this.duration = duration;
   }
 
   public isGreaterThan(period:Validity){
