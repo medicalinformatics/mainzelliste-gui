@@ -17,6 +17,8 @@ services:
       #NGINX_PORT: 4200
       MAINZELLISTE_URL: https://${HOST}/mainzelliste
       KEYCLOAK_URL: https://${HOST}/keycloak
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
       # supported languages: 'en-US' or 'de-DE'
       ML_UI_DEFAULT_LANGUAGE: de-DE
       ML_UI_MAIN_ID_TYPE: pid
@@ -33,6 +35,7 @@ services:
     environment:
       TOMCAT_REVERSEPROXY_FQDN: ${HOST}
       TOMCAT_REVERSEPROXY_SSL: "true"
+      ML_DB_HOST: mainzelliste-db
       ML_DB_NAME: ${ML_DB_NAME}
       ML_DB_USER: ${ML_DB_USER}
       ML_DB_PASS: ${ML_DB_PASS}
@@ -40,7 +43,7 @@ services:
       RELAXED_QUERY_CHARS: \|
       ML_ALLOWED_ORIGINS: https://${HOST}
       ML_OIDC_ISS: https://${HOST}/keycloak/realms/mainzelliste
-      #ML_OIDC_INTERNAL_ISS_BASE_URL: http://keycloak:8080
+      ML_OIDC_INTERNAL_ISS_BASE_URL: http://keycloak:8080
       ML_LOG_LEVEL: ERROR
       CATALINA_OPTS: "-XX:MaxRAMPercentage=95.0 -XX:+UseStringDeduplication"
     volumes:
