@@ -18,25 +18,29 @@
   <button mat-button color="primary" (click)="this.openExportPatientsDialog()">
     <mat-icon fontSet="material-symbols-outlined" matPrefix>file_export</mat-icon> {{"patientlist.button_export" | translate}}
   </button>
+   <button *ngIf="mergeActive" mat-button color="primary" (click)="executeMerge()" [disabled]="selection.selected.length != 2">
+    <mat-icon  fontSet="material-symbols-outlined" matPrefix>call_merge</mat-icon> {{"manual_merge.merge" | translate}}
+  </button>
+  <button mat-button color="primary" (click)="startMerge()">
+    <mat-icon fontSet="material-symbols-outlined" matPrefix> {{ !mergeActive ? "call_merge" : "cancel"}}</mat-icon> {{ (!mergeActive ? "manual_merge.merge" : "manual_merge.cancel") | translate}}
+  </button>
+ 
 </div>
 <section class="table-container mat-elevation-z8" tabindex="0">
   <table id="patientlist" mat-table [dataSource]="patients">
 
-<!--    <ng-container matColumnDef="select">-->
-<!--      <th mat-header-cell style="width: 3%!important;"*matHeaderCellDef>-->
-<!--        <mat-checkbox (change)="$event ? masterToggle() : null"-->
-<!--                      [checked]="selection.hasValue() && isAllSelected()"-->
-<!--                      [indeterminate]="selection.hasValue() && !isAllSelected()">-->
-<!--        </mat-checkbox>-->
-<!--      </th>-->
-<!--      <td mat-cell *matCellDef="let row">-->
-<!--        <mat-checkbox (click)="$event.stopPropagation()"-->
-<!--                      (change)="selectedRow($event, row)"-->
-<!--                      [checked]="selection.isSelected(row)"-->
-<!--                      [disabled]="loading">-->
-<!--        </mat-checkbox>-->
-<!--      </td>-->
-<!--    </ng-container>-->
+    <ng-container  matColumnDef="select">
+      <th mat-header-cell [hidden]="!mergeActive" style="width: 3%!important;"*matHeaderCellDef>
+      </th>
+      <td mat-cell [hidden]="!mergeActive" *matCellDef="let row">
+        <mat-checkbox style="accent-color:primary;"
+          (click)="$event.stopPropagation()"
+          (change)="selectedRow($event, row)"
+          [checked]="selection.isSelected(row)"
+          [disabled]="loading || (!selection.isSelected(row) && selection.selected.length >= 2)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
 
     <ng-container *ngFor="let idType of configuredIdTypes" matColumnDef="{{idType}}" [sticky]="this.defaultIdType === idType">
       <th mat-header-cell *matHeaderCellDef style="flex-flow: row;"> {{idType}}
@@ -99,7 +103,7 @@
         {{'patientlist.no_patient_found' | translate}}
       </td>
     </tr>
-    <tr mat-row *matRowDef="let row; columns: columns;" (click)="selection.toggle(row)"></tr>
+    <tr mat-row *matRowDef="let row; columns: columns;"></tr>
 
   </table>
 </section>

@@ -15,6 +15,8 @@ import {
   ExportPatientsDialogComponent
 } from "./dialogs/export-patients-dialog/export-patients-dialog.component";
 import {FilterItem} from "../model/filter-item";
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-patientlist',
@@ -40,6 +42,10 @@ export class PatientlistComponent implements OnInit {
 
   configuredIdTypes: string[] = [];
   public defaultIdType:  string = "";
+  public mergeActive: boolean = false;
+  public masterSelect: boolean = false;
+
+  mainIdType : string ="";
 
   constructor(
     public dialog: MatDialog,
@@ -49,8 +55,11 @@ export class PatientlistComponent implements OnInit {
     public consentService: ConsentService,
     public localStorageService:LocalStorageService,
     private translate: TranslateService,
-    public exportPatientsDialog: MatDialog
+    public exportPatientsDialog: MatDialog,
+    public router: Router,
   ) {
+    let internalIdTypes  = this.patientListService.getAllInternalIdTypes( "C");
+    this.mainIdType = this.patientListService.findDefaultIdType(internalIdTypes);
     this.patients = new MatTableDataSource<Patient>([]);
     this.fields = configService.data[0].fields.filter(f => !f.hideFromList);
     this.fieldNames = configService.data[0].fields.filter(f => !f.hideFromList).map(f => f.name);
@@ -83,24 +92,33 @@ export class PatientlistComponent implements OnInit {
   //   }
   // };
 
-  // isAllSelected() {
-  //   const numSelected = this.selection.selected.length;
-  //   const numRows = this.patients.data.length;
-  //   return numSelected == numRows;
-  // }
+  isAllSelected() {
+  const numSelected = this.selection.selected.length;
+   const numRows = this.patients.data.length;
+   return numSelected == numRows;
+  }
 
-  // /** Selects all rows if they are not all selected; otherwise clear selection. */
-  // masterToggle() {
-  //   this.isAllSelected() ?
-  //     this.selection.clear() :
-  //     this.patients.data.forEach(row => this.selection.select(row));
-  //   this.selectedPatients.emit(this.selection.selected);
-  // }
-  //
-  // selectedRow(event: MatCheckboxChange, row: Patient) {
-  //   event ? this.selection.toggle(row) : null;
-  //   this.selectedPatients.emit(this.selection.selected);
-  // }
+  /** clears selection. */
+  masterToggle() {
+    this.selection.clear();
+    this.selectedPatients.emit([]);
+    this.masterSelect = false;
+  }
+ 
+  selectedRow(event: MatCheckboxChange, row: Patient) {
+    if (event.checked) {
+      // Prevent selecting more than 2
+      if (this.selection.selected.length >= 2) {
+        event.source.checked = false; // Uncheck the checkbox
+        return;
+      }
+      this.selection.select(row);
+    } else {
+      this.selection.deselect(row);
+    }
+
+    this.selectedPatients.emit(this.selection.selected);
+  }
 
   ngOnInit(): void {
     this.configuredIdTypes = this.patientListService.getIdTypes("R");
@@ -111,6 +129,7 @@ export class PatientlistComponent implements OnInit {
     if(this.showTenantColumn())
       this.allColumnNames.push("tenants");
     this.allColumnNames.push("actions");
+    this.allColumnNames.unshift("select");
 
     // load columns from browser storage
     const storedColumns = this.localStorageService.patientListColumns
@@ -122,6 +141,8 @@ export class PatientlistComponent implements OnInit {
       if(this.showTenantColumn())
         this.columns.push("tenants");
       this.columns.push("actions");
+      this.columns.unshift("select");
+
       this.localStorageService.patientListColumns = this.columns
     }
   }
@@ -159,4 +180,22 @@ export class PatientlistComponent implements OnInit {
       }
     });
   }
+
+  public startMerge(){
+    this.mergeActive = !this.mergeActive;
+    if(!this.mergeActive){
+      this.selection.clear();
+      this.selectedPatients.emit([]);
+      this.masterSelect = false;
+    }
+  }
+  public executeMerge() {
+    const patients: Patient[] = this.selection.selected;  // get the selected patients
+    const patientIds = patients
+    .map(p => p.ids.find(id => id.idType === this.mainIdType)?.idString)
+    .filter(id => id !== undefined)
+    .join(',');
+    this.router.navigate(['/manuel-merge', patientIds, this.mainIdType]);
+  }
+
 }

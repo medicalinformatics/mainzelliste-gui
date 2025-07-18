@@ -432,5 +432,8 @@
 	"tentative.pseudonyms":"Pseudonyme",
 	"tentative.merge":"Mergen",
 	"tentative.split":"Spliten",
-	"tentative.identites": "Sekündäre Identitäten"
+	"tentative.identites": "Sekündäre Identitäten",
+
+	"manual_merge.cancel":"Abbrechen",
+	"manual_merge.merge":"Zusammenführen"
 }

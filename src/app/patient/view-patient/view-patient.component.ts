@@ -25,7 +25,6 @@ export class ViewPatientComponent implements OnInit {
   }
 
   ngOnInit(): void { 
-    console.log(this.patientFields)
     
   }
 

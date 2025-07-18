@@ -8,17 +8,19 @@ import {MatDialog} from '@angular/material/dialog';
 import {SolveTentativeOperationType} from "../../model/solve-tentative-payload";
 import {ErrorMessage, ErrorMessages} from "../../error/error-messages";
 import {HttpErrorResponse} from "@angular/common/http";
-import {MergeTentativeMatchDialogComponent} from "./dialog/merge-tentative-match-dialog.component";
-import {throwError} from "rxjs";
+import {catchError, throwError, forkJoin} from "rxjs";
 import { Field } from 'src/app/model/field';
-import { IdentityDialogComponent } from '../../shared/components/secondary-identities/dialog/secondary-identities-dialog.component';
+import { IdentityDialogComponent } from 'src/app/shared/components/secondary-identities/dialog/secondary-identities-dialog.component';
+import { Id } from 'src/app/model/id';
+import { MainzellisteUnknownError } from 'src/app/model/mainzelliste-unknown-error';
+import { AuthorizationService } from 'src/app/services/authorization.service';
 
 @Component({
-  selector: 'app-solve-tentative-match-patient',
-  templateUrl: './solve-tentative-match.component.html',
-  styleUrls: ['./solve-tentative-match.component.css']
+  selector: 'app-manual-merge-patient',
+  templateUrl: './manual-merge.component.html',
+  styleUrls: ['./manual-merge.component.css']
 })
-export class SolveTentativeMatchComponent implements OnInit {
+export class ManualMergeComponent implements OnInit {
   private readonly solveTentativeErrors: ErrorMessage[] = [
     ErrorMessages.SOLVE_TENTATIVE_MERGE_FAILED_MAIN_IDENTITY_IS_SECONDARY,
     ErrorMessages.SOLVE_TENTATIVE_MERGE_FAILED_SECONDARY_IDENTITY_ID_MAIN,
@@ -33,72 +35,80 @@ export class SolveTentativeMatchComponent implements OnInit {
 
   fields: Field[] = [];
 
+  mainIdType : string ="";
+
   constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly router: Router,
     private readonly titleService: GlobalTitleService,
     private readonly patientListService: PatientListService,
+    private authorizationService: AuthorizationService,
     public mergeTentativeConfirmDialog: MatDialog,
     public identityDialog: MatDialog,
     public translate: TranslateService,
 
   ) {
     this.activatedRoute.params.subscribe((params) => {
-      this.tentativeMatchId = parseInt(params["id"] ?? "0");
+      let ids = [];
+      if (params['ids']  !== undefined)
+         ids = params['ids'];
+      if(params['mainIdType'] !== undefined)
+        this.mainIdType = params['mainIdType'];
+      const idArray = ids ? ids.split(',') : [];
+      this.loadPatients(idArray);
     });
     this.changeTitle();
   }
 
   ngOnInit(): void {
-    this.loadTentativeMatch();
     this.translate.onLangChange.subscribe(() => {
       this.changeTitle();
     });
   }
 
+  loadPatients(idArray: string[]) {
+  const observables = idArray.map(idString =>
+    this.patientListService.readPatient(new Id(this.mainIdType, idString), "R").pipe(
+      catchError(e => {
+        if (e instanceof HttpErrorResponse && e.status === 404) {
+          this.router.navigate(['/**']).then();
+        }
+        return throwError(
+          new MainzellisteUnknownError(
+            this.translate.instant('error.patient_list_service_resolve_add_patient_token'),
+            e,
+            this.translate
+          )
+        );
+      })
+    )
+  );
+
+  forkJoin(observables).subscribe({
+    next: (patientArrays: any[][]) => {
+      const [firstPatientArray, secondPatientArray] = patientArrays;
+      this.patient1 = this.patientListService.convertToDisplayPatient(firstPatientArray[0], false, true, this.authorizationService.getTenants());
+      this.patient2 = this.patientListService.convertToDisplayPatient(secondPatientArray[0], false, true, this.authorizationService.getTenants()); 
+    },
+    error: (error) => {
+      console.error("Error loading patients", error);
+    }
+  });
+
+}
+
+
   changeTitle() {
     this.titleService.setTitle(this.translate.instant('solve_tentatives.title'), false, "alt_route");
   }
 
-  private loadTentativeMatch() {
-    this.patientListService.getTentative(this.tentativeMatchId)
-    .subscribe({
-      next: (r) => {
-        this.patient1 = r.bestMatchPatient
-        this.patient2 = r.assignedPatient
-      },
-      error: e => {
-        if (e instanceof HttpErrorResponse && (e.status == 404)) {
-          this.router.navigate(['/**']).then();
-        }
-        return throwError(() => e)
-      }
-    })
+
+  mergePatients() {
+   
   }
 
-  mergePatients(force: boolean) {
-    this.patientListService.solveTentative(this.tentativeMatchId, SolveTentativeOperationType.merge,
-      this.mainPatient == 1 ? this.patient1?.ids[0] : this.patient2?.ids[0], force)
-    .subscribe({
-      next: () => { this.router.navigate(["/tentatives"]).then()},
-      error: e => {
-        if (e instanceof HttpErrorResponse && this.solveTentativeErrors.find(msg => msg.match(e))) {
-          this.openMergeTentativeDialog();
-        }
-      }
-    });
-  }
-
-  splitPatients(){
-    this.patientListService.solveTentative(this.tentativeMatchId, SolveTentativeOperationType.split)
-    .subscribe({
-      next: () => { this.router.navigate(["/tentatives"]).then()},
-      error: e => {
-        if (e instanceof HttpErrorResponse && this.solveTentativeErrors.find(msg => msg.match(e))) {
-          this.openMergeTentativeDialog();
-        }
-      }
-    });
+  cancel(){
+    this.router.navigate(["/patientlist"]).then()
   }
 
   setMainPatient(index: number) {
@@ -110,17 +120,6 @@ export class SolveTentativeMatchComponent implements OnInit {
   }
    getIdType(patient: Patient | undefined): string {
     return patient?.ids?.[0]?.idType ?? '';
-  }
-
-  private openMergeTentativeDialog() {
-    const dialogRef = this.mergeTentativeConfirmDialog.open(MergeTentativeMatchDialogComponent, {
-      data: {},
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result)
-        this.mergePatients(true);
-    });
   }
 
   openIdentityDialog(idString : String, idType: String){

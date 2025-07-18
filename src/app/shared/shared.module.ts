@@ -30,6 +30,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { MessageCardComponent } from './components/message-card/message-card.component';
+import { IdentityDialogComponent } from './components/secondary-identities/dialog/secondary-identities-dialog.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -64,7 +65,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
     MatProgressSpinnerModule
   ],
-  declarations: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent, ConfirmDeleteDialogComponent, MessageCardComponent, SecondaryIdentitiesComponent],
+  declarations: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent, ConfirmDeleteDialogComponent, MessageCardComponent, SecondaryIdentitiesComponent, IdentityDialogComponent],
   exports: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent,SecondaryIdentitiesComponent,
     CommonModule,
     FormsModule,
@@ -86,7 +87,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatSlideToggleModule,
     DragDropModule,
     MatSnackBarModule,
-    TranslateModule, MessageCardComponent
+    TranslateModule, MessageCardComponent,
+    IdentityDialogComponent
   ]
 })
 export class SharedModule {

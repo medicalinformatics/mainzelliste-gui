@@ -26,6 +26,7 @@ import {
 import {
   SolveTentativeMatchComponent
 } from "./tentative-matches/solve-tentative-match/solve-tentative-match.component";
+import { ManualMergeComponent } from './patientlist/manual-merge/manual-merge.component';
 
 const routes: Routes = [
   // TODO: All Paths should have english wording.
@@ -51,7 +52,7 @@ const routes: Routes = [
       // {path: 'create-consent-template', component: CreateConsentTemplateComponent, data: { permission: Permission.CREATE_CONSENT}},
       { path: 'tentatives', component: TentativeMatchesListComponent, data: { permission: Permission.READ_TENTATIVES } },
       { path: 'resolve-unsure-match/:id', component: SolveTentativeMatchComponent, data: { permission: Permission.READ_TENTATIVE }},
-
+      { path: 'manuel-merge/:ids/:mainIdType', component: ManualMergeComponent, data: {permission: Permission.EDIT_PATIENT}},
     ]
   },
   { path: 'access-denied', component: AccessDeniedComponent },
