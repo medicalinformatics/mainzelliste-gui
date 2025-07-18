@@ -106,7 +106,7 @@ chmod u+x prepare-keycloak-import-file.sh
 ```
 5. Start mainzelliste
 ````bash 
-docker compose up -f docker-compose.prod.yml -d
+docker compose -f docker-compose.prod.yml up -d
 ````
 > ✅ The application should now be accessible at: ``https://{HOST}``
 

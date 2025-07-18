@@ -48,7 +48,7 @@ services:
     secrets:
       - mainzelliste.docker.conf
     depends_on:
-      - db
+      - mainzelliste-db
   mainzelliste-db:
     image: postgres:16-alpine
     environment:
