@@ -14,6 +14,7 @@ import { SessionService } from './session.service';
 import { PatientList } from '../model/patientlist';
 import { AppConfigService } from '../app-config.service';
 import { Identity} from '../model/identity'
+import { FilterItem } from '../model/filter-item';
 
 @Injectable({
   providedIn: 'root'
@@ -350,13 +351,12 @@ export class PatientService {
           // override patients
           response.patients = displayPatients;
           return response;
-        }
         // override patients
         response.patients = displayPatients;
         return response;
       }
       )
-    )
+    );
   }
 
   createPatient(patient: Patient, idTypes: string[], sureness: boolean): Observable<Id> {

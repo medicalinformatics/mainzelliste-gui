@@ -48,7 +48,7 @@
     (click)="openNewIdDialog()" [ngClass]="this.hasAllIds() ? '': 'idcard-button'" style="margin-bottom: 15px">
     <mat-icon matTooltip="{{'button_generate_id' | translate}}">add_box</mat-icon>
   </button>
-  <ng-container *ngIf="this.consentService.isServiceEnabled()">
+  <ng-container>
     <button mat-fab *appHasPermission="Permission.CREATE_CONSENT" [disabled]="this.hasAllTemplateIds()"
       (click)="openAddNewConsentDialog()" [ngClass]="this.hasAllTemplateIds() ? '': 'idcard-button'">
       <mat-icon matTooltip="{{'button_add_consent' | translate}}">assignment_turned_in</mat-icon>
@@ -72,7 +72,7 @@
     <app-secondary-identities></app-secondary-identities>
   </ng-container>
 
-  <ng-container *ngIf="this.consentService.isServiceEnabled()">
+  <ng-container>
     <mat-card *appHasPermission="Permission.READ_CONSENT" id="consents"
       style="box-sizing: border-box; display: flex; flex-direction: column;">
       <mat-card-title style="margin: 0 1.25%; align-self: start;">{{'idcard.consent_title' | translate}}</mat-card-title>
@@ -162,4 +162,5 @@
       </table>
     </mat-card-content>
   </mat-card>
+  </ng-container>
 </form>
