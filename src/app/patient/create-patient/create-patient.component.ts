@@ -20,6 +20,7 @@ import {Consent} from "../../consent/consent.model";
 import {ConsentService} from "../../consent/consent.service";
 import {Permission} from "../../model/permission";
 import {Operation} from "../../model/tenant";
+import {SimilarPatientDialog} from './similar-patient-dialog';
 
 export interface IdTypSelection {
   idType: string,
@@ -56,6 +57,8 @@ export class CreatePatientComponent implements OnInit {
   externalIdTypes: IdTypSelection[] = [];
   public creatingInProgress: boolean = false;
 
+  mainIdType : string = "";
+
   constructor(
     public translate: TranslateService,
     public consentDialog: MatDialog,
@@ -80,12 +83,12 @@ export class CreatePatientComponent implements OnInit {
 
   ngOnInit(): void {
     let internalIdTypes  = this.patientListService.getAllInternalIdTypes( "C");
-    let mainIdType = this.patientListService.findDefaultIdType(internalIdTypes);
-    this.selectedInternalIdTypes.push(mainIdType);
+    this.mainIdType = this.patientListService.findDefaultIdType(internalIdTypes);
+    this.selectedInternalIdTypes.push(this.mainIdType);
 
     this.internalIdTypeSelection = internalIdTypes
     .map(t => {
-      return {idType: t, added: mainIdType == t}
+      return {idType: t, added: this.mainIdType == t}
     });
 
     this.filteredInternalIdTypes = this.chipListInputCtrl.valueChanges.pipe(
@@ -223,6 +226,17 @@ export class CreatePatientComponent implements OnInit {
     let emptyIds = !this.patient.ids.some(id => id.idString.length > 0);
     let isIdsValid = patientForm.form.get('externalIds')?.valid ?? true;
     return !emptyFields && !patientForm.form.valid || emptyFields && (emptyIds || !isIdsValid);
+  }
+
+  openSimilarPatientDialog(): void {
+    const dialogRef = this.tentativeDialog.open(SimilarPatientDialog, {
+      data: { patient: this.patient, mainIdType: this.mainIdType }, //give current patient info
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result)
+        console.log(result);
+    });
   }
 
   openConsentDialog() {

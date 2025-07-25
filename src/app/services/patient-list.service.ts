@@ -660,4 +660,50 @@ export class PatientListService {
     }
     return result;
   }
+
+  public getMatches(patient: Patient, mainIdType:string ) {
+      console.log('getCheckMatch called');
+      return this.sessionService.createToken("checkMatch", new AddPatientTokenData(
+          [mainIdType]
+      )).pipe(
+          mergeMap(token => {
+              console.log('Token received:', token);
+              return this.resolveCheckMatch(token.id, patient);
+          }),
+          catchError((error) => {
+              console.error('Error occurred in getCheckMatch:', error);
+              if (error.status >= 400 && error.status < 500) {
+                  return throwError(() => new Error("failed to fetch matches"));
+              } else {
+                  return throwError(() => new Error("failed to fetch matches"));
+              }
+          })
+      );
+  }
+  
+  private resolveCheckMatch(tokenId: string | undefined, patient: Patient) {
+      let body = new URLSearchParams();
+      let patientFields = this.convertToPatientFields(patient.fields, this.configService.getMainzellisteFields());
+      for (const name in patientFields) {
+        body.set(name, patientFields[name]);
+      }
+      return this.httpClient.post(this.patientList.url + "/patients/checkMatch/" + tokenId, body, {
+          headers: new HttpHeaders()
+              .set('Content-Type', 'application/x-www-form-urlencoded')
+              .set('mainzellisteApiVersion', '3.2')
+      }).pipe(
+          mergeMap(response => {
+              return of({ data: response as any[] });
+          }),
+          catchError((error) => {
+              console.error('Error occurred in getCheckMatch:', error);
+              if (error.status >= 400 && error.status < 500) {
+                  return throwError(() => new Error("failed to fetch matches"));
+              } else {
+                  return throwError(() => new Error("failed to fetch matches"));
+              }
+          })
+      );
+  }
+
 }
