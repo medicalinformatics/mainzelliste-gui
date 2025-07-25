@@ -2,6 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef,} from "@angular/material/dialog";
 import {Id} from "../../model/id";
 import {Observable} from "rxjs";
+import { PatientListService } from 'src/app/services/patient-list.service';
 
 @Component({
   selector: 'new-id-dialog',
@@ -14,6 +15,7 @@ export class NewIdDialog implements OnInit {
   public resultIdType: string = ""
 
   constructor(
+    private patientListService: PatientListService,
     public dialogRef: MatDialogRef<NewIdDialog>,
     @Inject(MAT_DIALOG_DATA) public data: {
       relatedAssociatedIdsMap : Map<string, Id[]>,
@@ -31,6 +33,10 @@ export class NewIdDialog implements OnInit {
 
   getExternalIds(): Id[] {
     return this.data.relatedAssociatedIdsMap.get(this.resultIdType) || [];
+  }
+
+  getExternalIdTypes(): string[] {
+    return this.patientListService.getAllExternalIdTypes()
   }
 
   onCancel(): void {

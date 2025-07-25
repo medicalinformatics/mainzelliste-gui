@@ -9,6 +9,7 @@ import {AuthGuard} from "./guards/auth-guard.service";
 import {Permission} from "./model/permission";
 import {CreatePatientComponent} from "./patient/create-patient/create-patient.component";
 import {EditPatientComponent} from "./patient/edit-patient/edit-patient.component";
+import {EditPatientdataComponent} from './patient/edit-patientdata/edit-patientdata.component';
 import {AccessDeniedComponent} from "./access-denied/access-denied.component";
 import {EditConsentComponent} from "./consent/edit-consent/edit-consent.component";
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
@@ -32,6 +33,7 @@ const routes: Routes = [
       {path: 'configuration', component: ConfigurationComponent, data: { anyPermissions: [Permission.EDIT_CONFIGURATION, Permission.READ_CONSENT_POLICY_SET] }},
       {path: 'idcard/:idType/:idString', component: IdcardComponent, data : { permission: Permission.READ_PATIENT, checkIdType:true}},
       {path: 'add-new-patient', component: CreatePatientComponent, data: { permission: Permission.CREATE_PATIENT }},
+      {path: 'edit-patientdata/:idType/:idString', component: EditPatientdataComponent, data: { permission: Permission.EDIT_PATIENT, checkIdType: true } },
       {path: 'edit-patient/:idType/:idString', component: EditPatientComponent, data: { permission: Permission.EDIT_PATIENT, checkIdType:true}},
       {path: 'patientlist', component: PatientlistViewComponent, data : { permission: Permission.READ_PATIENT }},
       //{path: 'patient/:idType/:idString/add-consent', component: AddConsentComponent, data: { permission: Permission.CREATE_CONSENT, checkIdType:true}},
