@@ -90,8 +90,6 @@
                       (click)="backToFirst()">
                 {{'button_stepper_back' | translate}}
               </button>
-            </div>
-            <div class="button-row-right">
               <button mat-raised-button
                       class="submit"
                       (click)="addPatients()"
@@ -99,6 +97,14 @@
                 {{'bulkPseudonymization.button_stepper_pseudonymize' | translate}}
               </button>
             </div>
+            <!-- <div class="button-row-right">
+              <button mat-raised-button
+                      class="submit"
+                      (click)="addPatients()"
+                      [disabled]="this.addingInProgress || this.selectedInternalIdTypes.length == 0">
+                {{'bulkPseudonymization.button_stepper_pseudonymize' | translate}}
+              </button>
+            </div> -->
           </div>
         </div>
       </div>

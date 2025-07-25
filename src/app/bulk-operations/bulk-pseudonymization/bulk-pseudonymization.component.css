@@ -76,9 +76,5 @@ mat-paginator{
 .button-row-left {
   display: flex;
   justify-content: flex-start;
-}
-
-.button-row-right {
-  display: flex;
-  justify-content: flex-end;
+  grid-column-gap: 15px;
 }

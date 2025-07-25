@@ -415,7 +415,7 @@
   "bulkPseudonymization.progress_status_prepare_result": "CSV-Datei wird erstellt",
   "bulkPseudonymization.pseudonymization_in_progress": "Dieser Vorgang kann einige Minuten in Anspruch nehmen.",
   "bulkPseudonymization.pseudonymization_done": "Es wurden ${} Patienten erfolgreich pseudonymisiert",
-  "bulkPseudonymization.tentative_matches": "Unsichere Matches",
+  "bulkPseudonymization.tentative_matches": "Unsichere Matches hinzufügen",
 
 	"CSVFileUploader.upload_error_some_unknown_header": "Folgende CSV-Header-Werte ['${}'] sind unbekannt",
 	"CSVFileUploader.upload_error_invalid_file": "Ungültige CSV-Datei",
