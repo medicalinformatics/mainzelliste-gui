@@ -1,3 +1,6 @@
+## Unreleased
+### Fix
+- recalculation of consent period end date
 # Changelog
 ## [1.0.0] - 2025-05-09
 ### Feature
