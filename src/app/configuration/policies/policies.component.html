@@ -44,6 +44,9 @@
                 (click)="deletePolicySet(element)">
           <mat-icon>delete</mat-icon>
         </button>
+        <button mat-icon-button (click)="openCsvImportDialog(element.id)">
+          <mat-icon>upload_file</mat-icon>
+        </button>
       </div>
     </td>
   </ng-container>
