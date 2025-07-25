@@ -112,3 +112,10 @@
   </div>
   <br>
 </ng-container>
+
+<ng-container *ngIf="patientSignature != []">
+  <div>
+    {{patientSignature[0]}}
+    <img [src]="patientSignature[0]" alt="Signature" />
+  </div>
+</ng-container>

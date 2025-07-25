@@ -40,6 +40,7 @@ export class ConsentDetailComponent implements OnInit {
   uploadProgress: number = 0;
   uploadSubscription: Subscription | undefined = undefined;
   consentScans: Map<string,string> = new Map<string, string>();
+  patientSignature: string[] = [];
 
   constructor(
       private consentService: ConsentService,
@@ -62,15 +63,22 @@ export class ConsentDetailComponent implements OnInit {
       this.templateSelection.options.forEach((data: MatOption) => data.deselect());
     }
 
-    // load scans id
+    // load scans id and signature
     if(this.readOnly && this.authorizationService.hasPermission(Permission.READ_CONSENT_SCANS)){
       this.consentService.getConsentProvenance(this.consent.id + '/_history/' + this.consent.version || "").pipe(
         map(p => (p[0]?.entity ?? [])
           .filter(e => e.role == "source")
           .map(e => e.what.reference?.substring("DocumentReference/".length) || "")
         )
-      ).subscribe(ids => ids.forEach(id => this.consentScans.set(id, id)))
+      ).subscribe(ids => ids.forEach(id => this.consentScans.set(id, id)));
+      this.consentService.getConsentProvenance(this.consent.id + '/_history/' + this.consent.version || "").pipe(
+        map(p => (p[0]?.signature ?? [])
+          .filter(s => s.type.some(t => t.code == "1.2.840.10065.1.12.1.7"))
+          .map(s => s.data || "")
+        )
+      ).subscribe(data => this.patientSignature.push(data[0]));
     }
+    console.log(this.patientSignature)
   }
 
   initDataModel(consentTemplateId: MatSelectChange) {
