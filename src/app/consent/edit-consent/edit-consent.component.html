@@ -1,7 +1,7 @@
 <form #consentForm="ngForm">
 <div style="height:100%; width:100%;">
   <div style="margin-bottom: 15%;width: 75%; margin-left: 2.5%">
-    <app-consent-detail [(consent)]="dataModel" [edit]="true"></app-consent-detail>
+    <app-consent-detail [(consent)]="dataModel"></app-consent-detail>
     <br/>
     <div style="width: 90%; max-width: 700px; float: left">
       <button mat-raised-button class="submitBreak" *ngIf="dataModel" (click)="cancel()"

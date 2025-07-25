@@ -40,12 +40,20 @@ flex-flow: column;">
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
-          <button *appHasPermission="Permission.DELETE_CONSENT_TEMPLATE" mat-icon-button
-                  color="primary" class="ml-icon-button"
-                  [matTooltip]="'button_delete' | translate"
-                  (click)="openDeleteTemplateDialog(element.id)">
-            <mat-icon>delete</mat-icon>
-          </button>
+          <div style="display: flex; flex-flow: row; justify-content: right;">
+            <button *appHasPermission="Permission.READ_CONSENT_TEMPLATE" mat-icon-button
+                    color="primary" class="ml-icon-button"
+                    [matTooltip]="'button_view_consent_template' | translate"
+                    (click)="openViewDialog(element.id)">
+              <mat-icon>pageview</mat-icon>
+            </button>
+            <button *appHasPermission="Permission.DELETE_CONSENT_TEMPLATE" mat-icon-button
+                    color="primary" class="ml-icon-button"
+                    [matTooltip]="'button_delete_consent_template' | translate"
+                    (click)="openDeleteTemplateDialog(element.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
         </td>
       </ng-container>
 

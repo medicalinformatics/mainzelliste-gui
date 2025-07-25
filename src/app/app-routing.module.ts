@@ -29,7 +29,7 @@ const routes: Routes = [
       {path: 'bulk-id-generation', component: BulkIdGenerationComponent, data : { permission: Permission.GENERATE_IDS, checkIdType:true}},
       {path: 'bulk-pseudonymization', component: BulkPseudonymizationComponent, data : { permission: Permission.ADD_PATIENTS}},
       {path: 'info', component: InfoComponent, data: { permission: Permission.DEFAULT }},
-      {path: 'configuration', component: ConfigurationComponent, data: { permission: Permission.EDIT_CONFIGURATION }},
+      {path: 'configuration', component: ConfigurationComponent, data: { anyPermissions: [Permission.EDIT_CONFIGURATION, Permission.READ_CONSENT_POLICY_SET] }},
       {path: 'idcard/:idType/:idString', component: IdcardComponent, data : { permission: Permission.READ_PATIENT, checkIdType:true}},
       {path: 'add-new-patient', component: CreatePatientComponent, data: { permission: Permission.CREATE_PATIENT }},
       {path: 'edit-patient/:idType/:idString', component: EditPatientComponent, data: { permission: Permission.EDIT_PATIENT, checkIdType:true}},

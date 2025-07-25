@@ -1,0 +1,71 @@
+.policy-table {
+    margin: 1em 0;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  .policyId-row, .policyName-row {
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  @media (max-width: 600px) {
+    .policy-table {
+      display: block;
+      width: 100%;
+    }
+  
+    .policy-table thead, .policy-table tbody, .policy-table th, .policy-table td, .policy-table tr {
+      display: block;
+    }
+  
+    .policy-table thead tr {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+  
+    .policy-table tr {
+      margin: 0 0 1rem 0;
+    }
+  
+    .policy-table tr:nth-child(odd) {
+      background: #f2f2f2;
+    }
+  
+    .policy-table td {
+      border: none;
+      border-bottom: 1px solid #eee;
+      position: relative;
+      padding-left: 50%;
+    }
+  
+    .policy-table td:before {
+      position: absolute;
+      top: 0;
+      left: 6px;
+      width: 45%;
+      padding-right: 10px;
+      white-space: nowrap;
+      content: attr(data-column);
+      font-weight: bold;
+      
+    }
+}
+
+.mat-dialog-content {
+    overflow: auto;
+  }
+
+  .mat-column-actions {
+    width: 10%;
+    text-align: right;
+  }
+  
+  table {
+    width: 100%;
+  }
+  
+  
