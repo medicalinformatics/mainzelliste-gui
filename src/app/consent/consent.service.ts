@@ -1177,7 +1177,7 @@ export class ConsentService {
               display: "Consent Signature"
             }
           ],
-          when: _moment().format("YYYY-MM-DDThh:mm:ssZ"),
+          when: DateTime.now().toISO(),
           who: {
             identifier: this.convertToFhirIdentifier(patientId)
           },
