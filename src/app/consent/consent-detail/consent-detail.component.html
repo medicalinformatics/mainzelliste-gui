@@ -120,7 +120,6 @@
 
 <ng-container *ngIf="patientSignature != []">
   <div>
-    {{patientSignature[0]}}
-    <img [src]="patientSignature[0]" alt="Signature" />
+    <img [src]="'data:image/png;base64,' + patientSignature[0]" alt="Signature" />
   </div>
 </ng-container>
