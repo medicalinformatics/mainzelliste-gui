@@ -1,71 +1,130 @@
 <form #patientForm="ngForm">
-<div style="height:100%;width:100%;">
-    <h4>{{'createPatient.enter_patient_data' | translate}}</h4>
-    <app-patient-fields (fieldEvent)="fieldsChanged($event)"
-                        [fields]="patient.fields"></app-patient-fields>
-    <br>
-    <div *ngIf="this.getExternalIdTypes('C').length > 0" style="width: 90%; max-width: 700px;">
-      <h4>{{'createPatient.add_external_pseudonym' | translate}}</h4>
-      <app-external-pseudonyms [readOnly]="false" [ids]="this.patient.ids"
-                               [removeEmptyId]="true" [permittedOperation]="'C'"></app-external-pseudonyms>
+  <div style="height: 100%; width: 100%">
+    <h4>{{ "createPatient.enter_patient_data" | translate }}</h4>
+    <app-patient-fields
+      (fieldEvent)="fieldsChanged($event)"
+      [fields]="patient.fields"
+    ></app-patient-fields>
+    <br />
+    <div
+      *ngIf="this.getExternalIdTypes('C').length > 0"
+      style="width: 90%; max-width: 700px"
+    >
+      <h4>{{ "createPatient.add_external_pseudonym" | translate }}</h4>
+      <app-external-pseudonyms
+        [readOnly]="false"
+        [ids]="this.patient.ids"
+        [removeEmptyId]="true"
+        [permittedOperation]="'C'"
+      ></app-external-pseudonyms>
     </div>
-    <br>
-    <div *ngIf="!this.appConfigService.isIdSelectionDisabled()"
-         style="width: 90%; max-width: 700px;" ngModelGroup="internalIdTypes"
-         #internalIdTypesModelGroup="ngModelGroup">
-      <h4>{{'createPatient.add_pseudonym_type' | translate}}</h4>
+    <br />
+    <div
+      *ngIf="!this.appConfigService.isIdSelectionDisabled()"
+      style="width: 90%; max-width: 700px"
+      ngModelGroup="internalIdTypes"
+      #internalIdTypesModelGroup="ngModelGroup"
+    >
+      <h4>{{ "createPatient.add_pseudonym_type" | translate }}</h4>
       <mat-form-field color="primary" style="width: 76.5%">
-        <mat-label>{{'createPatient.pseudonym_types' | translate}}</mat-label>
-        <mat-chip-list #chipList aria-label="Fruit selection"
-                       name="internalIdTypesChipList"
-                       [ngModel]="this.selectedInternalIdTypes.join(',')"
-                       required>
-          <mat-chip *ngFor="let idType of this.selectedInternalIdTypes"
-                    [selectable]="true"
-                    [removable]="true"
-                    (removed)="removeInternalIdType(idType)">
-            {{idType}}
+        <mat-label>{{ "createPatient.pseudonym_types" | translate }}</mat-label>
+        <mat-chip-list
+          #chipList
+          aria-label="Fruit selection"
+          name="internalIdTypesChipList"
+          [ngModel]="this.selectedInternalIdTypes.join(',')"
+          required
+        >
+          <mat-chip
+            *ngFor="let idType of this.selectedInternalIdTypes"
+            [selectable]="true"
+            [removable]="true"
+            (removed)="removeInternalIdType(idType)"
+          >
+            {{ idType }}
             <button matChipRemove>
               <mat-icon>cancel</mat-icon>
             </button>
           </mat-chip>
-          <input [formControl]="chipListInputCtrl"
-                 [matChipInputFor]="chipList"
-                 [matAutocomplete]="auto"
-                 [matChipInputAddOnBlur]="true"
-                 (matChipInputTokenEnd)="findAndAddInternalIdType($event)">
+          <input
+            [formControl]="chipListInputCtrl"
+            [matChipInputFor]="chipList"
+            [matAutocomplete]="auto"
+            [matChipInputAddOnBlur]="true"
+            (matChipInputTokenEnd)="findAndAddInternalIdType($event)"
+          />
         </mat-chip-list>
-        <mat-error>{{'createPatient.no_pseudonym_type_error' | translate}}</mat-error>
-        <mat-autocomplete #auto="matAutocomplete"
-                          (optionSelected)="selectedInternalIdType($event)">
-          <mat-option style="height: auto" *ngFor="let idType of this.filteredInternalIdTypes | async"
-                      [value]="idType.idType">
-            <div [hidden]="idType.added">{{idType.idType}}</div>
+        <mat-error>{{
+          "createPatient.no_pseudonym_type_error" | translate
+        }}</mat-error>
+        <mat-autocomplete
+          #auto="matAutocomplete"
+          (optionSelected)="selectedInternalIdType($event)"
+        >
+          <mat-option
+            style="height: auto"
+            *ngFor="let idType of this.filteredInternalIdTypes | async"
+            [value]="idType.idType"
+          >
+            <div [hidden]="idType.added">{{ idType.idType }}</div>
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-      <br>
+      <br />
     </div>
-    <div *appHasPermission="Permission.CREATE_CONSENT" style="width: 90%; max-width: 700px;
-      display: flex; align-items: center; margin-bottom: 40px;">
-      <button style="float: left; margin-right: 0;" mat-raised-button
-              (click)="openConsentDialog()">
-        <mat-icon>{{!consent ? 'add' : 'edit'}}</mat-icon>
-        {{this.consent?.title || this.translate.instant('button_add_consent')}}
+    <div
+      *appHasPermission="Permission.CREATE_CONSENT"
+      style="
+        width: 90%;
+        max-width: 700px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 40px;
+      "
+    >
+      <button
+        style="float: left; margin-right: 0"
+        mat-raised-button
+        (click)="openConsentDialog()"
+      >
+        <mat-icon>{{ !consent ? "add" : "edit" }}</mat-icon>
+        {{
+          this.consent?.title || this.translate.instant("button_add_consent")
+        }}
       </button>
-      <button *ngIf="consent" mat-icon-button color="primary"
-              [matTooltip]="'button_delete_consent' | translate"
-              (click)="this.deleteConsent()" style="float:left;">
+      <span
+        *ngIf="
+          this.appConfigService.getConsentRequired() && consent === undefined
+        "
+        style="padding-left: 16px"
+        >{{ this.translate.instant("button_helper_consent_required") }}</span
+      >
+      <button
+        *ngIf="consent"
+        mat-icon-button
+        color="primary"
+        [matTooltip]="'button_delete_consent' | translate"
+        (click)="this.deleteConsent()"
+        style="float: left"
+      >
         <mat-icon>delete</mat-icon>
       </button>
     </div>
-    <br>
-    <div style="width: 90%; max-width: 700px;">
-      <button mat-raised-button class="submit" type="submit" style="clear: both; float: left;"
-              [disabled]="this.disable(patientForm) || creatingInProgress"
-              (click)="createNewPatient(false)">{{'button_request' | translate}}
-        <mat-icon *ngIf="creatingInProgress" style="margin-left: 10px"><mat-spinner diameter="20"></mat-spinner></mat-icon>
+    <br />
+    <div style="width: 90%; max-width: 700px">
+      <button
+        mat-raised-button
+        class="submit"
+        type="submit"
+        style="clear: both; float: left"
+        [disabled]="this.disable(patientForm) || creatingInProgress"
+        (click)="createNewPatient(false)"
+      >
+        {{ "button_request" | translate }}
+        <mat-icon *ngIf="creatingInProgress" style="margin-left: 10px"
+          ><mat-spinner diameter="20"></mat-spinner
+        ></mat-icon>
       </button>
     </div>
-</div>
+  </div>
 </form>

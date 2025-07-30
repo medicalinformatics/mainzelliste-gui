@@ -57,4 +57,5 @@ export interface BetaFeatures {
   disableBulkIdGeneration?:boolean
   disableIdSelection?:boolean
   onkostarUrl?:string
+  isConsentRequired?:boolean
 }

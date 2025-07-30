@@ -9,7 +9,7 @@
         "clientId": "${KEYCLOAK_CLIENT_ID}"
       },
       "mainIdType": "${ML_UI_MAIN_ID_TYPE}",
-      "showAllIds": ${ML_UI_SHOW_ALL_IDS},
+      "showAllIds": "${ML_UI_SHOW_ALL_IDS}",
       "fields": [
         { "i18n": "first_name_text", "name": "Vorname", "mainzellisteField": "vorname", "semantic": "firstname"},
         { "i18n": "last_name_text", "name": "Nachname", "mainzellisteField": "nachname", "semantic": "lastname"},
@@ -18,17 +18,18 @@
         { "i18n": "residence_text", "name": "Wohnort", "mainzellisteField": "ort", "semantic": "city"},
         { "i18n": "zip_code_text", "name": "PLZ", "mainzellisteField": "plz", "semantic": "postalCode"}
       ],
-      "debug": ${ML_UI_DEBUG_MODE},
+      "debug": "${ML_UI_DEBUG_MODE}",
       "betaFeatures": {
-        "consent": ${ML_UI_ENABLE_CONSENT},
+        "consent": "${ML_UI_ENABLE_CONSENT}",
         "copyConcatenatedId": true,
         "copyConcatenateSeparation": ": ",
         "copyId": false,
         "configuration": false,
         "showDomainsInIDCard": false,
         "onkostarUrl": "${ML_UI_ONKOSTAR_URL}",
-        "disableBulkIdGeneration": ${ML_UI_DISABLE_BULK_ID},
-        "disableIdSelection": ${ML_UI_DISABLE_ID_SELECTION}
+        "disableBulkIdGeneration": "${ML_UI_DISABLE_BULK_ID}",
+        "disableIdSelection": "${ML_UI_DISABLE_ID_SELECTION}",
+        "isConsentRequired": "${ML_UI_CONSENT_REQUIRED}"
       }
     }
   ]

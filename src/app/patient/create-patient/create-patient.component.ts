@@ -1,49 +1,49 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {Patient} from "../../model/patient";
-import {PatientService} from "../../services/patient.service";
-import {Router} from "@angular/router";
-import {FormControl, NgForm} from "@angular/forms";
-import {PatientListService} from "../../services/patient-list.service";
-import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
-import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
-import {ErrorNotificationService} from "../../services/error-notification.service";
-import {GlobalTitleService} from "../../services/global-title.service";
-import {Observable, of, retry} from "rxjs";
-import {concatMap, map, mergeMap, startWith} from "rxjs/operators";
-import {MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {MainzellisteError} from "../../model/mainzelliste-error.model";
-import {ErrorMessages} from "../../error/error-messages";
-import {UserAuthService} from "../../services/user-auth.service";
-import {TranslateService} from '@ngx-translate/core';
-import {ConsentDialogComponent} from "../../consent/consent-dialog/consent-dialog.component";
-import {Consent} from "../../consent/consent.model";
-import {ConsentService} from "../../consent/consent.service";
-import {Permission} from "../../model/permission";
-import {Operation} from "../../model/tenant";
-import { AppConfigService } from 'src/app/app-config.service';
+import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import { Patient } from "../../model/patient";
+import { PatientService } from "../../services/patient.service";
+import { Router } from "@angular/router";
+import { FormControl, NgForm } from "@angular/forms";
+import { PatientListService } from "../../services/patient-list.service";
+import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
+import { MatChipInputEvent, MatChipList } from "@angular/material/chips";
+import { ErrorNotificationService } from "../../services/error-notification.service";
+import { GlobalTitleService } from "../../services/global-title.service";
+import { Observable, of, retry } from "rxjs";
+import { concatMap, map, mergeMap, startWith } from "rxjs/operators";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { MainzellisteError } from "../../model/mainzelliste-error.model";
+import { ErrorMessages } from "../../error/error-messages";
+import { UserAuthService } from "../../services/user-auth.service";
+import { TranslateService } from "@ngx-translate/core";
+import { ConsentDialogComponent } from "../../consent/consent-dialog/consent-dialog.component";
+import { Consent } from "../../consent/consent.model";
+import { ConsentService } from "../../consent/consent.service";
+import { Permission } from "../../model/permission";
+import { Operation } from "../../model/tenant";
+import { AppConfigService } from "src/app/app-config.service";
 
 export interface IdTypSelection {
-  idType: string,
-  added: boolean,
-  associated?: boolean
+  idType: string;
+  added: boolean;
+  associated?: boolean;
 }
 
 @Component({
-  selector: 'app-create-patient',
-  templateUrl: './create-patient.component.html',
-  styleUrls: ['./create-patient.component.css']
+  selector: "app-create-patient",
+  templateUrl: "./create-patient.component.html",
+  styleUrls: ["./create-patient.component.css"],
 })
 export class CreatePatientComponent implements OnInit {
   public readonly Permission = Permission;
   @Input() fields: Array<string> = [];
 
-  externalIdTypesFormControl = new FormControl('');
-  @ViewChild('chipList') chipList!: MatChipList;
+  externalIdTypesFormControl = new FormControl("");
+  @ViewChild("chipList") chipList!: MatChipList;
 
   patient: Patient = new Patient();
   patientService: PatientService;
   patientListService: PatientListService;
-  userAuthService : UserAuthService;
+  userAuthService: UserAuthService;
   consent?: Consent;
 
   internalIdTypeSelection: IdTypSelection[] = [];
@@ -62,13 +62,13 @@ export class CreatePatientComponent implements OnInit {
     public consentDialog: MatDialog,
     patientService: PatientService,
     patientListService: PatientListService,
-    userAuthService : UserAuthService,
+    userAuthService: UserAuthService,
     public errorNotificationService: ErrorNotificationService,
     private router: Router,
     private titleService: GlobalTitleService,
     public tentativeDialog: MatDialog,
     public consentService: ConsentService,
-    public appConfigService: AppConfigService
+    public appConfigService: AppConfigService,
   ) {
     this.patientService = patientService;
     this.patientListService = patientListService;
@@ -77,81 +77,94 @@ export class CreatePatientComponent implements OnInit {
   }
 
   changeTitle() {
-    this.titleService.setTitle(this.translate.instant('createPatient.request_personal_identifier'));
+    this.titleService.setTitle(
+      this.translate.instant("createPatient.request_personal_identifier"),
+    );
   }
 
   ngOnInit(): void {
-    let internalIdTypes  = this.patientListService.getAllInternalIdTypes( "C");
+    let internalIdTypes = this.patientListService.getAllInternalIdTypes("C");
     let mainIdType = this.patientListService.findDefaultIdType(internalIdTypes);
     this.selectedInternalIdTypes.push(mainIdType);
 
-    this.internalIdTypeSelection = internalIdTypes
-    .map(t => {
-      return {idType: t, added: mainIdType == t}
+    this.internalIdTypeSelection = internalIdTypes.map((t) => {
+      return { idType: t, added: mainIdType == t };
     });
 
     this.filteredInternalIdTypes = this.chipListInputCtrl.valueChanges.pipe(
-      startWith(''),
-      map(value => {
+      startWith(""),
+      map((value) => {
         let searchValue = value;
-        if (value == undefined)
-          searchValue = "";
-        else if (typeof searchValue !== "string")
-          searchValue = value.idType
-        return this.internalIdTypeSelection
-        .filter(e => !e.added && e.idType.toLowerCase().includes(searchValue.toLowerCase()))
+        if (value == undefined) searchValue = "";
+        else if (typeof searchValue !== "string") searchValue = value.idType;
+        return this.internalIdTypeSelection.filter(
+          (e) =>
+            !e.added &&
+            e.idType.toLowerCase().includes(searchValue.toLowerCase()),
+        );
       }),
     );
 
     this.translate.onLangChange.subscribe(() => {
       this.changeTitle();
-    })
+    });
   }
 
   createNewPatient(sureness: boolean) {
     this.errorNotificationService.clearMessages();
     //create patient
     this.creatingInProgress = true;
-    of(this.patient).pipe(
-      concatMap(p => this.patientService.createPatient(p, this.selectedInternalIdTypes, sureness)),
-      retry({
-        delay: e => {
-              if (e instanceof MainzellisteError) {
-                // handle session timeout
-                if (e.errorMessage == ErrorMessages.ML_SESSION_NOT_FOUND)
-                  return this.userAuthService.retryLogin(this.router.url)
-                // handle tentative
-                else if (e.errorMessage == ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH) {
-                  this.openCreatePatientTentativeDialog();
-                  // do not emit any value in order to send a complete notification on subscription
-                  this.creatingInProgress = false;
-                  return of();
-                }
+    of(this.patient)
+      .pipe(
+        concatMap((p) =>
+          this.patientService.createPatient(
+            p,
+            this.selectedInternalIdTypes,
+            sureness,
+          ),
+        ),
+        retry({
+          delay: (e) => {
+            if (e instanceof MainzellisteError) {
+              // handle session timeout
+              if (e.errorMessage == ErrorMessages.ML_SESSION_NOT_FOUND)
+                return this.userAuthService.retryLogin(this.router.url);
+              // handle tentative
+              else if (
+                e.errorMessage ==
+                ErrorMessages.CREATE_PATIENT_CONFLICT_POSSIBLE_MATCH
+              ) {
+                this.openCreatePatientTentativeDialog();
+                // do not emit any value in order to send a complete notification on subscription
+                this.creatingInProgress = false;
+                return of();
               }
-              throw e;
             }
-      }),
-      mergeMap( newId => {
-        if (this.consent !== undefined) {
-          this.consent.patientId = newId;
-          return this.consentService.addConsent(this.consent)
-          .pipe(
-            // create document reference
-            mergeMap(c => {
-              if((this.consent?.scanUrls?.size || 0) > 0)
-                return this.consentService.createScansAndProvenance(this.consent, (c as fhir4.Consent).id || "")
-              else
-                return of(newId);
-            }),
-            map(c => newId)
-          );
-        } else
-          return of(newId);
-      })
-    ).subscribe(newId => {
-      this.creatingInProgress = false;
-      this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
-    })
+            throw e;
+          },
+        }),
+        mergeMap((newId) => {
+          if (this.consent !== undefined) {
+            this.consent.patientId = newId;
+            return this.consentService.addConsent(this.consent).pipe(
+              // create document reference
+              mergeMap((c) => {
+                if ((this.consent?.scanUrls?.size || 0) > 0)
+                  return this.consentService.createScansAndProvenance(
+                    this.consent,
+                    (c as fhir4.Consent).id || "",
+                  );
+                else return of(newId);
+              }),
+              map((c) => newId),
+            );
+          } else return of(newId);
+        }),
+      )
+      .subscribe((newId) => {
+        this.creatingInProgress = false;
+        this.router.navigate(["/idcard", newId.idType, newId.idString]).then();
+      });
   }
 
   fieldsChanged(newFields: { [p: string]: any }) {
@@ -163,7 +176,7 @@ export class CreatePatientComponent implements OnInit {
   }
 
   findAndAddInternalIdType($event: MatChipInputEvent): void {
-    const value = ($event.value || '').trim();
+    const value = ($event.value || "").trim();
     if (value) {
       this.addInternalIdType(value);
     }
@@ -179,34 +192,44 @@ export class CreatePatientComponent implements OnInit {
       idTypeSelection.added = true;
       this.chipListInputCtrl.setValue(null);
       this.chipList.errorState = false;
-      this.chipListInputCtrl.updateValueAndValidity({onlySelf: false, emitEvent: true});
+      this.chipListInputCtrl.updateValueAndValidity({
+        onlySelf: false,
+        emitEvent: true,
+      });
     }
   }
 
   getExternalIdTypes(permittedOperation: Operation): string[] {
-    return this.patientListService.getIdGenerators(true, permittedOperation).map(g => g.idType);
+    return this.patientListService
+      .getIdGenerators(true, permittedOperation)
+      .map((g) => g.idType);
   }
 
   removeInternalIdType(idType: string) {
-    const value = (idType || '').trim();
+    const value = (idType || "").trim();
 
     this.internalIdTypeSelection
-    .filter(e => e.idType == value)
-    .forEach(e => {
-      e.added = false;
-    })
+      .filter((e) => e.idType == value)
+      .forEach((e) => {
+        e.added = false;
+      });
 
     // remove id type from selected id types
-    let index = this.selectedInternalIdTypes.findIndex(e => e == value);
+    let index = this.selectedInternalIdTypes.findIndex((e) => e == value);
     if (index > -1) {
       this.selectedInternalIdTypes.splice(index, 1);
       this.chipList.errorState = this.selectedInternalIdTypes.length == 0;
-      this.chipListInputCtrl.updateValueAndValidity({onlySelf: false, emitEvent: true});
+      this.chipListInputCtrl.updateValueAndValidity({
+        onlySelf: false,
+        emitEvent: true,
+      });
     }
   }
 
   private findIdType(idType: string): IdTypSelection | undefined {
-    return this.internalIdTypeSelection.find(e => e.idType == idType && !e.added);
+    return this.internalIdTypeSelection.find(
+      (e) => e.idType == idType && !e.added,
+    );
   }
 
   openCreatePatientTentativeDialog(): void {
@@ -214,34 +237,42 @@ export class CreatePatientComponent implements OnInit {
       data: {},
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result)
-        this.createNewPatient(true);
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) this.createNewPatient(true);
     });
   }
 
   disable(patientForm: NgForm): boolean {
     let emptyFields = !Object.keys(this.patient.fields).length;
-    let emptyIds = !this.patient.ids.some(id => id.idString.length > 0);
-    let isIdsValid = patientForm.form.get('externalIds')?.valid ?? true;
-    return !emptyFields && !patientForm.form.valid || emptyFields && (emptyIds || !isIdsValid);
+    let emptyIds = !this.patient.ids.some((id) => id.idString.length > 0);
+    let isIdsValid = patientForm.form.get("externalIds")?.valid ?? true;
+    // consent is required & consent not set --> invalid
+    let consentValid = this.appConfigService.getConsentRequired()
+      ? this.consent !== undefined
+      : true;
+    return (
+      (!emptyFields && !patientForm.form.valid) ||
+      (emptyFields && (emptyIds || !isIdsValid)) ||
+      !consentValid
+    );
   }
 
   openConsentDialog() {
-    this.consentDialog.open(ConsentDialogComponent, {
-      width: '900px',
-      disableClose: true,
-      data: {
-        consent: !this.consent? this.consent : this.consent.clone(),
-        edit: this.consent != undefined,
-        isSaveButton: true,
-        updateConsentObservable: (consent: Consent) => of(consent)
-      }
-    })
-    .afterClosed().subscribe(result => {
-      if(result)
-        this.consent = result?.dataModel;
-    });
+    this.consentDialog
+      .open(ConsentDialogComponent, {
+        width: "900px",
+        disableClose: true,
+        data: {
+          consent: !this.consent ? this.consent : this.consent.clone(),
+          edit: this.consent != undefined,
+          isSaveButton: true,
+          updateConsentObservable: (consent: Consent) => of(consent),
+        },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) this.consent = result?.dataModel;
+      });
   }
 
   deleteConsent() {
@@ -250,14 +281,11 @@ export class CreatePatientComponent implements OnInit {
 }
 
 @Component({
-  selector: 'create-patient-tentative-dialog',
-  templateUrl: 'create-patient-tentative-dialog.html',
+  selector: "create-patient-tentative-dialog",
+  templateUrl: "create-patient-tentative-dialog.html",
 })
 export class CreatePatientTentativeDialog {
-  constructor(
-    public dialogRef: MatDialogRef<CreatePatientTentativeDialog>
-  ) {
-  }
+  constructor(public dialogRef: MatDialogRef<CreatePatientTentativeDialog>) {}
 
   cancel(): void {
     this.dialogRef.close();
