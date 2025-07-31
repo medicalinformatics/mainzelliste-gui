@@ -34,7 +34,8 @@ export class ExternalPseudonymsComponent implements OnChanges {
     private patientListService: PatientListService,
     public config: AppConfigService,
     public generateIdDialog: MatDialog,
-    public showRelatedIdDialog: MatDialog
+    public showRelatedIdDialog: MatDialog,
+    private appConfigService: AppConfigService
   ) {
   }
 
@@ -46,16 +47,21 @@ export class ExternalPseudonymsComponent implements OnChanges {
       .forEach(e => e.added = true);
 
   }
-
+  
   addExternalIdField(selectedExternalIdType: MatSelect) {
+    this.addExternalIdFieldString(selectedExternalIdType.value)
+    // TODO: Verify what this line does. Does it remove the item from the selection?
+    selectedExternalIdType.value = undefined
+  }
+
+  addExternalIdFieldString(idType: string) {
     //add external id to patient model
-    addIfNotExist(new Id(selectedExternalIdType.value, ''), this.ids,
-        e => !this.isAssociatedIdType(selectedExternalIdType.value) && e.idType == selectedExternalIdType.value
+    addIfNotExist(new Id(idType, ''), this.ids,
+        e => !this.isAssociatedIdType(idType) && e.idType == idType
     );
 
-    this.externalIdTypes.filter(t => t.idType == selectedExternalIdType.value)
+    this.externalIdTypes.filter(t => t.idType == idType)
     .forEach(t => t.added = true);
-    selectedExternalIdType.value = undefined
   }
 
   removeExternalIdField(idType: string) {
@@ -80,7 +86,9 @@ export class ExternalPseudonymsComponent implements OnChanges {
           .map(t => { return {idType: t, added: false, associated: false } }),
         ...this.patientListService.getAssociatedIdTypes(true, this.permittedOperation)
           .map(t => { return {idType: t, added: false, associated: true } })];
+      this.appConfigService.getRequiredExternalIds().forEach(type => this.addExternalIdFieldString(type))
     }
+    
     return this.externalIdTypes;
   }
 
@@ -137,5 +145,9 @@ export class ExternalPseudonymsComponent implements OnChanges {
 
   public getFieldClass(className: string){
     return className + (this.readOnly ? " inputFieldDisabled" : "");
+  }
+  
+  isRequired(idType: string) {
+    return this.appConfigService.getRequiredExternalIds().some(type => type === idType);
   }
 }

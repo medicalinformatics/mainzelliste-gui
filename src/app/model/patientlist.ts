@@ -57,5 +57,7 @@ export interface BetaFeatures {
   disableBulkIdGeneration?:boolean
   disableIdSelection?:boolean
   onkostarUrl?:string
-  isConsentRequired?:boolean
+  isConsentRequired?:boolean,
+  // NOTE: We expect a , separated string here
+  requiredExternalIds?:string
 }

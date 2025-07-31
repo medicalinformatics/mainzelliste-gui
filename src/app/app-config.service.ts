@@ -41,6 +41,7 @@ export class AppConfigService {
   private disableBulkIdGeneration: boolean = false;
   private disableIdSelection: boolean = false;
   private isConsentRequired: boolean = false;
+  private requiredExternalIds: string[] = [];
 
   constructor(
     private httpClient: HttpClient,
@@ -78,6 +79,8 @@ export class AppConfigService {
               this.data[0].betaFeatures?.showDomainsInIDCard ?? false;
             this.isConsentRequired =
               this.data[0].betaFeatures?.isConsentRequired ?? false;
+            this.requiredExternalIds =
+              this.data[0].betaFeatures?.requiredExternalIds?.split(",") ?? [];
 
             if (
               !this.data[0].genderFieldValues ||
@@ -178,6 +181,10 @@ export class AppConfigService {
 
   getConsentRequired() {
     return this.isConsentRequired;
+  }
+
+  getRequiredExternalIds() {
+    return this.requiredExternalIds;
   }
 
   getVersion(): string {
