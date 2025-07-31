@@ -29,7 +29,7 @@
         "onkostarUrl": "${ML_UI_ONKOSTAR_URL}",
         "disableBulkIdGeneration": "${ML_UI_DISABLE_BULK_ID}",
         "disableIdSelection": "${ML_UI_DISABLE_ID_SELECTION}",
-        "isConsentRequired": "${ML_UI_CONSENT_REQUIRED}",
+        "isConsentRequired": ${ML_UI_CONSENT_REQUIRED},
         "requiredExternalIds": "${ML_UI_REQUIRED_EXTIDS}"
       }
     }
