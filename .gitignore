@@ -30,6 +30,9 @@ chrome-profiler-events*.json
 !.vscode/extensions.json
 .history/*
 
+# IDE - direnv
+.direnv
+
 # misc
 /.angular/cache
 /.sass-cache

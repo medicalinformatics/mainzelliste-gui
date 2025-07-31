@@ -12,6 +12,7 @@
           <input style="width: 90%"
                  [(ngModel)]="id.idString" [name]="this.getFieldName(id)"
                  matInput [readonly]="readOnly || this.permittedOperation != 'C' && this.isAssociatedIdType(id.idType)"
+                 [required]="this.isRequired(id.idType)"
                  value="{{id.idString}}">
           <span matSuffix style="display:flex; flex-flow: row; justify-content:flex-end; column-gap:6px; row-gap: 0px">
             <button mat-icon-button *ngIf="readOnly && this.config.isCopyIdEnabled()" [cdkCopyToClipboard]="id.idString"
@@ -33,7 +34,7 @@
             </button>
           </span>
         </mat-form-field>
-        <button *ngIf="!readOnly && (this.permittedOperation == 'C' || !this.isAssociatedIdType(id.idType))" mat-icon-button color="primary"
+        <button *ngIf="!this.isRequired(id.idType) && !readOnly && (this.permittedOperation == 'C' || !this.isAssociatedIdType(id.idType))" mat-icon-button color="primary"
                 aria-label="Externes Pseudonym entfernen"
                 (click)="this.removeExternalIdField(id.idType)"
                 style="margin-top: 9px;">
