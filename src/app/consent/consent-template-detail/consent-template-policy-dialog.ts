@@ -101,7 +101,7 @@ export class ConsentTemplatePolicyDialog implements OnInit {
         policySet: this.policySets.find(s => s.id == this.selectedPolicySetId),
         displayText: this.selectedPolicy?.text,
         code: this.selectedPolicy?.code,
-        validity: new Validity(this.validityPeriod.days, this.validityPeriod.months, this.validityPeriod.years)
+        validity: new Validity(this.validityPeriod.days, this.validityPeriod.months, this.validityPeriod.years, this.validityPeriod.duration)
       },
       cachedPoliciesMap: this.dataModel.cachedPoliciesMap,
     });

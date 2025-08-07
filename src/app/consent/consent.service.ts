@@ -775,11 +775,12 @@ export class ConsentService {
   }
 
   deserializeTemplateValidity(startDate: string, endDate: string): Validity {
-    const start = DateTime.fromISO(startDate)
+    const start = DateTime.fromISO(startDate);
     // include the last day
-    const end = DateTime.fromISO(endDate).plus({days: 1})
-    const duration = end.diff(start, ['years', 'months', 'days']).toObject()
-    return new Validity(duration.days ?? 0, duration.months ?? 0, duration.years ?? 0);
+    const end = DateTime.fromISO(endDate).plus({days: 1});
+    const duration = end.diff(start, ['years', 'months', 'days']).toObject();
+    const durationDays = end.diff(start, ['days']);
+    return new Validity(duration.days ?? 0, duration.months ?? 0, duration.years ?? 0, durationDays);
   }
 
   mapValidityToDate(validityPeriod: Validity, startDate: string): string {
@@ -788,7 +789,7 @@ export class ConsentService {
 
   addPeriodToDate(startDate: string, period: Validity): DateTime {
     return DateTime.fromISO(startDate)
-    .plus({ days: period.days ?? 0, months: period.months ?? 0, years: period.years ?? 0 })
+    .plus(period.duration ? period.duration : { days: period.days ?? 0, months: period.months ?? 0, years: period.years ?? 0 })
     .minus({day: 1});
   }
 
