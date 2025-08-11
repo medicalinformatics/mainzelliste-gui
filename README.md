@@ -93,11 +93,11 @@ git clone https://github.com/medicalinformatics/mainzelliste-gui.git
 >- [resources/keycloak/import/mainzelliste-realm.json](./resources/keycloak/import/mainzelliste-realm.json) (Only for the initialisation of keycloak)
 >- [resources/keycloak/themes/mainzelliste.jar](./resources/keycloak/themes/mainzelliste.jar)
 
-3. Configure Environment variables: 
-   4. Copy the file `.env.default` to `.env`
-   5. Replace the environment variable `HOST` with the server's domain name or IP address. 
-   6. Choose strong and unpredictable values for API Keys or other sensitive values 
-   7. You may also define additional environment variables in ``.env`` especially for sensitive values used in the backend configuration file e.g API Key or PID parameters. 
+3. Configure Environment variables:
+   1. Copy the file `.env.default` to `.env`
+   2. Replace the environment variable `HOST` with the server's domain name or IP address. 
+   3. Choose strong and unpredictable values for API Keys or other sensitive values 
+   4. You may also define additional environment variables in ``.env`` especially for sensitive values used in the backend configuration file e.g API Key or PID parameters. 
    > ⚠️ As referred in the backend [installation guideline](https://bitbucket.org/medicalinformatics/mainzelliste/src/master/docker.md), a backend environment variable must start with `ML_`
 4. Prepare keycloak configuration: Replace `{HOST}` with your server's domain name or IP address and run the script to prepare keycloak initialisation file
 ```bash
