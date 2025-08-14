@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
 import { PatientListService } from "src/app/services/patient-list.service";
 import { Patient } from "src/app/model/patient";
 import { catchError } from "rxjs/operators";
@@ -8,13 +7,14 @@ import { AppConfigService } from "src/app/app-config.service";
 import { Field, FieldType } from 'src/app/model/field';
 import { PageEvent } from '@angular/material/paginator';
 import { PatientService } from 'src/app/services/patient.service';
+import { IdCardDialogComponent } from './dialog/id-card-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-secondary-identities',
   templateUrl: './secondary-identities.component.html',
   styleUrls: ['./secondary-identities.component.css']
 })
-
 export class SecondaryIdentitiesComponent implements OnInit {
   columns: string[] = [];
   allColumnNames: string[] = [];
@@ -42,17 +42,18 @@ export class SecondaryIdentitiesComponent implements OnInit {
     private patientListService: PatientListService,
     private authorizationService: AuthorizationService,
     private configService: AppConfigService,
+    public idCardDialog: MatDialog,
     private patientService: PatientService,
   ) {
     this.fieldNames = configService.data[0].fields.filter(f => !f.hideFromList).map(f => f.name);
     this.showAllIds = configService.data[0].showAllIds != undefined && configService.data[0].showAllIds;
     this.fields = configService.data[0].fields.filter(f => !f.hideFromList);
-    console.log(this.idString);
-    console.log(this.idType)
   }
 
-  ngOnInit() {
-    this.displayedColumns = [...this.fields.map(field => field.name)];
+  ngOnInit() {    
+    // Add action column to displayed columns
+    this.displayedColumns = [...this.fields.map(field => field.name), 'actions'];
+    
     this.getSecondaryIdentities().pipe(
       catchError(e => {
         this.secondaryIdentities = [];
@@ -99,4 +100,16 @@ export class SecondaryIdentitiesComponent implements OnInit {
     return field == FieldType.DATE; 
   }
 
+  openIDCardDialog(patient: Patient) {
+  
+  const dialogRef = this.idCardDialog.open(IdCardDialogComponent, {
+    width: '1100px',
+    maxHeight: '95vw',
+    data: { patient: patient }
+  });
+  
+  dialogRef.afterClosed().subscribe(result => {
+    console.log('Dialog was closed', result);
+  });
+  }
 }

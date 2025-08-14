@@ -146,7 +146,6 @@ function initializeAppFactory(
     NewIdDialog,
     AccessDeniedComponent,
     PageNotFoundComponent,
-    ConsentTemplatesComponent,
     BulkIdGenerationComponent,
     BulkIdGenerationTableComponent,
     BulkIdGenerationEmptyFieldsDialog,
@@ -157,6 +156,14 @@ function initializeAppFactory(
     SolveTentativeMatchComponent,
     MergeTentativeMatchDialogComponent,
     IdentityDialogComponent,
+    SecondaryIdentitiesComponent, 
+    IdCardDialogComponent,
+  ],
+  exports: [
+    SecondaryIdentitiesComponent, 
+    IdCardDialogComponent, 
+    IdcardComponent
+    // Removed CdkTableModule from exports
   ],
   imports: [
     SharedModule,
@@ -171,7 +178,8 @@ function initializeAppFactory(
     MatBadgeModule,
     MatPaginatorModule,
     MatNativeDateModule,
-    MatTableModule,
+    MatTableModule, // This provides everything needed for mat-table
+    // Removed CdkTableModule from imports - not needed
     MatCheckboxModule,
     MatTooltipModule,
     HttpClientModule,

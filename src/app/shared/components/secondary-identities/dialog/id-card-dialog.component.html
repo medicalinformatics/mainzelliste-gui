@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Secondary Identities</h2>
+<mat-dialog-content>
+  <div style="display: flex; flex-direction: row;">
+  <mat-card id="patientendaten"
+      style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; flex: 1">
+      <mat-card-title-group style="margin: 0 0 0 2.5%;">
+        <mat-card-title style="flex-grow: 2;">{{'idcard.title_patient_data' | translate}}</mat-card-title>
+        <div>
+          <button style="transform: scale(0.8)" mat-icon-button class="mini-icon-button"
+            [cdkCopyToClipboard]="getContactInfo()" matTooltip="{{'copy_data' | translate}}">
+            <mat-icon>file_copy</mat-icon>
+          </button>
+          <button mat-icon-button class="mini-icon-button" (click)="exportCSV()"
+            matTooltip="{{'export_data' | translate}}">
+            <mat-icon>download</mat-icon>
+          </button>
+        </div>
+      </mat-card-title-group>
+      <view-patient-fields [patientFields]="patient.fields"></view-patient-fields>
+    </mat-card>
+
+    <mat-card id="pseudonyme" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; flex: 1">
+      <mat-card-title style="margin: 0 0 0 2.5%; align-self: start">{{'idcard.title_pseudonyms' | translate}}</mat-card-title>
+      <app-view-pseudonyms [ids]="patient.ids"></app-view-pseudonyms>
+    </mat-card>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="closeDialog()">{{'button_close' | translate}}</button>
+</mat-dialog-actions>

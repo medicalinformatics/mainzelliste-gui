@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IdcardComponent } from './secondary-identities.component';
+import { SecondaryIdentitiesComponent } from './secondary-identities.component';
 
-describe('IdcardComponent', () => {
-  let component: IdcardComponent;
-  let fixture: ComponentFixture<IdcardComponent>;
+describe('SecondaryIdentitiesComponent', () => {
+  let component: SecondaryIdentitiesComponent;
+  let fixture: ComponentFixture<SecondaryIdentitiesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IdcardComponent ]
+      declarations: [ SecondaryIdentitiesComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(IdcardComponent);
+    fixture = TestBed.createComponent(SecondaryIdentitiesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
