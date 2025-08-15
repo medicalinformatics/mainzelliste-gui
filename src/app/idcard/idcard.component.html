@@ -16,13 +16,13 @@
           </button>
         </div>
       </mat-card-title-group>
-      <view-patient-fields [patientFields]="patient.fields"></view-patient-fields>
+      <app-patient-fields style="overflow: auto; height: 100%; margin: 0 0 0 2.5%;" [readOnly]=true [fields]="patient.fields"></app-patient-fields>
     </mat-card>
 
     <mat-card id="pseudonyme" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; flex: 1">
       <mat-card-title style="margin: 0 0 0 2.5%; align-self: start">{{'idcard.title_pseudonyms' | translate}}</mat-card-title>
-      <app-view-pseudonyms [ids]="patient.ids"></app-view-pseudonyms>
-    </mat-card>
+      <app-patient-pseudonyms style="overflow: auto; height: 100%; margin: 0 0 0 2.5%;" [readOnly]=true [ids]="patient.ids" [permittedOperation]="'R'"
+        (generateId)="this.generateId($event.idType, $event.idString, $event.newIdType)"></app-patient-pseudonyms>    </mat-card>
   </div>
   <section style="display: flex; flex: 1 1 1%; margin-left:2%; flex-flow: column;">
     <!--      <button mat-fab style="background-color:#053E6A; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">-->
