@@ -157,14 +157,6 @@ function initializeAppFactory(
     SolveTentativeMatchComponent,
     MergeTentativeMatchDialogComponent,
     IdentityDialogComponent,
-    SecondaryIdentitiesComponent, 
-    IdCardDialogComponent,
-  ],
-  exports: [
-    SecondaryIdentitiesComponent, 
-    IdCardDialogComponent, 
-    IdcardComponent
-    // Removed CdkTableModule from exports
   ],
   imports: [
     SharedModule,
