@@ -35,7 +35,6 @@ export class ConsentDialogComponent implements OnInit {
   onSave() {
     this.inProgress = true;
     this.dataModel.submitting = true;
-    this.dataModel.readonly = true;
     this.dataModel.updateConsentObservable(this.dataModel.consent).subscribe({
       next: () => {},
       error: e => {
@@ -50,8 +49,6 @@ export class ConsentDialogComponent implements OnInit {
         this.dialogRef.close({
           dataModel: this.dataModel.consent
         });
-        this.dataModel.submitting = false;
-        this.dataModel.readonly = false;
         this.inProgress = false;
       }
     });

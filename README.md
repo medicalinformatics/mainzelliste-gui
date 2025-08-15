@@ -4,7 +4,11 @@
 [![Build](https://github.com/medicalinformatics/mainzelliste-gui/actions/workflows/ci.yml/badge.svg)](https://github.com/medicalinformatics/mainzelliste-gui/actions/workflows/ci.yml)
 [![Docker Pulls](https://img.shields.io/docker/pulls/medicalinformatics/mainzelliste-gui.svg)](https://hub.docker.com/r/medicalinformatics/mainzelliste-gui/)
 
-With the Mainzelliste UI your can easily manage your patient list, creating new ID, editing patient fields or deleting patient.   
+Mainzelliste offers an intuitive web interface that makes managing patient data simple and efficient. 
+Easily create new patient IDs, update patient fields, or remove patient as needed.
+In addition, Mainzelliste supports comprehensive consent management and enables bulk operations such 
+as large-scale pseudonymization and automated ID generation—ideal for handling high volumes of data 
+in clinical and research environments.
 
 ![Mainzelliste UI Screenshot](./doc/images/mainzelliste-ui-screenshot-browser.png)
 ## Installation Guidelines
@@ -26,37 +30,88 @@ the docker image of the ui uses several environment variables :
 ### Version Compatibility
 Choosing the right version of the [Mainzelliste](http://mainzelliste.de) backend.
 
-| Mainzelliste-UI      | Mainzelliste (backend) |
-|----------------------|------------------------|
-| 0.0.4  (Beta)        | 12.x                   |
-| 0.0.5  (development) | 13.x (development)     |
+| Mainzelliste-UI | Mainzelliste (backend) |
+|-----------------|------------------------|
+| 1.0.x           | 1.13.x                 |
+| 0.0.4  (Beta)   | 1.12.x                 |
 
 ### Running on Linux
+#### Quick start
+Start Mainzelliste in few steps:
 1. copy the file `.env.default` to `.env` and set the environment variable `HOST` to the server name or ip address.
-2. set your server name or ip address (`{HOST}`) in keyclok configuration
+2. set your server name or ip address (`{HOST}`) including the port of ui service (eg. **4200** see [docker-compose.yml](./docker-compose.yml#L13)) in keycloak configuration
 ```bash
 chmod u+x prepare-keycloak-import-file.sh
 ./prepare-keycloak-import-file.sh {HOST}
 ```
-3. run ``docker-compose up -d``
+3. run ``docker compose up -d``
+> ✅ The application should now be accessible at: ``http://{HOST}``
 
-#### Running in production mode behind a reverse proxy
-Adjust your docker compose file, depending on the configuration of the reverse proxy:
-  1. in `keycloak` service:
-     1. change the `command` to `command: ["start"]`
-     2. replace the environment variable `KC_HOSTNAME_URL` with :
-```yml
-      KC_PROXY: edge
-      KC_HOSTNAME: ${HOST}
-      KC_HTTP_RELATIVE_PATH: /keycloak
+#### Run in production mode behind a reverse proxy
+The following steps describe how to set up Mainzelliste in production mode behind an Apache2 reverse proxy with HTTPS (using either a real SSL certificate or a self-signed one for testing).
+1. Install and configure of e.g. **Apache2** reverse proxy :
+> **1.1.** install apache2
+>````bash
+># install
+>sudo apt update
+>sudo apt install apache2
+>````
+> **1.2.** Provide or Generate SSL Certificates:
+> 
+>Put your ssl certificate and key files to ``/etc/ssl/`` or create a new Self-Signed certificate for testing
+>````bash
+>cd /etc/ssl/
+>openssl genrsa -out mainzelliste-ttp.key 2048
+>openssl req -new -sha256 -key mainzelliste-ttp.key -out mainzelliste-ttp.csr
+>openssl x509 -signkey mainzelliste-ttp.key -in mainzelliste-ttp.csr -req -days 365 -out mainzelliste-ttp.cert
+>````
+> **1.3.** Create apache2 virtual host configuration
+>````bash
+>## Go to to Apache site configuration directory
+>cd /etc/apache2/sites-available/
+>## Create the configuration file
+>vim mainzelliste-ttp.conf
+>````
+> Past the content of the following [mainzelliste-ttp.config](./resources/apache2/mainzelliste-ttp.config) file in ``vim`` and replace `{HOST}` with your server's name or IP address
+>````
+>ServerName {HOST}
+>````
+> **1.4.** Enable apache modules, site configuration and restart apache2
+>````bash 
+>a2enmod ssl proxy proxy_http headers
+>a2ensite mainzelliste-ttp
+>systemctl restart apache2
+>````
+2. clone this repository for a quick start or just download the required files for production deployment
+````bash
+git clone https://github.com/medicalinformatics/mainzelliste-gui.git
+````
+>Ensure the following files are available:
+>- [docker-compose.prod.yml](./docker-compose.prod.yml)
+>- [mainzelliste.docker.conf](./mainzelliste.docker.conf)
+>- [prepare-keycloak-import-file.sh](./prepare-keycloak-import-file.sh) (Only for the initialisation of keycloak)
+>- [resources/keycloak/import/mainzelliste-realm.json](./resources/keycloak/import/mainzelliste-realm.json) (Only for the initialisation of keycloak)
+>- [resources/keycloak/themes/mainzelliste.jar](./resources/keycloak/themes/mainzelliste.jar)
+
+3. Configure Environment variables:
+   1. Copy the file `.env.default` to `.env`
+   2. Replace the environment variable `HOST` with the server's domain name or IP address. 
+   3. Choose strong and unpredictable values for API Keys or other sensitive values 
+   4. You may also define additional environment variables in ``.env`` especially for sensitive values used in the backend configuration file e.g API Key or PID parameters. 
+   > ⚠️ As referred in the backend [installation guideline](https://bitbucket.org/medicalinformatics/mainzelliste/src/master/docker.md), a backend environment variable must start with `ML_`
+4. Prepare keycloak configuration: Replace `{HOST}` with your server's domain name or IP address and run the script to prepare keycloak initialisation file
+```bash
+chmod u+x prepare-keycloak-import-file.sh
+./prepare-keycloak-import-file.sh {HOST} https
 ```
-  2. in `mainzelliste` service:
-     1. adjust both env. variables `ML_ALLOWED_ORIGINS` and `ML_OIDC_ISS`
-  3. in `mainzelliste-gui` service:
-     1. adjust both env. variables `KEYCLOAK_URL` and `MAINZELLISTE_URL`
+5. Start mainzelliste
+````bash 
+docker compose -f docker-compose.prod.yml up -d
+````
+> ✅ The application should now be accessible at: ``https://{HOST}``
 
-#### Override the default configuration file
-For more configuration your can override the [default configuration file](./src/assets/config/config.template.json) using the docker secret ``mainzelliste-gui.docker.conf``
+#### Override the default UI configuration file (Optional)
+In order to customize the Mainzelliste UI, your can override the [default configuration file](./src/assets/config/config.template.json) by using the docker secret ``mainzelliste-gui.docker.conf``
 ```yaml
 services: 
   mainzelliste-gui:
@@ -76,7 +131,7 @@ secrets:
    *Note: `./rousource/demodata.sql` contains identifying demographic data set compiled from a lists of first and last names 
    provided by [Eli Finer in Gist](https://gist.github.com/elifiner/cc90fdd387449158829515782936a9a4)*, 
    randomly generated birthdate and german city and zip codes.
-4. `docker-compose up mainzelliste mainzelliste-db keycloak keycloak-db -d`
+4. `docker compose up mainzelliste mainzelliste-db keycloak keycloak-db -d`
 5. create a configuration file `src/assets/config/config.json` and fill the content with the following code:
 ```json
 {
@@ -95,8 +150,8 @@ secrets:
          { "i18n": "last_name_text", "name": "Nachname", "mainzellisteField": "nachname", "semantic": "lastname"},
          { "i18n": "birth_name_text", "name": "Geburtsname", "mainzellisteField": "geburtsname", "semantic": "birthName"},
          { "i18n": "birth_date_text", "name": "Geburtdatum", "mainzellisteFields": ["geburtstag", "geburtsmonat", "geburtsjahr"], "semantic": "birthday"},
-         { "i18n": "residence_text", "name": "Wohnort", "mainzellisteField": "ort", "semantic": "postalCode"},
-         { "i18n": "zip_code_text", "name": "PLZ", "mainzellisteField": "plz", "semantic": "city"}
+         { "i18n": "residence_text", "name": "Wohnort", "mainzellisteField": "ort", "semantic": "city"},
+         { "i18n": "zip_code_text", "name": "PLZ", "mainzellisteField": "plz", "semantic": "postalCode"}
       ],
       "debug": false,
       "betaFeatures": {

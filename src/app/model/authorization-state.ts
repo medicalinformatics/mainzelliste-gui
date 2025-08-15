@@ -29,6 +29,14 @@ export class AuthorizationState{
   EDIT_CONSENT_TEMPLATE: boolean = false;
   DELETE_CONSENT_TEMPLATE: boolean = false;
 
+  READ_CONSENT_POLICY: boolean = false;
+  CREATE_CONSENT_POLICY: boolean = false;
+  DELETE_CONSENT_POLICY: boolean = false;
+
+  READ_CONSENT_POLICY_SET: boolean = false;
+  CREATE_CONSENT_POLICY_SET: boolean = false;
+  DELETE_CONSENT_POLICY_SET: boolean = false;
+
   EDIT_CONFIGURATION: boolean = false;
   ADD_PATIENTS: boolean = false;
   READ_TENTATIVES: boolean = false;
@@ -71,6 +79,18 @@ export class AuthorizationState{
     this.READ_CONSENT_TEMPLATE = operation.some(o => o == "R");
     this.EDIT_CONSENT_TEMPLATE = operation.some(o => o == "U");
     this.DELETE_CONSENT_TEMPLATE = operation.some(o => o == "D");
+  }
+
+  setPolicy(operation: Operation[]){
+    this.CREATE_CONSENT_POLICY = operation.some(o => o == "C");
+    this.READ_CONSENT_POLICY = operation.some(o => o == "R");
+    this.DELETE_CONSENT_POLICY = operation.some(o => o == "D");
+  }
+
+  setPolicySet(operation: Operation[]){
+    this.CREATE_CONSENT_POLICY_SET = operation.some(o => o == "C");
+    this.READ_CONSENT_POLICY_SET = operation.some(o => o == "R");
+    this.DELETE_CONSENT_POLICY_SET = operation.some(o => o == "D");
   }
 
   setMiscellaneous(permissions: (MiscellaneousPermission|undefined)[]) {

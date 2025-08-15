@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {TranslateService} from "@ngx-translate/core";
 import {Observable} from "rxjs";
@@ -18,7 +18,8 @@ export class ConfirmDeleteDialogComponent {
     public dialogRef: MatDialogRef<ConfirmDeleteDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public dataModel: {
       itemI18nName: string,
-      callbackObservable: Observable<any>
+      callbackObservable: Observable<any>,
+      returnError: boolean,
     }
   ) {
     this.message = translate.instant("confirm_delete_dialog.text").replace("${0}",
@@ -34,9 +35,13 @@ export class ConfirmDeleteDialogComponent {
     this.dataModel.callbackObservable.subscribe({
       next: () => {},
       error: e => {
-        this.dialogRef.close();
         this.inProgress = false;
-        throw e;
+        if (this.dataModel.returnError) {
+          this.dialogRef.close(e);
+        } else {
+          this.dialogRef.close();
+          throw e;
+        }
       },
       complete: () => {
         this.dialogRef.close(true);
