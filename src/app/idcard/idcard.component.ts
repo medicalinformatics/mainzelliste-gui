@@ -12,8 +12,6 @@ import {TranslateService} from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.component";
 import {ConsentService} from "../consent/consent.service";
 import {Permission} from "../model/permission";
-import {HttpErrorResponse} from "@angular/common/http";
-import {Observable, of, throwError} from "rxjs";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {Consent, ConsentRow, ConsentsView} from "../consent/consent.model";
 import {catchError, map, mergeMap} from "rxjs/operators";
@@ -28,16 +26,16 @@ import {AppConfigService} from "../app-config.service";
 import {
   ConsentHistoryDialogComponent
 } from "../consent/consent-history-dialog/consent-history-dialog.component";
-import {FhirResource} from "fhir-kit-client/types/index";
 import {SearchParams} from "fhir-kit-client";
-import {SemanticType} from '../model/field';
 import {AngularCsv} from 'angular-csv-ext/dist/Angular-csv';
 import {
   ConfirmDeleteDialogComponent
 } from "../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
 import {Tenant} from "../model/tenant";
 import {ComponentType} from "@angular/cdk/portal";
-
+import { Observable, of, throwError } from 'rxjs';
+import { Field, SemanticType } from '../model/field';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-idcard',
@@ -46,6 +44,23 @@ import {ComponentType} from "@angular/cdk/portal";
 })
 
 export class IdcardComponent implements OnInit {
+
+  columns: string[] = [];
+  allColumnNames: string[] = [];
+  showAllIds: boolean;
+  fieldNames: string[];
+  displayedColumns: string[] = [];
+  clickedRow: any;
+
+  // required for displayed columns for secondary identities
+  fields: Field[];
+
+  //Pageinator
+  public pageIndex = 0;
+  public pageSize = 5;
+
+  public secondaryIdentities: Patient[] = [];
+
   public readonly Permission = Permission;
 
   public idString: string = "";
@@ -84,6 +99,10 @@ export class IdcardComponent implements OnInit {
         this.idString = params["idString"]
     });
     this.changeTitle();
+
+    this.fieldNames = configService.data[0].fields.filter(f => !f.hideFromList).map(f => f.name);
+    this.showAllIds = configService.data[0].showAllIds != undefined && configService.data[0].showAllIds;
+    this.fields = configService.data[0].fields.filter(f => !f.hideFromList);
   }
 
   ngOnInit() {
@@ -106,8 +125,10 @@ export class IdcardComponent implements OnInit {
     //load consent list
     if (this.authorizationService.hasPermission(Permission.READ_CONSENT))
       this.loadConsents();
-  }
 
+    this.displayedColumns = [...this.fields.map(field => field.name)];
+  }
+  
   changeTitle() {
     this.titleService.setTitle(this.translate.instant('idcard.title_id_card'), false, "badge");
   }
@@ -127,6 +148,7 @@ export class IdcardComponent implements OnInit {
         this.patient = this.patientListService.convertToDisplayPatient(patients[0], false, true, this.authorizationService.getTenants());
         this.patient.ids = this.patient.ids.filter(id => !this.otherTenantIdTypes.some(t => t == id.idType));
       });
+      
   }
 
   private loadConsents() {

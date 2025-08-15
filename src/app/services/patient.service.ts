@@ -1,14 +1,20 @@
-import {Injectable} from '@angular/core';
-import {Patient} from "../model/patient";
-import {PatientListService, ReadPatientsResponse} from "./patient-list.service";
-import {Field} from "../model/field";
-import {map} from "rxjs/operators";
-import {Observable} from "rxjs";
-import {MainzellisteError} from "../model/mainzelliste-error.model";
-import {ErrorMessages} from "../error/error-messages";
-import {Id} from "../model/id";
-import {Operation} from "../model/tenant";
-import {FilterItem} from "../model/filter-item";
+import { Injectable } from '@angular/core';
+import { Patient } from "../model/patient";
+import { PatientListService, ReadPatientsResponse } from "./patient-list.service";
+import { Field } from "../model/field";
+import { catchError, map, mergeMap } from "rxjs/operators";
+import { Observable, of, throwError } from "rxjs";
+import { MainzellisteError } from "../model/mainzelliste-error.model";
+import { ErrorMessages } from "../error/error-messages";
+import { Id } from "../model/id";
+import { Operation } from "../model/tenant";
+import { TokenData } from '../model/token-data';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { SessionService } from './session.service';
+import { PatientList } from '../model/patientlist';
+import { AppConfigService } from '../app-config.service';
+import { Identity} from '../model/identity'
+import { FilterItem } from '../model/filter-item';
 
 @Injectable({
   providedIn: 'root'
@@ -233,7 +239,7 @@ export class PatientService {
       Geburtsdatum: '06.07.1981',
       Wohnort: 'Dresden',
       PLZ: '01967'
-    }, [new Id("Pseudonym", "026HNBFT")]),new Patient({
+    }, [new Id("Pseudonym", "026HNBFT")]), new Patient({
       Nachname: 'Moser',
       Geburtsname: '',
       Vorname: 'Matthias',
@@ -264,7 +270,7 @@ export class PatientService {
       Geburtsdatum: '18.01.1989',
       Wohnort: 'Dresden',
       PLZ: '01967'
-    }, [new Id("Pseudonym", "YOK76BNH")]),new Patient({
+    }, [new Id("Pseudonym", "YOK76BNH")]), new Patient({
       Nachname: 'Franz',
       Geburtsname: '',
       Vorname: 'Ingrid',
@@ -279,7 +285,7 @@ export class PatientService {
       Geburtsdatum: '23.11.1969',
       Wohnort: 'Dresden',
       PLZ: '01967'
-    }, [new Id("Pseudonym", "09NV6DL2")]),new Patient({
+    }, [new Id("Pseudonym", "09NV6DL2")]), new Patient({
       Nachname: 'Müller',
       Geburtsname: '',
       Vorname: 'Julian',
@@ -320,39 +326,45 @@ export class PatientService {
       PLZ: '36452'
     }, [new Id("Pseudonym", "KMNH76FC")])
   ];
+  private patientList: PatientList;
 
-  constructor(private patientListService: PatientListService) {
+  constructor(
+    private patientListService: PatientListService,
+    private httpClient: HttpClient,
+    private configService: AppConfigService,
+    private sessionService: SessionService) {
+    this.patientList = this.configService.data[0];
   }
 
   getDisplayPatients(filters: Array<FilterItem>, pageIndex: number, pageSize: number, ignoreOrder: boolean,
                      tenants?: { id: string, name: string, idTypes: string[] }[]): Observable<ReadPatientsResponse> {
     return this.patientListService.getPatients(filters, pageIndex + 1, pageSize, ignoreOrder).pipe(
       map((response: ReadPatientsResponse): ReadPatientsResponse => {
-          let displayPatients: Patient[]
-          if (response.patients.length == 0) {
-            displayPatients = this.patientListService.isDebugModeEnabled() ? this.mockUpData : [];
-          } else {
-            displayPatients = response.patients
-            .filter(p => p.ids != undefined)
-            .map(patient => this.patientListService.convertToDisplayPatient(patient, true, true, tenants));
-          }
-          // override patients
-          response.patients = displayPatients;
-          return response;
+        let displayPatients: Patient[]
+        if (response.patients.length == 0) {
+          displayPatients = this.patientListService.isDebugModeEnabled() ? this.mockUpData : [];
+        } else {
+          displayPatients = response.patients
+          .filter(p => p.ids != undefined)
+          .map(patient => this.patientListService.convertToDisplayPatient(patient, true, true, tenants));
         }
+        // override patients
+        response.patients = displayPatients;
+        return response;
+      }
       )
     )
   }
 
-   createPatient(patient: Patient, idTypes: string[], sureness: boolean): Observable<Id> {
+  createPatient(patient: Patient, idTypes: string[], sureness: boolean): Observable<Id> {
     if (idTypes == undefined || idTypes.length == 0) {
       throw new MainzellisteError(ErrorMessages.CREATE_PATIENT_MISSING_ID_TYPE);
     }
     return this.patientListService.addPatient(patient, idTypes, sureness);
   }
 
-  deletePatient(patient: Patient){
-     return this.patientListService.deletePatient(patient);
+  deletePatient(patient: Patient) {
+    return this.patientListService.deletePatient(patient);
   }
 
   getConfiguredFields(operation: Operation): Array<Field> {
@@ -362,4 +374,59 @@ export class PatientService {
   getConfigureIdTypes(): Array<string> {
     return this.patientListService.getAllIdTypes("R");
   }
+
+  getSecondaryIdentities(idType: string, idString: string) {
+    const data: TokenData = {
+      patientId: new Id(idType, idString)
+    }
+    console.log('getSecondaryIdentities called');
+    return this.sessionService.createToken("readIdentities", data).pipe(
+      mergeMap(token => {
+        console.log('Token received:', token);
+        return this.readSecondaryIdentities(token.id);
+      }),
+      catchError((error) => {
+        console.error('Error occurred in getSecondaryIdentities:', error);
+        if (error.status >= 400 && error.status < 500) {
+          return throwError(() => new Error("failed to fetch identities"));
+        } else {
+          return throwError(() => new Error("failed to fetch identities"));
+        }
+      })
+    );
+  }
+
+  readSecondaryIdentities(tokenId: string | undefined) {
+    return this.httpClient.get(this.patientList.url + "/patients/identities", {
+      params: new HttpParams().set('tokenId', tokenId ?? ''),
+      observe: 'response'
+    }).pipe(
+      mergeMap(response => {
+        if (response.status == 200) {
+          return this.getPatients(response.body);
+        } else {
+          return throwError(() => new Error("failed to fetch identities"));
+        }
+      }),
+      catchError((error) => {
+        console.error('Error occurred in readSecondaryIdentities:', error);
+        if (error.status >= 400 && error.status < 500) {
+          return throwError(() => new Error("failed to fetch identities"));
+        } else {
+          return throwError(() => new Error("failed to fetch identities"));
+        }
+      })
+    );
+  }
+
+  getPatients(response: any) {
+    let identities: Identity[] = [];
+    let patients: Patient[] = [];
+    identities = response as Identity[] ?? [];
+    patients = identities.filter(i => i.main == false).map(i => new Patient(i.fields, [i.id]));
+    return of({ data: patients });
+  }
+
 }
+
+

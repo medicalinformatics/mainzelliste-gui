@@ -25,8 +25,12 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import { ConfirmDeleteDialogComponent } from './components/confirm-delete-dialog/confirm-delete-dialog.component';
+import { SecondaryIdentitiesComponent} from './components/secondary-identities/secondary-identities.component'
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { MessageCardComponent } from './components/message-card/message-card.component';
+import { IdCardDialogComponent } from './components/secondary-identities/dialog/id-card-dialog.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -50,6 +54,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatChipsModule,
     MatAutocompleteModule,
     MatSnackBarModule,
+    MatTableModule,
+    MatPaginatorModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -59,8 +65,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
     MatProgressSpinnerModule
   ],
-  declarations: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent, ConfirmDeleteDialogComponent, MessageCardComponent],
-  exports: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent,
+  declarations: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent, ConfirmDeleteDialogComponent, MessageCardComponent, SecondaryIdentitiesComponent],
+  exports: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent,SecondaryIdentitiesComponent,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,

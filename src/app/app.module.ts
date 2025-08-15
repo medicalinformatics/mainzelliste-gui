@@ -68,10 +68,26 @@ import {
 import {
   BulkIdGenerationEmptyFieldsDialog
 } from "./bulk-operations/bulk-id-generation/dialog/bulk-id-generation-empty-fields-dialog";
-import { BulkPseudonymizationComponent } from './bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component';
+import {
+  BulkPseudonymizationComponent
+} from './bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component';
 import {EditorModule, TINYMCE_SCRIPT_SRC} from "@tinymce/tinymce-angular";
-import { ExportPatientsDialogComponent } from './patientlist/dialogs/export-patients-dialog/export-patients-dialog.component';
+import {
+  ExportPatientsDialogComponent
+} from './patientlist/dialogs/export-patients-dialog/export-patients-dialog.component';
 import {MatListModule} from "@angular/material/list";
+import {
+  TentativeMatchesListComponent
+} from "./tentative-matches/tentative-matches-list/tentative-matches-list.component";
+import {
+  SolveTentativeMatchComponent
+} from "./tentative-matches/solve-tentative-match/solve-tentative-match.component";
+import {
+  MergeTentativeMatchDialogComponent
+} from "./tentative-matches/solve-tentative-match/dialog/merge-tentative-match-dialog.component";
+import {
+  IdentityDialogComponent
+} from './tentative-matches/solve-tentative-match/dialog/secondary-identities-dialog.component';
 
 function initializeAppFactory(
     configService: AppConfigService,
@@ -131,12 +147,24 @@ function initializeAppFactory(
     NewIdDialog,
     AccessDeniedComponent,
     PageNotFoundComponent,
-    ConsentTemplatesComponent,
     BulkIdGenerationComponent,
     BulkIdGenerationTableComponent,
     BulkIdGenerationEmptyFieldsDialog,
     BulkPseudonymizationComponent,
-    ExportPatientsDialogComponent
+    ExportPatientsDialogComponent,
+    ConsentTemplatesComponent,
+    TentativeMatchesListComponent,
+    SolveTentativeMatchComponent,
+    MergeTentativeMatchDialogComponent,
+    IdentityDialogComponent,
+    SecondaryIdentitiesComponent, 
+    IdCardDialogComponent,
+  ],
+  exports: [
+    SecondaryIdentitiesComponent, 
+    IdCardDialogComponent, 
+    IdcardComponent
+    // Removed CdkTableModule from exports
   ],
   imports: [
     SharedModule,
@@ -151,7 +179,8 @@ function initializeAppFactory(
     MatBadgeModule,
     MatPaginatorModule,
     MatNativeDateModule,
-    MatTableModule,
+    MatTableModule, // This provides everything needed for mat-table
+    // Removed CdkTableModule from imports - not needed
     MatCheckboxModule,
     MatTooltipModule,
     HttpClientModule,

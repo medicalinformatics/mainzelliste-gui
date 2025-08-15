@@ -82,6 +82,7 @@
 	"idcard.title_patient_data": "Patientendaten",
 	"idcard.title_pseudonyms": "Pseudonyme",
 	"idcard.title_id_card": "ID Karte",
+	"idcard.title_secondary": "Sekundäre Identitäten",
 
   "consent_list.unlimited_period": "unbegrenzt",
 
@@ -143,6 +144,7 @@
 	"navigation.bulkPseudonymization": "Bulk-Pseudonymisierung",
   "navigation.consent_template": "Einwilligungsvorlagen",
   "navigation.configuration": "Konfiguration",
+  "navigation.read_tentatives" : "Unsichere Matches",
 
 	"patientlist.filter_search": "Filter/Suche...",
 	"patientlist.button_filter_columns": "Spalten auswählen",
@@ -349,6 +351,9 @@
 
   "errorComponent.error": "Fehler",
 	"errorComponent.message": "Information",
+  "error.solve_tentative_failed_main_identity_is_secondary": "Die ausgewählte Haupt-Identität ist bereit eine sekundäre Identität eines existierenden Patienten. Möchten Sie stattdessen diesen Patienten als Haupt-Identität übernehmen",
+  "error.solve_tentative_failed_secondary_identity_is_main_identity": "Die angegebenene sekundäre Identität ist eine Haupt-Identität eines existierenden Patienten, mit weiteren sekundären Identitäten. Möchten Sie alle Identitäten als sekundären Identitäten für die ausgewählte Haupt-Identität hinzufügen",
+	"error.solve_tentative_failed_secondary_identity_is_secondary": "Die angegebenene sekundäre Identität ist bereit eine sekundäre Identität eines existierenden Patienten, mit weiteren sekundären Identitäten. Möchten Sie alle Identitäten als sekundären Identitäten für die ausgewählte Haupt-Identität hinzufügen",
 
 	"errorCardComponent.error": "Fehler: ",
 	"errorDialogComponent.title": "Ups! Etwas ist schief gelaufen!",
@@ -428,6 +433,21 @@
   "bulkPseudonymization.upload_info_text2": "Die Datei muss mindestens die pflicht IDAT-Felder (${fieldName}) und/oder ein externen ID-Typ (${extIdTypes}) als CSV-Header enthalten.",
   "bulkPseudonymization.upload_info_text3": "Leere Zeilen können zu Fehlern führen!",
 
+  "read_tentatives.title" : "Unsichere Matches",
+  "read_tentatives.not_item" : "Kein unsicheres Match gefunden.",
+  "read_tentatives.button_resolve" : "Unsicheres Match lösen",
+
+  "solve_tentatives.title": "Unsicheres Match lösen",
+
 	"export_data": "Kontaktdaten nach Excel exportieren",
-	"copy_data": "Kontaktdaten in Zwischenablage kopieren"
+	"copy_data": "Kontaktdaten in Zwischenablage kopieren",
+
+	"tentative.title_patient_1":"Patientendaten 1",
+	"tentative.title_patient_2":"Patientendaten 2",
+	"tentative.patient_data":"Patientendaten",
+	"tentative.label_main_patient":"Haupt-Patient",
+	"tentative.pseudonyms":"Pseudonyme",
+	"tentative.merge":"Mergen",
+	"tentative.split":"Spliten",
+	"tentative.identites": "Sekündäre Identitäten"
 }

@@ -1,0 +1,55 @@
+<!-- Container for the entire component -->
+<section class="table-container mat-elevation-z8" tabindex="0">
+  <table id="tentatives" mat-table [dataSource]="matTableData">
+    <ng-container *ngFor="let column of columns" matColumnDef="{{column.name}}">
+      <ng-container [ngSwitch]="column.type">
+        <ng-container *ngSwitchCase="'resolveButton'">
+          <th mat-header-cell *matHeaderCellDef style="width: 40px"></th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button style="background: none;border:none;" [disabled]="loading"
+                    [routerLink]="['/resolve-unsure-match', element[column.name]]">
+              <mat-icon matTooltip="{{'read_tentatives.button_resolve' | translate}}">alt_route</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <ng-container *ngSwitchCase="'text'">
+          <th mat-header-cell *matHeaderCellDef>
+            {{column.i18n ? (column.i18n | translate) : column.name }}
+          </th>
+          <td mat-cell *matCellDef="let element" [ngClass]="{'disabled': loading}">
+            {{element[column.name]}}
+          </td>
+        </ng-container>
+        <ng-container *ngSwitchCase="'separator'">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element" [ngClass]="{'disabled': loading}"></td>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+    <ng-container matColumnDef="progress">
+      <th mat-header-cell *matHeaderCellDef [attr.colspan]="this.columns.length"
+          style="padding: 0;">
+        <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+      </th>
+      <td mat-cell></td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="this.getColumnsNames()"></tr>
+    <tr mat-header-row style="height: 0; border: 0;" *matHeaderRowDef="['progress']"></tr>
+    <tr class="mat-row" *matNoDataRow>
+      <td *ngIf="!loading" class="mat-cell" [attr.colspan]="this.columns.length" style="text-align: center">
+        {{'read_tentatives.not_item' | translate}}
+      </td>
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: this.getColumnsNames();"></tr>
+  </table>
+</section>
+<mat-paginator
+  [length]="this.totalNumber"
+  [pageSize]="this.defaultPageSize"
+  [pageSizeOptions]="[5,10,20,50,100]"
+  [showFirstLastButtons]="true"
+  aria-label="Select page"
+  [disabled]="loading"
+  (page)="handlePageEvent($event)"
+>
+</mat-paginator>

@@ -231,4 +231,21 @@ export class ErrorMessages {
   public static readonly DELETE_POLICY_REJECTED: ErrorMessage = new ErrorMessage(12002,
     /Cannot delete policy because it is being referenced by consent template '(.+)'/i,
     "configuration.policy.error.delete");
+
+  // Solve TENTATIVE MATCH
+  //---------------------
+  // the given main identity already belong to another main identity
+  public static readonly SOLVE_TENTATIVE_MERGE_FAILED_MAIN_IDENTITY_IS_SECONDARY: ErrorMessage = new ErrorMessage(11001,
+    /It is not possible to add a new Identity to the Secondary Identity.(.*)/i,
+    "error.solve_tentative_failed_main_identity_is_secondary");
+
+  // the given secondary identity is already a main identity of existing secondary identities
+  public static readonly SOLVE_TENTATIVE_MERGE_FAILED_SECONDARY_IDENTITY_ID_MAIN: ErrorMessage = new ErrorMessage(11002,
+    /Secondary Identity has multiple Identities itself.(.*)/i,
+    "error.solve_tentative_failed_secondary_identity_is_main_identity");
+
+  // the given secondary identity already belong to another main identity
+  public static readonly SOLVE_TENTATIVE_MERGE_FAILED_SECONDARY_IDENTITY_LINKED: ErrorMessage = new ErrorMessage(11003,
+    /If you attach the Secondary Identity to the new Main Identity(.*)/i,
+    "error.solve_tentative_failed_secondary_identity_is_secondary");
 }

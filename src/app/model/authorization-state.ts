@@ -39,6 +39,9 @@ export class AuthorizationState{
 
   EDIT_CONFIGURATION: boolean = false;
   ADD_PATIENTS: boolean = false;
+  READ_TENTATIVES: boolean = false;
+  READ_TENTATIVE: boolean = false;
+  READ_IDENTITIES: boolean = false;
 
   setPatient(operation: Operation[]){
     this.CREATE_PATIENT = operation.some(o => o == "C");
@@ -93,5 +96,8 @@ export class AuthorizationState{
   setMiscellaneous(permissions: (MiscellaneousPermission|undefined)[]) {
     this.ADD_PATIENTS = permissions.some( p => p == "tt_addPatients");
     this.EDIT_CONFIGURATION = permissions.some( p => p == "tt_editConfiguration");
+    this.READ_TENTATIVE = permissions.some( p => p == "tt_readTentative");
+    this.READ_TENTATIVES = permissions.some( p => p == "tt_readTentatives");
+    this.READ_IDENTITIES = permissions.some( p => p == "tt_readIdentities");
   }
 }

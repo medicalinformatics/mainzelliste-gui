@@ -22,6 +22,7 @@ import {TranslateService} from '@ngx-translate/core';
 
 export class PatientFieldsComponent implements OnInit {
 
+  @Input() uniqueId: string = "";
   @Input()  fields: {[key: string]: any} = {};
   @Output() fieldEvent = new EventEmitter<{[key: string]: any}>();
   @Output() consentEvent = new EventEmitter<boolean>();

@@ -1,6 +1,7 @@
 export class Tenant {
   public static readonly DEFAULT_ID = "default"
-  public static readonly ESSENTIAL_MISCELLANEOUS_PERMISSIONS: MiscellaneousPermission[] = ['tt_editConfiguration', 'tt_addPatients']
+  public static readonly ESSENTIAL_MISCELLANEOUS_PERMISSIONS: MiscellaneousPermission[] = ['tt_editConfiguration', 'tt_addPatients',
+    'tt_readTentative', 'tt_readTentatives', 'tt_readIdentities']
   constructor(
     public id: string,
     public name: string,
@@ -34,4 +35,7 @@ export type MiscellaneousPermission =
     | "readAllPatientIdTypes"
     | "readConfiguration"
     | "tt_editConfiguration"
+    | "tt_readTentatives"
+    | "tt_readTentative"
+    | "tt_readIdentities"
     | "manageSessionPatients";

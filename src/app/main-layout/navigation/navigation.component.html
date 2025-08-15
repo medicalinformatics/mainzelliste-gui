@@ -6,6 +6,10 @@
   <mat-icon>person_add_alt</mat-icon>
   <span>{{'navigation.new_patient' | translate}}</span>
 </button>
+<button mat-button *ngIf="this.authorizationService.authorizationState.READ_TENTATIVES" [routerLink]="['/tentatives']" class="sidenav-menu-item">
+  <mat-icon>quiz</mat-icon>
+  <span>{{'navigation.read_tentatives' | translate}}</span>
+</button>
 
 <mat-divider *ngIf="this.authorizationService.authorizationState.GENERATE_IDS
   || this.authorizationService.authorizationState.ADD_PATIENTS " class="menu-divider"></mat-divider>
@@ -29,6 +33,7 @@
     <span>{{'navigation.consent_template' | translate}}</span>
   </button>
 </ng-container>
+
 <mat-divider class="menu-divider"></mat-divider>
 <ng-container *ngIf="this.appConfigService.isConfigurationEnabled()">
   <button mat-button *ngIf="this.authorizationService.authorizationState.EDIT_CONFIGURATION

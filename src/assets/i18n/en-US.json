@@ -80,6 +80,8 @@
 	"idcard.title_patient_data": "Patient data",
 	"idcard.title_pseudonyms": "Pseudonyms",
 	"idcard.title_id_card": "ID Card",
+	"idcard.title_secondary":"Secondary Identities",
+
 
   "consent_list.unlimited_period": "unlimited",
 
@@ -141,6 +143,7 @@
 	"navigation.bulkPseudonymization": "Bulk Pseudonymization",
   "navigation.consent_template": "Consent Templates",
   "navigation.configuration": "Configuration",
+  "navigation.read_tentatives" : "Tentative Matches",
 
 	"patientlist.filter_search": "Filter/Search...",
 	"patientlist.button_filter_columns": "Select columns",
@@ -404,6 +407,22 @@
   "bulkPseudonymization.upload_info_text2": "The file must at least contains the required field names (${fieldName}) and/or one external ID type (${extIdTypes}) as CSV-Header.",
   "bulkPseudonymization.upload_info_text3": "Empty lines can lead to errors!",
 
+  "read_tentatives.title" : "Tentative Matches",
+  "read_tentatives.not_item" : "No tenatives found.",
+  "read_tentatives.button_resolve" : "Resolve tentative Match",
+
+  "solve_tentatives.title": "Resolve tentative Match",
+
 	"export_data": "Export contact information to excel",
-	"copy_data": "Copy contact information to clipboard"
+	"copy_data": "Copy contact information to clipboard",
+
+	"tentative.title_patient_1":"Patientdata 1",
+	"tentative.title_patient_2":"Patientdata 2",
+	"tentative.patient_data":"Patientdata",
+	"tentative.label_main_patient":"Main-Patient",
+	"tentative.pseudonyms":"Pseudonymes",
+	"tentative.merge":"Merge",
+	"tentative.split":"Split",
+	"tentative.identites": "Secondary Identities"
+
 }
