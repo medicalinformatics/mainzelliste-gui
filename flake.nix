@@ -24,7 +24,7 @@
 
     devShells = forEachSupportedSystem ({pkgs}: {
       default = pkgs.mkShell {
-        packages = with pkgs; [node2nix nodejs nodePackages.pnpm yarn vscode-langservers-extracted];
+        packages = with pkgs; [node2nix nodejs nodePackages.pnpm yarn vtsls vscode-js-debug];
       };
     });
   };
