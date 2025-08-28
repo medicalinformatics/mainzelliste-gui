@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Id} from "../../model/id";
 import {IdTypSelection} from "../create-patient/create-patient.component";
 import {MatSelect} from "@angular/material/select";
@@ -19,7 +19,7 @@ import {
   styleUrls: ['./external-pseudonyms.component.css'],
   viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
 })
-export class ExternalPseudonymsComponent implements OnChanges {
+export class ExternalPseudonymsComponent implements OnInit, OnChanges {
 
   @Input() ids: Array<Id> = [];
   @Input() readOnly: boolean = false;
@@ -39,18 +39,25 @@ export class ExternalPseudonymsComponent implements OnChanges {
   ) {
   }
 
+  ngOnInit(): void {
+    // initialize required external ids
+    this.appConfigService.getRequiredExternalIds().map(requiredId => {
+      addIfNotExist(new Id(requiredId, ""), this.ids,
+        e => !this.isAssociatedIdType(requiredId) && e.idType == requiredId
+      )
+    });
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     const change = changes["ids"]
     if (change.currentValue != undefined && change.currentValue.length > 0)
       this.getExternalIdTypes()
       .filter(e => change.currentValue.some((id: any) => e.idType == id.idType))
       .forEach(e => e.added = true);
-
   }
-  
+
   addExternalIdField(selectedExternalIdType: MatSelect) {
     this.addExternalIdFieldString(selectedExternalIdType.value)
-    // TODO: Verify what this line does. Does it remove the item from the selection?
     selectedExternalIdType.value = undefined
   }
 
@@ -83,12 +90,14 @@ export class ExternalPseudonymsComponent implements OnChanges {
     if (this.externalIdTypes.length == 0) {
       this.externalIdTypes = [
         ...this.patientListService.getUniqueIdTypes(true, this.permittedOperation)
-          .map(t => { return {idType: t, added: false, associated: false } }),
+          .map(t => { return {
+            idType: t,
+            added: this.appConfigService.getRequiredExternalIds().some(id => id = t),
+            associated: false
+          } }),
         ...this.patientListService.getAssociatedIdTypes(true, this.permittedOperation)
           .map(t => { return {idType: t, added: false, associated: true } })];
-      this.appConfigService.getRequiredExternalIds().forEach(type => this.addExternalIdFieldString(type))
     }
-    
     return this.externalIdTypes;
   }
 
@@ -146,7 +155,7 @@ export class ExternalPseudonymsComponent implements OnChanges {
   public getFieldClass(className: string){
     return className + (this.readOnly ? " inputFieldDisabled" : "");
   }
-  
+
   isRequired(idType: string) {
     return this.appConfigService.getRequiredExternalIds().some(type => type === idType);
   }
