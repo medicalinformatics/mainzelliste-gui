@@ -309,13 +309,20 @@ export class PatientListService {
     }).join("&")
   }
 
-  generateId(idType: string, idString: string, newIdType: string) {
-    return this.generateIdArray(idType, [idString], newIdType);
+  generateId(idType: string, idString: string, newIdType: string, newIdValue: string = "") {
+    return this.generateIdArray(idType, [idString], newIdType, newIdValue);
   }
 
-  generateIdArray(idType: string, idString: string[], newIdType: string): Observable<[{idType: string, idString: string}]> {
+  // generating new ids of type newIdType for a group of patient.
+  // The group is defined by idString array and the specified idType
+  // Also supports adding new external id for a single patient by specifying newIdValue
+  generateIdArray(idType: string, idString: string[], newIdType: string, newIdValue: string = ""): Observable<[{idType: string, idString: string}]> {
     if(idString.length == 0) {
       throw new Error("idString cant be empty");
+    }
+
+    if (idString.length > 1 && newIdValue !== "") {
+      throw new Error("adding user defined external ids for multiple patients is currently not supported!")
     }
 
     let ids: {idType: string; idString: string}[] = [];
@@ -325,7 +332,7 @@ export class PatientListService {
 
     return this.sessionService.createToken("createIds", new CreateIdsTokenData(ids, [newIdType]))
       .pipe(mergeMap(
-        token => this.resolveCreateIdsToken(token.id, newIdType)
+        token => this.resolveCreateIdsToken(token.id, newIdType, newIdValue)
         ),
       catchError(e => {
         // handle failed token creation
@@ -337,8 +344,11 @@ export class PatientListService {
       }));
   }
 
-  resolveCreateIdsToken(tokenId: string | undefined, newIdType: string): Observable<any> {
-    return this.httpClient.post<Id[]>(this.patientList.url + "/ids/" + newIdType + "?tokenId=" + tokenId, {}, {
+  resolveCreateIdsToken(tokenId: string | undefined, newIdType: string, newIdValue: string = ""): Observable<any> {
+    let request_url = this.patientList.url + "/ids/" + newIdType + "?tokenId=" + tokenId;
+    if (newIdValue !== "") request_url = `${request_url}&idString=${newIdValue}`
+
+    return this.httpClient.post<Id[]>(request_url, {}, {
       headers: new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('mainzellisteApiVersion', '3.2')

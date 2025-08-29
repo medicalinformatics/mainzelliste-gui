@@ -375,6 +375,7 @@
   "newIdDialog.text_id": "{{idType}}: {{idString}}",
   "newIdDialog.text_3": "zugeordnet",
   "newIdDialog.text_4": "und zu der ausgewählten externen ID zugeordnet",
+  "newIdDialog.text_5": "mit dem Wert",
 	"newIdDialog.id_types": "ID Typen",
 
 	"logout.message": "Du wurdest erfolgreich ausgelogged!",
