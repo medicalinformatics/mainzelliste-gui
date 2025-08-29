@@ -354,6 +354,7 @@
   "newIdDialog.text_id": "{{idType}}: {{idString}}",
   "newIdDialog.text_3": "",
   "newIdDialog.text_4": "and assigned to the selected external id",
+  "newIdDialog.text_5": "with value",
   "newIdDialog.id_types": "ID type",
 
   "logout.message": "You are now logged out!",

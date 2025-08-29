@@ -150,9 +150,9 @@ export class IdcardComponent implements OnInit {
       });
   }
 
-  generateNewId(idType: string, idString: string, newIdType: string) {
+  generateNewId(idType: string, idString: string, newIdType: string, newIdValue: string) {
     return this.patientListService.generateId(idType?.length > 0 ? idType : this.idType,
-      idString?.length > 0 ? idString : this.idString, newIdType);
+      idString?.length > 0 ? idString : this.idString, newIdType, newIdValue);
   }
 
   hasAllTemplateIds(): boolean {
@@ -286,7 +286,9 @@ export class IdcardComponent implements OnInit {
         ...this.patientListService.getUniqueIdTypes(false, "C")
           .map(t => { return { name: t, isExternal: false, isAssociated: false } }),
         ...this.patientListService.getAssociatedIdTypes(false, "C")
-          .map(t => { return { name: t, isExternal: false, isAssociated: true } })
+          .map(t => { return { name: t, isExternal: false, isAssociated: true } }),
+        ...this.patientListService.getAssociatedIdTypes(true, "C")
+          .map(t => { return { name: t, isExternal: true, isAssociated: true } }),
       ];
     }
     return this.idTypes;
@@ -310,8 +312,14 @@ export class IdcardComponent implements OnInit {
       disableClose: true,
       data: {
         relatedAssociatedIdsMap: this.patientListService.getRelatedAssociatedIdsMapFrom(this.getUnAvailableIdTypes(this.patient), this.patient.ids, true, "R"),
-        generateIdObservable: (externalId: Id, newIdType: string) => this.generateNewId(
-          externalId?.idType ?? "", externalId?.idString ?? "", newIdType)
+        generateIdObservable: (externalId: Id, newIdType: string, newIdValue: string) => {
+          if (newIdValue !== "") {
+            return this.generateNewId(this.idType, this.idString, newIdType, newIdValue)
+          } else {
+            // QUESTION, what will happen if externalId is not there and idType and String are empty??
+            return this.generateNewId(externalId?.idType ?? "", externalId?.idString ?? "", newIdType, newIdValue)
+          }
+        }
       }
     }).beforeClosed().subscribe(result => {
       if(!result)
