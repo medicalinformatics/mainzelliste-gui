@@ -118,8 +118,12 @@
   <br>
 </ng-container>
 
-<ng-container *ngIf="patientSignature != []">
-  <div>
-    <img [src]="'data:image/png;base64,' + patientSignature[0]" alt="Signature" />
+<ng-container>
+  <div class="signature-container">
+    <canvas class="canvas" #canvasRef [ngStyle]="{ cursor: signaturePadActive ? 'crosshair' : 'default' }"></canvas>
   </div>
+
+  <button class="submit" mat-raised-button *ngIf="!signaturePadActive"(click)="clear()">{{'button_update_signature' | translate }}</button>
+  <button class="submit" mat-raised-button *ngIf="signaturePadActive"(click)="clear()">{{'button_delete' | translate }}</button>
+  <button id="saveButton" class="submit" mat-raised-button *ngIf="signaturePadActive" (click)="save()">{{'button_save' | translate }}</button>
 </ng-container>

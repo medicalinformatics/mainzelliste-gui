@@ -27,7 +27,8 @@
 	"button_stepper_download_csv": "CSV Datei herunterladen",
 	"button_okay": "Okay",
 	"button_publish": "Veröffentlichen",
-  "button_create": "Erstellen",
+  	"button_create": "Erstellen",
+  	"button_update_signature": "Unterschrift Aktualisieren",
 
 	"radio_button_yes": "Ja",
 	"radio_button_no": "Nein",
@@ -193,6 +194,7 @@
   "consentDetail.valid_until": "bis ",
   "consentDetail.valid_unlimited": "für einen unbegrenzten Zeitraum",
   "consentDetail.scans": "Gescannte Dokumenten:",
+  "consentDetail.alert_signature_empty": "Bitte zuerst unterschreiben.",
 
   "error.consentDetail.validity_date": "Gültigkeitszeitraum is ungültig",
 

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {MatSelect, MatSelectChange} from "@angular/material/select";
 import {ConsentService} from "../consent.service";
 import {MAT_DATE_LOCALE, MatOption} from "@angular/material/core";
@@ -13,6 +13,7 @@ import {AuthorizationService} from "../../services/authorization.service";
 import {TranslateService} from "@ngx-translate/core";
 import {getErrorMessageFrom} from "../../error/error-utils";
 import {MatDatepickerInputEvent} from "@angular/material/datepicker";
+import SignaturePad from 'signature_pad';
 
 @Component({
   selector: 'app-consent-detail',
@@ -20,7 +21,7 @@ import {MatDatepickerInputEvent} from "@angular/material/datepicker";
   styleUrls: ['./consent-detail.component.css'],
   viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
 })
-export class ConsentDetailComponent implements OnInit {
+export class ConsentDetailComponent implements OnInit, AfterViewInit {
 
   @Input() readOnly: boolean = false;
   @Input() submitting: boolean = false;
@@ -30,6 +31,10 @@ export class ConsentDetailComponent implements OnInit {
   @Input() errorMessages: string[] = [];
   @Output() errorMessagesChange = new EventEmitter<string[]>();
   @ViewChild('templateSelection') templateSelection!: MatSelect;
+  @ViewChild('canvasRef') canvasEl!: ElementRef<HTMLCanvasElement>;
+
+  private signaturePad!: SignaturePad;
+  signaturePadActive: boolean = false;
   consentLoaded: boolean = true;
   localDateFormat:string;
   uploadInProgress: boolean = false;
@@ -75,9 +80,25 @@ export class ConsentDetailComponent implements OnInit {
           .filter(s => s.type.some(t => t.code == "1.2.840.10065.1.12.1.7"))
           .map(s => s.data || "")
         )
-      ).subscribe(data => this.patientSignature.push(data[0]));
+      ).subscribe(data => {
+        this.patientSignature.push(data[0]);
+        this.loadSignature();
+      });
     }
-    console.log(this.patientSignature)
+  }
+
+  ngAfterViewInit(): void {
+    const canvas = this.canvasEl.nativeElement;
+
+    canvas.width = 700;
+    canvas.height = 200;
+
+    this.signaturePad = new SignaturePad(canvas, {
+      minWidth: 1,
+      maxWidth: 3,
+      penColor: 'black',
+      backgroundColor: 'white'
+    });
   }
 
   initDataModel(consentTemplateId: MatSelectChange) {
@@ -187,6 +208,40 @@ export class ConsentDetailComponent implements OnInit {
       complete: () => {
       }
     });
+  }
+
+  loadSignature() {
+    if (this.patientSignature[0] != undefined) {
+      console.log(this.patientSignature[0])
+      let imageData = 'data:image/png;base64,' + this.patientSignature[0]
+      this.signaturePad.fromDataURL(imageData, {
+        ratio: 1,
+        width: 700,
+        height: 200
+      });
+      this.signaturePad.off();
+      this.signaturePadActive = false;
+    }
+  }
+
+  clear() {
+    this.signaturePad.clear();
+    this.signaturePad.on();
+    this.signaturePadActive = true;
+  }
+
+  save() {
+    if (this.signaturePad.isEmpty()) {
+      alert(this.translate.instant('consentDetail.alert_signature_empty'));
+    } else {
+      const dataURL = this.signaturePad.toDataURL();
+      console.log('Unterschrift:', dataURL);
+      this.signaturePad.off();
+      this.signaturePadActive = false;
+
+      // Beispiel: an Backend schicken
+      // this.http.post('/api/save-signature', { image: dataURL }).subscribe();
+    }
   }
 
   displayError(field: NgModel) {
