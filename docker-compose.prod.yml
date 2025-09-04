@@ -1,0 +1,91 @@
+secrets:
+  mainzelliste.docker.conf:
+    file: mainzelliste.docker.conf
+    #mainzelliste-gui.docker.conf:
+    #file: ./configs/mainzelliste-ui-config.json
+volumes:
+  mainzellisteDB:
+  mainzellisteConsentScans:
+  keycloakDB:
+services:
+  mainzelliste-gui:
+    image: medicalinformatics/mainzelliste-gui:latest
+    ports:
+      - "4200:80"
+    environment:
+      NGINX_SERVER_NAME: ${HOST}
+      #NGINX_PORT: 4200
+      MAINZELLISTE_URL: https://${HOST}/mainzelliste
+      KEYCLOAK_URL: https://${HOST}/keycloak
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+      # supported languages: 'en-US' or 'de-DE'
+      ML_UI_DEFAULT_LANGUAGE: de-DE
+      ML_UI_MAIN_ID_TYPE: pid
+      ML_UI_SHOW_ALL_IDS: false
+      ML_UI_DEBUG_MODE: false
+    depends_on:
+      - mainzelliste
+  mainzelliste:
+    image: medicalinformatics/mainzelliste:1.13-latest
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      TOMCAT_REVERSEPROXY_FQDN: ${HOST}
+      TOMCAT_REVERSEPROXY_SSL: "true"
+      ML_DB_HOST: mainzelliste-db
+      ML_DB_NAME: ${ML_DB_NAME}
+      ML_DB_USER: ${ML_DB_USER}
+      ML_DB_PASS: ${ML_DB_PASS}
+      ML_API_KEY: ${ML_API_KEY}
+      RELAXED_QUERY_CHARS: \|
+      ML_ALLOWED_ORIGINS: https://${HOST}
+      ML_OIDC_ISS: https://${HOST}/keycloak/realms/mainzelliste
+      ML_OIDC_INTERNAL_ISS_BASE_URL: http://keycloak:8080
+      ML_LOG_LEVEL: ERROR
+      CATALINA_OPTS: "-XX:MaxRAMPercentage=95.0 -XX:+UseStringDeduplication"
+    volumes:
+      - mainzellisteConsentScans:/usr/local/tomcat/consents
+    secrets:
+      - mainzelliste.docker.conf
+    depends_on:
+      - mainzelliste-db
+  mainzelliste-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${ML_DB_NAME}
+      POSTGRES_USER: ${ML_DB_USER}
+      POSTGRES_PASSWORD: ${ML_DB_PASS}
+    volumes:
+      - mainzellisteDB:/var/lib/postgresql/data
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0
+    command: ["start --import-realm"]
+    ports:
+      - "8082:8080"
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db/${KC_DB_NAME}
+      KC_DB_USERNAME: ${KC_DB_USER}
+      KC_DB_PASSWORD: ${KC_DB_PASS}
+      KC_FEATURES: token-exchange
+      KC_PROXY: edge
+      KC_HOSTNAME: ${HOST}
+      KC_HTTP_RELATIVE_PATH: /keycloak
+    volumes:
+      - ./resources/keycloak/themes/mainzelliste.jar:/opt/keycloak/providers/mainzelliste.jar
+      - ./resources/keycloak/import/:/opt/keycloak/data/import/
+  keycloak-db:
+    image: postgres:13-alpine
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${KC_DB_NAME}
+      POSTGRES_USER: ${KC_DB_USER}
+      POSTGRES_PASSWORD: ${KC_DB_PASS}
+    volumes:
+      - keycloakDB:/var/lib/postgresql/data
