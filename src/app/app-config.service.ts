@@ -199,7 +199,9 @@ export class AppConfigService {
     public fetchClaims(): Promise<ClaimsConfig[]> {
       return firstValueFrom(this.httpClient.get<ClaimsConfig[]>(this.data[0].url + "/configuration/claims", {
               headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2'),
-              params: new HttpParams().set('filter', 'roles').set('merge', true)
+              params: new HttpParams().set('filter', 'roles')
+              .set('merge', true)
+              .set('mergeSameTenant', true)
           })
           .pipe(
               catchError((e) => throwError( () => new Error("Can't init claims configurations. Failed to connect " +
