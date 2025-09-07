@@ -1,6 +1,9 @@
 <table style="width: 100%; max-width: 700px;" ngModelGroup="externalIds">
   <tr *ngFor="let id of getExternalIds()">
     <td style="width: 100%; flex-flow: row">
+      <span *ngIf="this.isRequired(id.idType) && !readOnly">
+        {{this.translate.instant('createPatient.ask_for_kis_id')}}
+      </span>
       <div style="display: flex; flex-wrap: nowrap;">
         <button *ngIf="side!='none'" style=" margin-top:4%; border:none; background:none;"
                 [ngStyle]="{float:side}">
@@ -12,7 +15,6 @@
           <input style="width: 90%"
                  [(ngModel)]="id.idString" [name]="this.getFieldName(id)"
                  matInput [readonly]="readOnly || this.permittedOperation != 'C' && this.isAssociatedIdType(id.idType)"
-                 [required]="this.isRequired(id.idType)"
                  value="{{id.idString}}">
           <span matSuffix style="display:flex; flex-flow: row; justify-content:flex-end; column-gap:6px; row-gap: 0px">
             <button mat-icon-button *ngIf="readOnly && this.config.isCopyIdEnabled()" [cdkCopyToClipboard]="id.idString"

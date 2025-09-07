@@ -181,6 +181,7 @@
   "createPatient.no_pseudonym_type_error": "Entering the pseudonym type is required",
   "createPatient.add_external_pseudonym": "Add external pseudonym:",
   "createPatient.pseudonym_type": "Pseudonym type",
+  "createPatient.ask_for_kis_id": "If possible please enter the KIS_ID:",
   "consentDialog.title_consent": "Consent information",
   "consentDetail.select_consent_template": "Select consent template:",
   "consentDetail.consent_template": "Consent template",

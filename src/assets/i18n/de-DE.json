@@ -184,6 +184,7 @@
   "createPatient.no_pseudonym_type_error": "Die Eingabe des Pseudonymtyps ist erforderlich",
   "createPatient.add_external_pseudonym": "Externes Pseudonym hinzufügen:",
   "createPatient.pseudonym_type": "Pseudonymtyp",
+  "createPatient.ask_for_kis_id": "Sofern möglich geben Sie bitte eine KIS_ID:",
 
   "consentDialog.title_consent": "Angaben zur Einwilligung",
 

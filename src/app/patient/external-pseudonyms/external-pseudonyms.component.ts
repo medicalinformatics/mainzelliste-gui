@@ -12,6 +12,7 @@ import {GenerateIdDialog} from "./dialogs/generate-id/generate-id-dialog.compone
 import {
   ShowRelatedIdDialog
 } from "../patient-pseudonyms/dialogs/show-related-id-dialog/show-related-id-dialog.component";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-external-pseudonyms',
@@ -35,7 +36,8 @@ export class ExternalPseudonymsComponent implements OnInit, OnChanges {
     public config: AppConfigService,
     public generateIdDialog: MatDialog,
     public showRelatedIdDialog: MatDialog,
-    private appConfigService: AppConfigService
+    private appConfigService: AppConfigService,
+    public translate: TranslateService
   ) {
   }
 

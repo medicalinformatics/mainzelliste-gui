@@ -41,6 +41,7 @@ export class AppConfigService {
   private disableBulkIdGeneration: boolean = false;
   private disableIdSelection: boolean = false;
   private isConsentRequired: boolean = false;
+  // External IDs listed here are promoted in the add patient view, but not really required
   private requiredExternalIds: string[] = [];
 
   constructor(
