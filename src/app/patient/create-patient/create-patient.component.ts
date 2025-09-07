@@ -139,6 +139,17 @@ export class CreatePatientComponent implements OnInit {
                 this.creatingInProgress = false;
                 return of();
               }
+              else if (
+                e.errorMessage == ErrorMessages.CREATE_PATIENT_CONFLICT_IDAT
+                || e.errorMessage == ErrorMessages.CREATE_PATIENT_CONFLICT_EXT_IDS
+                || e.errorMessage == ErrorMessages.CREATE_PATIENT_INVALID_FIELD
+                || e.errorMessage == ErrorMessages.CREATE_PATIENT_INVALID_EXT_ID
+                || e.errorMessage == ErrorMessages.CREATE_PATIENT_INVALID_DATE_1
+                || e.errorMessage == ErrorMessages.CREATE_PATIENT_INVALID_DATE_2
+              ) {
+                this.creatingInProgress = false;
+                return of()
+              }
             }
             throw e;
           },
