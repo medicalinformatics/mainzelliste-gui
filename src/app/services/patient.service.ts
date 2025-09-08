@@ -348,6 +348,7 @@ export class PatientService {
     if (idTypes == undefined || idTypes.length == 0) {
       throw new MainzellisteError(ErrorMessages.CREATE_PATIENT_MISSING_ID_TYPE);
     }
+    patient.ids = patient.ids.filter(id => id.idString !== '');
     return this.patientListService.addPatient(patient, idTypes, sureness);
   }
 

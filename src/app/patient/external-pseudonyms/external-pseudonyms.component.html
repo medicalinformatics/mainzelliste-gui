@@ -1,6 +1,9 @@
 <table style="width: 100%; max-width: 700px;" ngModelGroup="externalIds">
   <tr *ngFor="let id of getExternalIds()">
     <td style="width: 100%; flex-flow: row">
+      <span *ngIf="this.isRequired(id.idType) && !readOnly">
+        {{this.translate.instant('createPatient.ask_for_kis_id')}}
+      </span>
       <div style="display: flex; flex-wrap: nowrap;">
         <button *ngIf="side!='none'" style=" margin-top:4%; border:none; background:none;"
                 [ngStyle]="{float:side}">
@@ -33,7 +36,7 @@
             </button>
           </span>
         </mat-form-field>
-        <button *ngIf="!readOnly && (this.permittedOperation == 'C' || !this.isAssociatedIdType(id.idType))" mat-icon-button color="primary"
+        <button *ngIf="!this.isRequired(id.idType) && !readOnly && (this.permittedOperation == 'C' || !this.isAssociatedIdType(id.idType))" mat-icon-button color="primary"
                 aria-label="Externes Pseudonym entfernen"
                 (click)="this.removeExternalIdField(id.idType)"
                 style="margin-top: 9px;">
