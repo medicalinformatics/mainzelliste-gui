@@ -148,7 +148,7 @@ export class CreatePatientComponent implements OnInit {
                 || e.errorMessage == ErrorMessages.CREATE_PATIENT_INVALID_DATE_2
               ) {
                 this.creatingInProgress = false;
-                return of()
+                throw e;
               }
             }
             throw e;
