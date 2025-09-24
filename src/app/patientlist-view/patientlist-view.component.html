@@ -9,7 +9,7 @@
                   [matBadgeHidden]="isString(filter.searchCriteria)"
                   [matBadge]="filter.searchCriteria.length"
                   matBadgePosition="before" style="font-family: Tahoma;">
-          {{filter.display + (isString(filter.searchCriteria)? ": " + filter.searchCriteria : "")}}
+          <b>{{ filter.display }}</b>{{(isString(filter.searchCriteria)? ": " + filter.searchCriteria : "")}}
           <mat-icon matChipRemove style="color:#494949">cancel</mat-icon>
         </mat-chip>
         <input #filterInput
