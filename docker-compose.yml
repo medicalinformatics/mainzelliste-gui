@@ -47,6 +47,7 @@ services:
       - mainzelliste-db
     secrets:
       - mainzelliste.docker.conf
+    env_file: .env
   mainzelliste-db:
     image: postgres:15-alpine
     environment:

@@ -1,7 +1,10 @@
+# Changelog
+## [1.0.2] - 2025-09-24
+### Fix
+- Dynamically changing locale does not update date formatting
 ## [1.0.1] - 2025-08-07
 ### Fix
 - recalculation of consent period end date
-# Changelog
 ## [1.0.0] - 2025-05-09
 ### Feature
 - Patient List with a search filter and csv export.

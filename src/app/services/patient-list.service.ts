@@ -99,6 +99,7 @@ export class PatientListService {
   ) {
     this.patientList = this.configService.data[0];
     this.mainzellisteHeaders = new HttpHeaders().set('mainzellisteApiVersion', '3.2')
+    //TODO migrate to luxon
     _moment.locale(this._locale);
   }
 

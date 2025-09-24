@@ -179,7 +179,7 @@ function initializeAppFactory(
     },
     {provide: ErrorHandler, useClass: GlobalErrorHandler},
     {provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher},
-    {provide: MAT_DATE_LOCALE, useValue: 'de-DE'},
+    {provide: MAT_DATE_LOCALE, useValue: 'en-US'},
     {provide: MAT_DATE_FORMATS, useValue: MAT_LUXON_DATE_FORMATS},
     {
       provide: DateAdapter,
