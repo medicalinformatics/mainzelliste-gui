@@ -75,7 +75,7 @@ export class PatientPseudonymsComponent{
   }
 
   public getConcatenated(id: Id): string {
-    return id.idType + "." + id.idString;
+    return id.idType + this.config.getCopyConcatenateSeparation() + id.idString;
   }
 
   forwardGenerateIdEvent(event: { idType: string, idString: string, newIdType: string }) {

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Id} from "../../model/id";
 import {IdTypSelection} from "../create-patient/create-patient.component";
 import {MatSelect} from "@angular/material/select";
@@ -12,6 +12,7 @@ import {GenerateIdDialog} from "./dialogs/generate-id/generate-id-dialog.compone
 import {
   ShowRelatedIdDialog
 } from "../patient-pseudonyms/dialogs/show-related-id-dialog/show-related-id-dialog.component";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-external-pseudonyms',
@@ -19,7 +20,7 @@ import {
   styleUrls: ['./external-pseudonyms.component.css'],
   viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
 })
-export class ExternalPseudonymsComponent implements OnChanges {
+export class ExternalPseudonymsComponent implements OnInit, OnChanges {
 
   @Input() ids: Array<Id> = [];
   @Input() readOnly: boolean = false;
@@ -34,8 +35,19 @@ export class ExternalPseudonymsComponent implements OnChanges {
     private patientListService: PatientListService,
     public config: AppConfigService,
     public generateIdDialog: MatDialog,
-    public showRelatedIdDialog: MatDialog
+    public showRelatedIdDialog: MatDialog,
+    private appConfigService: AppConfigService,
+    public translate: TranslateService
   ) {
+  }
+
+  ngOnInit(): void {
+    // initialize required external ids
+    this.appConfigService.getRequiredExternalIds().map(requiredId => {
+      addIfNotExist(new Id(requiredId, ""), this.ids,
+        e => !this.isAssociatedIdType(requiredId) && e.idType == requiredId
+      )
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -44,18 +56,21 @@ export class ExternalPseudonymsComponent implements OnChanges {
       this.getExternalIdTypes()
       .filter(e => change.currentValue.some((id: any) => e.idType == id.idType))
       .forEach(e => e.added = true);
-
   }
 
   addExternalIdField(selectedExternalIdType: MatSelect) {
+    this.addExternalIdFieldString(selectedExternalIdType.value)
+    selectedExternalIdType.value = undefined
+  }
+
+  addExternalIdFieldString(idType: string) {
     //add external id to patient model
-    addIfNotExist(new Id(selectedExternalIdType.value, ''), this.ids,
-        e => !this.isAssociatedIdType(selectedExternalIdType.value) && e.idType == selectedExternalIdType.value
+    addIfNotExist(new Id(idType, ''), this.ids,
+        e => !this.isAssociatedIdType(idType) && e.idType == idType
     );
 
-    this.externalIdTypes.filter(t => t.idType == selectedExternalIdType.value)
+    this.externalIdTypes.filter(t => t.idType == idType)
     .forEach(t => t.added = true);
-    selectedExternalIdType.value = undefined
   }
 
   removeExternalIdField(idType: string) {
@@ -77,7 +92,11 @@ export class ExternalPseudonymsComponent implements OnChanges {
     if (this.externalIdTypes.length == 0) {
       this.externalIdTypes = [
         ...this.patientListService.getUniqueIdTypes(true, this.permittedOperation)
-          .map(t => { return {idType: t, added: false, associated: false } }),
+          .map(t => { return {
+            idType: t,
+            added: this.appConfigService.getRequiredExternalIds().some(id => id = t),
+            associated: false
+          } }),
         ...this.patientListService.getAssociatedIdTypes(true, this.permittedOperation)
           .map(t => { return {idType: t, added: false, associated: true } })];
     }
@@ -101,7 +120,7 @@ export class ExternalPseudonymsComponent implements OnChanges {
   }
 
   public getConcatenated(id: Id): string {
-    return id.idType + "." + id.idString;
+    return id.idType + this.config.getCopyConcatenateSeparation() + id.idString;
   }
 
   getAssociatedIdTypes(idType: string):string[] {
@@ -137,5 +156,9 @@ export class ExternalPseudonymsComponent implements OnChanges {
 
   public getFieldClass(className: string){
     return className + (this.readOnly ? " inputFieldDisabled" : "");
+  }
+
+  isRequired(idType: string) {
+    return this.appConfigService.getRequiredExternalIds().some(type => type === idType);
   }
 }

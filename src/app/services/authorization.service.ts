@@ -39,6 +39,8 @@ export class AuthorizationService {
             e.permissions.tenant?.consentTemplateIds || [],
             this.convertClaimPermissions(e.permissions))
         })
+        // NOTE: Temporary fix. Mainzelliste reports default tenants because of tt_createIds. tt_createIds will be removed, but this is a more involved task
+        .filter(t => t.id !== "default")
     if(this.currentTenantId.length == 0 || this.configuredTenants.every(t => t.id != this.currentTenantId)) {
       let uiTenants = this.getUITenants();
       this.currentTenantId = uiTenants.length > 0 ? uiTenants[0].id : "";

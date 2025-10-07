@@ -26,6 +26,17 @@
       </mat-select>
     </mat-form-field>
   </ng-container>
+  <!-- id insertion for associated external ids -->
+  <ng-container  *ngIf="this.isWriteableExternalAssociatedId(this.resultIdType)">
+    <h4 style="font-weight: 100; text-align: justify">{{'newIdDialog.text_5' | translate}}</h4>
+    <mat-form-field appearance="fill">
+      <mat-label>{{this.resultIdType}}</mat-label>
+      <input matInput style="width: 90%;"
+        [(ngModel)]="this.resultIdValue"
+        [name]="this.resultIdType"
+        required="true"/>
+    </mat-form-field>
+  </ng-container>
 </div>
 <div mat-dialog-actions style="margin-top: 10%;">
   <button mat-raised-button class="submitBreak" (click)="onCancel()">
@@ -43,4 +54,3 @@
   </button>
 </div>
 </form>
-
