@@ -152,14 +152,25 @@ export class PatientListService {
     .filter(g => g.isExternal == isExternal).map(g => g.idType);
   }
 
-  getRelatedAssociatedIdsMapFrom(idTypes: IdType[], patientIds: Id[], operation: Operation): Map<IdType, Id[]> {
+  getRelatedAssociatedIdsMapFrom(idTypes: IdType[], relatedId: Map<Id, Id[]>, operation: Operation): Map<IdType, Id[]> {
     let result = new Map<IdType, Id[]>()
     for (let idType of idTypes) {
       let relatedIdTypes = this.getAllRelatedAssociatedIdTypes(idType.name, operation);
-      result.set(idType, idType.isAssociated ?
-        patientIds.filter(id => id.idType != idType.name && relatedIdTypes.includes(id.idType)) : [])
+      if (idType.isAssociated)
+        result.set(
+          idType,
+          this.removeDuplicate([...relatedId.values()].filter(ids =>
+            !ids.some(id => id.idType == idType.name) &&
+            ids.some(id => relatedIdTypes.includes(id.idType)))
+          .reduce((a, v) => a.concat(v), [])));
+      else
+        result.set(idType, [])
     }
     return result
+  }
+
+  private removeDuplicate(ids: Id[]){
+    return [... new Map(ids.map(id => [id.idType + id.idString, id])).values()];
   }
 
   findRelatedIds(id: Id, ids: Id[]): Observable<Id[]> {
@@ -488,12 +499,17 @@ export class PatientListService {
       })
     );
   }
-
   readPatient(id: Id, operation: Operation, resultFields?: string[], resultIdTypes?: string[]): Observable<Patient[]> {
+    return this.readPatients([id], operation, resultFields, resultIdTypes);
+  }
+
+  readPatients(ids: Id[], operation: Operation, resultFields?: string[], resultIdTypes?: string[]): Observable<Patient[]> {
+    let searchIds: Array<{idType: string, idString: string}> = [];
+    ids.forEach(id => searchIds.push({idType: id.idType, idString: id.idString}));
     return this.sessionService.createToken(
         "readPatients",
         new ReadPatientsTokenData(
-            [{idType: id.idType, idString: id.idString}],
+            searchIds,
             resultFields ?? this.getFieldNames(operation),
             resultIdTypes ?? this.getAllIdTypes(operation)
         )).pipe(

@@ -51,6 +51,7 @@ export class IdcardComponent implements OnInit {
   public idString: string = "";
   public idType: string = "";
   public patient: Patient = new Patient();
+  public relatedAssociatedIdMap: Map<Id, Id[]> = new Map<Id, Id[]>();
   public displayedConsentColumns: string[] = ['date', 'title', 'period', 'version', 'status', 'actions'];
   public consentsView: ConsentsView = { consentTemplates: new Map, consentRows: [] };
   @ViewChild('consentTable') consentTable!: MatTable<ConsentRow>;
@@ -115,6 +116,8 @@ export class IdcardComponent implements OnInit {
   private loadPatient() {
     this.patientListService.readPatient(new Id(this.idType, this.idString), "R", undefined, this.readIdTypes)
     .pipe(
+      map(patients => this.patientListService.convertToDisplayPatient(patients[0], false, true, this.authorizationService.getTenants())),
+      mergeMap(patient => this.loadRelatedAssociatedIds(patient, this.getIdTypes().filter( t => t.isAssociated ))),
       catchError(e => {
         if (e instanceof HttpErrorResponse && (e.status == 404)) {
           this.router.navigate(['/**']).then();
@@ -123,10 +126,33 @@ export class IdcardComponent implements OnInit {
       })
     )
     .subscribe(
-      patients => {
-        this.patient = this.patientListService.convertToDisplayPatient(patients[0], false, true, this.authorizationService.getTenants());
+      result => {
+        this.patient = result.patient;
         this.patient.ids = this.patient.ids.filter(id => !this.otherTenantIdTypes.some(t => t == id.idType));
+        this.relatedAssociatedIdMap = result.relatedAssociatedIdMap;
       });
+  }
+
+  private loadRelatedAssociatedIds(patient: Patient, associatedIdTypes: IdType[]): Observable<{
+    patient: Patient,
+    relatedAssociatedIdMap: Map<Id, Id[]>
+  }> {
+    let searchIds = patient.ids.filter(id => associatedIdTypes.some(t => t.name == id.idType))
+    return this.patientListService.readPatients(
+      searchIds,
+      "R",
+      undefined,
+      associatedIdTypes.map(t => t.name))
+    .pipe(
+      map(patients => {
+        let relatedAssociatedIdMap = new Map<Id, Id[]>()
+        searchIds.forEach((id, i) => relatedAssociatedIdMap.set(id, patients[i].ids));
+        return {
+          patient: patient,
+          relatedAssociatedIdMap: relatedAssociatedIdMap
+        };
+      })
+    )
   }
 
   private loadConsents() {
@@ -313,7 +339,8 @@ export class IdcardComponent implements OnInit {
     this.newIdDialog.open(NewIdDialog, {
       disableClose: true,
       data: {
-        relatedAssociatedIdsMap: this.patientListService.getRelatedAssociatedIdsMapFrom(this.getUnAvailableIdTypes(this.patient), this.patient.ids, "R"),
+        relatedAssociatedIdsMap: this.patientListService.getRelatedAssociatedIdsMapFrom(
+          this.getUnAvailableIdTypes(this.patient), this.relatedAssociatedIdMap, "R"),
         generateIdObservable: (externalId: Id, newIdType: string, newIdValue: string) =>
           this.generateNewId(externalId?.idType ?? "", externalId?.idString ?? "", newIdType, newIdValue)
       }
