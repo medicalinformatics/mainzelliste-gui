@@ -339,6 +339,7 @@ export class IdcardComponent implements OnInit {
     this.newIdDialog.open(NewIdDialog, {
       disableClose: true,
       data: {
+        patientIds: this.patient.ids,
         relatedAssociatedIdsMap: this.patientListService.getRelatedAssociatedIdsMapFrom(
           this.getUnAvailableIdTypes(this.patient), this.relatedAssociatedIdMap, "R"),
         generateIdObservable: (externalId: Id, newIdType: string, newIdValue: string) =>

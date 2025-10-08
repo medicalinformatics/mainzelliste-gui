@@ -378,6 +378,7 @@
   "newIdDialog.text_4": "und zu der ausgewählten ID zugeordnet",
 	"newIdDialog.id_types": "ID Typen",
   "newIdDialog.id_value": "ID Wert",
+  "newIdDialog.error.id_exist": "ID mit dem angegebenen Wert existiert",
 
 	"logout.message": "Du wurdest erfolgreich ausgelogged!",
 

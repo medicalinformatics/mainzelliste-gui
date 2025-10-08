@@ -4,6 +4,7 @@ import {Id} from "../../model/id";
 import {Observable} from "rxjs";
 import {IdType} from "../../model/id-type";
 import {TranslateService} from "@ngx-translate/core";
+import {NgModel} from "@angular/forms";
 
 @Component({
   selector: 'new-id-dialog',
@@ -20,6 +21,7 @@ export class NewIdDialog {
     public dialogRef: MatDialogRef<NewIdDialog>,
     public translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) public data: {
+      patientIds: Id[],
       relatedAssociatedIdsMap : Map<IdType, Id[]>,
       generateIdObservable: (externalId: Id, newIdType: string, newIdValue:string) => Observable<[{idType: string, idString: string}]>
     }
@@ -62,5 +64,9 @@ export class NewIdDialog {
 
   getText1() {
     return this.translate.instant(this.resultIdType.isExternal ? 'newIdDialog.text_1_b' : 'newIdDialog.text_1_a');
+  }
+
+  displayError(field: NgModel) {
+    return field.invalid && (field.dirty || field.touched) && field.errors?.idStringExist?.value;
   }
 }
