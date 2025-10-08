@@ -2,7 +2,8 @@ import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef,} from "@angular/material/dialog";
 import {Id} from "../../model/id";
 import {Observable} from "rxjs";
-import { PatientListService } from 'src/app/services/patient-list.service';
+import {IdType} from "../../model/id-type";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'new-id-dialog',
@@ -12,14 +13,14 @@ import { PatientListService } from 'src/app/services/patient-list.service';
 export class NewIdDialog {
   public inProgress: boolean = false
   public externalId: Id = new Id("", "")
-  public resultIdType: string = ""
-  public resultIdValue: string = ""
+  public resultIdType: IdType = {name:"unkown", isExternal:false, isAssociated:false};
+  public resultIdString: string = ""
 
   constructor(
     public dialogRef: MatDialogRef<NewIdDialog>,
-    public patientlist: PatientListService,
+    public translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) public data: {
-      relatedAssociatedIdsMap : Map<string, Id[]>,
+      relatedAssociatedIdsMap : Map<IdType, Id[]>,
       generateIdObservable: (externalId: Id, newIdType: string, newIdValue:string) => Observable<[{idType: string, idString: string}]>
     }
   ) {
@@ -29,13 +30,14 @@ export class NewIdDialog {
     return [...this.data.relatedAssociatedIdsMap.keys()];
   }
 
-  getExternalIds(): Id[] {
+  getRelatedAssociatedIds(): Id[] {
     return this.data.relatedAssociatedIdsMap.get(this.resultIdType) || [];
   }
 
   // Check for external associated Ids
-  isWriteableExternalAssociatedId(idType: string): boolean {
-    return this.patientlist.getAssociatedIdTypes(true, "C").some(id => id = idType);
+  isExternalIdType(idType: string): boolean {
+    return false;
+    // return this.patientlist.getAssociatedIdTypes(true, "C").some(id => id = idType);
   }
 
   onCancel(): void {
@@ -44,7 +46,7 @@ export class NewIdDialog {
 
   onSave() {
     this.inProgress = true;
-    this.data.generateIdObservable(this.externalId, this.resultIdType, this.resultIdValue).subscribe({
+    this.data.generateIdObservable(this.externalId, this.resultIdType.name, this.resultIdString).subscribe({
       next: () => {},
       error: e => {
         this.dialogRef.close(false);
@@ -56,5 +58,9 @@ export class NewIdDialog {
         this.inProgress = false;
       }
     });
+  }
+
+  getText1() {
+    return this.translate.instant(this.resultIdType.isExternal ? 'newIdDialog.text_1_b' : 'newIdDialog.text_1_a');
   }
 }

@@ -285,6 +285,8 @@ export class IdcardComponent implements OnInit {
       this.idTypes = [
         ...this.patientListService.getUniqueIdTypes(false, "C")
           .map(t => { return { name: t, isExternal: false, isAssociated: false } }),
+        ...this.patientListService.getUniqueIdTypes(true, "C")
+          .map(t => { return { name: t, isExternal: true, isAssociated: false } }),
         ...this.patientListService.getAssociatedIdTypes(false, "C")
           .map(t => { return { name: t, isExternal: false, isAssociated: true } }),
         ...this.patientListService.getAssociatedIdTypes(true, "C")
@@ -311,15 +313,9 @@ export class IdcardComponent implements OnInit {
     this.newIdDialog.open(NewIdDialog, {
       disableClose: true,
       data: {
-        relatedAssociatedIdsMap: this.patientListService.getRelatedAssociatedIdsMapFrom(this.getUnAvailableIdTypes(this.patient), this.patient.ids, true, "R"),
-        generateIdObservable: (externalId: Id, newIdType: string, newIdValue: string) => {
-          if (newIdValue !== "") {
-            return this.generateNewId(this.idType, this.idString, newIdType, newIdValue)
-          } else {
-            // QUESTION, what will happen if externalId is not there and idType and String are empty??
-            return this.generateNewId(externalId?.idType ?? "", externalId?.idString ?? "", newIdType, newIdValue)
-          }
-        }
+        relatedAssociatedIdsMap: this.patientListService.getRelatedAssociatedIdsMapFrom(this.getUnAvailableIdTypes(this.patient), this.patient.ids, "R"),
+        generateIdObservable: (externalId: Id, newIdType: string, newIdValue: string) =>
+          this.generateNewId(externalId?.idType ?? "", externalId?.idString ?? "", newIdType, newIdValue)
       }
     }).beforeClosed().subscribe(result => {
       if(!result)

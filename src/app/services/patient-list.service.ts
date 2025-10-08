@@ -152,12 +152,12 @@ export class PatientListService {
     .filter(g => g.isExternal == isExternal).map(g => g.idType);
   }
 
-  getRelatedAssociatedIdsMapFrom(idTypes: IdType[], patientIds: Id[], areExternal: boolean, operation: Operation): Map<string, Id[]> {
-    let result = new Map<string, Id[]>()
+  getRelatedAssociatedIdsMapFrom(idTypes: IdType[], patientIds: Id[], operation: Operation): Map<IdType, Id[]> {
+    let result = new Map<IdType, Id[]>()
     for (let idType of idTypes) {
-      let relatedIdTypes = this.authorizationService.getRelatedAssociatedIdTypes(idType.name, areExternal, operation);
-      result.set(idType.name, !idType.isExternal && idType.isAssociated ?
-        patientIds.filter(id => relatedIdTypes.includes(id.idType)) : [])
+      let relatedIdTypes = this.getAllRelatedAssociatedIdTypes(idType.name, operation);
+      result.set(idType, idType.isAssociated ?
+        patientIds.filter(id => id.idType != idType.name && relatedIdTypes.includes(id.idType)) : [])
     }
     return result
   }
@@ -319,10 +319,6 @@ export class PatientListService {
   generateIdArray(idType: string, idString: string[], newIdType: string, newIdValue: string = ""): Observable<[{idType: string, idString: string}]> {
     if(idString.length == 0) {
       throw new Error("idString cant be empty");
-    }
-
-    if (idString.length > 1 && newIdValue !== "") {
-      throw new Error("adding user defined external ids for multiple patients is currently not supported!")
     }
 
     let ids: {idType: string; idString: string}[] = [];
