@@ -152,14 +152,25 @@ export class PatientListService {
     .filter(g => g.isExternal == isExternal).map(g => g.idType);
   }
 
-  getRelatedAssociatedIdsMapFrom(idTypes: IdType[], patientIds: Id[], areExternal: boolean, operation: Operation): Map<string, Id[]> {
-    let result = new Map<string, Id[]>()
+  getRelatedAssociatedIdsMapFrom(idTypes: IdType[], relatedId: Map<Id, Id[]>, operation: Operation): Map<IdType, Id[]> {
+    let result = new Map<IdType, Id[]>()
     for (let idType of idTypes) {
-      let relatedIdTypes = this.authorizationService.getRelatedAssociatedIdTypes(idType.name, areExternal, operation);
-      result.set(idType.name, !idType.isExternal && idType.isAssociated ?
-        patientIds.filter(id => relatedIdTypes.includes(id.idType)) : [])
+      let relatedIdTypes = this.getAllRelatedAssociatedIdTypes(idType.name, operation);
+      if (idType.isAssociated)
+        result.set(
+          idType,
+          this.removeDuplicate([...relatedId.values()].filter(ids =>
+            !ids.some(id => id.idType == idType.name) &&
+            ids.some(id => relatedIdTypes.includes(id.idType)))
+          .reduce((a, v) => a.concat(v), [])));
+      else
+        result.set(idType, [])
     }
     return result
+  }
+
+  private removeDuplicate(ids: Id[]){
+    return [... new Map(ids.map(id => [id.idType + id.idString, id])).values()];
   }
 
   findRelatedIds(id: Id, ids: Id[]): Observable<Id[]> {
@@ -309,11 +320,14 @@ export class PatientListService {
     }).join("&")
   }
 
-  generateId(idType: string, idString: string, newIdType: string) {
-    return this.generateIdArray(idType, [idString], newIdType);
+  generateId(idType: string, idString: string, newIdType: string, newIdValue: string = "") {
+    return this.generateIdArray(idType, [idString], newIdType, newIdValue);
   }
 
-  generateIdArray(idType: string, idString: string[], newIdType: string): Observable<[{idType: string, idString: string}]> {
+  // generating new ids of type newIdType for a group of patient.
+  // The group is defined by idString array and the specified idType
+  // Also supports adding new external id for a single patient by specifying newIdValue
+  generateIdArray(idType: string, idString: string[], newIdType: string, newIdValue: string = ""): Observable<[{idType: string, idString: string}]> {
     if(idString.length == 0) {
       throw new Error("idString cant be empty");
     }
@@ -325,7 +339,7 @@ export class PatientListService {
 
     return this.sessionService.createToken("createIds", new CreateIdsTokenData(ids, [newIdType]))
       .pipe(mergeMap(
-        token => this.resolveCreateIdsToken(token.id, newIdType)
+        token => this.resolveCreateIdsToken(token.id, newIdType, newIdValue)
         ),
       catchError(e => {
         // handle failed token creation
@@ -337,8 +351,11 @@ export class PatientListService {
       }));
   }
 
-  resolveCreateIdsToken(tokenId: string | undefined, newIdType: string): Observable<any> {
-    return this.httpClient.post<Id[]>(this.patientList.url + "/ids/" + newIdType + "?tokenId=" + tokenId, {}, {
+  resolveCreateIdsToken(tokenId: string | undefined, newIdType: string, newIdValue: string = ""): Observable<any> {
+    let request_url = this.patientList.url + "/ids/" + newIdType + "?tokenId=" + tokenId;
+    if (newIdValue !== "") request_url = `${request_url}&idString=${newIdValue}`
+
+    return this.httpClient.post<Id[]>(request_url, {}, {
       headers: new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('mainzellisteApiVersion', '3.2')
@@ -482,12 +499,17 @@ export class PatientListService {
       })
     );
   }
-
   readPatient(id: Id, operation: Operation, resultFields?: string[], resultIdTypes?: string[]): Observable<Patient[]> {
+    return this.readPatients([id], operation, resultFields, resultIdTypes);
+  }
+
+  readPatients(ids: Id[], operation: Operation, resultFields?: string[], resultIdTypes?: string[]): Observable<Patient[]> {
+    let searchIds: Array<{idType: string, idString: string}> = [];
+    ids.forEach(id => searchIds.push({idType: id.idType, idString: id.idString}));
     return this.sessionService.createToken(
         "readPatients",
         new ReadPatientsTokenData(
-            [{idType: id.idType, idString: id.idString}],
+            searchIds,
             resultFields ?? this.getFieldNames(operation),
             resultIdTypes ?? this.getAllIdTypes(operation)
         )).pipe(

@@ -370,12 +370,15 @@
 	"patientlistView.title": "Patientenliste",
 
 	"newIdDialog.mat_title": "Neue ID generieren",
-	"newIdDialog.text_1": "Für den ausgewählten Typ wird eine neue ID generiert",
+	"newIdDialog.text_1_a": "Für den ausgewählten Typ wird eine neue ID generiert",
+  "newIdDialog.text_1_b": "Für den ausgewählten Typ wird eine neue ID hinzugefügt",
   "newIdDialog.text_2": "und zu der externen ID",
   "newIdDialog.text_id": "{{idType}}: {{idString}}",
   "newIdDialog.text_3": "zugeordnet",
-  "newIdDialog.text_4": "und zu der ausgewählten externen ID zugeordnet",
+  "newIdDialog.text_4": "und zu der ausgewählten ID zugeordnet",
 	"newIdDialog.id_types": "ID Typen",
+  "newIdDialog.id_value": "ID Wert",
+  "newIdDialog.error.id_exist": "ID mit dem angegebenen Wert existiert",
 
 	"logout.message": "Du wurdest erfolgreich ausgelogged!",
 

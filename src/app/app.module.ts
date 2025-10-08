@@ -72,6 +72,9 @@ import { BulkPseudonymizationComponent } from './bulk-operations/bulk-pseudonymi
 import {EditorModule, TINYMCE_SCRIPT_SRC} from "@tinymce/tinymce-angular";
 import { ExportPatientsDialogComponent } from './patientlist/dialogs/export-patients-dialog/export-patients-dialog.component';
 import {MatListModule} from "@angular/material/list";
+import {
+  ValidRelatedExternalIdsDirective
+} from "./shared/directives/valid-related-external-ids.directive";
 
 function initializeAppFactory(
     configService: AppConfigService,
@@ -166,7 +169,8 @@ function initializeAppFactory(
     NgxMatFileInputModule,
     MatStepperModule,
     EditorModule,
-    MatListModule
+    MatListModule,
+    ValidRelatedExternalIdsDirective
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
