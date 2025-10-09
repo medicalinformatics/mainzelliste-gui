@@ -2,6 +2,10 @@
   border: 1px solid #3e3e3e;
 }
 
-#saveButton {
+#signatureButton {
     margin-left: 0.65em;
+}
+
+.signature-container {
+  margin-top: 1.3em;
 }

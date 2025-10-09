@@ -63,6 +63,18 @@
     </mat-form-field>
     <label><strong>{{getConsentExpirationDate()}}</strong></label>
   </div>
+  <ng-container>
+    <div class="signature-container">
+      <canvas class="canvas" #canvasRef [ngStyle]="{cursor: signaturePadActive ? 'crosshair' : 'default' }"></canvas>
+    </div>
+    <div *ngIf="!readOnly">
+      <button color="primary" type="submit" mat-stroked-button *ngIf="!signaturePadActive"(click)="clear()">{{(canvasEmpty ? 'button_add_signature' : 'button_update_signature') | translate }}</button>
+      <button id="signatureButton" color="primary" type="submit" mat-stroked-button *ngIf="!signaturePadActive && !canvasEmpty" (click)="removeSignature()">{{'button_remove_signature' | translate }}</button>
+      <button mat-stroked-button *ngIf="signaturePadActive"(click)="cancel()">{{'button_cancel' | translate }}</button>
+      <button id="signatureButton" color="primary" type="submit" mat-stroked-button *ngIf="signaturePadActive"(click)="clear()">{{'button_delete' | translate }}</button>
+      <button id="signatureButton" color="primary" type="submit" mat-stroked-button *ngIf="signaturePadActive" (click)="save()">{{'button_save' | translate }}</button>
+    </div>
+  </ng-container>
 </mat-card>
 <br>
 <ng-container *appHasAnyPermissions="[Permission.ADD_CONSENT_SCANS, Permission.READ_CONSENT_SCANS]">
@@ -118,12 +130,4 @@
   <br>
 </ng-container>
 
-<ng-container>
-  <div class="signature-container">
-    <canvas class="canvas" #canvasRef [ngStyle]="{ cursor: signaturePadActive ? 'crosshair' : 'default' }"></canvas>
-  </div>
 
-  <button class="submit" mat-raised-button *ngIf="!signaturePadActive"(click)="clear()">{{'button_update_signature' | translate }}</button>
-  <button class="submit" mat-raised-button *ngIf="signaturePadActive"(click)="clear()">{{'button_delete' | translate }}</button>
-  <button id="saveButton" class="submit" mat-raised-button *ngIf="signaturePadActive" (click)="save()">{{'button_save' | translate }}</button>
-</ng-container>

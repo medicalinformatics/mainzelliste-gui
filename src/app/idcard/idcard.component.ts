@@ -199,6 +199,7 @@ export class IdcardComponent implements OnInit {
         disableClose: true,
         data: {
           consent: c,
+          readonly: false,
           edit: true,
           updateConsentObservable: (consent: Consent) => this.getUpdateConsentObservable(
             of(consent).pipe(
@@ -219,7 +220,7 @@ export class IdcardComponent implements OnInit {
     return observable.pipe(
       mergeMap(consent => this.consentService.updateConsent(consent, force || false,  searchParamsProvider ? searchParamsProvider(consent) : undefined).pipe(
         mergeMap(c =>
-          this.consentService.createScansAndProvenance(consent, (c as fhir4.Consent).id ?? "")
+          this.consentService.createScansProvenance(consent, (c as fhir4.Consent).id ?? "")
         ),
         catchError(e => throwError( () => { return { error: e, dataModel: consent}}))
       ))

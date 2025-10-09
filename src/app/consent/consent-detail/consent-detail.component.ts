@@ -42,6 +42,7 @@ export class ConsentDetailComponent implements OnInit, AfterViewInit {
   uploadSubscription: Subscription | undefined = undefined;
   consentScans: Map<string,string> = new Map<string, string>();
   patientSignature: string[] = [];
+  canvasEmpty: boolean = true;
 
   constructor(
       private readonly consentService: ConsentService,
@@ -81,7 +82,10 @@ export class ConsentDetailComponent implements OnInit, AfterViewInit {
           .map(s => s.data || "")
         )
       ).subscribe(data => {
+        console.log("test");
+        console.log(data[0]);
         this.patientSignature.push(data[0]);
+        console.log(this.patientSignature);
         this.loadSignature();
       });
     }
@@ -99,6 +103,9 @@ export class ConsentDetailComponent implements OnInit, AfterViewInit {
       penColor: 'black',
       backgroundColor: 'white'
     });
+    
+    this.signaturePad.off();
+    this.signaturePadActive = false;
   }
 
   initDataModel(consentTemplateId: MatSelectChange) {
@@ -107,7 +114,7 @@ export class ConsentDetailComponent implements OnInit, AfterViewInit {
       .subscribe(consentDataModel => {
         this.consent = consentDataModel;
         // propagate change to parent component
-        this.consentChange.emit(this.consent)
+        this.consentChange.emit(this.consent);
       });
     }
   }
@@ -161,14 +168,14 @@ export class ConsentDetailComponent implements OnInit, AfterViewInit {
           if (event.type == HttpEventType.UploadProgress) {
             this.uploadProgress = Math.round(100 * (event.loaded / (event.total ?? 1)));
           } else if(event.type == HttpEventType.Response) {
-            let fileUrl = event.body?.url
+            let fileUrl = event.body?.url;
             if(fileUrl == undefined)
-              throw new Error("failed to upload File")
+              throw new Error("failed to upload File");
             this.consent.scanUrls.set( files[0].name, fileUrl);
           }
         },
         error: e => {
-          this.errorMessages.push(getErrorMessageFrom(e, this.translate))
+          this.errorMessages.push(getErrorMessageFrom(e, this.translate));
           this.errorMessagesChange.emit(this.errorMessages);
         },
         complete: () => {
@@ -178,7 +185,7 @@ export class ConsentDetailComponent implements OnInit, AfterViewInit {
   }
 
   cancelUploadScan() {
-    this.uploadSubscription?.unsubscribe()
+    this.uploadSubscription?.unsubscribe();
     this.resetUploadScan();
   }
 
@@ -190,7 +197,7 @@ export class ConsentDetailComponent implements OnInit, AfterViewInit {
 
   deleteUploadedScan(fileName: string) {
     this.consent.scanUrls.delete(fileName);
-    console.log("remove from backend not implemented yet")
+    console.log("remove from backend not implemented yet");
   }
 
   downloadScan(id: string) {
@@ -202,7 +209,7 @@ export class ConsentDetailComponent implements OnInit, AfterViewInit {
         downloadLink.click();
       },
       error: e => {
-        this.errorMessages.push(getErrorMessageFrom(e, this.translate))
+        this.errorMessages.push(getErrorMessageFrom(e, this.translate));
         this.errorMessagesChange.emit(this.errorMessages);
       },
       complete: () => {
@@ -211,23 +218,48 @@ export class ConsentDetailComponent implements OnInit, AfterViewInit {
   }
 
   loadSignature() {
-    if (this.patientSignature[0] != undefined) {
-      console.log(this.patientSignature[0])
-      let imageData = 'data:image/png;base64,' + this.patientSignature[0]
+    if (this.patientSignature[0] != undefined && this.patientSignature[0] != "") {
+      this.canvasEmpty = false;
+      let imageData = 'data:image/png;base64,' + this.patientSignature[0];
       this.signaturePad.fromDataURL(imageData, {
         ratio: 1,
         width: 700,
         height: 200
       });
-      this.signaturePad.off();
-      this.signaturePadActive = false;
+    }
+  }
+
+  load() {
+    this.canvasEmpty = true;
+    if (this.consent.signature != undefined && this.consent.signature != "") {
+      this.canvasEmpty = false;
+      let imageData = 'data:image/png;base64,' + this.consent.signature;
+      this.signaturePad.fromDataURL(imageData, {
+        ratio: 1,
+        width: 700,
+        height: 200
+      });
     }
   }
 
   clear() {
+    this.canvasEmpty = false;
     this.signaturePad.clear();
     this.signaturePad.on();
     this.signaturePadActive = true;
+  }
+
+  removeSignature() {
+    this.canvasEmpty = true;
+    this.signaturePad.clear();
+    this.consent.signature = "";
+  }
+
+  cancel() {
+    this.signaturePad.clear();
+    this.signaturePad.off();
+    this.signaturePadActive = false;
+    this.load();
   }
 
   save() {
@@ -235,12 +267,11 @@ export class ConsentDetailComponent implements OnInit, AfterViewInit {
       alert(this.translate.instant('consentDetail.alert_signature_empty'));
     } else {
       const dataURL = this.signaturePad.toDataURL();
-      console.log('Unterschrift:', dataURL);
+      let splitURL = dataURL.split(",");
+      this.consent.signature = splitURL[1];
+
       this.signaturePad.off();
       this.signaturePadActive = false;
-
-      // Beispiel: an Backend schicken
-      // this.http.post('/api/save-signature', { image: dataURL }).subscribe();
     }
   }
 
@@ -250,7 +281,7 @@ export class ConsentDetailComponent implements OnInit, AfterViewInit {
 
   dateChanged($event: MatDatepickerInputEvent<any, any>) {
     if (this.consent.validityPeriod.period && $event.value){
-      console.log("changed" + $event.value.toISODate())
+      console.log("changed" + $event.value.toISODate());
       this.consent.validityPeriod.validUntil = this.consentService.addPeriodToDate($event.value.toISODate(), this.consent.validityPeriod.period);
     }
   }

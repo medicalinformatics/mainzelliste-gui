@@ -29,6 +29,8 @@
 	"button_publish": "Publish",
   	"button_create": "Create",
 	"button_update_signature": "Update signature",
+	"button_add_signature": "Add signature",
+	"button_remove_signature": "Remove signature",
 
 	"radio_button_yes": "Yes",
 	"radio_button_no": "No",
