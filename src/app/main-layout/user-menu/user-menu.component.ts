@@ -5,6 +5,7 @@ import {AuthorizationService} from "../../services/authorization.service";
 import {Router} from "@angular/router";
 import {LocalStorageService} from "../../services/local-storage.service";
 import {Tenant} from "../../model/tenant";
+import {DateAdapter} from "@angular/material/core";
 
 @Component({
   selector: 'app-user-menu',
@@ -17,7 +18,8 @@ export class UserMenuComponent {
     public translate :TranslateService,
     public authorizationService: AuthorizationService,
     public router: Router,
-    private localStorageService :LocalStorageService
+    private readonly localStorageService :LocalStorageService,
+    private readonly dateAdapter: DateAdapter<any>
   ) {
   }
 
@@ -28,6 +30,7 @@ export class UserMenuComponent {
   useLanguage(language: string): void {
     this.localStorageService.language = language;
     this.translate.use(language).subscribe();
+    this.dateAdapter.setLocale(language);
   }
 
   getTenants(): { id: string, name: string }[] {

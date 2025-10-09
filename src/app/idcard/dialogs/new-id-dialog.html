@@ -3,24 +3,41 @@
 <div mat-dialog-content>
   <br />
   <h4 style="font-weight: 100; text-align: justify">
-    {{'newIdDialog.text_1' | translate}}
+    {{ this.getText1() }}
   </h4>
   <mat-form-field appearance="fill">
     <mat-label>{{'newIdDialog.id_types' | translate}}</mat-label>
     <mat-select [(ngModel)]="this.resultIdType" name="idType" required="true" [disabled]="inProgress">
       <mat-option *ngFor="let idType of this.getIdTypes()" [value]="idType">
-        {{idType}}
+        {{idType.name}}
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <ng-container  *ngIf="this.getExternalIds().length > 0">
+
+  <ng-container  *ngIf="this.resultIdType.isExternal">
+    <br>
+    <mat-form-field appearance="fill" [ngStyle]="{'margin-bottom': displayError(idString) ? '0.9em' : '0.24em' }">
+      <mat-label>{{'newIdDialog.id_value' | translate}}</mat-label>
+      <input matInput style="width: 90%;"
+             [(ngModel)]="this.resultIdString"
+             [name]="this.resultIdType.name"
+             [appPatientIds]="this.data.patientIds"
+             [appExternalIdType]="this.resultIdType.name"
+             #idString="ngModel"
+             required="true"/>
+      <mat-error *ngIf="this.displayError(idString)">
+        {{'newIdDialog.error.id_exist' | translate}}
+      </mat-error>
+    </mat-form-field>
+  </ng-container>
+  <ng-container  *ngIf="this.getRelatedAssociatedIds().length > 0">
     <h4 style="font-weight: 100; text-align: justify">
       {{'newIdDialog.text_4' | translate}}
     </h4>
     <mat-form-field appearance="fill">
-      <mat-label>External Ids:</mat-label>
+      <mat-label>IDs</mat-label>
       <mat-select [(ngModel)]="this.externalId" name="externalId" [disabled]="inProgress">
-        <mat-option *ngFor="let id of this.getExternalIds()" [value]="id">
+        <mat-option *ngFor="let id of this.getRelatedAssociatedIds()" [value]="id">
           {{id.idType}}: {{id.idString}}
         </mat-option>
       </mat-select>
@@ -43,4 +60,3 @@
   </button>
 </div>
 </form>
-
