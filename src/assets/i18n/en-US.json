@@ -407,6 +407,7 @@
   "bulkPseudonymization.upload_info_text1": "Please select a CSV file with patient data",
   "bulkPseudonymization.upload_info_text2": "The file must at least contains the required field names (${fieldName}) and/or one external ID type (${extIdTypes}) as CSV-Header.",
   "bulkPseudonymization.upload_info_text3": "Empty lines can lead to errors!",
+  "bulkPseudonymization.tentative_matches": "Add tentative matches",
 
 	"export_data": "Export contact information to excel",
 	"copy_data": "Copy contact information to clipboard"
