@@ -15,8 +15,7 @@
           </button>
           <button mat-icon-button class="mini-icon-button"
                   *appHasAnyPermissions="[Permission.EDIT_PATIENT]"
-                  [routerLink]="['/edit-patientdata', idType, idString]"
-                  [state]="{patient: patient}"
+                  (click)="openEditPatientDialog()"
                   matTooltip="{{'button_edit_patient' | translate}}">
             <mat-icon>edit</mat-icon>
           </button>

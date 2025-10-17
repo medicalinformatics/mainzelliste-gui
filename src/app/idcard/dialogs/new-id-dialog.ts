@@ -10,16 +10,18 @@ import { PatientListService } from 'src/app/services/patient-list.service';
 })
 
 export class NewIdDialog implements OnInit {
-  public inProgress: boolean = false
-  public externalId: Id = new Id("", "")
-  public resultIdType: string = ""
+  public inProgress: boolean = false;
+  public externalId: Id = new Id("", "");
+  public resultIdType: string = "";
+  public manualIdInput: string = "";
+  public resultExtIdString: string = "";
 
   constructor(
     private patientListService: PatientListService,
     public dialogRef: MatDialogRef<NewIdDialog>,
     @Inject(MAT_DIALOG_DATA) public data: {
       relatedAssociatedIdsMap : Map<string, Id[]>,
-      generateIdObservable: (externalId: Id, newIdType: string) => Observable<[{idType: string, idString: string}]>
+      generateIdObservable: (externalId: Id, newIdType: string, resultExtIdString: string) => Observable<[{idType: string, idString: string}]>
     }
   ) {
   }
@@ -45,7 +47,7 @@ export class NewIdDialog implements OnInit {
 
   onSave() {
     this.inProgress = true;
-    this.data.generateIdObservable(this.externalId, this.resultIdType).subscribe({
+    this.data.generateIdObservable(this.externalId, this.resultIdType, this.resultExtIdString).subscribe({
       next: () => {},
       error: e => {
         this.dialogRef.close(false);
@@ -57,5 +59,9 @@ export class NewIdDialog implements OnInit {
         this.inProgress = false;
       }
     });
+  }
+
+  public isExternalIdType(idType: string): boolean {
+    return this.getExternalIdTypes().includes(idType);
   }
 }

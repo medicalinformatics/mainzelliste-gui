@@ -1,25 +1,25 @@
 <form #patientForm="ngForm">
-  <div style="width: 90%; height: 100%">
-    <div style="background:none; margin-top:0.5%; margin-left: 1%; display: flex; flex-flow: row; align-items: flex-start;">
-      <mat-card class="patientendatenMatCard" style="width: 40%; min-width: 350px; display: flex; flex-flow: column; margin-bottom: 24px;">
+  <div style="width: 100%; height: 100%">
+    <div style="background:none; margin-top:0.5%; margin-left: 0; display: flex; flex-flow: row; align-items: flex-start;">
+      <mat-card class="patientendatenMatCard" style="width: 100%; min-width: 350px; display: flex; flex-flow: column; margin-bottom: 24px;">
         <div style="margin-left: 3%; margin-right: 0;">
-          <mat-card-title>{{'editPatient.title_patient_data' | translate}}</mat-card-title>
+          <mat-card-title>{{'editPatient.title_edit_patient' | translate}}</mat-card-title>
           <app-patient-fields [readOnly]="false"
                             (fieldEvent)="fieldsChanged($event)"
                             [fields]="patient.fields"></app-patient-fields>
         </div>
       </mat-card>
-      <section style="display: flex; flex-direction: column; gap: 16px; margin-left: 32px; margin-top: 0;">
-        <button mat-fab (click)="editPatient()" color="primary"
-                aria-label="Speichern"
-                [disabled]="!patientForm.form.valid">
-          <mat-icon matTooltip="{{'button_save' | translate}}">done</mat-icon>
-        </button>
-        <button mat-fab [routerLink]="['/idcard', idType, idString]"
-                style="background-color:#888888; color:white;">
-          <mat-icon matTooltip="{{'button_cancel' | translate}}">close</mat-icon>
-        </button>
-      </section>
+    </div>
+    <div style="display: flex; flex-direction: row; justify-content: flex-start; gap: 16px; margin-left: 3%;">
+      <button mat-fab (click)="editPatient()" color="primary"
+              aria-label="Speichern"
+              [disabled]="!patientForm.form.valid">
+        <mat-icon matTooltip="{{'button_save' | translate}}">done</mat-icon>
+      </button>
+      <button mat-fab (click)="onCancel()"
+              style="background-color:#888888; color:white;">
+        <mat-icon matTooltip="{{'button_cancel' | translate}}">close</mat-icon>
+      </button>
     </div>
   </div>
 </form>

@@ -308,11 +308,11 @@ export class PatientListService {
     }).join("&")
   }
 
-  generateId(idType: string, idString: string, newIdType: string) {
-    return this.generateIdArray(idType, [idString], newIdType);
+  generateId(idType: string, idString: string, newIdType: string, resultExtIdString?: string) {
+    return this.generateIdArray(idType, [idString], newIdType, resultExtIdString);
   }
 
-  generateIdArray(idType: string, idString: string[], newIdType: string): Observable<[{idType: string, idString: string}]> {
+  generateIdArray(idType: string, idString: string[], newIdType: string, resultExtIdString?: string): Observable<[{idType: string, idString: string}]> {
     if(idString.length == 0) {
       throw new Error("idString cant be empty");
     }
@@ -324,7 +324,7 @@ export class PatientListService {
 
     return this.sessionService.createToken("createIds", new CreateIdsTokenData(ids, [newIdType]))
       .pipe(mergeMap(
-        token => this.resolveCreateIdsToken(token.id, newIdType)
+        token => this.resolveCreateIdsToken(token.id, newIdType, resultExtIdString)
         ),
       catchError(e => {
         // handle failed token creation
@@ -336,7 +336,8 @@ export class PatientListService {
       }));
   }
 
-  resolveCreateIdsToken(tokenId: string | undefined, newIdType: string): Observable<any> {
+  resolveCreateIdsToken(tokenId: string | undefined, newIdType: string, resultExtIdString?: string): Observable<any> {
+    let newExtIdString = resultExtIdString != undefined && resultExtIdString.length > 0 ? "&idString=" + resultExtIdString : "";
     return this.httpClient.post<Id[]>(this.patientList.url + "/ids/" + newIdType + "?tokenId=" + tokenId, {}, {
       headers: new HttpHeaders()
       .set('Content-Type', 'application/json')
@@ -500,7 +501,9 @@ export class PatientListService {
       "editPatient",
       new EditPatientTokenData(
         {idType: id.idType, idString: id.idString},
+        //müsste leer sein
         this.getFieldNames("U"),
+        //ein id type
         this.getIdGenerators(true,"U").map( g => g.idType)
       )
     )

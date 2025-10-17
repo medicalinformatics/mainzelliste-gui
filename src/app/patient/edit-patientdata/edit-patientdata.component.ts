@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Patient } from "../../model/patient";
 import { PatientListService } from "../../services/patient-list.service";
 import { GlobalTitleService } from "../../services/global-title.service";
 import { TranslateService } from '@ngx-translate/core';
 import { Id } from "../../model/id";
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-edit-patientdata',
@@ -20,14 +21,14 @@ export class EditPatientdataComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private patientListService: PatientListService,
-    private titleService: GlobalTitleService
+    private titleService: GlobalTitleService,
+    public dialogRef?: MatDialogRef<EditPatientdataComponent>,
+    @Inject(MAT_DIALOG_DATA) public data?: { idType: string, idString: string }
   ) {
-    this.activatedRoute.params.subscribe((params) => {
-      if (params["idType"] !== undefined)
-        this.idType = params["idType"]
-      if (params["idString"] !== undefined)
-        this.idString = params["idString"]
-    });
+    if (data) {
+      this.idType = data.idType;
+      this.idString = data.idString;
+    }
     this.changeTitle();
   }
 
@@ -49,8 +50,20 @@ export class EditPatientdataComponent implements OnInit {
   }
 
   editPatient() {
-    this.patientListService.editPatient(new Id(this.idType, this.idString), this.patient, true).then(() =>
-      this.router.navigate(["/idcard", this.idType, this.idString]).then()
-    );
+    this.patientListService.editPatient(new Id(this.idType, this.idString), this.patient, true).then(() => {
+      if (this.dialogRef) {
+        this.dialogRef.close(true);
+      } else {
+        this.router.navigate(["/idcard", this.idType, this.idString]);
+      }
+    });
+  }
+
+  onCancel() {
+    if (this.dialogRef) {
+      this.dialogRef.close(false);
+    } else {
+      this.router.navigate(["/idcard", this.idType, this.idString]);
+    }
   }
 }

@@ -5,7 +5,7 @@
   <h4 style="font-weight: 100; text-align: justify">
     {{'newIdDialog.text_1' | translate}}
   </h4>
-  <mat-form-field appearance="fill">
+  <mat-form-field appearance="fill" style="width: 60%;">
     <mat-label>{{'newIdDialog.id_types' | translate}}</mat-label>
     <mat-select [(ngModel)]="this.resultIdType" name="idType" required="true" [disabled]="inProgress">
       <mat-option *ngFor="let idType of this.getIdTypes()" [value]="idType">
@@ -13,6 +13,12 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+
+  <mat-form-field appearance="fill" *ngIf="isExternalIdType(resultIdType)"  style="display: block; width: 60%;">
+    <mat-label>{{'newIdDialog.manual_id' | translate}}</mat-label>
+    <input matInput [(ngModel)]="manualIdInput" name="manualId" required="true" [disabled]="inProgress">
+  </mat-form-field>
+
   <ng-container  *ngIf="this.getExternalIds().length > 0">
     <h4 style="font-weight: 100; text-align: justify">
       {{'newIdDialog.text_4' | translate}}

@@ -37,6 +37,7 @@ import {
 } from "../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
 import {Tenant} from "../model/tenant";
 import {ComponentType} from "@angular/cdk/portal";
+import { EditPatientdataComponent } from '../patient/edit-patientdata/edit-patientdata.component';
 
 
 @Component({
@@ -58,6 +59,9 @@ export class IdcardComponent implements OnInit {
   public idTypes: IdType[] = [];
   private readIdTypes: string [] = [];
   private otherTenantIdTypes: string [] = [];
+
+  selectedExternalId: Id | null = null;
+  manualIdInput: string = '';
 
   constructor(
     private translate: TranslateService,
@@ -150,9 +154,9 @@ export class IdcardComponent implements OnInit {
       });
   }
 
-  generateNewId(idType: string, idString: string, newIdType: string) {
+  generateNewId(idType: string, idString: string, newIdType: string, resultExtIdString: string) {
     return this.patientListService.generateId(idType?.length > 0 ? idType : this.idType,
-      idString?.length > 0 ? idString : this.idString, newIdType);
+      idString?.length > 0 ? idString : this.idString, newIdType, resultExtIdString);
   }
 
   hasAllTemplateIds(): boolean {
@@ -285,6 +289,8 @@ export class IdcardComponent implements OnInit {
       this.idTypes = [
         ...this.patientListService.getUniqueIdTypes(false, "C")
           .map(t => { return { name: t, isExternal: false, isAssociated: false } }),
+          ...this.patientListService.getUniqueIdTypes(true, "C")
+          .map(t => { return { name: t, isExternal: true, isAssociated: false } }),
         ...this.patientListService.getAssociatedIdTypes(false, "C")
           .map(t => { return { name: t, isExternal: false, isAssociated: true } })
       ];
@@ -310,8 +316,8 @@ export class IdcardComponent implements OnInit {
       disableClose: true,
       data: {
         relatedAssociatedIdsMap: this.patientListService.getRelatedAssociatedIdsMapFrom(this.getUnAvailableIdTypes(this.patient), this.patient.ids, true, "R"),
-        generateIdObservable: (externalId: Id, newIdType: string) => this.generateNewId(
-          externalId?.idType ?? "", externalId?.idString ?? "", newIdType)
+        generateIdObservable: (externalId: Id, newIdType: string, resultExtIdString: string) => this.generateNewId(
+          externalId?.idType ?? "", externalId?.idString ?? "", newIdType, resultExtIdString)
       }
     }).beforeClosed().subscribe(result => {
       if(!result)
@@ -330,6 +336,20 @@ export class IdcardComponent implements OnInit {
     .afterClosed().subscribe(result => {
       if (result)
         this.router.navigate(['/patientlist']).then();
+    });
+  }
+
+  openEditPatientDialog(): void {
+    this.newIdDialog.open(EditPatientdataComponent, {
+      disableClose: true,
+      data: {
+        idType: this.idType,
+        idString: this.idString
+      }
+    }).afterClosed().subscribe(result => {
+      if (result) {
+        this.loadPatient();
+      }
     });
   }
 
