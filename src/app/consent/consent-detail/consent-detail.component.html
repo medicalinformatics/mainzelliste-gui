@@ -14,38 +14,39 @@
   </div>
 </div>
 <mat-divider *ngIf="consent && !readOnly && !consentLoaded" style="margin-bottom: 1.34375em"></mat-divider>
-<mat-card *ngIf="consent">
-  <h2 style="text-align: center">{{consent.title | uppercase}}</h2>
-  <div *ngFor="let item of consent.items; index as i">
-    <div [ngSwitch]="getTypeOf(item)">
-      <div class="form-group">
-        <div *ngSwitchCase="'ConsentDisplayItem'" [innerHTML]="item.text"></div>
-        <div style="padding-bottom: 10px" *ngSwitchCase="'ConsentChoiceItem'">
-          <mat-card>
-            <div style="margin-bottom: 10px;" [innerHTML]="item.text"></div>
-            <mat-radio-group [(ngModel)]="toChoiceItem(item).answer"
+<mat-card [ngStyle]="consent ? {} : {visibility: 'hidden', height: '0px', overflow: 'hidden'}">
+  <div *ngIf="consent">
+    <h2 style="text-align: center">{{consent.title | uppercase}}</h2>
+    <div *ngFor="let item of consent.items; index as i">
+      <div [ngSwitch]="getTypeOf(item)">
+        <div class="form-group">
+          <div *ngSwitchCase="'ConsentDisplayItem'" [innerHTML]="item.text"></div>
+          <div style="padding-bottom: 10px" *ngSwitchCase="'ConsentChoiceItem'">
+            <mat-card>
+              <div style="margin-bottom: 10px;" [innerHTML]="item.text"></div>
+              <mat-radio-group [(ngModel)]="toChoiceItem(item).answer"
                              aria-label="Select an option" id="question-{{i}}"
                              name="question-{{i}}"
                              style ="display:flex; gap:40px"
                              [disabled]="readOnly || submitting"
-            color="primary">
-              <mat-radio-button value="permit">{{'radio_button_yes' | translate}}</mat-radio-button>
-              <mat-radio-button value="deny">{{'radio_button_no' | translate}}</mat-radio-button>
-            </mat-radio-group>
-          </mat-card>
+                             color="primary">
+                <mat-radio-button value="permit">{{'radio_button_yes' | translate}}</mat-radio-button>
+                <mat-radio-button value="deny">{{'radio_button_no' | translate}}</mat-radio-button>
+              </mat-radio-group>
+            </mat-card>
+          </div>
+          <div *ngSwitchDefault></div>
         </div>
-        <div *ngSwitchDefault></div>
       </div>
     </div>
-  </div>
-  <br>
-  <br>
- <!-- consent validation period -->
-  <div class="form-group">
-    <label>{{'consentDetail.valid_from' | translate}}</label>
-    <mat-form-field appearance="fill" style="width: 150px; margin: 0 7px 0 7px">
-      <mat-label>{{'consentDetail.validity_date_label' | translate}}</mat-label>
-      <input matInput
+    <br>
+    <br>
+    <!-- consent validation period -->
+    <div class="form-group">
+      <label>{{'consentDetail.valid_from' | translate}}</label>
+      <mat-form-field appearance="fill" style="width: 150px; margin: 0 7px 0 7px">
+        <mat-label>{{'consentDetail.validity_date_label' | translate}}</mat-label>
+        <input matInput
              [matDatepicker]="picker"
              placeholder="{{localDateFormat}}"
              [appInvalidConsentPeriod]="this.consent.validityPeriod"
@@ -54,18 +55,19 @@
              name="date"
              #date="ngModel"
              [disabled]="readOnly || submitting"
-      >
-      <mat-datepicker-toggle [disabled]="submitting" *ngIf="!readOnly" matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker [disabled]="readOnly || submitting"></mat-datepicker>
-      <mat-error *ngIf="this.displayError(date)">
-        {{'error.consentDetail.validity_date' | translate}}
-      </mat-error>
-    </mat-form-field>
-    <label><strong>{{getConsentExpirationDate()}}</strong></label>
+        >
+        <mat-datepicker-toggle [disabled]="submitting" *ngIf="!readOnly" matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker [disabled]="readOnly || submitting"></mat-datepicker>
+        <mat-error *ngIf="this.displayError(date)">
+          {{'error.consentDetail.validity_date' | translate}}
+        </mat-error>
+      </mat-form-field>
+      <label><strong>{{getConsentExpirationDate()}}</strong></label>
+    </div>
   </div>
   <ng-container>
     <div class="signature-container">
-      <canvas class="canvas" #canvasRef [ngStyle]="{cursor: signaturePadActive ? 'crosshair' : 'default' }"></canvas>
+      <canvas #canvasRef class="canvas" [ngStyle]="{cursor: signaturePadActive ? 'crosshair' : 'default' }"></canvas>
     </div>
     <div *ngIf="!readOnly">
       <button color="primary" type="submit" mat-stroked-button *ngIf="!signaturePadActive"(click)="clear()">{{(canvasEmpty ? 'button_add_signature' : 'button_update_signature') | translate }}</button>

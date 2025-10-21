@@ -82,10 +82,7 @@ export class ConsentDetailComponent implements OnInit, AfterViewInit {
           .map(s => s.data || "")
         )
       ).subscribe(data => {
-        console.log("test");
-        console.log(data[0]);
         this.patientSignature.push(data[0]);
-        console.log(this.patientSignature);
         this.loadSignature();
       });
     }

@@ -134,12 +134,9 @@ export class CreatePatientComponent implements OnInit {
           this.consent.patientId = newId;
           return this.consentService.addConsent(this.consent)
           .pipe(
-            // create provenance with document reference
+            // create provenance
             mergeMap(c => {
-              if((this.consent?.scanUrls?.size || 0) > 0)
-                return this.consentService.createScansProvenance(this.consent, (c as fhir4.Consent).id || "");
-              else
-                return of(newId);
+              return this.consentService.createProvenance(this.consent, (c as fhir4.Consent).id || "");
             }),
             map(c => newId)
           );

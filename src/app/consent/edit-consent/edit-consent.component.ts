@@ -59,7 +59,7 @@ export class EditConsentComponent implements OnInit {
     this.consentService.updateConsent(this.dataModel, force || false)
     .pipe(
         mergeMap(c =>
-            this.consentService.createScansProvenance(this.dataModel, (c as fhir4.Consent).id || "")
+            this.consentService.createProvenance(this.dataModel, (c as fhir4.Consent).id || "")
         ),
         catchError(e => throwError(() => e))
     ).subscribe({
