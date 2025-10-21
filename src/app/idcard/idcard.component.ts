@@ -138,7 +138,7 @@ export class IdcardComponent implements OnInit {
     relatedAssociatedIdMap: Map<Id, Id[]>
   }> {
     let searchIds = patient.ids.filter(id => associatedIdTypes.some(t => t.name == id.idType))
-    return this.patientListService.readPatients(
+    return searchIds.length > 0 ? this.patientListService.readPatients(
       searchIds,
       "R",
       undefined,
@@ -152,7 +152,10 @@ export class IdcardComponent implements OnInit {
           relatedAssociatedIdMap: relatedAssociatedIdMap
         };
       })
-    )
+    ): of({
+      patient: patient,
+      relatedAssociatedIdMap: new Map<Id, Id[]>()
+    })
   }
 
   private loadConsents() {
