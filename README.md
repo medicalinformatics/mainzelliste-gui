@@ -158,7 +158,8 @@ secrets:
         "copyConcatenatedId": false,
         "copyId": true,
         "configuration": true,
-        "showDomainsInIDCard": false
+        "showDomainsInIDCard": false,
+        "consentSignature": false
       }
     }
   ]

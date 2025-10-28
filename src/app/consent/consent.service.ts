@@ -268,6 +268,7 @@ export class ConsentService {
       questionnaire?.id ?? "0",
       new Map<string, string>(),
       new Map<string, string>(),
+      "",
       fhirConsent?.id,
       fhirConsent?.meta?.versionId,
       undefined,
@@ -1137,9 +1138,9 @@ export class ConsentService {
     return this.createFhirResource<fhir4.DocumentReference>("addConsentScan", {}, 'DocumentReference', resource);
   }
 
-  addConsentProvenance(id: string | undefined, docRefIds: (string | undefined)[]) {
+  addConsentProvenance(id: string | undefined, docRefIds: (string | undefined)[], patientId: {idType: string; idString: string;} | undefined, signature: string | undefined) {
     if(docRefIds == undefined || docRefIds.length == 0)
-      return of();
+      docRefIds = [];
     let resource : fhir4.Provenance = {
       resourceType: "Provenance",
       meta: {
@@ -1167,21 +1168,48 @@ export class ConsentService {
             reference: "DocumentReference/" + id
           }
         }
-      ))
+      )),
+      signature: [
+        {
+          type:  [
+            {
+              system: "urn:iso-astm:E1762-95:2013",
+              code: "1.2.840.10065.1.12.1.7",
+              display: "Consent Signature"
+            }
+          ],
+          when: DateTime.now().toISO(),
+          who: {
+            identifier: this.convertToFhirIdentifier(patientId)
+          },
+          data: signature
+        }
+      ]
     }
     return this.createFhirResource<fhir4.Provenance>("addConsentProvenance", {}, 'Provenance', resource);
   }
 
-  createScansAndProvenance(consent: Consent|undefined, consentId: string) {
+  createProvenance(consent: Consent | undefined, consentId: string) {
+    if((consent?.scanUrls?.size || 0) > 0)
+      return this.createScansProvenance(consent, consentId);
+    else
+      return this.createNoScansProvenance(consent, consentId);
+  }
+
+  createScansProvenance(consent: Consent | undefined, consentId: string) {
     return forkJoin(
       Array.from(consent?.scanUrls?.values() ?? []).map(url =>
         this.uploadConsentScan(url, consent?.patientId))
     ).pipe(
       map(docRefs => docRefs?.map(docRef => (docRef as fhir4.DocumentReference).id) || []),
       mergeMap(docRefIds =>
-        this.addConsentProvenance(consentId, docRefIds)
+        this.addConsentProvenance(consentId, docRefIds, consent?.patientId, consent?.signature)
       )
     )
+  }
+
+  createNoScansProvenance(consent: Consent | undefined, consentId: string) {
+    return this.addConsentProvenance(consentId, [], consent?.patientId, consent?.signature);
   }
 
   getConsentProvenance(versionedConsentId:string){

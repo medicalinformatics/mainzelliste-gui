@@ -27,11 +27,15 @@
 	"button_stepper_download_csv": "Download CSV file",
 	"button_okay": "Okay",
 	"button_publish": "Publish",
-  "button_create": "Create",
+  	"button_create": "Create",
+	"button_update_signature": "Update signature",
+	"button_add_signature": "Add signature",
+	"button_remove_signature": "Remove signature",
+
 	"radio_button_yes": "Yes",
 	"radio_button_no": "No",
 	"birth_date_text": "Date of Birth",
-  "place_of_birth_text": "Place of birth",
+  "place_of_birth_text": "Place of Birth",
   "birth_name_text": "Birth Name",
   "first_name_text": "First name",
   "last_name_text": "Last name",
@@ -188,6 +192,7 @@
   "consentDetail.valid_until": "until ",
   "consentDetail.valid_unlimited": " for an unlimited period of time",
   "consentDetail.scans": "Scanned documents:",
+  "consentDetail.alert_signature_empty": "Please sign first.",
 
   "error.consentDetail.validity_date": "Validity period is invalid",
 

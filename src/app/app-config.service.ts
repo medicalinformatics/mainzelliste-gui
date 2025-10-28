@@ -32,6 +32,7 @@ export class AppConfigService {
   private copyIdEnabled: boolean = false;
   private configurationEnabled: boolean = false;
   private _showDomainsInIDCard: boolean = false;
+  private consentSignatureEnabled: boolean = false;
   private consentTerminology!: ConsentTerminology;
 
   constructor(
@@ -60,6 +61,7 @@ export class AppConfigService {
           this.copyIdEnabled = this.data[0].betaFeatures?.copyId ?? false;
           this.configurationEnabled = this.data[0].betaFeatures?.configuration ?? false;
           this._showDomainsInIDCard = this.data[0].betaFeatures?.showDomainsInIDCard ?? false;
+          this.consentSignatureEnabled = this.data[0].betaFeatures?.consentSignature ?? false;
 
           if(!this.data[0].genderFieldValues || this.data[0].genderFieldValues.length == 0)
             this.data[0].genderFieldValues = PatientList.defaultFenderFieldValues
@@ -94,6 +96,10 @@ export class AppConfigService {
 
   public showDomainsInIDCard(): boolean {
     return this._showDomainsInIDCard;
+  }
+
+  isConsentSignatureEnabled(): boolean {
+    return this.consentSignatureEnabled;
   }
 
   getMainzellisteIdTypes(): string[] {

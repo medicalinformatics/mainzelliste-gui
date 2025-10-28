@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {MatSelect, MatSelectChange} from "@angular/material/select";
 import {ConsentService} from "../consent.service";
 import {MAT_DATE_LOCALE, MatOption} from "@angular/material/core";
@@ -13,6 +13,8 @@ import {AuthorizationService} from "../../services/authorization.service";
 import {TranslateService} from "@ngx-translate/core";
 import {getErrorMessageFrom} from "../../error/error-utils";
 import {MatDatepickerInputEvent} from "@angular/material/datepicker";
+import SignaturePad from 'signature_pad';
+import { AppConfigService } from 'src/app/app-config.service';
 
 @Component({
   selector: 'app-consent-detail',
@@ -20,7 +22,7 @@ import {MatDatepickerInputEvent} from "@angular/material/datepicker";
   styleUrls: ['./consent-detail.component.css'],
   viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
 })
-export class ConsentDetailComponent implements OnInit {
+export class ConsentDetailComponent implements OnInit, AfterViewInit {
 
   @Input() readOnly: boolean = false;
   @Input() submitting: boolean = false;
@@ -30,15 +32,22 @@ export class ConsentDetailComponent implements OnInit {
   @Input() errorMessages: string[] = [];
   @Output() errorMessagesChange = new EventEmitter<string[]>();
   @ViewChild('templateSelection') templateSelection!: MatSelect;
+  @ViewChild('canvasRef') canvasEl!: ElementRef<HTMLCanvasElement>;
+
+  private signaturePad!: SignaturePad;
+  signaturePadActive: boolean = false;
   consentLoaded: boolean = true;
   localDateFormat:string;
   uploadInProgress: boolean = false;
   uploadProgress: number = 0;
   uploadSubscription: Subscription | undefined = undefined;
   consentScans: Map<string,string> = new Map<string, string>();
+  patientSignature: string[] = [];
+  canvasEmpty: boolean = true;
 
   constructor(
       private readonly consentService: ConsentService,
+      public configService: AppConfigService,
       private readonly authorizationService: AuthorizationService,
       private readonly translate :TranslateService,
       @Inject(MAT_DATE_LOCALE) private _locale: string
@@ -61,14 +70,44 @@ export class ConsentDetailComponent implements OnInit {
         this.templateSelection.options.forEach((data: MatOption) => data.deselect());
     }
 
-    // load scans id
+    // load scans id and signature
     if(this.readOnly && this.authorizationService.hasPermission(Permission.READ_CONSENT_SCANS)){
       this.consentService.getConsentProvenance(this.consent.id + '/_history/' + this.consent.version || "").pipe(
         map(p => (p[0]?.entity ?? [])
           .filter(e => e.role == "source")
           .map(e => e.what.reference?.substring("DocumentReference/".length) || "")
         )
-      ).subscribe(ids => ids.forEach(id => this.consentScans.set(id, id)))
+      ).subscribe(ids => ids.forEach(id => this.consentScans.set(id, id)));
+      if(this.configService.isConsentSignatureEnabled()) {
+        this.consentService.getConsentProvenance(this.consent.id + '/_history/' + this.consent.version || "").pipe(
+          map(p => (p[0]?.signature ?? [])
+            .filter(s => s.type.some(t => t.code == "1.2.840.10065.1.12.1.7"))
+            .map(s => s.data || "")
+          )
+        ).subscribe(data => {
+          this.patientSignature.push(data[0]);
+          this.loadSignature();
+        });
+      }
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if(this.configService.isConsentSignatureEnabled()) {
+      const canvas = this.canvasEl.nativeElement;
+
+      canvas.width = 700;
+      canvas.height = 200;
+
+      this.signaturePad = new SignaturePad(canvas, {
+        minWidth: 1,
+        maxWidth: 3,
+        penColor: 'black',
+        backgroundColor: 'white'
+      });
+    
+      this.signaturePad.off();
+      this.signaturePadActive = false;
     }
   }
 
@@ -78,7 +117,7 @@ export class ConsentDetailComponent implements OnInit {
       .subscribe(consentDataModel => {
         this.consent = consentDataModel;
         // propagate change to parent component
-        this.consentChange.emit(this.consent)
+        this.consentChange.emit(this.consent);
       });
     }
   }
@@ -132,14 +171,14 @@ export class ConsentDetailComponent implements OnInit {
           if (event.type == HttpEventType.UploadProgress) {
             this.uploadProgress = Math.round(100 * (event.loaded / (event.total ?? 1)));
           } else if(event.type == HttpEventType.Response) {
-            let fileUrl = event.body?.url
+            let fileUrl = event.body?.url;
             if(fileUrl == undefined)
-              throw new Error("failed to upload File")
+              throw new Error("failed to upload File");
             this.consent.scanUrls.set( files[0].name, fileUrl);
           }
         },
         error: e => {
-          this.errorMessages.push(getErrorMessageFrom(e, this.translate))
+          this.errorMessages.push(getErrorMessageFrom(e, this.translate));
           this.errorMessagesChange.emit(this.errorMessages);
         },
         complete: () => {
@@ -149,7 +188,7 @@ export class ConsentDetailComponent implements OnInit {
   }
 
   cancelUploadScan() {
-    this.uploadSubscription?.unsubscribe()
+    this.uploadSubscription?.unsubscribe();
     this.resetUploadScan();
   }
 
@@ -161,7 +200,7 @@ export class ConsentDetailComponent implements OnInit {
 
   deleteUploadedScan(fileName: string) {
     this.consent.scanUrls.delete(fileName);
-    console.log("remove from backend not implemented yet")
+    console.log("remove from backend not implemented yet");
   }
 
   downloadScan(id: string) {
@@ -173,12 +212,70 @@ export class ConsentDetailComponent implements OnInit {
         downloadLink.click();
       },
       error: e => {
-        this.errorMessages.push(getErrorMessageFrom(e, this.translate))
+        this.errorMessages.push(getErrorMessageFrom(e, this.translate));
         this.errorMessagesChange.emit(this.errorMessages);
       },
       complete: () => {
       }
     });
+  }
+
+  loadSignature() {
+    if (this.patientSignature[0] != undefined && this.patientSignature[0] != "") {
+      this.canvasEmpty = false;
+      let imageData = 'data:image/png;base64,' + this.patientSignature[0];
+      this.signaturePad.fromDataURL(imageData, {
+        ratio: 1,
+        width: 700,
+        height: 200
+      });
+    }
+  }
+
+  load() {
+    this.canvasEmpty = true;
+    if (this.consent.signature != undefined && this.consent.signature != "") {
+      this.canvasEmpty = false;
+      let imageData = 'data:image/png;base64,' + this.consent.signature;
+      this.signaturePad.fromDataURL(imageData, {
+        ratio: 1,
+        width: 700,
+        height: 200
+      });
+    }
+  }
+
+  clear() {
+    this.canvasEmpty = false;
+    this.signaturePad.clear();
+    this.signaturePad.on();
+    this.signaturePadActive = true;
+  }
+
+  removeSignature() {
+    this.canvasEmpty = true;
+    this.signaturePad.clear();
+    this.consent.signature = "";
+  }
+
+  cancel() {
+    this.signaturePad.clear();
+    this.signaturePad.off();
+    this.signaturePadActive = false;
+    this.load();
+  }
+
+  save() {
+    if (this.signaturePad.isEmpty()) {
+      alert(this.translate.instant('consentDetail.alert_signature_empty'));
+    } else {
+      const dataURL = this.signaturePad.toDataURL();
+      let splitURL = dataURL.split(",");
+      this.consent.signature = splitURL[1];
+
+      this.signaturePad.off();
+      this.signaturePadActive = false;
+    }
   }
 
   displayError(field: NgModel) {
@@ -187,7 +284,7 @@ export class ConsentDetailComponent implements OnInit {
 
   dateChanged($event: MatDatepickerInputEvent<any, any>) {
     if (this.consent.validityPeriod.period && $event.value){
-      console.log("changed" + $event.value.toISODate())
+      console.log("changed" + $event.value.toISODate());
       this.consent.validityPeriod.validUntil = this.consentService.addPeriodToDate($event.value.toISODate(), this.consent.validityPeriod.period);
     }
   }
