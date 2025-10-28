@@ -65,7 +65,7 @@
       <label><strong>{{getConsentExpirationDate()}}</strong></label>
     </div>
   </div>
-  <ng-container>
+  <ng-container *ngIf="configService.isConsentSignatureEnabled()">
     <div class="signature-container">
       <canvas #canvasRef class="canvas" [ngStyle]="{cursor: signaturePadActive ? 'crosshair' : 'default' }"></canvas>
     </div>

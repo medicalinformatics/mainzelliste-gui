@@ -14,6 +14,7 @@ import {TranslateService} from "@ngx-translate/core";
 import {getErrorMessageFrom} from "../../error/error-utils";
 import {MatDatepickerInputEvent} from "@angular/material/datepicker";
 import SignaturePad from 'signature_pad';
+import { AppConfigService } from 'src/app/app-config.service';
 
 @Component({
   selector: 'app-consent-detail',
@@ -46,6 +47,7 @@ export class ConsentDetailComponent implements OnInit, AfterViewInit {
 
   constructor(
       private readonly consentService: ConsentService,
+      public configService: AppConfigService,
       private readonly authorizationService: AuthorizationService,
       private readonly translate :TranslateService,
       @Inject(MAT_DATE_LOCALE) private _locale: string
@@ -76,33 +78,37 @@ export class ConsentDetailComponent implements OnInit, AfterViewInit {
           .map(e => e.what.reference?.substring("DocumentReference/".length) || "")
         )
       ).subscribe(ids => ids.forEach(id => this.consentScans.set(id, id)));
-      this.consentService.getConsentProvenance(this.consent.id + '/_history/' + this.consent.version || "").pipe(
-        map(p => (p[0]?.signature ?? [])
-          .filter(s => s.type.some(t => t.code == "1.2.840.10065.1.12.1.7"))
-          .map(s => s.data || "")
-        )
-      ).subscribe(data => {
-        this.patientSignature.push(data[0]);
-        this.loadSignature();
-      });
+      if(this.configService.isConsentSignatureEnabled()) {
+        this.consentService.getConsentProvenance(this.consent.id + '/_history/' + this.consent.version || "").pipe(
+          map(p => (p[0]?.signature ?? [])
+            .filter(s => s.type.some(t => t.code == "1.2.840.10065.1.12.1.7"))
+            .map(s => s.data || "")
+          )
+        ).subscribe(data => {
+          this.patientSignature.push(data[0]);
+          this.loadSignature();
+        });
+      }
     }
   }
 
   ngAfterViewInit(): void {
-    const canvas = this.canvasEl.nativeElement;
+    if(this.configService.isConsentSignatureEnabled()) {
+      const canvas = this.canvasEl.nativeElement;
 
-    canvas.width = 700;
-    canvas.height = 200;
+      canvas.width = 700;
+      canvas.height = 200;
 
-    this.signaturePad = new SignaturePad(canvas, {
-      minWidth: 1,
-      maxWidth: 3,
-      penColor: 'black',
-      backgroundColor: 'white'
-    });
+      this.signaturePad = new SignaturePad(canvas, {
+        minWidth: 1,
+        maxWidth: 3,
+        penColor: 'black',
+        backgroundColor: 'white'
+      });
     
-    this.signaturePad.off();
-    this.signaturePadActive = false;
+      this.signaturePad.off();
+      this.signaturePadActive = false;
+    }
   }
 
   initDataModel(consentTemplateId: MatSelectChange) {
