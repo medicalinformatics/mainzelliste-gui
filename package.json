@@ -1,6 +1,6 @@
 {
   "name": "mainzelliste-gui",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -32,7 +32,7 @@
     "fhir-kit-client": "^1.9.2",
     "file-saver": "^2.0.5",
     "keycloak-angular": "^12.2.0",
-    "keycloak-js": "^19.0.3",
+    "keycloak-js": "^25.0.6",
     "moment": "^2.30.1",
     "ngx-csv-parser": "^1.2.0",
     "ngx-filesaver": "^14.0.0",
