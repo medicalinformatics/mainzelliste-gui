@@ -4,7 +4,7 @@ import {PatientListService} from "../../services/patient-list.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {GlobalTitleService} from "../../services/global-title.service";
 import {ErrorNotificationService} from "../../services/error-notification.service";
-import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef} from "@angular/material/legacy-dialog";
 import {MainzellisteError} from "../../model/mainzelliste-error.model";
 import {ErrorMessages} from "../../error/error-messages";
 import {Id} from "../../model/id";

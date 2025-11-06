@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatStep, MatStepper} from "@angular/material/stepper";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
-import {MatDialog} from "@angular/material/dialog";
+import {MatLegacyDialog as MatDialog} from "@angular/material/legacy-dialog";
 import {GlobalTitleService} from "../../services/global-title.service";
 import {NgxCsvParser, NgxCSVParserError} from "ngx-csv-parser";
 import {PatientListService} from "../../services/patient-list.service";
@@ -14,10 +14,10 @@ import {AddPatientRequest} from "../../model/add-patient-request";
 import {map, startWith} from "rxjs/operators";
 import {Observable, of} from "rxjs";
 import {IdTypSelection} from "../../patient/create-patient/create-patient.component";
-import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
-import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
+import {MatLegacyAutocompleteSelectedEvent as MatAutocompleteSelectedEvent} from "@angular/material/legacy-autocomplete";
+import {MatLegacyChipInputEvent as MatChipInputEvent, MatLegacyChipList as MatChipList} from "@angular/material/legacy-chips";
 import _moment from "moment";
-import {MatPaginator} from "@angular/material/paginator";
+import {MatLegacyPaginator as MatPaginator} from "@angular/material/legacy-paginator";
 import {animate, style, transition, trigger} from "@angular/animations";
 
 @Component({

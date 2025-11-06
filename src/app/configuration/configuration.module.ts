@@ -5,17 +5,17 @@ import {ClipboardModule} from "@angular/cdk/clipboard";
 import {FormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
 import {ScrollingModule} from "@angular/cdk/scrolling";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatLegacyProgressSpinnerModule as MatProgressSpinnerModule} from "@angular/material/legacy-progress-spinner";
 import {IdGeneratorsComponent} from './idgenerator/id-generators/id-generators.component';
 import {
   IdGeneratorDialogComponent
 } from './idgenerator/id-generator-dialog/id-generator-dialog.component';
-import {MatPaginatorModule} from "@angular/material/paginator";
-import {MatProgressBarModule} from "@angular/material/progress-bar";
-import {MatTableModule} from "@angular/material/table";
+import {MatLegacyPaginatorModule as MatPaginatorModule} from "@angular/material/legacy-paginator";
+import {MatLegacyProgressBarModule as MatProgressBarModule} from "@angular/material/legacy-progress-bar";
+import {MatLegacyTableModule as MatTableModule} from "@angular/material/legacy-table";
 import { IdGeneratorDetailComponent } from './idgenerator/id-generator-detail/id-generator-detail.component';
 import { ConfigurationComponent } from './configuration/configuration.component';
-import {MatTabsModule} from "@angular/material/tabs";
+import {MatLegacyTabsModule as MatTabsModule} from "@angular/material/legacy-tabs";
 import { PoliciesComponent } from './policies/policies.component';
 import { PolicyDialogComponent } from './policy-dialog/policy-dialog.component';
 import { PolicySetFormComponent } from './policy-set-form/policy-set-form.component';

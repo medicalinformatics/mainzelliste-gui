@@ -1,11 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatTableDataSource} from "@angular/material/table";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {MatLegacyTableDataSource as MatTableDataSource} from "@angular/material/legacy-table";
+import {MatLegacyPaginator as MatPaginator, LegacyPageEvent as PageEvent} from "@angular/material/legacy-paginator";
 import {IdGenerator} from "../../../model/idgenerator";
 import {AppConfigService} from "../../../app-config.service";
 import {Permission} from "../../../model/permission";
 import {IdGeneratorDialogComponent} from "../id-generator-dialog/id-generator-dialog.component";
-import {MatDialog} from "@angular/material/dialog";
+import {MatLegacyDialog as MatDialog} from "@angular/material/legacy-dialog";
 import {AuthorizationService} from "../../../services/authorization.service";
 import {IDGeneratorType} from "../../../model/id-generator-config";
 

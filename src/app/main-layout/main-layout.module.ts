@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {FooterComponent} from "./footer/footer.component";
 import {SharedModule} from "../shared/shared.module";
 import {UserMenuComponent} from "./user-menu/user-menu.component";
-import {MatMenuModule} from "@angular/material/menu";
+import {MatLegacyMenuModule as MatMenuModule} from "@angular/material/legacy-menu";
 import {HeaderComponent} from "./header/header.component";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {RouterModule} from "@angular/router";

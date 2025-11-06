@@ -1,5 +1,5 @@
 import {Component, Inject, Injectable, Input, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
+import {MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogConfig as MatDialogConfig, MatLegacyDialogRef as MatDialogRef} from "@angular/material/legacy-dialog";
 import {FormBuilder, FormControl, UntypedFormGroup} from "@angular/forms";
 import {PatientService} from "../../services/patient.service";
 

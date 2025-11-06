@@ -1,12 +1,12 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {PatientService} from "../services/patient.service";
 import {Patient} from "../model/patient";
-import {MatChipInputEvent} from "@angular/material/chips";
+import {MatLegacyChipInputEvent as MatChipInputEvent} from "@angular/material/legacy-chips";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
-import {MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from "@angular/material/autocomplete";
+import {MatLegacyAutocompleteSelectedEvent as MatAutocompleteSelectedEvent, MatLegacyAutocompleteTrigger as MatAutocompleteTrigger} from "@angular/material/legacy-autocomplete";
 import {FormControl} from "@angular/forms";
-import {MatTableDataSource} from "@angular/material/table";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {MatLegacyTableDataSource as MatTableDataSource} from "@angular/material/legacy-table";
+import {MatLegacyPaginator as MatPaginator, LegacyPageEvent as PageEvent} from "@angular/material/legacy-paginator";
 import {Observable, of} from "rxjs";
 import {map, startWith} from 'rxjs/operators';
 import {GlobalTitleService} from "../services/global-title.service";

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { ConsentService } from 'src/app/consent/consent.service';
 import { take } from 'rxjs/operators';
 import { getErrorMessageFrom } from 'src/app/error/error-utils';

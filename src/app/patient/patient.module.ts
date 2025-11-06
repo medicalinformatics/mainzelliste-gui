@@ -23,7 +23,7 @@ import {
 import {
   ShowRelatedIdDialog
 } from './patient-pseudonyms/dialogs/show-related-id-dialog/show-related-id-dialog.component';
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatLegacyProgressSpinnerModule as MatProgressSpinnerModule} from "@angular/material/legacy-progress-spinner";
 
 
 @NgModule({

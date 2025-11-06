@@ -14,7 +14,7 @@ import {
 import {
   ConsentTemplateDetailComponent
 } from './consent-template-detail/consent-template-detail.component';
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatLegacyProgressSpinnerModule as MatProgressSpinnerModule} from "@angular/material/legacy-progress-spinner";
 import {
   ConsentTemplateValidityPeriodDialog
 } from "./consent-template-detail/consent-template-validity-period-dialog";
@@ -23,11 +23,11 @@ import {
 } from "./consent-template-detail/consent-template-modules.component";
 import {MatDividerModule} from "@angular/material/divider";
 import {InvalidConsentPeriodDirective} from "../shared/directives/invalid-consent-period.directive";
-import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {MatLegacyProgressBarModule as MatProgressBarModule} from "@angular/material/legacy-progress-bar";
 import {
   ConsentHistoryDialogComponent
 } from "./consent-history-dialog/consent-history-dialog.component";
-import {MatTableModule} from "@angular/material/table";
+import {MatLegacyTableModule as MatTableModule} from "@angular/material/legacy-table";
 import {
   ConsentTemplatePolicyDialog
 } from "./consent-template-detail/consent-template-policy-dialog";

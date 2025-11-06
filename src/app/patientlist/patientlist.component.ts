@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {MatDialog} from "@angular/material/dialog";
+import {MatLegacyDialog as MatDialog} from "@angular/material/legacy-dialog";
 import {Patient} from "../model/patient";
 import {SelectionModel} from "@angular/cdk/collections";
-import {MatTableDataSource} from "@angular/material/table";
+import {MatLegacyTableDataSource as MatTableDataSource} from "@angular/material/legacy-table";
 import {PatientListService} from "../services/patient-list.service";
 import {AppConfigService} from "../app-config.service";
 import {ConsentService} from "../consent/consent.service";

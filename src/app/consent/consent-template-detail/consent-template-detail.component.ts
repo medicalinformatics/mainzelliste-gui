@@ -7,11 +7,11 @@ import {
   DisplayItem
 } from "../consent-template.model";
 import {ConsentService} from "../consent.service";
-import {MatDialog} from "@angular/material/dialog";
+import {MatLegacyDialog as MatDialog} from "@angular/material/legacy-dialog";
 import {TranslateService} from "@ngx-translate/core";
 import {ConsentTemplateValidityPeriodDialog} from "./consent-template-validity-period-dialog";
-import {MatRadioChange} from "@angular/material/radio";
-import {MatSlideToggleChange} from "@angular/material/slide-toggle";
+import {MatLegacyRadioChange as MatRadioChange} from "@angular/material/legacy-radio";
+import {MatLegacySlideToggleChange as MatSlideToggleChange} from "@angular/material/legacy-slide-toggle";
 import {ConsentPolicySet} from "../../model/consent-policy-set";
 import {AppConfigService} from "../../app-config.service";
 import {Duration} from "luxon";
