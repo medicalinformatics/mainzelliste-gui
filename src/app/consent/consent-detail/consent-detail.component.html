@@ -14,14 +14,14 @@
   </div>
 </div>
 <mat-divider *ngIf="consent && !readOnly && !consentLoaded" style="margin-bottom: 1.34375em"></mat-divider>
-<mat-card appearance="outlined" *ngIf="consent">
+<mat-card *ngIf="consent">
   <h2 style="text-align: center">{{consent.title | uppercase}}</h2>
   <div *ngFor="let item of consent.items; index as i">
     <div [ngSwitch]="getTypeOf(item)">
       <div class="form-group">
         <div *ngSwitchCase="'ConsentDisplayItem'" [innerHTML]="item.text"></div>
         <div style="padding-bottom: 10px" *ngSwitchCase="'ConsentChoiceItem'">
-          <mat-card appearance="outlined">
+          <mat-card>
             <div style="margin-bottom: 10px;" [innerHTML]="item.text"></div>
             <mat-radio-group [(ngModel)]="toChoiceItem(item).answer"
                              aria-label="Select an option" id="question-{{i}}"

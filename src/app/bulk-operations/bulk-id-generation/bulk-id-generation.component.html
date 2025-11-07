@@ -31,7 +31,7 @@
   <mat-step #stepTwo [editable]="isEditable">
     <ng-template matStepLabel>{{'bulkIdGeneration.generate_id_label' | translate}}</ng-template>
     <div>
-      <mat-card appearance="outlined" *ngIf="this.generationInProgress" style=" width: 50%; margin: 0 auto;">
+      <mat-card *ngIf="this.generationInProgress" style=" width: 50%; margin: 0 auto;">
         <mat-card-content style="display: flex; justify-content: center; flex-direction: column; text-align: center; margin: 13px 0;">
           <div>
             <span>{{this.generationStatus}} ...</span>

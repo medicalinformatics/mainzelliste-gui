@@ -35,7 +35,7 @@
                         [message]="this.undefinedHeaders.length == 0 ? '' :
                               this.translate.instant('CSVFileUploader.upload_error_some_unknown_header').replace('${}', this.undefinedHeaders)">
       </app-message-card>
-      <mat-card appearance="outlined" *ngIf="this.addingInProgress" style=" width: 50%; margin: 0 auto;">
+      <mat-card *ngIf="this.addingInProgress" style=" width: 50%; margin: 0 auto;">
         <mat-card-content style="display: flex; justify-content: center; flex-direction: column; text-align: center; margin: 13px 0;">
           <div>
             <span>{{this.addingStatus}} ...</span>
@@ -115,7 +115,7 @@
   <mat-step #stepThree>
     <ng-template matStepLabel>{{'bulkPseudonymization.download_label' | translate}}</ng-template>
     <div class="float-container">
-      <mat-card appearance="outlined" @infoDialogTrigger *ngIf="this.showInfoCard" style=" width: 50%; margin: 0 auto;">
+      <mat-card @infoDialogTrigger *ngIf="this.showInfoCard" style=" width: 50%; margin: 0 auto;">
         <mat-card-title-group>
           <mat-icon
             style="color: #87ce84; font-size: 50px; height: 50px; width: 50px;">

@@ -10,7 +10,7 @@
   <div style="height: 90%; display:flex; flex-flow: column">
     <div style="display: flex; flex-flow: row; height: 100%;">
       <div style=" flex: 1 1 80%; display: flex; flex-flow: row; justify-content: space-around; align-items: stretch; background:none;  justify-content: space-around; gap: 0 30px; flex-wrap: wrap" >
-        <mat-card appearance="outlined" id="deletePatient1" *ngFor="let patient of patients" style=" flex: 1 1 65%; display: flex; flex-flow: column; justify-content: space-around; align-items: stretch;column-gap: 30px; max-width: 40%">
+        <mat-card id="deletePatient1" *ngFor="let patient of patients" style=" flex: 1 1 65%; display: flex; flex-flow: column; justify-content: space-around; align-items: stretch;column-gap: 30px; max-width: 40%">
           <mat-card-title style="color: black; font-size: xx-large">Patient</mat-card-title>
           <div id="patientendaten1"  style="background: none; flex: 1 1 40%; display: flex;  flex-flow: column">
             <mat-card-title style="font-size: x-large; color:dimgray">Patientendaten</mat-card-title>
