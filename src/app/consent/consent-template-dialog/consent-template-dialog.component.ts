@@ -1,6 +1,6 @@
 import {Component, Inject, ViewChild} from '@angular/core';
 import {ConsentDetailComponent} from "../consent-detail/consent-detail.component";
-import {MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef} from "@angular/material/legacy-dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {ConsentTemplateDetailComponent} from "../consent-template-detail/consent-template-detail.component";
 import {ChoiceItem, ConsentTemplate} from "../consent-template.model";
 import {NgForm} from "@angular/forms";

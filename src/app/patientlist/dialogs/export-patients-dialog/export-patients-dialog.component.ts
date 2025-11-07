@@ -1,9 +1,9 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef} from "@angular/material/legacy-dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {PatientService} from "../../../services/patient.service";
 import {saveAs} from "file-saver";
 import _moment from "moment/moment";
-import {MatLegacySelectionList as MatSelectionList, MatLegacySelectionListChange as MatSelectionListChange} from "@angular/material/legacy-list";
+import {MatSelectionList, MatSelectionListChange} from "@angular/material/list";
 import {TranslateService} from "@ngx-translate/core";
 import {animate, style, transition, trigger} from "@angular/animations";
 import {FilterItem} from "../../../model/filter-item";

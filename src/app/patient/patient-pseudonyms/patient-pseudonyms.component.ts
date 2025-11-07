@@ -6,7 +6,7 @@ import {Id} from "../../model/id";
 import {ExternalPseudonymsComponent} from "../external-pseudonyms/external-pseudonyms.component";
 import {AppConfigService} from "../../app-config.service";
 import {Operation} from "../../model/tenant";
-import {MatLegacyDialog as MatDialog} from "@angular/material/legacy-dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {
   ShowRelatedIdDialog
 } from "./dialogs/show-related-id-dialog/show-related-id-dialog.component";

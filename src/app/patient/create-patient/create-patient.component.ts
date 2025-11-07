@@ -4,13 +4,13 @@ import {PatientService} from "../../services/patient.service";
 import {Router} from "@angular/router";
 import {FormControl, NgForm} from "@angular/forms";
 import {PatientListService} from "../../services/patient-list.service";
-import {MatLegacyAutocompleteSelectedEvent as MatAutocompleteSelectedEvent} from "@angular/material/legacy-autocomplete";
-import {MatLegacyChipInputEvent as MatChipInputEvent, MatLegacyChipList as MatChipList} from "@angular/material/legacy-chips";
+import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
+import {MatChipInputEvent, MatChipGrid} from "@angular/material/chips";
 import {ErrorNotificationService} from "../../services/error-notification.service";
 import {GlobalTitleService} from "../../services/global-title.service";
 import {Observable, of, retry} from "rxjs";
 import {concatMap, map, mergeMap, startWith} from "rxjs/operators";
-import {MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef} from "@angular/material/legacy-dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MainzellisteError} from "../../model/mainzelliste-error.model";
 import {ErrorMessages} from "../../error/error-messages";
 import {UserAuthService} from "../../services/user-auth.service";
@@ -37,7 +37,7 @@ export class CreatePatientComponent implements OnInit {
   @Input() fields: Array<string> = [];
 
   externalIdTypesFormControl = new FormControl('');
-  @ViewChild('chipList') chipList!: MatChipList;
+  @ViewChild('chipList') chipList!: MatChipGrid;
 
   patient: Patient = new Patient();
   patientService: PatientService;

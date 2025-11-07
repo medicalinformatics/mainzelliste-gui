@@ -1,11 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ConsentService} from "../consent.service";
 import {ConsentTemplateFhirWrapper} from "../../model/consent-template-fhir-wrapper";
-import {MatLegacyPaginator as MatPaginator, LegacyPageEvent as PageEvent} from "@angular/material/legacy-paginator";
-import {MatLegacyTableDataSource as MatTableDataSource} from "@angular/material/legacy-table";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {MatTableDataSource} from "@angular/material/table";
 import {Router} from "@angular/router";
 import {GlobalTitleService} from "../../services/global-title.service";
-import {MatLegacyDialog as MatDialog} from "@angular/material/legacy-dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {
   ConsentTemplateDialogComponent
 } from "../consent-template-dialog/consent-template-dialog.component";

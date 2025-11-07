@@ -4,7 +4,7 @@ import {PatientService} from "../../services/patient.service";
 import {PatientListService} from "../../services/patient-list.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {GlobalTitleService} from "../../services/global-title.service";
-import {MatLegacyDialog as MatDialog} from "@angular/material/legacy-dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {Id} from "../../model/id";
 import {TranslateService} from '@ngx-translate/core';
 import {

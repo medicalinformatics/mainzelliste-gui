@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {MatLegacySelect as MatSelect, MatLegacySelectChange as MatSelectChange} from "@angular/material/legacy-select";
+import {MatSelect, MatSelectChange} from "@angular/material/select";
 import {ConsentService} from "../consent.service";
 import {MAT_DATE_LOCALE} from "@angular/material/core";
-import {MatLegacyOption as MatOption} from "@angular/material/legacy-core";
+import {MatOption} from "@angular/material/core";
 import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "../consent.model";
 import _moment from "moment";
 import {ControlContainer, NgForm, NgModel} from "@angular/forms";

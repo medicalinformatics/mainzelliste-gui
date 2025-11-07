@@ -22,10 +22,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 /*following CSS-Design of all mat-cards (specially for iD-Card-, editcomponent and deleteComponent and mergeComponent)*/
 
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card {
   border: solid thin lightgray;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card-title{
   transform: scale(0.9);
   padding-top: 1%;
@@ -54,7 +56,8 @@ mat-form-field.inputField {
   margin: 0 0 -1.25em;
 }
 
-.mat-form-field.inputFieldDisabled .mat-form-field-outline
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+.mat-mdc-form-field.inputFieldDisabled .mat-form-field-outline
 {
   color: rgba(0,0,0,.12);
   cursor: pointer;
@@ -98,25 +101,28 @@ table tr.single-mat-row:hover {
   padding: 2px 10px;
 }
 
-.mat-tab-body-wrapper, .mat-tab-body.mat-tab-body-active, .mat-tab-body-content{
+.mat-mdc-tab-body-wrapper, .mat-tab-body.mat-tab-body-active, .mat-tab-body-content{
   overflow: visible!important;
 }
 button.mini-icon-button {
   transform: scale(0.9);
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
 button.mini-icon-button .mat-button-focus-overlay,
 button.ml-icon-button .mat-button-focus-overlay{
   opacity: 0;
 }
 
 @media (hover: none) {
+  /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
   button.mini-icon-button:hover:not(.mat-button-disabled) .mat-button-focus-overlay,
   button.ml-icon-button:hover:not(.mat-button-disabled) .mat-button-focus-overlay{
     opacity: 0;
   }
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
 button.mini-icon-button:hover:not(.mat-button-disabled) .mat-button-focus-overlay,
 button.ml-icon-button:hover:not(.mat-button-disabled) .mat-button-focus-overlay{
   opacity: .04;

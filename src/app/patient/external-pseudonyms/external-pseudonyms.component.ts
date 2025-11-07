@@ -1,13 +1,13 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Id} from "../../model/id";
 import {IdTypSelection} from "../create-patient/create-patient.component";
-import {MatLegacySelect as MatSelect} from "@angular/material/legacy-select";
+import {MatSelect} from "@angular/material/select";
 import {addIfNotExist, removeFrom} from "../../utils/array-utils";
 import {PatientListService} from "../../services/patient-list.service";
 import {ControlContainer, NgForm} from "@angular/forms";
 import {AppConfigService} from "../../app-config.service";
 import {Operation} from "../../model/tenant";
-import {MatLegacyDialog as MatDialog} from "@angular/material/legacy-dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {GenerateIdDialog} from "./dialogs/generate-id/generate-id-dialog.component";
 import {
   ShowRelatedIdDialog

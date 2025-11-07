@@ -24,13 +24,14 @@
   margin: 0 1.25% 15px 1.25%;
 }
 
+/*TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
 mat-card-title{
   transform: scale(0.9);
   padding-top: 1%;
   padding-bottom: 25px;
 }
 
-.idcard-button.mat-fab.mat-accent {
+.idcard-button.mat-mdc-fab.mat-accent {
   background-color: #053E6A;
   color:white;
 }
@@ -88,17 +89,19 @@ mat-card-title{
   text-align: right;
 }
 
-.mat-card.mat-card-scrollable {
+/*TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
+.mat-mdc-card.mat-card-scrollable {
   flex: 1 1 25%;
   display: flex;
   flex-flow: column;
 }
 
-.mat-card.mat-card-scrollable app-patient-pseudonyms {
+/*TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
+.mat-mdc-card.mat-card-scrollable app-patient-pseudonyms {
   overflow: auto;
   height: 32vh;
 }
 
-.mat-card.mat-card-scrollable mat-card-title {
+.mat-mdc-card.mat-card-scrollable mat-card-title {
   display: block;
 }

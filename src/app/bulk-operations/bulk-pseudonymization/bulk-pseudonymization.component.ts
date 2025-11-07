@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatStep, MatStepper} from "@angular/material/stepper";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
-import {MatLegacyDialog as MatDialog} from "@angular/material/legacy-dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {GlobalTitleService} from "../../services/global-title.service";
 import {NgxCsvParser, NgxCSVParserError} from "ngx-csv-parser";
 import {PatientListService} from "../../services/patient-list.service";
@@ -14,10 +14,10 @@ import {AddPatientRequest} from "../../model/add-patient-request";
 import {map, startWith} from "rxjs/operators";
 import {Observable, of} from "rxjs";
 import {IdTypSelection} from "../../patient/create-patient/create-patient.component";
-import {MatLegacyAutocompleteSelectedEvent as MatAutocompleteSelectedEvent} from "@angular/material/legacy-autocomplete";
-import {MatLegacyChipInputEvent as MatChipInputEvent, MatLegacyChipList as MatChipList} from "@angular/material/legacy-chips";
+import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
+import {MatChipInputEvent, MatChipGrid} from "@angular/material/chips";
 import _moment from "moment";
-import {MatLegacyPaginator as MatPaginator} from "@angular/material/legacy-paginator";
+import {MatPaginator} from "@angular/material/paginator";
 import {animate, style, transition, trigger} from "@angular/animations";
 
 @Component({
@@ -56,7 +56,7 @@ export class BulkPseudonymizationComponent implements OnInit {
   undefinedHeaders: string[] = []
 
   showInfoCard: boolean = true;
-  @ViewChild('chipList') chipList!: MatChipList;
+  @ViewChild('chipList') chipList!: MatChipGrid;
   chipListInputCtrl = new FormControl();
   internalIdTypeSelection: IdTypSelection[] = [];
   /** selected chip data model */

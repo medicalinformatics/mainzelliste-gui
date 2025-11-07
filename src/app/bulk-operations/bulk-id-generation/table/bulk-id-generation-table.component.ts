@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from "@angular/core";
-import { MatLegacyPaginator as MatPaginator } from "@angular/material/legacy-paginator";
+import { MatPaginator } from "@angular/material/paginator";
 
 @Component({
     selector: 'bulk-id-generation-table',

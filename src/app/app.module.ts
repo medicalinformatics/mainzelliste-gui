@@ -8,12 +8,12 @@ import {PatientlistComponent} from "./patientlist/patientlist.component";
 // import {SimilarPatientComponent} from './similarPatient/similarPatient.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule} from "@angular/forms";
-import {MAT_LEGACY_FORM_FIELD_DEFAULT_OPTIONS as MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/legacy-form-field';
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
 import {ScrollingModule} from "@angular/cdk/scrolling";
 import {PatientlistViewComponent} from './patientlist-view/patientlist-view.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatBadgeModule} from "@angular/material/badge";
-import {MatLegacyPaginatorIntl as MatPaginatorIntl, MatLegacyPaginatorModule as MatPaginatorModule} from "@angular/material/legacy-paginator";
+import {MatPaginatorIntl, MatPaginatorModule} from "@angular/material/paginator";
 import {
   DateAdapter,
   ErrorStateMatcher,
@@ -21,16 +21,16 @@ import {
   MAT_DATE_LOCALE,
   MatNativeDateModule
 } from '@angular/material/core';
-import {MatLegacyTableModule as MatTableModule} from "@angular/material/legacy-table";
-import {MatLegacyCheckboxModule as MatCheckboxModule} from "@angular/material/legacy-checkbox";
+import {MatTableModule} from "@angular/material/table";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 import {HttpClientModule} from "@angular/common/http";
-import {MatLegacyTooltipModule as MatTooltipModule} from "@angular/material/legacy-tooltip";
+import {MatTooltipModule} from "@angular/material/tooltip";
 import {AppConfigService} from "./app-config.service";
 import {ErrorComponent} from './error/error.component';
 import {LogoutComponent} from './logout/logout.component';
 import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
-import {MatLegacyProgressSpinnerModule as MatProgressSpinnerModule} from "@angular/material/legacy-progress-spinner";
-import {MatLegacyProgressBarModule as MatProgressBarModule} from "@angular/material/legacy-progress-bar";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {GlobalErrorHandler} from "./error/global-error-handler";
 import {
   MAT_LUXON_DATE_ADAPTER_OPTIONS,
@@ -71,7 +71,7 @@ import {
 import { BulkPseudonymizationComponent } from './bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component';
 import {EditorModule, TINYMCE_SCRIPT_SRC} from "@tinymce/tinymce-angular";
 import { ExportPatientsDialogComponent } from './patientlist/dialogs/export-patients-dialog/export-patients-dialog.component';
-import {MatLegacyListModule as MatListModule} from "@angular/material/legacy-list";
+import {MatListModule} from "@angular/material/list";
 import {
   ValidRelatedExternalIdsDirective
 } from "./shared/directives/valid-related-external-ids.directive";

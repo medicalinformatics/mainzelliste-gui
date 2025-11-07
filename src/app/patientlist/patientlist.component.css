@@ -12,7 +12,7 @@
   padding: 0 10px 0 10px;
 }
 
-#patientlist tr.mat-row{
+#patientlist tr.mat-mdc-row{
   height: 38px;
 }
 
@@ -24,7 +24,7 @@
   background-color: #eff6ff;
 }
 
-#patientlist .mat-header-cell{
+#patientlist .mat-mdc-header-cell{
   background-color: #053E6A;
   color: white;
   font-size: inherit
@@ -34,10 +34,12 @@
   border-right: 0
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
 #patientlist .mat-header-cell .mat-checkbox-frame {
   border-color: white;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
 #patientlist .mat-header-cell .mat-checkbox-frame.mat-checkbox-indeterminate{
   border-color: #053E6A;
 }
@@ -58,17 +60,17 @@ a{
   text-decoration: none;
 }
 
-.custom-dialog-container .mat-dialog-container {
+.custom-dialog-container .mat-mdc-dialog-container {
   width: 36em;
   height: 31em;
   padding:0px;
 }
 
-.custom-dialog-container .mat-dialog-container .mat-h3{
+.custom-dialog-container .mat-mdc-dialog-container .mat-h3{
   margin:0px;
   padding:0px;
 }
 
-.custom-dialog-container .mat-dialog-container .mat-h3, .mat-subheading-2, .mat-typography h3 {
+.custom-dialog-container .mat-mdc-dialog-container .mat-h3, .mat-subtitle-1, .mat-typography h3 {
   margin:0px;
 }

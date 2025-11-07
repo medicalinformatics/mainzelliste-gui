@@ -1,9 +1,9 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef} from "@angular/material/legacy-dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {ConsentHistoryRow} from "../consent.model";
 import {Permission} from "../../model/permission";
 import {ConsentService} from "../consent.service";
-import {MatLegacyTable as MatTable} from "@angular/material/legacy-table";
+import {MatTable} from "@angular/material/table";
 import {ConsentDialogComponent} from "../consent-dialog/consent-dialog.component";
 
 @Component({

@@ -7,7 +7,7 @@ import {GlobalTitleService} from "../../services/global-title.service";
 import {TranslateService} from '@ngx-translate/core';
 import {MainzellisteError} from "../../model/mainzelliste-error.model";
 import {ErrorMessages} from "../../error/error-messages";
-import {MatLegacyDialog as MatDialog} from "@angular/material/legacy-dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {ConsentRejectedDialog} from "../dialogs/consent-rejected-dialog";
 import {ConsentInactivatedDialog} from "../dialogs/consent-inactivated-dialog";
 import {catchError, map, mergeMap} from "rxjs/operators";

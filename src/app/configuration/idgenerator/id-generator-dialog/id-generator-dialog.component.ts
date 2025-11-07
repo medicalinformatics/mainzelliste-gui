@@ -2,7 +2,7 @@ import {Component, Inject, ViewChild} from '@angular/core';
 import {
   ConsentTemplateDetailComponent
 } from "../../../consent/consent-template-detail/consent-template-detail.component";
-import {MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef} from "@angular/material/legacy-dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {TranslateService} from "@ngx-translate/core";
 import {NgForm} from "@angular/forms";
 import {IdGeneratorDetailComponent} from "../id-generator-detail/id-generator-detail.component";

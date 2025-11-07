@@ -2,7 +2,7 @@
   width: 100%
 }
 
-#bulkIdGeneration tr.mat-row {
+#bulkIdGeneration tr.mat-mdc-row {
   height: 38px;
 }
 

@@ -1,9 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatLegacyTableDataSource as MatTableDataSource} from '@angular/material/legacy-table';
+import {MatTableDataSource} from '@angular/material/table';
 import {ConsentService} from 'src/app/consent/consent.service';
-import {MatLegacyDialog as MatDialog} from '@angular/material/legacy-dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {PolicyDialogComponent} from '../policy-dialog/policy-dialog.component';
-import {MatLegacyPaginator as MatPaginator, LegacyPageEvent as PageEvent} from '@angular/material/legacy-paginator';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {PolicySetFormComponent} from '../policy-set-form/policy-set-form.component';
 import {PolicyFormComponent} from '../policy-form/policy-form.component';
 import {switchMap, take} from 'rxjs/operators';

@@ -9,6 +9,7 @@
 .disabled {
   color: rgb(161, 159, 159);
 }
+/* TODO(mdc-migration): The following rule targets internal classes of paginator that may no longer apply for the MDC version. */
 mat-paginator{
   float:right;
   margin-top: 1.5%;

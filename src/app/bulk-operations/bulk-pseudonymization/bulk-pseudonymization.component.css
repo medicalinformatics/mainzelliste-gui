@@ -22,7 +22,7 @@
   width: 100%
 }
 
-.bulkPseudonymisationTable tr.mat-row {
+.bulkPseudonymisationTable tr.mat-mdc-row {
   height: 38px;
 }
 
@@ -39,6 +39,7 @@
 .mat-column-index {
   width: auto;
 }
+/* TODO(mdc-migration): The following rule targets internal classes of paginator that may no longer apply for the MDC version. */
 mat-paginator{
   float:right;
   margin-top: 1.5%;
