@@ -28,6 +28,8 @@
 	"button_okay": "Okay",
 	"button_publish": "Veröffentlichen",
   "button_create": "Erstellen",
+  "button_continue": "Fortfahren",
+
 
 	"radio_button_yes": "Ja",
 	"radio_button_no": "Nein",
@@ -72,13 +74,21 @@
 	"tentative_dialog_text8": ". Es wird dann ein neuer Patient mit diesen Daten angelegt.",
 	"tentative_dialog_text9": "Falls Sie sicher sind, dass die eingegebenen Daten stimmen, aber der Patient schon früher einmal eingegeben wurde, melden Sie sich bitte beim Administrator der Patientenliste.",
 
+	"similar_patient_button":"Ähnliche Patienten suchen",
+	"similar_patient_dialog_title1": "Ähnlicher Patient gefunden",
+	"similar_patient_dialog_text1_1": "Es gibt ähnliche Patienten im System. Bitte überprüfen Sie die folgenden Patienten, bevor Sie fortfahren.",
+	"similar_patient_dialog_text1_2": "Der Grad der Ähnlichkeit wird im SimilarityScore angezeigt. Ein SimilarityScore von über 0,95 zeigt eine nahezu identische Übereinstimmung an und wird rot hervorgehoben.",
+	"similar_patient_dialog_text1_3": "Ein Score zwischen 0,95 und 0,7, der gelb hervorgehoben ist, bedeutet, dass es sich um eine wahrscheinliche Übereinstimmung handelt. Ein Score unter 0,7 wird grün angezeigt und bedeutet keine Übereinstimmung.",
+	"similar_patient_dialog_title2": "Kein ähnlicher Patient gefunden",
+	"similar_patient_dialog_text2": "Es gibt keine ähnlichen Patienten im System. Bitte fahren Sie mit der Erstellung des neuen Patienten fort.",
+
 	"idcard.consent_created": "Erstellt",
 	"idcard.consent_no_consent": "Keine Einwilligung.",
 	"idcard.consent_template": "Vorlage",
 	"idcard.consent_title": "Einwilligungen",
 	"idcard.consent_validity_period": "Gültigkeitszeitraum",
 	"idcard.consent_version": "Version",
-  "idcard.consent_status": "Status",
+ "idcard.consent_status": "Status",
 	"idcard.title_patient_data": "Patientendaten",
 	"idcard.title_pseudonyms": "Pseudonyme",
 	"idcard.title_id_card": "ID Karte",
@@ -363,9 +373,6 @@
 
   	"page_not_found.title": "Seite nicht gefunden",
   	"page_not_found.message": "Die gesuchte Seite konnte nicht gefunden werden",
-
-  "page_not_found.title": "Seite nicht gefunden",
-  "page_not_found.message": "Die gesuchte Seite konnte nicht gefunden werden",
 
 	"patientlistView.title": "Patientenliste",
 
