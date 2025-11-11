@@ -3,6 +3,13 @@
   overflow: auto;
 }
 
+.control-button .mat-icon{
+  margin-right: 0.5em;
+  font-size: 24px;
+  height: 24px;
+  width: 24px;
+}
+
 #patientlist {
   width: 100%;
 }
