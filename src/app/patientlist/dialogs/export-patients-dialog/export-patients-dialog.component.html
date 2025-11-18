@@ -57,9 +57,9 @@
   </div>
 </ng-container>
 <div mat-dialog-actions style="justify-content: center">
-  <button mat-raised-button class="dialog-break"
+  <button mat-raised-button class="submitBreak"
           (click)="cancel()">{{(this.exportSucceeded ? 'button_close' : 'button_cancel') | translate}}</button>
-  <button *ngIf="!this.exportSucceeded" mat-raised-button class="dialog-submit" (click)="onExport(selectionFields)"
+  <button *ngIf="!this.exportSucceeded" mat-raised-button class="submit" (click)="onExport(selectionFields)"
           [disabled]="this.inProgress">
     {{'ExportPatientsDialog.button-export' | translate}}
     <mat-icon *ngIf="this.inProgress" style="margin-left: 10px">
