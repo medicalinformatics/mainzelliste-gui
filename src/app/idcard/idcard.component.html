@@ -4,8 +4,8 @@
     <mat-card id="patientendaten" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; flex: 1">
       <mat-card-title-group style="margin: 0 0 0 2.5%;">
         <mat-card-title style="flex-grow: 2;">{{'idcard.title_patient_data' | translate}}</mat-card-title>
-        <div>
-          <button style="transform: scale(0.8)" mat-icon-button class="mini-icon-button" [cdkCopyToClipboard]="getContactInfo()"
+        <div style="padding-right: 16px; flex-flow: row; justify-content:flex-end; align-items: baseline; gap: 0 0">
+          <button mat-icon-button class="mini-icon-button" [cdkCopyToClipboard]="getContactInfo()"
                   matTooltip="{{'copy_data' | translate}}">
             <mat-icon>file_copy</mat-icon>
           </button>
