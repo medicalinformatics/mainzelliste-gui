@@ -4,16 +4,17 @@
 
 .mat-basic-chip-status {
   display: inline-flex;
-  padding: 7px 10px;
+  padding: 5px 10px;
   border-radius: 6px;
   align-items: center;
-  min-height: 22px;
+  min-height: 24px;
   height: 1px;
   background-color: #e0e0e0;
   color: #000000de;
   box-sizing: border-box;
   min-width: 100px;
   justify-content: center;
+  font-weight: 500;
 }
 
 .mat-basic-chip-status#active {

@@ -38,16 +38,17 @@ mat-card-title{
 
 .mat-basic-chip-status {
   display: inline-flex;
-  padding: 7px 10px;
+  padding: 5px 10px;
   border-radius: 6px;
   align-items: center;
-  min-height: 22px;
+  min-height: 24px;
   height: 1px;
   background-color: #e0e0e0;
   color: #000000de;
   box-sizing: border-box;
   min-width: 100px;
   justify-content: center;
+  font-weight: 500;
 }
 
 .mat-basic-chip-status#active {
@@ -89,14 +90,12 @@ mat-card-title{
   text-align: right;
 }
 
-/*TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
 .mat-mdc-card.mat-card-scrollable {
   flex: 1 1 25%;
   display: flex;
   flex-flow: column;
 }
 
-/*TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
 .mat-mdc-card.mat-card-scrollable app-patient-pseudonyms {
   overflow: auto;
   height: 32vh;
