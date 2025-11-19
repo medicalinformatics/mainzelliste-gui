@@ -10,11 +10,10 @@
       <app-external-pseudonyms [readOnly]="false" [ids]="this.patient.ids"
                                [removeEmptyId]="true" [permittedOperation]="'C'"></app-external-pseudonyms>
     </div>
-    <br>
     <div style="width: 90%; max-width: 700px;" ngModelGroup="internalIdTypes"
          #internalIdTypesModelGroup="ngModelGroup">
       <h4>{{'createPatient.add_pseudonym_type' | translate}}</h4>
-      <mat-form-field color="primary" style="width: 76.5%">
+      <mat-form-field color="primary" class="idtype-field">
         <mat-label>{{'createPatient.pseudonym_types' | translate}}</mat-label>
         <mat-chip-grid #chipList aria-label="Fruit selection"
                        name="internalIdTypesChipList"
