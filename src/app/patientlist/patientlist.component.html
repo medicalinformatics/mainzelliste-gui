@@ -101,8 +101,8 @@
 
     <tr mat-header-row *matHeaderRowDef="columns"></tr>
     <tr mat-header-row  style="height: 0; border: 0;" *matHeaderRowDef="['progress']"></tr>
-    <tr class="mat-row"  *matNoDataRow>
-      <td *ngIf="!loading" class="mat-cell" [attr.colspan]="this.columns.length" style="text-align: center">
+    <tr class="mat-mdc-row"  *matNoDataRow>
+      <td *ngIf="!loading" class="mat-mdc-cell" [attr.colspan]="this.columns.length" style="text-align: center">
         {{'patientlist.no_patient_found' | translate}}
       </td>
     </tr>

@@ -43,8 +43,8 @@
     <tr mat-header-row *matHeaderRowDef="displayedConsentColumns"></tr>
     <tr mat-row class="consent-row" *matRowDef="let row; columns: displayedConsentColumns;"></tr>
     <tr mat-header-row  style="height: 0; border: 0;" *matHeaderRowDef="['progress']"></tr>
-    <tr class="mat-row" *matNoDataRow>
-      <td *ngIf="!inProgress" class="mat-cell" [attr.colspan]="4" style="text-align: center">
+    <tr class="mat-mdc-row" *matNoDataRow>
+      <td *ngIf="!inProgress" class="mat-mdc-cell" [attr.colspan]="4" style="text-align: center">
         {{'idcard.consent_no_consent' | translate}}
       </td>
     </tr>

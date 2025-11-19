@@ -71,8 +71,8 @@ flex-flow: column;">
       <tr mat-row class="consent-row" (click)="editTemplate(row)"
           *matRowDef="let row; columns: displayedConsentTemplateColumns;"></tr>
       <tr mat-header-row style="height: 0; border: 0;" *matHeaderRowDef="['progress']"></tr>
-      <tr class="mat-row" *matNoDataRow>
-        <td *ngIf="!loading" class="mat-cell" [attr.colspan]="6" style="text-align: center">
+      <tr class="mat-mdc-row" *matNoDataRow>
+        <td *ngIf="!loading" class="mat-mdc-cell" [attr.colspan]="6" style="text-align: center">
           {{'idcard.consent_no_consent' | translate}}
         </td>
       </tr>

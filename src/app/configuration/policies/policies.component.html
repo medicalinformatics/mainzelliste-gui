@@ -58,8 +58,8 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns" class="mat-header-row"></tr>
   <tr mat-row class="single-mat-row" *matRowDef="let row; columns: displayedColumns;"></tr>
   <tr mat-header-row  style="height: 0; border: 0;" *matHeaderRowDef="['progress']"></tr>
-  <tr class="mat-row" *matNoDataRow>
-    <td *ngIf="!loading" class="mat-cell" [attr.colspan]="3" style="text-align: center">
+  <tr class="mat-mdc-row" *matNoDataRow>
+    <td *ngIf="!loading" class="mat-mdc-cell" [attr.colspan]="3" style="text-align: center">
       {{'configuration.policySet.empty' | translate}}
     </td>
   </tr>

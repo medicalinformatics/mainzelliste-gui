@@ -63,8 +63,8 @@
 
               <tr mat-header-row *matHeaderRowDef="this.displayedColumns; sticky: true;"></tr>
               <tr mat-row *matRowDef="let row; columns: this.displayedColumns;"></tr>
-              <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" [attr.colspan]="this.displayedColumns.length+2"
+              <tr class="mat-mdc-row" *matNoDataRow>
+                <td class="mat-mdc-cell" [attr.colspan]="this.displayedColumns.length+2"
                     style="text-align: center">
                   {{'consent_template.no_policy_found' | translate}}
                 </td>
@@ -138,8 +138,8 @@
 
               <tr mat-header-row *matHeaderRowDef="this.displayedColumns; sticky: true;"></tr>
               <tr mat-row *matRowDef="let row; columns: this.displayedColumns;"></tr>
-              <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" [attr.colspan]="this.displayedColumns.length+2"
+              <tr class="mat-mdc-row" *matNoDataRow>
+                <td class="mat-mdc-cell" [attr.colspan]="this.displayedColumns.length+2"
                     style="text-align: center">
                   {{'consent_template.no_policy_found' | translate}}
                 </td>
