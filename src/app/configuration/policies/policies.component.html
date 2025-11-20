@@ -1,3 +1,4 @@
+<div style="min-height: 10em; display: flex; flex-flow: column; margin-top: 30px; padding: 0 10px">
 <div class="header-container" *appHasPermission="Permission.CREATE_CONSENT_POLICY_SET">
   <button mat-raised-button class="add-policy-set-button" (click)="addPolicySet()">
     {{'configuration.policySet.add' | translate}}
@@ -58,8 +59,8 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns" class="mat-header-row"></tr>
   <tr mat-row class="single-mat-row" *matRowDef="let row; columns: displayedColumns;"></tr>
   <tr mat-header-row  style="height: 0; border: 0;" *matHeaderRowDef="['progress']"></tr>
-  <tr class="mat-mdc-row" *matNoDataRow>
-    <td *ngIf="!loading" class="mat-mdc-cell" [attr.colspan]="3" style="text-align: center">
+  <tr class="mat-row" *matNoDataRow>
+    <td *ngIf="!loading" class="mat-cell" [attr.colspan]="3" style="text-align: center">
       {{'configuration.policySet.empty' | translate}}
     </td>
   </tr>
@@ -72,3 +73,4 @@
                [disabled]="loading"
                showFirstLastButtons>
 </mat-paginator>
+</div>
