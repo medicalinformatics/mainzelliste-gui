@@ -23,7 +23,7 @@ import {
 } from '@angular/material/core';
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
-import {HttpClientModule} from "@angular/common/http";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {AppConfigService} from "./app-config.service";
 import {ErrorComponent} from './error/error.component';
@@ -43,12 +43,12 @@ import {UserAuthService} from "./services/user-auth.service";
 import {NewIdDialog} from './idcard/dialogs/new-id-dialog';
 import {NgxCsvParserModule} from 'ngx-csv-parser';
 import {FileSaverModule} from 'ngx-filesaver';
-import {SharedModule} from "./shared/shared.module";
+import {HttpLoaderFactory, SharedModule} from "./shared/shared.module";
 import {ConsentModule} from "./consent/consent.module";
 import {MainLayoutModule} from "./main-layout/main-layout.module";
 import {PatientModule} from "./patient/patient.module";
 import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.component";
-import {TranslateService} from '@ngx-translate/core';
+import {provideTranslateService, TranslateLoader, TranslateService} from '@ngx-translate/core';
 import {AccessDeniedComponent} from './access-denied/access-denied.component';
 import {NgxMatFileInputModule} from '@angular-material-components/file-input';
 import {MatStepperModule} from '@angular/material/stepper';
@@ -181,6 +181,13 @@ function initializeAppFactory(
       deps: [AppConfigService, KeycloakService, UserAuthService, TranslateService, LocalStorageService],
       multi: true
     },
+    provideTranslateService({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient],
+      },
+    }),
     {provide: ErrorHandler, useClass: GlobalErrorHandler},
     {provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher},
     {provide: MAT_DATE_LOCALE, useValue: 'en-US'},

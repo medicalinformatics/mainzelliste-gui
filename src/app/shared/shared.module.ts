@@ -5,7 +5,7 @@ import {HasPermissionDirective} from "./directives/has-permission.directive";
 import {ErrorDialogComponent} from "./components/error-dialog/error-dialog.component";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatDatepickerModule} from "@angular/material/datepicker";
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective, TranslateModule, TranslatePipe} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {HttpClient} from "@angular/common/http";
 import {MatButtonModule} from "@angular/material/button";
@@ -24,9 +24,11 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {DragDropModule} from "@angular/cdk/drag-drop";
-import { ConfirmDeleteDialogComponent } from './components/confirm-delete-dialog/confirm-delete-dialog.component';
+import {
+  ConfirmDeleteDialogComponent
+} from './components/confirm-delete-dialog/confirm-delete-dialog.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import { MessageCardComponent } from './components/message-card/message-card.component';
+import {MessageCardComponent} from './components/message-card/message-card.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -50,13 +52,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatChipsModule,
     MatAutocompleteModule,
     MatSnackBarModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    }),
+    TranslatePipe,
+    TranslateDirective,
     MatProgressSpinnerModule
   ],
   declarations: [HasPermissionDirective, HasAnyPermissionsDirective, ErrorDialogComponent, ErrorCardComponent, ConfirmDeleteDialogComponent, MessageCardComponent],
@@ -81,7 +78,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatSlideToggleModule,
     DragDropModule,
     MatSnackBarModule,
-    TranslateModule, MessageCardComponent
+    MessageCardComponent
   ]
 })
 export class SharedModule {
