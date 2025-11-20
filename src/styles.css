@@ -20,6 +20,20 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   padding-top: 10%;
 }
 
+mat-form-field.ml-field{
+  padding-bottom: 10px;
+}
+
+mat-form-field.ml-field .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  min-height: 0;
+}
+
+.ml-field label.mdc-floating-label {
+  padding-bottom: 9px;
+}
+
 /*following CSS-Design of all mat-cards (specially for iD-Card-, editcomponent and deleteComponent and mergeComponent)*/
 
 .mat-mdc-card {
@@ -153,10 +167,6 @@ td.mat-mdc-cell {
 }
 
 td.mat-mdc-cell:first-of-type  {
-  padding-left: 24px;
-}
-
-td.mat-mdc-cell:last-of-type  {
   padding-left: 24px;
 }
 
