@@ -148,6 +148,18 @@ table tr.single-mat-row:hover {
   background-color: #fbcdcd;
 }
 
+td.mat-mdc-cell {
+  padding: 0;
+}
+
+td.mat-mdc-cell:first-of-type  {
+  padding-left: 24px;
+}
+
+td.mat-mdc-cell:last-of-type  {
+  padding-left: 24px;
+}
+
 /*following CSS-Design for Header of all Components*/
 /*TODO from editComponent Header isnt working - margins are not reacting*/
 .title{

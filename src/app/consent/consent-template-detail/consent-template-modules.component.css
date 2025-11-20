@@ -28,7 +28,7 @@ mat-form-field.templateInputField {
 }
 
 .policiesTable {
-  width: 100%
+  width: 100%;
 }
 .policiesTable tr.mat-mdc-row {
   height: 38px;

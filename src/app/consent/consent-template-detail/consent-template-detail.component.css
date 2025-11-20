@@ -1,7 +1,6 @@
 mat-form-field.templateInputField {
   width: 60%;
-  padding-bottom: 0;
-  margin: 0 0 -1.25em 0;
+  padding-bottom: 10px;
   clear: both;
   float: left;
 }
@@ -9,7 +8,6 @@ mat-form-field.templateVersion
 {
   width: 14%;
   margin-left: 1%;
-  padding-bottom: 0;
   float: left;
   clear: none;
 }
