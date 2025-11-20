@@ -80,7 +80,7 @@ export class PatientFieldsComponent implements OnInit {
   }
 
   public getFieldClass(){
-    return "inputField" + (this.readOnly ? " inputFieldDisabled" : "");
+    return "inputField ml-field" + (this.readOnly ? " inputFieldDisabled" : "");
   }
 }
 

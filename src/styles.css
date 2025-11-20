@@ -41,10 +41,8 @@ mat-form-field.ml-field .mat-mdc-text-field-wrapper.mdc-text-field--outlined .ma
   padding: 16px;
 }
 
-/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card-title{
   transform: scale(0.9);
-  padding-top: 1%;
   padding-bottom: 2%;
   font-family: Arial;
 }
@@ -70,12 +68,6 @@ mat-form-field.inputField {
 
 .inputFieldDisabled.mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper.mdc-text-field--outlined {
   padding-right: 10px;
-}
-
-mat-form-field.inputField .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  min-height: 0;
 }
 
 mat-form-field.idtype-field .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
@@ -166,7 +158,7 @@ td.mat-mdc-cell {
   padding: 0;
 }
 
-td.mat-mdc-cell:first-of-type  {
+td.mat-mdc-cell {
   padding-left: 24px;
 }
 

@@ -1,7 +1,7 @@
 <table class="patientField" cellspacing="0" ngModelGroup="fields">
     <tr *ngFor="let field of configuredFields">
       <td [ngSwitch]="field.type">
-        <div style="width: 100%; padding-bottom: 10px;" >
+        <div style="width: 100%;" >
           <button id="arrow" *ngIf="side!='none'" [ngStyle]="{float:side}" (click)="slideData(fields[field.name], field.name)">
             <mat-icon>arrow_circle_{{side}}</mat-icon>
           </button>

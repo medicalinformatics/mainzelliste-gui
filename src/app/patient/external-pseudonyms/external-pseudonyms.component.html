@@ -1,13 +1,13 @@
 <table style="width: 100%; max-width: 700px;" ngModelGroup="externalIds">
   <tr *ngFor="let id of getExternalIds()">
     <td style="width: 100%; flex-flow: row">
-      <div style="display: flex; flex-wrap: nowrap; padding-bottom: 10px;">
+      <div style="display: flex; flex-wrap: nowrap;">
         <button *ngIf="side!='none'" style=" margin-top:4%; border:none; background:none;"
                 [ngStyle]="{float:side}">
 <!--                (click)="slideData(fields[externalId.idType], externalId.idString)">-->
           <mat-icon>arrow_circle_{{side}}</mat-icon>
         </button>
-        <mat-form-field [class]="getFieldClass('inputField')" subscriptSizing="dynamic">
+        <mat-form-field [class]="getFieldClass()" subscriptSizing="dynamic">
           <mat-label>{{id.idType}}</mat-label>
           <input style="width: 90%"
                  [(ngModel)]="id.idString" [name]="this.getFieldName(id)"
@@ -50,7 +50,7 @@
   <tr *ngIf="!readOnly && this.getExternalIdMatSelectData().length > 0">
     <td>
       <div style="display: flex; flex-wrap: nowrap;">
-        <mat-form-field class="inputField">
+        <mat-form-field class="inputField ml-field">
           <mat-label>{{'createPatient.pseudonym_type' | translate}}</mat-label>
           <mat-select #selectedExternalIdType required="false">
             <mat-option *ngFor="let idType of this.getExternalIdMatSelectData()"
