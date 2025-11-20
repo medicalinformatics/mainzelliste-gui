@@ -6,8 +6,6 @@ import {ErrorDialogComponent} from "./components/error-dialog/error-dialog.compo
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {TranslateDirective, TranslateModule, TranslatePipe} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import {HttpClient} from "@angular/common/http";
 import {MatButtonModule} from "@angular/material/button";
 import {MatSelectModule} from "@angular/material/select";
 import {MatCardModule} from "@angular/material/card";
@@ -29,10 +27,6 @@ import {
 } from './components/confirm-delete-dialog/confirm-delete-dialog.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MessageCardComponent} from './components/message-card/message-card.component';
-
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
-}
 
 @NgModule({
   imports: [
