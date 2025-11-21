@@ -5,7 +5,7 @@ import {Router} from "@angular/router";
 import {FormControl, NgForm} from "@angular/forms";
 import {PatientListService} from "../../services/patient-list.service";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
-import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
+import {MatChipInputEvent, MatChipGrid} from "@angular/material/chips";
 import {ErrorNotificationService} from "../../services/error-notification.service";
 import {GlobalTitleService} from "../../services/global-title.service";
 import {Observable, of, retry} from "rxjs";
@@ -37,7 +37,7 @@ export class CreatePatientComponent implements OnInit {
   @Input() fields: Array<string> = [];
 
   externalIdTypesFormControl = new FormControl('');
-  @ViewChild('chipList') chipList!: MatChipList;
+  @ViewChild('chipList') chipList!: MatChipGrid;
 
   patient: Patient = new Patient();
   patientService: PatientService;

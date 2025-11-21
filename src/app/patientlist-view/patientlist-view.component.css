@@ -1,4 +1,4 @@
-.mat-raised-button{
+.mat-mdc-raised-button{
   background-color: #ADDFFF;
   color:#294E66;
   margin-bottom: 1%;
@@ -7,7 +7,7 @@
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.mat-raised-button[disabled]{
+.mat-mdc-raised-button[disabled]{
   background-color: lightgray;
 }
 
@@ -18,7 +18,7 @@ h1{
   font-family: "Arial";
 }
 
-.mat-chip.mat-standard-chip{
+.mat-mdc-chip.mat-mdc-standard-chip{
   background-color: #aecbde;
   color: #162b38;
   border-radius: 0px;
@@ -27,18 +27,20 @@ h1{
 #filterBoard{
   font-size: medium;
   width:100%;
+  padding-bottom: 0.5em;
 }
 
 /*following: CSS-Design of all Inputs (specially for Search/FilterInput in Patientlist-ViewComponent, Patient-FieldsComponent and Patient-PseudonymComponent) */
-::ng-deep #filterBoard .mat-form-field-wrapper {
-  padding-bottom: 0.5em;
-}
+
+/*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 ::ng-deep #filterBoard .mat-form-field-underline {
   bottom: 0.4em;
 }
+/*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 ::ng-deep #filterBoard.mat-form-field-appearance-fill .mat-form-field-infix {
   padding: .25em 0 .25em 0;
 }
+/*TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 ::ng-deep #filterBoard.mat-form-field-appearance-fill .mat-form-field-flex {
   background-color: white;
   -webkit-box-shadow: inset 1.5px 1px 2px -0.5px #757575;
@@ -47,6 +49,7 @@ h1{
   border-right: 1px solid #757575;
 }
 
+/*TODO(mdc-migration): The following rule targets internal classes of paginator that may no longer apply for the MDC version. */
 mat-paginator{
   float:right;
   margin-top: 1.5%;

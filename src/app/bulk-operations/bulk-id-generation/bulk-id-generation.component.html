@@ -14,14 +14,15 @@
         <br/>
         {{'bulkIdGeneration.upload_info_text4' | translate}}
       </div>
-      <div style="margin-top: 1%; display: flex; justify-content: center;">
-        <mat-form-field style="float: left;">
+      <div style="margin-top: 3%; display: flex; justify-content: center;">
+        <mat-form-field>
           <ngx-mat-file-input
             #fileInput
             [multiple]="false"
             [placeholder]="'file.csv'"
             [accept]="'text/csv,.csv'"
             [formControlName]="'uploadField'"
+            style="height: 20px;"
           ></ngx-mat-file-input>
         </mat-form-field>
         <mat-spinner *ngIf="this.readingInProgress" style="margin-left: 10px; margin-top: 18px;" diameter="28"></mat-spinner>
@@ -75,7 +76,7 @@
     <ng-template matStepLabel>{{'bulkIdGeneration.download_label' | translate}}</ng-template>
     <div class="float-container">
       <div class="float-content">
-        <button style="width: 230px; align-self: center;"
+        <button style="width: 250px; align-self: center;"
           id="downloadFile"
           class="submit"
           mat-raised-button

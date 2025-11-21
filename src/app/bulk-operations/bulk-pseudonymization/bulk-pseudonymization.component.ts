@@ -15,7 +15,7 @@ import {map, startWith} from "rxjs/operators";
 import {Observable, of} from "rxjs";
 import {IdTypSelection} from "../../patient/create-patient/create-patient.component";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
-import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
+import {MatChipInputEvent, MatChipGrid} from "@angular/material/chips";
 import _moment from "moment";
 import {MatPaginator} from "@angular/material/paginator";
 import {animate, style, transition, trigger} from "@angular/animations";
@@ -56,7 +56,7 @@ export class BulkPseudonymizationComponent implements OnInit {
   undefinedHeaders: string[] = []
 
   showInfoCard: boolean = true;
-  @ViewChild('chipList') chipList!: MatChipList;
+  @ViewChild('chipList') chipList!: MatChipGrid;
   chipListInputCtrl = new FormControl();
   internalIdTypeSelection: IdTypSelection[] = [];
   /** selected chip data model */

@@ -3,7 +3,7 @@
      [ngStyle]="{'width': '100%', 'display': 'flex', 'flex-direction': 'column', 'row-gap': '10px',
      'margin-bottom': templateModules.length > 0 ? '10px' : '0px'}">
   <mat-card *ngFor="let module of templateModules; index as i" cdkDrag
-            [cdkDragDisabled]="readonly || this.editedModule != undefined">
+            [cdkDragDisabled]="readonly || this.editedModule != undefined"  style="color: black">
     <mat-card-title-group class="module-header">
       <mat-card-title></mat-card-title>
       <mat-card-subtitle
@@ -13,17 +13,17 @@
         {{ 'consent_template.module_type_' + (this.module.type == 'display' ? 'text' : 'question')
         | translate }}</mat-card-subtitle>
       <div></div>
-      <button *ngIf="!readonly" mat-icon-button class="edit-module-button" color="primary"
-              style="float: right; margin-left: auto; margin-right: 10px;"
+      <button *ngIf="!readonly" mat-icon-button class="ml-icon-button" color="primary"
+              style="float: right; margin-left: auto;"
               (click)="this.editModule(module)" [disabled]="this.editedModule != undefined">
         <mat-icon [matTooltip]="'button_edit' | translate">edit</mat-icon>
       </button>
-      <button *ngIf="!readonly" mat-icon-button class="edit-module-button" color="primary" style="float: right"
+      <button *ngIf="!readonly" mat-icon-button class="ml-icon-button" color="primary" style="float: right"
               (click)="this.deleteModule(module)">
         <mat-icon [matTooltip]="'button_delete' | translate">delete</mat-icon>
       </button>
     </mat-card-title-group>
-    <mat-card-content [ngSwitch]="module.constructor.name">
+    <div [ngSwitch]="module.constructor.name">
       <!-- display mode -->
       <div *ngIf="this.editedModule == undefined || this.editedModule?.id != module.id">
         <h3 *ngIf=" module.type == 'choice'"><b>{{$any(module).policy?.text}}</b></h3>
@@ -63,8 +63,8 @@
 
               <tr mat-header-row *matHeaderRowDef="this.displayedColumns; sticky: true;"></tr>
               <tr mat-row *matRowDef="let row; columns: this.displayedColumns;"></tr>
-              <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" [attr.colspan]="this.displayedColumns.length+2"
+              <tr class="mat-mdc-row" *matNoDataRow>
+                <td class="mat-mdc-cell" [attr.colspan]="this.displayedColumns.length+2"
                     style="text-align: center">
                   {{'consent_template.no_policy_found' | translate}}
                 </td>
@@ -138,8 +138,8 @@
 
               <tr mat-header-row *matHeaderRowDef="this.displayedColumns; sticky: true;"></tr>
               <tr mat-row *matRowDef="let row; columns: this.displayedColumns;"></tr>
-              <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" [attr.colspan]="this.displayedColumns.length+2"
+              <tr class="mat-mdc-row" *matNoDataRow>
+                <td class="mat-mdc-cell" [attr.colspan]="this.displayedColumns.length+2"
                     style="text-align: center">
                   {{'consent_template.no_policy_found' | translate}}
                 </td>
@@ -148,21 +148,21 @@
           </section>
         </ng-container>
       </div>
-    </mat-card-content>
+    </div>
     <mat-card-actions *ngIf="this.editedModule != undefined && this.editedModule?.id == module.id"
-                      style="margin-left: 1px">
+                      style="margin-left: 1px; display: flex; column-gap: 12px; margin-Top: 20px;">
       <button mat-stroked-button color="primary" type="submit" (click)="this.save(module)"
               [disabled]="!moduleCtrl?.valid || false">{{'button_save' | translate}}
       </button>
       <button mat-stroked-button (click)="this.cancel()">{{'button_cancel' | translate}}</button>
     </mat-card-actions>
-    <mat-card-footer *ngIf="module.type == 'choice' && this.editedModule?.id != module.id
+    <div *ngIf="module.type == 'choice' && this.editedModule?.id != module.id
     && (this.toChoiceItem(module).policies?.length == 0)">
       <mat-error style="display: flex; flex-direction: row; align-items: flex-end; padding: 7px 14px;
         column-gap: 5px;">
         <mat-icon>error</mat-icon>
         <span>{{ this.translate.instant('consent_template.error.required_policies') }}</span>
       </mat-error>
-    </mat-card-footer>
+    </div>
   </mat-card>
 </div>

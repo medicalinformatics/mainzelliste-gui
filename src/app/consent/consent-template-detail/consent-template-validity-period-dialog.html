@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>{{'consent_template.validityPeriod' | translate}}</h1>
+<h1 mat-dialog-title class="dialog-title">{{'consent_template.validityPeriod' | translate}}</h1>
 <div mat-dialog-content>
   <br />
         <mat-form-field
@@ -8,20 +8,20 @@
                  [(ngModel)]="this.validityPeriod.years" [name]="'year'" #year="ngModel">
           <mat-error *ngIf="displayError(year)">{{getFieldErrorMessage("validity_year", year.errors)}}</mat-error>
         </mat-form-field>
-        <mat-form-field style="float: left; width: 100px; margin-left: 15px">
+        <mat-form-field style="float: left; width: 130px; margin-left: 15px">
           <mat-label>{{"consent_template.validity_months" | translate}}</mat-label>
           <mat-select [(value)]="this.validityPeriod.months">
             <mat-option *ngFor="let i of validityMonths" value="{{i}}">{{i}}</mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field style=" float: left; width: 70px; margin-left: 15px">
+        <mat-form-field style=" float: left; width: 100px; margin-left: 15px">
           <mat-label>{{"consent_template.validity_days" | translate}}</mat-label>
           <mat-select [(value)]="this.validityPeriod.days">
             <mat-option *ngFor="let i of validityDays" value="{{i}}">{{i}}</mat-option>
           </mat-select>
         </mat-form-field>
 </div>
-<div mat-dialog-actions style="margin-top: 3%;">
+<div mat-dialog-actions class="dialog-actions">
   <button mat-raised-button class="submitBreak" (click)="onCancel()">
     {{'button_cancel' | translate}}
   </button>

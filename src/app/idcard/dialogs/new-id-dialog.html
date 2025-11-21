@@ -1,7 +1,6 @@
-<h1 mat-dialog-title>{{'newIdDialog.mat_title' | translate}}</h1>
+<h1 mat-dialog-title class="dialog-title">{{'newIdDialog.mat_title' | translate}}</h1>
+<div class="dialog">
 <form #generateId="ngForm">
-<div mat-dialog-content>
-  <br />
   <h4 style="font-weight: 100; text-align: justify">
     {{ this.getText1() }}
   </h4>
@@ -14,15 +13,15 @@
     </mat-select>
   </mat-form-field>
 
-  <ng-container  *ngIf="this.resultIdType.isExternal">
+  <ng-container  *ngIf="this.resultIdType?.isExternal">
     <br>
     <mat-form-field appearance="fill" [ngStyle]="{'margin-bottom': displayError(idString) ? '0.9em' : '0.24em' }">
       <mat-label>{{'newIdDialog.id_value' | translate}}</mat-label>
       <input matInput style="width: 90%;"
              [(ngModel)]="this.resultIdString"
-             [name]="this.resultIdType.name"
+             [name]="this.resultIdType?.name || 'unknown'"
              [appPatientIds]="this.data.patientIds"
-             [appExternalIdType]="this.resultIdType.name"
+             [appExternalIdType]="this.resultIdType?.name || ''"
              #idString="ngModel"
              required="true"/>
       <mat-error *ngIf="this.displayError(idString)">
@@ -43,7 +42,6 @@
       </mat-select>
     </mat-form-field>
   </ng-container>
-</div>
 <div mat-dialog-actions style="margin-top: 10%;">
   <button mat-raised-button class="submitBreak" (click)="onCancel()">
     {{'button_cancel' | translate}}
@@ -60,3 +58,4 @@
   </button>
 </div>
 </form>
+</div>

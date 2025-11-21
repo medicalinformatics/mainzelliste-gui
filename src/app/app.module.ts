@@ -33,9 +33,9 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {GlobalErrorHandler} from "./error/global-error-handler";
 import {
+  LuxonDateAdapter,
   MAT_LUXON_DATE_ADAPTER_OPTIONS,
-  MAT_LUXON_DATE_FORMATS,
-  LuxonDateAdapter
+  MAT_LUXON_DATE_FORMATS
 } from "@angular/material-luxon-adapter";
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {firstValueFrom, from} from "rxjs";
@@ -48,7 +48,7 @@ import {ConsentModule} from "./consent/consent.module";
 import {MainLayoutModule} from "./main-layout/main-layout.module";
 import {PatientModule} from "./patient/patient.module";
 import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.component";
-import {TranslateService} from '@ngx-translate/core';
+import {provideTranslateService, TranslateService} from '@ngx-translate/core';
 import {AccessDeniedComponent} from './access-denied/access-denied.component';
 import {NgxMatFileInputModule} from '@angular-material-components/file-input';
 import {MatStepperModule} from '@angular/material/stepper';
@@ -68,13 +68,18 @@ import {
 import {
   BulkIdGenerationEmptyFieldsDialog
 } from "./bulk-operations/bulk-id-generation/dialog/bulk-id-generation-empty-fields-dialog";
-import { BulkPseudonymizationComponent } from './bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component';
+import {
+  BulkPseudonymizationComponent
+} from './bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component';
 import {EditorModule, TINYMCE_SCRIPT_SRC} from "@tinymce/tinymce-angular";
-import { ExportPatientsDialogComponent } from './patientlist/dialogs/export-patients-dialog/export-patients-dialog.component';
+import {
+  ExportPatientsDialogComponent
+} from './patientlist/dialogs/export-patients-dialog/export-patients-dialog.component';
 import {MatListModule} from "@angular/material/list";
 import {
   ValidRelatedExternalIdsDirective
 } from "./shared/directives/valid-related-external-ids.directive";
+import {provideTranslateHttpLoader} from "@ngx-translate/http-loader";
 
 function initializeAppFactory(
     configService: AppConfigService,
@@ -87,7 +92,7 @@ function initializeAppFactory(
   return () => configService.init()
     .then(config => {
       from(keycloak.keycloakEvents$).subscribe(event => userAuthService.notifyKeycloakEvent(event));
-      translate.setDefaultLang(config[0].defaultLanguage || "en-US");
+      translate.setFallbackLang(config[0].defaultLanguage || "en-US");
       return firstValueFrom(translate.use(localStorageService.language))
         .then(() => keycloak.init({
           config: {
@@ -181,6 +186,9 @@ function initializeAppFactory(
       deps: [AppConfigService, KeycloakService, UserAuthService, TranslateService, LocalStorageService],
       multi: true
     },
+    provideTranslateService({
+      loader: provideTranslateHttpLoader({prefix:"./assets/i18n/", suffix:".json"}),
+    }),
     {provide: ErrorHandler, useClass: GlobalErrorHandler},
     {provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher},
     {provide: MAT_DATE_LOCALE, useValue: 'en-US'},

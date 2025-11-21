@@ -1,8 +1,8 @@
 <div ngModelGroup="consentTemplateDetails">
   <!-- Name -->
   <mat-form-field [class]="getFieldClass('templateInputField')"
-                  [ngStyle]="{'width': '45%', 'margin-bottom': displayError(name) ? '0.25em' : '-1.25em' }">
-    <mat-label>{{"consent_template.name" | translate}}</mat-label>
+                  style="width: 45%" subscriptSizing="dynamic">
+    <mat-label style="height: 24px;">{{"consent_template.name" | translate}}</mat-label>
     <input pattern="[A-Za-z\d\-_\.$#]{1,255}" matInput placeholder=""
            [(ngModel)]="this.template.name"
            [readonly]="this.readonly"
@@ -13,8 +13,7 @@
   </mat-form-field>
 
   <!-- Version-->
-  <mat-form-field [class]="getFieldClass('templateVersion')"
-                  [ngStyle]="{'margin-bottom': displayError(version) ? '0.65em' : '-1.25em' }">
+  <mat-form-field [class]="getFieldClass('templateVersion')" subscriptSizing="dynamic">
     <mat-label>{{'consent_template.version' | translate}}</mat-label>
     <input pattern="[A-Za-z\d\-_\.]{1,255}" matInput placeholder=""
            [(ngModel)]="this.template.version"
@@ -27,8 +26,7 @@
   </mat-form-field>
 
   <!-- Title-->
-  <mat-form-field [class]="getFieldClass('templateInputField')"
-                  [ngStyle]="{'margin-bottom': displayError(title) ? '0.25em' : '-1.25em' }">
+  <mat-form-field [class]="getFieldClass('templateInputField')" subscriptSizing="dynamic">
     <mat-label>{{'consent_template.title' | translate}}</mat-label>
     <input matInput placeholder=""
            [(ngModel)]="this.template.title"
@@ -40,8 +38,7 @@
   </mat-form-field>
 
   <!-- Organization-->
-  <mat-form-field [class]="getFieldClass('templateInputField')"
-                  [ngStyle]="{'margin-bottom': displayError(organization) ? '0.25em' : '-1.25em' }">
+  <mat-form-field [class]="getFieldClass('templateInputField')" subscriptSizing="dynamic">
     <mat-label>{{'consent_template.organization' | translate}}</mat-label>
     <input matInput placeholder=""
            [(ngModel)]="this.template.organization"
@@ -62,8 +59,7 @@
 <!--  </mat-form-field>-->
 
   <!-- Validity-->
-  <mat-form-field [class]="getFieldClass('templateInputField')"
-                  [ngStyle]="{'margin-bottom': displayError(validityPeriod) ? '0.25em' : '-1.25em' }">
+  <mat-form-field [class]="getFieldClass('templateInputField')" subscriptSizing="dynamic">
     <mat-label>{{'consent_template.validityPeriod' | translate}}</mat-label>
     <input matInput style="width: 90%; "
            [ngModel]="this.template.validity.toLocalText(this.translate)"
@@ -79,7 +75,8 @@
 
   <!-- MII Conform Toggle-->
   <mat-slide-toggle color="primary" (change)="this.isMiiFhirChanged($event)" [disabled]="readonly"
-                    style="clear: both; float:left; margin-top: 20px; margin-bottom: 1.25em" [(ngModel)]="this.template.isMiiFhirConsentConform" [name]="'isMiiFhir'">
+                    style="clear: both; float:left; margin-top: 20px; margin-bottom: 1.25em"
+                    [(ngModel)]="this.template.isMiiFhirConsentConform" [name]="'isMiiFhir'">
     {{'consent_template.based_on_mii_broad_consent' | translate}}
   </mat-slide-toggle>
   <mat-form-field style="clear:both; float: left; width: 300px; padding-bottom: 0; margin: 0 0 -1.25em;"
@@ -92,7 +89,7 @@
   </mat-form-field>
 
   <!-- Opt-In/out -->
-  <div style="clear: both; float: left; margin-top: 20px; margin-bottom: 1.25em;">
+  <div style="clear: both; float: left; margin-top: 20px;">
     <label id="opt-radio-group-label"><h4>{{"consent_template.consent_model" | translate}}</h4></label>
     <mat-radio-group aria-labelledby="opt-radio-group-label" color="primary"
                      [(ngModel)]="this.template.consentModel" [name]="'optIn'"

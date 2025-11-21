@@ -14,7 +14,7 @@ import {NgModel} from "@angular/forms";
 export class NewIdDialog {
   public inProgress: boolean = false
   public externalId: Id = new Id("", "")
-  public resultIdType: IdType = {name:"unkown", isExternal:false, isAssociated:false};
+  public resultIdType?: IdType;
   public resultIdString: string = ""
 
   constructor(
@@ -33,7 +33,7 @@ export class NewIdDialog {
   }
 
   getRelatedAssociatedIds(): Id[] {
-    return this.data.relatedAssociatedIdsMap.get(this.resultIdType) || [];
+    return this.resultIdType ? this.data.relatedAssociatedIdsMap.get(this.resultIdType) || [] : [];
   }
 
   // Check for external associated Ids
@@ -48,7 +48,7 @@ export class NewIdDialog {
 
   onSave() {
     this.inProgress = true;
-    this.data.generateIdObservable(this.externalId, this.resultIdType.name, this.resultIdString).subscribe({
+    this.data.generateIdObservable(this.externalId, this.resultIdType?.name || "", this.resultIdString).subscribe({
       next: () => {},
       error: e => {
         this.dialogRef.close(false);
@@ -63,7 +63,7 @@ export class NewIdDialog {
   }
 
   getText1() {
-    return this.translate.instant(this.resultIdType.isExternal ? 'newIdDialog.text_1_b' : 'newIdDialog.text_1_a');
+    return this.translate.instant(this.resultIdType?.isExternal ? 'newIdDialog.text_1_b' : 'newIdDialog.text_1_a');
   }
 
   displayError(field: NgModel) {

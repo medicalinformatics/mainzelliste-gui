@@ -94,7 +94,7 @@ export class PatientPseudonymsComponent{
     }))
   }
 
-  public getFieldClass(className: string){
-    return className + (this.readOnly ? " inputFieldDisabled" : "");
+  public getFieldClass(){
+    return "inputField ml-field" + (this.readOnly ? " inputFieldDisabled" : "");
   }
 }

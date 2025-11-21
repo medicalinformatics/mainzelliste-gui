@@ -136,6 +136,10 @@ export class AppConfigService {
     return this.version;
   }
 
+  getDefaultLanguage(){
+    return this.data[0].defaultLanguage || "en-US";
+  }
+
   public getLayoutFooterLogos(): FooterLogo[] {
     return this.layoutFooterLogos;
   }

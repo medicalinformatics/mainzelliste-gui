@@ -10,31 +10,29 @@
       <app-external-pseudonyms [readOnly]="false" [ids]="this.patient.ids"
                                [removeEmptyId]="true" [permittedOperation]="'C'"></app-external-pseudonyms>
     </div>
-    <br>
     <div style="width: 90%; max-width: 700px;" ngModelGroup="internalIdTypes"
          #internalIdTypesModelGroup="ngModelGroup">
       <h4>{{'createPatient.add_pseudonym_type' | translate}}</h4>
-      <mat-form-field color="primary" style="width: 76.5%">
+      <mat-form-field color="primary" class="idtype-field">
         <mat-label>{{'createPatient.pseudonym_types' | translate}}</mat-label>
-        <mat-chip-list #chipList aria-label="Fruit selection"
+        <mat-chip-grid #chipList aria-label="Fruit selection"
                        name="internalIdTypesChipList"
                        [ngModel]="this.selectedInternalIdTypes.join(',')"
                        required>
-          <mat-chip *ngFor="let idType of this.selectedInternalIdTypes"
-                    [selectable]="true"
+          <mat-chip-row *ngFor="let idType of this.selectedInternalIdTypes"
                     [removable]="true"
                     (removed)="removeInternalIdType(idType)">
             {{idType}}
             <button matChipRemove>
               <mat-icon>cancel</mat-icon>
             </button>
-          </mat-chip>
+          </mat-chip-row>
           <input [formControl]="chipListInputCtrl"
                  [matChipInputFor]="chipList"
                  [matAutocomplete]="auto"
                  [matChipInputAddOnBlur]="true"
                  (matChipInputTokenEnd)="findAndAddInternalIdType($event)">
-        </mat-chip-list>
+        </mat-chip-grid>
         <mat-error>{{'createPatient.no_pseudonym_type_error' | translate}}</mat-error>
         <mat-autocomplete #auto="matAutocomplete"
                           (optionSelected)="selectedInternalIdType($event)">
