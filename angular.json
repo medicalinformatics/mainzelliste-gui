@@ -30,7 +30,7 @@
               "src/assets",
               {
                 "glob": "**/*",
-                "input": "node_modules/@tinymce/tinymce-angular/node_modules/tinymce",
+                "input": "node_modules/tinymce",
                 "output": "/tinymce/"
               }
             ],
@@ -39,7 +39,7 @@
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/@tinymce/tinymce-angular/node_modules/tinymce/tinymce.min.js"
+              "node_modules/tinymce/tinymce.min.js"
             ]
           },
           "configurations": {
@@ -105,7 +105,7 @@
               "src/assets",
               {
                 "glob": "**/*",
-                "input": "node_modules/@tinymce/tinymce-angular/node_modules/tinymce",
+                "input": "node_modules/tinymce",
                 "output": "/tinymce/"
               }
             ],
@@ -114,7 +114,7 @@
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/@tinymce/tinymce-angular/node_modules/tinymce/tinymce.min.js"
+              "node_modules/tinymce/tinymce.min.js"
             ]
           }
         }
