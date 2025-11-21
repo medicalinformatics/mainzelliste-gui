@@ -29,6 +29,7 @@ services:
     image: medicalinformatics/mainzelliste:develop
     ports:
       - "8080:8080"
+      - "1098:1099"
     environment:
       TOMCAT_REVERSEPROXY_FQDN: ${HOST}
       TOMCAT_REVERSEPROXY_SSL: "false"
@@ -41,6 +42,9 @@ services:
       # Note: can be removed, if the HOST env variable not referring to the local computer (localhost or 127.0.0.1).
       # Set KC_HOSTNAME_URL in keycloak service to the keycloak frontend url e.g. http://${HOST}:8082
       ML_OIDC_INTERNAL_ISS_BASE_URL: http://keycloak:8080
+      # backend debugging
+      #DEBUG: true
+      #JPDA_SUSPEND: y
     volumes:
       - mainzellisteConsentScans:/usr/local/tomcat/consents
     depends_on:
@@ -50,6 +54,8 @@ services:
     env_file: .env
   mainzelliste-db:
     image: postgres:15-alpine
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_DB: mainzelliste
       POSTGRES_USER: mainzelliste
@@ -57,10 +63,10 @@ services:
     volumes:
       - mainzellisteDB:/var/lib/postgresql/data
   keycloak:
-    image: quay.io/keycloak/keycloak:22.0
+    image: quay.io/keycloak/keycloak:26.4
     ports:
       - "8082:8080"
-    command: ["start-dev --import-realm"]
+    command: start-dev --import-realm --hostname http://localhost:8082
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
