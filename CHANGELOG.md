@@ -1,4 +1,13 @@
+# Unreleased
+### Upgrade
+- upgrade to angular v16
+- upgrade keycloak client to v25.0.6 
+- upgrade ngx translate to v17
+- upgrade typescript to v4.9.3
 # Changelog
+## [1.0.3] - 2025-10-30
+### Fix
+- Upgrade keycloak client to v25.0.6
 ## [1.0.2] - 2025-09-24
 ### Fix
 - Dynamically changing locale does not update date formatting

@@ -1,7 +1,6 @@
 FROM node:lts AS build
 WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
-RUN npm install
 COPY ./angular.json ./tsconfig.json ./tsconfig.app.json ./
 COPY ./src ./src
 RUN npm run build --outputHashing=all
