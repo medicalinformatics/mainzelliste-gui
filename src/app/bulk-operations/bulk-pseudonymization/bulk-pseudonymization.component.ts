@@ -45,6 +45,7 @@ export class BulkPseudonymizationComponent implements OnInit {
   fileName: string = "";
   public externalIdTypes: string[] = [];
   public  fieldNames: string[] = [];
+  allowUnsafeMatches: boolean = false;
 
   /** stats*/
   step: number = 3;
@@ -217,7 +218,7 @@ export class BulkPseudonymizationComponent implements OnInit {
     this.undefinedHeaders = [];
     this.addingInProgress = true;
     this.addingStatus = this.translate.instant("bulkPseudonymization.progress_status_start");
-    this.patientListService.addPatients(this.addPatientRequests,this.selectedInternalIdTypes, false)
+    this.patientListService.addPatients(this.addPatientRequests,this.selectedInternalIdTypes, this.allowUnsafeMatches)
     .subscribe({
       next: (responses): void => {
         this.addingStatus = this.translate.instant("bulkPseudonymization.progress_status_prepare_result");
