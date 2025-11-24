@@ -187,7 +187,13 @@ function initializeAppFactory(
       multi: true
     },
     provideTranslateService({
-      loader: provideTranslateHttpLoader({prefix:"./assets/i18n/", suffix:".json"}),
+      loader: provideTranslateHttpLoader(
+        {
+          prefix:"./assets/i18n/",
+          suffix:".json"}
+      ),
+      fallbackLang: "en-US",
+      lang: "en-US"
     }),
     {provide: ErrorHandler, useClass: GlobalErrorHandler},
     {provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher},
