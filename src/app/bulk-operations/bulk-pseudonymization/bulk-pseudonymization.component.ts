@@ -3,7 +3,6 @@ import {MatStep, MatStepper} from "@angular/material/stepper";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {GlobalTitleService} from "../../services/global-title.service";
-import {NgxCsvParser, NgxCSVParserError} from "ngx-csv-parser";
 import {PatientListService} from "../../services/patient-list.service";
 import {TranslateService} from "@ngx-translate/core";
 import {saveAs} from "file-saver";
@@ -15,10 +14,12 @@ import {map, startWith} from "rxjs/operators";
 import {Observable, of} from "rxjs";
 import {IdTypSelection} from "../../patient/create-patient/create-patient.component";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
-import {MatChipInputEvent, MatChipGrid} from "@angular/material/chips";
+import {MatChipGrid, MatChipInputEvent} from "@angular/material/chips";
 import _moment from "moment";
 import {MatPaginator} from "@angular/material/paginator";
 import {animate, style, transition, trigger} from "@angular/animations";
+import * as papaparse from "papaparse";
+import {ParseResult} from "papaparse";
 
 @Component({
   selector: 'app-bulk-pseudonymization',
@@ -86,7 +87,6 @@ export class BulkPseudonymizationComponent implements OnInit {
     public dialog: MatDialog,
     private titleService: GlobalTitleService,
     private configService: AppConfigService,
-    private ngxCsvParser: NgxCsvParser,
     public patientListService: PatientListService,
     public translate: TranslateService
   ) {
@@ -146,71 +146,76 @@ export class BulkPseudonymizationComponent implements OnInit {
   readCsv(file: any) {
     this.readingInProgress = true
     this.fileName = file.name;
-    file.text().then((content: string) => {
-      this.delimiter = content.includes(";") ? ";" : ",";
-      this.ngxCsvParser.parse(file, {header: false, delimiter: this.delimiter, encoding: 'utf8'})
-      .pipe(
-        map( records => {
-          if (records instanceof NgxCSVParserError) {
-            console.log(records.message)
-            throw new FieldError(this.translate, "CSVFileUploader.upload_error_invalid_file");
+    new Observable<ParseResult<unknown>>(
+      observable  => {
+        papaparse.parse(file, {
+          encoding: 'utf8',
+          complete: function (content) {
+            observable.next(content);
+            observable.complete();
           }
-          this.csvRecords = records;
-          const csvHeaders = records[0] as string[]
-
-          // check empty headers
-          if(records.length == 0 || csvHeaders.length == 0)
-            throw new FieldError(this.translate, "CSVFileUploader.upload_error_no_header");
-
-          // check empty rows
-          if(records.length <=1)
-            throw new FieldError(this.translate, "CSVFileUploader.upload_error_empty");
-
-          // check undefined headers
-          const fieldsIndexes = csvHeaders.map((h, i) => this.fieldNames.includes(h.trim())? i : -1).filter( i => i >= 0)
-          const idTypesIndexes = csvHeaders.map((h, i) => this.externalIdTypes.includes(h.trim())? i : -1).filter( i => i >= 0)
-          this.undefinedHeaders = csvHeaders.filter((h,i) => !fieldsIndexes.includes(i) && !idTypesIndexes.includes(i))
-          if (fieldsIndexes.length == 0 && idTypesIndexes.length == 0 && this.undefinedHeaders.length > 0) {
-            this.undefinedHeaders = [];
-            throw new FieldError(this.translate, "bulkPseudonymization.upload_error_unknown_header")
-          }
-
-          // validate fields
-          if (fieldsIndexes.length > 0) {
-            // check required field
-            const missingRequiredFields = this.fieldNames.filter( fieldName => this.configService.getFields()
-            .some( f => f.required && (f.mainzellisteField != undefined && f.mainzellisteField.length > 0?
-              f.mainzellisteField == fieldName : f.mainzellisteFields.includes(fieldName))))
-            .filter( f => !csvHeaders.includes(f))
-            if(missingRequiredFields.length > 0)
-              throw new FieldError(this.translate, "bulkPseudonymization.upload_error_required_header", missingRequiredFields.join(", "))
-          }
-
-          return records.filter((r,i) => i>0).map( row => {
-            const fields: { [key: string]: string }  = {};
-            fieldsIndexes.forEach( i => fields[csvHeaders[i]] = row[i])
-            const idTypes: { [key: string]: string }  = {};
-            idTypesIndexes.forEach( i => idTypes[csvHeaders[i]] = row[i])
-            return new AddPatientRequest(fields, idTypes);
-          })
         })
-      ).subscribe({
-        next: (requests): void => {
-          this.readingInProgress = false
-          this.addPatientRequests = requests;
-          this.stepper.next();
-          this.step = 1;
-        },
-        error: (e:FieldError): void => {
-          this.readingInProgress = false
-          console.log(e)
-          const invalidHeaderMessage = this.undefinedHeaders.length == 0 ? "" : ". " +
-            this.translate.instant("CSVFileUploader.upload_error_some_unknown_header")
-            .replace("${}", this.undefinedHeaders.join(", "))
-          this.uploadFormGroup.get('uploadField')?.setErrors({csvError: {value: e.message + invalidHeaderMessage}})
-          this.step = 0;
+      }
+    )
+    .pipe(
+      map(content => {
+        this.csvRecords = content.data as string[][];
+        // check if empty
+        if (this.csvRecords.length <= 1)
+          throw new FieldError(this.translate, "CSVFileUploader.upload_error_empty");
+
+        // extract and validate header
+        let csvHeaders = this.csvRecords[0]
+        if (!csvHeaders || csvHeaders.length == 0 || csvHeaders[0].trim().length == 0)
+          throw new FieldError(this.translate, "CSVFileUploader.upload_error_no_header");
+
+        // check undefined headers
+        const fieldsIndexes = csvHeaders.map((h, i) => this.fieldNames.includes(h.trim())? i : -1).filter( i => i >= 0)
+        const idTypesIndexes = csvHeaders.map((h, i) => this.externalIdTypes.includes(h.trim())? i : -1).filter( i => i >= 0)
+        this.undefinedHeaders = csvHeaders.filter((h,i) => !fieldsIndexes.includes(i) && !idTypesIndexes.includes(i))
+        if (fieldsIndexes.length == 0 && idTypesIndexes.length == 0 && this.undefinedHeaders.length > 0) {
+          this.undefinedHeaders = [];
+          throw new FieldError(this.translate, "bulkPseudonymization.upload_error_unknown_header")
         }
-      });
+
+        // validate fields
+        if (fieldsIndexes.length > 0) {
+          // check required field
+          const missingRequiredFields = this.fieldNames.filter( fieldName => this.configService.getFields()
+          .some( f => f.required && (f.mainzellisteField != undefined && f.mainzellisteField.length > 0?
+            f.mainzellisteField == fieldName : f.mainzellisteFields.includes(fieldName))))
+          .filter( f => !csvHeaders.includes(f))
+          if(missingRequiredFields.length > 0)
+            throw new FieldError(this.translate, "bulkPseudonymization.upload_error_required_header", missingRequiredFields.join(", "))
+        }
+
+        this.delimiter = content.meta.delimiter;
+
+        return this.csvRecords.filter((r,i) => i > 0)
+        .map( row => {
+          const fields: { [key: string]: string }  = {};
+          fieldsIndexes.forEach( i => fields[csvHeaders[i]] = row[i])
+          const idTypes: { [key: string]: string }  = {};
+          idTypesIndexes.forEach( i => idTypes[csvHeaders[i]] = row[i])
+          return new AddPatientRequest(fields, idTypes);
+        })
+      })
+    ).subscribe({
+      next: (requests): void => {
+        this.readingInProgress = false
+        this.addPatientRequests = requests;
+        this.stepper.next();
+        this.step = 1;
+      },
+      error: (e:FieldError): void => {
+        this.readingInProgress = false
+        console.log(e)
+        const invalidHeaderMessage = this.undefinedHeaders.length == 0 ? "" : ". " +
+          this.translate.instant("CSVFileUploader.upload_error_some_unknown_header")
+          .replace("${}", this.undefinedHeaders.join(", "))
+        this.uploadFormGroup.get('uploadField')?.setErrors({csvError: {value: e.message + invalidHeaderMessage}})
+        this.step = 0;
+      }
     });
   }
 

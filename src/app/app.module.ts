@@ -41,7 +41,6 @@ import {ClipboardModule} from "@angular/cdk/clipboard";
 import {firstValueFrom, from} from "rxjs";
 import {UserAuthService} from "./services/user-auth.service";
 import {NewIdDialog} from './idcard/dialogs/new-id-dialog';
-import {NgxCsvParserModule} from 'ngx-csv-parser';
 import {FileSaverModule} from 'ngx-filesaver';
 import {SharedModule} from "./shared/shared.module";
 import {ConsentModule} from "./consent/consent.module";
@@ -169,7 +168,6 @@ function initializeAppFactory(
     ClipboardModule,
     ConsentModule,
     ConfigurationModule,
-    NgxCsvParserModule,
     FileSaverModule,
     NgxMatFileInputModule,
     MatStepperModule,
