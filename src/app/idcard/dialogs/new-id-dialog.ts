@@ -7,8 +7,9 @@ import {TranslateService} from "@ngx-translate/core";
 import {NgModel} from "@angular/forms";
 
 @Component({
-  selector: 'new-id-dialog',
-  templateUrl: 'new-id-dialog.html',
+    selector: 'new-id-dialog',
+    templateUrl: 'new-id-dialog.html',
+    standalone: false
 })
 
 export class NewIdDialog {

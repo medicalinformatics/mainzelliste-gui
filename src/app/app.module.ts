@@ -1,4 +1,4 @@
-import {APP_INITIALIZER, ErrorHandler, NgModule} from '@angular/core';
+import { ErrorHandler, NgModule, inject, provideAppInitializer } from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent} from './app.component';
 // import {AudittrailComponent} from './audittrail/audittrail.component';
@@ -173,12 +173,10 @@ function initializeAppFactory(
         ValidRelatedExternalIdsDirective], providers: [
         { provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl },
         { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
-        {
-            provide: APP_INITIALIZER,
-            useFactory: initializeAppFactory,
-            deps: [AppConfigService, KeycloakService, UserAuthService, TranslateService, LocalStorageService],
-            multi: true
-        },
+        provideAppInitializer(() => {
+        const initializerFn = (initializeAppFactory)(inject(AppConfigService), inject(KeycloakService), inject(UserAuthService), inject(TranslateService), inject(LocalStorageService));
+        return initializerFn();
+      }),
         provideTranslateService({
             loader: provideTranslateHttpLoader({
                 prefix: "./assets/i18n/",

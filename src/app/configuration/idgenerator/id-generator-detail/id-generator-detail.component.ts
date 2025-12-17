@@ -7,10 +7,11 @@ import {AppConfigService} from "../../../app-config.service";
 import {IdGenerator} from "../../../model/idgenerator";
 
 @Component({
-  selector: 'app-id-generator-detail',
-  templateUrl: './id-generator-detail.component.html',
-  styleUrls: ['./id-generator-detail.component.css'],
-  viewProviders: [{provide: ControlContainer, useExisting: NgForm}]
+    selector: 'app-id-generator-detail',
+    templateUrl: './id-generator-detail.component.html',
+    styleUrls: ['./id-generator-detail.component.css'],
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    standalone: false
 })
 export class IdGeneratorDetailComponent implements OnInit {
 

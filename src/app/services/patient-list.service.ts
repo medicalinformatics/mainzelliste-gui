@@ -489,7 +489,7 @@ export class PatientListService {
       map(response => {
         return {
           tokenId: tokenId ?? "",
-          locationUrl: this.patientList.url + "/jobs" + response.headers.get("Location")?.split("/jobs")[1] ?? ""
+          locationUrl: this.patientList.url + "/jobs" + (response.headers.get("Location")?.split("/jobs")[1] ?? "")
         }
       }),
       catchError(e => {

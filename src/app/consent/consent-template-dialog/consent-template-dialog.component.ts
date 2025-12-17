@@ -9,9 +9,10 @@ import {TranslateService} from "@ngx-translate/core";
 import {getErrorMessageFrom} from "../../error/error-utils";
 
 @Component({
-  selector: 'app-consent-template-dialog',
-  templateUrl: './consent-template-dialog.component.html',
-  styleUrls: ['./consent-template-dialog.component.css']
+    selector: 'app-consent-template-dialog',
+    templateUrl: './consent-template-dialog.component.html',
+    styleUrls: ['./consent-template-dialog.component.css'],
+    standalone: false
 })
 export class ConsentTemplateDialogComponent {
 

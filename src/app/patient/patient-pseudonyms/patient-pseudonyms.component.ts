@@ -12,10 +12,11 @@ import {
 } from "./dialogs/show-related-id-dialog/show-related-id-dialog.component";
 
 @Component({
-  selector: 'app-patient-pseudonyms',
-  templateUrl: './patient-pseudonyms.component.html',
-  styleUrls: ['./patient-pseudonyms.component.css'],
-  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
+    selector: 'app-patient-pseudonyms',
+    templateUrl: './patient-pseudonyms.component.html',
+    styleUrls: ['./patient-pseudonyms.component.css'],
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    standalone: false
 })
 
 export class PatientPseudonymsComponent{

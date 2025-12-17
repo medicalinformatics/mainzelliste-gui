@@ -3,9 +3,10 @@ import { AppConfigService } from 'src/app/app-config.service';
 import {FooterLogo} from "../../model/patientlist";
 
 @Component({
-  selector: 'app-footer',
-  templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.css']
+    selector: 'app-footer',
+    templateUrl: './footer.component.html',
+    styleUrls: ['./footer.component.css'],
+    standalone: false
 })
 export class FooterComponent implements OnInit {
   magicLogo: string = "assets/images/magic-logo.png";

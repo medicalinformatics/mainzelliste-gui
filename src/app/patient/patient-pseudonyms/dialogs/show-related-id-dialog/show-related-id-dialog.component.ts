@@ -3,9 +3,10 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Id} from "../../../../model/id";
 
 @Component({
-  selector: 'app-show-related-id-dialog',
-  templateUrl: './show-related-id-dialog.component.html',
-  styleUrls: ['./show-related-id-dialog.component.css']
+    selector: 'app-show-related-id-dialog',
+    templateUrl: './show-related-id-dialog.component.html',
+    styleUrls: ['./show-related-id-dialog.component.css'],
+    standalone: false
 })
 export class ShowRelatedIdDialog implements OnInit {
 

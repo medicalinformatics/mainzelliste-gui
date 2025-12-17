@@ -4,9 +4,10 @@ import {TranslateService} from "@ngx-translate/core";
 import {Permission} from "../../model/permission";
 
 @Component({
-  selector: 'app-configuration',
-  templateUrl: './configuration.component.html',
-  styleUrls: ['./configuration.component.css']
+    selector: 'app-configuration',
+    templateUrl: './configuration.component.html',
+    styleUrls: ['./configuration.component.css'],
+    standalone: false
 })
 export class ConfigurationComponent implements OnInit {
   protected readonly Permission = Permission;

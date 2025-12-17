@@ -22,20 +22,21 @@ import * as papaparse from "papaparse";
 import {ParseResult} from "papaparse";
 
 @Component({
-  selector: 'app-bulk-pseudonymization',
-  templateUrl: './bulk-pseudonymization.component.html',
-  styleUrls: ['./bulk-pseudonymization.component.css'],
-  animations: [
-    trigger('infoDialogTrigger', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('300ms', style({ opacity: 1 })),
-      ]),
-      transition(':leave', [
-        animate('100ms', style({ opacity: 0 }))
-      ])
-    ])
-  ]
+    selector: 'app-bulk-pseudonymization',
+    templateUrl: './bulk-pseudonymization.component.html',
+    styleUrls: ['./bulk-pseudonymization.component.css'],
+    animations: [
+        trigger('infoDialogTrigger', [
+            transition(':enter', [
+                style({ opacity: 0 }),
+                animate('300ms', style({ opacity: 1 })),
+            ]),
+            transition(':leave', [
+                animate('100ms', style({ opacity: 0 }))
+            ])
+        ])
+    ],
+    standalone: false
 })
 export class BulkPseudonymizationComponent implements OnInit {
 

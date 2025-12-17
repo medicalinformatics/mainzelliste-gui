@@ -8,9 +8,10 @@ import {getErrorMessageFrom} from "../../error/error-utils";
 import {TranslateService} from "@ngx-translate/core";
 
 @Component({
-  selector: 'app-policy-dialog',
-  templateUrl: './policy-dialog.component.html',
-  styleUrls: ['./policy-dialog.component.css']
+    selector: 'app-policy-dialog',
+    templateUrl: './policy-dialog.component.html',
+    styleUrls: ['./policy-dialog.component.css'],
+    standalone: false
 })
 export class PolicyDialogComponent {
   displayedColumns: string[] = ['policyId', 'policyName', 'actions'];

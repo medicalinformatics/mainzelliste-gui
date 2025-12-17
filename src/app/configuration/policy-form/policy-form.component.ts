@@ -13,9 +13,10 @@ import {TranslateService} from '@ngx-translate/core';
 import {take} from 'rxjs/operators';
 
 @Component({
-  selector: 'app-policy-form',
-  templateUrl: './policy-form.component.html',
-  styleUrls: ['./policy-form.component.css']
+    selector: 'app-policy-form',
+    templateUrl: './policy-form.component.html',
+    styleUrls: ['./policy-form.component.css'],
+    standalone: false
 })
 export class PolicyFormComponent implements OnInit {
   policyForm: FormGroup;

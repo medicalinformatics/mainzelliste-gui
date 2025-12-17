@@ -18,20 +18,21 @@ import * as papaparse from "papaparse";
 import {ParseResult} from "papaparse";
 
 @Component({
-  selector: 'app-bulk-id-generation',
-  templateUrl: './bulk-id-generation.component.html',
-  styleUrls: ['./bulk-id-generation.component.css'],
-  animations: [
-    trigger('infoDialogTrigger', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('300ms', style({ opacity: 1 })),
-      ]),
-      transition(':leave', [
-        animate('100ms', style({ opacity: 0 }))
-      ])
-    ])
-  ]
+    selector: 'app-bulk-id-generation',
+    templateUrl: './bulk-id-generation.component.html',
+    styleUrls: ['./bulk-id-generation.component.css'],
+    animations: [
+        trigger('infoDialogTrigger', [
+            transition(':enter', [
+                style({ opacity: 0 }),
+                animate('300ms', style({ opacity: 1 })),
+            ]),
+            transition(':leave', [
+                animate('100ms', style({ opacity: 0 }))
+            ])
+        ])
+    ],
+    standalone: false
 })
 export class BulkIdGenerationComponent implements OnInit {
 

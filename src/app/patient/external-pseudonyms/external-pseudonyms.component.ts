@@ -14,10 +14,11 @@ import {
 } from "../patient-pseudonyms/dialogs/show-related-id-dialog/show-related-id-dialog.component";
 
 @Component({
-  selector: 'app-external-pseudonyms',
-  templateUrl: './external-pseudonyms.component.html',
-  styleUrls: ['./external-pseudonyms.component.css'],
-  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
+    selector: 'app-external-pseudonyms',
+    templateUrl: './external-pseudonyms.component.html',
+    styleUrls: ['./external-pseudonyms.component.css'],
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    standalone: false
 })
 export class ExternalPseudonymsComponent implements OnChanges {
 

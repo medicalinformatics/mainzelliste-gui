@@ -26,9 +26,10 @@ export interface FilterConfig {
 }
 
 @Component({
-  selector: 'app-patientlist-view',
-  templateUrl: './patientlist-view.component.html',
-  styleUrls: ['./patientlist-view.component.css']
+    selector: 'app-patientlist-view',
+    templateUrl: './patientlist-view.component.html',
+    styleUrls: ['./patientlist-view.component.css'],
+    standalone: false
 })
 export class PatientlistViewComponent implements OnInit {
 

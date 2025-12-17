@@ -12,9 +12,10 @@ import {ConfigurationService} from "../../../services/configuration.service";
 import {Id} from "../../../model/id";
 
 @Component({
-  selector: 'app-id-generator-dialog',
-  templateUrl: './id-generator-dialog.component.html',
-  styleUrls: ['./id-generator-dialog.component.css']
+    selector: 'app-id-generator-dialog',
+    templateUrl: './id-generator-dialog.component.html',
+    styleUrls: ['./id-generator-dialog.component.css'],
+    standalone: false
 })
 export class IdGeneratorDialogComponent {
 

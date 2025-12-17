@@ -1,5 +1,10 @@
 import {Injectable} from '@angular/core';
-import {KeycloakEvent, KeycloakEventType, KeycloakService} from "keycloak-angular";
+import {
+  KeycloakEventLegacy,
+  KeycloakEventType,
+  KeycloakEventTypeLegacy,
+  KeycloakService
+} from "keycloak-angular";
 import {SessionService} from "./session.service";
 import {mergeMap} from "rxjs/operators";
 import {firstValueFrom, lastValueFrom} from "rxjs";
@@ -16,10 +21,10 @@ export class UserAuthService {
     protected readonly sessionService: SessionService) {
   }
 
-  notifyKeycloakEvent(event: KeycloakEvent){
-    if (event.type == KeycloakEventType.OnAuthLogout) {
+  notifyKeycloakEvent(event: KeycloakEventLegacy){
+    if (event.type == KeycloakEventTypeLegacy.OnAuthLogout) {
       this.isLoggedInKeycloak = false;
-    } else if (event.type == KeycloakEventType.OnAuthSuccess) {
+    } else if (event.type == KeycloakEventTypeLegacy.OnAuthSuccess) {
       this.isLoggedInKeycloak = true;
     }
   }

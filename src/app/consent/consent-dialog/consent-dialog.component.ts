@@ -4,9 +4,10 @@ import {Consent} from "../consent.model";
 import {Observable} from "rxjs";
 
 @Component({
-  selector: 'app-consent-dialog',
-  templateUrl: './consent-dialog.component.html',
-  styleUrls: ['./consent-dialog.component.css']
+    selector: 'app-consent-dialog',
+    templateUrl: './consent-dialog.component.html',
+    styleUrls: ['./consent-dialog.component.css'],
+    standalone: false
 })
 
 export class ConsentDialogComponent implements OnInit {

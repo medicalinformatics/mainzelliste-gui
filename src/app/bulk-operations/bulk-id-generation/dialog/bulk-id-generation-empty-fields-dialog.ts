@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
     selector: 'bulk-id-generation-empty-fields-dialog',
     templateUrl: 'bulk-id-generation-empty-fields-dialog.html',
+    standalone: false
 })
 
 export class BulkIdGenerationEmptyFieldsDialog implements OnInit {

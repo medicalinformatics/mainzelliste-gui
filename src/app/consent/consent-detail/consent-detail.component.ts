@@ -16,10 +16,11 @@ import {getErrorMessageFrom} from "../../error/error-utils";
 import {MatDatepickerInputEvent} from "@angular/material/datepicker";
 
 @Component({
-  selector: 'app-consent-detail',
-  templateUrl: './consent-detail.component.html',
-  styleUrls: ['./consent-detail.component.css'],
-  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
+    selector: 'app-consent-detail',
+    templateUrl: './consent-detail.component.html',
+    styleUrls: ['./consent-detail.component.css'],
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    standalone: false
 })
 export class ConsentDetailComponent implements OnInit {
 

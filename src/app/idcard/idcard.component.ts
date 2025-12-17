@@ -40,9 +40,10 @@ import {ComponentType} from "@angular/cdk/portal";
 
 
 @Component({
-  selector: 'app-idcard',
-  templateUrl: './idcard.component.html',
-  styleUrls: ['./idcard.component.css']
+    selector: 'app-idcard',
+    templateUrl: './idcard.component.html',
+    styleUrls: ['./idcard.component.css'],
+    standalone: false
 })
 
 export class IdcardComponent implements OnInit {

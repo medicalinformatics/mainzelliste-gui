@@ -10,9 +10,10 @@ import {AuthorizationService} from "../../../services/authorization.service";
 import {IDGeneratorType} from "../../../model/id-generator-config";
 
 @Component({
-  selector: 'app-id-generators',
-  templateUrl: './id-generators.component.html',
-  styleUrls: ['./id-generators.component.css']
+    selector: 'app-id-generators',
+    templateUrl: './id-generators.component.html',
+    styleUrls: ['./id-generators.component.css'],
+    standalone: false
 })
 export class IdGeneratorsComponent implements OnInit {
   protected readonly Permission = Permission;

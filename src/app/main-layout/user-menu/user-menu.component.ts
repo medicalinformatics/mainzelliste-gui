@@ -8,9 +8,10 @@ import {Tenant} from "../../model/tenant";
 import {DateAdapter} from "@angular/material/core";
 
 @Component({
-  selector: 'app-user-menu',
-  templateUrl: './user-menu.component.html',
-  styleUrls: ['./user-menu.component.css']
+    selector: 'app-user-menu',
+    templateUrl: './user-menu.component.html',
+    styleUrls: ['./user-menu.component.css'],
+    standalone: false
 })
 export class UserMenuComponent {
   constructor(

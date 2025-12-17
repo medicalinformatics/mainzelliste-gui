@@ -4,9 +4,10 @@ import {FormBuilder, FormControl, UntypedFormGroup} from "@angular/forms";
 import {PatientService} from "../../services/patient.service";
 
 @Component({
-  selector: 'app-patient-search',
-  templateUrl: './patientSearch.component.html',
-  styleUrls: ['./patientSearch.component.css']
+    selector: 'app-patient-search',
+    templateUrl: './patientSearch.component.html',
+    styleUrls: ['./patientSearch.component.css'],
+    standalone: false
 })
 
 export class PatientSearchComponent implements OnInit {

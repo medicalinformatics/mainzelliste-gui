@@ -14,9 +14,10 @@ import {Permission} from "../../model/permission";
 import {NgForm} from "@angular/forms";
 
 @Component({
-  selector: 'app-edit-patient',
-  templateUrl: './edit-patient.component.html',
-  styleUrls: ['./edit-patient.component.css']
+    selector: 'app-edit-patient',
+    templateUrl: './edit-patient.component.html',
+    styleUrls: ['./edit-patient.component.css'],
+    standalone: false
 })
 export class EditPatientComponent implements OnInit {
   public readonly Permission = Permission;
@@ -95,8 +96,9 @@ export class EditPatientComponent implements OnInit {
 }
 
 @Component({
-  selector: 'edit-patient-tentative-dialog',
-  templateUrl: 'edit-patient-tentative-dialog.html',
+    selector: 'edit-patient-tentative-dialog',
+    templateUrl: 'edit-patient-tentative-dialog.html',
+    standalone: false
 })
 export class EditPatientTentativeDialog {
   constructor(
