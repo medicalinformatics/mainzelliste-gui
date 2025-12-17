@@ -1,5 +1,4 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {NgxCsvParser, NgxCSVParserError} from 'ngx-csv-parser';
 import {saveAs} from 'file-saver';
 import {FormBuilder, Validators} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
@@ -14,6 +13,9 @@ import {BulkIdGenerationEmptyFieldsDialog} from "./dialog/bulk-id-generation-emp
 import {FieldError} from "../../error/field-error";
 import {map} from "rxjs/operators";
 import {animate, style, transition, trigger} from "@angular/animations";
+import {Observable} from "rxjs";
+import * as papaparse from "papaparse";
+import {ParseResult} from "papaparse";
 
 @Component({
   selector: 'app-bulk-id-generation',
@@ -65,7 +67,6 @@ export class BulkIdGenerationComponent implements OnInit {
     private _formBuilder: FormBuilder,
     public dialog: MatDialog,
     private titleService: GlobalTitleService,
-    private ngxCsvParser: NgxCsvParser,
     public patientListService: PatientListService,
     private translate: TranslateService
     ) {
@@ -99,48 +100,65 @@ export class BulkIdGenerationComponent implements OnInit {
 
   readCsv(file: any) {
     this.readingInProgress = true
-    file.text().then((content: string) => {
-      this.delimiter = content.includes(";") ? ";" : ",";
-      this.ngxCsvParser.parse(file, { header: false, delimiter: this.delimiter, encoding: 'utf8' })
-      .pipe(
-        map(records => {
-          if (records instanceof NgxCSVParserError) {
-            console.log(records.message)
-            throw new FieldError(this.translate, "CSVFileUploader.upload_error_invalid_file");
+    new Observable<ParseResult<unknown>>(
+      observable  => {
+        papaparse.parse(file, {
+          encoding: 'utf8',
+          complete: function (content) {
+            observable.next(content);
+            observable.complete();
           }
-
-          //validate
-          if (!this.patientListService.getAllIdTypes("R").includes(records[0][0])) {
-            throw new FieldError(this.translate, 'bulkIdGeneration.upload_error_read_permission', records[0][0]);
-          } else if (records.length > this.allowed_length + 1) {
-            throw new FieldError(this.translate, 'bulkIdGeneration.upload_error_file_length');
-          } else if (records[0].length <= 2 && (records[0].length == 1 || records[0][1] == "")) {
-            for (let i = 1; i < records.length; i++) {
-              if (records[i].length >= 3 || !(records[i].length == 1 || records[i][1] == "") || records[i][0] == "") {
-                throw new FieldError(this.translate, 'bulkIdGeneration.upload_error_ids');
-              }
-            }
-          } else {
-            throw new FieldError(this.translate, 'bulkIdGeneration.upload_error_id_type');
-          }
-          return records;
         })
-      ).subscribe({
-        next: (records): void => {
-          this.readingInProgress = false
-          this.csvRecords = records;
-          this.idType = this.csvRecords[0][0];
-          this.stepper.next();
-          this.step = 1;
-        },
-        error: (e:FieldError): void => {
-          this.readingInProgress = false
-          console.log(e)
-          this.uploadFormGroup.get('uploadField')?.setErrors({csvError: {value: e.message}})
-          this.step = 0;
+      }
+    )
+    .pipe(
+      map(content => {
+        // check if empty
+        if (content.data.length <= 1)
+          throw new FieldError(this.translate, "CSVFileUploader.upload_error_empty");
+
+        // extract and validate header
+        let csvHeaders = (content.data[0] as string[])
+        if (!csvHeaders || csvHeaders.length == 0 || csvHeaders[0].trim().length == 0)
+          throw new FieldError(this.translate, "CSVFileUploader.upload_error_no_header");
+
+        // validate id types
+        const configuredIdTypes = this.patientListService.getAllIdTypes("R");
+        const invalidHeaders = csvHeaders.filter(c => c.length != 0 && !configuredIdTypes.includes(c));
+        if (invalidHeaders.length > 0)
+          throw new FieldError(this.translate, "CSVFileUploader.upload_error_some_unknown_header", invalidHeaders.join(", "));
+
+        // check max size
+        if (content.data.length > this.allowed_length + 1) {
+          throw new FieldError(this.translate, 'bulkIdGeneration.upload_error_file_length');
         }
-      });
-    });
+
+        // max one id type
+        if(csvHeaders.filter(c => c.length != 0).length > 1)
+          throw new FieldError(this.translate, 'bulkIdGeneration.upload_error_id_type');
+        // validate consent
+        if(content.data.some((l, j) => j > 0 &&
+          (!l || !(l as string[])[0] || (l as string[])[0].trim().length == 0)))
+          throw new FieldError(this.translate, 'bulkIdGeneration.upload_error_ids');
+
+        this.delimiter = content.meta.delimiter;
+        return {idType: csvHeaders[0], content: content.data};
+      })
+    ).subscribe({
+      next: (records): void => {
+        this.readingInProgress = false
+        this.csvRecords = records.content as string[][];
+        this.idType = records.idType;
+        this.stepper.next();
+        this.step = 1;
+      },
+      error: (e:FieldError): void => {
+        this.readingInProgress = false
+        console.log(e)
+        this.uploadFormGroup.get('uploadField')?.setErrors({csvError: {value: e.message}})
+        this.step = 0;
+      }
+    })
   }
 
   generateNewIds(newIdType: string) {
@@ -150,7 +168,7 @@ export class BulkIdGenerationComponent implements OnInit {
     const idStrings = this.csvRecords.filter((r,i) => i>0).map( row => row[0])
     this.patientListService.generateIdArray(this.idType, idStrings, newIdType).subscribe(ids => {
       this.generationStatus = this.translate.instant("bulkPseudonymization.progress_status_prepare_result");
-      this.newEntrys(ids);
+      this.newEntries(ids);
       this.generationInProgress = false;
       if(this.emptyFields == 0) {
         this.generated = true;
@@ -171,14 +189,14 @@ export class BulkIdGenerationComponent implements OnInit {
   }
 
   private setupCSV() {
-    const csv = [this.csvRecords[0][0] + ";" + this.csvRecords[0][1]];
+    const csv = [this.csvRecords[0][0] + this.delimiter + this.csvRecords[0][1]];
     for(let i = 1; i < this.csvRecords.length; i++) {
-      csv.push(this.csvRecords[i][0] + ";" + this.csvRecords[i][1]);
+      csv.push(this.csvRecords[i][0] + this.delimiter + this.csvRecords[i][1]);
     }
     return csv;
   }
 
-  private newEntrys(newIds: [{idType: string, idString: string}]) {
+  private newEntries(newIds: [{idType: string, idString: string}]) {
     this.emptyFields = 0;
     for(let i = 1; i < this.csvRecords.length; i++) {
       if(newIds[i-1].idString == undefined) {

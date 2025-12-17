@@ -12,9 +12,10 @@ import {map, startWith} from 'rxjs/operators';
 import {GlobalTitleService} from "../services/global-title.service";
 import {TranslateService} from '@ngx-translate/core';
 import {AuthorizationService} from "../services/authorization.service";
-import {NgxCsvParser, NgxCSVParserError} from "ngx-csv-parser";
 import {CardError} from "../error/card-error";
 import {FilterItem} from "../model/filter-item";
+import * as papaparse from "papaparse"
+import {ParseResult} from "papaparse"
 
 export interface FilterConfig {
   display: string,
@@ -59,8 +60,7 @@ export class PatientlistViewComponent implements OnInit {
     public translate: TranslateService,
     patientService: PatientService,
     public authorizationService: AuthorizationService,
-    private titleService: GlobalTitleService,
-    private ngxCsvParser: NgxCsvParser,
+    private titleService: GlobalTitleService
   ) {
     this.patientService = patientService;
     this.patientsMatTableData = new MatTableDataSource<Patient>([]);
@@ -118,6 +118,14 @@ export class PatientlistViewComponent implements OnInit {
       // load patients
       this.loadPatients(0, this.paginator.pageSize).then();
     }
+    this.filterCtrl.updateValueAndValidity({onlySelf: false, emitEvent: true});
+  }
+
+  removeAllFilter(): void {
+    this.filters = [];
+    this.paginator.firstPage();
+    // load patients
+    this.loadPatients(0, this.paginator.pageSize).then();
     this.filterCtrl.updateValueAndValidity({onlySelf: false, emitEvent: true});
   }
 
@@ -194,46 +202,64 @@ export class PatientlistViewComponent implements OnInit {
 
   onUploadSearchIDsFromCSV($event: Event) {
     this.filterAutoCompleteTrigger.closePanel();
+    if(this.filters.length > 0)
+      this.removeAllFilter();
+    this.filterAutoCompleteTrigger.closePanel();
     this.uploadCSVinProgress = true;
     const target = $event.target as HTMLInputElement;
     const files = target.files as FileList;
     if(files != null && files.length >0) {
-      this.ngxCsvParser.parse(files[0], {header: false, delimiter: ";", encoding: 'utf8'}).pipe(
-          map(records => {
-            if (records instanceof NgxCSVParserError) {
-              console.log(records.message)
-              throw new CardError(this.translate, "CSVFileUploader.upload_error_invalid_file");
+      new Observable<ParseResult<unknown>>(
+        observable  => {
+          papaparse.parse(files[0], {
+            encoding: 'utf8',
+            complete: function (content) {
+              observable.next(content);
+              observable.complete();
             }
-            const csvHeaders = records[0] as string[]
-            if (records.length == 0 || csvHeaders.length == 0)
-              throw new CardError(this.translate, "CSVFileUploader.upload_error_no_header");
+          })
+        }
+      )
+      .pipe(
+        map(content=> {
+          console.log(content);
+          let csvHeaders = (content.data[0] as string[])
+          if(csvHeaders && csvHeaders.length == 1 && csvHeaders[0].trim().length == 0)
+            csvHeaders.pop();
+          if (content.data.length == 0 || !csvHeaders || csvHeaders.length == 0)
+            throw new CardError(this.translate, "CSVFileUploader.upload_error_no_header");
 
-            // check empty rows
-            if (records.length <= 1)
-              throw new CardError(this.translate, "CSVFileUploader.upload_error_empty");
+          // check no content
+          if (content.data.length <= 1)
+            throw new CardError(this.translate, "CSVFileUploader.upload_error_empty");
 
-            const configuredIdTypes = this.patientService.getConfigureIdTypes()
-            const invalidHeaders = csvHeaders.filter(c => c.length != 0 && !configuredIdTypes.includes(c));
-            if (invalidHeaders.length > 0)
-              throw new CardError(this.translate, "CSVFileUploader.upload_error_some_unknown_header", invalidHeaders.join(", "));
+          const configuredIdTypes = this.patientService.getConfigureIdTypes()
+          const invalidHeaders = csvHeaders.filter(c => c.length != 0 && !configuredIdTypes.includes(c));
+          if (invalidHeaders.length > 0)
+            throw new CardError(this.translate, "CSVFileUploader.upload_error_some_unknown_header", invalidHeaders.join(", "));
 
-            let filterConfigs: FilterConfig[] = this.configuredFilteringKeys
-            .filter(f => f.isIdType && csvHeaders.includes(f.field));
+          let filterConfigs: FilterConfig[] = this.configuredFilteringKeys
+          .filter(f => f.isIdType && csvHeaders.includes(f.field));
 
-            // add search filters
-            filterConfigs.forEach(filterConfig => {
-              const i = csvHeaders.indexOf(filterConfig.field);
+          // add search filters
+          filterConfigs.forEach(filterConfig => {
+            const i = csvHeaders.indexOf(filterConfig.field);
+            const ids = content.data.filter((l, j) => j > 0)
+            .map(l => (l as string[])[i])
+            .filter(w => w && w.trim().length > 0);
+            if(ids.length > 0) {
               filterConfig.hidden = true;
               this.filters.push({
                 display: filterConfig.display,
                 field: filterConfig.field,
                 fields: filterConfig.fields,
-                searchCriteria: records.filter((l, j) => j > 0).map( l => l[i]),
+                searchCriteria: ids,
                 isIdType: filterConfig.isIdType
               });
-            });
-          })
-       ).subscribe({
+            }
+          });
+        })
+      ).subscribe({
         next: (requests): void => {
           this.uploadCSVinProgress = false;
           this.filterInput.nativeElement.value = "";
@@ -242,7 +268,7 @@ export class PatientlistViewComponent implements OnInit {
           // load patients
           this.loadPatients(0, this.paginator.pageSize).then();
         },
-        error: (e:CardError): void => {
+        error: (e: CardError): void => {
           this.uploadCSVinProgress = false;
           this.filterInput.nativeElement.value = "";
           this.filterCtrl.setValue("");

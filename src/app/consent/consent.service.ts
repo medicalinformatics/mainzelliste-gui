@@ -939,9 +939,15 @@ export class ConsentService {
   }
 
   resolveDeleteFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, id:string, urlParams?: SearchParams): Promise<FhirResource | F> => {
+    const compatibleUrlParams = urlParams ? Object.fromEntries(
+      Object.entries(urlParams).map(([key, value]) => [
+        key,
+        Array.isArray(value) ? JSON.stringify(value) : value
+      ])
+    ) : {};
     return this.client.delete({
       resourceType: resourceType,
-      id: urlParams && Object.keys(urlParams).length > 0 ? id + "?" +  querystring.stringify(urlParams) : id,
+      id: urlParams && Object.keys(urlParams).length > 0 ? id + "?" +  querystring.stringify(compatibleUrlParams) : id,
       options: { headers: {'Authorization': 'MainzellisteToken ' + tokenId}}
     })
   }
