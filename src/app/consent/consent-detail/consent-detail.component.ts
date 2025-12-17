@@ -8,7 +8,7 @@ import _moment from "moment";
 import {ControlContainer, NgForm, NgModel} from "@angular/forms";
 import {Permission} from "../../model/permission";
 import {Subscription} from "rxjs";
-import {HttpEventType} from "@angular/common/http";
+import { HttpEventType } from "@angular/common/http";
 import {map} from "rxjs/operators";
 import {AuthorizationService} from "../../services/authorization.service";
 import {TranslateService} from "@ngx-translate/core";

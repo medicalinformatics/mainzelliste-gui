@@ -23,7 +23,7 @@ import {
 } from '@angular/material/core';
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
-import {HttpClientModule} from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {AppConfigService} from "./app-config.service";
 import {ErrorComponent} from './error/error.component';
@@ -126,85 +126,78 @@ function initializeAppFactory(
     });
 }
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    PatientlistComponent,
-    routingComponents,
-    IdcardComponent,
-    PatientlistViewComponent,
-    ErrorComponent,
-    LogoutComponent,
-    NewIdDialog,
-    AccessDeniedComponent,
-    PageNotFoundComponent,
-    ConsentTemplatesComponent,
-    BulkIdGenerationComponent,
-    BulkIdGenerationTableComponent,
-    BulkIdGenerationEmptyFieldsDialog,
-    BulkPseudonymizationComponent,
-    ExportPatientsDialogComponent
-  ],
-  imports: [
-    SharedModule,
-    MainLayoutModule,
-    PatientModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    FormsModule,
-    ScrollingModule,
-    MatSidenavModule,
-    MatBadgeModule,
-    MatPaginatorModule,
-    MatNativeDateModule,
-    MatTableModule,
-    MatCheckboxModule,
-    MatTooltipModule,
-    HttpClientModule,
-    KeycloakAngularModule,
-    MatProgressSpinnerModule,
-    MatProgressBarModule,
-    ClipboardModule,
-    ConsentModule,
-    ConfigurationModule,
-    FileSaverModule,
-    NgxMatFileInputModule,
-    MatStepperModule,
-    EditorModule,
-    MatListModule,
-    ValidRelatedExternalIdsDirective
-  ],
-  providers: [
-    {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
-    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeAppFactory,
-      deps: [AppConfigService, KeycloakService, UserAuthService, TranslateService, LocalStorageService],
-      multi: true
-    },
-    provideTranslateService({
-      loader: provideTranslateHttpLoader(
+@NgModule({ declarations: [
+        AppComponent,
+        PatientlistComponent,
+        routingComponents,
+        IdcardComponent,
+        PatientlistViewComponent,
+        ErrorComponent,
+        LogoutComponent,
+        NewIdDialog,
+        AccessDeniedComponent,
+        PageNotFoundComponent,
+        ConsentTemplatesComponent,
+        BulkIdGenerationComponent,
+        BulkIdGenerationTableComponent,
+        BulkIdGenerationEmptyFieldsDialog,
+        BulkPseudonymizationComponent,
+        ExportPatientsDialogComponent
+    ],
+    bootstrap: [AppComponent], imports: [SharedModule,
+        MainLayoutModule,
+        PatientModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        FormsModule,
+        ScrollingModule,
+        MatSidenavModule,
+        MatBadgeModule,
+        MatPaginatorModule,
+        MatNativeDateModule,
+        MatTableModule,
+        MatCheckboxModule,
+        MatTooltipModule,
+        KeycloakAngularModule,
+        MatProgressSpinnerModule,
+        MatProgressBarModule,
+        ClipboardModule,
+        ConsentModule,
+        ConfigurationModule,
+        FileSaverModule,
+        NgxMatFileInputModule,
+        MatStepperModule,
+        EditorModule,
+        MatListModule,
+        ValidRelatedExternalIdsDirective], providers: [
+        { provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl },
+        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
         {
-          prefix:"./assets/i18n/",
-          suffix:".json"}
-      ),
-      fallbackLang: "en-US",
-      lang: "en-US"
-    }),
-    {provide: ErrorHandler, useClass: GlobalErrorHandler},
-    {provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher},
-    {provide: MAT_DATE_LOCALE, useValue: 'en-US'},
-    {provide: MAT_DATE_FORMATS, useValue: MAT_LUXON_DATE_FORMATS},
-    {
-      provide: DateAdapter,
-      useClass: LuxonDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_LUXON_DATE_ADAPTER_OPTIONS]
-    },
-    {provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js'}
-  ],
-  bootstrap: [AppComponent]
-})
+            provide: APP_INITIALIZER,
+            useFactory: initializeAppFactory,
+            deps: [AppConfigService, KeycloakService, UserAuthService, TranslateService, LocalStorageService],
+            multi: true
+        },
+        provideTranslateService({
+            loader: provideTranslateHttpLoader({
+                prefix: "./assets/i18n/",
+                suffix: ".json"
+            }),
+            fallbackLang: "en-US",
+            lang: "en-US"
+        }),
+        { provide: ErrorHandler, useClass: GlobalErrorHandler },
+        { provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher },
+        { provide: MAT_DATE_LOCALE, useValue: 'en-US' },
+        { provide: MAT_DATE_FORMATS, useValue: MAT_LUXON_DATE_FORMATS },
+        {
+            provide: DateAdapter,
+            useClass: LuxonDateAdapter,
+            deps: [MAT_DATE_LOCALE, MAT_LUXON_DATE_ADAPTER_OPTIONS]
+        },
+        { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 
 export class AppModule { }
