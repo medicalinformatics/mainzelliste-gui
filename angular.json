@@ -79,10 +79,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "mainzelliste-gui:build:production"
+              "buildTarget": "mainzelliste-gui:build:production"
             },
             "development": {
-              "browserTarget": "mainzelliste-gui:build:development"
+              "buildTarget": "mainzelliste-gui:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -90,7 +90,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "mainzelliste-gui:build"
+            "buildTarget": "mainzelliste-gui:build"
           }
         },
         "test": {
