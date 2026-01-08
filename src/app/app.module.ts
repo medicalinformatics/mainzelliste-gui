@@ -49,7 +49,6 @@ import {PatientModule} from "./patient/patient.module";
 import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.component";
 import {provideTranslateService, TranslateService} from '@ngx-translate/core';
 import {AccessDeniedComponent} from './access-denied/access-denied.component';
-import {NgxMatFileInputModule} from '@angular-material-components/file-input';
 import {MatStepperModule} from '@angular/material/stepper';
 import {
   InternationalizedMatPaginatorIntl
@@ -166,7 +165,6 @@ function initializeAppFactory(
         ConsentModule,
         ConfigurationModule,
         FileSaverModule,
-        NgxMatFileInputModule,
         MatStepperModule,
         EditorModule,
         MatListModule,

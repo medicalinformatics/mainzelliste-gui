@@ -126,11 +126,15 @@ export class BulkPseudonymizationComponent implements OnInit {
         .filter(e => !e.added && e.idType.toLowerCase().includes(searchValue.toLowerCase()))
       }),
     );
+  }
 
-    this.uploadFormGroup.get('uploadField')?.valueChanges.subscribe((file: any) => {
-      if (file != null) {
-        if (this.validFileTypes.includes(file.type)) {
-          this.readCsv(file);
+  onFileSelected($event: Event) {
+    const target = $event.target as HTMLInputElement;
+    const files = target.files as FileList;
+    if (files != null && files.length > 0) {
+      if (files[0] != null) {
+        if (this.validFileTypes.includes(files[0].type)) {
+          this.readCsv(files[0]);
         } else {
           this.uploadFormGroup.get('uploadField')?.setErrors({
             csvError: {
@@ -140,7 +144,7 @@ export class BulkPseudonymizationComponent implements OnInit {
           this.step = 0;
         }
       }
-    });
+    }
   }
 
   readCsv(file: any) {
