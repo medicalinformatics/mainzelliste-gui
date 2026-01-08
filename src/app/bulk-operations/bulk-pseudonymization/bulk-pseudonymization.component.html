@@ -4,7 +4,7 @@
     <form [formGroup]="uploadFormGroup">
       <ng-template matStepLabel>{{'bulkPseudonymization.upload_label' | translate}}</ng-template>
       <app-message-card [type]="'error'"
-                        [message]="fileInput.ngControl.getError('csvError')?.value || ''">
+                        [message]="this.uploadFormGroup.get('uploadField')?.getError('csvError')?.value || ''">
       </app-message-card>
       <div style="margin: 1% auto 0 auto; width: 66%;">{{'bulkPseudonymization.upload_info_text1' | translate}}
         <br/>
@@ -15,17 +15,12 @@
         {{'bulkPseudonymization.upload_info_text3' | translate}}
       </div>
       <div style="margin-top: 3%; display: flex; justify-content: center;">
-        <mat-form-field>
-          <ngx-mat-file-input
-            #fileInput
-            [multiple]="false"
-            [placeholder]="'file.csv'"
-            [accept]="'text/csv,.csv'"
-            [formControlName]="'uploadField'"
-            style="height: 20px;"
-          ></ngx-mat-file-input>
-        </mat-form-field>
-        <mat-spinner *ngIf="this.readingInProgress" style="margin-left: 10px; margin-top: 18px;" diameter="28"></mat-spinner>
+        <input formControlName="uploadField" type="file" accept="text/csv,.csv"
+               style="display: none" (change)="onFileSelected($event)" #fileUploader>
+        <button mat-raised-button (click)="fileUploader.click()" [disabled]="this.readingInProgress" style="margin-top: 5px">
+          {{'button_upload_csv_file' | translate }}
+          <mat-icon *ngIf="this.readingInProgress"><mat-spinner diameter="19"></mat-spinner></mat-icon>
+        </button>
       </div>
     </form>
   </mat-step>

@@ -6,6 +6,8 @@
 - upgrade ngx translate to v17
 - upgrade typescript to v4.9.3
 - upgrade keycloak v26.4
+### Refactor:
+- remove angular-material-components/file-input due to outdated Angular dependency
 ### Feature
 - Bulk pseudonymization support adding unsure matches
 ## [1.0.3] - 2025-10-30

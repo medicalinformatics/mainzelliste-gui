@@ -8,6 +8,7 @@
   "button_view_consent_template": "Einwilligungsvorlage ansehen",
   "button_delete_consent_template": "Einwilligungsvorlage löschen",
   "button_add_consent_scan": "PDF-Datei hinzufügen",
+  "button_upload_csv_file": "CSV-Datei hochladen",
   "button_generate_id": "ID generieren",
 	"button_delete": "Löschen",
 	"button_edit": "Bearbeiten",

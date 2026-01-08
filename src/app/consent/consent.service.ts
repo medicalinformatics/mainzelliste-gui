@@ -28,7 +28,7 @@ import {getErrorMessageFrom} from "../error/error-utils";
 import {TokenType} from "../model/token";
 import {TokenData} from "../model/token-data";
 import {UploadConsentFileResponse} from "../model/api/upload-consent-file-response";
-import * as querystring from "querystring";
+import queryString from 'querystring';
 import {AuthorizationService} from "../services/authorization.service";
 import {DateTime} from "luxon";
 import {StringUtils} from "../shared/utils/string-utils";
@@ -947,7 +947,7 @@ export class ConsentService {
     ) : {};
     return this.client.delete({
       resourceType: resourceType,
-      id: urlParams && Object.keys(urlParams).length > 0 ? id + "?" +  querystring.stringify(compatibleUrlParams) : id,
+      id: urlParams && Object.keys(urlParams).length > 0 ? id + "?" +  queryString.stringify(compatibleUrlParams) : id,
       options: { headers: {'Authorization': 'MainzellisteToken ' + tokenId}}
     })
   }
