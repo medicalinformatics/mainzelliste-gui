@@ -44,7 +44,10 @@
                 (click)="deletePolicySet(element)">
           <mat-icon>delete</mat-icon>
         </button>
-        <button mat-icon-button (click)="openCsvImportDialog(element.id)">
+        <button mat-icon-button *appHasPermission="Permission.CREAT_CONSENT_POLICY"
+                color="primary" class="ml-icon-button"
+                [matTooltip]="'configuration.policySet.bulkadd' | translate"
+                (click)="openCsvImportDialog(element.id)">
           <mat-icon>upload_file</mat-icon>
         </button>
       </div>

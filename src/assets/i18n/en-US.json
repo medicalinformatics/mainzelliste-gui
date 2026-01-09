@@ -226,6 +226,7 @@
   "configuration.policy.empty": "no Policy found.",
   "configuration.policySet.add": "Add Policy Set",
   "configuration.policySet.delete": "Delete Policy Set",
+  "configuration.policySet.bulkadd": "Add multiple Policies",
   "configuration.policySet.empty": "no Policy-Set found.",
   "configuration.policy.error.400": "Invalid field 'Policy Code'. Value contains whitespace.",
   "configuration.policy.error.409": "Policy with the given 'Code' already exist",

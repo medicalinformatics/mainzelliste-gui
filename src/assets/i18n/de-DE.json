@@ -235,6 +235,7 @@
   "configuration.policy.empty": "Kein Policy gefunden.",
   "configuration.policySet.add": "Policy-Set hinzufügen",
   "configuration.policySet.delete": "Policy-Set löschen",
+  "configuration.policySet.bulkadd": "Mehrere Policies hinzufügen",
   "configuration.policySet.empty": "Kein Policy-Set gefunden.",
   "configuration.policy.error.400": "Feld 'Policy-Code' fehlerhaft. Inhalt enthält Leerzeichen.",
   "configuration.policy.error.409": "Policy mit dem angegebenen 'Code' existiert bereits",
