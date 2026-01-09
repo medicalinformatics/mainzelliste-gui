@@ -19,7 +19,9 @@
 </div>
 <h3 class="upload-title">{{ 'configuration.policy.csv.title' | translate }}</h3>
 <app-error-card [(messages)]="errorMessages"></app-error-card>
-<div class="upload-container" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+
+  <!-- Add multiple policies-->
+  <div *ngIf="selectedFiles.length == 0" class="upload-container" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
   <p>{{ 'configuration.policy.csv.add' | translate }}</p>
   <input type="file" accept=".csv" (change)="onFileSelected($event)" hidden #fileInput multiple>
   <button mat-raised-button (click)="fileInput.click()">
@@ -27,19 +29,19 @@
   </button>
 </div>
 
-<div *ngIf="selectedFiles.length > 0" class="file-list">
+<div *ngIf="!importResult && selectedFiles.length > 0" class="file-list">
   <h4>{{ 'configuration.policy.csv.selectedFiles' | translate }}</h4>
   <ul>
     <li *ngFor="let file of selectedFiles">
       <span class="file-name">{{ file.name }}</span>
-      <button mat-icon-button color="warn" (click)="removeFile(file.name)">
+      <button mat-icon-button color="warn" (click)="removeFile(file.name)" [disabled]="importResult">
         <mat-icon>delete</mat-icon>
       </button>
     </li>
   </ul>
 </div>
 
-<div *ngIf="importResult" class="message-container">
+<div *ngIf="importResult && selectedFiles.length > 0" class="message-container">
   <p>
     {{ 'configuration.policy.csv.successSummary' | translate: { added: importResult.added, total: totalRows } }}
   </p>
