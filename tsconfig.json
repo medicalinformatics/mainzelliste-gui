@@ -13,7 +13,7 @@
     "sourceMap": true,
     "declaration": false,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
     "module": "es2022",
@@ -27,9 +27,6 @@
     "paths": {
       "querystring": [
         "./node_modules/query-string"
-      ],
-      "papaparse": [
-        "./node_modules/papaparse",
       ]
     },
     "useDefineForClassFields": false
