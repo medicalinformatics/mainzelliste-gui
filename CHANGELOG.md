@@ -1,4 +1,27 @@
 # Changelog
+## [1.1.0] - Unreleased
+### Upgrade
+- upgrade to angular v19
+- ensure compatibility with keycloak v26.4
+- upgrade keycloak client to v26.2.2
+- upgrade ngx translate to v17
+- upgrade typescript to v5.5.4
+- upgrade tinymce-angular v9.1.1
+### Refactor:
+- remove angular-material-components/file-input due to outdated Angular dependency
+- use papaparse instead of ngx-csv-parser
+- remove angular-csv and file-saver packages
+### Feature
+- Bulk pseudonymization support adding unsure matches
+## [1.0.3] - 2025-10-30
+### Fix
+- Upgrade keycloak client to v25.0.6
+## [1.0.2] - 2025-09-24
+### Fix
+- Dynamically changing locale does not update date formatting
+## [1.0.1] - 2025-08-07
+### Fix
+- recalculation of consent period end date
 ## [1.0.0] - 2025-05-09
 ### Feature
 - Patient List with a search filter and csv export.

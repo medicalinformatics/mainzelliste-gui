@@ -1,13 +1,14 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {MatSelect, MatSelectChange} from "@angular/material/select";
 import {ConsentService} from "../consent.service";
-import {MAT_DATE_LOCALE, MatOption} from "@angular/material/core";
+import {MAT_DATE_LOCALE} from "@angular/material/core";
+import {MatOption} from "@angular/material/core";
 import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "../consent.model";
 import _moment from "moment";
 import {ControlContainer, NgForm, NgModel} from "@angular/forms";
 import {Permission} from "../../model/permission";
 import {Subscription} from "rxjs";
-import {HttpEventType} from "@angular/common/http";
+import { HttpEventType } from "@angular/common/http";
 import {map} from "rxjs/operators";
 import {AuthorizationService} from "../../services/authorization.service";
 import {TranslateService} from "@ngx-translate/core";
@@ -15,10 +16,11 @@ import {getErrorMessageFrom} from "../../error/error-utils";
 import {MatDatepickerInputEvent} from "@angular/material/datepicker";
 
 @Component({
-  selector: 'app-consent-detail',
-  templateUrl: './consent-detail.component.html',
-  styleUrls: ['./consent-detail.component.css'],
-  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
+    selector: 'app-consent-detail',
+    templateUrl: './consent-detail.component.html',
+    styleUrls: ['./consent-detail.component.css'],
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    standalone: false
 })
 export class ConsentDetailComponent implements OnInit {
 

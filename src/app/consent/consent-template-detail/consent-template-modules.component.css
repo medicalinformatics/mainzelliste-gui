@@ -14,6 +14,7 @@
   justify-content: space-between;
   font-size: 15px;
 }
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 .module-header.mat-card-header-text {
   width: 100%
 }
@@ -27,13 +28,13 @@ mat-form-field.templateInputField {
 }
 
 .policiesTable {
-  width: 100%
+  width: 100%;
 }
-.policiesTable tr.mat-row {
+.policiesTable tr.mat-mdc-row {
   height: 38px;
 }
 
-.policiesTable tr.mat-header-row {
+.policiesTable tr.mat-mdc-header-row {
   height: 40px;
 }
 

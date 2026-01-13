@@ -14,10 +14,11 @@ import {TranslateService} from "@ngx-translate/core";
 import {Validity} from "../consent-validity-period";
 
 @Component({
-  selector: 'app-consent-template-modules',
-  templateUrl: './consent-template-modules.component.html',
-  styleUrls: ['./consent-template-modules.component.css'],
-  viewProviders: [{provide: ControlContainer, useExisting: NgForm}]
+    selector: 'app-consent-template-modules',
+    templateUrl: './consent-template-modules.component.html',
+    styleUrls: ['./consent-template-modules.component.css'],
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    standalone: false
 })
 export class ConsentTemplateModulesComponent implements OnInit {
 

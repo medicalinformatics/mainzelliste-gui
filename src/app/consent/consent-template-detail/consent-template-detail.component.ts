@@ -13,15 +13,16 @@ import {ConsentTemplateValidityPeriodDialog} from "./consent-template-validity-p
 import {MatRadioChange} from "@angular/material/radio";
 import {MatSlideToggleChange} from "@angular/material/slide-toggle";
 import {ConsentPolicySet} from "../../model/consent-policy-set";
-import {Validity} from "../consent-validity-period";
 import {AppConfigService} from "../../app-config.service";
+import {Duration} from "luxon";
 
 @Component({
-  selector: 'app-consent-template-detail',
-  templateUrl: './consent-template-detail.component.html',
-  styleUrls: ['./consent-template-detail.component.css'],
-  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-consent-template-detail',
+    templateUrl: './consent-template-detail.component.html',
+    styleUrls: ['./consent-template-detail.component.css'],
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ConsentTemplateDetailComponent implements OnInit {
 
@@ -118,7 +119,7 @@ export class ConsentTemplateDetailComponent implements OnInit {
     if($event.checked) {
       this.template.consentModel = true;
       this.changeModulesAnswer("permit")
-      this.template.validity.set(0,0,30);
+      this.template.validity.set(0,0,30, Duration.fromObject({ years: 30}));
     }
   }
 

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {BehaviorSubject, Observable, of, throwError} from 'rxjs';
 import {Session} from '../model/session';
 import {Token, TokenType} from '../model/token';

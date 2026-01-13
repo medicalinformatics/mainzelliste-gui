@@ -7,9 +7,10 @@ import {MatTable} from "@angular/material/table";
 import {ConsentDialogComponent} from "../consent-dialog/consent-dialog.component";
 
 @Component({
-  selector: 'app-consent-dialog',
-  templateUrl: './consent-history-dialog.component.html',
-  styleUrls: ['./consent-history-dialog.component.css']
+    selector: 'app-consent-dialog',
+    templateUrl: './consent-history-dialog.component.html',
+    styleUrls: ['./consent-history-dialog.component.css'],
+    standalone: false
 })
 
 export class ConsentHistoryDialogComponent implements OnInit {

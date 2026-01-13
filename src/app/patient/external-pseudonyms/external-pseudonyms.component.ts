@@ -14,10 +14,11 @@ import {
 } from "../patient-pseudonyms/dialogs/show-related-id-dialog/show-related-id-dialog.component";
 
 @Component({
-  selector: 'app-external-pseudonyms',
-  templateUrl: './external-pseudonyms.component.html',
-  styleUrls: ['./external-pseudonyms.component.css'],
-  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
+    selector: 'app-external-pseudonyms',
+    templateUrl: './external-pseudonyms.component.html',
+    styleUrls: ['./external-pseudonyms.component.css'],
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    standalone: false
 })
 export class ExternalPseudonymsComponent implements OnChanges {
 
@@ -135,7 +136,7 @@ export class ExternalPseudonymsComponent implements OnChanges {
     return key.idType + this.ids.indexOf(key);
   }
 
-  public getFieldClass(className: string){
-    return className + (this.readOnly ? " inputFieldDisabled" : "");
+  public getFieldClass(){
+    return "inputField ml-field" + (this.readOnly ? " inputFieldDisabled" : "");
   }
 }

@@ -3,9 +3,10 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Id} from "../../../../model/id";
 
 @Component({
-  selector: 'app-generate-id-dialog',
-  templateUrl: './generate-id-dialog.component.html',
-  styleUrls: ['./generate-id-dialog.component.css']
+    selector: 'app-generate-id-dialog',
+    templateUrl: './generate-id-dialog.component.html',
+    styleUrls: ['./generate-id-dialog.component.css'],
+    standalone: false
 })
 export class GenerateIdDialog implements OnInit {
 

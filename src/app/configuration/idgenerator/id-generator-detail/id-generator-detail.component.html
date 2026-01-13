@@ -1,6 +1,6 @@
 <div ngModelGroup="idGeneratorDetail">
   <!-- idGenerator-->
-  <mat-form-field class="idGeneratorInputField" [ngStyle]="{'margin-bottom': '-1.25em' }">
+  <mat-form-field class="idGeneratorInputField" subscriptSizing="dynamic">
     <mat-label>{{'configuration.idGenerator.idGenerator' | translate}}</mat-label>
     <mat-select [(ngModel)]="this.dataModel.idGenerator"
                 (selectionChange)="this.idGeneratorSelected($event.value)"
@@ -12,7 +12,7 @@
   </mat-form-field>
 
   <!-- ID Type -->
-  <mat-form-field class="idGeneratorInputField" [ngStyle]="{'margin-bottom': displayError(idType) ? '0.25em' : '-1.25em' }">
+  <mat-form-field class="idGeneratorInputField" subscriptSizing="dynamic">
     <mat-label>{{'configuration.idGenerator.idType' | translate}}</mat-label>
     <input style="width: 45%;" matInput placeholder=""
            [(ngModel)]="this.dataModel.idType" [name]="'idType'" #idType="ngModel" required="true">
@@ -24,7 +24,7 @@
   <!-- CryptoIDGenerator Parameters -->
   <ng-container [ngSwitch]="this.dataModel.idGenerator">
     <ng-container *ngSwitchCase="IDGeneratorType.CryptoIDGenerator">
-      <mat-form-field  class="idGeneratorInputField" [ngStyle]="{'margin-bottom': displayError(baseIdType) ? '0.25em' : '-1.25em' }">
+      <mat-form-field  class="idGeneratorInputField" subscriptSizing="dynamic">
         <mat-label>baseIdType</mat-label>
         <mat-select [(ngModel)]="$any(this.dataModel.parameters).baseIdType"
                     [name]="'baseIdType'" #baseIdType="ngModel"
@@ -37,7 +37,7 @@
     </ng-container>
     <!-- PIDGenerator Parameters -->
     <ng-container *ngSwitchCase="IDGeneratorType.PIDGenerator">
-      <mat-form-field class="idGeneratorInputField" [ngStyle]="{'margin-bottom': displayError(k1) ? '0.25em' : '-1.25em' }">
+      <mat-form-field class="idGeneratorInputField" subscriptSizing="dynamic">
         <mat-label>K1</mat-label>
         <input type="number" min="1" matInput placeholder=""
                [(ngModel)]="$any(this.dataModel.parameters).k1" [name]="'k1'" #k1="ngModel" required="true">
@@ -45,7 +45,7 @@
           {{ getFieldErrorMessage("k1", k1.errors) }}
         </mat-error>
       </mat-form-field>
-      <mat-form-field class="idGeneratorInputField" [ngStyle]="{'margin-bottom': displayError(k2) ? '0.25em' : '-1.25em' }">
+      <mat-form-field class="idGeneratorInputField" subscriptSizing="dynamic">
         <mat-label>k2</mat-label>
         <input type="number" min="1" matInput placeholder=""
                [(ngModel)]="$any(this.dataModel.parameters).k2" [name]="'k2'" #k2="ngModel" required="true">
@@ -53,7 +53,7 @@
           {{ getFieldErrorMessage("k2", k2.errors) }}
         </mat-error>
       </mat-form-field>
-      <mat-form-field class="idGeneratorInputField" [ngStyle]="{'margin-bottom': displayError(k3) ? '0.25em' : '-1.25em' }">
+      <mat-form-field class="idGeneratorInputField" subscriptSizing="dynamic">
         <mat-label>k3</mat-label>
         <input type="number" min="1" matInput placeholder=""
                [(ngModel)]="$any(this.dataModel.parameters).k3" [name]="'k3'" #k3="ngModel" required="true">
@@ -61,7 +61,7 @@
           {{ getFieldErrorMessage("k3", k2.errors) }}
         </mat-error>
       </mat-form-field>
-      <mat-form-field class="idGeneratorInputField">
+      <mat-form-field class="idGeneratorInputField" subscriptSizing="dynamic">
         <mat-label>rndwidth</mat-label>
         <input type="number" min="0" matInput placeholder=""
                [(ngModel)]="$any(this.dataModel.parameters).rndwidth" [name]="'rndwidth'" #rndwidth="ngModel" required="true">

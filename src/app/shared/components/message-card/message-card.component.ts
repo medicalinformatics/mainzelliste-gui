@@ -2,20 +2,21 @@ import {Component, Input, OnChanges, OnInit, SimpleChange} from '@angular/core';
 import {animate, style, transition, trigger} from "@angular/animations";
 
 @Component({
-  selector: 'app-message-card',
-  templateUrl: './message-card.component.html',
-  styleUrls: ['./message-card.component.css'],
-  animations: [
-    trigger('messageDialogTrigger', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('300ms', style({ opacity: 1 })),
-      ]),
-      transition(':leave', [
-        animate('100ms', style({ opacity: 0 }))
-      ])
-    ])
-  ]
+    selector: 'app-message-card',
+    templateUrl: './message-card.component.html',
+    styleUrls: ['./message-card.component.css'],
+    animations: [
+        trigger('messageDialogTrigger', [
+            transition(':enter', [
+                style({ opacity: 0 }),
+                animate('300ms', style({ opacity: 1 })),
+            ]),
+            transition(':leave', [
+                animate('100ms', style({ opacity: 0 }))
+            ])
+        ])
+    ],
+    standalone: false
 })
 export class MessageCardComponent implements OnInit, OnChanges {
 

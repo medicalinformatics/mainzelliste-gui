@@ -1,9 +1,8 @@
-<h1 mat-dialog-title>{{'newIdDialog.mat_title' | translate}}</h1>
-<form #generateId="ngForm">
-  <div mat-dialog-content>
-    <br />
+<h1 mat-dialog-title class="dialog-title">{{'newIdDialog.mat_title' | translate}}</h1>
+<div class="dialog">
+  <form #generateId="ngForm">
     <h4 style="font-weight: 100; text-align: justify">
-      {{'newIdDialog.text_1' | translate}} {{'newIdDialog.text_2' | translate}}
+      {{'newIdDialog.text_1_a' | translate}} {{'newIdDialog.text_2' | translate}}
       <b style="background-color: #eee; padding: 2px 5px; border-radius: 8px;"> {{'newIdDialog.text_id' | translate: {idType: this.data.externalId.idType, idString: this.data.externalId.idString} }}</b> {{'newIdDialog.text_3' | translate }}
     </h4>
     <mat-form-field appearance="fill">
@@ -14,19 +13,19 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-  </div>
-  <div mat-dialog-actions style="margin-top: 10%;">
-    <button mat-raised-button class="submitBreak" (click)="onCancel()">
-      {{'button_cancel' | translate}}
-    </button>
-    <button
-      mat-raised-button
-      class="submit"
-      type="submit"
-      (click)="onSave()"
-      [disabled]="!generateId.form.valid"
-    >
-      {{'button_save_new_id' | translate}}
-    </button>
-  </div>
-</form>
+    <div mat-dialog-actions style="margin-top: 10%;">
+      <button mat-raised-button class="submitBreak" (click)="onCancel()">
+        {{'button_cancel' | translate}}
+      </button>
+      <button
+        mat-raised-button
+        class="submit"
+        type="submit"
+        (click)="onSave()"
+        [disabled]="!generateId.form.valid"
+      >
+        {{'button_save_new_id' | translate}}
+      </button>
+    </div>
+  </form>
+</div>

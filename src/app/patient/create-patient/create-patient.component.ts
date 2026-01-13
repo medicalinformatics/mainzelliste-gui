@@ -5,7 +5,7 @@ import {Router} from "@angular/router";
 import {FormControl, NgForm} from "@angular/forms";
 import {PatientListService} from "../../services/patient-list.service";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
-import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
+import {MatChipInputEvent, MatChipGrid} from "@angular/material/chips";
 import {ErrorNotificationService} from "../../services/error-notification.service";
 import {GlobalTitleService} from "../../services/global-title.service";
 import {Observable, of, retry} from "rxjs";
@@ -28,16 +28,17 @@ export interface IdTypSelection {
 }
 
 @Component({
-  selector: 'app-create-patient',
-  templateUrl: './create-patient.component.html',
-  styleUrls: ['./create-patient.component.css']
+    selector: 'app-create-patient',
+    templateUrl: './create-patient.component.html',
+    styleUrls: ['./create-patient.component.css'],
+    standalone: false
 })
 export class CreatePatientComponent implements OnInit {
   public readonly Permission = Permission;
   @Input() fields: Array<string> = [];
 
   externalIdTypesFormControl = new FormControl('');
-  @ViewChild('chipList') chipList!: MatChipList;
+  @ViewChild('chipList') chipList!: MatChipGrid;
 
   patient: Patient = new Patient();
   patientService: PatientService;
@@ -248,8 +249,9 @@ export class CreatePatientComponent implements OnInit {
 }
 
 @Component({
-  selector: 'create-patient-tentative-dialog',
-  templateUrl: 'create-patient-tentative-dialog.html',
+    selector: 'create-patient-tentative-dialog',
+    templateUrl: 'create-patient-tentative-dialog.html',
+    standalone: false
 })
 export class CreatePatientTentativeDialog {
   constructor(

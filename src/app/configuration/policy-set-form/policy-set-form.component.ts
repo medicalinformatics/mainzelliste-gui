@@ -7,9 +7,10 @@ import { getErrorMessageFrom } from 'src/app/error/error-utils';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-policy-set-form',
-  templateUrl: './policy-set-form.component.html',
-  styleUrls: ['./policy-set-form.component.css']
+    selector: 'app-policy-set-form',
+    templateUrl: './policy-set-form.component.html',
+    styleUrls: ['./policy-set-form.component.css'],
+    standalone: false
 })
 export class PolicySetFormComponent implements OnInit {
   policySetForm: FormGroup;

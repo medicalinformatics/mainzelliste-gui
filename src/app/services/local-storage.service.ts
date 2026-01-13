@@ -28,7 +28,7 @@ export class LocalStorageService {
     const cachedLanguage: string | null = localStorage.getItem(LocalStorageService.LS_LANG);
     return new BehaviorSubject<string>(
       cachedLanguage !== null && this.supportedLanguages.some(l => l == cachedLanguage) ?
-        cachedLanguage : this.translate.getDefaultLang());
+        cachedLanguage : this.translate.getFallbackLang() || "");
   }
 
   loadTenant(): BehaviorSubject<string> {

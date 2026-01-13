@@ -14,9 +14,10 @@ import {catchError, map, mergeMap} from "rxjs/operators";
 import {forkJoin, throwError} from "rxjs";
 
 @Component({
-  selector: 'app-edit-consent',
-  templateUrl: './edit-consent.component.html',
-  styleUrls: ['./edit-consent.component.css']
+    selector: 'app-edit-consent',
+    templateUrl: './edit-consent.component.html',
+    styleUrls: ['./edit-consent.component.css'],
+    standalone: false
 })
 export class EditConsentComponent implements OnInit {
 

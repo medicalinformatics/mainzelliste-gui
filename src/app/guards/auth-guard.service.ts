@@ -1,13 +1,5 @@
 import {Injectable} from '@angular/core';
-import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  CanActivateChild,
-  Router,
-  RouterStateSnapshot,
-  UrlSegment,
-  UrlTree
-} from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlSegment, UrlTree } from '@angular/router';
 import {KeycloakAuthGuard, KeycloakService} from 'keycloak-angular';
 import {Observable} from "rxjs";
 import {UserAuthService} from "../services/user-auth.service";
@@ -16,7 +8,7 @@ import {AuthorizationService} from "../services/authorization.service";
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard extends KeycloakAuthGuard implements CanActivateChild {
+export class AuthGuard extends KeycloakAuthGuard  {
   constructor(
     protected readonly router: Router,
     protected readonly activatedRouter: ActivatedRoute,

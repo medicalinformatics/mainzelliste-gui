@@ -5,9 +5,10 @@ import {PatientListService} from "../../services/patient-list.service";
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-multiple-delete-patients',
-  templateUrl: './delete-multiple-patients.component.html',
-  styleUrls: ['./delete-multiple-patients.component.css']
+    selector: 'app-multiple-delete-patients',
+    templateUrl: './delete-multiple-patients.component.html',
+    styleUrls: ['./delete-multiple-patients.component.css'],
+    standalone: false
 })
 export class DeleteMultiplePatientsComponent implements OnInit {
   patientService: PatientService;

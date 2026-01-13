@@ -8,6 +8,7 @@
   "button_view_consent_template": "View consent template",
   "button_delete_consent_template": "Delete consent template",
   "button_add_consent_scan": "Add PDF file",
+  "button_upload_csv_file": "Upload CSV file",
 	"button_generate_id": "Generate ID",
 	"button_delete": "Delete",
 	"button_edit": "Edit",
@@ -360,13 +361,17 @@
 	"page_not_found.title": "Page not found",
 	"page_not_found.message": "The page you were looking for could not be found",
 	"patientlistView.title": "Patient list",
+
 	"newIdDialog.mat_title": "Generate new ID",
-	"newIdDialog.text_1": "A new ID will be generated for the selected type",
+	"newIdDialog.text_1_a": "A new ID will be generated for the selected type",
+  "newIdDialog.text_1_b": "A new ID of the selected type will be added.",
   "newIdDialog.text_2": "and assigned to the external id",
   "newIdDialog.text_id": "{{idType}}: {{idString}}",
   "newIdDialog.text_3": "",
-  "newIdDialog.text_4": "and assigned to the selected external id",
+  "newIdDialog.text_4": "and assigned to the selected ID",
   "newIdDialog.id_types": "ID type",
+  "newIdDialog.id_value": "ID value",
+  "newIdDialog.error.id_exist": "ID with the given value already exist",
 
 	"logout.message": "You are now logged out!",
 	"footer.version": "Version ",
@@ -417,6 +422,7 @@
   "bulkPseudonymization.upload_info_text1": "Please select a CSV file with patient data",
   "bulkPseudonymization.upload_info_text2": "The file must at least contains the required field names (${fieldName}) and/or one external ID type (${extIdTypes}) as CSV-Header.",
   "bulkPseudonymization.upload_info_text3": "Empty lines can lead to errors!",
+  "bulkPseudonymization.tentative_matches": "Add tentative matches",
 
 	"export_data": "Export contact information to excel",
 	"copy_data": "Copy contact information to clipboard"

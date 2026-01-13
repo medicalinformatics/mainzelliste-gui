@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import {FooterLogo, OAuthConfig, PatientList} from "./model/patientlist";
 import {AppConfig} from "./app-config";
 import {catchError, map} from "rxjs/operators";
@@ -136,6 +136,10 @@ export class AppConfigService {
     return this.version;
   }
 
+  getDefaultLanguage(){
+    return this.data[0].defaultLanguage || "en-US";
+  }
+
   public getLayoutFooterLogos(): FooterLogo[] {
     return this.layoutFooterLogos;
   }
@@ -199,7 +203,9 @@ export class AppConfigService {
     public fetchClaims(): Promise<ClaimsConfig[]> {
       return firstValueFrom(this.httpClient.get<ClaimsConfig[]>(this.data[0].url + "/configuration/claims", {
               headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2'),
-              params: new HttpParams().set('filter', 'roles').set('merge', true)
+              params: new HttpParams().set('filter', 'roles')
+              .set('merge', true)
+              .set('mergeSameTenant', true)
           })
           .pipe(
               catchError((e) => throwError( () => new Error("Can't init claims configurations. Failed to connect " +

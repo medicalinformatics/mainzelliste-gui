@@ -18,19 +18,22 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/mainzelliste-gui",
+            "outputPath": {
+              "base": "dist/mainzelliste-gui"
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
               "src/assets",
               {
                 "glob": "**/*",
-                "input": "node_modules/@tinymce/tinymce-angular/node_modules/tinymce",
+                "input": "node_modules/tinymce",
                 "output": "/tinymce/"
               }
             ],
@@ -39,16 +42,17 @@
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/@tinymce/tinymce-angular/node_modules/tinymce/tinymce.min.js"
-            ]
+              "node_modules/tinymce/tinymce.min.js"
+            ],
+            "browser": "src/main.ts"
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2500kb",
-                  "maximumError": "3mb"
+                  "maximumWarning": "3000kb",
+                  "maximumError": "4mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -65,9 +69,7 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
@@ -79,10 +81,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "mainzelliste-gui:build:production"
+              "buildTarget": "mainzelliste-gui:build:production"
             },
             "development": {
-              "browserTarget": "mainzelliste-gui:build:development"
+              "buildTarget": "mainzelliste-gui:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -90,7 +92,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "mainzelliste-gui:build"
+            "buildTarget": "mainzelliste-gui:build"
           }
         },
         "test": {
@@ -105,7 +107,7 @@
               "src/assets",
               {
                 "glob": "**/*",
-                "input": "node_modules/@tinymce/tinymce-angular/node_modules/tinymce",
+                "input": "node_modules/tinymce",
                 "output": "/tinymce/"
               }
             ],
@@ -114,7 +116,7 @@
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/@tinymce/tinymce-angular/node_modules/tinymce/tinymce.min.js"
+              "node_modules/tinymce/tinymce.min.js"
             ]
           }
         }

@@ -3,7 +3,8 @@ import {AuthorizationService} from "../../services/authorization.service";
 import {Permission} from "../../model/permission";
 
 @Directive({
-  selector: '[appHasAnyPermissions]'
+    selector: '[appHasAnyPermissions]',
+    standalone: false
 })
 export class HasAnyPermissionsDirective {
 

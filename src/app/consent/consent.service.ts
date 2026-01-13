@@ -22,13 +22,13 @@ import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {ChoiceItem, ConsentTemplate, DisplayItem, PolicyView} from "./consent-template.model";
 import {catchError, finalize, map, mergeMap, reduce} from "rxjs/operators";
 import {ConsentPolicySet} from "../model/consent-policy-set";
-import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import {ConsentPolicy} from "../model/consent-policy";
 import {getErrorMessageFrom} from "../error/error-utils";
 import {TokenType} from "../model/token";
 import {TokenData} from "../model/token-data";
 import {UploadConsentFileResponse} from "../model/api/upload-consent-file-response";
-import * as querystring from "querystring";
+import queryString from 'querystring';
 import {AuthorizationService} from "../services/authorization.service";
 import {DateTime} from "luxon";
 import {StringUtils} from "../shared/utils/string-utils";
@@ -775,11 +775,12 @@ export class ConsentService {
   }
 
   deserializeTemplateValidity(startDate: string, endDate: string): Validity {
-    const start = DateTime.fromISO(startDate)
+    const start = DateTime.fromISO(startDate);
     // include the last day
-    const end = DateTime.fromISO(endDate).plus({days: 1})
-    const duration = end.diff(start, ['years', 'months', 'days']).toObject()
-    return new Validity(duration.days ?? 0, duration.months ?? 0, duration.years ?? 0);
+    const end = DateTime.fromISO(endDate).plus({days: 1});
+    const duration = end.diff(start, ['years', 'months', 'days']).toObject();
+    const durationDays = end.diff(start, ['days']);
+    return new Validity(duration.days ?? 0, duration.months ?? 0, duration.years ?? 0, durationDays);
   }
 
   mapValidityToDate(validityPeriod: Validity, startDate: string): string {
@@ -788,7 +789,7 @@ export class ConsentService {
 
   addPeriodToDate(startDate: string, period: Validity): DateTime {
     return DateTime.fromISO(startDate)
-    .plus({ days: period.days ?? 0, months: period.months ?? 0, years: period.years ?? 0 })
+    .plus(period.duration ? period.duration : { days: period.days ?? 0, months: period.months ?? 0, years: period.years ?? 0 })
     .minus({day: 1});
   }
 
@@ -938,9 +939,15 @@ export class ConsentService {
   }
 
   resolveDeleteFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, id:string, urlParams?: SearchParams): Promise<FhirResource | F> => {
+    const compatibleUrlParams = urlParams ? Object.fromEntries(
+      Object.entries(urlParams).map(([key, value]) => [
+        key,
+        Array.isArray(value) ? JSON.stringify(value) : value
+      ])
+    ) : {};
     return this.client.delete({
       resourceType: resourceType,
-      id: urlParams && Object.keys(urlParams).length > 0 ? id + "?" +  querystring.stringify(urlParams) : id,
+      id: urlParams && Object.keys(urlParams).length > 0 ? id + "?" +  queryString.stringify(compatibleUrlParams) : id,
       options: { headers: {'Authorization': 'MainzellisteToken ' + tokenId}}
     })
   }

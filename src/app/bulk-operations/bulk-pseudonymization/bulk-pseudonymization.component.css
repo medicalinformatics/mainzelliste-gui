@@ -22,7 +22,7 @@
   width: 100%
 }
 
-.bulkPseudonymisationTable tr.mat-row {
+.bulkPseudonymisationTable tr.mat-mdc-row {
   height: 38px;
 }
 
@@ -39,8 +39,43 @@
 .mat-column-index {
   width: auto;
 }
+/* TODO(mdc-migration): The following rule targets internal classes of paginator that may no longer apply for the MDC version. */
 mat-paginator{
   float:right;
   margin-top: 1.5%;
   background-color: transparent;
+}
+.pseudonymize-action-group {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  margin-top: 0;
+  margin-bottom: 18px;
+  width: 100%;
+  box-sizing: border-box;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.unsafe-matches-checkbox {
+  margin-bottom: 1.5em;
+  margin-top: 0;
+  margin-left: 0;
+  margin-right: 0;
+  align-self: flex-start;
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 0;
+}
+
+.button-row-left {
+  display: flex;
+  justify-content: flex-start;
+  grid-column-gap: 15px;
 }

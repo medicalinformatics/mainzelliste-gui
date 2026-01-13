@@ -3,8 +3,9 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Observable} from "rxjs";
 
 @Component({
-  selector: 'consent-inactivated-dialog',
-  templateUrl: 'consent-inactivated-dialog.html',
+    selector: 'consent-inactivated-dialog',
+    templateUrl: 'consent-inactivated-dialog.html',
+    standalone: false
 })
 export class ConsentInactivatedDialog {
   public inProgress: boolean = false

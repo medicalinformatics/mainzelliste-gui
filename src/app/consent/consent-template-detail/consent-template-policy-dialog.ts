@@ -11,9 +11,10 @@ import {Validity} from "../consent-validity-period";
 
 
 @Component({
-  selector: 'consent-template-policy-dialog',
-  templateUrl: 'consent-template-policy-dialog.html',
-  styleUrls: ['./consent-template-policy-dialog.css']
+    selector: 'consent-template-policy-dialog',
+    templateUrl: 'consent-template-policy-dialog.html',
+    styleUrls: ['./consent-template-policy-dialog.css'],
+    standalone: false
 })
 
 export class ConsentTemplatePolicyDialog implements OnInit {
@@ -101,7 +102,7 @@ export class ConsentTemplatePolicyDialog implements OnInit {
         policySet: this.policySets.find(s => s.id == this.selectedPolicySetId),
         displayText: this.selectedPolicy?.text,
         code: this.selectedPolicy?.code,
-        validity: new Validity(this.validityPeriod.days, this.validityPeriod.months, this.validityPeriod.years)
+        validity: new Validity(this.validityPeriod.days, this.validityPeriod.months, this.validityPeriod.years, this.validityPeriod.duration)
       },
       cachedPoliciesMap: this.dataModel.cachedPoliciesMap,
     });
