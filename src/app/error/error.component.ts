@@ -3,9 +3,10 @@ import {AppConfigService} from "../app-config.service";
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
-  selector: 'app-error',
-  templateUrl: './error.component.html',
-  styleUrls: ['./error.component.css']
+    selector: 'app-error',
+    templateUrl: './error.component.html',
+    styleUrls: ['./error.component.css'],
+    standalone: false
 })
 /**
  * This Component implements a basic Error Message. It should only be used for fatal errors (e.g. patientlist instance is not reachable).

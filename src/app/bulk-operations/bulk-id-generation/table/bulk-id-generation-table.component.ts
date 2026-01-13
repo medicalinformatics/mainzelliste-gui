@@ -4,7 +4,8 @@ import { MatPaginator } from "@angular/material/paginator";
 @Component({
     selector: 'bulk-id-generation-table',
     templateUrl: 'bulk-id-generation-table.component.html',
-    styleUrls: ['./bulk-id-generation-table.component.css']
+    styleUrls: ['./bulk-id-generation-table.component.css'],
+    standalone: false
 })
 export class BulkIdGenerationTableComponent implements OnInit{
 

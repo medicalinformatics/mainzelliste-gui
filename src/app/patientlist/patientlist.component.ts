@@ -17,10 +17,11 @@ import {
 import {FilterItem} from "../model/filter-item";
 
 @Component({
-  selector: 'app-patientlist',
-  templateUrl: './patientlist.component.html',
-  styleUrls: ['./patientlist.component.css'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-patientlist',
+    templateUrl: './patientlist.component.html',
+    styleUrls: ['./patientlist.component.css'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 
 export class PatientlistComponent implements OnInit{

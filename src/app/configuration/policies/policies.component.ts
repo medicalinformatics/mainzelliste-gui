@@ -14,9 +14,10 @@ import {
 import {Permission} from 'src/app/model/permission';
 
 @Component({
-  selector: 'app-policies',
-  templateUrl: './policies.component.html',
-  styleUrls: ['./policies.component.css']
+    selector: 'app-policies',
+    templateUrl: './policies.component.html',
+    styleUrls: ['./policies.component.css'],
+    standalone: false
 })
 export class PoliciesComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'actions'];

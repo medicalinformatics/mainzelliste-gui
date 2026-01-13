@@ -14,10 +14,11 @@ import {ErrorStateMatcher} from "@angular/material/core";
 import {TranslateService} from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-patient-fields',
-  templateUrl: './patient-fields.component.html',
-  styleUrls: ['./patient-fields.component.css'],
-  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
+    selector: 'app-patient-fields',
+    templateUrl: './patient-fields.component.html',
+    styleUrls: ['./patient-fields.component.css'],
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    standalone: false
 })
 
 export class PatientFieldsComponent implements OnInit {

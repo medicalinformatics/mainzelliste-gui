@@ -19,9 +19,10 @@ import {ConsentTemplate} from "../consent-template.model";
 import {map} from "rxjs/operators";
 
 @Component({
-  selector: 'app-consent-templates',
-  templateUrl: './consent-templates.component.html',
-  styleUrls: ['./consent-templates.component.css']
+    selector: 'app-consent-templates',
+    templateUrl: './consent-templates.component.html',
+    styleUrls: ['./consent-templates.component.css'],
+    standalone: false
 })
 export class ConsentTemplatesComponent implements OnInit {
 

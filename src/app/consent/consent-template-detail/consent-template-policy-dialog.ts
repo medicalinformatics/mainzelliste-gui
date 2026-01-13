@@ -11,9 +11,10 @@ import {Validity} from "../consent-validity-period";
 
 
 @Component({
-  selector: 'consent-template-policy-dialog',
-  templateUrl: 'consent-template-policy-dialog.html',
-  styleUrls: ['./consent-template-policy-dialog.css']
+    selector: 'consent-template-policy-dialog',
+    templateUrl: 'consent-template-policy-dialog.html',
+    styleUrls: ['./consent-template-policy-dialog.css'],
+    standalone: false
 })
 
 export class ConsentTemplatePolicyDialog implements OnInit {

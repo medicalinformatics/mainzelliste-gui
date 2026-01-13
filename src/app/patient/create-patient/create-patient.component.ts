@@ -28,9 +28,10 @@ export interface IdTypSelection {
 }
 
 @Component({
-  selector: 'app-create-patient',
-  templateUrl: './create-patient.component.html',
-  styleUrls: ['./create-patient.component.css']
+    selector: 'app-create-patient',
+    templateUrl: './create-patient.component.html',
+    styleUrls: ['./create-patient.component.css'],
+    standalone: false
 })
 export class CreatePatientComponent implements OnInit {
   public readonly Permission = Permission;
@@ -248,8 +249,9 @@ export class CreatePatientComponent implements OnInit {
 }
 
 @Component({
-  selector: 'create-patient-tentative-dialog',
-  templateUrl: 'create-patient-tentative-dialog.html',
+    selector: 'create-patient-tentative-dialog',
+    templateUrl: 'create-patient-tentative-dialog.html',
+    standalone: false
 })
 export class CreatePatientTentativeDialog {
   constructor(

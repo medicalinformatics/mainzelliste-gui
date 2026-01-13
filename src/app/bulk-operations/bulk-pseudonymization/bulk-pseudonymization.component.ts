@@ -22,20 +22,21 @@ import * as papaparse from "papaparse";
 import {ParseResult} from "papaparse";
 
 @Component({
-  selector: 'app-bulk-pseudonymization',
-  templateUrl: './bulk-pseudonymization.component.html',
-  styleUrls: ['./bulk-pseudonymization.component.css'],
-  animations: [
-    trigger('infoDialogTrigger', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('300ms', style({ opacity: 1 })),
-      ]),
-      transition(':leave', [
-        animate('100ms', style({ opacity: 0 }))
-      ])
-    ])
-  ]
+    selector: 'app-bulk-pseudonymization',
+    templateUrl: './bulk-pseudonymization.component.html',
+    styleUrls: ['./bulk-pseudonymization.component.css'],
+    animations: [
+        trigger('infoDialogTrigger', [
+            transition(':enter', [
+                style({ opacity: 0 }),
+                animate('300ms', style({ opacity: 1 })),
+            ]),
+            transition(':leave', [
+                animate('100ms', style({ opacity: 0 }))
+            ])
+        ])
+    ],
+    standalone: false
 })
 export class BulkPseudonymizationComponent implements OnInit {
 
@@ -126,11 +127,15 @@ export class BulkPseudonymizationComponent implements OnInit {
         .filter(e => !e.added && e.idType.toLowerCase().includes(searchValue.toLowerCase()))
       }),
     );
+  }
 
-    this.uploadFormGroup.get('uploadField')?.valueChanges.subscribe((file: any) => {
-      if (file != null) {
-        if (this.validFileTypes.includes(file.type)) {
-          this.readCsv(file);
+  onFileSelected($event: Event) {
+    const target = $event.target as HTMLInputElement;
+    const files = target.files as FileList;
+    if (files != null && files.length > 0) {
+      if (files[0] != null) {
+        if (this.validFileTypes.includes(files[0].type)) {
+          this.readCsv(files[0]);
         } else {
           this.uploadFormGroup.get('uploadField')?.setErrors({
             csvError: {
@@ -140,7 +145,7 @@ export class BulkPseudonymizationComponent implements OnInit {
           this.step = 0;
         }
       }
-    });
+    }
   }
 
   readCsv(file: any) {

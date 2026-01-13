@@ -1,6 +1,6 @@
 import {Inject, Injectable} from '@angular/core';
 import {SessionService} from "./session.service";
-import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from "@angular/common/http";
 import {PatientList} from "../model/patientlist";
 import {Patient} from "../model/patient";
 import {AppConfigService} from "../app-config.service";
@@ -489,7 +489,7 @@ export class PatientListService {
       map(response => {
         return {
           tokenId: tokenId ?? "",
-          locationUrl: this.patientList.url + "/jobs" + response.headers.get("Location")?.split("/jobs")[1] ?? ""
+          locationUrl: this.patientList.url + "/jobs" + (response.headers.get("Location")?.split("/jobs")[1] ?? "")
         }
       }),
       catchError(e => {

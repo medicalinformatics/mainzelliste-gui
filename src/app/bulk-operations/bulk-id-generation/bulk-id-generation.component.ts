@@ -18,20 +18,21 @@ import * as papaparse from "papaparse";
 import {ParseResult} from "papaparse";
 
 @Component({
-  selector: 'app-bulk-id-generation',
-  templateUrl: './bulk-id-generation.component.html',
-  styleUrls: ['./bulk-id-generation.component.css'],
-  animations: [
-    trigger('infoDialogTrigger', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('300ms', style({ opacity: 1 })),
-      ]),
-      transition(':leave', [
-        animate('100ms', style({ opacity: 0 }))
-      ])
-    ])
-  ]
+    selector: 'app-bulk-id-generation',
+    templateUrl: './bulk-id-generation.component.html',
+    styleUrls: ['./bulk-id-generation.component.css'],
+    animations: [
+        trigger('infoDialogTrigger', [
+            transition(':enter', [
+                style({ opacity: 0 }),
+                animate('300ms', style({ opacity: 1 })),
+            ]),
+            transition(':leave', [
+                animate('100ms', style({ opacity: 0 }))
+            ])
+        ])
+    ],
+    standalone: false
 })
 export class BulkIdGenerationComponent implements OnInit {
 
@@ -69,34 +70,38 @@ export class BulkIdGenerationComponent implements OnInit {
     private titleService: GlobalTitleService,
     public patientListService: PatientListService,
     private translate: TranslateService
-    ) {
+  ) {
+    this.changeTitle();
+  }
+
+  changeTitle() {
+    this.titleService.setTitle(this.translate.instant('bulkIdGeneration.title'));
+  }
+
+  ngOnInit(): void {
+    this.translate.onLangChange.subscribe(() => {
       this.changeTitle();
-    }
+    });
+  }
 
-    changeTitle() {
-      this.titleService.setTitle(this.translate.instant('bulkIdGeneration.title'));
-    }
-
-    ngOnInit(): void {
-      this.translate.onLangChange.subscribe(() => {
-        this.changeTitle();
-      });
-
-      this.uploadFormGroup.get('uploadField')?.valueChanges.subscribe((file: any) => {
-        if (file != null) {
-          if(this.validFileTypes.includes(file.type)) {
-            this.readCsv(file);
-          } else {
-            this.uploadFormGroup.get('uploadField')?.setErrors({
-              csvError: {
-                value: this.translate.instant("bulkIdGeneration.upload_error_file_type")
-              }
-            })
-            this.step = 0;
-          }
+  onFileSelected($event: Event) {
+    const target = $event.target as HTMLInputElement;
+    const files = target.files as FileList;
+    if (files != null && files.length > 0) {
+      if (files[0] != null) {
+        if (this.validFileTypes.includes(files[0].type)) {
+          this.readCsv(files[0]);
+        } else {
+          this.uploadFormGroup.get('uploadField')?.setErrors({
+            csvError: {
+              value: this.translate.instant("CSVFileUploader.upload_error_invalid_file")
+            }
+          })
+          this.step = 0;
         }
-      });
+      }
     }
+  }
 
   readCsv(file: any) {
     this.readingInProgress = true

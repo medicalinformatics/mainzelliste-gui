@@ -4,9 +4,10 @@ import {TranslateService} from "@ngx-translate/core";
 import {Observable} from "rxjs";
 
 @Component({
-  selector: 'app-confirm-delete-dialog',
-  templateUrl: './confirm-delete-dialog.component.html',
-  styleUrls: ['./confirm-delete-dialog.component.css']
+    selector: 'app-confirm-delete-dialog',
+    templateUrl: './confirm-delete-dialog.component.html',
+    styleUrls: ['./confirm-delete-dialog.component.css'],
+    standalone: false
 })
 export class ConfirmDeleteDialogComponent {
 

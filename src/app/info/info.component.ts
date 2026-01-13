@@ -3,9 +3,10 @@ import {GlobalTitleService} from "../services/global-title.service";
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-info',
-  templateUrl: './info.component.html',
-  styleUrls: ['./info.component.css']
+    selector: 'app-info',
+    templateUrl: './info.component.html',
+    styleUrls: ['./info.component.css'],
+    standalone: false
 })
 export class InfoComponent implements OnInit {
 

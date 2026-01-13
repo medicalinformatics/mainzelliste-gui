@@ -12,9 +12,10 @@ import {
 } from "../../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
 
 @Component({
-  selector: 'app-delete-patient',
-  templateUrl: './delete-patient.component.html',
-  styleUrls: ['./delete-patient.component.css']
+    selector: 'app-delete-patient',
+    templateUrl: './delete-patient.component.html',
+    styleUrls: ['./delete-patient.component.css'],
+    standalone: false
 })
 
 export class DeletePatientComponent implements OnInit {

@@ -6,8 +6,9 @@ import {Validity} from "../consent-validity-period";
 
 
 @Component({
-  selector: 'consent-template-validity-period-dialog',
-  templateUrl: 'consent-template-validity-period-dialog.html',
+    selector: 'consent-template-validity-period-dialog',
+    templateUrl: 'consent-template-validity-period-dialog.html',
+    standalone: false
 })
 
 export class ConsentTemplateValidityPeriodDialog implements OnInit {

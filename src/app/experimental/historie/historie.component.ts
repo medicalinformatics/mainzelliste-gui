@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-historie',
-  templateUrl: './historie.component.html',
-  styleUrls: ['./historie.component.css']
+    selector: 'app-historie',
+    templateUrl: './historie.component.html',
+    styleUrls: ['./historie.component.css'],
+    standalone: false
 })
 export class HistorieComponent implements OnInit {
 

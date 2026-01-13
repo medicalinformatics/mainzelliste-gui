@@ -1,11 +1,16 @@
 # Changelog
 ## [1.1.0] - Unreleased
 ### Upgrade
-- upgrade to angular v16
-- upgrade keycloak client to v25.0.6 
+- upgrade to angular v19
+- ensure compatibility with keycloak v26.4
+- upgrade keycloak client to v26.2.2
 - upgrade ngx translate to v17
-- upgrade typescript to v4.9.3
-- upgrade keycloak v26.4
+- upgrade typescript to v5.5.4
+- upgrade tinymce-angular v9.1.1
+### Refactor:
+- remove angular-material-components/file-input due to outdated Angular dependency
+- use papaparse instead of ngx-csv-parser
+- remove angular-csv and file-saver packages
 ### Feature
 - Bulk pseudonymization support adding unsure matches
 ## [1.0.3] - 2025-10-30

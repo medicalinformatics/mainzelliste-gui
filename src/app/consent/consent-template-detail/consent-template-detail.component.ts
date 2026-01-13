@@ -17,11 +17,12 @@ import {AppConfigService} from "../../app-config.service";
 import {Duration} from "luxon";
 
 @Component({
-  selector: 'app-consent-template-detail',
-  templateUrl: './consent-template-detail.component.html',
-  styleUrls: ['./consent-template-detail.component.css'],
-  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-consent-template-detail',
+    templateUrl: './consent-template-detail.component.html',
+    styleUrls: ['./consent-template-detail.component.css'],
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ConsentTemplateDetailComponent implements OnInit {
 

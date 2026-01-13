@@ -8,9 +8,9 @@
       <mat-card-title></mat-card-title>
       <mat-card-subtitle
         style="display: flex; align-items: center; column-gap: 3px; margin-bottom: 8px;">
-        <mat-icon style="transform: scale(1.1);">{{this.module.type == 'display' ? 'notes'
+        <mat-icon style="transform: scale(1.1);">{{ module.type == 'display' ? 'notes'
           : 'help_center'}}</mat-icon>
-        {{ 'consent_template.module_type_' + (this.module.type == 'display' ? 'text' : 'question')
+        {{ 'consent_template.module_type_' + ( module.type == 'display' ? 'text' : 'question')
         | translate }}</mat-card-subtitle>
       <div></div>
       <button *ngIf="!readonly" mat-icon-button class="ml-icon-button" color="primary"
@@ -28,7 +28,7 @@
       <div *ngIf="this.editedModule == undefined || this.editedModule?.id != module.id">
         <h3 *ngIf=" module.type == 'choice'"><b>{{$any(module).policy?.text}}</b></h3>
         <p [innerHTML]="module.text" style="margin-bottom: 20px; margin-top: 5px;"></p>
-        <ng-container *ngIf="this.module.type == 'choice'">
+        <ng-container *ngIf=" module.type == 'choice'">
           <section *ngIf="($any(module).policies?.length ?? 0) > 0" class="mat-elevation-z1"
                    style="overflow: auto; max-height: 500px; margin-bottom: 20px;">
             <table mat-table [dataSource]="$any(module).policies" class="policiesTable">
@@ -89,7 +89,7 @@
                 style="margin-top: 8px"
                 initialValue="Once upon a time...">
         </editor>
-        <ng-container *ngIf="this.module.type == 'choice'">
+        <ng-container *ngIf="module.type == 'choice'">
           <div
             style="clear: both; margin-top: 20px; margin-right: 5px; display: flex; justify-content: space-between; align-items: center;">
             <h4>{{'consent_template.policies' | translate}}</h4>

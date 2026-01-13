@@ -2,9 +2,10 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-error-card',
-  templateUrl: './error-card.component.html',
-  styleUrls: ['./error-card.component.css']
+    selector: 'app-error-card',
+    templateUrl: './error-card.component.html',
+    styleUrls: ['./error-card.component.css'],
+    standalone: false
 })
 export class ErrorCardComponent implements OnInit {
 

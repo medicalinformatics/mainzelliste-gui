@@ -7,9 +7,10 @@ import { TranslateService } from '@ngx-translate/core';
 import {ConsentService} from "../consent.service";
 
 @Component({
-  selector: 'app-add-consent',
-  templateUrl: './add-consent.component.html',
-  styleUrls: ['./add-consent.component.css']
+    selector: 'app-add-consent',
+    templateUrl: './add-consent.component.html',
+    styleUrls: ['./add-consent.component.css'],
+    standalone: false
 })
 export class AddConsentComponent implements OnInit {
 

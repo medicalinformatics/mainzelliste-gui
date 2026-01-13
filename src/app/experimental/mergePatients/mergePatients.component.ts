@@ -3,9 +3,10 @@ import {Patient} from "../../model/patient";
 import {PatientService} from "../../services/patient.service";
 
 @Component({
-  selector: 'app-merge-patients',
-  templateUrl: './mergePatients.component.html',
-  styleUrls: ['./mergePatients.component.css']
+    selector: 'app-merge-patients',
+    templateUrl: './mergePatients.component.html',
+    styleUrls: ['./mergePatients.component.css'],
+    standalone: false
 })
 export class MergePatientsComponent implements OnInit {
   patientService: PatientService;

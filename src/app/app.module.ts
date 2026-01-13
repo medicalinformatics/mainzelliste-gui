@@ -1,4 +1,4 @@
-import {APP_INITIALIZER, ErrorHandler, NgModule} from '@angular/core';
+import { ErrorHandler, NgModule, inject, provideAppInitializer } from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent} from './app.component';
 // import {AudittrailComponent} from './audittrail/audittrail.component';
@@ -23,7 +23,7 @@ import {
 } from '@angular/material/core';
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
-import {HttpClientModule} from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {AppConfigService} from "./app-config.service";
 import {ErrorComponent} from './error/error.component';
@@ -49,7 +49,6 @@ import {PatientModule} from "./patient/patient.module";
 import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.component";
 import {provideTranslateService, TranslateService} from '@ngx-translate/core';
 import {AccessDeniedComponent} from './access-denied/access-denied.component';
-import {NgxMatFileInputModule} from '@angular-material-components/file-input';
 import {MatStepperModule} from '@angular/material/stepper';
 import {
   InternationalizedMatPaginatorIntl
@@ -126,85 +125,75 @@ function initializeAppFactory(
     });
 }
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    PatientlistComponent,
-    routingComponents,
-    IdcardComponent,
-    PatientlistViewComponent,
-    ErrorComponent,
-    LogoutComponent,
-    NewIdDialog,
-    AccessDeniedComponent,
-    PageNotFoundComponent,
-    ConsentTemplatesComponent,
-    BulkIdGenerationComponent,
-    BulkIdGenerationTableComponent,
-    BulkIdGenerationEmptyFieldsDialog,
-    BulkPseudonymizationComponent,
-    ExportPatientsDialogComponent
-  ],
-  imports: [
-    SharedModule,
-    MainLayoutModule,
-    PatientModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    FormsModule,
-    ScrollingModule,
-    MatSidenavModule,
-    MatBadgeModule,
-    MatPaginatorModule,
-    MatNativeDateModule,
-    MatTableModule,
-    MatCheckboxModule,
-    MatTooltipModule,
-    HttpClientModule,
-    KeycloakAngularModule,
-    MatProgressSpinnerModule,
-    MatProgressBarModule,
-    ClipboardModule,
-    ConsentModule,
-    ConfigurationModule,
-    FileSaverModule,
-    NgxMatFileInputModule,
-    MatStepperModule,
-    EditorModule,
-    MatListModule,
-    ValidRelatedExternalIdsDirective
-  ],
-  providers: [
-    {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
-    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeAppFactory,
-      deps: [AppConfigService, KeycloakService, UserAuthService, TranslateService, LocalStorageService],
-      multi: true
-    },
-    provideTranslateService({
-      loader: provideTranslateHttpLoader(
+@NgModule({ declarations: [
+        AppComponent,
+        PatientlistComponent,
+        routingComponents,
+        IdcardComponent,
+        PatientlistViewComponent,
+        ErrorComponent,
+        LogoutComponent,
+        NewIdDialog,
+        AccessDeniedComponent,
+        PageNotFoundComponent,
+        ConsentTemplatesComponent,
+        BulkIdGenerationComponent,
+        BulkIdGenerationTableComponent,
+        BulkIdGenerationEmptyFieldsDialog,
+        BulkPseudonymizationComponent,
+        ExportPatientsDialogComponent
+    ],
+    bootstrap: [AppComponent], imports: [SharedModule,
+        MainLayoutModule,
+        PatientModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        FormsModule,
+        ScrollingModule,
+        MatSidenavModule,
+        MatBadgeModule,
+        MatPaginatorModule,
+        MatNativeDateModule,
+        MatTableModule,
+        MatCheckboxModule,
+        MatTooltipModule,
+        KeycloakAngularModule,
+        MatProgressSpinnerModule,
+        MatProgressBarModule,
+        ClipboardModule,
+        ConsentModule,
+        ConfigurationModule,
+        FileSaverModule,
+        MatStepperModule,
+        EditorModule,
+        MatListModule,
+        ValidRelatedExternalIdsDirective], providers: [
+        { provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl },
+        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
+        provideAppInitializer(() => {
+        const initializerFn = (initializeAppFactory)(inject(AppConfigService), inject(KeycloakService), inject(UserAuthService), inject(TranslateService), inject(LocalStorageService));
+        return initializerFn();
+      }),
+        provideTranslateService({
+            loader: provideTranslateHttpLoader({
+                prefix: "./assets/i18n/",
+                suffix: ".json"
+            }),
+            fallbackLang: "en-US",
+            lang: "en-US"
+        }),
+        { provide: ErrorHandler, useClass: GlobalErrorHandler },
+        { provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher },
+        { provide: MAT_DATE_LOCALE, useValue: 'en-US' },
+        { provide: MAT_DATE_FORMATS, useValue: MAT_LUXON_DATE_FORMATS },
         {
-          prefix:"./assets/i18n/",
-          suffix:".json"}
-      ),
-      fallbackLang: "en-US",
-      lang: "en-US"
-    }),
-    {provide: ErrorHandler, useClass: GlobalErrorHandler},
-    {provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher},
-    {provide: MAT_DATE_LOCALE, useValue: 'en-US'},
-    {provide: MAT_DATE_FORMATS, useValue: MAT_LUXON_DATE_FORMATS},
-    {
-      provide: DateAdapter,
-      useClass: LuxonDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_LUXON_DATE_ADAPTER_OPTIONS]
-    },
-    {provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js'}
-  ],
-  bootstrap: [AppComponent]
-})
+            provide: DateAdapter,
+            useClass: LuxonDateAdapter,
+            deps: [MAT_DATE_LOCALE, MAT_LUXON_DATE_ADAPTER_OPTIONS]
+        },
+        { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 
 export class AppModule { }
