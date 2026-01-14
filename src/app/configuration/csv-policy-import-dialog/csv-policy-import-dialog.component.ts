@@ -7,7 +7,8 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-csv-policy-import-dialog',
   templateUrl: './csv-policy-import-dialog.component.html',
-  styleUrls: ['./csv-policy-import-dialog.component.css']
+  styleUrls: ['./csv-policy-import-dialog.component.css'],
+  standalone: false
 })
 export class CsvPolicyImportDialogComponent {
   errorMessages: string[] = [];
@@ -48,7 +49,7 @@ export class CsvPolicyImportDialogComponent {
       }
     }
   }
-  
+
   onDragOver(event: DragEvent) {
     event.preventDefault();
   }
