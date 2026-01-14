@@ -17,7 +17,6 @@ export class PolicySetFormComponent implements OnInit {
   errorMessages: string[] = [];
   saving: boolean = false;
 
-  isLoading: boolean = false;
   selectedFiles: File[] = [];
   fileContents: string[] = [];
   importResult: { added: number; failed: number } | null = null;
@@ -53,6 +52,7 @@ export class PolicySetFormComponent implements OnInit {
             } else {
               this.dialogRef.close(response);
             }
+            this.saving = false;
           },
           error: (e) => {
             this.errorMessages.push(getErrorMessageFrom(e, this.translate));
@@ -194,7 +194,7 @@ export class PolicySetFormComponent implements OnInit {
   }
 
   addPolicies(policySetId: string, policies: Array<{ code: string, name: string }>) {
-    this.isLoading = true;
+    this.saving = true;
     let addedCount = 0;
     let failedCount = 0;
     const requests = policies.map(async policy => {
@@ -207,7 +207,7 @@ export class PolicySetFormComponent implements OnInit {
       }
     });
     Promise.all(requests).then(() => {
-      this.isLoading = false;
+      this.saving = false;
       this.importResult = { added: addedCount, failed: failedCount };
       this.dialogRef.close({ policySetId, importResult: this.importResult });
     });
