@@ -1,7 +1,7 @@
 <h1 mat-dialog-title class="dialog-title">{{"configuration.policySet.add" | translate}}</h1>
 <app-error-card [(messages)]="errorMessages"></app-error-card>
 <form [formGroup]="policySetForm">
-<div mat-dialog-content>
+  <div mat-dialog-content>
     <mat-form-field appearance="outline" class="ml-field" subscriptSizing="dynamic">
       <mat-label>{{'configuration.policySet.id' | translate}}</mat-label>
       <input matInput formControlName="id">
@@ -10,18 +10,42 @@
       </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline" class="ml-field" subscriptSizing="dynamic">
-      <mat-label>{{'configuration.policySet.name' | translate}}</mat-label>
+      <mat-label>{{ 'configuration.policySet.name' | translate }}</mat-label>
       <input matInput formControlName="name">
       <mat-error *ngIf="displayError(policySetForm.controls.name)">
         {{ getFieldErrorMessage("name", policySetForm.controls.name.errors) }}
       </mat-error>
     </mat-form-field>
-</div>
-<div mat-dialog-actions class="dialog-actions">
-  <button mat-raised-button mat-dialog-close class="submitBreak">{{'button_cancel' | translate}}</button>
-  <button mat-raised-button (click)="save()" class="submit" cdkFocusInitial [disabled]="!policySetForm.valid || saving">
-    {{'button_create' | translate}}
-    <mat-icon *ngIf="saving"><mat-spinner diameter="20"></mat-spinner></mat-icon>
-  </button>
-</div>
+    <!-- Add multiple policies-->
+    <h3 style="margin-top: 15px">{{ 'configuration.policy.csv.title' | translate }}</h3>
+    <div *ngIf="!selectedFile" class="upload-container" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+      <p>{{ 'configuration.policy.csv.add' | translate }}</p>
+      <input type="file" accept=".csv" (change)="onFileSelected($event)" hidden #fileInput>
+      <button mat-raised-button (click)="fileInput.click()">
+        {{ 'configuration.policy.csv.select' | translate }}
+      </button>
+    </div>
+
+    <div *ngIf="importResult && selectedFile" class="message-container">
+      <p>
+        {{ 'configuration.policy.csv.successSummary' | translate: { added: importResult.added, total: this.policies.length } }}
+      </p>
+    </div>
+
+    <div *ngIf="!importResult && selectedFile" class="file-list">
+      <span class="file-name">{{ selectedFile.name }}</span>
+      <button mat-icon-button color="warn" (click)="removeFile()" [disabled]="importResult">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div mat-dialog-actions class="dialog-actions">
+    <button mat-raised-button mat-dialog-close class="submitBreak">{{'button_cancel' | translate}}</button>
+    <button mat-raised-button (click)="save()" class="submit"
+            [disabled]="!policySetForm.valid || this.errorMessages.length > 0 || saving">
+      {{ 'button_create' | translate }}
+      <mat-icon *ngIf="saving"><mat-spinner diameter="20"></mat-spinner></mat-icon>
+    </button>
+  </div>
 </form>
