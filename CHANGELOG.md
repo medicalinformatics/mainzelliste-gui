@@ -13,6 +13,7 @@
 - remove angular-csv and file-saver packages
 ### Feature
 - Bulk pseudonymization support adding unsure matches
+- Support importing policies from a csv file
 ## [1.0.3] - 2025-10-30
 ### Fix
 - Upgrade keycloak client to v25.0.6

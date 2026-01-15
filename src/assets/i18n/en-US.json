@@ -248,7 +248,6 @@
   "configuration.policySet.csv.error.duplicate": "File contains duplicate policy codes",
   "configuration.policySet.csv.error.invalid": "File contains invalid policy codes",
 
-
 	"info.title": "Information and notes on the Mainzelliste",
 	"info.notice_add_patient": "Note for creating a patient",
 	"info.add_patient_text1": "This application returns a personal identifier (PID) for the reference data you enter below. The known patient population is searched; If there is a match, the existing PID is returned.",

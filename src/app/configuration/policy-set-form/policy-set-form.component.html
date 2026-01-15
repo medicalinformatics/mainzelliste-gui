@@ -18,36 +18,32 @@
     </mat-form-field>
     <!-- Add multiple policies-->
     <h3 style="margin-top: 15px">{{ 'configuration.policy.csv.title' | translate }}</h3>
-    <div *ngIf="selectedFiles.length == 0" class="upload-container" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+    <div *ngIf="!selectedFile" class="upload-container" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
       <p>{{ 'configuration.policy.csv.add' | translate }}</p>
-      <input type="file" accept=".csv" (change)="onFileSelected($event)" hidden #fileInput multiple>
+      <input type="file" accept=".csv" (change)="onFileSelected($event)" hidden #fileInput>
       <button mat-raised-button (click)="fileInput.click()">
         {{ 'configuration.policy.csv.select' | translate }}
       </button>
     </div>
 
-    <div *ngIf="importResult && selectedFiles.length > 0" class="message-container">
+    <div *ngIf="importResult && selectedFile" class="message-container">
       <p>
-        {{ 'configuration.policy.csv.successSummary' | translate: { added: importResult.added, total: totalRows } }}
+        {{ 'configuration.policy.csv.successSummary' | translate: { added: importResult.added, total: this.policies.length } }}
       </p>
     </div>
 
-    <div *ngIf="!importResult && selectedFiles.length > 0" class="file-list">
-      <h4>{{ 'configuration.policy.csv.selectedFiles' | translate }}</h4>
-      <ul>
-        <li *ngFor="let file of selectedFiles">
-          <span class="file-name">{{ file.name }}</span>
-          <button mat-icon-button color="warn" (click)="removeFile(file.name)" [disabled]="importResult">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </li>
-      </ul>
+    <div *ngIf="!importResult && selectedFile" class="file-list">
+      <span class="file-name">{{ selectedFile.name }}</span>
+      <button mat-icon-button color="warn" (click)="removeFile()" [disabled]="importResult">
+        <mat-icon>delete</mat-icon>
+      </button>
     </div>
   </div>
 
   <div mat-dialog-actions class="dialog-actions">
     <button mat-raised-button mat-dialog-close class="submitBreak">{{'button_cancel' | translate}}</button>
-    <button mat-raised-button (click)="save()" class="submit" cdkFocusInitial [disabled]="!policySetForm.valid || saving">
+    <button mat-raised-button (click)="save()" class="submit"
+            [disabled]="!policySetForm.valid || this.errorMessages.length > 0 || saving">
       {{ 'button_create' | translate }}
       <mat-icon *ngIf="saving"><mat-spinner diameter="20"></mat-spinner></mat-icon>
     </button>
