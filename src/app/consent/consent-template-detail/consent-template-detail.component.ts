@@ -15,6 +15,7 @@ import {MatSlideToggleChange} from "@angular/material/slide-toggle";
 import {ConsentPolicySet} from "../../model/consent-policy-set";
 import {AppConfigService} from "../../app-config.service";
 import {Duration} from "luxon";
+import {BackendConfigService} from "../../services/backend-config.service";
 
 @Component({
     selector: 'app-consent-template-detail',
@@ -47,7 +48,7 @@ export class ConsentTemplateDetailComponent implements OnInit {
 
   constructor(
     public consentService: ConsentService,
-    public configService:AppConfigService,
+    public configService: BackendConfigService,
     private readonly validityPeriodDialog: MatDialog,
     public translate: TranslateService
   ) {

@@ -78,16 +78,21 @@ import {
   ValidRelatedExternalIdsDirective
 } from "./shared/directives/valid-related-external-ids.directive";
 import {provideTranslateHttpLoader} from "@ngx-translate/http-loader";
+import {BackendConfigService} from "./services/backend-config.service";
+import {AuthorizationService} from "./services/authorization.service";
 
 function initializeAppFactory(
     configService: AppConfigService,
+    backendConfigService: BackendConfigService,
     keycloak: KeycloakService,
     userAuthService: UserAuthService,
+    authorizationService: AuthorizationService,
     translate: TranslateService,
     localStorageService :LocalStorageService
-): () => Promise<any> {
+): Promise<any> {
+  console.log("start initializeAppFactory");
   translate.addLangs(['en-US', 'de-DE']);
-  return () => configService.init()
+  return configService.init()
     .then(config => {
       from(keycloak.keycloakEvents$).subscribe(event => userAuthService.notifyKeycloakEvent(event));
       translate.setFallbackLang(config[0].defaultLanguage || "en-US");
@@ -116,12 +121,14 @@ function initializeAppFactory(
           }
           throw new Error(translate.instant('error.app_module_connect_keycloak') + reason);
         }))
-        .then(isLoggedIn => isLoggedIn ? configService.fetchMainzellisteIdGenerators() : undefined)
-        .then(idGenerators => idGenerators != undefined ? configService.fetchMainzellisteAssociatedIdGenerators() : undefined)
-        .then(idGenerators => idGenerators != undefined ? configService.fetchMainzellisteFields() : undefined)
-        .then(fields => fields != undefined ? configService.fetchClaims() : undefined)
-        .then(claims => configService.fetchVersion())
-        .then(versions => configService.readConsentTerminology());
+        .then(isLoggedIn => {
+          if(isLoggedIn) {
+            return backendConfigService.init()
+            .then( d => authorizationService.init());
+          } else {
+            return Promise.resolve();
+          }
+        })
     });
 }
 
@@ -168,32 +175,35 @@ function initializeAppFactory(
         MatStepperModule,
         EditorModule,
         MatListModule,
-        ValidRelatedExternalIdsDirective], providers: [
-        { provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl },
-        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
-        provideAppInitializer(() => {
-        const initializerFn = (initializeAppFactory)(inject(AppConfigService), inject(KeycloakService), inject(UserAuthService), inject(TranslateService), inject(LocalStorageService));
-        return initializerFn();
+        ValidRelatedExternalIdsDirective],
+  providers: [
+    {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
+    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
+    provideTranslateService({
+      loader: provideTranslateHttpLoader({
+        prefix: "./assets/i18n/",
+        suffix: ".json"
       }),
-        provideTranslateService({
-            loader: provideTranslateHttpLoader({
-                prefix: "./assets/i18n/",
-                suffix: ".json"
-            }),
-            fallbackLang: "en-US",
-            lang: "en-US"
-        }),
-        { provide: ErrorHandler, useClass: GlobalErrorHandler },
-        { provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher },
-        { provide: MAT_DATE_LOCALE, useValue: 'en-US' },
-        { provide: MAT_DATE_FORMATS, useValue: MAT_LUXON_DATE_FORMATS },
-        {
-            provide: DateAdapter,
-            useClass: LuxonDateAdapter,
-            deps: [MAT_DATE_LOCALE, MAT_LUXON_DATE_ADAPTER_OPTIONS]
-        },
-        { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
-        provideHttpClient(withInterceptorsFromDi())
-    ] })
+      fallbackLang: "en-US",
+      lang: "en-US"
+    }),
+    provideAppInitializer( () =>
+      initializeAppFactory(inject(AppConfigService),inject(BackendConfigService),
+        inject(KeycloakService), inject(UserAuthService), inject(AuthorizationService),
+        inject(TranslateService), inject(LocalStorageService))
+    ),
+    {provide: ErrorHandler, useClass: GlobalErrorHandler},
+    {provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher},
+    {provide: MAT_DATE_LOCALE, useValue: 'en-US'},
+    {provide: MAT_DATE_FORMATS, useValue: MAT_LUXON_DATE_FORMATS},
+    {
+      provide: DateAdapter,
+      useClass: LuxonDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_LUXON_DATE_ADAPTER_OPTIONS]
+    },
+    {provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js'},
+    provideHttpClient(withInterceptorsFromDi())
+  ]
+})
 
 export class AppModule { }

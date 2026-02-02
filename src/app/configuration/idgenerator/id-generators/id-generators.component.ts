@@ -8,6 +8,7 @@ import {IdGeneratorDialogComponent} from "../id-generator-dialog/id-generator-di
 import {MatDialog} from "@angular/material/dialog";
 import {AuthorizationService} from "../../../services/authorization.service";
 import {IDGeneratorType} from "../../../model/id-generator-config";
+import {BackendConfigService} from "../../../services/backend-config.service";
 
 @Component({
     selector: 'app-id-generators',
@@ -33,7 +34,7 @@ export class IdGeneratorsComponent implements OnInit {
   idGeneratorFilter: string [] = [];
 
   constructor(
-    private appConfig: AppConfigService,
+    private backendConfigService: BackendConfigService,
     private authorizationService: AuthorizationService,
     public idGeneratorDialog: MatDialog
   ) {
@@ -43,7 +44,7 @@ export class IdGeneratorsComponent implements OnInit {
   ngOnInit(): void {
     this.loadData(0, this.defaultPageSize, false)
     //TODO pagination pageIndex pageSize
-    this.idGeneratorNodes = [ ...this.appConfig.getMainzellisteAssociatedIdGeneratorsMap().keys()];
+    this.idGeneratorNodes = [ ...this.backendConfigService.getMainzellisteAssociatedIdGeneratorsMap().keys()];
     this.idGeneratorNodes.push('default');
   }
 
@@ -53,8 +54,8 @@ export class IdGeneratorsComponent implements OnInit {
     let endTo = starFrom + pageSize;
     if(fetch) {
       if(this.idGeneratorNode === 'default') {
-        this.appConfig.fetchMainzellisteIdGenerators().then(
-          e => this.appConfig.fetchClaims()
+        this.backendConfigService.fetchMainzellisteIdGenerators().then(
+          e => this.backendConfigService.fetchClaims()
         ).then(
           e => {
             this.authorizationService.initUserAllowedIDTypes();
@@ -62,8 +63,8 @@ export class IdGeneratorsComponent implements OnInit {
           }
         )
       } else {
-        this.appConfig.fetchMainzellisteAssociatedIdGenerators().then(
-          e => this.appConfig.fetchClaims()
+        this.backendConfigService.fetchMainzellisteAssociatedIdGenerators().then(
+          e => this.backendConfigService.fetchClaims()
         ).then(
           e => {
             this.authorizationService.initUserAllowedIDTypes();
@@ -79,8 +80,8 @@ export class IdGeneratorsComponent implements OnInit {
 
   setTableData(starFrom:number, endTo:number){
     let idGenerators : IdGenerator[] = (this.idGeneratorNode === 'default' ?
-      this.appConfig.getMainzellisteIdGenerators() :
-      this.appConfig.getMainzellisteAssociatedIdGeneratorsMap().get(this.idGeneratorNode) ?? [])
+      this.backendConfigService.getMainzellisteIdGenerators() :
+      this.backendConfigService.getMainzellisteAssociatedIdGeneratorsMap().get(this.idGeneratorNode) ?? [])
     .filter(g => this.idGeneratorTypesFilter.length == 0 || this.idGeneratorTypesFilter.some(t => t == g.idgenerator));
     this.matTableData.data = [...idGenerators.values()].slice(starFrom, endTo);
     this.totalCount = idGenerators.length;

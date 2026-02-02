@@ -34,6 +34,7 @@ import {DateTime} from "luxon";
 import {StringUtils} from "../shared/utils/string-utils";
 import {ConsentValidityPeriod, Validity} from "./consent-validity-period";
 import {MAT_DATE_LOCALE} from "@angular/material/core";
+import {BackendConfigService} from "../services/backend-config.service";
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +52,7 @@ export class ConsentService {
     private readonly sessionService: SessionService,
     private readonly authorizationService:AuthorizationService,
     private readonly appConfigService: AppConfigService,
+    private readonly backendConfigService: BackendConfigService,
     private readonly translate: TranslateService,
     private readonly httpClient: HttpClient,
     @Inject(MAT_DATE_LOCALE) private _locale: string
@@ -1162,7 +1164,7 @@ export class ConsentService {
       agent: [
         {
           who: {
-            display: "Mainzelliste - " + this.appConfigService.getVersion()
+            display: "Mainzelliste - " + this.backendConfigService.getVersion()
           }
         }
       ],

@@ -37,6 +37,7 @@ import {
 } from "../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
 import {Tenant} from "../model/tenant";
 import {ComponentType} from "@angular/cdk/portal";
+import {BackendConfigService} from "../services/backend-config.service";
 
 
 @Component({
@@ -77,7 +78,8 @@ export class IdcardComponent implements OnInit {
     public consentInactivatedDialog: MatDialog,
     public newIdDialog: MatDialog,
     public consentService: ConsentService,
-    public configService: AppConfigService
+    public configService: BackendConfigService,
+    public appConfigService :AppConfigService
   ) {
     this.activatedRoute.params.subscribe((params) => {
       if (params["idType"] !== undefined)
@@ -94,7 +96,7 @@ export class IdcardComponent implements OnInit {
 
     // find id types, that can be read
     let readIdTypesSet = new Set(this.patientListService.getAllIdTypes("R"));
-    if(this.configService.showDomainsInIDCard() && this.authorizationService.currentTenantId != Tenant.DEFAULT_ID) {
+    if(this.appConfigService.showDomainsInIDCard() && this.authorizationService.currentTenantId != Tenant.DEFAULT_ID) {
       this.otherTenantIdTypes = this.authorizationService.getAllTenantIdTypes(true);
       this.authorizationService.getAllTenantIdTypes().forEach( t => this.otherTenantIdTypes.push(t));
     }
@@ -428,6 +430,6 @@ export class IdcardComponent implements OnInit {
   }
 
   showDomainsCard():boolean{
-    return this.configService.showDomainsInIDCard() && this.authorizationService.getTenants().length > 1;
+    return this.appConfigService.showDomainsInIDCard() && this.authorizationService.getTenants().length > 1;
   }
 }

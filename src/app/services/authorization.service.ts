@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {AppConfigService} from "../app-config.service";
 import {UserAuthService} from "./user-auth.service";
 import {TranslateService} from '@ngx-translate/core';
 import {Operation, Tenant, TenantPermission} from "../model/tenant";
@@ -8,14 +7,15 @@ import {ClaimPermissions} from "../model/api/configuration-claims-data";
 import {IdType} from "../model/id-type";
 import {AuthorizationState} from "../model/authorization-state";
 import {LocalStorageService} from "./local-storage.service";
+import {BackendConfigService} from "./backend-config.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthorizationService {
 
-  private readonly userRoles: string[] = [];
-  private readonly configuredTenants: Tenant[];
+  private userRoles: string[] = [];
+  private configuredTenants: Tenant[] = [];
   private readonly allowedUniqueIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
   private readonly allowedExternalIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
   private readonly allowedAssociatedIdTypes: Map<Operation, string[]> = new Map<Operation, string[]>();
@@ -26,19 +26,23 @@ export class AuthorizationService {
 
   constructor(
     private readonly translate: TranslateService,
-    private readonly configService: AppConfigService,
+    private readonly configService: BackendConfigService,
     private readonly authentication: UserAuthService,
     private readonly localStorageService: LocalStorageService
   ) {
+  }
+
+  public init(){
     this.userRoles = this.authentication.getRoles();
     this.configuredTenants = this.configService.getMainzellisteClaims()
-        .filter(c => c.roles.some( r => this.userRoles.includes(r)))
-        .map(e => {
-          return new Tenant(e.permissions.tenant.id, e.permissions.tenant.name, e.roles,
-            e.permissions.tenant?.idTypes || [],
-            e.permissions.tenant?.consentTemplateIds || [],
-            this.convertClaimPermissions(e.permissions))
-        })
+    .filter(c => c.roles.some( r => this.userRoles.includes(r)))
+    .map(e => {
+      return new Tenant(e.permissions.tenant.id, e.permissions.tenant.name, e.roles,
+        e.permissions.tenant?.idTypes || [],
+        e.permissions.tenant?.consentTemplateIds || [],
+        this.convertClaimPermissions(e.permissions))
+    })
+
     if(this.currentTenantId.length == 0 || this.configuredTenants.every(t => t.id != this.currentTenantId)) {
       let uiTenants = this.getUITenants();
       this.currentTenantId = uiTenants.length > 0 ? uiTenants[0].id : "";

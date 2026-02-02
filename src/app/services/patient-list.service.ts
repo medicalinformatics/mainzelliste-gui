@@ -29,6 +29,7 @@ import {AddPatientsSingleResponse} from "../model/add-patients-single-response";
 import {TaskResponse} from "../model/task-response";
 import {AddPatientRequest} from "../model/add-patient-request";
 import {FilterItem} from "../model/filter-item";
+import {BackendConfigService} from "./backend-config.service";
 
 export interface ReadPatientsResponse {
   patients: Patient[];
@@ -91,13 +92,14 @@ export class PatientListService {
 
   constructor(
     private translate: TranslateService,
-    private configService: AppConfigService,
+    private appConfigService: AppConfigService,
+    private configService: BackendConfigService,
     private authorizationService: AuthorizationService,
     private sessionService: SessionService,
     private httpClient: HttpClient,
     @Inject(MAT_DATE_LOCALE) private _locale: string,
   ) {
-    this.patientList = this.configService.data[0];
+    this.patientList = this.appConfigService.data[0];
     this.mainzellisteHeaders = new HttpHeaders().set('mainzellisteApiVersion', '3.2')
     //TODO migrate to luxon
     _moment.locale(this._locale);
@@ -209,7 +211,7 @@ export class PatientListService {
   }
 
   isDebugModeEnabled(): boolean {
-    return this.configService.isDebugModeEnabled();
+    return this.appConfigService.isDebugModeEnabled();
   }
 
   isUniqueExternalIdType(idType: string, operation:Operation): boolean {
@@ -272,7 +274,7 @@ export class PatientListService {
 
     let resultIdTypes = new Set(this.getIdTypes("R"));
     //Note: find tenant id types to determine to which domain they belong
-    if(this.configService.showDomainsInIDCard())
+    if(this.appConfigService.showDomainsInIDCard())
       this.authorizationService.getAllTenantIdTypes().forEach( t => resultIdTypes.add(t));
 
     // create read patients token
@@ -631,7 +633,7 @@ export class PatientListService {
             if(!convertDisplaySex){
               displayPatient.fields[fieldConfig.name] = patient.fields[fieldConfig.mainzellisteField];
             } else {
-              const i18nAttribute = this.configService.data[0].genderFieldValues.find(g => g.value == patient.fields[fieldConfig.mainzellisteField])?.i18n;
+              const i18nAttribute = this.appConfigService.data[0].genderFieldValues.find(g => g.value == patient.fields[fieldConfig.mainzellisteField])?.i18n;
               if(i18nAttribute != undefined && i18nAttribute.length > 0)
                 displayPatient.fields[fieldConfig.name] = this.translate.instant(i18nAttribute);
             }

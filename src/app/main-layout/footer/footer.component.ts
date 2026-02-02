@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AppConfigService } from 'src/app/app-config.service';
 import {FooterLogo} from "../../model/patientlist";
+import {BackendConfigService} from "../../services/backend-config.service";
 
 @Component({
     selector: 'app-footer',
@@ -19,9 +20,10 @@ export class FooterComponent implements OnInit {
   logos: FooterLogo[] = [];
 
   constructor(
-    appConfig: AppConfigService
+    appConfig: AppConfigService,
+    backendConfigService: BackendConfigService
   ) {
-    this.version = appConfig.getVersion();
+    this.version = backendConfigService.getVersion();
     this.logos = appConfig.getLayoutFooterLogos();
     this.year = new Date().getFullYear();
   }

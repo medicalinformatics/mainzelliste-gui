@@ -5,6 +5,7 @@ import {IDGeneratorConfig, IDGeneratorType} from "../../../model/id-generator-co
 import {PatientListService} from "../../../services/patient-list.service";
 import {AppConfigService} from "../../../app-config.service";
 import {IdGenerator} from "../../../model/idgenerator";
+import {BackendConfigService} from "../../../services/backend-config.service";
 
 @Component({
     selector: 'app-id-generator-detail',
@@ -24,7 +25,7 @@ export class IdGeneratorDetailComponent implements OnInit {
   constructor(
     private translate: TranslateService,
     private patientService: PatientListService,
-    private configService: AppConfigService
+    private configService: BackendConfigService
   ) {
   }
 

@@ -20,6 +20,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {animate, style, transition, trigger} from "@angular/animations";
 import * as papaparse from "papaparse";
 import {ParseResult} from "papaparse";
+import {BackendConfigService} from "../../services/backend-config.service";
 
 @Component({
     selector: 'app-bulk-pseudonymization',
@@ -87,7 +88,8 @@ export class BulkPseudonymizationComponent implements OnInit {
     private _formBuilder: FormBuilder,
     public dialog: MatDialog,
     private titleService: GlobalTitleService,
-    private configService: AppConfigService,
+    private configService: BackendConfigService,
+    private appConfigService: AppConfigService,
     public patientListService: PatientListService,
     public translate: TranslateService
   ) {
@@ -186,7 +188,7 @@ export class BulkPseudonymizationComponent implements OnInit {
         // validate fields
         if (fieldsIndexes.length > 0) {
           // check required field
-          const missingRequiredFields = this.fieldNames.filter( fieldName => this.configService.getFields()
+          const missingRequiredFields = this.fieldNames.filter( fieldName => this.appConfigService.getFields()
           .some( f => f.required && (f.mainzellisteField != undefined && f.mainzellisteField.length > 0?
             f.mainzellisteField == fieldName : f.mainzellisteFields.includes(fieldName))))
           .filter( f => !csvHeaders.includes(f))
