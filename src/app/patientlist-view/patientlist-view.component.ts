@@ -1,21 +1,30 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {PatientService} from "../services/patient.service";
 import {Patient} from "../model/patient";
-import {MatChipInputEvent} from "@angular/material/chips";
+import { MatChipInputEvent, MatChipGrid, MatChipRow, MatChipRemove, MatChipInput } from "@angular/material/chips";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
-import {MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from "@angular/material/autocomplete";
-import {FormControl} from "@angular/forms";
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger, MatAutocomplete } from "@angular/material/autocomplete";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {Observable, of} from "rxjs";
 import {map, startWith} from 'rxjs/operators';
 import {GlobalTitleService} from "../services/global-title.service";
-import {TranslateService} from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import {AuthorizationService} from "../services/authorization.service";
 import {CardError} from "../error/card-error";
 import {FilterItem} from "../model/filter-item";
 import * as papaparse from "papaparse"
 import {ParseResult} from "papaparse"
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { NgFor, NgIf, NgStyle, AsyncPipe } from '@angular/common';
+import { MatBadge } from '@angular/material/badge';
+import { MatIcon } from '@angular/material/icon';
+import { MatOption } from '@angular/material/select';
+import { MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { PatientlistComponent } from '../patientlist/patientlist.component';
 
 export interface FilterConfig {
   display: string,
@@ -29,7 +38,7 @@ export interface FilterConfig {
     selector: 'app-patientlist-view',
     templateUrl: './patientlist-view.component.html',
     styleUrls: ['./patientlist-view.component.css'],
-    standalone: false
+    imports: [MatFormField, MatLabel, MatChipGrid, NgFor, MatChipRow, MatBadge, MatIcon, MatChipRemove, MatChipInput, FormsModule, MatAutocompleteTrigger, ReactiveFormsModule, MatAutocomplete, MatOption, MatIconButton, MatSuffix, MatTooltip, NgIf, NgStyle, MatProgressSpinner, PatientlistComponent, MatPaginator, AsyncPipe, TranslatePipe]
 })
 export class PatientlistViewComponent implements OnInit {
 

@@ -1,17 +1,21 @@
 import {Component} from '@angular/core';
 import {UserAuthService} from "../../services/user-auth.service";
-import {TranslateService} from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import {AuthorizationService} from "../../services/authorization.service";
 import {Router} from "@angular/router";
 import {LocalStorageService} from "../../services/local-storage.service";
 import {Tenant} from "../../model/tenant";
 import {DateAdapter} from "@angular/material/core";
+import { NgIf, NgFor } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'app-user-menu',
     templateUrl: './user-menu.component.html',
     styleUrls: ['./user-menu.component.css'],
-    standalone: false
+    imports: [NgIf, MatButton, MatMenuTrigger, MatIcon, MatMenu, NgFor, MatMenuItem, TranslatePipe]
 })
 export class UserMenuComponent {
   constructor(

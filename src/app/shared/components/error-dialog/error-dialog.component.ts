@@ -1,11 +1,14 @@
 import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent } from "@angular/material/dialog";
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { NgFor } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-error-dialog',
     templateUrl: './error-dialog.component.html',
     styleUrls: ['./error-dialog.component.css'],
-    standalone: false
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, NgFor, TranslatePipe]
 })
 export class ErrorDialogComponent {
 

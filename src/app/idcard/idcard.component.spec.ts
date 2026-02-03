@@ -8,8 +8,8 @@ describe('IdcardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IdcardComponent ]
-    })
+    imports: [IdcardComponent]
+})
     .compileComponents();
   });
 

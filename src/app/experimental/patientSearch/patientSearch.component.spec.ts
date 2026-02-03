@@ -8,8 +8,8 @@ describe('PatientSearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PatientSearchComponent ]
-    })
+    declarations: [PatientSearchComponent]
+})
     .compileComponents();
   });
 

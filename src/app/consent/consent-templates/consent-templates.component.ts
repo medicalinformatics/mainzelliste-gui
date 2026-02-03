@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ConsentService} from "../consent.service";
 import {ConsentTemplateFhirWrapper} from "../../model/consent-template-fhir-wrapper";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {MatTableDataSource} from "@angular/material/table";
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow } from "@angular/material/table";
 import {Router} from "@angular/router";
 import {GlobalTitleService} from "../../services/global-title.service";
 import {MatDialog} from "@angular/material/dialog";
@@ -14,15 +14,22 @@ import {
   ConfirmDeleteDialogComponent
 } from "../../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
 import {AuthorizationService} from "../../services/authorization.service";
-import {TranslateService} from "@ngx-translate/core";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import {ConsentTemplate} from "../consent-template.model";
 import {map} from "rxjs/operators";
+import { HasPermissionDirective } from '../../shared/directives/has-permission.directive';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgClass, NgIf } from '@angular/common';
+import { MatChip } from '@angular/material/chips';
+import { MatProgressBar } from '@angular/material/progress-bar';
 
 @Component({
     selector: 'app-consent-templates',
     templateUrl: './consent-templates.component.html',
     styleUrls: ['./consent-templates.component.css'],
-    standalone: false
+    imports: [HasPermissionDirective, MatButton, MatIcon, MatTooltip, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, NgClass, MatChip, MatIconButton, NgIf, MatProgressBar, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow, MatPaginator, TranslatePipe]
 })
 export class ConsentTemplatesComponent implements OnInit {
 

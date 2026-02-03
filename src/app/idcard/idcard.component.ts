@@ -1,14 +1,14 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import {PatientListService} from "../services/patient-list.service";
 import {Patient} from "../model/patient";
 import {GlobalTitleService} from "../services/global-title.service";
 import {Id} from "../model/id";
-import {MatTable} from "@angular/material/table";
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow } from "@angular/material/table";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {PatientService} from "../services/patient.service";
 import {NewIdDialog} from './dialogs/new-id-dialog';
-import {TranslateService} from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.component";
 import {ConsentService} from "../consent/consent.service";
 import {Permission} from "../model/permission";
@@ -38,13 +38,26 @@ import {
 import {Tenant} from "../model/tenant";
 import {ComponentType} from "@angular/cdk/portal";
 import {BackendConfigService} from "../services/backend-config.service";
+import { FormsModule } from '@angular/forms';
+import { MatCard, MatCardTitleGroup, MatCardTitle, MatCardContent } from '@angular/material/card';
+import { MatIconButton, MatFabButton } from '@angular/material/button';
+import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { PatientFieldsComponent } from '../patient/patient-fields/patient-fields.component';
+import { PatientPseudonymsComponent } from '../patient/patient-pseudonyms/patient-pseudonyms.component';
+import { HasAnyPermissionsDirective } from '../shared/directives/has-any-permissions.directive';
+import { HasPermissionDirective } from '../shared/directives/has-permission.directive';
+import { NgClass, NgIf, NgFor } from '@angular/common';
+import { MatChipListbox, MatChipOption, MatChip } from '@angular/material/chips';
+import { MatProgressBar } from '@angular/material/progress-bar';
 
 
 @Component({
     selector: 'app-idcard',
     templateUrl: './idcard.component.html',
     styleUrls: ['./idcard.component.css'],
-    standalone: false
+    imports: [FormsModule, MatCard, MatCardTitleGroup, MatCardTitle, MatIconButton, CdkCopyToClipboard, MatTooltip, MatIcon, PatientFieldsComponent, PatientPseudonymsComponent, HasAnyPermissionsDirective, MatFabButton, RouterLink, HasPermissionDirective, NgClass, NgIf, MatCardContent, MatChipListbox, NgFor, MatChipOption, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatChip, MatProgressBar, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow, TranslatePipe]
 })
 
 export class IdcardComponent implements OnInit {

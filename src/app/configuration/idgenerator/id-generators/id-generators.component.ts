@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatTableDataSource} from "@angular/material/table";
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow } from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {IdGenerator} from "../../../model/idgenerator";
 import {AppConfigService} from "../../../app-config.service";
@@ -9,12 +9,21 @@ import {MatDialog} from "@angular/material/dialog";
 import {AuthorizationService} from "../../../services/authorization.service";
 import {IDGeneratorType} from "../../../model/id-generator-config";
 import {BackendConfigService} from "../../../services/backend-config.service";
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { NgStyle, NgFor, NgClass, NgIf } from '@angular/common';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-id-generators',
     templateUrl: './id-generators.component.html',
     styleUrls: ['./id-generators.component.css'],
-    standalone: false
+    imports: [MatIcon, MatFormField, NgStyle, MatLabel, MatSelect, FormsModule, NgFor, MatOption, MatButton, MatTooltip, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, NgClass, NgIf, MatProgressBar, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow, MatPaginator, TranslatePipe]
 })
 export class IdGeneratorsComponent implements OnInit {
   protected readonly Permission = Permission;

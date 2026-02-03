@@ -8,8 +8,8 @@ describe('BulkIdGenerationTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BulkIdGenerationTableComponent ]
-    })
+    imports: [BulkIdGenerationTableComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(BulkIdGenerationTableComponent);

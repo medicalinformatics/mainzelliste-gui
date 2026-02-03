@@ -8,8 +8,8 @@ describe('CsvPolicyImportDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CsvPolicyImportDialogComponent ]
-    })
+    imports: [CsvPolicyImportDialogComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(CsvPolicyImportDialogComponent);

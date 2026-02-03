@@ -1,15 +1,23 @@
 import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef,} from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogActions } from "@angular/material/dialog";
 import {Id} from "../../model/id";
 import {Observable} from "rxjs";
 import {IdType} from "../../model/id-type";
-import {TranslateService} from "@ngx-translate/core";
-import {NgModel} from "@angular/forms";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
+import { NgModel, FormsModule } from "@angular/forms";
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { NgFor, NgIf, NgStyle } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { ValidRelatedExternalIdsDirective } from '../../shared/directives/valid-related-external-ids.directive';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'new-id-dialog',
     templateUrl: 'new-id-dialog.html',
-    standalone: false
+    imports: [MatDialogTitle, FormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, NgIf, NgStyle, MatInput, ValidRelatedExternalIdsDirective, MatError, MatDialogActions, MatButton, MatIcon, MatProgressSpinner, TranslatePipe]
 })
 
 export class NewIdDialog {

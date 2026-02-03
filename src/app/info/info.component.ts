@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {GlobalTitleService} from "../services/global-title.service";
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-info',
     templateUrl: './info.component.html',
     styleUrls: ['./info.component.css'],
-    standalone: false
+    imports: [TranslatePipe]
 })
 export class InfoComponent implements OnInit {
 

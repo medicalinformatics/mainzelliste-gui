@@ -2,10 +2,7 @@ import {Directive, Input, TemplateRef, ViewContainerRef} from '@angular/core';
 import {AuthorizationService} from "../../services/authorization.service";
 import {Permission} from "../../model/permission";
 
-@Directive({
-    selector: '[appHasAnyPermissions]',
-    standalone: false
-})
+@Directive({ selector: '[appHasAnyPermissions]' })
 export class HasAnyPermissionsDirective {
 
   constructor(

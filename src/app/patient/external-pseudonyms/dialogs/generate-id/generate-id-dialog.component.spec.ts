@@ -8,8 +8,8 @@ describe('GenerateIdDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GenerateIdDialog ]
-    })
+    imports: [GenerateIdDialog]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(GenerateIdDialog);

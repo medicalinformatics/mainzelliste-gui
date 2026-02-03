@@ -4,7 +4,7 @@ import {ConsentService} from "../consent.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Consent} from "../consent.model";
 import {GlobalTitleService} from "../../services/global-title.service";
-import {TranslateService} from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import {MainzellisteError} from "../../model/mainzelliste-error.model";
 import {ErrorMessages} from "../../error/error-messages";
 import {MatDialog} from "@angular/material/dialog";
@@ -12,12 +12,15 @@ import {ConsentRejectedDialog} from "../dialogs/consent-rejected-dialog";
 import {ConsentInactivatedDialog} from "../dialogs/consent-inactivated-dialog";
 import {catchError, map, mergeMap} from "rxjs/operators";
 import {forkJoin, throwError} from "rxjs";
+import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'app-edit-consent',
     templateUrl: './edit-consent.component.html',
     styleUrls: ['./edit-consent.component.css'],
-    standalone: false
+    imports: [FormsModule, ConsentDetailComponent, NgIf, MatButton, TranslatePipe]
 })
 export class EditConsentComponent implements OnInit {
 

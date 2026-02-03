@@ -8,8 +8,8 @@ describe('ExternalPseudonymsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ExternalPseudonymsComponent ]
-    })
+    imports: [ExternalPseudonymsComponent]
+})
     .compileComponents();
   });
 

@@ -8,8 +8,8 @@ describe('ConsentTemplatesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ConsentTemplatesComponent ]
-    })
+    imports: [ConsentTemplatesComponent]
+})
     .compileComponents();
   });
 

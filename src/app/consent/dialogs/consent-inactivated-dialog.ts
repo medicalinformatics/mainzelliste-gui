@@ -1,11 +1,17 @@
 import {Component, Inject} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogActions } from "@angular/material/dialog";
 import {Observable} from "rxjs";
+import { CdkScrollable } from "@angular/cdk/scrolling";
+import { MatButton } from "@angular/material/button";
+import { NgIf } from "@angular/common";
+import { MatIcon } from "@angular/material/icon";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { TranslatePipe } from "@ngx-translate/core";
 
 @Component({
     selector: 'consent-inactivated-dialog',
     templateUrl: 'consent-inactivated-dialog.html',
-    standalone: false
+    imports: [CdkScrollable, MatDialogContent, MatDialogActions, MatButton, NgIf, MatIcon, MatProgressSpinner, TranslatePipe]
 })
 export class ConsentInactivatedDialog {
   public inProgress: boolean = false

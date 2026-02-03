@@ -8,8 +8,8 @@ describe('BulkIdGenerationComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [BulkIdGenerationComponent]
-    });
+    imports: [BulkIdGenerationComponent]
+});
     fixture = TestBed.createComponent(BulkIdGenerationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

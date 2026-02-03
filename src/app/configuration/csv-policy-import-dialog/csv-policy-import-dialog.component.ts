@@ -1,14 +1,20 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import { ConsentService } from 'src/app/consent/consent.service';
 import { take } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { ErrorCardComponent } from '../../shared/components/error-card/error-card.component';
+import { NgIf, NgFor } from '@angular/common';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-csv-policy-import-dialog',
-  templateUrl: './csv-policy-import-dialog.component.html',
-  styleUrls: ['./csv-policy-import-dialog.component.css'],
-  standalone: false
+    selector: 'app-csv-policy-import-dialog',
+    templateUrl: './csv-policy-import-dialog.component.html',
+    styleUrls: ['./csv-policy-import-dialog.component.css'],
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, ErrorCardComponent, NgIf, MatButton, MatProgressSpinner, NgFor, MatIconButton, MatIcon, MatDialogActions, MatDialogClose, TranslatePipe]
 })
 export class CsvPolicyImportDialogComponent {
   errorMessages: string[] = [];
