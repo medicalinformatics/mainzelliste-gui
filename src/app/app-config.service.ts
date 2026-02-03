@@ -104,6 +104,10 @@ export class AppConfigService {
     return this.data[0].defaultLanguage || "en-US";
   }
 
+  getOAuthConfig(): OAuthConfig | undefined {
+    return this.data[0]?.oAuthConfig;
+  }
+
   public getLayoutFooterLogos(): FooterLogo[] {
     return this.layoutFooterLogos;
   }

@@ -1,4 +1,10 @@
-import { ErrorHandler, NgModule, inject, provideAppInitializer } from '@angular/core';
+import {
+  EnvironmentProviders,
+  ErrorHandler,
+  inject,
+  NgModule,
+  provideAppInitializer
+} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent} from './app.component';
 // import {AudittrailComponent} from './audittrail/audittrail.component';
@@ -23,12 +29,24 @@ import {
 } from '@angular/material/core';
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import {provideHttpClient, withInterceptors} from "@angular/common/http";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {AppConfigService} from "./app-config.service";
 import {ErrorComponent} from './error/error.component';
 import {LogoutComponent} from './logout/logout.component';
-import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
+import {
+  AutoRefreshTokenService,
+  INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
+  includeBearerTokenInterceptor,
+  KEYCLOAK_EVENT_SIGNAL,
+  KeycloakEvent,
+  KeycloakEventType,
+  provideKeycloak,
+  ReadyArgs,
+  typeEventArgs,
+  UserActivityService,
+  withAutoRefreshToken
+} from "keycloak-angular";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {GlobalErrorHandler} from "./error/global-error-handler";
@@ -38,8 +56,7 @@ import {
   MAT_LUXON_DATE_FORMATS
 } from "@angular/material-luxon-adapter";
 import {ClipboardModule} from "@angular/cdk/clipboard";
-import {firstValueFrom, from} from "rxjs";
-import {UserAuthService} from "./services/user-auth.service";
+import {first, firstValueFrom, Observable} from "rxjs";
 import {NewIdDialog} from './idcard/dialogs/new-id-dialog';
 import {FileSaverModule} from 'ngx-filesaver';
 import {SharedModule} from "./shared/shared.module";
@@ -80,102 +97,119 @@ import {
 import {provideTranslateHttpLoader} from "@ngx-translate/http-loader";
 import {BackendConfigService} from "./services/backend-config.service";
 import {AuthorizationService} from "./services/authorization.service";
+import {AppConfig} from "./app-config";
+import {toObservable} from "@angular/core/rxjs-interop";
+import {filter, map} from "rxjs/operators";
 
-function initializeAppFactory(
-    configService: AppConfigService,
-    backendConfigService: BackendConfigService,
-    keycloak: KeycloakService,
-    userAuthService: UserAuthService,
-    authorizationService: AuthorizationService,
-    translate: TranslateService,
-    localStorageService :LocalStorageService
+export async function initializeAppFactory(
+  appConfigService: AppConfigService,
+  backendConfigService: BackendConfigService,
+  keycloakSignalObservable: Observable<KeycloakEvent>,
+  authorizationService: AuthorizationService,
+  translate: TranslateService,
+  localStorageService: LocalStorageService
 ): Promise<any> {
-  console.log("start initializeAppFactory");
-  translate.addLangs(['en-US', 'de-DE']);
-  return configService.init()
-    .then(config => {
-      from(keycloak.keycloakEvents$).subscribe(event => userAuthService.notifyKeycloakEvent(event));
-      translate.setFallbackLang(config[0].defaultLanguage || "en-US");
-      return firstValueFrom(translate.use(localStorageService.language))
-        .then(() => keycloak.init({
-          config: {
-            url: config[0].oAuthConfig?.url ?? "",
-            realm: config[0].oAuthConfig?.realm ?? "",
-            clientId: config[0].oAuthConfig?.clientId ?? ""
-          },
-          loadUserProfileAtStartUp: true,
-          initOptions: {
-            onLoad: 'check-sso',
-            silentCheckSsoRedirectUri:
-              window.location.origin + '/assets/silent-check-sso.html'
-          },
-          shouldAddToken: (request) => {
-            const paths = ['/sessions', '/configuration'];
-            return paths.some((path) => request.url.includes(path));
-          }
-        }).catch(error => {
-          // find error reason
-          let reason = "";
-          if (error) {
-            reason = error.error?.length > 0 ? " Reason: " + error.error : "";
-          }
-          throw new Error(translate.instant('error.app_module_connect_keycloak') + reason);
-        }))
-        .then(isLoggedIn => {
-          if(isLoggedIn) {
-            return backendConfigService.init()
-            .then( d => authorizationService.init());
-          } else {
-            return Promise.resolve();
-          }
-        })
-    });
+  // read ui config file and init translate service
+  return appConfigService.init().then( c => {
+    translate.addLangs(['en-US', 'de-DE']);
+    translate.setFallbackLang(appConfigService.getDefaultLanguage());
+    return firstValueFrom(translate.use(localStorageService.language));
+  }).then( () =>
+    // check if keycloak event changed its state to 'ready'
+    firstValueFrom(keycloakSignalObservable.pipe(
+    filter(e => e.type == KeycloakEventType.Ready),
+    map(evt => typeEventArgs<ReadyArgs>(evt.args)),
+    first()
+  )))
+  .then(isLoggedIn => {
+    //fetch backend configuration
+    if (isLoggedIn)
+      return backendConfigService.init().then(d => authorizationService.init())
+    else
+      return Promise.resolve();
+  })
 }
 
-@NgModule({ declarations: [
-        AppComponent,
-        PatientlistComponent,
-        routingComponents,
-        IdcardComponent,
-        PatientlistViewComponent,
-        ErrorComponent,
-        LogoutComponent,
-        NewIdDialog,
-        AccessDeniedComponent,
-        PageNotFoundComponent,
-        ConsentTemplatesComponent,
-        BulkIdGenerationComponent,
-        BulkIdGenerationTableComponent,
-        BulkIdGenerationEmptyFieldsDialog,
-        BulkPseudonymizationComponent,
-        ExportPatientsDialogComponent
+export function provideKeycloakWithConfig(): EnvironmentProviders {
+  console.log("start provideKeycloakWithConfig")
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', '/assets/config/config.json', false);
+  xhr.send(null);
+  const config: AppConfig = JSON.parse(xhr.responseText);
+  return provideKeycloak({
+    config: {
+      url: config.patientLists[0].oAuthConfig?.url ?? "",
+      realm: config.patientLists[0].oAuthConfig?.realm ?? "",
+      clientId: config.patientLists[0].oAuthConfig?.clientId ?? ""
+    },
+    initOptions: {
+      onLoad: 'check-sso',
+      silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html',
+      // redirectUri: window.location.origin + '/'
+    },
+    providers: [
+      AutoRefreshTokenService,
+      UserActivityService,
+      {
+        provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
+        useValue: [{
+          urlPattern: /^.+\/(configuration|sessions).*$/,
+        }]
+      }
     ],
-    bootstrap: [AppComponent], imports: [SharedModule,
-        MainLayoutModule,
-        PatientModule,
-        BrowserModule,
-        BrowserAnimationsModule,
-        AppRoutingModule,
-        FormsModule,
-        ScrollingModule,
-        MatSidenavModule,
-        MatBadgeModule,
-        MatPaginatorModule,
-        MatNativeDateModule,
-        MatTableModule,
-        MatCheckboxModule,
-        MatTooltipModule,
-        KeycloakAngularModule,
-        MatProgressSpinnerModule,
-        MatProgressBarModule,
-        ClipboardModule,
-        ConsentModule,
-        ConfigurationModule,
-        FileSaverModule,
-        MatStepperModule,
-        EditorModule,
-        MatListModule,
-        ValidRelatedExternalIdsDirective],
+    features: [
+      withAutoRefreshToken({
+        onInactivityTimeout: 'logout',
+        sessionTimeout: 60000
+      })
+    ]
+  });
+}
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    PatientlistComponent,
+    routingComponents,
+    IdcardComponent,
+    PatientlistViewComponent,
+    ErrorComponent,
+    LogoutComponent,
+    NewIdDialog,
+    AccessDeniedComponent,
+    PageNotFoundComponent,
+    ConsentTemplatesComponent,
+    BulkIdGenerationComponent,
+    BulkIdGenerationTableComponent,
+    BulkIdGenerationEmptyFieldsDialog,
+    BulkPseudonymizationComponent,
+    ExportPatientsDialogComponent
+  ],
+  bootstrap: [AppComponent], imports: [SharedModule,
+    MainLayoutModule,
+    PatientModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    FormsModule,
+    ScrollingModule,
+    MatSidenavModule,
+    MatBadgeModule,
+    MatPaginatorModule,
+    MatNativeDateModule,
+    MatTableModule,
+    MatCheckboxModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    MatProgressBarModule,
+    ClipboardModule,
+    ConsentModule,
+    ConfigurationModule,
+    FileSaverModule,
+    MatStepperModule,
+    EditorModule,
+    MatListModule,
+    ValidRelatedExternalIdsDirective],
   providers: [
     {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
@@ -187,10 +221,15 @@ function initializeAppFactory(
       fallbackLang: "en-US",
       lang: "en-US"
     }),
-    provideAppInitializer( () =>
-      initializeAppFactory(inject(AppConfigService),inject(BackendConfigService),
-        inject(KeycloakService), inject(UserAuthService), inject(AuthorizationService),
-        inject(TranslateService), inject(LocalStorageService))
+    provideKeycloakWithConfig(),
+    provideAppInitializer(async () =>
+      initializeAppFactory(
+        inject(AppConfigService),
+        inject(BackendConfigService),
+        toObservable(inject(KEYCLOAK_EVENT_SIGNAL)),
+        inject(AuthorizationService),
+        inject(TranslateService),
+        inject(LocalStorageService))
     ),
     {provide: ErrorHandler, useClass: GlobalErrorHandler},
     {provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher},
@@ -202,8 +241,9 @@ function initializeAppFactory(
       deps: [MAT_DATE_LOCALE, MAT_LUXON_DATE_ADAPTER_OPTIONS]
     },
     {provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js'},
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withInterceptors([includeBearerTokenInterceptor])),
   ]
 })
 
-export class AppModule { }
+export class AppModule {
+}

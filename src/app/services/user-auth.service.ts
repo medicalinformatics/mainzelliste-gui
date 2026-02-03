@@ -1,10 +1,11 @@
-import {Injectable} from '@angular/core';
+import {effect, inject, Injectable, Signal} from '@angular/core';
 import {
-  KeycloakEventLegacy,
-  KeycloakEventType,
-  KeycloakEventTypeLegacy,
-  KeycloakService
+  KEYCLOAK_EVENT_SIGNAL,
+  KeycloakEvent,
+  KeycloakEventType, ReadyArgs,
+  typeEventArgs
 } from "keycloak-angular";
+import Keycloak from 'keycloak-js';
 import {SessionService} from "./session.service";
 import {mergeMap} from "rxjs/operators";
 import {firstValueFrom, lastValueFrom} from "rxjs";
@@ -15,23 +16,28 @@ import {firstValueFrom, lastValueFrom} from "rxjs";
 export class UserAuthService {
 
   isLoggedInKeycloak: boolean = false;
+  private readonly keycloakSignal: Signal<KeycloakEvent>;
+  private readonly keycloak: Keycloak;
 
   constructor(
-    protected readonly keycloak: KeycloakService,
     protected readonly sessionService: SessionService) {
-  }
+    this.keycloakSignal = inject(KEYCLOAK_EVENT_SIGNAL);
+    this.keycloak = inject(Keycloak);
 
-  notifyKeycloakEvent(event: KeycloakEventLegacy){
-    if (event.type == KeycloakEventTypeLegacy.OnAuthLogout) {
-      this.isLoggedInKeycloak = false;
-    } else if (event.type == KeycloakEventTypeLegacy.OnAuthSuccess) {
-      this.isLoggedInKeycloak = true;
-    }
+    // listen to keycloak event
+    effect(() => {
+      const event =  this.keycloakSignal();
+      if (event.type == KeycloakEventType.AuthLogout) {
+        this.isLoggedInKeycloak = false;
+      } else if (event.type == KeycloakEventType.AuthSuccess
+        || event.type == KeycloakEventType.Ready && typeEventArgs<ReadyArgs>(event.args)) {
+        this.isLoggedInKeycloak = true;
+      }
+    });
   }
 
   async retryLogin(redirectUrl: string){
-    let authenticated = await this.keycloak.isLoggedIn();
-    return this.login(authenticated, redirectUrl);
+    return this.login(this.keycloak.authenticated, redirectUrl);
   }
 
   async login(authenticated: boolean, redirectUrl: string): Promise<boolean> {
@@ -55,15 +61,25 @@ export class UserAuthService {
     });
   }
 
-  public getUserName(): string {
-    return this.keycloak.getUsername();
+  getUserName() {
+    return this.keycloak.profile?.username ?? "";
   }
-
   public isLoggedIn(): boolean {
     return this.isLoggedInKeycloak && this.sessionService.isSessionCreated();
   }
 
   getRoles() {
-    return this.keycloak.getUserRoles(true);
+    let roles: string[] = [];
+
+    if (this.keycloak.resourceAccess) {
+      roles = Object.values(this.keycloak.resourceAccess)
+      .map(roles => roles['roles'] || [])
+      .flat();
+
+      const realmRoles = this.keycloak.realmAccess?.roles || [];
+      roles.push(...realmRoles);
+    }
+
+    return roles;
   }
 }

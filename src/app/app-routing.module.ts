@@ -5,7 +5,7 @@ import {IdcardComponent} from "./idcard/idcard.component";
 import {PatientlistViewComponent} from "./patientlist-view/patientlist-view.component";
 import {ErrorComponent} from "./error/error.component";
 import {LogoutComponent} from "./logout/logout.component";
-import {AuthGuard} from "./guards/auth-guard.service";
+import {canActivateAuthRole, canActivateChildAuthRole} from "./guards/auth-guard.service";
 import {Permission} from "./model/permission";
 import {CreatePatientComponent} from "./patient/create-patient/create-patient.component";
 import {EditPatientComponent} from "./patient/edit-patient/edit-patient.component";
@@ -24,7 +24,7 @@ import {
 const routes: Routes = [
   // TODO: All Paths should have english wording.
   {
-    path: '', canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
+    path: '', canActivate: [canActivateAuthRole], canActivateChild: [canActivateChildAuthRole], children: [
       {path: '', pathMatch: 'full', redirectTo: 'patientlist'},
       {path: 'bulk-id-generation', component: BulkIdGenerationComponent, data : { permission: Permission.GENERATE_IDS, checkIdType:true}},
       {path: 'bulk-pseudonymization', component: BulkPseudonymizationComponent, data : { permission: Permission.ADD_PATIENTS}},
