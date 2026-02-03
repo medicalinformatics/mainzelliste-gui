@@ -64,6 +64,7 @@ export class UserAuthService {
   getUserName() {
     return this.keycloak.profile?.username ?? "";
   }
+
   public isLoggedIn(): boolean {
     return this.isLoggedInKeycloak && this.sessionService.isSessionCreated();
   }

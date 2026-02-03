@@ -1,5 +1,4 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {Routes} from '@angular/router';
 import {InfoComponent} from "./info/info.component";
 import {IdcardComponent} from "./idcard/idcard.component";
 import {PatientlistViewComponent} from "./patientlist-view/patientlist-view.component";
@@ -21,8 +20,7 @@ import {
   BulkPseudonymizationComponent
 } from "./bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component";
 
-const routes: Routes = [
-  // TODO: All Paths should have english wording.
+export const routes: Routes = [
   {
     path: '', canActivate: [canActivateAuthRole], canActivateChild: [canActivateChildAuthRole], children: [
       {path: '', pathMatch: 'full', redirectTo: 'patientlist'},
@@ -42,7 +40,6 @@ const routes: Routes = [
       // {path: 'audittrail', component: AudittrailComponent},
       // {path: 'delete-patients', component: DeleteMultiplePatientsComponent, data : { permission: 'deletePatient' }},
       {path: 'consent-templates', component: ConsentTemplatesComponent, data: { permission: Permission.CREATE_CONSENT_TEMPLATE}}
-      // {path: 'create-consent-template', component: CreateConsentTemplateComponent, data: { permission: Permission.CREATE_CONSENT}}
     ]
   },
   {path: 'access-denied', component: AccessDeniedComponent},
@@ -53,13 +50,3 @@ const routes: Routes = [
   { path: '**', pathMatch: 'full',
   component: PageNotFoundComponent }
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes, {
-    onSameUrlNavigation: 'reload'
-  })],
-  exports: [RouterModule]
-
-})
-export class AppRoutingModule{}
-export const routingComponents =[IdcardComponent, PatientlistViewComponent, InfoComponent]
