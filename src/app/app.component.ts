@@ -13,6 +13,7 @@ import { NavigationComponent } from './main-layout/navigation/navigation.compone
 import { MatIcon } from '@angular/material/icon';
 import { ErrorCardComponent } from './shared/components/error-card/error-card.component';
 import { FooterComponent } from './main-layout/footer/footer.component';
+import {MlTokenAuthService} from "./services/ml-token-auth.service";
 
 
 @Component({
@@ -28,6 +29,7 @@ export class AppComponent implements AfterContentChecked {
     public readonly titleService: GlobalTitleService,
     public readonly errorNotificationService: ErrorNotificationService,
     protected readonly userAuthService: UserAuthService,
+    protected readonly mlTokenAuthService: MlTokenAuthService,
     public router: Router,
     private changeDetector: ChangeDetectorRef,
   ) {

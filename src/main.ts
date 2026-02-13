@@ -71,6 +71,7 @@ import {provideRouter} from "@angular/router";
 import {routes} from "./app/app-routing.module";
 import {first, firstValueFrom, Observable} from "rxjs";
 import {filter, map} from "rxjs/operators";
+import {MlTokenAuthService} from "./app/services/ml-token-auth.service";
 
 if (environment.production) {
   enableProdMode();
@@ -82,14 +83,23 @@ export async function initializeAppFactory(
   keycloakSignalObservable: Observable<KeycloakEvent>,
   authorizationService: AuthorizationService,
   translate: TranslateService,
-  localStorageService: LocalStorageService
+  localStorageService: LocalStorageService,
+  mlTokenAuthService: MlTokenAuthService
 ): Promise<any> {
+  const initConfigAndAuthServices = (tokenId?: string) =>
+    backendConfigService.init(tokenId)
+    .then(() => {
+      authorizationService.init();
+      return true;
+    });
+
   // read ui config file and init translate service
   return appConfigService.init().then(c => {
     translate.addLangs(['en-US', 'de-DE']);
     translate.setFallbackLang(appConfigService.getDefaultLanguage());
     return firstValueFrom(translate.use(localStorageService.language));
-  }).then(() =>
+  })
+  .then(() =>
     // check if keycloak event changed its state to 'ready'
     firstValueFrom(keycloakSignalObservable.pipe(
       filter(e => e.type == KeycloakEventType.Ready),
@@ -97,11 +107,15 @@ export async function initializeAppFactory(
       first()
     )))
   .then(isLoggedIn => {
-    //fetch backend configuration
-    if (isLoggedIn)
-      return backendConfigService.init().then(d => authorizationService.init())
-    else
-      return Promise.resolve();
+    if(isLoggedIn)
+      return initConfigAndAuthServices();
+
+    //otherwise try to login with a mainzelliste token
+    const params = new URLSearchParams(window.location.search);
+    const tokenId = params.get('tokenId') ?? "";
+    const sessionId = params.get('sessionId') ?? "";
+    return mlTokenAuthService.init(sessionId, tokenId)
+    .then( isAuthenticated => !isAuthenticated ? false : initConfigAndAuthServices(tokenId));
   })
 }
 
@@ -152,7 +166,7 @@ const init = async () => {
         lang: "en-US"
       }),
       provideKeycloakWithConfig(config),
-      provideAppInitializer(async () => initializeAppFactory(inject(AppConfigService), inject(BackendConfigService), toObservable(inject(KEYCLOAK_EVENT_SIGNAL)), inject(AuthorizationService), inject(TranslateService), inject(LocalStorageService))),
+      provideAppInitializer(async () => initializeAppFactory(inject(AppConfigService), inject(BackendConfigService), toObservable(inject(KEYCLOAK_EVENT_SIGNAL)), inject(AuthorizationService), inject(TranslateService), inject(LocalStorageService), inject(MlTokenAuthService))),
       {provide: ErrorHandler, useClass: GlobalErrorHandler},
       {provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher},
       {provide: MAT_DATE_LOCALE, useValue: 'en-US'},

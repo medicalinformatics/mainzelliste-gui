@@ -1,16 +1,16 @@
 <div class="wrapper" style="display: flex; overflow: auto">
   <!--show loading bar-->
-  <div *ngIf="!isLoggedIn()" style="display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%;">
+  <div *ngIf="!this.mlTokenAuthService.isAuthenticated() && !isLoggedIn()" style="display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%;">
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     <img src="assets/images/mainzelliste-logo-650.png" alt="Mainzelliste Logo" class="load-page-logo"/>
   </div>
 
   <!--HEADER AND CONTENT AS COLUMN-->
-  <app-header style="flex: 0 0; height: 75px" *ngIf="isLoggedIn()"></app-header>
+  <app-header style="flex: 0 0; height: 75px" *ngIf="this.mlTokenAuthService.isAuthenticated() || isLoggedIn()"></app-header>
   <!-- NAVIGATION AND CONTENT NEXT TO EACH OTHER sessionService.isLoggedIn() -->
-  <mat-sidenav-container *ngIf="isLoggedIn()" style="height: 100%" autosize>
+  <mat-sidenav-container *ngIf="this.mlTokenAuthService.isAuthenticated() || isLoggedIn()" style="height: 100%" autosize>
     <mat-sidenav mode="side" class="sidenav-menu" opened>
-      <app-navigation style=" padding-top:22px; color: white; display: flex; flex-flow: column"></app-navigation>
+      <app-navigation *ngIf="!this.mlTokenAuthService.isAuthenticated()" style=" padding-top:22px; color: white; display: flex; flex-flow: column"></app-navigation>
     </mat-sidenav>
     <mat-sidenav-content style="height: 100%">
       <div style="display: flex; flex-direction: column; height: 100%; position: absolute; width: 100%;">
