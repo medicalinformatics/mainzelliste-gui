@@ -1,12 +1,20 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogActions } from "@angular/material/dialog";
 import {PatientService} from "../../../services/patient.service";
 import {saveAs} from "file-saver";
 import _moment from "moment/moment";
-import {MatSelectionList, MatSelectionListChange} from "@angular/material/list";
-import {TranslateService} from "@ngx-translate/core";
+import { MatSelectionList, MatSelectionListChange, MatListOption } from "@angular/material/list";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import {animate, style, transition, trigger} from "@angular/animations";
 import {FilterItem} from "../../../model/filter-item";
+import { NgFor, NgIf } from '@angular/common';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
+import { MatCard, MatCardTitleGroup, MatCardContent } from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-export-patients-dialog',
@@ -23,7 +31,7 @@ import {FilterItem} from "../../../model/filter-item";
             ])
         ])
     ],
-    standalone: false
+    imports: [MatDialogTitle, MatSelectionList, NgFor, MatListOption, MatFormField, MatLabel, MatSelect, FormsModule, MatOption, NgIf, MatCard, MatCardTitleGroup, MatIcon, MatIconButton, MatCardContent, MatButton, MatDialogActions, MatProgressSpinner, TranslatePipe]
 })
 export class ExportPatientsDialogComponent implements OnInit {
 

@@ -8,8 +8,8 @@ describe('DeletePatientComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DeletePatientComponent ]
-    })
+    imports: [DeletePatientComponent]
+})
     .compileComponents();
   });
 

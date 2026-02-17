@@ -8,8 +8,8 @@ describe('ErrorCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ErrorCardComponent ]
-    })
+    imports: [ErrorCardComponent]
+})
     .compileComponents();
   });
 

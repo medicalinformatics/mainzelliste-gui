@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { AppConfigService } from 'src/app/app-config.service';
 import {FooterLogo} from "../../model/patientlist";
+import {BackendConfigService} from "../../services/backend-config.service";
+import { NgStyle, NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-footer',
     templateUrl: './footer.component.html',
     styleUrls: ['./footer.component.css'],
-    standalone: false
+    imports: [NgStyle, NgFor, NgSwitch, NgSwitchCase, TranslatePipe]
 })
 export class FooterComponent implements OnInit {
   magicLogo: string = "assets/images/magic-logo.png";
@@ -19,9 +22,10 @@ export class FooterComponent implements OnInit {
   logos: FooterLogo[] = [];
 
   constructor(
-    appConfig: AppConfigService
+    appConfig: AppConfigService,
+    backendConfigService: BackendConfigService
   ) {
-    this.version = appConfig.getVersion();
+    this.version = backendConfigService.getVersion();
     this.logos = appConfig.getLayoutFooterLogos();
     this.year = new Date().getFullYear();
   }

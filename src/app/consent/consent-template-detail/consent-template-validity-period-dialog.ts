@@ -1,14 +1,20 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef,} from "@angular/material/dialog";
-import {NgModel, ValidationErrors} from "@angular/forms";
-import {TranslateService} from "@ngx-translate/core";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from "@angular/material/dialog";
+import { NgModel, ValidationErrors, FormsModule } from "@angular/forms";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import {Validity} from "../consent-validity-period";
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { NgStyle, NgIf, NgFor } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { MatButton } from '@angular/material/button';
 
 
 @Component({
     selector: 'consent-template-validity-period-dialog',
     templateUrl: 'consent-template-validity-period-dialog.html',
-    standalone: false
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatFormField, NgStyle, MatLabel, MatInput, FormsModule, NgIf, MatError, MatSelect, NgFor, MatOption, MatDialogActions, MatButton, TranslatePipe]
 })
 
 export class ConsentTemplateValidityPeriodDialog implements OnInit {

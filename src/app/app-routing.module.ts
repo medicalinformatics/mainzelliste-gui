@@ -1,11 +1,10 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {Routes} from '@angular/router';
 import {InfoComponent} from "./info/info.component";
 import {IdcardComponent} from "./idcard/idcard.component";
 import {PatientlistViewComponent} from "./patientlist-view/patientlist-view.component";
 import {ErrorComponent} from "./error/error.component";
 import {LogoutComponent} from "./logout/logout.component";
-import {AuthGuard} from "./guards/auth-guard.service";
+import {canActivateAuthRole, canActivateChildAuthRole} from "./guards/auth-guard.service";
 import {Permission} from "./model/permission";
 import {CreatePatientComponent} from "./patient/create-patient/create-patient.component";
 import {EditPatientComponent} from "./patient/edit-patient/edit-patient.component";
@@ -21,10 +20,9 @@ import {
   BulkPseudonymizationComponent
 } from "./bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component";
 
-const routes: Routes = [
-  // TODO: All Paths should have english wording.
+export const routes: Routes = [
   {
-    path: '', canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
+    path: '', canActivate: [canActivateAuthRole], canActivateChild: [canActivateChildAuthRole], children: [
       {path: '', pathMatch: 'full', redirectTo: 'patientlist'},
       {path: 'bulk-id-generation', component: BulkIdGenerationComponent, data : { permission: Permission.GENERATE_IDS, checkIdType:true}},
       {path: 'bulk-pseudonymization', component: BulkPseudonymizationComponent, data : { permission: Permission.ADD_PATIENTS}},
@@ -42,7 +40,6 @@ const routes: Routes = [
       // {path: 'audittrail', component: AudittrailComponent},
       // {path: 'delete-patients', component: DeleteMultiplePatientsComponent, data : { permission: 'deletePatient' }},
       {path: 'consent-templates', component: ConsentTemplatesComponent, data: { permission: Permission.CREATE_CONSENT_TEMPLATE}}
-      // {path: 'create-consent-template', component: CreateConsentTemplateComponent, data: { permission: Permission.CREATE_CONSENT}}
     ]
   },
   {path: 'access-denied', component: AccessDeniedComponent},
@@ -53,13 +50,3 @@ const routes: Routes = [
   { path: '**', pathMatch: 'full',
   component: PageNotFoundComponent }
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes, {
-    onSameUrlNavigation: 'reload'
-  })],
-  exports: [RouterModule]
-
-})
-export class AppRoutingModule{}
-export const routingComponents =[IdcardComponent, PatientlistViewComponent, InfoComponent]

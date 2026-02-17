@@ -1,5 +1,9 @@
 import {Component, Input, OnChanges, OnInit, SimpleChange} from '@angular/core';
 import {animate, style, transition, trigger} from "@angular/animations";
+import { NgIf, NgStyle } from '@angular/common';
+import { MatCard, MatCardTitleGroup, MatCardContent } from '@angular/material/card';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'app-message-card',
@@ -16,7 +20,7 @@ import {animate, style, transition, trigger} from "@angular/animations";
             ])
         ])
     ],
-    standalone: false
+    imports: [NgIf, MatCard, MatCardTitleGroup, MatIconButton, MatIcon, MatCardContent, NgStyle]
 })
 export class MessageCardComponent implements OnInit, OnChanges {
 

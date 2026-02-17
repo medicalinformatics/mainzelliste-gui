@@ -2,24 +2,35 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Patient} from "../../model/patient";
 import {PatientService} from "../../services/patient.service";
 import {Router} from "@angular/router";
-import {FormControl, NgForm} from "@angular/forms";
+import { FormControl, NgForm, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {PatientListService} from "../../services/patient-list.service";
-import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
-import {MatChipInputEvent, MatChipGrid} from "@angular/material/chips";
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger, MatAutocomplete } from "@angular/material/autocomplete";
+import { MatChipInputEvent, MatChipGrid, MatChipRow, MatChipRemove, MatChipInput } from "@angular/material/chips";
 import {ErrorNotificationService} from "../../services/error-notification.service";
 import {GlobalTitleService} from "../../services/global-title.service";
 import {Observable, of, retry} from "rxjs";
 import {concatMap, map, mergeMap, startWith} from "rxjs/operators";
-import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import { MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from "@angular/material/dialog";
 import {MainzellisteError} from "../../model/mainzelliste-error.model";
 import {ErrorMessages} from "../../error/error-messages";
 import {UserAuthService} from "../../services/user-auth.service";
-import {TranslateService} from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../../consent/consent-dialog/consent-dialog.component";
 import {Consent} from "../../consent/consent.model";
 import {ConsentService} from "../../consent/consent.service";
 import {Permission} from "../../model/permission";
 import {Operation} from "../../model/tenant";
+import { PatientFieldsComponent } from '../patient-fields/patient-fields.component';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { ExternalPseudonymsComponent } from '../external-pseudonyms/external-pseudonyms.component';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatOption } from '@angular/material/select';
+import { HasPermissionDirective } from '../../shared/directives/has-permission.directive';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { CdkScrollable } from '@angular/cdk/scrolling';
 
 export interface IdTypSelection {
   idType: string,
@@ -31,7 +42,7 @@ export interface IdTypSelection {
     selector: 'app-create-patient',
     templateUrl: './create-patient.component.html',
     styleUrls: ['./create-patient.component.css'],
-    standalone: false
+    imports: [FormsModule, PatientFieldsComponent, NgIf, ExternalPseudonymsComponent, MatFormField, MatLabel, MatChipGrid, NgFor, MatChipRow, MatChipRemove, MatIcon, MatChipInput, MatAutocompleteTrigger, ReactiveFormsModule, MatError, MatAutocomplete, MatOption, HasPermissionDirective, MatButton, MatIconButton, MatTooltip, MatProgressSpinner, AsyncPipe, TranslatePipe]
 })
 export class CreatePatientComponent implements OnInit {
   public readonly Permission = Permission;
@@ -251,7 +262,7 @@ export class CreatePatientComponent implements OnInit {
 @Component({
     selector: 'create-patient-tentative-dialog',
     templateUrl: 'create-patient-tentative-dialog.html',
-    standalone: false
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatDialogActions, MatButton, MatDialogClose, TranslatePipe]
 })
 export class CreatePatientTentativeDialog {
   constructor(

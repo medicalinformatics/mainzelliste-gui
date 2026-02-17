@@ -2,23 +2,24 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FieldService} from "../../services/field.service";
 import {Field} from "../../model/field";
 import _moment from "moment";
-import {
-  ControlContainer,
-  FormControl,
-  FormGroupDirective,
-  NgForm,
-  NgModel,
-  ValidationErrors
-} from "@angular/forms";
+import { ControlContainer, FormControl, FormGroupDirective, NgForm, NgModel, ValidationErrors, FormsModule } from "@angular/forms";
 import {ErrorStateMatcher} from "@angular/material/core";
-import {TranslateService} from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { NgFor, NgSwitch, NgIf, NgStyle, NgSwitchCase, NgSwitchDefault } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatLabel, MatSuffix, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { MatIconButton } from '@angular/material/button';
+import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
+import { MatSelect, MatOption } from '@angular/material/select';
 
 @Component({
     selector: 'app-patient-fields',
     templateUrl: './patient-fields.component.html',
     styleUrls: ['./patient-fields.component.css'],
     viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
-    standalone: false
+    imports: [FormsModule, NgFor, NgSwitch, NgIf, NgStyle, MatIcon, NgSwitchCase, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatIconButton, CdkCopyToClipboard, MatSelect, MatOption, NgSwitchDefault, MatError, TranslatePipe]
 })
 
 export class PatientFieldsComponent implements OnInit {

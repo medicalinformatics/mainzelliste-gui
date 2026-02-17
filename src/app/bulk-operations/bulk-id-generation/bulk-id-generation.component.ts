@@ -1,9 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {saveAs} from 'file-saver';
-import {FormBuilder, Validators} from '@angular/forms';
-import {TranslateService} from '@ngx-translate/core';
-import {MatStep, MatStepper} from '@angular/material/stepper';
-import {MatSelect} from '@angular/material/select';
+import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { MatStep, MatStepper, MatStepLabel } from '@angular/material/stepper';
+import { MatSelect, MatOption } from '@angular/material/select';
 import {MatDialog} from '@angular/material/dialog';
 import {StepperSelectionEvent} from "@angular/cdk/stepper";
 import {GlobalTitleService} from "../../services/global-title.service";
@@ -16,6 +16,15 @@ import {animate, style, transition, trigger} from "@angular/animations";
 import {Observable} from "rxjs";
 import * as papaparse from "papaparse";
 import {ParseResult} from "papaparse";
+import { MessageCardComponent } from '../../shared/components/message-card/message-card.component';
+import { MatButton } from '@angular/material/button';
+import { NgIf, NgFor } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { BulkIdGenerationTableComponent } from './table/bulk-id-generation-table.component';
 
 @Component({
     selector: 'app-bulk-id-generation',
@@ -32,7 +41,7 @@ import {ParseResult} from "papaparse";
             ])
         ])
     ],
-    standalone: false
+    imports: [MatStepper, MatStep, FormsModule, ReactiveFormsModule, MatStepLabel, MessageCardComponent, MatButton, NgIf, MatIcon, MatProgressSpinner, MatCard, MatCardContent, MatProgressBar, MatFormField, MatLabel, MatSelect, NgFor, MatOption, BulkIdGenerationTableComponent, TranslatePipe]
 })
 export class BulkIdGenerationComponent implements OnInit {
 

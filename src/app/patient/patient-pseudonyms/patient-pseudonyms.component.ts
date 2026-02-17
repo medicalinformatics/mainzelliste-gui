@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {PatientListService} from "../../services/patient-list.service";
 import {IdTypSelection} from "../create-patient/create-patient.component";
-import {ControlContainer, NgForm} from "@angular/forms";
+import { ControlContainer, NgForm, FormsModule } from "@angular/forms";
 import {Id} from "../../model/id";
 import {ExternalPseudonymsComponent} from "../external-pseudonyms/external-pseudonyms.component";
 import {AppConfigService} from "../../app-config.service";
@@ -10,13 +10,21 @@ import {MatDialog} from "@angular/material/dialog";
 import {
   ShowRelatedIdDialog
 } from "./dialogs/show-related-id-dialog/show-related-id-dialog.component";
+import { NgFor, NgIf, NgStyle } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatIconButton } from '@angular/material/button';
+import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
+import { MatTooltip } from '@angular/material/tooltip';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-patient-pseudonyms',
     templateUrl: './patient-pseudonyms.component.html',
     styleUrls: ['./patient-pseudonyms.component.css'],
     viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
-    standalone: false
+    imports: [FormsModule, NgFor, NgIf, NgStyle, MatIcon, MatFormField, MatLabel, MatInput, MatSuffix, MatIconButton, CdkCopyToClipboard, MatTooltip, ExternalPseudonymsComponent, TranslatePipe]
 })
 
 export class PatientPseudonymsComponent{

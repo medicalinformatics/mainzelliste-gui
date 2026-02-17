@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow } from '@angular/material/table';
 import {ConsentService} from 'src/app/consent/consent.service';
 import {MatDialog} from '@angular/material/dialog';
 import {PolicyDialogComponent} from '../policy-dialog/policy-dialog.component';
@@ -15,12 +15,19 @@ import {Permission} from 'src/app/model/permission';
 import {
   CsvPolicyImportDialogComponent
 } from '../csv-policy-import-dialog/csv-policy-import-dialog.component';
+import { HasPermissionDirective } from '../../shared/directives/has-permission.directive';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { NgIf } from '@angular/common';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-policies',
     templateUrl: './policies.component.html',
     styleUrls: ['./policies.component.css'],
-    standalone: false
+    imports: [HasPermissionDirective, MatButton, MatIcon, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIconButton, MatTooltip, NgIf, MatProgressBar, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow, MatPaginator, TranslatePipe]
 })
 export class PoliciesComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'actions'];

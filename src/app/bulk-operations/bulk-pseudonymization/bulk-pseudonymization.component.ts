@@ -1,10 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatStep, MatStepper} from "@angular/material/stepper";
-import {FormBuilder, FormControl, Validators} from "@angular/forms";
+import { MatStep, MatStepper, MatStepLabel } from "@angular/material/stepper";
+import { FormBuilder, FormControl, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {GlobalTitleService} from "../../services/global-title.service";
 import {PatientListService} from "../../services/patient-list.service";
-import {TranslateService} from "@ngx-translate/core";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import {saveAs} from "file-saver";
 import {StepperSelectionEvent} from "@angular/cdk/stepper";
 import {AppConfigService} from "../../app-config.service";
@@ -13,13 +13,25 @@ import {AddPatientRequest} from "../../model/add-patient-request";
 import {map, startWith} from "rxjs/operators";
 import {Observable, of} from "rxjs";
 import {IdTypSelection} from "../../patient/create-patient/create-patient.component";
-import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
-import {MatChipGrid, MatChipInputEvent} from "@angular/material/chips";
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger, MatAutocomplete } from "@angular/material/autocomplete";
+import { MatChipGrid, MatChipInputEvent, MatChipRow, MatChipRemove, MatChipInput } from "@angular/material/chips";
 import _moment from "moment";
 import {MatPaginator} from "@angular/material/paginator";
 import {animate, style, transition, trigger} from "@angular/animations";
 import * as papaparse from "papaparse";
 import {ParseResult} from "papaparse";
+import {BackendConfigService} from "../../services/backend-config.service";
+import { MessageCardComponent } from '../../shared/components/message-card/message-card.component';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { NgIf, NgFor, AsyncPipe, SlicePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatCard, MatCardContent, MatCardTitleGroup } from '@angular/material/card';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatOption } from '@angular/material/select';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 
 @Component({
     selector: 'app-bulk-pseudonymization',
@@ -36,7 +48,7 @@ import {ParseResult} from "papaparse";
             ])
         ])
     ],
-    standalone: false
+    imports: [MatStepper, MatStep, FormsModule, ReactiveFormsModule, MatStepLabel, MessageCardComponent, MatButton, NgIf, MatIcon, MatProgressSpinner, MatCard, MatCardContent, MatProgressBar, MatFormField, MatLabel, MatChipGrid, NgFor, MatChipRow, MatChipRemove, MatChipInput, MatAutocompleteTrigger, MatError, MatAutocomplete, MatOption, MatCheckbox, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, MatCardTitleGroup, MatIconButton, AsyncPipe, SlicePipe, TranslatePipe]
 })
 export class BulkPseudonymizationComponent implements OnInit {
 
@@ -87,7 +99,8 @@ export class BulkPseudonymizationComponent implements OnInit {
     private _formBuilder: FormBuilder,
     public dialog: MatDialog,
     private titleService: GlobalTitleService,
-    private configService: AppConfigService,
+    private configService: BackendConfigService,
+    private appConfigService: AppConfigService,
     public patientListService: PatientListService,
     public translate: TranslateService
   ) {
@@ -186,7 +199,7 @@ export class BulkPseudonymizationComponent implements OnInit {
         // validate fields
         if (fieldsIndexes.length > 0) {
           // check required field
-          const missingRequiredFields = this.fieldNames.filter( fieldName => this.configService.getFields()
+          const missingRequiredFields = this.fieldNames.filter( fieldName => this.appConfigService.getFields()
           .some( f => f.required && (f.mainzellisteField != undefined && f.mainzellisteField.length > 0?
             f.mainzellisteField == fieldName : f.mainzellisteFields.includes(fieldName))))
           .filter( f => !csvHeaders.includes(f))

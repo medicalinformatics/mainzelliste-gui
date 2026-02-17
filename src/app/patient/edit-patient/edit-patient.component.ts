@@ -1,23 +1,30 @@
 import {Component, OnInit} from '@angular/core';
 import {Patient} from "../../model/patient";
 import {PatientListService} from "../../services/patient-list.service";
-import {ActivatedRoute, Router} from "@angular/router";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import {GlobalTitleService} from "../../services/global-title.service";
 import {ErrorNotificationService} from "../../services/error-notification.service";
-import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import { MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from "@angular/material/dialog";
 import {MainzellisteError} from "../../model/mainzelliste-error.model";
 import {ErrorMessages} from "../../error/error-messages";
 import {Id} from "../../model/id";
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import {AuthorizationService} from "../../services/authorization.service";
 import {Permission} from "../../model/permission";
-import {NgForm} from "@angular/forms";
+import { NgForm, FormsModule } from "@angular/forms";
+import { MatCard, MatCardTitle } from '@angular/material/card';
+import { PatientFieldsComponent } from '../patient-fields/patient-fields.component';
+import { PatientPseudonymsComponent } from '../patient-pseudonyms/patient-pseudonyms.component';
+import { MatFabButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { CdkScrollable } from '@angular/cdk/scrolling';
 
 @Component({
     selector: 'app-edit-patient',
     templateUrl: './edit-patient.component.html',
     styleUrls: ['./edit-patient.component.css'],
-    standalone: false
+    imports: [FormsModule, MatCard, MatCardTitle, PatientFieldsComponent, PatientPseudonymsComponent, MatFabButton, MatIcon, MatTooltip, RouterLink, TranslatePipe]
 })
 export class EditPatientComponent implements OnInit {
   public readonly Permission = Permission;
@@ -98,7 +105,7 @@ export class EditPatientComponent implements OnInit {
 @Component({
     selector: 'edit-patient-tentative-dialog',
     templateUrl: 'edit-patient-tentative-dialog.html',
-    standalone: false
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatDialogActions, MatButton, MatDialogClose, TranslatePipe]
 })
 export class EditPatientTentativeDialog {
   constructor(

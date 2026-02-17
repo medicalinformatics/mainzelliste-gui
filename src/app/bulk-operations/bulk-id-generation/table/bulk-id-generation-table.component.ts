@@ -1,11 +1,13 @@
 import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from "@angular/material/table";
+import { SlicePipe } from "@angular/common";
 
 @Component({
     selector: 'bulk-id-generation-table',
     templateUrl: 'bulk-id-generation-table.component.html',
     styleUrls: ['./bulk-id-generation-table.component.css'],
-    standalone: false
+    imports: [MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, SlicePipe]
 })
 export class BulkIdGenerationTableComponent implements OnInit{
 
