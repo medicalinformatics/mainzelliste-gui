@@ -53,5 +53,7 @@ export interface BetaFeatures {
   copyId?: boolean
   configuration?:boolean
   showDomainsInIDCard?:boolean
+  // NOTE: We expect a , separated string here
+  requiredExternalIds?:string
 }
 
