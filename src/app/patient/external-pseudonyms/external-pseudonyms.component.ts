@@ -12,6 +12,7 @@ import {GenerateIdDialog} from "./dialogs/generate-id/generate-id-dialog.compone
 import {
   ShowRelatedIdDialog
 } from "../patient-pseudonyms/dialogs/show-related-id-dialog/show-related-id-dialog.component";
+import { IdConfig } from "../../model/patientlist";
 
 @Component({
     selector: 'app-external-pseudonyms',
@@ -115,10 +116,6 @@ export class ExternalPseudonymsComponent implements OnInit, OnChanges {
     return this.getExternalIdTypes().some( t => t.idType == idType && t.associated)
   }
 
-  public getConcatenated(id: Id): string {
-    return id.idType + "." + id.idString;
-  }
-
   getAssociatedIdTypes(idType: string):string[] {
     return this.patientListService.getRelatedAssociatedIdTypes(idType, false, "C");
   }
@@ -152,5 +149,31 @@ export class ExternalPseudonymsComponent implements OnInit, OnChanges {
 
   public getFieldClass(){
     return "inputField ml-field" + (this.readOnly ? " inputFieldDisabled" : "");
+  }
+
+  isRequired(idType: string) {
+    return this.appConfigService.getRequiredExternalIds().some(type => type === idType);
+  }
+
+  getIdConfig(id: Id): IdConfig {
+    return this.config.data[0].idConfigs[id.idType];
+  }
+  
+   fillTemplate(templateString: string, id: Id): string {
+    return templateString?.replace('<idType>', id.idType)?.replace('<idString>', id.idString);
+  }
+  
+  getDescriptionForPseudonym(id: Id): string {
+    return this.getIdConfig(id)?.description ?? '';
+  }
+
+  getExternalLink(id: Id): string {
+    let linkTemplate = this.getIdConfig(id)?.linkTemplate;
+    return this.fillTemplate(linkTemplate, id);
+  }
+
+  getConcatenated(id: Id): string {
+    let concatenatedIdTemplate = this.getIdConfig(id)?.idCopyTemplate || '<idType>.<idString>';
+    return this.fillTemplate(concatenatedIdTemplate, id);
   }
 }

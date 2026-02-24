@@ -10,6 +10,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {
   ShowRelatedIdDialog
 } from "./dialogs/show-related-id-dialog/show-related-id-dialog.component";
+import { IdConfig } from "../../model/patientlist";
+import { link } from 'fs';
 
 @Component({
     selector: 'app-patient-pseudonyms',
@@ -75,10 +77,6 @@ export class PatientPseudonymsComponent{
     );
   }
 
-  public getConcatenated(id: Id): string {
-    return id.idType + "." + id.idString;
-  }
-
   forwardGenerateIdEvent(event: { idType: string, idString: string, newIdType: string }) {
     this.generateId.emit({
       idType: event.idType,
@@ -93,6 +91,28 @@ export class PatientPseudonymsComponent{
       disableClose: true,
       minWidth: 300
     }))
+  }
+
+  getIdConfig(id: Id): IdConfig {
+    return this.config.data[0].idConfigs[id.idType];
+  }
+
+  fillTemplate(templateString: string, id: Id): string {
+    return templateString?.replace('<idType>', id.idType)?.replace('<idString>', id.idString);
+  }
+
+  getDescriptionForPseudonym(id: Id): string {
+    return this.getIdConfig(id)?.description ?? '';
+  }
+
+  getExternalLink(id: Id): string {
+    let linkTemplate = this.getIdConfig(id)?.linkTemplate;
+    return this.fillTemplate(linkTemplate, id);
+  }
+
+  getConcatenated(id: Id): string {
+    let concatenatedIdTemplate = this.getIdConfig(id)?.idCopyTemplate || '<idType>.<idString>';
+    return this.fillTemplate(concatenatedIdTemplate, id);
   }
 
   public getFieldClass(){

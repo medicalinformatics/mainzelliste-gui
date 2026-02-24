@@ -10,6 +10,7 @@ export class PatientList {
   constructor(
     public url: URL,
     public defaultLanguage: string,
+    public idConfigs: {[key:string]: IdConfig},
     public oAuthConfig?: OAuthConfig,
     public mainIdType?: string,
     public showAllIds?: boolean,
@@ -46,6 +47,12 @@ export interface OAuthConfig {
   url?: string;
   realm: string;
   clientId: string;
+}
+
+export interface IdConfig {
+  description: string;
+  linkTemplate: string;
+  idCopyTemplate: string;
 }
 
 export interface BetaFeatures {

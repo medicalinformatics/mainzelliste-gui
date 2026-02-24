@@ -7,7 +7,7 @@
 <!--                (click)="slideData(fields[externalId.idType], externalId.idString)">-->
           <mat-icon>arrow_circle_{{side}}</mat-icon>
         </button>
-        <mat-form-field [class]="getFieldClass()" subscriptSizing="dynamic">
+        <mat-form-field [class]="getFieldClass()" subscriptSizing="dynamic" hintLabel="{{getDescriptionForPseudonym(id)}}">
           <mat-label>{{id.idType}}</mat-label>
           <input style="width: 90%"
                  [(ngModel)]="id.idString" [name]="this.getFieldName(id)"
@@ -31,6 +31,14 @@
                     (click)="this.openRelatedDialog(id)">
               <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">hub</mat-icon>
             </button>
+            <a mat-icon-button *ngIf="readOnly && this.getExternalLink(id)"
+                    [ngStyle]="{'width': '24px', 'height': '24px'}"
+                    matTooltip="{{'patientPseudonyms.jump_to_mdat_system' | translate}}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="{{this.getExternalLink(id)}}">
+              <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">open_in_new</mat-icon>
+            </a>
           </span>
         </mat-form-field>
         <button *ngIf="!readOnly && (this.permittedOperation == 'C' || !this.isAssociatedIdType(id.idType))" mat-icon-button color="primary"

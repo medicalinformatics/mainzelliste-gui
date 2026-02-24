@@ -287,7 +287,8 @@
 	"info.audit_trail_text6": "werden im Audit-Trail aufgezeichnet. Dabei wird Zeitpunkt der Aktion aufgezeichnet und angegeben. Über den Folder-Symbol gelangt man zur ID-Card des Patienten für weitere Details über die Aktion.",
 
 	"patientPseudonyms.external": "Externe Pseudonyme:",
-  "patientPseudonyms.related_id_button": "Zugeordnete IDs anzeigen",
+    "patientPseudonyms.related_id_button": "Zugeordnete IDs anzeigen",
+    "patientPseudonyms.jump_to_mdat_system": "In das Dokumentationssystem springen",
 
 	"patientFields.error_value_text1": "Der Wert für das Feld",
 	"patientFields.error_value_text2": "ist ungültig",
