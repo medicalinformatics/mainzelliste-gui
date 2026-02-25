@@ -29,6 +29,7 @@
 	"button_okay": "Okay",
 	"button_publish": "Veröffentlichen",
   "button_create": "Erstellen",
+	"button_helper_consent_required": "(Erforderlich)",
 
 	"radio_button_yes": "Ja",
 	"radio_button_no": "Nein",

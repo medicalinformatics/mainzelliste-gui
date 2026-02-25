@@ -20,6 +20,7 @@ import {Consent} from "../../consent/consent.model";
 import {ConsentService} from "../../consent/consent.service";
 import {Permission} from "../../model/permission";
 import {Operation} from "../../model/tenant";
+import {AppConfigService} from '../../app-config.service';
 
 export interface IdTypSelection {
   idType: string,
@@ -67,7 +68,8 @@ export class CreatePatientComponent implements OnInit {
     private router: Router,
     private titleService: GlobalTitleService,
     public tentativeDialog: MatDialog,
-    public consentService: ConsentService
+    public consentService: ConsentService,
+    public appConfigService: AppConfigService
   ) {
     this.patientService = patientService;
     this.patientListService = patientListService;
@@ -223,7 +225,15 @@ export class CreatePatientComponent implements OnInit {
     let emptyFields = !Object.keys(this.patient.fields).length;
     let emptyIds = !this.patient.ids.some(id => id.idString.length > 0);
     let isIdsValid = patientForm.form.get('externalIds')?.valid ?? true;
-    return !emptyFields && !patientForm.form.valid || emptyFields && (emptyIds || !isIdsValid);
+    // consent is required & consent not set --> invalid
+    let consentValid = this.appConfigService.getConsentRequired()
+      ? this.consent !== undefined
+      : true;
+    return (
+      (!emptyFields && !patientForm.form.valid) ||
+      (emptyFields && (emptyIds || !isIdsValid)) ||
+      !consentValid
+    );
   }
 
   openConsentDialog() {

@@ -51,6 +51,10 @@
         <mat-icon>{{!consent ? 'add' : 'edit'}}</mat-icon>
         {{this.consent?.title || this.translate.instant('button_add_consent')}}
       </button>
+      <span *ngIf="this.appConfigService.getConsentRequired() && consent === undefined"
+        style="padding-left: 16px">
+        {{ this.translate.instant("button_helper_consent_required") }}
+      </span>
       <button *ngIf="consent" mat-icon-button color="primary"
               [matTooltip]="'button_delete_consent' | translate"
               (click)="this.deleteConsent()" style="float:left;">

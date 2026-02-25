@@ -29,6 +29,7 @@
 	"button_okay": "Okay",
 	"button_publish": "Publish",
   "button_create": "Create",
+	"button_helper_consent_required": "(Required)",
 	"radio_button_yes": "Yes",
 	"radio_button_no": "No",
 	"birth_date_text": "Date of Birth",

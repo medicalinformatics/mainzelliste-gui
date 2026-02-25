@@ -62,5 +62,6 @@ export interface BetaFeatures {
   showDomainsInIDCard?:boolean
   // NOTE: We expect a , separated string here
   requiredExternalIds?:string
+  patientConsentRequired?:boolean
 }
 
