@@ -91,6 +91,15 @@ function initializeAppFactory(
     .then(config => {
       from(keycloak.keycloakEvents$).subscribe(event => userAuthService.notifyKeycloakEvent(event));
       translate.setFallbackLang(config[0].defaultLanguage || "en-US");
+      let idConfigs = config[0].idConfigs;
+      if (idConfigs) {
+        for (const idType in idConfigs) {
+          for (const lang in idConfigs[idType].description) {
+            console.log(lang)
+            translate.set('patientPseudonyms.' + idType + '.description', idConfigs[idType].description[lang], lang);
+          }
+        }
+      }
       return firstValueFrom(translate.use(localStorageService.language))
         .then(() => keycloak.init({
           config: {

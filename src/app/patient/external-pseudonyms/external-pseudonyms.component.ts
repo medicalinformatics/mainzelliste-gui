@@ -162,10 +162,6 @@ export class ExternalPseudonymsComponent implements OnInit, OnChanges {
    fillTemplate(templateString: string, id: Id): string {
     return templateString?.replace('<idType>', id.idType)?.replace('<idString>', id.idString);
   }
-  
-  getDescriptionForPseudonym(id: Id): string {
-    return this.getIdConfig(id)?.description ?? '';
-  }
 
   getExternalLink(id: Id): string {
     let linkTemplate = this.getIdConfig(id)?.linkTemplate;

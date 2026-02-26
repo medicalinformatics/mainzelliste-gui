@@ -50,7 +50,7 @@ export interface OAuthConfig {
 }
 
 export interface IdConfig {
-  description: string;
+  description: {[key: string]: string};
   linkTemplate: string;
   idCopyTemplate: string;
 }

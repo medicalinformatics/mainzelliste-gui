@@ -101,10 +101,6 @@ export class PatientPseudonymsComponent{
     return templateString?.replace('<idType>', id.idType)?.replace('<idString>', id.idString);
   }
 
-  getDescriptionForPseudonym(id: Id): string {
-    return this.getIdConfig(id)?.description ?? '';
-  }
-
   getExternalLink(id: Id): string {
     let linkTemplate = this.getIdConfig(id)?.linkTemplate;
     return this.fillTemplate(linkTemplate, id);
