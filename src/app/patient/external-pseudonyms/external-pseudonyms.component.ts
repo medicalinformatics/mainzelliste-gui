@@ -42,10 +42,10 @@ export class ExternalPseudonymsComponent implements OnInit, OnChanges {
   }
 
     ngOnInit(): void {
-    // initialize required external ids
-    this.appConfigService.getRequiredExternalIds().map(requiredId => {
-      addIfNotExist(new Id(requiredId, ""), this.ids,
-        e => !this.isAssociatedIdType(requiredId) && e.idType == requiredId
+    // initialize promoted external ids
+    this.appConfigService.getPromotedExternalIds().map(promotedId => {
+      addIfNotExist(new Id(promotedId, ""), this.ids,
+        e => !this.isAssociatedIdType(promotedId) && e.idType == promotedId
       )
     });
   }
@@ -91,7 +91,7 @@ export class ExternalPseudonymsComponent implements OnInit, OnChanges {
         ...this.patientListService.getUniqueIdTypes(true, this.permittedOperation)
           .map(t => { return {
             idType: t,
-            added: this.appConfigService.getRequiredExternalIds().some(id => id = t),
+            added: this.appConfigService.getPromotedExternalIds().some(id => id = t),
             associated: false
           } }),
         ...this.patientListService.getAssociatedIdTypes(true, this.permittedOperation)
@@ -149,10 +149,6 @@ export class ExternalPseudonymsComponent implements OnInit, OnChanges {
 
   public getFieldClass(){
     return "inputField ml-field" + (this.readOnly ? " inputFieldDisabled" : "");
-  }
-
-  isRequired(idType: string) {
-    return this.appConfigService.getRequiredExternalIds().some(type => type === idType);
   }
 
   getIdConfig(id: Id): IdConfig {

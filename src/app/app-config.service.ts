@@ -33,8 +33,7 @@ export class AppConfigService {
   private configurationEnabled: boolean = false;
   private _showDomainsInIDCard: boolean = false;
   private consentTerminology!: ConsentTerminology;
-  // External IDs listed here are promoted in the add patient view, but not really required
-  private requiredExternalIds: string[] = [];
+  private promotedExternalIds: string[] = []; // promoted in the add patient view,
   private patientConsentRequired: boolean = false;
 
   constructor(
@@ -64,8 +63,8 @@ export class AppConfigService {
           this.configurationEnabled = this.data[0].betaFeatures?.configuration ?? false;
           this._showDomainsInIDCard = this.data[0].betaFeatures?.showDomainsInIDCard ?? false;
           this.patientConsentRequired = this.data[0].betaFeatures?.patientConsentRequired ?? false;
-          this.requiredExternalIds =
-              this.data[0].betaFeatures?.requiredExternalIds?.split(",") ?? [];
+          this.promotedExternalIds =
+              this.data[0].betaFeatures?.promotedExternalIds?.split(",") ?? [];
 
           if(!this.data[0].genderFieldValues || this.data[0].genderFieldValues.length == 0)
             this.data[0].genderFieldValues = PatientList.defaultFenderFieldValues
@@ -142,8 +141,8 @@ export class AppConfigService {
     return this.patientConsentRequired;
   }
 
-  getRequiredExternalIds(): string[] {
-    return this.requiredExternalIds;
+  getPromotedExternalIds(): string[] {
+    return this.promotedExternalIds;
   }
 
   getVersion(): string {
