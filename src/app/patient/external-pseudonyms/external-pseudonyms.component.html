@@ -7,7 +7,7 @@
 <!--                (click)="slideData(fields[externalId.idType], externalId.idString)">-->
           <mat-icon>arrow_circle_{{side}}</mat-icon>
         </button>
-        <mat-form-field [class]="getFieldClass()" subscriptSizing="dynamic" hintLabel="{{`patientPseudonyms.${id.idType}.description` | translate}}">
+        <mat-form-field [class]="getFieldClass()" subscriptSizing="dynamic" hintLabel="{{`patientPseudonymDescriptions.${id.idType}` | translate}}">
           <mat-label>{{id.idType}}</mat-label>
           <input style="width: 90%"
                  [(ngModel)]="id.idString" [name]="this.getFieldName(id)"

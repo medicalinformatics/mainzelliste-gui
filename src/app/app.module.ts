@@ -95,8 +95,7 @@ function initializeAppFactory(
       if (idConfigs) {
         for (const idType in idConfigs) {
           for (const lang in idConfigs[idType].description) {
-            console.log(lang)
-            translate.set('patientPseudonyms.' + idType + '.description', idConfigs[idType].description[lang], lang);
+            translate.set('patientPseudonymDescriptions.' + idType, idConfigs[idType].description[lang], lang);
           }
         }
       }
