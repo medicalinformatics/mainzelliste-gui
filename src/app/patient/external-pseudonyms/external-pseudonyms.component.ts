@@ -112,6 +112,10 @@ export class ExternalPseudonymsComponent implements OnInit, OnChanges {
     );
   }
 
+  isRequired(idType: string): boolean {
+    return this.appConfigService.getRequiredExternalIds().some(type => idType === type);
+  }
+
   isAssociatedIdType(idType: string){
     return this.getExternalIdTypes().some( t => t.idType == idType && t.associated)
   }

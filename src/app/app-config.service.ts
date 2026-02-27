@@ -33,7 +33,8 @@ export class AppConfigService {
   private configurationEnabled: boolean = false;
   private _showDomainsInIDCard: boolean = false;
   private consentTerminology!: ConsentTerminology;
-  private promotedExternalIds: string[] = []; // promoted in the add patient view,
+  private promotedExternalIds: string[] = []; // promoted in the add patient view
+  private requiredExternalIds: string[] = []; // actually required ID's
   private patientConsentRequired: boolean = false;
 
   constructor(
@@ -63,8 +64,22 @@ export class AppConfigService {
           this.configurationEnabled = this.data[0].betaFeatures?.configuration ?? false;
           this._showDomainsInIDCard = this.data[0].betaFeatures?.showDomainsInIDCard ?? false;
           this.patientConsentRequired = this.data[0].betaFeatures?.patientConsentRequired ?? false;
-          this.promotedExternalIds =
+          this.requiredExternalIds =
+              this.data[0].betaFeatures?.requiredExternalIds?.split(",") ?? [];
+          
+          /*
+          Every required external ID has to be also promoted,
+          i.e. there obviously has to be an input field for them,
+          although required ID's might not be entered in the promented ID list in the config.json.
+          */
+          let promotedExternalIds =
               this.data[0].betaFeatures?.promotedExternalIds?.split(",") ?? [];
+          for (const requiredExtId of this.requiredExternalIds) {
+            if (!promotedExternalIds.includes(requiredExtId)) {
+              promotedExternalIds.push(requiredExtId);
+            }
+          }
+          this.promotedExternalIds = promotedExternalIds;
 
           if(!this.data[0].genderFieldValues || this.data[0].genderFieldValues.length == 0)
             this.data[0].genderFieldValues = PatientList.defaultFenderFieldValues
@@ -143,6 +158,10 @@ export class AppConfigService {
 
   getPromotedExternalIds(): string[] {
     return this.promotedExternalIds;
+  }
+
+  getRequiredExternalIds(): string[] {
+    return this.requiredExternalIds;
   }
 
   getVersion(): string {

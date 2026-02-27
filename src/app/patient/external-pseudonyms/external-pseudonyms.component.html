@@ -12,7 +12,7 @@
           <input style="width: 90%"
                  [(ngModel)]="id.idString" [name]="this.getFieldName(id)"
                  matInput [readonly]="readOnly || this.permittedOperation != 'C' && this.isAssociatedIdType(id.idType)"
-                 value="{{id.idString}}">
+                 value="{{id.idString}}" [required]="this.isRequired(id.idType)">
           <span matSuffix style="display:flex; flex-flow: row; justify-content:flex-end;">
             <button mat-icon-button *ngIf="readOnly && this.config.isCopyIdEnabled()" [cdkCopyToClipboard]="id.idString"
                     class="mat-field-suffix-button"

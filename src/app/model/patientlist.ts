@@ -60,8 +60,9 @@ export interface BetaFeatures {
   copyId?: boolean
   configuration?:boolean
   showDomainsInIDCard?:boolean
-  // NOTE: We expect a , separated string here
+  // NOTE: We expect a , separated string for the following two properties
   promotedExternalIds?:string
+  requiredExternalIds?:string
   patientConsentRequired?:boolean
 }
 
