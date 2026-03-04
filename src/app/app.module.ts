@@ -47,7 +47,7 @@ import {ConsentModule} from "./consent/consent.module";
 import {MainLayoutModule} from "./main-layout/main-layout.module";
 import {PatientModule} from "./patient/patient.module";
 import {DirtyErrorStateMatcher} from "./patient/patient-fields/patient-fields.component";
-import {provideTranslateService, TranslateService} from '@ngx-translate/core';
+import {provideMissingTranslationHandler, provideTranslateService, TranslateService} from '@ngx-translate/core';
 import {AccessDeniedComponent} from './access-denied/access-denied.component';
 import {MatStepperModule} from '@angular/material/stepper';
 import {
@@ -78,6 +78,7 @@ import {
   ValidRelatedExternalIdsDirective
 } from "./shared/directives/valid-related-external-ids.directive";
 import {provideTranslateHttpLoader} from "@ngx-translate/http-loader";
+import { CustomMissingTranslationHandler } from './custom-missing-translation-handler';
 
 function initializeAppFactory(
     configService: AppConfigService,
@@ -189,7 +190,8 @@ function initializeAppFactory(
                 suffix: ".json"
             }),
             fallbackLang: "en-US",
-            lang: "en-US"
+            lang: "en-US",
+            missingTranslationHandler: provideMissingTranslationHandler(CustomMissingTranslationHandler)
         }),
         { provide: ErrorHandler, useClass: GlobalErrorHandler },
         { provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher },
