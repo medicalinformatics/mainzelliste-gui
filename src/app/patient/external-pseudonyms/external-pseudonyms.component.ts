@@ -43,7 +43,7 @@ export class ExternalPseudonymsComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
     // initialize promoted external ids
-    this.appConfigService.getPromotedExternalIds().map(promotedId => {
+    this.appConfigService.getPromotedExternalIdTypes().map(promotedId => {
       addIfNotExist(new Id(promotedId, ""), this.ids,
         e => !this.isAssociatedIdType(promotedId) && e.idType == promotedId
       )
@@ -91,7 +91,7 @@ export class ExternalPseudonymsComponent implements OnInit, OnChanges {
         ...this.patientListService.getUniqueIdTypes(true, this.permittedOperation)
           .map(t => { return {
             idType: t,
-            added: this.appConfigService.getPromotedExternalIds().some(id => id = t),
+            added: this.appConfigService.getPromotedExternalIdTypes().some(id => id = t),
             associated: false
           } }),
         ...this.patientListService.getAssociatedIdTypes(true, this.permittedOperation)
@@ -113,7 +113,7 @@ export class ExternalPseudonymsComponent implements OnInit, OnChanges {
   }
 
   isRequired(idType: string): boolean {
-    return this.appConfigService.getRequiredExternalIds().some(type => idType === type);
+    return this.appConfigService.getRequiredExternalIdTypes().some(type => idType === type);
   }
 
   isAssociatedIdType(idType: string){
