@@ -92,7 +92,8 @@
           <mat-form-field [class]="getFieldClass()" subscriptSizing="dynamic">
             <mat-label style="height: 24px;">Stadt</mat-label>
             <input style="width: 90%; " [readonly]="true" matInput (input)="fieldChanged()"
-                   [required]="true" [value]="cityControl.value"
+                   placeholder="wird automatisch anhand der PLZ ausgefüllt"
+                   [required]="true" [value]="cityControl.value" [disabled]="true"
                    [formControl]="cityControl">
           </mat-form-field>
         </div>

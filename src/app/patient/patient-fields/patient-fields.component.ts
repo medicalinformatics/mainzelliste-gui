@@ -41,7 +41,7 @@ export class PatientFieldsComponent implements OnInit {
   postalCodeControl = new FormControl('');
   cityControl = new FormControl('');
   options: string[] = ['One', 'Two', 'Three'];
-  filteredOptions: Observable<{postal_code: string, place_name: string}[]>;
+  filteredOptions: Observable<City[]>;
 
   constructor(
     public fieldService: FieldService,
@@ -62,16 +62,23 @@ export class PatientFieldsComponent implements OnInit {
         }
       })
     );
+    // based on Bing/Copilot suggestion for "angular autocomplete choose option automatically when only one is left"
+    // https://www.bing.com/search?pglt=163&q=angular+autocomplete+choose+option+automatically+when+only+one+is+left&cvid=62302ea78cce475f8450a554ee0b53d2&gs_lcrp=EgRlZGdlKgYIABBFGDkyBggAEEUYOTIHCAEQ6wcYQNIBCTMyNzk5ajBqMagCALACAQ&FORM=ANNTA1&PC=U531
+    this.filteredOptions.subscribe(opts => {
+      if (opts.length === 1) {
+        this.onCitySelected(opts[0]);
+      }
+    })
   }
 
-  private _fetchSuggestions(value: string): Observable<{postal_code: string, place_name: string}[]> {
+  private _fetchSuggestions(value: string): Observable<City[]> {
     const url = `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-postal-code/records/?limit=10&offset=0&where=country_code+like+%22DE%22+and+%28startswith%28place_name%2C+%22${value}%22%29+or+startswith%28postal_code%2C+%22${value}%22%29%29`;
     return this.http.get<any>(url).pipe(
       map(reply => reply.results),
     );
   }
 
-  onCitySelected(city: {postal_code: string, place_name: string}) {
+  onCitySelected(city: City) {
     this.postalCodeControl.setValue(city.postal_code);
     this.cityControl.setValue(city.place_name);
   }
@@ -124,4 +131,11 @@ export class DirtyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     return !!(control && control.invalid && (control.dirty || control.touched));
   }
+}
+
+class City {
+  postal_code = "";
+  place_name = "";
+  admin_name1 = "";
+  admin_name3 = "";
 }
