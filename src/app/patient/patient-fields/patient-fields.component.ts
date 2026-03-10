@@ -10,8 +10,11 @@ import {
   NgModel,
   ValidationErrors
 } from "@angular/forms";
+import {Observable, of} from 'rxjs';
+import {debounceTime, distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 import {ErrorStateMatcher} from "@angular/material/core";
 import {TranslateService} from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'app-patient-fields',
@@ -33,12 +36,44 @@ export class PatientFieldsComponent implements OnInit {
   @Input() side: string="none";
   localDateFormat: string;
 
+  // based on Bing copilot results for "angular forms suggestions based on fetch results" and "angular autocomplete set other field according to chosen option"
+  // https://www.bing.com/search?pglt=163&q=angular+autocomplete+set+other+field+according+to+chosen+option&cvid=519b8e2706cb4b7097532aac340cf153&gs_lcrp=EgRlZGdlKgYIABBFGDkyBggAEEUYOTIHCAEQ6wcYQNIBCTIzNjQyajBqMagCALACAA&FORM=ANNTA1&PC=U531
+  postalCodeControl = new FormControl('');
+  cityControl = new FormControl('');
+  options: string[] = ['One', 'Two', 'Three'];
+  filteredOptions: Observable<{postal_code: string, place_name: string}[]>;
+
   constructor(
     public fieldService: FieldService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private http: HttpClient
     ) {
     this.configuredFields = fieldService.getFields();
     this.localDateFormat = _moment().localeData().longDateFormat('L');
+
+    this.filteredOptions = this.postalCodeControl.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(value => {
+        if (value && (value.length >= 3)) {
+          return this._fetchSuggestions(value);
+        } else {
+          return of([]);
+        }
+      })
+    );
+  }
+
+  private _fetchSuggestions(value: string): Observable<{postal_code: string, place_name: string}[]> {
+    const url = `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-postal-code/records/?limit=10&offset=0&where=country_code+like+%22DE%22+and+%28startswith%28place_name%2C+%22${value}%22%29+or+startswith%28postal_code%2C+%22${value}%22%29%29`;
+    return this.http.get<any>(url).pipe(
+      map(reply => reply.results),
+    );
+  }
+
+  onCitySelected(city: {postal_code: string, place_name: string}) {
+    this.postalCodeControl.setValue(city.postal_code);
+    this.cityControl.setValue(city.place_name);
   }
 
   ngOnInit(): void {}
@@ -48,7 +83,7 @@ export class PatientFieldsComponent implements OnInit {
   }
 
   slideData(value: string, name: string): void{
-      this.slideFieldEvent.emit({value:value, name:name});
+    this.slideFieldEvent.emit({value:value, name:name});
   }
 
   public getFieldErrorMessage(fieldName: string, errors: ValidationErrors | null): string {

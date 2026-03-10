@@ -62,4 +62,40 @@
         </div>
       </td>
     </tr>
-  </table>
+    <tr>
+      <td>
+        <div style="width: 100%;" >
+          <button id="arrow" *ngIf="side!='none'" [ngStyle]="{float:side}">
+            <mat-icon>arrow_circle_{{side}}</mat-icon>
+          </button>      
+          <mat-form-field [class]="getFieldClass()" subscriptSizing="dynamic">
+            <mat-label style="height: 24px;">PLZ</mat-label>
+            <input style="width: 90%; " [readonly]="readOnly" matInput (input)="fieldChanged()"
+                   placeholder="PLZ oder Stadt eingeben"
+                   [required]="true"
+                   [formControl]="postalCodeControl" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="this.onCitySelected($event.option.value)">
+              @for (option of filteredOptions | async; track option) {
+                <mat-option [value]="option">{{option.postal_code}} {{option.place_name}}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div style="width: 100%;" >
+          <button id="arrow" *ngIf="side!='none'" [ngStyle]="{float:side}">
+            <mat-icon>arrow_circle_{{side}}</mat-icon>
+          </button>      
+          <mat-form-field [class]="getFieldClass()" subscriptSizing="dynamic">
+            <mat-label style="height: 24px;">Stadt</mat-label>
+            <input style="width: 90%; " [readonly]="true" matInput (input)="fieldChanged()"
+                   [required]="true" [value]="cityControl.value"
+                   [formControl]="cityControl">
+          </mat-form-field>
+        </div>
+      </td>
+    </tr>
+</table>
