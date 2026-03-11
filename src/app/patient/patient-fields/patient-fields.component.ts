@@ -39,7 +39,7 @@ export class PatientFieldsComponent implements OnInit {
   // based on Bing copilot results for "angular forms suggestions based on fetch results" and "angular autocomplete set other field according to chosen option"
   // https://www.bing.com/search?pglt=163&q=angular+autocomplete+set+other+field+according+to+chosen+option&cvid=519b8e2706cb4b7097532aac340cf153&gs_lcrp=EgRlZGdlKgYIABBFGDkyBggAEEUYOTIHCAEQ6wcYQNIBCTIzNjQyajBqMagCALACAA&FORM=ANNTA1&PC=U531
   postalCodeControl = new FormControl('');
-  cityControl = new FormControl('');
+  cityControl = new FormControl({value: '', disabled: true});
   options: string[] = ['One', 'Two', 'Three'];
   filteredOptions: Observable<City[]>;
 
@@ -72,7 +72,7 @@ export class PatientFieldsComponent implements OnInit {
   }
 
   private _fetchSuggestions(value: string): Observable<City[]> {
-    const url = `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-postal-code/records/?limit=10&offset=0&where=country_code+like+%22DE%22+and+%28startswith%28place_name%2C+%22${value}%22%29+or+startswith%28postal_code%2C+%22${value}%22%29%29`;
+    const url = `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-postal-code/records/?limit=10&where=country_code+like+%22DE%22+and+%28startswith%28place_name%2C+%22${value}%22%29+or+startswith%28postal_code%2C+%22${value}%22%29%29`;
     return this.http.get<any>(url).pipe(
       map(reply => reply.results),
     );
