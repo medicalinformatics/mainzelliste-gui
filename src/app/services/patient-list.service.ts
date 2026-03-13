@@ -8,7 +8,7 @@ import {ReadPatientsTokenData} from "../model/read-patients-token-data";
 import {AddPatientTokenData} from "../model/add-patient-token-data";
 import {EditPatientTokenData} from "../model/edit-patient-token-data";
 import {DeletePatientTokenData} from "../model/delete-patient-token-data";
-import {Field} from "../model/field";
+import {Field, FieldType} from "../model/field";
 import {DatePipe} from "@angular/common";
 import {catchError, filter, map, mergeMap, repeat, retry, take, takeWhile} from "rxjs/operators";
 import {firstValueFrom, lastValueFrom, Observable, of, throwError} from "rxjs";
@@ -625,8 +625,8 @@ export class PatientListService {
       return displayPatient;
     }
     for(const fieldConfig of this.patientList.fields) {
-      switch (fieldConfig.type+"") {
-        case "SEX": {
+      switch (fieldConfig.type) {
+        case FieldType.SEX: {
           if(patient.fields[fieldConfig.mainzellisteField] != undefined) {
             if(!convertDisplaySex){
               displayPatient.fields[fieldConfig.name] = patient.fields[fieldConfig.mainzellisteField];
@@ -638,7 +638,7 @@ export class PatientListService {
           }
           break;
         }
-        case "DATE": {
+        case FieldType.DATE: {
           let extractDate = (fieldNames: string[], fields: { [key: string]: any }, i: number, defaultValue: string): string =>
             fieldNames.length > i && fieldNames[i] ? fields[fieldNames[i]] : defaultValue;
           let day = extractDate(fieldConfig.mainzellisteFields, patient.fields,  0, "00");
@@ -662,8 +662,8 @@ export class PatientListService {
   private convertToPatientFields(fields: { [p: string]: string }, permittedFieldNames: Array<string>): { [p: string]: string } {
     let result: { [p: string]: string } = {};
     for(const fieldConfig of this.patientList.fields) {
-      switch (fieldConfig.type+"") {
-        case "DATE": {
+      switch (fieldConfig.type) {
+        case FieldType.DATE: {
           if(fields[fieldConfig.name] != undefined && fieldConfig.mainzellisteFields.every( c =>
             permittedFieldNames.some( p => p == c))) {
             let dateStr = new DatePipe('en-US').transform(fields[fieldConfig.name], 'dd.MM.yyyy') || "";
