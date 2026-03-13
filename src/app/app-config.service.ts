@@ -5,7 +5,7 @@ import {AppConfig} from "./app-config";
 import {catchError, map} from "rxjs/operators";
 import {firstValueFrom, lastValueFrom, throwError} from "rxjs";
 import {MainzellisteField, MainzellisteFieldType} from "./model/mainzelliste-field";
-import {Field, FieldType} from "./model/field";
+import {Field, FieldType, SemanticType} from "./model/field";
 import {MainzellisteUnknownError} from './model/mainzelliste-unknown-error';
 import {TranslateService} from '@ngx-translate/core';
 import {ClaimsConfig} from "./model/api/configuration-claims-data";
@@ -296,8 +296,14 @@ export class AppConfigService {
     if(!isDateType) {
       if(['sex', 'gender', 'geschlecht'].includes(mlField.name.toLowerCase())){
         configuredField.type = FieldType.SEX;
-      } else if (mlField.type == MainzellisteFieldType.PlainTextField)
-        configuredField.type = FieldType.TEXT
+      } else if (mlField.type == MainzellisteFieldType.PlainTextField) {
+        if (configuredField.semantic == SemanticType.POSTAL_CODE)
+          configuredField.type = FieldType.POSTAL_CODE;
+        else if (configuredField.semantic == SemanticType.CITY)
+          configuredField.type = FieldType.CITY;
+        else
+          configuredField.type = FieldType.TEXT;
+      }
       else if (mlField.type == MainzellisteFieldType.IntegerField) {
         configuredField.type = FieldType.NUMBER;
       }

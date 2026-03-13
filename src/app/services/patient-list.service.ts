@@ -638,12 +638,6 @@ export class PatientListService {
           }
           break;
         }
-        case "TEXT":{
-          if(patient.fields[fieldConfig.mainzellisteField] != undefined) {
-            displayPatient.fields[fieldConfig.name] = patient.fields[fieldConfig.mainzellisteField];
-          }
-          break;
-        }
         case "DATE": {
           let extractDate = (fieldNames: string[], fields: { [key: string]: any }, i: number, defaultValue: string): string =>
             fieldNames.length > i && fieldNames[i] ? fields[fieldNames[i]] : defaultValue;
@@ -652,6 +646,12 @@ export class PatientListService {
           let year = extractDate(fieldConfig.mainzellisteFields, patient.fields, 2, "0000");
           let date = `${year}-${month}-${day}`;
           displayPatient.fields[fieldConfig.name] = convertDateToLocal ? _moment(date, "YYYY-MM-DD").format('L') : date;
+          break;
+        }
+        default:{
+          if(patient.fields[fieldConfig.mainzellisteField] != undefined) {
+            displayPatient.fields[fieldConfig.name] = patient.fields[fieldConfig.mainzellisteField];
+          }
           break;
         }
       }
@@ -663,19 +663,18 @@ export class PatientListService {
     let result: { [p: string]: string } = {};
     for(const fieldConfig of this.patientList.fields) {
       switch (fieldConfig.type+"") {
-        case "SEX":
-        case "TEXT":{
-          if(fields[fieldConfig.name] != undefined && permittedFieldNames.some( p => p == fieldConfig.mainzellisteField)) {
-            result[fieldConfig.mainzellisteField] = fields[fieldConfig.name];
-          }
-          break;
-        }
         case "DATE": {
           if(fields[fieldConfig.name] != undefined && fieldConfig.mainzellisteFields.every( c =>
             permittedFieldNames.some( p => p == c))) {
             let dateStr = new DatePipe('en-US').transform(fields[fieldConfig.name], 'dd.MM.yyyy') || "";
             const dateFields = dateStr.split('.');
             fieldConfig.mainzellisteFields.forEach((n,i) => result[n] = dateFields[i]);
+          }
+          break;
+        }
+        default:{
+          if(fields[fieldConfig.name] != undefined && permittedFieldNames.some( p => p == fieldConfig.mainzellisteField)) {
+            result[fieldConfig.mainzellisteField] = fields[fieldConfig.name];
           }
           break;
         }

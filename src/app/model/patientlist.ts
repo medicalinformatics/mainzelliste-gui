@@ -20,8 +20,8 @@ export class PatientList {
       new Field("birth_name_text", "Geburtsname", "geburtsname", [], SemanticType.BIRTH_NAME , FieldType.TEXT, true, "", "falls vorhanden"),
       new Field("birth_date_text", "Geburtdatum", "", ["geburtstag", "geburtsmonat", "geburtsjahr"], SemanticType.UNDEFINED , FieldType.DATE, true, "", "00.00.0000"),
       new Field("sex_text", "Geschlecht", "sex", [], SemanticType.SEX, FieldType.SEX, false, "", "Geschlecht"),
-      new Field("residence_text", "Wohnort", "ort", [], SemanticType.CITY, FieldType.TEXT, true, "", "Musterstadt"),
-      new Field("zip_code_text", "PLZ", "plz", [], SemanticType.POSTAL_CODE, FieldType.TEXT, true, "", "mind. 5 Zeichen")
+      new Field("residence_text", "Wohnort", "ort", [], SemanticType.CITY, FieldType.CITY, true, "", "Musterstadt"),
+      new Field("zip_code_text", "PLZ", "plz", [], SemanticType.POSTAL_CODE, FieldType.POSTAL_CODE, true, "", "mind. 5 Zeichen")
     ],
     public genderFieldValues: GenderValue[] = PatientList.defaultFenderFieldValues,
     public layout?: Layout,

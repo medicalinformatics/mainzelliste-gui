@@ -10,8 +10,6 @@ import {
   NgModel,
   ValidationErrors
 } from "@angular/forms";
-import {Observable, of} from 'rxjs';
-import {debounceTime, distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 import {ErrorStateMatcher} from "@angular/material/core";
 import {TranslateService} from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
@@ -36,12 +34,15 @@ export class PatientFieldsComponent implements OnInit {
   @Input() side: string="none";
   localDateFormat: string;
 
-  // based on Bing copilot results for "angular forms suggestions based on fetch results" and "angular autocomplete set other field according to chosen option"
-  // https://www.bing.com/search?pglt=163&q=angular+autocomplete+set+other+field+according+to+chosen+option&cvid=519b8e2706cb4b7097532aac340cf153&gs_lcrp=EgRlZGdlKgYIABBFGDkyBggAEEUYOTIHCAEQ6wcYQNIBCTIzNjQyajBqMagCALACAA&FORM=ANNTA1&PC=U531
-  postalCodeControl = new FormControl('');
-  cityControl = new FormControl({value: '', disabled: true});
-  options: string[] = ['One', 'Two', 'Three'];
-  filteredOptions: Observable<City[]>;
+  /*
+  postal code autocompletion was implemented based on Bing Copilot results:
+  - suggestion for "angular autocomplete choose option automatically when only one is left":
+    https://www.bing.com/search?pglt=163&q=angular+autocomplete+choose+option+automatically+when+only+one+is+left&cvid=62302ea78cce475f8450a554ee0b53d2&gs_lcrp=EgRlZGdlKgYIABBFGDkyBggAEEUYOTIHCAEQ6wcYQNIBCTMyNzk5ajBqMagCALACAQ&FORM=ANNTA1&PC=U531
+  - suggestion for "angular forms suggestions based on fetch results" and "angular autocomplete set other field according to chosen option"
+    https://www.bing.com/search?pglt=163&q=angular+autocomplete+set+other+field+according+to+chosen+option&cvid=519b8e2706cb4b7097532aac340cf153&gs_lcrp=EgRlZGdlKgYIABBFGDkyBggAEEUYOTIHCAEQ6wcYQNIBCTIzNjQyajBqMagCALACAA&FORM=ANNTA1&PC=U531
+  -
+  */
+  filteredOptions: City[] = [];
 
   constructor(
     public fieldService: FieldService,
@@ -50,37 +51,24 @@ export class PatientFieldsComponent implements OnInit {
     ) {
     this.configuredFields = fieldService.getFields();
     this.localDateFormat = _moment().localeData().longDateFormat('L');
-
-    this.filteredOptions = this.postalCodeControl.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap(value => {
-        if (value && (value.length >= 3)) {
-          return this._fetchSuggestions(value);
-        } else {
-          return of([]);
-        }
-      })
-    );
-    // based on Bing/Copilot suggestion for "angular autocomplete choose option automatically when only one is left"
-    // https://www.bing.com/search?pglt=163&q=angular+autocomplete+choose+option+automatically+when+only+one+is+left&cvid=62302ea78cce475f8450a554ee0b53d2&gs_lcrp=EgRlZGdlKgYIABBFGDkyBggAEEUYOTIHCAEQ6wcYQNIBCTMyNzk5ajBqMagCALACAQ&FORM=ANNTA1&PC=U531
-    this.filteredOptions.subscribe(opts => {
-      if (opts.length === 1) {
-        this.onCitySelected(opts[0]);
-      }
-    })
   }
 
-  private _fetchSuggestions(value: string): Observable<City[]> {
-    const url = `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-postal-code/records/?limit=10&where=country_code+like+%22DE%22+and+%28startswith%28place_name%2C+%22${value}%22%29+or+startswith%28postal_code%2C+%22${value}%22%29%29`;
-    return this.http.get<any>(url).pipe(
-      map(reply => reply.results),
-    );
+  updateOptions(value: string) {
+    console.log(this.fields);
+    if (typeof value === 'string' && value.length >= 3) {
+      const url = `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-postal-code/records/?limit=10&where=country_code+like+%22DE%22+and+%28startswith%28place_name%2C+%22${value}%22%29+or+startswith%28postal_code%2C+%22${value}%22%29%29`;
+      this.http.get<any>(url).subscribe(reply => {
+        this.filteredOptions = reply.results;
+        if (this.filteredOptions.length === 1)
+          this.onCitySelected(this.filteredOptions[0]);
+      })
+    }
   }
 
   onCitySelected(city: City) {
-    this.postalCodeControl.setValue(city.postal_code);
-    this.cityControl.setValue(city.place_name);
+    this.fields['PLZ'] = city.postal_code;
+    this.fields['Wohnort'] = city.place_name;
+    this.fieldChanged();
   }
 
   ngOnInit(): void {}
@@ -134,8 +122,14 @@ export class DirtyErrorStateMatcher implements ErrorStateMatcher {
 }
 
 class City {
+  /*
+  records from geodata-postal-code have more entries,
+  see https://public.opendatasoft.com/explore/assets/geonames-postal-code/view/?page=1
+  Yet this are all that seem reasonable useful for our application.
+  */
   postal_code = "";
-  place_name = "";
-  admin_name1 = "";
-  admin_name3 = "";
+  place_name = "";    // name of municipality (city) or of instition with own postal code (Postgroßempfänger, at least in Germany)
+  country_code = "";  // two-letter ISO country code, DE for Germany
+  admin_name1 = "";   // correspondes to state (Bundesland in Germany), not given in all countries
+  admin_name3 = "";   // correspondes to county (Kreis or kreisfreie Stadt/Stadtkreis in Germany), not given in all countries
 }
