@@ -10,6 +10,7 @@ import { NgIf, NgFor } from '@angular/common';
 import { MatButton } from '@angular/material/button';
 import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
+import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
 
 @Component({
     selector: 'app-user-menu',
@@ -52,7 +53,12 @@ export class UserMenuComponent {
 
   setTenant(tenantId: string){
     this.authorizationService.currentTenantId = tenantId;
-    this.router.navigate([`/patientlist`]).then();
+    this.reloadPage();
+  }
+
+  reloadPage() {
+    this.router.navigateByUrl('/', { skipLocationChange: true })
+    .then(() => this.router.navigate([this.router.url]));
   }
 
   getCurrentTenant() {
