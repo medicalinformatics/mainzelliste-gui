@@ -54,7 +54,6 @@ export class PatientFieldsComponent implements OnInit {
   }
 
   updateOptions(value: string) {
-    console.log(this.fields);
     if (typeof value === 'string' && value.length >= 3) {
       const url = `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-postal-code/records/?limit=10&where=country_code+like+%22DE%22+and+%28startswith%28place_name%2C+%22${value}%22%29+or+startswith%28postal_code%2C+%22${value}%22%29%29`;
       this.http.get<any>(url).subscribe(reply => {
