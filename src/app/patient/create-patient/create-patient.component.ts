@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Patient} from "../../model/patient";
 import {PatientService} from "../../services/patient.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl, NgForm} from "@angular/forms";
 import {PatientListService} from "../../services/patient-list.service";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
@@ -57,6 +57,7 @@ export class CreatePatientComponent implements OnInit {
 
   externalIdTypes: IdTypSelection[] = [];
   public creatingInProgress: boolean = false;
+  newLayout = false;
 
   constructor(
     public translate: TranslateService,
@@ -65,6 +66,7 @@ export class CreatePatientComponent implements OnInit {
     patientListService: PatientListService,
     userAuthService : UserAuthService,
     public errorNotificationService: ErrorNotificationService,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private titleService: GlobalTitleService,
     public tentativeDialog: MatDialog,
@@ -75,6 +77,10 @@ export class CreatePatientComponent implements OnInit {
     this.patientListService = patientListService;
     this.userAuthService = userAuthService;
     this.changeTitle();
+
+    this.activatedRoute.queryParamMap.subscribe((queryParams) => {
+      this.newLayout = (queryParams.get('showConsent') == "true");
+    })
   }
 
   changeTitle() {
@@ -255,6 +261,17 @@ export class CreatePatientComponent implements OnInit {
 
   deleteConsent() {
     this.consent = undefined;
+  }
+
+  getStyle() {
+    if (this.newLayout)
+      return 'display: flex; flex-flow: row; justify-content: space-around; align-items: stretch; column-gap: 14px';
+    else
+      return '';
+  }
+
+  changeConsent(consent: Consent) {
+    this.consent = consent;
   }
 }
 

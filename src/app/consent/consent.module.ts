@@ -49,6 +49,9 @@ import {
     EditorComponent,
     EmptyConsentTemplateValidityPeriodDirective
   ],
+  exports: [
+    ConsentDetailComponent
+  ],
   declarations: [
     ConsentDetailComponent,
     ConsentDialogComponent,

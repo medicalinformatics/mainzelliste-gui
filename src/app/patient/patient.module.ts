@@ -24,6 +24,7 @@ import {
   ShowRelatedIdDialog
 } from './patient-pseudonyms/dialogs/show-related-id-dialog/show-related-id-dialog.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { ConsentModule } from '../consent/consent.module';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     ClipboardModule,
     RouterModule,
     ScrollingModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    ConsentModule
   ],
   exports: [
     PatientFieldsComponent,
