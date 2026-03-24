@@ -41,3 +41,9 @@ mat-card{
   background-color: #053E6A;
   box-shadow: 1px 10px 10px rgba(0, 0, 0, .4);
 }
+
+@media (max-width: 1000px) {
+  .sidenav-menu {
+    display: none;
+  }
+}
