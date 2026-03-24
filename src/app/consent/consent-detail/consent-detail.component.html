@@ -1,7 +1,7 @@
 <div *ngIf="!readOnly && !consentLoaded">
   <h4>{{'consentDetail.select_consent_template' | translate}}</h4>
   <div>
-    <mat-form-field style="width: 500px">
+    <mat-form-field style="width: 100%; max-width: 500px;">
       <mat-label>{{'consentDetail.consent_template' | translate}}</mat-label>
       <mat-select #templateSelection
                   (selectionChange)="initDataModel($event)"

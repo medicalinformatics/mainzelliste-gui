@@ -1,6 +1,6 @@
 <form #patientForm="ngForm">
-  <div style="height:100%; width:100%" [style]="getStyle()">
-    <div style=" width: 50%">
+  <div style="height:100%; width:100%" [style]="getPageStyle()">
+    <div style="width: 50%;">
       <h4>{{'createPatient.enter_patient_data' | translate}}</h4>
       <app-patient-fields (fieldEvent)="fieldsChanged($event)"
                           [fields]="patient.fields"></app-patient-fields>
@@ -44,14 +44,16 @@
         </mat-form-field>
       </div>
     </div>
-    <div *appHasPermission="Permission.CREATE_CONSENT" style="width: 90%; max-width: 700px;
-      display: flex; align-items: center; margin-bottom: 40px;" [style]="getStyle()">
-      @if (this.newLayout) {
+    @if (this.newLayout) {
+      <div style="width: fit-content; min-width: 50%; height: 80vh; overflow-y: auto; position: sticky; top: 0; flex-flow: column;">
         <app-consent-detail (consentChange)="changeConsent($event)"
                         [readOnly]="false"
                         [submitting]="false">
         </app-consent-detail>
-      } @else {
+      </div>
+    } @else {
+      <div *appHasPermission="Permission.CREATE_CONSENT" style="width: 90%; max-width: 700px;
+        display: flex; align-items: center; margin-bottom: 40px;">
         <button style="float: left; margin-right: 0;" mat-raised-button
                 (click)="openConsentDialog()">
           <mat-icon>{{!consent ? 'add' : 'edit'}}</mat-icon>
@@ -66,8 +68,8 @@
                 (click)="this.deleteConsent()" style="float:left;">
           <mat-icon>delete</mat-icon>
         </button>
-      }
-    </div>
+        </div>
+    }
   </div>
   <br>
   <div style="width: 90%; max-width: 700px;">

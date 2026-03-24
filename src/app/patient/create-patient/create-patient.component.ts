@@ -263,7 +263,7 @@ export class CreatePatientComponent implements OnInit {
     this.consent = undefined;
   }
 
-  getStyle() {
+  getPageStyle() {
     if (this.newLayout)
       return 'display: flex; flex-flow: row; justify-content: space-around; align-items: stretch; column-gap: 14px';
     else
