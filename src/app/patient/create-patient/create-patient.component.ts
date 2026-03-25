@@ -2,35 +2,56 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Patient} from "../../model/patient";
 import {PatientService} from "../../services/patient.service";
 import {Router} from "@angular/router";
-import { FormControl, NgForm, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import {FormControl, FormsModule, NgForm, ReactiveFormsModule} from "@angular/forms";
 import {PatientListService} from "../../services/patient-list.service";
-import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger, MatAutocomplete } from "@angular/material/autocomplete";
-import { MatChipInputEvent, MatChipGrid, MatChipRow, MatChipRemove, MatChipInput } from "@angular/material/chips";
+import {
+  MatAutocomplete,
+  MatAutocompleteSelectedEvent,
+  MatAutocompleteTrigger
+} from "@angular/material/autocomplete";
+import {
+  MatChipGrid,
+  MatChipInput,
+  MatChipInputEvent,
+  MatChipRemove,
+  MatChipRow
+} from "@angular/material/chips";
 import {ErrorNotificationService} from "../../services/error-notification.service";
 import {GlobalTitleService} from "../../services/global-title.service";
 import {Observable, of, retry} from "rxjs";
 import {concatMap, map, mergeMap, startWith} from "rxjs/operators";
-import { MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from "@angular/material/dialog";
+import {
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle
+} from "@angular/material/dialog";
 import {MainzellisteError} from "../../model/mainzelliste-error.model";
 import {ErrorMessages} from "../../error/error-messages";
 import {UserAuthService} from "../../services/user-auth.service";
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../../consent/consent-dialog/consent-dialog.component";
 import {Consent} from "../../consent/consent.model";
 import {ConsentService} from "../../consent/consent.service";
 import {Permission} from "../../model/permission";
 import {Operation} from "../../model/tenant";
-import { PatientFieldsComponent } from '../patient-fields/patient-fields.component';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
-import { ExternalPseudonymsComponent } from '../external-pseudonyms/external-pseudonyms.component';
-import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
-import { MatOption } from '@angular/material/select';
-import { HasPermissionDirective } from '../../shared/directives/has-permission.directive';
-import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatTooltip } from '@angular/material/tooltip';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { CdkScrollable } from '@angular/cdk/scrolling';
+import {AsyncPipe, NgFor, NgIf} from '@angular/common';
+import {MatButton, MatIconButton} from '@angular/material/button';
+import {FieldService} from "../../services/field.service";
+import _moment from "moment/moment";
+import {Field, FieldType, SemanticType} from "../../model/field";
+import {SexFieldComponent} from "../fields/sex-field/sex-field.component";
+import {TextFieldComponent} from "../fields/text-field/text-field.component";
+import {DateFieldComponent} from "../fields/date-field/date-field.component";
+import {ExternalPseudonymsComponent} from "../external-pseudonyms/external-pseudonyms.component";
+import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatIcon} from "@angular/material/icon";
+import {MatOption} from "@angular/material/select";
+import {HasPermissionDirective} from "../../shared/directives/has-permission.directive";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
 
 export interface IdTypSelection {
   idType: string,
@@ -42,13 +63,18 @@ export interface IdTypSelection {
     selector: 'app-create-patient',
     templateUrl: './create-patient.component.html',
     styleUrls: ['./create-patient.component.css'],
-    imports: [FormsModule, PatientFieldsComponent, NgIf, ExternalPseudonymsComponent, MatFormField, MatLabel, MatChipGrid, NgFor, MatChipRow, MatChipRemove, MatIcon, MatChipInput, MatAutocompleteTrigger, ReactiveFormsModule, MatError, MatAutocomplete, MatOption, HasPermissionDirective, MatButton, MatIconButton, MatTooltip, MatProgressSpinner, AsyncPipe, TranslatePipe]
+  imports: [FormsModule, NgIf, ExternalPseudonymsComponent, MatFormField,
+    MatLabel, MatChipGrid, NgFor, MatChipRow, MatChipRemove, MatIcon, MatChipInput, MatAutocompleteTrigger,
+    ReactiveFormsModule, MatError, MatAutocomplete, MatOption, HasPermissionDirective, MatButton,
+    MatIconButton, MatTooltip, MatProgressSpinner, AsyncPipe, TranslatePipe, TextFieldComponent, SexFieldComponent, DateFieldComponent]
 })
 export class CreatePatientComponent implements OnInit {
-  public readonly Permission = Permission;
+  protected readonly Permission = Permission;
+  protected readonly SemanticType = SemanticType;
+  protected readonly FieldType = FieldType;
+
   @Input() fields: Array<string> = [];
 
-  externalIdTypesFormControl = new FormControl('');
   @ViewChild('chipList') chipList!: MatChipGrid;
 
   patient: Patient = new Patient();
@@ -63,10 +89,11 @@ export class CreatePatientComponent implements OnInit {
   /** autocomplete data model */
   filteredInternalIdTypes: Observable<IdTypSelection[]> = of([]);
   chipListInputCtrl = new FormControl();
-  chipListInputData: string = "";
-
-  externalIdTypes: IdTypSelection[] = [];
   public creatingInProgress: boolean = false;
+
+  semanticFields: {[key: string]: Field};
+  nonSemanticFields: Field[];
+  localDateFormat: string;
 
   constructor(
     public translate: TranslateService,
@@ -78,16 +105,20 @@ export class CreatePatientComponent implements OnInit {
     private router: Router,
     private titleService: GlobalTitleService,
     public tentativeDialog: MatDialog,
+    public fieldService: FieldService,
     public consentService: ConsentService
   ) {
     this.patientService = patientService;
     this.patientListService = patientListService;
     this.userAuthService = userAuthService;
+    this.semanticFields = fieldService.getSemanticFields();
+    this.nonSemanticFields = this.fieldService.getFields().filter(f => f.semantic == SemanticType.UNDEFINED)
+    this.localDateFormat = _moment().localeData().longDateFormat('L');
     this.changeTitle();
   }
 
   changeTitle() {
-    this.titleService.setTitle(this.translate.instant('createPatient.request_personal_identifier'));
+    this.titleService.setTitle(this.translate.instant('createPatient.title'), false, "person_add_alt");
   }
 
   ngOnInit(): void {
@@ -116,6 +147,14 @@ export class CreatePatientComponent implements OnInit {
     this.translate.onLangChange.subscribe(() => {
       this.changeTitle();
     })
+  }
+
+  public hasField(semantic: SemanticType):boolean {
+    return this.semanticFields[semantic.valueOf()] != undefined;
+  }
+
+  public getFieldName(semantic: SemanticType): string {
+    return this.semanticFields[semantic.valueOf()].name;
   }
 
   createNewPatient(sureness: boolean) {
@@ -162,10 +201,6 @@ export class CreatePatientComponent implements OnInit {
       this.creatingInProgress = false;
       this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
     })
-  }
-
-  fieldsChanged(newFields: { [p: string]: any }) {
-    this.patient.fields = newFields;
   }
 
   selectedInternalIdType(event: MatAutocompleteSelectedEvent): void {
@@ -262,7 +297,7 @@ export class CreatePatientComponent implements OnInit {
 @Component({
     selector: 'create-patient-tentative-dialog',
     templateUrl: 'create-patient-tentative-dialog.html',
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatDialogActions, MatButton, MatDialogClose, TranslatePipe]
+  imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatButton, MatDialogClose, TranslatePipe]
 })
 export class CreatePatientTentativeDialog {
   constructor(

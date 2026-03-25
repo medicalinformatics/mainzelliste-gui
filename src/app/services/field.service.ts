@@ -19,6 +19,10 @@ export class FieldService {
     return this.fields;
   }
 
+  getSemanticFields(): {[key: string]: Field} {
+    return Object.fromEntries( this.fields.map( f => [f.semantic.valueOf(), f]));
+  }
+
   getGenderFieldValues(): GenderValue[] {
     return this.genderFieldValues;
   }

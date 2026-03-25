@@ -8,7 +8,9 @@ export enum SemanticType{
   FIRSTNAME = "firstname",
   LASTNAME = "lastname",
   BIRTH_NAME = "birthName",
+  BIRTHDAY = "birthday",
   SEX = "sex",
+  STREET = "street",
   POSTAL_CODE = "postalCode",
   CITY = "city",
   UNDEFINED = "undefined"

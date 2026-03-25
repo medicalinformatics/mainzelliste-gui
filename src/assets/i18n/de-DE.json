@@ -177,13 +177,19 @@
 	"session.menu_language": "Sprache",
 	"session.menu_logout": "Ausloggen",
 
+  "createPatient.title": "Neuer Patient anmelden",
 	"createPatient.request_personal_identifier": "Personenidentifikator anfordern",
-	"createPatient.enter_patient_data": "Patientendaten eingeben:",
-	"createPatient.add_pseudonym_type": "Pseudonymtyp hinzufügen:",
+	"createPatient.patient_data": "Personendaten",
+  "createPatient.contact_data": "Kontaktdaten",
+  "createPatient.external_pseudonyms": "Externe Identifikatoren",
+  "createPatient.select_external_id": "Externe Identifikator hinzufügen",
+  "createPatient.add_pseudonym_type": "Zu generierende Pseudonyme",
 	"createPatient.pseudonym_types": "Pseudonym-Typen",
+  "createPatient.select_pseudonym": "Pseudonymtyp auswählen",
 	"createPatient.no_pseudonym_type_error": "Die Eingabe des Pseudonymtyps ist erforderlich",
-	"createPatient.add_external_pseudonym": "Externes Pseudonym hinzufügen:",
 	"createPatient.pseudonym_type": "Pseudonymtyp",
+  "createPatient.consents": "Einwilligung",
+  "createPatient.submit_button": "Patient anmelden",
 
 	"consentDialog.title_consent": "Angaben zur Einwilligung",
 
