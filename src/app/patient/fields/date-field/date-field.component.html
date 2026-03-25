@@ -1,0 +1,15 @@
+<mat-form-field class="ml-field"
+                appearance="outline"
+                subscriptSizing="dynamic"
+>
+  <mat-label>{{ field.i18n | translate }}</mat-label>
+  <input matInput
+         [matDatepicker]="picker"
+         [required]="field.required"
+         placeholder="{{field.hint}} {{localDateFormat}}"
+         [(ngModel)]="data"
+         [name]="field.name"
+         #dateField="ngModel">
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>

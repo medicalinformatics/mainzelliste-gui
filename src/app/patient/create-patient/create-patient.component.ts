@@ -153,6 +153,10 @@ export class CreatePatientComponent implements OnInit {
     return this.semanticFields[semantic.valueOf()] != undefined;
   }
 
+  public hasAnyFields(semantics: SemanticType[]):boolean {
+    return Object.entries(this.semanticFields).some(([k,v]) => semantics.some( s => s.valueOf() == k.valueOf()));
+  }
+
   public getFieldName(semantic: SemanticType): string {
     return this.semanticFields[semantic.valueOf()].name;
   }

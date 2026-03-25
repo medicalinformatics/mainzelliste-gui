@@ -1,6 +1,8 @@
 <form #patientForm="ngForm">
   <div style=" width: 500px">
     <!-- personal Info. -->
+    @if (this.hasAnyFields([SemanticType.FIRSTNAME, SemanticType.LASTNAME, SemanticType.BIRTH_NAME,
+      SemanticType.BIRTHDAY, SemanticType.SEX]) || nonSemanticFields.length > 0) {
     <div>
       <h4 style="color: #063d6c">{{ 'createPatient.patient_data' | translate }}</h4>
       <div style="display: flex; width: 100%; column-gap: 15px;">
@@ -58,7 +60,9 @@
       }
       <br>
     </div>
+    }
     <!-- contact Info. -->
+    @if (this.hasAnyFields([SemanticType.STREET, SemanticType.POSTAL_CODE, SemanticType.CITY])) {
     <div>
       <h4 style="color: #063d6c">{{ 'createPatient.contact_data' | translate }}</h4>
       <div>
@@ -88,6 +92,7 @@
       </div>
       <br>
     </div>
+    }
     <!-- external IDs -->
     <div *ngIf="this.getExternalIdTypes('C').length > 0" style="max-width: 700px;">
       <h4 style="color: #063d6c">{{'createPatient.external_pseudonyms' | translate}}</h4>
