@@ -16,10 +16,12 @@
       <div style="display: flex; flex-direction: column; height: 100%; position: absolute; width: 100%;">
         <div style="display: flex; flex-flow: column; padding: 30px 2% 5% 2%; flex-shrink: 1; flex-grow: 1;">
           <div class="title" *ngIf="this.titleService.titleText.length > 0">
-            <h1>
+            <h1 style="display: flex;align-items: center;">
               <mat-icon *ngIf="titleService.titleIcon != undefined"
-                        style="transform: scale(1.5); margin-right: 0.5em;">{{this.titleService.titleIcon}}</mat-icon>
-              {{this.titleService.titleText}}</h1>
+                        style="transform: scale(1.5); margin-right: 0.5em;">
+                {{this.titleService.titleIcon}}</mat-icon>
+              <span>{{this.titleService.titleText}}</span>
+            </h1>
           </div>
           <app-error-card [(messages)]="errorNotificationService.messages"></app-error-card>
           <div style="flex: 1 1 auto; height: 100%">
