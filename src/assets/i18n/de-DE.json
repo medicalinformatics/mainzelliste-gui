@@ -380,9 +380,6 @@
   	"page_not_found.title": "Seite nicht gefunden",
   	"page_not_found.message": "Die gesuchte Seite konnte nicht gefunden werden",
 
-  "page_not_found.title": "Seite nicht gefunden",
-  "page_not_found.message": "Die gesuchte Seite konnte nicht gefunden werden",
-
 	"patientlistView.title": "Patientenliste",
 
 	"newIdDialog.mat_title": "Neue ID generieren",
