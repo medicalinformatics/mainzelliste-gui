@@ -39,6 +39,7 @@
   "last_name_text": "Last name",
   "sex_text": "Sex",
 	"street_text": "Street",
+	"house_number_text": "House number",
 	"residence_text": "Residence",
 	"zip_code_text": "ZIP code",
 	"phone_number_text": "Phone number",

@@ -13,6 +13,7 @@ import {
 import {ErrorStateMatcher} from "@angular/material/core";
 import {TranslateService} from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
+import { AppConfigService } from 'src/app/app-config.service';
 
 @Component({
     selector: 'app-patient-fields',
@@ -35,17 +36,15 @@ export class PatientFieldsComponent implements OnInit {
   localDateFormat: string;
 
   /*
-  postal code autocompletion was implemented based on Bing Copilot results:
-  - suggestion for "angular autocomplete choose option automatically when only one is left":
-    https://www.bing.com/search?pglt=163&q=angular+autocomplete+choose+option+automatically+when+only+one+is+left&cvid=62302ea78cce475f8450a554ee0b53d2&gs_lcrp=EgRlZGdlKgYIABBFGDkyBggAEEUYOTIHCAEQ6wcYQNIBCTMyNzk5ajBqMagCALACAQ&FORM=ANNTA1&PC=U531
-  - suggestion for "angular forms suggestions based on fetch results" and "angular autocomplete set other field according to chosen option"
-    https://www.bing.com/search?pglt=163&q=angular+autocomplete+set+other+field+according+to+chosen+option&cvid=519b8e2706cb4b7097532aac340cf153&gs_lcrp=EgRlZGdlKgYIABBFGDkyBggAEEUYOTIHCAEQ6wcYQNIBCTIzNjQyajBqMagCALACAA&FORM=ANNTA1&PC=U531
-  -
+  autocompletion was implemented with the help of several following Bing/Copilot results, e.g.:
+   - https://www.bing.com/search?pglt=163&q=angular+autocomplete+set+other+field+according+to+chosen+option&cvid=519b8e2706cb4b7097532aac340cf153&gs_lcrp=EgRlZGdlKgYIABBFGDkyBggAEEUYOTIHCAEQ6wcYQNIBCTIzNjQyajBqMagCALACAA&FORM=ANNTA1&PC=U531
+
   */
-  filteredOptions: City[] = [];
+  filteredStreets: Street[] = [];
 
   constructor(
     public fieldService: FieldService,
+    public appConfigService: AppConfigService,
     private translate: TranslateService,
     private http: HttpClient
     ) {
@@ -53,21 +52,71 @@ export class PatientFieldsComponent implements OnInit {
     this.localDateFormat = _moment().localeData().longDateFormat('L');
   }
 
-  updateOptions(value: string) {
-    if (typeof value === 'string' && value.length >= 3) {
-      const url = `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-postal-code/records/?limit=10&where=country_code+like+%22DE%22+and+%28startswith%28place_name%2C+%22${value}%22%29+or+startswith%28postal_code%2C+%22${value}%22%29%29`;
-      this.http.get<any>(url).subscribe(reply => {
-        this.filteredOptions = reply.results;
-        if (this.filteredOptions.length === 1)
-          this.onCitySelected(this.filteredOptions[0]);
-      })
+  updateStreets(streetInput: string, postalCodeInput = '', localityInput = '') {
+    if (typeof streetInput === 'string' && streetInput.length >= 5) {
+      streetInput = streetInput.replace('straße', 'str.');
+      streetInput = streetInput.replace('straß', 'str.');
+      streetInput = streetInput.replace('stra', 'str.');
+      let url = '';
+      if (postalCodeInput)
+        url = `https://openplzapi.org/de/Streets?name=%5E${streetInput}%24&postalCode=%5E${postalCodeInput}&pageSize=10`;
+      else if (localityInput)
+        url = `https://openplzapi.org/de/Streets?name=%5E${streetInput}%24&locality=%5E${localityInput}&pageSize=10`;
+      else
+        url = `https://openplzapi.org/de/Streets?name=%5E${streetInput}&pageSize=10`;
+      this.http.get<any>(url, {observe: 'response'}).subscribe(reply => { 
+        if (reply.headers.get('x-total-pages') == '1')
+          this.filteredStreets = reply.body;
+        else
+          this.filteredStreets = [];
+      });
+    } else {
+      this.filteredStreets = [];
     }
   }
 
-  onCitySelected(city: City) {
-    this.fields['PLZ'] = city.postal_code;
-    this.fields['Wohnort'] = city.place_name;
+  displayStreet(street: Street | string | null): string {
+    if (typeof street === 'string') {
+      street = street.replace('str.', 'straße');
+      return street;
+    } else {
+      return street?.name ?? '';
+    }
+  }
+
+  selectIfFieldLeft() {
+    if (this.filteredStreets.length === 1)
+      this.onStreetSelected(this.filteredStreets[0]);
+  }
+
+  onStreetSelected(street: Street) {
+    this.fields['Straße'] = street.name;
+    this.fields['PLZ'] = street.postalCode;
+    this.fields['Wohnort'] = street.locality;
     this.fieldChanged();
+  }
+
+  displayPostalCode(value: Street | string | null): string {
+    if (typeof value === 'string')
+      return value;
+    else
+      return value?.postalCode ?? '';
+  }
+
+  updateStreetsBasedOnPostalCodeInput(postalCodeInput: string) {
+    this.updateStreets(this.fields['Straße'], postalCodeInput);
+  }
+
+  displayLocality(value: Street | string | null): string {
+    if (typeof value === 'string')
+      return value;
+    else
+      return value?.locality ?? '';
+  }
+
+  updateStreetsBasedOnLocalityInput(localityInput: string) {
+    if (!this.fields['PLZ'])
+      this.updateStreets(this.fields['Straße'], '', localityInput);
   }
 
   ngOnInit(): void {}
@@ -120,15 +169,11 @@ export class DirtyErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
-class City {
-  /*
-  records from geodata-postal-code have more entries,
-  see https://public.opendatasoft.com/explore/assets/geonames-postal-code/view/?page=1
-  Yet this are all that seem reasonable useful for our application.
-  */
-  postal_code = "";
-  place_name = "";    // name of municipality (city) or of instition with own postal code (Postgroßempfänger, at least in Germany)
-  country_code = "";  // two-letter ISO country code, DE for Germany
-  admin_name1 = "";   // correspondes to state (Bundesland in Germany), not given in all countries
-  admin_name3 = "";   // correspondes to county (Kreis or kreisfreie Stadt/Stadtkreis in Germany), not given in all countries
+class Street {
+  // only the relevant subset of the attributes given for every street by OpenPLZ API,
+  // see https://www.openplzapi.org/de/germany/#abfrage-straen (in German) for full list
+
+  name = "";
+  postalCode = "";
+  locality = ""; // name of the municipality without additions like "Stadt" or "kreisangehörige Gemeinde"
 }

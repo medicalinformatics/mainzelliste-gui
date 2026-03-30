@@ -20,6 +20,8 @@ export class PatientList {
       new Field("birth_name_text", "Geburtsname", "geburtsname", [], SemanticType.BIRTH_NAME , FieldType.TEXT, true, "", "falls vorhanden"),
       new Field("birth_date_text", "Geburtdatum", "", ["geburtstag", "geburtsmonat", "geburtsjahr"], SemanticType.UNDEFINED , FieldType.DATE, true, "", "00.00.0000"),
       new Field("sex_text", "Geschlecht", "sex", [], SemanticType.SEX, FieldType.SEX, false, "", "Geschlecht"),
+      new Field("street_text", "Straße", "strasse", [], SemanticType.STREET, FieldType.STREET, true, "", "Musterstraße"),
+      new Field("house_number_text", "Hausnummer", "hausnummer", [], SemanticType.HOUSE_NUMBER, FieldType.TEXT, true, "", "17"),
       new Field("residence_text", "Wohnort", "ort", [], SemanticType.CITY, FieldType.CITY, true, "", "Musterstadt"),
       new Field("zip_code_text", "PLZ", "plz", [], SemanticType.POSTAL_CODE, FieldType.POSTAL_CODE, true, "", "mind. 5 Zeichen")
     ],
@@ -64,5 +66,6 @@ export interface BetaFeatures {
   promotedExternalIdTypes?:string
   requiredExternalIdTypes?:string
   patientConsentRequired?:boolean
+  germanAddressAutocompletion: boolean
 }
 

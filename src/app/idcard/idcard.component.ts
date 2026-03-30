@@ -415,6 +415,8 @@ export class IdcardComponent implements OnInit {
     const fieldMap: { [key: string]: string } = {
       [SemanticType.FIRSTNAME]: "",
       [SemanticType.LASTNAME]: "",
+      [SemanticType.STREET]: "",
+      [SemanticType.HOUSE_NUMBER]: "",
       [SemanticType.POSTAL_CODE]: "",
       [SemanticType.CITY]: ""
     };

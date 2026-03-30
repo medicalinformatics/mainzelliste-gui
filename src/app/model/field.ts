@@ -3,6 +3,7 @@ export enum FieldType {
   SEX = "SEX",
   DATE = "DATE",
   NUMBER = "NUMBER",
+  STREET = "STREET",
   POSTAL_CODE = "POSTAL_CODE",
   CITY = "CITY",
 }
@@ -11,6 +12,8 @@ export enum SemanticType{
   LASTNAME = "lastname",
   BIRTH_NAME = "birthName",
   SEX = "sex",
+  STREET = "street",
+  HOUSE_NUMBER = "houseNumber",
   POSTAL_CODE = "postalCode",
   CITY = "city",
   UNDEFINED = "undefined"

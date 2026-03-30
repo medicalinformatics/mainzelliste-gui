@@ -36,6 +36,7 @@ export class AppConfigService {
   private promotedExternalIdTypes: string[] = []; // promoted in the add patient view
   private requiredExternalIdTypes: string[] = []; // actually required ID's
   private patientConsentRequired: boolean = false;
+  private germanAddressAutocompletion: boolean = false;
 
   constructor(
     private httpClient: HttpClient,
@@ -64,6 +65,7 @@ export class AppConfigService {
           this.configurationEnabled = this.data[0].betaFeatures?.configuration ?? false;
           this._showDomainsInIDCard = this.data[0].betaFeatures?.showDomainsInIDCard ?? false;
           this.patientConsentRequired = this.data[0].betaFeatures?.patientConsentRequired ?? false;
+          this.germanAddressAutocompletion = this.data[0].betaFeatures?.germanAddressAutocompletion ?? false;
           this.requiredExternalIdTypes =
               this.data[0].betaFeatures?.requiredExternalIdTypes?.split(",") ?? [];
           
@@ -162,6 +164,10 @@ export class AppConfigService {
 
   getRequiredExternalIdTypes(): string[] {
     return this.requiredExternalIdTypes;
+  }
+
+  useGermanAddressAutocompletion(): Boolean {
+    return this.germanAddressAutocompletion;
   }
 
   getVersion(): string {
@@ -297,7 +303,9 @@ export class AppConfigService {
       if(['sex', 'gender', 'geschlecht'].includes(mlField.name.toLowerCase())){
         configuredField.type = FieldType.SEX;
       } else if (mlField.type == MainzellisteFieldType.PlainTextField) {
-        if (configuredField.semantic == SemanticType.POSTAL_CODE)
+        if (configuredField.semantic == SemanticType.STREET)
+          configuredField.type = FieldType.STREET;
+        else if (configuredField.semantic == SemanticType.POSTAL_CODE)
           configuredField.type = FieldType.POSTAL_CODE;
         else if (configuredField.semantic == SemanticType.CITY)
           configuredField.type = FieldType.CITY;
