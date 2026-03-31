@@ -1,7 +1,7 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, inject, Input, OnInit, ViewChild} from '@angular/core';
 import {Patient} from "../../model/patient";
 import {PatientService} from "../../services/patient.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl, FormsModule, NgForm, ReactiveFormsModule} from "@angular/forms";
 import {PatientListService} from "../../services/patient-list.service";
 import {
@@ -37,7 +37,7 @@ import {Consent} from "../../consent/consent.model";
 import {ConsentService} from "../../consent/consent.service";
 import {Permission} from "../../model/permission";
 import {Operation} from "../../model/tenant";
-import {AsyncPipe, NgFor, NgIf} from '@angular/common';
+import {AsyncPipe, NgFor, NgIf, NgStyle} from '@angular/common';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {FieldService} from "../../services/field.service";
 import _moment from "moment/moment";
@@ -66,7 +66,7 @@ export interface IdTypSelection {
   imports: [FormsModule, NgIf, ExternalPseudonymsComponent, MatFormField,
     MatLabel, MatChipGrid, NgFor, MatChipRow, MatChipRemove, MatIcon, MatChipInput, MatAutocompleteTrigger,
     ReactiveFormsModule, MatError, MatAutocomplete, MatOption, HasPermissionDirective, MatButton,
-    MatIconButton, MatTooltip, MatProgressSpinner, AsyncPipe, TranslatePipe, TextFieldComponent, SexFieldComponent, DateFieldComponent]
+    MatIconButton, MatTooltip, MatProgressSpinner, AsyncPipe, TranslatePipe, TextFieldComponent, SexFieldComponent, DateFieldComponent, NgStyle]
 })
 export class CreatePatientComponent implements OnInit {
   protected readonly Permission = Permission;
@@ -82,6 +82,7 @@ export class CreatePatientComponent implements OnInit {
   patientListService: PatientListService;
   userAuthService : UserAuthService;
   consent?: Consent;
+  private route = inject(ActivatedRoute);
 
   internalIdTypeSelection: IdTypSelection[] = [];
   /** selected chip data model */
@@ -96,6 +97,7 @@ export class CreatePatientComponent implements OnInit {
   localDateFormat: string;
 
   showConsentFieldGroup: boolean = false;
+  split: boolean = this.route.snapshot.queryParams['split'] == 'true';
 
   constructor(
     public translate: TranslateService,

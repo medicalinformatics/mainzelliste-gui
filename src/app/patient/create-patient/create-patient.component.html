@@ -1,4 +1,5 @@
 <form #patientForm="ngForm">
+  <div [ngStyle]="{'display': 'flex', 'flex-direction': this.split? 'row' : 'column', 'gap': '0 60px'}">
   <div style=" width: 500px">
     <!-- personal Info. -->
     @if (this.hasAnyFields([SemanticType.FIRSTNAME, SemanticType.LASTNAME, SemanticType.BIRTH_NAME,
@@ -93,6 +94,8 @@
       <br>
     </div>
     }
+  </div>
+  <div style="width: 500px">
     <!-- external IDs -->
     <div *ngIf="this.getExternalIdTypes('C').length > 0" style="max-width: 700px;">
       <h4 style="color: #063d6c">{{'createPatient.external_pseudonyms' | translate}}</h4>
@@ -151,14 +154,15 @@
       </div>
     </div>
     }
-    <br>
-    <!-- submit button -->
-    <div style="text-align: center;">
-      <button mat-raised-button class="submit" type="submit" style="width: 70%"
-              [disabled]="this.disable(patientForm) || creatingInProgress"
-              (click)="createNewPatient(false)">{{'createPatient.submit_button' | translate}}
-        <mat-icon *ngIf="creatingInProgress" style="margin-left: 10px"><mat-spinner diameter="20"></mat-spinner></mat-icon>
-      </button>
-    </div>
+  </div>
+  </div>
+  <br>
+  <!-- submit button -->
+  <div [ngStyle]="{'text-align':'left', 'margin-left': this.split? '325px' : '75px'}">
+    <button mat-raised-button class="submit" type="submit" style="width: 350px"
+            [disabled]="this.disable(patientForm) || creatingInProgress"
+            (click)="createNewPatient(false)">{{'createPatient.submit_button' | translate}}
+      <mat-icon *ngIf="creatingInProgress" style="margin-left: 10px"><mat-spinner diameter="20"></mat-spinner></mat-icon>
+    </button>
   </div>
 </form>
