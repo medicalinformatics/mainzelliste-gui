@@ -95,6 +95,8 @@ export class CreatePatientComponent implements OnInit {
   nonSemanticFields: Field[];
   localDateFormat: string;
 
+  showConsentFieldGroup: boolean = false;
+
   constructor(
     public translate: TranslateService,
     public consentDialog: MatDialog,
@@ -147,6 +149,8 @@ export class CreatePatientComponent implements OnInit {
     this.translate.onLangChange.subscribe(() => {
       this.changeTitle();
     })
+
+    this.consentService.getConsentTemplateCount().subscribe(c => this.showConsentFieldGroup = c > 0);
   }
 
   public hasField(semantic: SemanticType):boolean {

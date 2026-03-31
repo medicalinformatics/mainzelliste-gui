@@ -23,6 +23,7 @@ export class AuthorizationService {
   private readonly allowedAssociatedIdTypesMap: Map<string, IdType[]> = new Map<string, IdType[]>();
   private readonly allowedFieldNames: Map<Operation, string[]> = new Map<Operation, string[]>();
   public authorizationState :AuthorizationState = new AuthorizationState();
+  private isAnyTenantConsentTemplateConfigSet: boolean = false;
 
   constructor(
     private readonly translate: TranslateService,
@@ -42,6 +43,8 @@ export class AuthorizationService {
         e.permissions.tenant?.consentTemplateIds || [],
         this.convertClaimPermissions(e.permissions))
     })
+
+    this.isAnyTenantConsentTemplateConfigSet = this.configuredTenants.some(r => r.consentTemplateIds.length > 0)
 
     if(this.currentTenantId.length == 0 || this.configuredTenants.every(t => t.id != this.currentTenantId)) {
       let uiTenants = this.getUITenants();
@@ -365,5 +368,14 @@ export class AuthorizationService {
     .filter(t => this.userRoles.some(r => t.roles.includes(r)))
     .map(r => r.consentTemplateIds)
     .reduce((accumulator, currentValue) => accumulator.concat(currentValue.filter(e => !accumulator.includes(e))), []);
+  }
+
+  /*
+  TODO this have to be done in the backend
+   */
+  checkTenantOfConsentTemplate(templateId:string): boolean {
+    const consentTemplateIds = this.getTenantConsentTemplate();
+    return this.isAnyTenantConsentTemplateConfigSet && consentTemplateIds.includes(templateId) ||
+      !this.isAnyTenantConsentTemplateConfigSet && consentTemplateIds.length == 0
   }
 }

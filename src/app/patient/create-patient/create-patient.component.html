@@ -102,7 +102,7 @@
     <!-- ID type to generate -->
     <div style="max-width: 700px; margin-bottom: 12px;" ngModelGroup="internalIdTypes">
       <h4 style="color: #063d6c">{{'createPatient.add_pseudonym_type' | translate}}</h4>
-      <mat-form-field color="primary" style="width: 90%;" class="idtype-field">
+      <mat-form-field color="primary" style="width: 90%; margin-top: 10px" class="idtype-field">
         <mat-label>{{'createPatient.select_pseudonym' | translate}}</mat-label>
         <mat-chip-grid #chipList aria-label="Fruit selection"
                        name="internalIdTypesChipList"
@@ -133,9 +133,10 @@
       </mat-form-field>
     </div>
     <!-- consent -->
-    <div>
+    @if (this.showConsentFieldGroup) {
+    <div *appHasPermission="Permission.CREATE_CONSENT" >
       <h4 style="color: #063d6c">{{'createPatient.consents' | translate}}</h4>
-      <div *appHasPermission="Permission.CREATE_CONSENT" style="max-width: 700px;
+      <div style="max-width: 700px;
         display: flex; align-items: center; margin-bottom: 40px;">
         <button type="button" style="float: left; margin-right: 0;" mat-raised-button
                 (click)="openConsentDialog()">
@@ -148,8 +149,9 @@
           <mat-icon>delete</mat-icon>
         </button>
       </div>
-      <br>
     </div>
+    }
+    <br>
     <!-- submit button -->
     <div style="text-align: center;">
       <button mat-raised-button class="submit" type="submit" style="width: 70%"
