@@ -1,6 +1,6 @@
 import {Inject, Injectable} from '@angular/core';
 import {SessionService} from "./session.service";
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {PatientList} from "../model/patientlist";
 import {Patient} from "../model/patient";
 import {AppConfigService} from "../app-config.service";
@@ -10,8 +10,8 @@ import {EditPatientTokenData} from "../model/edit-patient-token-data";
 import {DeletePatientTokenData} from "../model/delete-patient-token-data";
 import {Field} from "../model/field";
 import {DatePipe} from "@angular/common";
-import {catchError, filter, map, mergeMap, repeat, retry, take, takeWhile} from "rxjs/operators";
-import {firstValueFrom, lastValueFrom, Observable, of, throwError} from "rxjs";
+import {catchError, filter, map, mergeMap, repeat, switchMap, take} from "rxjs/operators";
+import {EMPTY, firstValueFrom, Observable, of, throwError} from "rxjs";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
 import {ErrorMessage, ErrorMessages} from "../error/error-messages";
 import _moment from 'moment';
@@ -374,12 +374,13 @@ export class PatientListService {
       )
   }
 
-  addPatient(patient: Patient, idTypes: string[], sureness: boolean): Observable<Id> {
-    return this.sessionService.createToken(
+  addPatient(patient: Patient, idTypes: string[], sureness: boolean, tokenId?: string): Observable<Id> {
+    return (tokenId != undefined ? of(tokenId) :  this.sessionService.createToken(
       "addPatient", new AddPatientTokenData(idTypes)
     )
+    .pipe(map(t => t.id)))
     .pipe(
-      mergeMap(token => this.resolveAddPatientToken(token.id, patient, sureness)),
+      mergeMap(tokenId => this.resolveAddPatientToken(tokenId, patient, sureness)),
       catchError(e => {
         // handle failed token creation
         if (e instanceof HttpErrorResponse && (e.status == 404) && ErrorMessages.ML_SESSION_NOT_FOUND.match(e))
@@ -407,12 +408,26 @@ export class PatientListService {
       body.set("sureness", "true")
 
     //send request
-    return this.httpClient.post<Id[]>(this.patientList.url + "/patients?tokenId=" + tokenId, body, {
+    return this.httpClient.post(this.patientList.url + "/patients?tokenId=" + tokenId + '&mainzellisteApiVersion=3.3', body, {
       headers: new HttpHeaders()
-      .set('Content-Type', 'application/x-www-form-urlencoded')
-      .set('mainzellisteApiVersion', '3.2')
+      .set('Content-Type', 'application/x-www-form-urlencoded'),
+      observe: 'response',
+      responseType: 'text'
     })
     .pipe(
+      switchMap(response => {
+        try{
+          // parse returned Json array of IDs
+          return of(JSON.parse(response.body  ?? ""));
+        } catch (e: any){
+          // handle redirect
+          if (response.url) {
+            window.location.href = response.url;
+            return EMPTY;
+          }
+          return of([]);
+        }
+      }),
       catchError(e => {
         if (e instanceof HttpErrorResponse && (e.status == 400 || e.status == 409)) {
           const errorMessage = this.addPatientErrorMessages.find(msg => msg.match(e))
@@ -428,7 +443,7 @@ export class PatientListService {
         }
         return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_add_patient_token'), e, this.translate))
       }),
-      map( ids => ids[0])
+      map( (ids : Id[]) => ids[0])
     )
   }
 

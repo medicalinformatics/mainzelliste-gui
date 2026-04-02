@@ -73,15 +73,19 @@ export class SessionService {
     if (!this.isSessionCreated()) {
       return of(false);
     }
+    return this.isSessionIdValid(this.sessionId);
+  }
+
+  public isSessionIdValid(sessionId: string | undefined): Observable<boolean> {
     return this.httpClient.get<Session>(
-      this.appConfigService.data[0].url + '/sessions/' + this.sessionId)
+      this.appConfigService.data[0].url + '/sessions/' + sessionId)
     .pipe(
       map(() => true),
       catchError((error) => SessionService.handleFailedRequest(SessionService.translate.instant('error.session_service_is_session_valid'), error))
     );
   }
 
-  private static handleFailedRequest(errorMessage: string, error?: any) {
+  public static handleFailedRequest(errorMessage: string, error?: any) {
     if (error.status == 404)
       return of(false)
     else

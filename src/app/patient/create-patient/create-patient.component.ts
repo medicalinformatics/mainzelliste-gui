@@ -31,6 +31,7 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { CdkScrollable } from '@angular/cdk/scrolling';
+import {MlTokenAuthService} from "../../services/ml-token-auth.service";
 
 export interface IdTypSelection {
   idType: string,
@@ -74,6 +75,7 @@ export class CreatePatientComponent implements OnInit {
     patientService: PatientService,
     patientListService: PatientListService,
     userAuthService : UserAuthService,
+    private readonly mlTokenAuthService: MlTokenAuthService,
     public errorNotificationService: ErrorNotificationService,
     private router: Router,
     private titleService: GlobalTitleService,
@@ -123,7 +125,7 @@ export class CreatePatientComponent implements OnInit {
     //create patient
     this.creatingInProgress = true;
     of(this.patient).pipe(
-      concatMap(p => this.patientService.createPatient(p, this.selectedInternalIdTypes, sureness)),
+      concatMap(p => this.patientService.createPatient(p, this.selectedInternalIdTypes, sureness, this.mlTokenAuthService.getTokenId('addPatient'))),
       retry({
         delay: e => {
               if (e instanceof MainzellisteError) {
@@ -160,7 +162,9 @@ export class CreatePatientComponent implements OnInit {
       })
     ).subscribe(newId => {
       this.creatingInProgress = false;
-      this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
+      // ignore if a redirect
+      if(newId != undefined)
+        this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
     })
   }
 

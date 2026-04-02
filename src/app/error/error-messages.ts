@@ -10,7 +10,17 @@ export class ErrorMessage {
   }
 
   public match(errorResponse: HttpErrorResponse): boolean {
-    let errorMessage = !errorResponse.error.message ? errorResponse.error : errorResponse.error.message;
+    let errorMessage;
+    if (errorResponse.error.message)
+      errorMessage = errorResponse.error.message;
+    else {
+      try {
+        errorMessage = JSON.parse(errorResponse.error)?.message ?? errorResponse.error;
+      } catch (e: any) {
+        errorMessage = errorResponse.error;
+      }
+    }
+
     return this.message instanceof RegExp ? errorMessage.match(this.message) : this.message == errorMessage;
   }
 
