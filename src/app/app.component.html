@@ -14,7 +14,9 @@
     </mat-sidenav>
     <mat-sidenav-content style="height: 100%">
       <div style="display: flex; flex-direction: column; height: 100%; position: absolute; width: 100%;">
-        <div style="display: flex; flex-flow: column; padding: 30px 2% 5% 2%; flex-shrink: 1; flex-grow: 1;">
+        <div [ngStyle]="{'display': 'flex', 'flex-flow': 'column', 'padding': '30px 2% 5% 2%',
+        'flex-shrink': 1, 'flex-grow': 1,
+        'align-items': this.mlTokenAuthService.isAuthenticated() ? 'center':'left'}">
           <div class="title" *ngIf="this.titleService.titleText.length > 0">
             <h1>
               <mat-icon *ngIf="titleService.titleIcon != undefined"
