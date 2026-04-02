@@ -31,11 +31,11 @@ export class BackendConfigService {
   ) {
   }
 
-  public init() {
-    return this.fetchMainzellisteIdGenerators()
-    .then(idGenerators => this.fetchMainzellisteAssociatedIdGenerators())
-    .then(idGenerators => this.fetchMainzellisteFields())
-    .then(fields => this.fetchClaims())
+  public init(tokenId?: string) {
+    return this.fetchMainzellisteIdGenerators(tokenId)
+    .then(idGenerators => this.fetchMainzellisteAssociatedIdGenerators(tokenId))
+    .then(idGenerators => this.fetchMainzellisteFields(tokenId))
+    .then(fields => this.fetchClaims(tokenId))
     .then(claims => this.fetchVersion())
     .then(versions => this.readConsentTerminology());
   }
@@ -104,8 +104,8 @@ export class BackendConfigService {
     );
   }
 
-  public fetchMainzellisteFields(): Promise<MainzellisteField[]> {
-    let fieldEndpointUrl = this.appConfigService.getMainzellisteUrl() + "/configuration/fields";
+  public fetchMainzellisteFields(tokenId?: string): Promise<MainzellisteField[]> {
+    let fieldEndpointUrl = this.appConfigService.getMainzellisteUrl() + "/configuration/fields" + ( tokenId != undefined ? "?tokenId=" + tokenId: "" );
     return lastValueFrom(this.httpClient.get<MainzellisteField[]>(fieldEndpointUrl, {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
     .pipe(
       catchError(e => throwError(() => new Error(this.translate.instant('error.app_config_service_fetch_fields') + fieldEndpointUrl))),
@@ -153,8 +153,10 @@ export class BackendConfigService {
     this.mainzellisteFields.push(fieldName);
   }
 
-  public fetchMainzellisteIdGenerators(): Promise<IdGenerator[]> {
-    return lastValueFrom(this.httpClient.get<IdGenerator[]>(this.appConfigService.getMainzellisteUrl() + "/configuration/idGenerators", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
+  public fetchMainzellisteIdGenerators(tokenId?: string): Promise<IdGenerator[]> {
+    return lastValueFrom(this.httpClient.get<IdGenerator[]>(
+        this.appConfigService.getMainzellisteUrl() + "/configuration/idGenerators" + ( tokenId != undefined ? "?tokenId=" + tokenId: "" ),
+        {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
     .pipe(
       catchError((e) => throwError(() => new Error(this.translate.instant('error.app_config_service_fetch_id_generators')))),
       map(idGenerators => {
@@ -166,8 +168,10 @@ export class BackendConfigService {
     ));
   }
 
-  public fetchMainzellisteAssociatedIdGenerators(): Promise<IdGenerator[]> {
-    return lastValueFrom(this.httpClient.get<AssociatedIds>(this.appConfigService.getMainzellisteUrl() + "/configuration/idGenerators/associatedIds", {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
+  public fetchMainzellisteAssociatedIdGenerators(tokenId?: string): Promise<IdGenerator[]> {
+    return lastValueFrom(this.httpClient.get<AssociatedIds>(
+        this.appConfigService.getMainzellisteUrl() + "/configuration/idGenerators/associatedIds" + ( tokenId != undefined ? "?tokenId=" + tokenId: "" ),
+        {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
     .pipe(
       catchError((e) => throwError(() => new Error(this.translate.instant('error.app_config_service_fetch_id_generators')))),
       map(associatedIds => {
@@ -181,12 +185,16 @@ export class BackendConfigService {
     ));
   }
 
-  public fetchClaims(): Promise<ClaimsConfig[]> {
+  public fetchClaims(tokenId?: string): Promise<ClaimsConfig[]> {
+    let httpParams = new HttpParams().set('filter', 'roles')
+    .set('merge', true)
+    .set('mergeSameTenant', true);
+    if(tokenId != undefined){
+      httpParams = httpParams.set('tokenId', tokenId);
+    }
     return firstValueFrom(this.httpClient.get<ClaimsConfig[]>(this.appConfigService.getMainzellisteUrl() + "/configuration/claims", {
       headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2'),
-      params: new HttpParams().set('filter', 'roles')
-      .set('merge', true)
-      .set('mergeSameTenant', true)
+      params: httpParams
     })
     .pipe(
       catchError((e) => throwError(() => new Error("Can't init claims configurations. Failed to connect " +

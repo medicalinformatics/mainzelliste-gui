@@ -11,6 +11,7 @@ import {
 import {inject} from '@angular/core';
 import {AuthorizationService} from "../services/authorization.service";
 import {UserAuthService} from "../services/user-auth.service";
+import {MlTokenAuthService} from "../services/ml-token-auth.service";
 
 const isAccessAllowed = async (
   route: ActivatedRouteSnapshot,
@@ -21,7 +22,10 @@ const isAccessAllowed = async (
 
   const router = inject(Router);
   const userAuthService = inject(UserAuthService);
-  return userAuthService.login(authenticated, state.url).then() || router.createUrlTree(['access-denied']);
+  const mlTokenAuthService = inject(MlTokenAuthService);
+  return mlTokenAuthService.isAuthenticated()
+    || await userAuthService.login(authenticated, state.url)
+    || router.createUrlTree(['access-denied']);
 };
 
 export const canActivateAuthRole = createAuthGuard<CanActivateFn>(isAccessAllowed);

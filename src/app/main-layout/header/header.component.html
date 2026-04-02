@@ -4,5 +4,5 @@
 <!--     <h1>Pseudonymisierung und Identitätsmanagement</h1>-->
 
    </div>
-   <app-user-menu></app-user-menu>
+   <app-user-menu *ngIf="!this.mlTokenAuthService.isAuthenticated()"></app-user-menu>
  </mat-toolbar>

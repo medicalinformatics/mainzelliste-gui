@@ -8,6 +8,7 @@ import {IdType} from "../model/id-type";
 import {AuthorizationState} from "../model/authorization-state";
 import {LocalStorageService} from "./local-storage.service";
 import {BackendConfigService} from "./backend-config.service";
+import {MlTokenAuthService} from "./ml-token-auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,7 @@ export class AuthorizationService {
     private readonly translate: TranslateService,
     private readonly configService: BackendConfigService,
     private readonly authentication: UserAuthService,
+    private readonly mlTokenAuthService: MlTokenAuthService,
     private readonly localStorageService: LocalStorageService
   ) {
   }
@@ -36,7 +38,7 @@ export class AuthorizationService {
   public init(){
     this.userRoles = this.authentication.getRoles();
     this.configuredTenants = this.configService.getMainzellisteClaims()
-    .filter(c => c.roles.some( r => this.userRoles.includes(r)))
+    .filter(c => this.mlTokenAuthService.isAuthenticated() || c.roles.some( r => this.userRoles.includes(r)))
     .map(e => {
       return new Tenant(e.permissions.tenant.id, e.permissions.tenant.name, e.roles,
         e.permissions.tenant?.idTypes || [],
@@ -112,7 +114,7 @@ export class AuthorizationService {
     fieldsOperations.forEach( o => {
       let permittedFieldNames: string[] = this.configService.getMainzellisteClaims()
         .filter(c => c.permissions.tenant.id == this.currentTenantId)
-        .filter(c => c.roles.some( r => this.userRoles.includes(r)))
+        .filter(c => c.roles.some( r => this.mlTokenAuthService.isAuthenticated() || this.userRoles.includes(r)))
         .map(c => c.permissions.resources.patient.resources.fields )
         .map(t => t.filter( i=> i.operations.includes(o)).map(i => i.name) || [])
         .reduce((accumulator, currentValue) => accumulator.concat(currentValue.filter(e => !accumulator.includes(e))), []);
@@ -228,7 +230,7 @@ export class AuthorizationService {
 
   public isCurrentTenantPermissionsEmpty() {
     return this.configService.getMainzellisteClaims()
-    .filter(c => c.roles.some(r => this.userRoles.includes(r)) && c.permissions.tenant.id == this.currentTenantId)
+    .filter(c => (this.mlTokenAuthService.isAuthenticated() || c.roles.some(r => this.userRoles.includes(r))) && c.permissions.tenant.id == this.currentTenantId)
     .map(c => c.permissions.resources)
     .every(r => r.patient == undefined && r.consentTemplate == undefined
         && r.policy == undefined && r.policySet == undefined)
@@ -248,7 +250,7 @@ export class AuthorizationService {
   getUITenants(): Tenant[]{
     return this.configuredTenants.filter( t => t.permissions.some( p =>
         p.type == 'miscellaneous' && !Tenant.ESSENTIAL_MISCELLANEOUS_PERMISSIONS.includes(p.miscellaneous ?? 'createSession')
-        || !['miscellaneous', 'default'].includes(p.type) && p.operations.length >1 ))
+        || !['miscellaneous', 'default'].includes(p.type) && p.operations.length > 0 ))
   }
 
   set currentTenantId(tenantId: string){
@@ -278,7 +280,7 @@ export class AuthorizationService {
       return true
     //check permission
     let tenants: Tenant[] = this.configuredTenants.filter(c => c.id == this.currentTenantId)
-      .filter(t => this.userRoles.some(r => t.roles.includes(r)))
+      .filter(t => this.mlTokenAuthService.isAuthenticated() || this.userRoles.some(r => t.roles.includes(r)))
     if (tenants.length == 0)
       throw new Error(this.translate.instant('error.authorization_service') + `${this.userRoles}`)
     return tenants.some(role => permissions.some( p => this.checkPermission(role.permissions, p)));
@@ -333,7 +335,7 @@ export class AuthorizationService {
   findAllowedIdTypes(operation: Operation, isExternal: boolean): string[] {
     let permittedIdTypes: string[] = this.configService.getMainzellisteClaims()
       .filter(c => c.permissions.tenant.id == this.currentTenantId)
-      .filter(c => c.roles.some( r => this.userRoles.includes(r)))
+      .filter(c => this.mlTokenAuthService.isAuthenticated() || c.roles.some( r => this.userRoles.includes(r)))
       .map(c => c.permissions.resources.patient.resources )
       .map(r => isExternal? r.externalIds : r.ids )
       .map(t => t.filter( i=> i.operations.includes(operation)).map(i => i.type) || [])
@@ -347,7 +349,7 @@ export class AuthorizationService {
   findOperations(idType:string, isExternal: boolean) {
     return this.configService.getMainzellisteClaims()
     .filter(c => c.permissions.tenant.id == this.currentTenantId)
-    .filter(c => c.roles.some( r => this.userRoles.includes(r)))
+    .filter(c => this.mlTokenAuthService.isAuthenticated() || c.roles.some( r => this.userRoles.includes(r)))
     .map(c => c.permissions.resources.patient.resources )
     .map(r => isExternal? r.externalIds : r.ids )
     .map(ids => ids.find( id => id.type == idType || id.type == "*")?.operations || [])
@@ -357,7 +359,7 @@ export class AuthorizationService {
   getTenantIdTypes(): string[] {
     return this.configuredTenants
       .filter(c => c.id == this.currentTenantId)
-      .filter(t => this.userRoles.some(r => t.roles.includes(r)))
+      .filter(t => this.mlTokenAuthService.isAuthenticated() || this.userRoles.some(r => t.roles.includes(r)))
       .map(r => r.idTypes)
       .reduce((accumulator, currentValue) => accumulator.concat(currentValue.filter(e => !accumulator.includes(e))), []);
   }
@@ -365,7 +367,7 @@ export class AuthorizationService {
   getTenantConsentTemplate(): string[] {
     return this.configuredTenants
     .filter(c => c.id == this.currentTenantId)
-    .filter(t => this.userRoles.some(r => t.roles.includes(r)))
+    .filter(t => this.mlTokenAuthService.isAuthenticated() || this.userRoles.some(r => t.roles.includes(r)))
     .map(r => r.consentTemplateIds)
     .reduce((accumulator, currentValue) => accumulator.concat(currentValue.filter(e => !accumulator.includes(e))), []);
   }
