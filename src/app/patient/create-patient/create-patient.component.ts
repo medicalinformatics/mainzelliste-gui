@@ -118,7 +118,7 @@ export class CreatePatientComponent implements OnInit {
     this.patientListService = patientListService;
     this.userAuthService = userAuthService;
     this.semanticFields = fieldService.getSemanticFields();
-    this.nonSemanticFields = this.fieldService.getFields().filter(f => f.semantic == SemanticType.UNDEFINED)
+    this.nonSemanticFields = this.fieldService.getFields().filter(f => !f.semantic || f.semantic == SemanticType.UNDEFINED)
     this.localDateFormat = _moment().localeData().longDateFormat('L');
     this.changeTitle();
   }

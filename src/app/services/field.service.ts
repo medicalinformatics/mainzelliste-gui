@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Field} from "../model/field";
+import {Field, SemanticType} from "../model/field";
 import {AppConfigService} from "../app-config.service";
 import {GenderValue} from "../model/patientlist";
 
@@ -19,8 +19,11 @@ export class FieldService {
     return this.fields;
   }
 
-  getSemanticFields(): {[key: string]: Field} {
-    return Object.fromEntries( this.fields.map( f => [f.semantic.valueOf(), f]));
+  getSemanticFields(): { [key: string]: Field } {
+    return Object.fromEntries(this.fields.filter(f =>
+      f.semantic != undefined && f.semantic != SemanticType.UNDEFINED
+    )
+    .map(f => [f.semantic.valueOf(), f]));
   }
 
   getGenderFieldValues(): GenderValue[] {
