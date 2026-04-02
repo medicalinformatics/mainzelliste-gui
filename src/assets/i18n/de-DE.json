@@ -181,6 +181,7 @@
 	"createPatient.request_personal_identifier": "Personenidentifikator anfordern",
 	"createPatient.patient_data": "Personendaten",
   "createPatient.contact_data": "Kontaktdaten",
+  "createPatient.additional_info": "Zusätzliche Informationen",
   "createPatient.external_pseudonyms": "Externe Identifikatoren",
   "createPatient.select_external_id": "Externe Identifikator hinzufügen",
   "createPatient.add_pseudonym_type": "Zu generierende Pseudonyme",

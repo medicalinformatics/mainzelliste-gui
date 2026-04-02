@@ -47,18 +47,6 @@
           </app-sex-field>
         }
       </div>
-      @for (field of nonSemanticFields; track field.name){
-        <div>
-        @switch (field.type){
-          @case (FieldType.DATE){
-            <app-date-field [(data)]="this.patient.fields[field.name]" [field]="field"></app-date-field>
-          }
-          @default {
-            <app-text-field [(data)]="this.patient.fields[field.name]" [field]="field"></app-text-field>
-          }
-        }
-        </div>
-      }
       <br>
     </div>
     }
@@ -91,6 +79,25 @@
           </app-text-field>
         }
       </div>
+      <br>
+    </div>
+    }
+    <!-- Additional Information -->
+    @if (nonSemanticFields.length > 0){
+    <div>
+      <h4 style="color: #063d6c">{{ 'createPatient.additional_info' | translate }}</h4>
+      @for (field of nonSemanticFields; track field.name){
+      <div>
+        @switch (field.type){
+          @case (FieldType.DATE){
+            <app-date-field [(data)]="this.patient.fields[field.name]" [field]="field"></app-date-field>
+          }
+          @default {
+            <app-text-field [(data)]="this.patient.fields[field.name]" [field]="field"></app-text-field>
+          }
+        }
+      </div>
+      }
       <br>
     </div>
     }

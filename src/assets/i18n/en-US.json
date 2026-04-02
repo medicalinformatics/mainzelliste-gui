@@ -179,6 +179,7 @@
 	"createPatient.request_personal_identifier": "Request personal identifier",
 	"createPatient.patient_data": "Personal Data",
   "createPatient.contact_data": "Contact Details",
+  "createPatient.additional_info": "Additional Information",
   "createPatient.external_pseudonyms": "External Identifiers",
   "createPatient.select_external_id": "add external identifier",
   "createPatient.add_pseudonym_type": "Pseudonyms to generate",
