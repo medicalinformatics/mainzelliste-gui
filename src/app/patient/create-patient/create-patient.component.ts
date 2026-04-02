@@ -154,7 +154,8 @@ export class CreatePatientComponent implements OnInit {
       this.changeTitle();
     })
 
-    this.consentService.getConsentTemplateCount().subscribe(c => this.showConsentFieldGroup = c > 0);
+    if(!this.mlTokenAuthService.isAuthenticated())
+      this.consentService.getConsentTemplateCount().subscribe(c => this.showConsentFieldGroup = c > 0);
   }
 
   public hasField(semantic: SemanticType):boolean {
