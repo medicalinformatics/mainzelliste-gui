@@ -160,7 +160,9 @@ export class BackendConfigService {
     .pipe(
       catchError((e) => throwError(() => new Error(this.translate.instant('error.app_config_service_fetch_id_generators')))),
       map(idGenerators => {
-        console.log(this.validateMainIdType(idGenerators))
+        //validate main id
+        if(!tokenId)
+          console.log(this.validateMainIdType(idGenerators))
         this.mainzellisteIdGenerators = idGenerators
         this.mainzellisteIdTypes = idGenerators.map(g => g.idType);
         return idGenerators;
