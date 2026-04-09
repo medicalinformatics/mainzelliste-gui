@@ -13,6 +13,8 @@ export enum SemanticType{
   STREET = "street",
   POSTAL_CODE = "postalCode",
   CITY = "city",
+  EMAIL = "email",
+  PHONE = "phone",
   UNDEFINED = "undefined"
 }
 export class Field {

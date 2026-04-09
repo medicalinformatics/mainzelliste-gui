@@ -51,7 +51,8 @@
     </div>
     }
     <!-- contact Info. -->
-    @if (this.hasAnyFields([SemanticType.STREET, SemanticType.POSTAL_CODE, SemanticType.CITY])) {
+    @if (this.hasAnyFields([SemanticType.STREET, SemanticType.POSTAL_CODE, SemanticType.CITY,
+      SemanticType.EMAIL, SemanticType.PHONE])) {
     <div>
       <h4 style="color: #063d6c">{{ 'createPatient.contact_data' | translate }}</h4>
       <div>
@@ -75,6 +76,24 @@
           <app-text-field *ngIf="this.hasField(SemanticType.CITY)" style="flex-grow: 3"
                           [(data)]="this.patient.fields[getFieldName(SemanticType.CITY)]"
                           [field]="this.semanticFields[SemanticType.CITY.valueOf()]">
+
+          </app-text-field>
+        }
+      </div>
+      <div>
+        @if (this.hasField(SemanticType.EMAIL)) {
+          <app-text-field *ngIf="this.hasField(SemanticType.EMAIL)"
+                          [(data)]="this.patient.fields[getFieldName(SemanticType.EMAIL)]"
+                          [field]="this.semanticFields[SemanticType.EMAIL.valueOf()]">
+
+          </app-text-field>
+        }
+      </div>
+      <div>
+        @if (this.hasField(SemanticType.PHONE)) {
+          <app-text-field *ngIf="this.hasField(SemanticType.PHONE)"
+                          [(data)]="this.patient.fields[getFieldName(SemanticType.PHONE)]"
+                          [field]="this.semanticFields[SemanticType.PHONE.valueOf()]">
 
           </app-text-field>
         }
