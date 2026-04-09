@@ -8,6 +8,6 @@
          pattern="{{field.validator}}"
          #currentField="ngModel">
   <mat-error *ngIf="displayError(currentField)">
-    {{getFieldErrorMessage(field.i18n | translate, currentField.errors)}}
+    {{getFieldErrorMessage(currentField.errors, translate)}}
   </mat-error>
 </mat-form-field>

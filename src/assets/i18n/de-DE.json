@@ -298,8 +298,10 @@
 
 	"patientFields.error_value_text1": "Der Wert für das Feld",
 	"patientFields.error_value_text2": "ist ungültig",
+  "patientFields.error_invalid_short": "Der Wert ist ungültig",
 	"patientFields.error_mandatory_text1": "Die Eingabe des Feldes",
 	"patientFields.error_mandatory_text2": "ist erforderlich",
+  "patientFields.error_mandatory_short": "Eingabe erforderlich",
 
 	"error.global_session_not_found": "Session ist ungültig",
 	"error.create_patient_missing_field": "Die Eingabe der Pflichtfelder sind erforderlich",

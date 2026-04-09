@@ -12,4 +12,7 @@
          #dateField="ngModel">
   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
   <mat-datepicker #picker></mat-datepicker>
+  <mat-error *ngIf="displayError(dateField)">
+    {{getFieldErrorMessage(dateField.errors, this.translate)}}
+  </mat-error>
 </mat-form-field>

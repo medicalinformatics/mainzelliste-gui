@@ -5,6 +5,7 @@ import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {ControlContainer, FormsModule, NgForm, NgModel, ValidationErrors} from "@angular/forms";
 import {NgIf} from "@angular/common";
+import {displayError, getFieldErrorMessage} from "../fields-utils";
 
 @Component({
   selector: 'app-text-field',
@@ -26,22 +27,10 @@ export class TextFieldComponent {
   @Input() field!: Field
 
   constructor(
-    private translate: TranslateService
+    protected translate: TranslateService
   ) {
   }
 
-  public getFieldErrorMessage(fieldName: string, errors: ValidationErrors | null): string {
-    if (errors?.['pattern'])
-      return this.translate.instant('patientFields.error_value_text1') + " \"" + fieldName + "\" " + this.translate.instant('patientFields.error_value_text2');
-    else if (errors?.['required'])
-      return this.translate.instant('patientFields.error_mandatory_text1') + " \"" + fieldName + "\" " + this.translate.instant('patientFields.error_mandatory_text2');
-    else
-      return "fehler";
-  }
-
-  displayError(field: NgModel) {
-    return field.invalid &&
-      (field.dirty || field.touched) &&
-      (field.errors?.['pattern'] || field.errors?.['required']);
-  }
+  protected readonly displayError = displayError;
+  protected readonly getFieldErrorMessage = getFieldErrorMessage;
 }
