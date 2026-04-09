@@ -83,6 +83,7 @@ export async function initializeAppFactory(
   keycloakSignalObservable: Observable<KeycloakEvent>,
   authorizationService: AuthorizationService,
   translate: TranslateService,
+  dateAdapter: DateAdapter<any>,
   localStorageService: LocalStorageService,
   mlTokenAuthService: MlTokenAuthService
 ): Promise<any> {
@@ -97,6 +98,7 @@ export async function initializeAppFactory(
   return appConfigService.init().then(c => {
     translate.addLangs(['en-US', 'de-DE']);
     translate.setFallbackLang(appConfigService.getDefaultLanguage());
+    dateAdapter.setLocale(localStorageService.language);
     return firstValueFrom(translate.use(localStorageService.language));
   })
   .then(() =>
@@ -166,7 +168,7 @@ const init = async () => {
         lang: "en-US"
       }),
       provideKeycloakWithConfig(config),
-      provideAppInitializer(async () => initializeAppFactory(inject(AppConfigService), inject(BackendConfigService), toObservable(inject(KEYCLOAK_EVENT_SIGNAL)), inject(AuthorizationService), inject(TranslateService), inject(LocalStorageService), inject(MlTokenAuthService))),
+      provideAppInitializer(async () => initializeAppFactory(inject(AppConfigService), inject(BackendConfigService), toObservable(inject(KEYCLOAK_EVENT_SIGNAL)), inject(AuthorizationService), inject(TranslateService), inject(DateAdapter), inject(LocalStorageService), inject(MlTokenAuthService))),
       {provide: ErrorHandler, useClass: GlobalErrorHandler},
       {provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher},
       {provide: MAT_DATE_LOCALE, useValue: 'en-US'},

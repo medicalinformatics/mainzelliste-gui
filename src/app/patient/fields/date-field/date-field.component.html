@@ -6,7 +6,7 @@
   <input matInput
          [matDatepicker]="picker"
          [required]="field.required"
-         placeholder="{{field.hint}} {{localDateFormat}}"
+         placeholder="{{field.hint}} {{getLocalDateFormat()}}"
          [(ngModel)]="data"
          [name]="field.name"
          #dateField="ngModel">

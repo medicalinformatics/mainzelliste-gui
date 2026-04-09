@@ -8,6 +8,7 @@ import {MatInput} from "@angular/material/input";
 import {NgIf} from "@angular/common";
 import {displayError, getFieldErrorMessage} from "../fields-utils";
 import _moment from "moment";
+import {LocalStorageService} from "../../../services/local-storage.service";
 
 @Component({
   selector: 'app-date-field',
@@ -29,13 +30,23 @@ import _moment from "moment";
   viewProviders: [{provide: ControlContainer, useExisting: NgForm}]
 })
 export class DateFieldComponent {
+  private LOCALE_DATE_FORMAT_MAP: Map<string, string> = new Map<string, string> ([
+    ['en-US', 'MM/dd/yyyy'],
+    ['de-DE', 'dd.MM.yyyy']
+  ]);
+
   data = model<string>();
   @Input() field!: Field
 
-  localDateFormat: string;
 
-  constructor( protected  translate: TranslateService) {
-    this.localDateFormat = _moment().localeData().longDateFormat('L');
+  constructor(
+    protected translate: TranslateService,
+    private localStorageService: LocalStorageService
+  ) {
+  }
+
+  getLocalDateFormat():string{
+    return this.LOCALE_DATE_FORMAT_MAP.get(this.localStorageService.language) || 'MM/dd/yyyy';
   }
 
   protected readonly displayError = displayError;
