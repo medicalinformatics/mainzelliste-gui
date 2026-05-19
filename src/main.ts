@@ -83,6 +83,7 @@ export async function initializeAppFactory(
   keycloakSignalObservable: Observable<KeycloakEvent>,
   authorizationService: AuthorizationService,
   translate: TranslateService,
+  dateAdapter: DateAdapter<any>,
   localStorageService: LocalStorageService,
   mlTokenAuthService: MlTokenAuthService
 ): Promise<any> {
@@ -93,11 +94,20 @@ export async function initializeAppFactory(
       return true;
     });
 
+  const availableLangs = ['en-US', 'de-DE'];
+  const params = new URLSearchParams(window.location.search);
+  let langCode = params.get('language') ?? "";
+  if(langCode.length > 0)
+    langCode = availableLangs.find( l => l.startsWith(langCode)) ?? "";
+
   // read ui config file and init translate service
   return appConfigService.init().then(c => {
-    translate.addLangs(['en-US', 'de-DE']);
+    translate.addLangs(availableLangs);
     translate.setFallbackLang(appConfigService.getDefaultLanguage());
-    return firstValueFrom(translate.use(localStorageService.language));
+    // override local storage language with language code given by the url parameter
+    const language = langCode.length == 0 ? localStorageService.language : langCode;
+    dateAdapter.setLocale(language);
+    return firstValueFrom(translate.use(language));
   })
   .then(() =>
     // check if keycloak event changed its state to 'ready'
@@ -111,7 +121,6 @@ export async function initializeAppFactory(
       return initConfigAndAuthServices();
 
     //otherwise try to login with a mainzelliste token
-    const params = new URLSearchParams(window.location.search);
     const tokenId = params.get('tokenId') ?? "";
     const sessionId = params.get('sessionId') ?? "";
     return mlTokenAuthService.init(sessionId, tokenId)
@@ -166,7 +175,7 @@ const init = async () => {
         lang: "en-US"
       }),
       provideKeycloakWithConfig(config),
-      provideAppInitializer(async () => initializeAppFactory(inject(AppConfigService), inject(BackendConfigService), toObservable(inject(KEYCLOAK_EVENT_SIGNAL)), inject(AuthorizationService), inject(TranslateService), inject(LocalStorageService), inject(MlTokenAuthService))),
+      provideAppInitializer(async () => initializeAppFactory(inject(AppConfigService), inject(BackendConfigService), toObservable(inject(KEYCLOAK_EVENT_SIGNAL)), inject(AuthorizationService), inject(TranslateService), inject(DateAdapter), inject(LocalStorageService), inject(MlTokenAuthService))),
       {provide: ErrorHandler, useClass: GlobalErrorHandler},
       {provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher},
       {provide: MAT_DATE_LOCALE, useValue: 'en-US'},
