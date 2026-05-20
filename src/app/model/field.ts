@@ -11,6 +11,7 @@ export enum SemanticType{
   SEX = "sex",
   POSTAL_CODE = "postalCode",
   CITY = "city",
+  BIRTHDATE = "birthday",
   UNDEFINED = "undefined"
 }
 export class Field {
