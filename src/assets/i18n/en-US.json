@@ -289,11 +289,12 @@
   "patientPseudonyms.external": "External pseudonyms:",
 	"patientPseudonyms.related_id_button": "Show related IDs",
 
-	"patientFields.error_value_text1": "The value for the field",
+  "patientFields.error_value_text1": "The value for the field",
 	"patientFields.error_value_text2": "is invalid",
   "patientFields.error_invalid_short": "Invalid value",
 	"patientFields.error_mandatory_text1": "Entering the field",
 	"patientFields.error_mandatory_text2": "is mandatory",
+  "patientFields.invalid_birthday": "Date of birth cannot be a future date",
   "patientFields.error_mandatory_short": "Input required",
 
 	"error.global_session_not_found": "Session is invalid",

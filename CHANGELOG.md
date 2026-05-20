@@ -14,6 +14,10 @@
 ### Feature
 - Bulk pseudonymization support adding unsure matches
 - Support importing policies from a csv file
+- Support language url parameter
+### Bugfix
+- In the "Create Patient"-page the Submit button remained disabled after submitting the form with an invalid date of birth.
+- Added date of birth validation and error messaging on the Create Patient page.
 ## [1.0.3] - 2025-10-30
 ### Fix
 - Upgrade keycloak client to v25.0.6

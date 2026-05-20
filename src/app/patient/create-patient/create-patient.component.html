@@ -3,7 +3,7 @@
   <div style=" width: 500px">
     <!-- personal Info. -->
     @if (this.hasAnyFields([SemanticType.FIRSTNAME, SemanticType.LASTNAME, SemanticType.BIRTH_NAME,
-      SemanticType.BIRTHDAY, SemanticType.SEX]) || nonSemanticFields.length > 0) {
+      SemanticType.BIRTHDATE, SemanticType.SEX]) || nonSemanticFields.length > 0) {
     <div>
       <h4 style="color: #063d6c">{{ 'createPatient.patient_data' | translate }}</h4>
       <div style="display: flex; width: 100%; column-gap: 15px;">
@@ -31,10 +31,10 @@
         }
       </div>
       <div>
-        @if (this.hasField(SemanticType.BIRTHDAY)) {
-          <app-date-field *ngIf="this.hasField(SemanticType.BIRTHDAY)"
-                          [(data)]="this.patient.fields[getFieldName(SemanticType.BIRTHDAY)]"
-                          [field]="this.semanticFields[SemanticType.BIRTHDAY.valueOf()]">
+        @if (this.hasField(SemanticType.BIRTHDATE)) {
+          <app-date-field *ngIf="this.hasField(SemanticType.BIRTHDATE)"
+                          [(data)]="this.patient.fields[getFieldName(SemanticType.BIRTHDATE)]"
+                          [field]="this.semanticFields[SemanticType.BIRTHDATE.valueOf()]">
           </app-date-field>
         }
       </div>

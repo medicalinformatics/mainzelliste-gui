@@ -301,6 +301,7 @@
   "patientFields.error_invalid_short": "Der Wert ist ungültig",
 	"patientFields.error_mandatory_text1": "Die Eingabe des Feldes",
 	"patientFields.error_mandatory_text2": "ist erforderlich",
+  "patientFields.invalid_birthday": "Das Geburtsdatum darf nicht in der Zukunft liegen",
   "patientFields.error_mandatory_short": "Eingabe erforderlich",
 
 	"error.global_session_not_found": "Session ist ungültig",

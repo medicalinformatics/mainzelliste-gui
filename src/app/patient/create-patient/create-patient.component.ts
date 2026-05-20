@@ -210,11 +210,17 @@ export class CreatePatientComponent implements OnInit {
         } else
           return of(newId);
       })
-    ).subscribe(newId => {
-      this.creatingInProgress = false;
-      // ignore if a redirect
-      if(newId != undefined)
-        this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
+    ).subscribe({
+      next: newId => {
+        this.creatingInProgress = false;
+        // ignore if a redirect
+        if(newId != undefined)
+          this.router.navigate(["/idcard", newId.idType, newId.idString]).then()
+      },
+      error: e => {
+        this.creatingInProgress = false;
+        throw e;
+      }
     })
   }
 

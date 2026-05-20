@@ -94,12 +94,20 @@ export async function initializeAppFactory(
       return true;
     });
 
+  const availableLangs = ['en-US', 'de-DE'];
+  const params = new URLSearchParams(window.location.search);
+  let langCode = params.get('language') ?? "";
+  if(langCode.length > 0)
+    langCode = availableLangs.find( l => l.startsWith(langCode)) ?? "";
+
   // read ui config file and init translate service
   return appConfigService.init().then(c => {
-    translate.addLangs(['en-US', 'de-DE']);
+    translate.addLangs(availableLangs);
     translate.setFallbackLang(appConfigService.getDefaultLanguage());
-    dateAdapter.setLocale(localStorageService.language);
-    return firstValueFrom(translate.use(localStorageService.language));
+    // override local storage language with language code given by the url parameter
+    const language = langCode.length == 0 ? localStorageService.language : langCode;
+    dateAdapter.setLocale(language);
+    return firstValueFrom(translate.use(language));
   })
   .then(() =>
     // check if keycloak event changed its state to 'ready'
@@ -113,7 +121,6 @@ export async function initializeAppFactory(
       return initConfigAndAuthServices();
 
     //otherwise try to login with a mainzelliste token
-    const params = new URLSearchParams(window.location.search);
     const tokenId = params.get('tokenId') ?? "";
     const sessionId = params.get('sessionId') ?? "";
     return mlTokenAuthService.init(sessionId, tokenId)
