@@ -15,12 +15,16 @@
                    [matDatepicker]="picker"
                    (blur)="enableDateFieldValidation(dateField)"
                    (input)="fieldChanged()"
+                   [appValidateBirthday]="field.semantic"
                    [required]="field.required"
                    placeholder="{{field.hint}} {{localDateFormat}}"
                    [(ngModel)]="fields[field.name]" [name]="field.name"
                    #dateField="ngModel">
             <mat-datepicker-toggle *ngIf="!readOnly" matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker [disabled]="readOnly"></mat-datepicker>
+            <mat-error *ngIf="displayError(dateField)">
+              {{getFieldErrorMessage(field.i18n | translate, dateField.errors)}}
+            </mat-error>
             <button mat-icon-button *ngIf="readOnly" [cdkCopyToClipboard]="fields[field.name]"
                     class="mat-field-suffix-button" matSuffix>
               <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>

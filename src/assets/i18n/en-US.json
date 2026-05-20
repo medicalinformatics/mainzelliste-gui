@@ -278,10 +278,13 @@
 	"info.audit_trail_text6": "are recorded in the audit trail. The time of the action is recorded and stated. The folder symbol takes you to the patient's ID card for further details about the campaign.",
 	"patientPseudonyms.external": "External pseudonyms:",
 	"patientPseudonyms.related_id_button": "Show related IDs",
-	"patientFields.error_value_text1": "The value for the field",
+
+  "patientFields.error_value_text1": "The value for the field",
 	"patientFields.error_value_text2": "is invalid",
 	"patientFields.error_mandatory_text1": "Entering the field",
 	"patientFields.error_mandatory_text2": "is mandatory",
+  "patientFields.invalid_birthday": "Date of birth cannot be a future date",
+
 	"error.global_session_not_found": "Session is invalid",
 	"error.create_patient_missing_field": "The mandatory fields are required",
 	"error.create_patient_missing_id_type": "Entering a pseudonym type is required",
