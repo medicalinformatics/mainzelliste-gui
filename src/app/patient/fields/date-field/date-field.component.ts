@@ -9,6 +9,7 @@ import {NgIf} from "@angular/common";
 import {displayError, getFieldErrorMessage} from "../fields-utils";
 import _moment from "moment";
 import {LocalStorageService} from "../../../services/local-storage.service";
+import {InvalidBirthdayDirective} from "../../../shared/directives/invalid-birthday-directive";
 
 @Component({
   selector: 'app-date-field',
@@ -24,6 +25,7 @@ import {LocalStorageService} from "../../../services/local-storage.service";
     MatSuffix,
     MatError,
     NgIf,
+    InvalidBirthdayDirective,
   ],
   templateUrl: './date-field.component.html',
   styleUrl: './date-field.component.css',

@@ -8,6 +8,7 @@
          [required]="field.required"
          placeholder="{{field.hint}} {{getLocalDateFormat()}}"
          [(ngModel)]="data"
+         [appValidateBirthday]="field.semantic"
          [name]="field.name"
          #dateField="ngModel">
   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>

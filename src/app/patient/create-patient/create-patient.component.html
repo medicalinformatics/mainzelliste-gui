@@ -33,6 +33,7 @@
       <div>
         @if (this.hasField(SemanticType.BIRTHDATE)) {
           <app-date-field *ngIf="this.hasField(SemanticType.BIRTHDATE)"
+                          style="display: block; width: 242px"
                           [(data)]="this.patient.fields[getFieldName(SemanticType.BIRTHDATE)]"
                           [field]="this.semanticFields[SemanticType.BIRTHDATE.valueOf()]">
           </app-date-field>

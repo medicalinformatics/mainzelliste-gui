@@ -7,6 +7,8 @@ export function getFieldErrorMessage(
 ): string {
   if (errors?.['required'])
     return translate.instant('patientFields.error_mandatory_short')
+  else if (errors?.['invalidBirthday'])
+    return translate.instant('patientFields.invalid_birthday')
   else // if (errors?.['pattern'])
     return translate.instant('patientFields.error_invalid_short');
 }
@@ -14,5 +16,5 @@ export function getFieldErrorMessage(
 export function displayError(field: NgModel) {
   return field.invalid &&
     (field.dirty || field.touched) &&
-    (field.errors?.['pattern'] || field.errors?.['required']);
+    (field.errors?.['pattern'] || field.errors?.['required'] || field.errors?.['invalidBirthday']);
 }
