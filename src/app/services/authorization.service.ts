@@ -35,7 +35,7 @@ export class AuthorizationService {
   ) {
   }
 
-  public init(){
+  public init(reset?: boolean){
     this.userRoles = this.authentication.getRoles();
     this.configuredTenants = this.configService.getMainzellisteClaims()
     .filter(c => this.mlTokenAuthService.isAuthenticated() || c.roles.some( r => this.userRoles.includes(r)))
@@ -48,7 +48,13 @@ export class AuthorizationService {
 
     this.isAnyTenantConsentTemplateConfigSet = this.configuredTenants.some(r => r.consentTemplateIds.length > 0)
 
-    if(this.currentTenantId.length == 0 || this.configuredTenants.every(t => t.id != this.currentTenantId)) {
+    // Reset the tenant ID in the local storage only:
+    // if multiple tenants are configured. (Note: Authentication with an ML token sets the tenant ID in local storage to 'default'.)
+    if(reset && this.currentTenantId == Tenant.DEFAULT_ID && this.configuredTenants.length > 1
+      // if stored tenantId is empty
+      || this.currentTenantId.length == 0
+      // if the stored tenantId not valid anymore
+      || this.configuredTenants.every(t => t.id != this.currentTenantId)) {
       let uiTenants = this.getUITenants();
       this.currentTenantId = uiTenants.length > 0 ? uiTenants[0].id : "";
     } else {

@@ -3,7 +3,8 @@ import {
   EnvironmentProviders,
   ErrorHandler,
   importProvidersFrom,
-  inject, makeEnvironmentProviders,
+  inject,
+  makeEnvironmentProviders,
   provideAppInitializer
 } from '@angular/core';
 
@@ -69,7 +70,7 @@ import {MatListModule} from '@angular/material/list';
 import {AppComponent} from './app/app.component';
 import {provideRouter} from "@angular/router";
 import {routes} from "./app/app-routing.module";
-import {EMPTY, first, firstValueFrom, Observable, of} from "rxjs";
+import {EMPTY, first, firstValueFrom, Observable} from "rxjs";
 import {filter, map} from "rxjs/operators";
 import {MlTokenAuthService} from "./app/services/ml-token-auth.service";
 
@@ -77,8 +78,7 @@ if (environment.production) {
   enableProdMode();
 }
 
-// TODO Refactor -> simplify
-export function initializeAppFactory(
+export async function initializeAppFactory(
   appConfigService: AppConfigService,
   backendConfigService: BackendConfigService,
   keycloakSignalObservable: Observable<KeycloakEvent>,
@@ -88,46 +88,79 @@ export function initializeAppFactory(
   localStorageService: LocalStorageService,
   mlTokenAuthService: MlTokenAuthService
 ): Promise<any> {
-  const initConfigAndAuthServices = (tokenId?: string) =>
-    backendConfigService.init(tokenId)
-    .then(() => {
-      authorizationService.init();
-      return true;
-    });
-
-  const availableLangs = ['en-US', 'de-DE'];
+  // read url parameters
   const params = new URLSearchParams(window.location.search);
-  let langCode = params.get('language') ?? "";
-  if(langCode.length > 0)
-    langCode = availableLangs.find( l => l.startsWith(langCode)) ?? "";
 
-  // read ui config file and init translate service
-  return appConfigService.init().then(c => {
-    translate.addLangs(availableLangs);
-    translate.setFallbackLang(appConfigService.getDefaultLanguage());
-    // override local storage language with language code given by the url parameter
-    const language = langCode.length == 0 ? localStorageService.language : langCode;
-    dateAdapter.setLocale(language);
-    return firstValueFrom(translate.use(language));
-  })
-  .then(() => keycloakSignalObservable != EMPTY
-    // check if keycloak event changed its state to 'ready'
-    && firstValueFrom(keycloakSignalObservable.pipe(
-      filter(e => e.type == KeycloakEventType.Ready),
-      map(evt => typeEventArgs<ReadyArgs>(evt.args)),
-      first()
-    ))
-  )
-  .then(isLoggedIn => {
-    if(isLoggedIn)
-      return initConfigAndAuthServices();
+  // init config file
+  await appConfigService.init();
 
-    //otherwise try to login with a mainzelliste token
-    const tokenId = params.get('tokenId') ?? "";
-    const sessionId = params.get('sessionId') ?? "";
-    return mlTokenAuthService.init(sessionId, tokenId)
-    .then( isAuthenticated => !isAuthenticated ? false : initConfigAndAuthServices(tokenId));
-  })
+  // init translation service
+  await initTranslationService(appConfigService, translate, localStorageService, dateAdapter, params.get('language') ?? "");
+
+  // read tokenId url parameter
+  const tokenId = params.get('tokenId');
+
+  // init authentication service
+  const authenticationState = await authenticate(
+    tokenId,
+    params.get('sessionId'),
+    mlTokenAuthService,
+    keycloakSignalObservable,
+    appConfigService.isOAuthConfigured()
+  );
+
+  // init authorization and configuration services
+  if(authenticationState != AuthenticationState.FAILED) {
+    await backendConfigService.init(authenticationState == AuthenticationState.SUCCESS_WITH_ML_TOKEN? tokenId : null);
+    authorizationService.init(authenticationState == AuthenticationState.SUCCESS_WITH_OAUTH)
+  }
+}
+
+const initTranslationService = async (
+  appConfigService: AppConfigService,
+  translate: TranslateService,
+  localStorageService: LocalStorageService,
+  dateAdapter: DateAdapter<any>,
+  langCodeParam: string
+)=> {
+  const availableLangCodes = ['en-US', 'de-DE'];
+
+  // override local storage language with language code given by the url parameter
+  const langCode = availableLangCodes.find( l => l.startsWith(langCodeParam)) ?? localStorageService.language;
+
+  // init translate service
+  translate.addLangs(availableLangCodes);
+  translate.setFallbackLang(appConfigService.getDefaultLanguage());
+  dateAdapter.setLocale(langCode);
+  return firstValueFrom(translate.use(langCode));
+}
+
+enum AuthenticationState { SUCCESS_WITH_ML_TOKEN, SUCCESS_WITH_OAUTH, FAILED}
+
+async function authenticate(
+  tokenId: string | null,
+  sessionId: string | null,
+  mlTokenAuthService: MlTokenAuthService,
+  keycloakSignalObservable: Observable<KeycloakEvent>,
+  isOAuthConfigured: boolean
+) {
+  // try to authenticate with mainzelliste token
+  if (await mlTokenAuthService.init(sessionId, tokenId)) {
+    return AuthenticationState.SUCCESS_WITH_ML_TOKEN;
+  } else if (isOAuthConfigured && await checkKeycloakAuthenticationStatus(keycloakSignalObservable)) {
+    return AuthenticationState.SUCCESS_WITH_OAUTH;
+  } else {
+    return AuthenticationState.FAILED;
+  }
+}
+
+// check if keycloak event changed its state to 'ready'
+function checkKeycloakAuthenticationStatus(keycloakSignalObservable: Observable<KeycloakEvent>){
+  return firstValueFrom(keycloakSignalObservable.pipe(
+    filter(e => e.type == KeycloakEventType.Ready),
+    map(evt => typeEventArgs<ReadyArgs>(evt.args)),
+    first()
+  ))
 }
 
 export function provideKeycloakWithConfig(config: AppConfig): EnvironmentProviders {
@@ -163,8 +196,8 @@ export function provideKeycloakWithConfig(config: AppConfig): EnvironmentProvide
 
 const init = async () => {
   const config: AppConfig = await fetch('/assets/config/config.json').then((res) => res?.json());
-  const keyclockAuthConfigured = config.patientLists[0].oAuthConfig != undefined;
-    await bootstrapApplication(AppComponent, {
+  const isOAuthConfigured = config.patientLists[0].oAuthConfig != undefined;
+  await bootstrapApplication(AppComponent, {
     providers: [
       importProvidersFrom(BrowserModule, FormsModule, ScrollingModule, MatSidenavModule, MatBadgeModule, MatPaginatorModule, MatNativeDateModule, MatTableModule, MatCheckboxModule, MatTooltipModule, MatProgressSpinnerModule, MatProgressBarModule, ClipboardModule, ConsentModule, FileSaverModule, MatStepperModule, EditorModule, MatListModule),
       {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
@@ -177,8 +210,8 @@ const init = async () => {
         fallbackLang: "en-US",
         lang: "en-US"
       }),
-      keyclockAuthConfigured ? provideKeycloakWithConfig(config) : makeEnvironmentProviders([]),
-      provideAppInitializer(async () => initializeAppFactory(inject(AppConfigService), inject(BackendConfigService),  keyclockAuthConfigured ? toObservable(inject(KEYCLOAK_EVENT_SIGNAL)) : EMPTY, inject(AuthorizationService), inject(TranslateService), inject(DateAdapter), inject(LocalStorageService), inject(MlTokenAuthService))),
+      isOAuthConfigured ? provideKeycloakWithConfig(config) : makeEnvironmentProviders([]),
+      provideAppInitializer(async () => initializeAppFactory(inject(AppConfigService), inject(BackendConfigService),  isOAuthConfigured ? toObservable(inject(KEYCLOAK_EVENT_SIGNAL)) : EMPTY, inject(AuthorizationService), inject(TranslateService), inject(DateAdapter), inject(LocalStorageService), inject(MlTokenAuthService))),
       {provide: ErrorHandler, useClass: GlobalErrorHandler},
       {provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher},
       {provide: MAT_DATE_LOCALE, useValue: 'en-US'},
@@ -189,7 +222,7 @@ const init = async () => {
         deps: [MAT_DATE_LOCALE, MAT_LUXON_DATE_ADAPTER_OPTIONS]
       },
       {provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js'},
-      provideHttpClient(withInterceptors(keyclockAuthConfigured ? [includeBearerTokenInterceptor] : [])),
+      provideHttpClient(withInterceptors(isOAuthConfigured ? [includeBearerTokenInterceptor] : [])),
       provideRouter(routes),
       provideAnimations()
     ]

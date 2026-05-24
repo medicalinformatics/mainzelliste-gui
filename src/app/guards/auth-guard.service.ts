@@ -22,6 +22,7 @@ const isAccessAllowed = async (state: RouterStateSnapshot) => {
 
 export const canActivateAuthRole : CanActivateFn = (route, state) => {
     return inject(AppConfigService).isOAuthConfigured()
+      && !inject(MlTokenAuthService).isAuthenticated()
       && isAccessAllowed(state)
       || inject(Router).createUrlTree(['access-denied']);
 };
