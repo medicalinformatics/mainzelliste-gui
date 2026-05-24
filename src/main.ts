@@ -3,7 +3,7 @@ import {
   EnvironmentProviders,
   ErrorHandler,
   importProvidersFrom,
-  inject,
+  inject, makeEnvironmentProviders,
   provideAppInitializer
 } from '@angular/core';
 
@@ -69,7 +69,7 @@ import {MatListModule} from '@angular/material/list';
 import {AppComponent} from './app/app.component';
 import {provideRouter} from "@angular/router";
 import {routes} from "./app/app-routing.module";
-import {first, firstValueFrom, Observable} from "rxjs";
+import {EMPTY, first, firstValueFrom, Observable, of} from "rxjs";
 import {filter, map} from "rxjs/operators";
 import {MlTokenAuthService} from "./app/services/ml-token-auth.service";
 
@@ -77,7 +77,8 @@ if (environment.production) {
   enableProdMode();
 }
 
-export async function initializeAppFactory(
+// TODO Refactor -> simplify
+export function initializeAppFactory(
   appConfigService: AppConfigService,
   backendConfigService: BackendConfigService,
   keycloakSignalObservable: Observable<KeycloakEvent>,
@@ -109,13 +110,14 @@ export async function initializeAppFactory(
     dateAdapter.setLocale(language);
     return firstValueFrom(translate.use(language));
   })
-  .then(() =>
+  .then(() => keycloakSignalObservable != EMPTY
     // check if keycloak event changed its state to 'ready'
-    firstValueFrom(keycloakSignalObservable.pipe(
+    && firstValueFrom(keycloakSignalObservable.pipe(
       filter(e => e.type == KeycloakEventType.Ready),
       map(evt => typeEventArgs<ReadyArgs>(evt.args)),
       first()
-    )))
+    ))
+  )
   .then(isLoggedIn => {
     if(isLoggedIn)
       return initConfigAndAuthServices();
@@ -161,7 +163,8 @@ export function provideKeycloakWithConfig(config: AppConfig): EnvironmentProvide
 
 const init = async () => {
   const config: AppConfig = await fetch('/assets/config/config.json').then((res) => res?.json());
-  await bootstrapApplication(AppComponent, {
+  const keyclockAuthConfigured = config.patientLists[0].oAuthConfig != undefined;
+    await bootstrapApplication(AppComponent, {
     providers: [
       importProvidersFrom(BrowserModule, FormsModule, ScrollingModule, MatSidenavModule, MatBadgeModule, MatPaginatorModule, MatNativeDateModule, MatTableModule, MatCheckboxModule, MatTooltipModule, MatProgressSpinnerModule, MatProgressBarModule, ClipboardModule, ConsentModule, FileSaverModule, MatStepperModule, EditorModule, MatListModule),
       {provide: MatPaginatorIntl, useClass: InternationalizedMatPaginatorIntl},
@@ -174,8 +177,8 @@ const init = async () => {
         fallbackLang: "en-US",
         lang: "en-US"
       }),
-      provideKeycloakWithConfig(config),
-      provideAppInitializer(async () => initializeAppFactory(inject(AppConfigService), inject(BackendConfigService), toObservable(inject(KEYCLOAK_EVENT_SIGNAL)), inject(AuthorizationService), inject(TranslateService), inject(DateAdapter), inject(LocalStorageService), inject(MlTokenAuthService))),
+      keyclockAuthConfigured ? provideKeycloakWithConfig(config) : makeEnvironmentProviders([]),
+      provideAppInitializer(async () => initializeAppFactory(inject(AppConfigService), inject(BackendConfigService),  keyclockAuthConfigured ? toObservable(inject(KEYCLOAK_EVENT_SIGNAL)) : EMPTY, inject(AuthorizationService), inject(TranslateService), inject(DateAdapter), inject(LocalStorageService), inject(MlTokenAuthService))),
       {provide: ErrorHandler, useClass: GlobalErrorHandler},
       {provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher},
       {provide: MAT_DATE_LOCALE, useValue: 'en-US'},
@@ -186,7 +189,7 @@ const init = async () => {
         deps: [MAT_DATE_LOCALE, MAT_LUXON_DATE_ADAPTER_OPTIONS]
       },
       {provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js'},
-      provideHttpClient(withInterceptors([includeBearerTokenInterceptor])),
+      provideHttpClient(withInterceptors(keyclockAuthConfigured ? [includeBearerTokenInterceptor] : [])),
       provideRouter(routes),
       provideAnimations()
     ]
