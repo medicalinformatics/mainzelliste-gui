@@ -4,6 +4,7 @@ import {
   ErrorHandler,
   importProvidersFrom,
   inject,
+  InjectionToken,
   makeEnvironmentProviders,
   provideAppInitializer
 } from '@angular/core';
@@ -78,6 +79,15 @@ if (environment.production) {
   enableProdMode();
 }
 
+export class BootState {
+  public ready: boolean = false;
+}
+
+export const APP_BOOT_STATUS_EVENT_SIGNAL = new InjectionToken<BootState>('app.boot.status', {
+  providedIn: 'root',
+  factory: () => new BootState(),
+});
+
 export async function initializeAppFactory(
   appConfigService: AppConfigService,
   backendConfigService: BackendConfigService,
@@ -86,7 +96,8 @@ export async function initializeAppFactory(
   translate: TranslateService,
   dateAdapter: DateAdapter<any>,
   localStorageService: LocalStorageService,
-  mlTokenAuthService: MlTokenAuthService
+  mlTokenAuthService: MlTokenAuthService,
+  bootState: BootState
 ): Promise<any> {
   // read url parameters
   const params = new URLSearchParams(window.location.search);
@@ -112,8 +123,10 @@ export async function initializeAppFactory(
   // init authorization and configuration services
   if(authenticationState != AuthenticationState.FAILED) {
     await backendConfigService.init(authenticationState == AuthenticationState.SUCCESS_WITH_ML_TOKEN? tokenId : null);
-    authorizationService.init(authenticationState == AuthenticationState.SUCCESS_WITH_OAUTH)
+    authorizationService.init(authenticationState == AuthenticationState.SUCCESS_WITH_OAUTH);
   }
+
+  bootState.ready = true;
 }
 
 const initTranslationService = async (
@@ -211,7 +224,7 @@ const init = async () => {
         lang: "en-US"
       }),
       isOAuthConfigured ? provideKeycloakWithConfig(config) : makeEnvironmentProviders([]),
-      provideAppInitializer(async () => initializeAppFactory(inject(AppConfigService), inject(BackendConfigService),  isOAuthConfigured ? toObservable(inject(KEYCLOAK_EVENT_SIGNAL)) : EMPTY, inject(AuthorizationService), inject(TranslateService), inject(DateAdapter), inject(LocalStorageService), inject(MlTokenAuthService))),
+      provideAppInitializer(async () => initializeAppFactory(inject(AppConfigService), inject(BackendConfigService),  isOAuthConfigured ? toObservable(inject(KEYCLOAK_EVENT_SIGNAL)) : EMPTY, inject(AuthorizationService), inject(TranslateService), inject(DateAdapter), inject(LocalStorageService), inject(MlTokenAuthService), inject(APP_BOOT_STATUS_EVENT_SIGNAL))),
       {provide: ErrorHandler, useClass: GlobalErrorHandler},
       {provide: ErrorStateMatcher, useClass: DirtyErrorStateMatcher},
       {provide: MAT_DATE_LOCALE, useValue: 'en-US'},

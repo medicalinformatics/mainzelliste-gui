@@ -1,4 +1,4 @@
-import {AfterContentChecked, ChangeDetectorRef, Component} from '@angular/core';
+import {AfterContentChecked, ChangeDetectorRef, Component, inject} from '@angular/core';
 import {GlobalTitleService} from "./services/global-title.service";
 import {ErrorNotificationService} from "./services/error-notification.service";
 import { NavigationStart, Router, RouterOutlet } from "@angular/router";
@@ -14,6 +14,7 @@ import { MatIcon } from '@angular/material/icon';
 import { ErrorCardComponent } from './shared/components/error-card/error-card.component';
 import { FooterComponent } from './main-layout/footer/footer.component';
 import {MlTokenAuthService} from "./services/ml-token-auth.service";
+import {APP_BOOT_STATUS_EVENT_SIGNAL} from "../main";
 
 
 @Component({
@@ -24,6 +25,7 @@ import {MlTokenAuthService} from "./services/ml-token-auth.service";
 })
 export class AppComponent implements AfterContentChecked {
   title = 'mainzelliste-gui';
+  bootState = inject(APP_BOOT_STATUS_EVENT_SIGNAL);
 
   constructor(
     public readonly titleService: GlobalTitleService,
