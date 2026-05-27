@@ -370,11 +370,17 @@
 	"errorDialogComponent.text2": " while trying to load the application",
 	"appConfigService.backend_online": "Mainzelliste is online",
 	"appConfigService.main_id_type_valid": "Main id type is valid",
-	"access_denied.title": "Access Denied",
+
+  "access_denied.title": "Access Denied",
 	"access_denied.message": "you do not have permission to view this page",
-	"page_not_found.title": "Page not found",
+
+  "auth_failed.title": "Authentication Failed",
+  "auth_failed.message": "Please provide a valid Mainzelliste token and session ID using the URL parameters tokenId and sessionId.",
+
+  "page_not_found.title": "Page not found",
 	"page_not_found.message": "The page you were looking for could not be found",
-	"patientlistView.title": "Patient list",
+
+  "patientlistView.title": "Patient list",
 
 	"newIdDialog.mat_title": "Generate new ID",
 	"newIdDialog.text_1_a": "A new ID will be generated for the selected type",

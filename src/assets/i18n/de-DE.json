@@ -382,11 +382,11 @@
 	"appConfigService.backend_online": "Mainzelliste ist online",
 	"appConfigService.main_id_type_valid": "Haupt-ID-Typ ist gültig",
 
-  	"access_denied.title": "Zugriff verweigert",
-  	"access_denied.message": "Sie haben keine Berechtigung zum Anzeigen dieser Seite",
+  "access_denied.title": "Zugriff verweigert",
+  "access_denied.message": "Sie haben keine Berechtigung zum Anzeigen dieser Seite",
 
-  	"page_not_found.title": "Seite nicht gefunden",
-  	"page_not_found.message": "Die gesuchte Seite konnte nicht gefunden werden",
+  "auth_failed.title": "Authentifizierung fehlgeschlagen",
+  "auth_failed.message": "Bitte geben Sie eine gültige Mainzelliste-Token-ID und Session-ID über die URL-Parameter tokenId und sessionId an",
 
   "page_not_found.title": "Seite nicht gefunden",
   "page_not_found.message": "Die gesuchte Seite konnte nicht gefunden werden",

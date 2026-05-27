@@ -7,13 +7,13 @@
   </div>
 
   <!--HEADER-->
-  <app-header style="flex: 0 0; height: 75px" *ngIf="this.mlTokenAuthService.isAuthenticated() || isLoggedIn()"></app-header>
+  <app-header style="flex: 0 0; height: 75px" *ngIf="!this.hideSideNav && (this.mlTokenAuthService.isAuthenticated() || isLoggedIn())"></app-header>
 
   <!-- NAVIGATION AND CONTENT -->
   <mat-sidenav-container style="height: 100%" autosize *ngIf="bootState.ready">
     <!-- LEFT MENU-->
     <mat-sidenav mode="side" class="sidenav-menu" opened>
-      <app-navigation *ngIf="this.userAuthService.isLoggedIn() && !this.mlTokenAuthService.isAuthenticated()"
+      <app-navigation *ngIf="this.userAuthService.isLoggedIn() && !this.mlTokenAuthService.isAuthenticated() && !this.hideSideNav"
                       style=" padding-top:22px; color: white; display: flex; flex-flow: column"></app-navigation>
     </mat-sidenav>
     <!-- CONTENT & FOOTER -->
@@ -35,7 +35,7 @@
             <router-outlet></router-outlet>
           </div>
         </div>
-        <app-footer *ngIf="this.mlTokenAuthService.isAuthenticated() || isLoggedIn()"></app-footer>
+        <app-footer *ngIf="!this.hideSideNav && (this.mlTokenAuthService.isAuthenticated() || isLoggedIn())"></app-footer>
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>

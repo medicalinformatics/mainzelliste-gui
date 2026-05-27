@@ -23,6 +23,9 @@ import {
 import {
   BulkPseudonymizationComponent
 } from "./bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component";
+import {
+  FailedAuthenticationComponent
+} from "./failed-authentication/failed-authentication.component";
 
 export const routes: Routes = [
   { // Note: access is only possible with OAuth authentication.
@@ -52,6 +55,7 @@ export const routes: Routes = [
     ]
   },
   {path: 'access-denied', component: AccessDeniedComponent},
+  {path: 'auth-failed', component: FailedAuthenticationComponent},
   // Needs to be outside, because we want message why user couldn't authenticate
   {path: 'error', component: ErrorComponent},
   {path: 'logout', component: LogoutComponent},

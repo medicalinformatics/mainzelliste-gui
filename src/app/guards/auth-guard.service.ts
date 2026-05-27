@@ -29,7 +29,7 @@ export const canActivateAuthRole : CanActivateFn = (route, state) => {
 
 export const canActivateMlToken: CanActivateFn = (route, state) => {
   return inject(MlTokenAuthService).isAuthenticated()
-    || inject(Router).createUrlTree(['access-denied']);
+    || inject(Router).createUrlTree(['auth-failed']);
 };
 
 const checkTenantIdType = (
