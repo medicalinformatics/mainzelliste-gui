@@ -1,10 +1,10 @@
-<table style="width: 100%; max-width: 700px;" ngModelGroup="externalIds" #externalIdsCtrl="ngModelGroup">
-  <tr *ngFor="let id of getExternalIds()">
-    <td style="width: 100%; flex-flow: row">
-      <div style="display: flex; flex-wrap: nowrap;">
+<div style="width: 100%; max-width: 700px;" ngModelGroup="externalIds" #externalIdsCtrl="ngModelGroup">
+  <div [ngStyle]="{'display': 'flex', 'flex-direction': 'column', 'gap': '0 60px'}">
+    @for (id of getExternalIds(); track $index){
+      <div style="width: 100%; display: flex; flex-wrap: nowrap;">
         <button *ngIf="side!='none'" style=" margin-top:4%; border:none; background:none;"
                 [ngStyle]="{float:side}">
-<!--                (click)="slideData(fields[externalId.idType], externalId.idString)">-->
+          <!--                (click)="slideData(fields[externalId.idType], externalId.idString)">-->
           <mat-icon>arrow_circle_{{side}}</mat-icon>
         </button>
         <mat-form-field [class]="getFieldClass()" subscriptSizing="dynamic">
@@ -46,21 +46,16 @@
           <mat-icon>add_box</mat-icon>
         </button>
       </div>
-    </td>
-  </tr>
-  <!-- external id types dropdown menu-->
-  <tr *ngIf="!readOnly">
-    <td>
-      <div style="display: flex; flex-wrap: nowrap;">
-        <mat-form-field class="inputField ml-field">
-          <mat-label>{{'createPatient.select_external_id' | translate}}</mat-label>
-          <mat-select required="false" [disabled]="this.getExternalIdMatSelectData().length == 0"
-                      (selectionChange)="this.addExternalIdField($event.source, externalIdsCtrl)" >
-            <mat-option *ngFor="let idType of this.getExternalIdMatSelectData()"
-                        [value]="idType">{{idType}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </td>
-  </tr>
-</table>
+    }
+  </div>
+  @if (!readOnly) {
+    <mat-form-field class="inputField ml-field">
+      <mat-label>{{'createPatient.select_external_id' | translate}}</mat-label>
+      <mat-select required="false" [disabled]="this.getExternalIdMatSelectData().length == 0"
+                  (selectionChange)="this.addExternalIdField($event.source, externalIdsCtrl)" >
+        <mat-option *ngFor="let idType of this.getExternalIdMatSelectData()"
+                    [value]="idType">{{idType}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  }
+</div>
