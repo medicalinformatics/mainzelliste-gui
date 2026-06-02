@@ -32,6 +32,7 @@
               <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">hub</mat-icon>
             </button>
             <a mat-icon-button *ngIf="readOnly && this.getExternalLink(id)"
+                    class="mat-field-suffix-button"
                     [ngStyle]="{'width': '24px', 'height': '24px'}"
                     matTooltip="{{'patientPseudonyms.jump_to_mdat_system' | translate}}"
                     target="_blank"
