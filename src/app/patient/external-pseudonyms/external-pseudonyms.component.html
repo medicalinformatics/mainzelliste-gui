@@ -41,7 +41,7 @@
             </a>
           </span>
         </mat-form-field>
-        <button *ngIf="!readOnly && (this.permittedOperation == 'C' || !this.isAssociatedIdType(id.idType))" mat-icon-button color="primary"
+        <button *ngIf="!readOnly && !this.isRequired(id.idType) && (this.permittedOperation == 'C' || !this.isAssociatedIdType(id.idType))" mat-icon-button color="primary"
                 aria-label="Externes Pseudonym entfernen"
                 (click)="this.removeExternalIdField(id.idType)">
           <mat-icon>delete</mat-icon>
