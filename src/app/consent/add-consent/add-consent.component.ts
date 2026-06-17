@@ -3,13 +3,16 @@ import {ConsentDetailComponent} from "../consent-detail/consent-detail.component
 import {ActivatedRoute, Router} from "@angular/router";
 import {Consent} from "../consent.model";
 import {GlobalTitleService} from "../../services/global-title.service";
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import {ConsentService} from "../consent.service";
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-add-consent',
-  templateUrl: './add-consent.component.html',
-  styleUrls: ['./add-consent.component.css']
+    selector: 'app-add-consent',
+    templateUrl: './add-consent.component.html',
+    styleUrls: ['./add-consent.component.css'],
+    imports: [ConsentDetailComponent, NgIf, MatButton, TranslatePipe]
 })
 export class AddConsentComponent implements OnInit {
 

@@ -1,23 +1,31 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ChoiceItem, Item, PolicyView} from "../consent-template.model";
-import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
+import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag } from "@angular/cdk/drag-drop";
 import {ConsentPolicy} from "../../model/consent-policy";
 import {ConsentService} from "../consent.service";
 import {ConsentPolicySet} from "../../model/consent-policy-set";
-import {ControlContainer, NgForm} from "@angular/forms";
-import {MatTableDataSource} from "@angular/material/table";
+import { ControlContainer, NgForm, FormsModule } from "@angular/forms";
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow } from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
 import {ConsentTemplatePolicyDialog} from "./consent-template-policy-dialog";
 import {EditorComponent} from "@tinymce/tinymce-angular";
 import {Permission} from "../../model/permission";
-import {TranslateService} from "@ngx-translate/core";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import {Validity} from "../consent-validity-period";
+import { NgStyle, NgFor, NgIf, NgSwitch } from '@angular/common';
+import { MatCard, MatCardTitleGroup, MatCardTitle, MatCardSubtitle, MatCardActions } from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { MatError } from '@angular/material/form-field';
 
 @Component({
-  selector: 'app-consent-template-modules',
-  templateUrl: './consent-template-modules.component.html',
-  styleUrls: ['./consent-template-modules.component.css'],
-  viewProviders: [{provide: ControlContainer, useExisting: NgForm}]
+    selector: 'app-consent-template-modules',
+    templateUrl: './consent-template-modules.component.html',
+    styleUrls: ['./consent-template-modules.component.css'],
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    imports: [CdkDropList, FormsModule, NgStyle, NgFor, MatCard, CdkDrag, MatCardTitleGroup, MatCardTitle, MatCardSubtitle, MatIcon, NgIf, MatIconButton, MatTooltip, NgSwitch, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow, MatRadioGroup, MatRadioButton, EditorComponent, MatCardActions, MatButton, MatError, TranslatePipe]
 })
 export class ConsentTemplateModulesComponent implements OnInit {
 

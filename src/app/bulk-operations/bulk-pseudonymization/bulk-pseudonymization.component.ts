@@ -1,11 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatStep, MatStepper} from "@angular/material/stepper";
-import {FormBuilder, FormControl, Validators} from "@angular/forms";
+import { MatStep, MatStepper, MatStepLabel } from "@angular/material/stepper";
+import { FormBuilder, FormControl, Validators, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {GlobalTitleService} from "../../services/global-title.service";
-import {NgxCsvParser, NgxCSVParserError} from "ngx-csv-parser";
 import {PatientListService} from "../../services/patient-list.service";
-import {TranslateService} from "@ngx-translate/core";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import {saveAs} from "file-saver";
 import {StepperSelectionEvent} from "@angular/cdk/stepper";
 import {AppConfigService} from "../../app-config.service";
@@ -14,27 +13,42 @@ import {AddPatientRequest} from "../../model/add-patient-request";
 import {map, startWith} from "rxjs/operators";
 import {Observable, of} from "rxjs";
 import {IdTypSelection} from "../../patient/create-patient/create-patient.component";
-import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
-import {MatChipInputEvent, MatChipList} from "@angular/material/chips";
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger, MatAutocomplete } from "@angular/material/autocomplete";
+import { MatChipGrid, MatChipInputEvent, MatChipRow, MatChipRemove, MatChipInput } from "@angular/material/chips";
 import _moment from "moment";
 import {MatPaginator} from "@angular/material/paginator";
 import {animate, style, transition, trigger} from "@angular/animations";
+import * as papaparse from "papaparse";
+import {ParseResult} from "papaparse";
+import {BackendConfigService} from "../../services/backend-config.service";
+import { MessageCardComponent } from '../../shared/components/message-card/message-card.component';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { NgIf, NgFor, AsyncPipe, SlicePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatCard, MatCardContent, MatCardTitleGroup } from '@angular/material/card';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatOption } from '@angular/material/select';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 
 @Component({
-  selector: 'app-bulk-pseudonymization',
-  templateUrl: './bulk-pseudonymization.component.html',
-  styleUrls: ['./bulk-pseudonymization.component.css'],
-  animations: [
-    trigger('infoDialogTrigger', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('300ms', style({ opacity: 1 })),
-      ]),
-      transition(':leave', [
-        animate('100ms', style({ opacity: 0 }))
-      ])
-    ])
-  ]
+    selector: 'app-bulk-pseudonymization',
+    templateUrl: './bulk-pseudonymization.component.html',
+    styleUrls: ['./bulk-pseudonymization.component.css'],
+    animations: [
+        trigger('infoDialogTrigger', [
+            transition(':enter', [
+                style({ opacity: 0 }),
+                animate('300ms', style({ opacity: 1 })),
+            ]),
+            transition(':leave', [
+                animate('100ms', style({ opacity: 0 }))
+            ])
+        ])
+    ],
+    imports: [MatStepper, MatStep, FormsModule, ReactiveFormsModule, MatStepLabel, MessageCardComponent, MatButton, NgIf, MatIcon, MatProgressSpinner, MatCard, MatCardContent, MatProgressBar, MatFormField, MatLabel, MatChipGrid, NgFor, MatChipRow, MatChipRemove, MatChipInput, MatAutocompleteTrigger, MatError, MatAutocomplete, MatOption, MatCheckbox, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatPaginator, MatCardTitleGroup, MatIconButton, AsyncPipe, SlicePipe, TranslatePipe]
 })
 export class BulkPseudonymizationComponent implements OnInit {
 
@@ -45,6 +59,7 @@ export class BulkPseudonymizationComponent implements OnInit {
   fileName: string = "";
   public externalIdTypes: string[] = [];
   public  fieldNames: string[] = [];
+  allowUnsafeMatches: boolean = false;
 
   /** stats*/
   step: number = 3;
@@ -56,7 +71,7 @@ export class BulkPseudonymizationComponent implements OnInit {
   undefinedHeaders: string[] = []
 
   showInfoCard: boolean = true;
-  @ViewChild('chipList') chipList!: MatChipList;
+  @ViewChild('chipList') chipList!: MatChipGrid;
   chipListInputCtrl = new FormControl();
   internalIdTypeSelection: IdTypSelection[] = [];
   /** selected chip data model */
@@ -84,8 +99,8 @@ export class BulkPseudonymizationComponent implements OnInit {
     private _formBuilder: FormBuilder,
     public dialog: MatDialog,
     private titleService: GlobalTitleService,
-    private configService: AppConfigService,
-    private ngxCsvParser: NgxCsvParser,
+    private configService: BackendConfigService,
+    private appConfigService: AppConfigService,
     public patientListService: PatientListService,
     public translate: TranslateService
   ) {
@@ -125,11 +140,15 @@ export class BulkPseudonymizationComponent implements OnInit {
         .filter(e => !e.added && e.idType.toLowerCase().includes(searchValue.toLowerCase()))
       }),
     );
+  }
 
-    this.uploadFormGroup.get('uploadField')?.valueChanges.subscribe((file: any) => {
-      if (file != null) {
-        if (this.validFileTypes.includes(file.type)) {
-          this.readCsv(file);
+  onFileSelected($event: Event) {
+    const target = $event.target as HTMLInputElement;
+    const files = target.files as FileList;
+    if (files != null && files.length > 0) {
+      if (files[0] != null) {
+        if (this.validFileTypes.includes(files[0].type)) {
+          this.readCsv(files[0]);
         } else {
           this.uploadFormGroup.get('uploadField')?.setErrors({
             csvError: {
@@ -139,77 +158,82 @@ export class BulkPseudonymizationComponent implements OnInit {
           this.step = 0;
         }
       }
-    });
+    }
   }
 
   readCsv(file: any) {
     this.readingInProgress = true
     this.fileName = file.name;
-    file.text().then((content: string) => {
-      this.delimiter = content.includes(";") ? ";" : ",";
-      this.ngxCsvParser.parse(file, {header: false, delimiter: this.delimiter, encoding: 'utf8'})
-      .pipe(
-        map( records => {
-          if (records instanceof NgxCSVParserError) {
-            console.log(records.message)
-            throw new FieldError(this.translate, "CSVFileUploader.upload_error_invalid_file");
+    new Observable<ParseResult<unknown>>(
+      observable  => {
+        papaparse.parse(file, {
+          encoding: 'utf8',
+          complete: function (content) {
+            observable.next(content);
+            observable.complete();
           }
-          this.csvRecords = records;
-          const csvHeaders = records[0] as string[]
-
-          // check empty headers
-          if(records.length == 0 || csvHeaders.length == 0)
-            throw new FieldError(this.translate, "CSVFileUploader.upload_error_no_header");
-
-          // check empty rows
-          if(records.length <=1)
-            throw new FieldError(this.translate, "CSVFileUploader.upload_error_empty");
-
-          // check undefined headers
-          const fieldsIndexes = csvHeaders.map((h, i) => this.fieldNames.includes(h.trim())? i : -1).filter( i => i >= 0)
-          const idTypesIndexes = csvHeaders.map((h, i) => this.externalIdTypes.includes(h.trim())? i : -1).filter( i => i >= 0)
-          this.undefinedHeaders = csvHeaders.filter((h,i) => !fieldsIndexes.includes(i) && !idTypesIndexes.includes(i))
-          if (fieldsIndexes.length == 0 && idTypesIndexes.length == 0 && this.undefinedHeaders.length > 0) {
-            this.undefinedHeaders = [];
-            throw new FieldError(this.translate, "bulkPseudonymization.upload_error_unknown_header")
-          }
-
-          // validate fields
-          if (fieldsIndexes.length > 0) {
-            // check required field
-            const missingRequiredFields = this.fieldNames.filter( fieldName => this.configService.getFields()
-            .some( f => f.required && (f.mainzellisteField != undefined && f.mainzellisteField.length > 0?
-              f.mainzellisteField == fieldName : f.mainzellisteFields.includes(fieldName))))
-            .filter( f => !csvHeaders.includes(f))
-            if(missingRequiredFields.length > 0)
-              throw new FieldError(this.translate, "bulkPseudonymization.upload_error_required_header", missingRequiredFields.join(", "))
-          }
-
-          return records.filter((r,i) => i>0).map( row => {
-            const fields: { [key: string]: string }  = {};
-            fieldsIndexes.forEach( i => fields[csvHeaders[i]] = row[i])
-            const idTypes: { [key: string]: string }  = {};
-            idTypesIndexes.forEach( i => idTypes[csvHeaders[i]] = row[i])
-            return new AddPatientRequest(fields, idTypes);
-          })
         })
-      ).subscribe({
-        next: (requests): void => {
-          this.readingInProgress = false
-          this.addPatientRequests = requests;
-          this.stepper.next();
-          this.step = 1;
-        },
-        error: (e:FieldError): void => {
-          this.readingInProgress = false
-          console.log(e)
-          const invalidHeaderMessage = this.undefinedHeaders.length == 0 ? "" : ". " +
-            this.translate.instant("CSVFileUploader.upload_error_some_unknown_header")
-            .replace("${}", this.undefinedHeaders.join(", "))
-          this.uploadFormGroup.get('uploadField')?.setErrors({csvError: {value: e.message + invalidHeaderMessage}})
-          this.step = 0;
+      }
+    )
+    .pipe(
+      map(content => {
+        this.csvRecords = content.data as string[][];
+        // check if empty
+        if (this.csvRecords.length <= 1)
+          throw new FieldError(this.translate, "CSVFileUploader.upload_error_empty");
+
+        // extract and validate header
+        let csvHeaders = this.csvRecords[0]
+        if (!csvHeaders || csvHeaders.length == 0 || csvHeaders[0].trim().length == 0)
+          throw new FieldError(this.translate, "CSVFileUploader.upload_error_no_header");
+
+        // check undefined headers
+        const fieldsIndexes = csvHeaders.map((h, i) => this.fieldNames.includes(h.trim())? i : -1).filter( i => i >= 0)
+        const idTypesIndexes = csvHeaders.map((h, i) => this.externalIdTypes.includes(h.trim())? i : -1).filter( i => i >= 0)
+        this.undefinedHeaders = csvHeaders.filter((h,i) => !fieldsIndexes.includes(i) && !idTypesIndexes.includes(i))
+        if (fieldsIndexes.length == 0 && idTypesIndexes.length == 0 && this.undefinedHeaders.length > 0) {
+          this.undefinedHeaders = [];
+          throw new FieldError(this.translate, "bulkPseudonymization.upload_error_unknown_header")
         }
-      });
+
+        // validate fields
+        if (fieldsIndexes.length > 0) {
+          // check required field
+          const missingRequiredFields = this.fieldNames.filter( fieldName => this.appConfigService.getFields()
+          .some( f => f.required && (f.mainzellisteField != undefined && f.mainzellisteField.length > 0?
+            f.mainzellisteField == fieldName : f.mainzellisteFields.includes(fieldName))))
+          .filter( f => !csvHeaders.includes(f))
+          if(missingRequiredFields.length > 0)
+            throw new FieldError(this.translate, "bulkPseudonymization.upload_error_required_header", missingRequiredFields.join(", "))
+        }
+
+        this.delimiter = content.meta.delimiter;
+
+        return this.csvRecords.filter((r,i) => i > 0)
+        .map( row => {
+          const fields: { [key: string]: string }  = {};
+          fieldsIndexes.forEach( i => fields[csvHeaders[i]] = row[i])
+          const idTypes: { [key: string]: string }  = {};
+          idTypesIndexes.forEach( i => idTypes[csvHeaders[i]] = row[i])
+          return new AddPatientRequest(fields, idTypes);
+        })
+      })
+    ).subscribe({
+      next: (requests): void => {
+        this.readingInProgress = false
+        this.addPatientRequests = requests;
+        this.stepper.next();
+        this.step = 1;
+      },
+      error: (e:FieldError): void => {
+        this.readingInProgress = false
+        console.log(e)
+        const invalidHeaderMessage = this.undefinedHeaders.length == 0 ? "" : ". " +
+          this.translate.instant("CSVFileUploader.upload_error_some_unknown_header")
+          .replace("${}", this.undefinedHeaders.join(", "))
+        this.uploadFormGroup.get('uploadField')?.setErrors({csvError: {value: e.message + invalidHeaderMessage}})
+        this.step = 0;
+      }
     });
   }
 
@@ -217,7 +241,7 @@ export class BulkPseudonymizationComponent implements OnInit {
     this.undefinedHeaders = [];
     this.addingInProgress = true;
     this.addingStatus = this.translate.instant("bulkPseudonymization.progress_status_start");
-    this.patientListService.addPatients(this.addPatientRequests,this.selectedInternalIdTypes, false)
+    this.patientListService.addPatients(this.addPatientRequests,this.selectedInternalIdTypes, this.allowUnsafeMatches)
     .subscribe({
       next: (responses): void => {
         this.addingStatus = this.translate.instant("bulkPseudonymization.progress_status_prepare_result");

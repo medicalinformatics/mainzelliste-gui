@@ -1,21 +1,25 @@
 <div style="display:flex; align-items:center; margin-bottom: 8px;">
   <div>
-    <button mat-button (click)="columnFilter.open()" color="primary" style="position: relative;">
-      <mat-icon matPrefix>view_column</mat-icon> {{"patientlist.button_filter_columns" | translate}}
+    <button mat-button (click)="columnFilter.open()" color="primary" class="control-button"
+            style="position: relative;">
+      <mat-icon matPrefix>view_column</mat-icon>
+      {{ "patientlist.button_filter_columns" | translate }}
     </button>
-    <mat-form-field style="position: relative; left: 31px; top: 25px; float: left"
-                    [class.cdk-visually-hidden]="true">
-      <mat-label>{{'button_filter_columns' | translate}}</mat-label>
+    <div style="position: relative; top: -20px; height: 0; width: 200px;">
       <mat-select [(ngModel)]="this.columns" multiple #columnFilter
-                  (selectionChange)="this.selectColumns($event.value || [])">
+                  (selectionChange)="this.selectColumns($event.value || [])"
+                  class="cdk-visually-hidden"
+      >
         <mat-option *ngFor="let columnName of this.allColumnNames" [value]="columnName"
-                    [ngStyle]="this.hideColumn(columnName) ? {'display':  'none' } : {}">
-          {{this.getColumnDisplayText(columnName)}}
+                    [ngStyle]="this.hideColumn(columnName) ? {'display':  'none' } : {}"
+                    class="mat-primary"
+        >
+          {{ this.getColumnDisplayText(columnName) }}
         </mat-option>
       </mat-select>
-    </mat-form-field>
+    </div>
   </div>
-  <button mat-button color="primary" (click)="this.openExportPatientsDialog()">
+  <button mat-button color="primary" class="control-button" (click)="this.openExportPatientsDialog()">
     <mat-icon fontSet="material-symbols-outlined" matPrefix>file_export</mat-icon> {{"patientlist.button_export" | translate}}
   </button>
 </div>
@@ -97,8 +101,8 @@
 
     <tr mat-header-row *matHeaderRowDef="columns"></tr>
     <tr mat-header-row  style="height: 0; border: 0;" *matHeaderRowDef="['progress']"></tr>
-    <tr class="mat-row"  *matNoDataRow>
-      <td *ngIf="!loading" class="mat-cell" [attr.colspan]="this.columns.length" style="text-align: center">
+    <tr class="mat-mdc-row"  *matNoDataRow>
+      <td *ngIf="!loading" class="mat-mdc-cell" [attr.colspan]="this.columns.length" style="text-align: center">
         {{'patientlist.no_patient_found' | translate}}
       </td>
     </tr>

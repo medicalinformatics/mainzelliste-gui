@@ -239,7 +239,7 @@ export class PatientService {
       Geburtsdatum: '06.07.1981',
       Wohnort: 'Dresden',
       PLZ: '01967'
-    }, [new Id("Pseudonym", "026HNBFT")]), new Patient({
+    }, [new Id("Pseudonym", "026HNBFT")]),new Patient({
       Nachname: 'Moser',
       Geburtsname: '',
       Vorname: 'Matthias',
@@ -270,7 +270,7 @@ export class PatientService {
       Geburtsdatum: '18.01.1989',
       Wohnort: 'Dresden',
       PLZ: '01967'
-    }, [new Id("Pseudonym", "YOK76BNH")]), new Patient({
+    }, [new Id("Pseudonym", "YOK76BNH")]),new Patient({
       Nachname: 'Franz',
       Geburtsname: '',
       Vorname: 'Ingrid',
@@ -285,7 +285,7 @@ export class PatientService {
       Geburtsdatum: '23.11.1969',
       Wohnort: 'Dresden',
       PLZ: '01967'
-    }, [new Id("Pseudonym", "09NV6DL2")]), new Patient({
+    }, [new Id("Pseudonym", "09NV6DL2")]),new Patient({
       Nachname: 'Müller',
       Geburtsname: '',
       Vorname: 'Julian',
@@ -340,27 +340,27 @@ export class PatientService {
                      tenants?: { id: string, name: string, idTypes: string[] }[]): Observable<ReadPatientsResponse> {
     return this.patientListService.getPatients(filters, pageIndex + 1, pageSize, ignoreOrder).pipe(
       map((response: ReadPatientsResponse): ReadPatientsResponse => {
-        let displayPatients: Patient[]
-        if (response.patients.length == 0) {
-          displayPatients = this.patientListService.isDebugModeEnabled() ? this.mockUpData : [];
-        } else {
-          displayPatients = response.patients
-          .filter(p => p.ids != undefined)
-          .map(patient => this.patientListService.convertToDisplayPatient(patient, true, true, tenants));
+          let displayPatients: Patient[]
+          if (response.patients.length == 0) {
+            displayPatients = this.patientListService.isDebugModeEnabled() ? this.mockUpData : [];
+          } else {
+            displayPatients = response.patients
+            .filter(p => p.ids != undefined)
+            .map(patient => this.patientListService.convertToDisplayPatient(patient, true, true, tenants));
+          }
+          // override patients
+          response.patients = displayPatients;
+          return response;
         }
-        // override patients
-        response.patients = displayPatients;
-        return response;
-      }
       )
     )
   }
 
-  createPatient(patient: Patient, idTypes: string[], sureness: boolean): Observable<Id> {
+   createPatient(patient: Patient, idTypes: string[], sureness: boolean, tokenId?: string): Observable<Id> {
     if (idTypes == undefined || idTypes.length == 0) {
       throw new MainzellisteError(ErrorMessages.CREATE_PATIENT_MISSING_ID_TYPE);
     }
-    return this.patientListService.addPatient(patient, idTypes, sureness);
+    return this.patientListService.addPatient(patient, idTypes, sureness, tokenId);
   }
 
   deletePatient(patient: Patient) {

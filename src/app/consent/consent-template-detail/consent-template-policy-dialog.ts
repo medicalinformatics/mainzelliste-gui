@@ -1,19 +1,26 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef,} from "@angular/material/dialog";
-import {TranslateService} from "@ngx-translate/core";
-import {MatSelectChange} from "@angular/material/select";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from "@angular/material/dialog";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
+import { MatSelectChange, MatSelect, MatOption } from "@angular/material/select";
 import {ConsentPolicy} from "../../model/consent-policy";
 import {ConsentPolicySet} from "../../model/consent-policy-set";
 import {ConsentService} from "../consent.service";
 import {PolicyView} from "../consent-template.model";
-import {NgModel, ValidationErrors} from "@angular/forms";
+import { NgModel, ValidationErrors, FormsModule } from "@angular/forms";
 import {Validity} from "../consent-validity-period";
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel, MatPrefix, MatError } from '@angular/material/form-field';
+import { NgFor, NgIf } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
 
 
 @Component({
-  selector: 'consent-template-policy-dialog',
-  templateUrl: 'consent-template-policy-dialog.html',
-  styleUrls: ['./consent-template-policy-dialog.css']
+    selector: 'consent-template-policy-dialog',
+    templateUrl: 'consent-template-policy-dialog.html',
+    styleUrls: ['./consent-template-policy-dialog.css'],
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatSelect, NgFor, MatOption, NgIf, MatProgressSpinner, MatPrefix, FormsModule, MatInput, MatError, MatDialogActions, MatButton, TranslatePipe]
 })
 
 export class ConsentTemplatePolicyDialog implements OnInit {

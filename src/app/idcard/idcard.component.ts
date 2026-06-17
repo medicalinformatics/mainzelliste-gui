@@ -1,17 +1,19 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import {PatientListService} from "../services/patient-list.service";
 import {Patient} from "../model/patient";
 import {GlobalTitleService} from "../services/global-title.service";
 import {Id} from "../model/id";
-import {MatTable} from "@angular/material/table";
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow } from "@angular/material/table";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {PatientService} from "../services/patient.service";
 import {NewIdDialog} from './dialogs/new-id-dialog';
-import {TranslateService} from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.component";
 import {ConsentService} from "../consent/consent.service";
 import {Permission} from "../model/permission";
+import {HttpErrorResponse} from "@angular/common/http";
+import {Observable, of, throwError} from "rxjs";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {Consent, ConsentRow, ConsentsView} from "../consent/consent.model";
 import {catchError, map, mergeMap} from "rxjs/operators";
@@ -26,46 +28,45 @@ import {AppConfigService} from "../app-config.service";
 import {
   ConsentHistoryDialogComponent
 } from "../consent/consent-history-dialog/consent-history-dialog.component";
+import {FhirResource} from "fhir-kit-client/types/index";
 import {SearchParams} from "fhir-kit-client";
+import {SemanticType} from '../model/field';
 import {AngularCsv} from 'angular-csv-ext/dist/Angular-csv';
 import {
   ConfirmDeleteDialogComponent
 } from "../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
 import {Tenant} from "../model/tenant";
 import {ComponentType} from "@angular/cdk/portal";
-import { Observable, of, throwError } from 'rxjs';
-import { Field, SemanticType } from '../model/field';
-import { HttpErrorResponse } from '@angular/common/http';
+import {BackendConfigService} from "../services/backend-config.service";
+import { FormsModule } from '@angular/forms';
+import { MatCard, MatCardTitleGroup, MatCardTitle, MatCardContent } from '@angular/material/card';
+import { MatIconButton, MatFabButton } from '@angular/material/button';
+import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { PatientFieldsComponent } from '../patient/patient-fields/patient-fields.component';
+import { PatientPseudonymsComponent } from '../patient/patient-pseudonyms/patient-pseudonyms.component';
+import { HasAnyPermissionsDirective } from '../shared/directives/has-any-permissions.directive';
+import { HasPermissionDirective } from '../shared/directives/has-permission.directive';
+import { NgClass, NgIf, NgFor } from '@angular/common';
+import { MatChipListbox, MatChipOption, MatChip } from '@angular/material/chips';
+import { MatProgressBar } from '@angular/material/progress-bar';
+
 
 @Component({
-  selector: 'app-idcard',
-  templateUrl: './idcard.component.html',
-  styleUrls: ['./idcard.component.css']
+    selector: 'app-idcard',
+    templateUrl: './idcard.component.html',
+    styleUrls: ['./idcard.component.css'],
+    imports: [FormsModule, MatCard, MatCardTitleGroup, MatCardTitle, MatIconButton, CdkCopyToClipboard, MatTooltip, MatIcon, PatientFieldsComponent, PatientPseudonymsComponent, HasAnyPermissionsDirective, MatFabButton, RouterLink, HasPermissionDirective, NgClass, NgIf, MatCardContent, MatChipListbox, NgFor, MatChipOption, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatChip, MatProgressBar, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow, TranslatePipe]
 })
 
 export class IdcardComponent implements OnInit {
-
-  columns: string[] = [];
-  allColumnNames: string[] = [];
-  showAllIds: boolean;
-  fieldNames: string[];
-  displayedColumns: string[] = [];
-  clickedRow: any;
-
-  // required for displayed columns for secondary identities
-  fields: Field[];
-
-  //Pageinator
-  public pageIndex = 0;
-  public pageSize = 5;
-
-  public secondaryIdentities: Patient[] = [];
-
   public readonly Permission = Permission;
 
   public idString: string = "";
   public idType: string = "";
   public patient: Patient = new Patient();
+  public relatedAssociatedIdMap: Map<Id, Id[]> = new Map<Id, Id[]>();
   public displayedConsentColumns: string[] = ['date', 'title', 'period', 'version', 'status', 'actions'];
   public consentsView: ConsentsView = { consentTemplates: new Map, consentRows: [] };
   @ViewChild('consentTable') consentTable!: MatTable<ConsentRow>;
@@ -90,7 +91,8 @@ export class IdcardComponent implements OnInit {
     public consentInactivatedDialog: MatDialog,
     public newIdDialog: MatDialog,
     public consentService: ConsentService,
-    public configService: AppConfigService
+    public configService: BackendConfigService,
+    public appConfigService :AppConfigService
   ) {
     this.activatedRoute.params.subscribe((params) => {
       if (params["idType"] !== undefined)
@@ -99,10 +101,6 @@ export class IdcardComponent implements OnInit {
         this.idString = params["idString"]
     });
     this.changeTitle();
-
-    this.fieldNames = configService.data[0].fields.filter(f => !f.hideFromList).map(f => f.name);
-    this.showAllIds = configService.data[0].showAllIds != undefined && configService.data[0].showAllIds;
-    this.fields = configService.data[0].fields.filter(f => !f.hideFromList);
   }
 
   ngOnInit() {
@@ -111,7 +109,7 @@ export class IdcardComponent implements OnInit {
 
     // find id types, that can be read
     let readIdTypesSet = new Set(this.patientListService.getAllIdTypes("R"));
-    if(this.configService.showDomainsInIDCard() && this.authorizationService.currentTenantId != Tenant.DEFAULT_ID) {
+    if(this.appConfigService.showDomainsInIDCard() && this.authorizationService.currentTenantId != Tenant.DEFAULT_ID) {
       this.otherTenantIdTypes = this.authorizationService.getAllTenantIdTypes(true);
       this.authorizationService.getAllTenantIdTypes().forEach( t => this.otherTenantIdTypes.push(t));
     }
@@ -125,10 +123,8 @@ export class IdcardComponent implements OnInit {
     //load consent list
     if (this.authorizationService.hasPermission(Permission.READ_CONSENT))
       this.loadConsents();
-
-    this.displayedColumns = [...this.fields.map(field => field.name)];
   }
-  
+
   changeTitle() {
     this.titleService.setTitle(this.translate.instant('idcard.title_id_card'), false, "badge");
   }
@@ -136,6 +132,8 @@ export class IdcardComponent implements OnInit {
   private loadPatient() {
     this.patientListService.readPatient(new Id(this.idType, this.idString), "R", undefined, this.readIdTypes)
     .pipe(
+      map(patients => this.patientListService.convertToDisplayPatient(patients[0], false, true, this.authorizationService.getTenants())),
+      mergeMap(patient => this.loadRelatedAssociatedIds(patient, this.getIdTypes().filter( t => t.isAssociated ))),
       catchError(e => {
         if (e instanceof HttpErrorResponse && (e.status == 404)) {
           this.router.navigate(['/**']).then();
@@ -144,11 +142,36 @@ export class IdcardComponent implements OnInit {
       })
     )
     .subscribe(
-      patients => {
-        this.patient = this.patientListService.convertToDisplayPatient(patients[0], false, true, this.authorizationService.getTenants());
+      result => {
+        this.patient = result.patient;
         this.patient.ids = this.patient.ids.filter(id => !this.otherTenantIdTypes.some(t => t == id.idType));
+        this.relatedAssociatedIdMap = result.relatedAssociatedIdMap;
       });
-      
+  }
+
+  private loadRelatedAssociatedIds(patient: Patient, associatedIdTypes: IdType[]): Observable<{
+    patient: Patient,
+    relatedAssociatedIdMap: Map<Id, Id[]>
+  }> {
+    let searchIds = patient.ids.filter(id => associatedIdTypes.some(t => t.name == id.idType))
+    return searchIds.length > 0 ? this.patientListService.readPatients(
+      searchIds,
+      "R",
+      undefined,
+      associatedIdTypes.map(t => t.name))
+    .pipe(
+      map(patients => {
+        let relatedAssociatedIdMap = new Map<Id, Id[]>()
+        searchIds.forEach((id, i) => relatedAssociatedIdMap.set(id, patients[i].ids));
+        return {
+          patient: patient,
+          relatedAssociatedIdMap: relatedAssociatedIdMap
+        };
+      })
+    ): of({
+      patient: patient,
+      relatedAssociatedIdMap: new Map<Id, Id[]>()
+    })
   }
 
   private loadConsents() {
@@ -172,9 +195,9 @@ export class IdcardComponent implements OnInit {
       });
   }
 
-  generateNewId(idType: string, idString: string, newIdType: string) {
+  generateNewId(idType: string, idString: string, newIdType: string, newIdValue: string) {
     return this.patientListService.generateId(idType?.length > 0 ? idType : this.idType,
-      idString?.length > 0 ? idString : this.idString, newIdType);
+      idString?.length > 0 ? idString : this.idString, newIdType, newIdValue);
   }
 
   hasAllTemplateIds(): boolean {
@@ -307,8 +330,12 @@ export class IdcardComponent implements OnInit {
       this.idTypes = [
         ...this.patientListService.getUniqueIdTypes(false, "C")
           .map(t => { return { name: t, isExternal: false, isAssociated: false } }),
+        ...this.patientListService.getUniqueIdTypes(true, "C")
+          .map(t => { return { name: t, isExternal: true, isAssociated: false } }),
         ...this.patientListService.getAssociatedIdTypes(false, "C")
-          .map(t => { return { name: t, isExternal: false, isAssociated: true } })
+          .map(t => { return { name: t, isExternal: false, isAssociated: true } }),
+        ...this.patientListService.getAssociatedIdTypes(true, "C")
+          .map(t => { return { name: t, isExternal: true, isAssociated: true } }),
       ];
     }
     return this.idTypes;
@@ -331,9 +358,11 @@ export class IdcardComponent implements OnInit {
     this.newIdDialog.open(NewIdDialog, {
       disableClose: true,
       data: {
-        relatedAssociatedIdsMap: this.patientListService.getRelatedAssociatedIdsMapFrom(this.getUnAvailableIdTypes(this.patient), this.patient.ids, true, "R"),
-        generateIdObservable: (externalId: Id, newIdType: string) => this.generateNewId(
-          externalId?.idType ?? "", externalId?.idString ?? "", newIdType)
+        patientIds: this.patient.ids,
+        relatedAssociatedIdsMap: this.patientListService.getRelatedAssociatedIdsMapFrom(
+          this.getUnAvailableIdTypes(this.patient), this.relatedAssociatedIdMap, "R"),
+        generateIdObservable: (externalId: Id, newIdType: string, newIdValue: string) =>
+          this.generateNewId(externalId?.idType ?? "", externalId?.idString ?? "", newIdType, newIdValue)
       }
     }).beforeClosed().subscribe(result => {
       if(!result)
@@ -414,6 +443,6 @@ export class IdcardComponent implements OnInit {
   }
 
   showDomainsCard():boolean{
-    return this.configService.showDomainsInIDCard() && this.authorizationService.getTenants().length > 1;
+    return this.appConfigService.showDomainsInIDCard() && this.authorizationService.getTenants().length > 1;
   }
 }

@@ -1,16 +1,22 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ControlContainer, NgForm, NgModel, ValidationErrors} from "@angular/forms";
-import {TranslateService} from "@ngx-translate/core";
+import { ControlContainer, NgForm, NgModel, ValidationErrors, FormsModule } from "@angular/forms";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import {IDGeneratorConfig, IDGeneratorType} from "../../../model/id-generator-config";
 import {PatientListService} from "../../../services/patient-list.service";
 import {AppConfigService} from "../../../app-config.service";
 import {IdGenerator} from "../../../model/idgenerator";
+import {BackendConfigService} from "../../../services/backend-config.service";
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
+import { MatInput } from '@angular/material/input';
 
 @Component({
-  selector: 'app-id-generator-detail',
-  templateUrl: './id-generator-detail.component.html',
-  styleUrls: ['./id-generator-detail.component.css'],
-  viewProviders: [{provide: ControlContainer, useExisting: NgForm}]
+    selector: 'app-id-generator-detail',
+    templateUrl: './id-generator-detail.component.html',
+    styleUrls: ['./id-generator-detail.component.css'],
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    imports: [FormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, MatInput, NgIf, MatError, NgSwitch, NgSwitchCase, NgSwitchDefault, TranslatePipe]
 })
 export class IdGeneratorDetailComponent implements OnInit {
 
@@ -23,7 +29,7 @@ export class IdGeneratorDetailComponent implements OnInit {
   constructor(
     private translate: TranslateService,
     private patientService: PatientListService,
-    private configService: AppConfigService
+    private configService: BackendConfigService
   ) {
   }
 

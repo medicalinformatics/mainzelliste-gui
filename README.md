@@ -220,7 +220,7 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ### Export Keycloak Configuration
 In order to export realm configuration including all users to one file, just run "bash" in keycloak container and execute the following command:
 ```bash
-./opt/keycloak/bin/kc.sh export --file ~/mainzelliste-realm.json --users realm_file --realm mainzelliste
+./opt/keycloak/bin/kc.sh export --file ~/mainzelliste-realm.json --users same_file --realm mainzelliste --optimized
 ```
 Now you can just copy the file to the resource order "resources/keycloak/import/" 
 ```bash

@@ -1,17 +1,24 @@
 import {Component, Inject, ViewChild} from '@angular/core';
 import {ConsentDetailComponent} from "../consent-detail/consent-detail.component";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from "@angular/material/dialog";
 import {ConsentTemplateDetailComponent} from "../consent-template-detail/consent-template-detail.component";
 import {ChoiceItem, ConsentTemplate} from "../consent-template.model";
-import {NgForm} from "@angular/forms";
+import { NgForm, FormsModule } from "@angular/forms";
 import {ConsentService} from "../consent.service";
-import {TranslateService} from "@ngx-translate/core";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import {getErrorMessageFrom} from "../../error/error-utils";
+import { ErrorCardComponent } from '../../shared/components/error-card/error-card.component';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-  selector: 'app-consent-template-dialog',
-  templateUrl: './consent-template-dialog.component.html',
-  styleUrls: ['./consent-template-dialog.component.css']
+    selector: 'app-consent-template-dialog',
+    templateUrl: './consent-template-dialog.component.html',
+    styleUrls: ['./consent-template-dialog.component.css'],
+    imports: [MatDialogTitle, ErrorCardComponent, FormsModule, CdkScrollable, MatDialogContent, ConsentTemplateDetailComponent, MatDialogActions, MatButton, NgIf, MatIcon, MatProgressSpinner, TranslatePipe]
 })
 export class ConsentTemplateDialogComponent {
 

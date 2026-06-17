@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import {AppConfigService} from "../app-config.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-error',
-  templateUrl: './error.component.html',
-  styleUrls: ['./error.component.css']
+    selector: 'app-error',
+    templateUrl: './error.component.html',
+    styleUrls: ['./error.component.css'],
+    imports: [TranslatePipe]
 })
 /**
  * This Component implements a basic Error Message. It should only be used for fatal errors (e.g. patientlist instance is not reachable).

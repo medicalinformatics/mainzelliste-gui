@@ -1,10 +1,13 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import { TranslateService } from '@ngx-translate/core';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogActions } from "@angular/material/dialog";
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'bulk-id-generation-empty-fields-dialog',
     templateUrl: 'bulk-id-generation-empty-fields-dialog.html',
+    imports: [CdkScrollable, MatDialogContent, MatDialogActions, MatButton, TranslatePipe]
 })
 
 export class BulkIdGenerationEmptyFieldsDialog implements OnInit {

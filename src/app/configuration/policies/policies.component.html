@@ -1,3 +1,4 @@
+<div style="min-height: 10em; display: flex; flex-flow: column; margin-top: 30px; padding: 0 10px">
 <div class="header-container" *appHasPermission="Permission.CREATE_CONSENT_POLICY_SET">
   <button mat-raised-button class="add-policy-set-button" (click)="addPolicySet()">
     {{'configuration.policySet.add' | translate}}
@@ -44,6 +45,12 @@
                 (click)="deletePolicySet(element)">
           <mat-icon>delete</mat-icon>
         </button>
+        <button mat-icon-button *appHasPermission="Permission.CREAT_CONSENT_POLICY"
+                color="primary" class="ml-icon-button"
+                [matTooltip]="'configuration.policySet.bulkadd' | translate"
+                (click)="openCsvImportDialog(element.id)">
+          <mat-icon>upload_file</mat-icon>
+        </button>
       </div>
     </td>
   </ng-container>
@@ -72,3 +79,4 @@
                [disabled]="loading"
                showFirstLastButtons>
 </mat-paginator>
+</div>

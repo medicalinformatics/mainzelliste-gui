@@ -22,18 +22,19 @@ import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {ChoiceItem, ConsentTemplate, DisplayItem, PolicyView} from "./consent-template.model";
 import {catchError, finalize, map, mergeMap, reduce} from "rxjs/operators";
 import {ConsentPolicySet} from "../model/consent-policy-set";
-import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import {ConsentPolicy} from "../model/consent-policy";
 import {getErrorMessageFrom} from "../error/error-utils";
 import {TokenType} from "../model/token";
 import {TokenData} from "../model/token-data";
 import {UploadConsentFileResponse} from "../model/api/upload-consent-file-response";
-import * as querystring from "querystring";
+import queryString from 'querystring';
 import {AuthorizationService} from "../services/authorization.service";
 import {DateTime} from "luxon";
 import {StringUtils} from "../shared/utils/string-utils";
 import {ConsentValidityPeriod, Validity} from "./consent-validity-period";
 import {MAT_DATE_LOCALE} from "@angular/material/core";
+import {BackendConfigService} from "../services/backend-config.service";
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +52,7 @@ export class ConsentService {
     private readonly sessionService: SessionService,
     private readonly authorizationService:AuthorizationService,
     private readonly appConfigService: AppConfigService,
+    private readonly backendConfigService: BackendConfigService,
     private readonly translate: TranslateService,
     private readonly httpClient: HttpClient,
     @Inject(MAT_DATE_LOCALE) private _locale: string
@@ -939,9 +941,15 @@ export class ConsentService {
   }
 
   resolveDeleteFhirResourceToken = <F extends FhirResource>(tokenId: string | undefined, resourceType: string, id:string, urlParams?: SearchParams): Promise<FhirResource | F> => {
+    const compatibleUrlParams = urlParams ? Object.fromEntries(
+      Object.entries(urlParams).map(([key, value]) => [
+        key,
+        Array.isArray(value) ? JSON.stringify(value) : value
+      ])
+    ) : {};
     return this.client.delete({
       resourceType: resourceType,
-      id: urlParams && Object.keys(urlParams).length > 0 ? id + "?" +  querystring.stringify(urlParams) : id,
+      id: urlParams && Object.keys(urlParams).length > 0 ? id + "?" +  queryString.stringify(compatibleUrlParams) : id,
       options: { headers: {'Authorization': 'MainzellisteToken ' + tokenId}}
     })
   }
@@ -1156,7 +1164,7 @@ export class ConsentService {
       agent: [
         {
           who: {
-            display: "Mainzelliste - " + this.appConfigService.getVersion()
+            display: "Mainzelliste - " + this.backendConfigService.getVersion()
           }
         }
       ],

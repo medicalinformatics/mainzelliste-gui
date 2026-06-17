@@ -12,6 +12,7 @@ export enum SemanticType{
   BIRTH_DAY = "birthday",
   POSTAL_CODE = "postalCode",
   CITY = "city",
+  BIRTHDATE = "birthday",
   UNDEFINED = "undefined"
 }
 export class Field {

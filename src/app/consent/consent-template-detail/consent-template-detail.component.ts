@@ -1,5 +1,5 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
-import {ControlContainer, NgForm, NgModel, ValidationErrors} from "@angular/forms";
+import { ControlContainer, NgForm, NgModel, ValidationErrors, FormsModule } from "@angular/forms";
 import {
   ChoiceItem,
   ChoiceItemAnswer,
@@ -8,20 +8,31 @@ import {
 } from "../consent-template.model";
 import {ConsentService} from "../consent.service";
 import {MatDialog} from "@angular/material/dialog";
-import {TranslateService} from "@ngx-translate/core";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import {ConsentTemplateValidityPeriodDialog} from "./consent-template-validity-period-dialog";
-import {MatRadioChange} from "@angular/material/radio";
-import {MatSlideToggleChange} from "@angular/material/slide-toggle";
+import { MatRadioChange, MatRadioGroup, MatRadioButton } from "@angular/material/radio";
+import { MatSlideToggleChange, MatSlideToggle } from "@angular/material/slide-toggle";
 import {ConsentPolicySet} from "../../model/consent-policy-set";
 import {AppConfigService} from "../../app-config.service";
 import {Duration} from "luxon";
+import {BackendConfigService} from "../../services/backend-config.service";
+import { MatFormField, MatLabel, MatError, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { NgIf, NgStyle, NgFor } from '@angular/common';
+import { EmptyConsentTemplateValidityPeriodDirective } from '../../shared/directives/empty-consent-template-validity-period.directive';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { ConsentTemplateModulesComponent } from './consent-template-modules.component';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'app-consent-template-detail',
-  templateUrl: './consent-template-detail.component.html',
-  styleUrls: ['./consent-template-detail.component.css'],
-  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-consent-template-detail',
+    templateUrl: './consent-template-detail.component.html',
+    styleUrls: ['./consent-template-detail.component.css'],
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    encapsulation: ViewEncapsulation.None,
+    imports: [FormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError, EmptyConsentTemplateValidityPeriodDirective, MatIconButton, MatSuffix, MatIcon, NgStyle, MatSlideToggle, MatSelect, NgFor, MatOption, MatRadioGroup, MatRadioButton, ConsentTemplateModulesComponent, MatTooltip, TranslatePipe]
 })
 export class ConsentTemplateDetailComponent implements OnInit {
 
@@ -46,7 +57,7 @@ export class ConsentTemplateDetailComponent implements OnInit {
 
   constructor(
     public consentService: ConsentService,
-    public configService:AppConfigService,
+    public configService: BackendConfigService,
     private readonly validityPeriodDialog: MatDialog,
     public translate: TranslateService
   ) {

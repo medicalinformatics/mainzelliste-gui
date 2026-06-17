@@ -1,10 +1,8 @@
-<h1 mat-dialog-title>{{'configuration.idGeneratorDialog.title' | translate}}</h1>
+<h1 mat-dialog-title class="dialog-title">{{'configuration.idGeneratorDialog.title' | translate}}</h1>
 <app-error-card [(messages)]="errorMessages"></app-error-card>
 <form #idGeneratorForm="ngForm">
-  <div mat-dialog-content>
-    <app-id-generator-detail [dataModel]="dataModel"></app-id-generator-detail>
-  </div>
-  <div mat-dialog-actions>
+  <app-id-generator-detail mat-dialog-content [dataModel]="dataModel"></app-id-generator-detail>
+  <div mat-dialog-actions class="dialog-actions">
     <button mat-raised-button class="submitBreak" (click)="onCancel()">{{'button_cancel' | translate}}</button>
     <button mat-raised-button class="submit" style="clear: both; float: left;"
             [disabled]="disable(idGeneratorForm) || saving"

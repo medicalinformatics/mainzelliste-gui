@@ -8,8 +8,8 @@ describe('AddConsentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddConsentComponent ]
-    })
+    imports: [AddConsentComponent]
+})
     .compileComponents();
   });
 

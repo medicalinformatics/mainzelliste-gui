@@ -1,4 +1,4 @@
-import {HttpErrorResponse} from "@angular/common/http";
+import { HttpErrorResponse } from "@angular/common/http";
 import { TranslateService } from "@ngx-translate/core";
 
 export class ErrorMessage {
@@ -10,13 +10,23 @@ export class ErrorMessage {
   }
 
   public match(errorResponse: HttpErrorResponse): boolean {
-    let errorMessage = !errorResponse.error.message ? errorResponse.error : errorResponse.error.message;
+    let errorMessage;
+    if (errorResponse.error.message)
+      errorMessage = errorResponse.error.message;
+    else {
+      try {
+        errorMessage = JSON.parse(errorResponse.error)?.message ?? errorResponse.error;
+      } catch (e: any) {
+        errorMessage = errorResponse.error;
+      }
+    }
+
     return this.message instanceof RegExp ? errorMessage.match(this.message) : this.message == errorMessage;
   }
 
   public matchFhirMessage(errorMessage: string): boolean {
     return this.message instanceof RegExp ?
-      (errorMessage.match(this.message)?.length ?? []) > 0 : this.message == errorMessage;
+      (errorMessage.match(this.message)?.length ?? 0) > 0 : this.message == errorMessage;
   }
 
   public findVariablesFromFhirMessage(errorMessage: string): string[] {

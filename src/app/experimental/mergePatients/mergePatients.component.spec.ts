@@ -7,8 +7,8 @@ describe('MergePatientsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MergePatientsComponent ]
-    })
+    declarations: [MergePatientsComponent]
+})
     .compileComponents();
   });
 

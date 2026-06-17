@@ -1,21 +1,24 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  ValidationErrors,
-  Validators
-} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import {ConsentService} from 'src/app/consent/consent.service';
 import {getErrorMessageFrom} from 'src/app/error/error-utils';
-import {TranslateService} from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import {take} from 'rxjs/operators';
+import { ErrorCardComponent } from '../../shared/components/error-card/error-card.component';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-  selector: 'app-policy-form',
-  templateUrl: './policy-form.component.html',
-  styleUrls: ['./policy-form.component.css']
+    selector: 'app-policy-form',
+    templateUrl: './policy-form.component.html',
+    styleUrls: ['./policy-form.component.css'],
+    imports: [MatDialogTitle, ErrorCardComponent, FormsModule, ReactiveFormsModule, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, NgIf, MatError, MatDialogActions, MatButton, MatDialogClose, MatIcon, MatProgressSpinner, TranslatePipe]
 })
 export class PolicyFormComponent implements OnInit {
   policyForm: FormGroup;

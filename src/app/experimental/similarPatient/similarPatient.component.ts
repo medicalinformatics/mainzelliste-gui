@@ -3,9 +3,10 @@ import {Patient} from "../../model/patient";
 
 
 @Component({
-  selector: 'app-similar-patient',
-  templateUrl: './similarPatient.component.html',
-  styleUrls: ['./similarPatient.component.css']
+    selector: 'app-similar-patient',
+    templateUrl: './similarPatient.component.html',
+    styleUrls: ['./similarPatient.component.css'],
+    standalone: false
 })
 export class SimilarPatientComponent implements OnInit {
   patient: Patient = new Patient();

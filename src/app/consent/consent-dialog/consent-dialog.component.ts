@@ -1,12 +1,22 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from "@angular/material/dialog";
 import {Consent} from "../consent.model";
 import {Observable} from "rxjs";
+import { NgIf } from '@angular/common';
+import { ErrorCardComponent } from '../../shared/components/error-card/error-card.component';
+import { FormsModule } from '@angular/forms';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { ConsentDetailComponent } from '../consent-detail/consent-detail.component';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-consent-dialog',
-  templateUrl: './consent-dialog.component.html',
-  styleUrls: ['./consent-dialog.component.css']
+    selector: 'app-consent-dialog',
+    templateUrl: './consent-dialog.component.html',
+    styleUrls: ['./consent-dialog.component.css'],
+    imports: [NgIf, MatDialogTitle, ErrorCardComponent, FormsModule, CdkScrollable, MatDialogContent, ConsentDetailComponent, MatDialogActions, MatButton, MatIcon, MatProgressSpinner, TranslatePipe]
 })
 
 export class ConsentDialogComponent implements OnInit {

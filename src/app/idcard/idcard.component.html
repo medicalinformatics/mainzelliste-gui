@@ -1,28 +1,30 @@
 <form #patientForm="ngForm" style="width: 100%; height: 100%">
   <div style="float: left; margin: 0 20px 14px 0; width: 94%; height: 480px; display: flex;
-  flex-flow: row; justify-content: space-around; align-items: stretch; column-gap: 14px;">
-    <mat-card id="patientendaten"
-      style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; flex: 1">
+    flex-flow: row; justify-content: space-around; align-items: stretch; column-gap: 14px;">
+    <mat-card id="patientendaten" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; flex: 1">
       <mat-card-title-group style="margin: 0 0 0 2.5%;">
-        <mat-card-title style="flex-grow: 2;">{{'idcard.title_patient_data' | translate}}</mat-card-title>
-        <div>
-          <button style="transform: scale(0.8)" mat-icon-button class="mini-icon-button"
-            [cdkCopyToClipboard]="getContactInfo()" matTooltip="{{'copy_data' | translate}}">
+        <mat-card-title>{{'idcard.title_patient_data' | translate}}</mat-card-title>
+        <div style="padding-right: 16px; flex-flow: row; justify-content:flex-end; align-items: baseline; gap: 0 0">
+          <button mat-icon-button class="mini-icon-button" [cdkCopyToClipboard]="getContactInfo()"
+                  matTooltip="{{'copy_data' | translate}}">
             <mat-icon>file_copy</mat-icon>
           </button>
           <button mat-icon-button class="mini-icon-button" (click)="exportCSV()"
-            matTooltip="{{'export_data' | translate}}">
+                  matTooltip="{{'export_data' | translate}}">
             <mat-icon>download</mat-icon>
           </button>
         </div>
       </mat-card-title-group>
-      <app-patient-fields style="overflow: auto; height: 100%; margin: 0 0 0 2.5%;" [readOnly]=true [fields]="patient.fields"></app-patient-fields>
+      <app-patient-fields style="overflow: auto; height: 100%; margin: 0 0 0 2.5%; padding-top: 5px;" [readOnly]=true [fields]="patient.fields"></app-patient-fields>
     </mat-card>
 
     <mat-card id="pseudonyme" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; flex: 1">
-      <mat-card-title style="margin: 0 0 0 2.5%; align-self: start">{{'idcard.title_pseudonyms' | translate}}</mat-card-title>
-      <app-patient-pseudonyms style="overflow: auto; height: 100%; margin: 0 0 0 2.5%;" [readOnly]=true [ids]="patient.ids" [permittedOperation]="'R'"
-        (generateId)="this.generateId($event.idType, $event.idString, $event.newIdType)"></app-patient-pseudonyms>    </mat-card>
+      <mat-card-title-group style="margin: 0 0 0 2.5%;">
+        <mat-card-title>{{'idcard.title_pseudonyms' | translate}}</mat-card-title>
+      </mat-card-title-group>
+      <app-patient-pseudonyms style="overflow: auto; height: 100%; margin: 0 0 0 2.5%; padding-top: 5px;" [readOnly]=true [ids]="patient.ids" [permittedOperation]="'R'"
+        (generateId)="this.generateId($event.idType, $event.idString, $event.newIdType)"></app-patient-pseudonyms>
+    </mat-card>
   </div>
   <section style="display: flex; flex: 1 1 1%; margin-left:2%; flex-flow: column;">
     <!--      <button mat-fab style="background-color:#053E6A; color:white; margin-bottom: 15px;" aria-label="Example icon button with a delete icon">-->
@@ -53,28 +55,16 @@
       <mat-icon matTooltip="{{'button_add_consent' | translate}}">assignment_turned_in</mat-icon>
     </button>
   </section>
-
   <ng-container *ngIf="this.showDomainsCard()">
     <mat-card id="domains" style="box-sizing: border-box; display: flex; flex-direction: column; margin: 0 20px 14px 0;">
       <mat-card-title style="margin: 0 1.25%; align-self: start;">{{'patientlist.headers_tenants' | translate}}</mat-card-title>
       <mat-card-content style="display: flex; flex-direction: column; height: 100%">
-        <mat-chip-list style="margin: 0 0 7px 1.4%;">
-          <mat-chip *ngFor="let domainName of patient.tenants"> {{domainName}}</mat-chip>
-        </mat-chip-list>
+        <mat-chip-listbox style="margin: 0 0 7px 1.4%;">
+          <mat-chip-option *ngFor="let domainName of patient.tenants"> {{domainName}}</mat-chip-option>
+        </mat-chip-listbox>
       </mat-card-content>
     </mat-card>
   </ng-container>
-
-  <!-- Secondary Identities Table -->
-   <mat-card id="secondary" style="box-sizing: border-box; display: flex; flex-direction: column; margin: 0 20px 14px 0; ">
-    <mat-card-title-group style="margin: 0 0 0 1.25%;">
-      <mat-card-title style="flex-grow: 2;">{{'idcard.title_secondary' | translate}}</mat-card-title>
-    </mat-card-title-group>
-    <mat-card-content style="margin: 0 1.25% 0 1.25%;">
-      <app-secondary-identities idString="{{idString}}" idType="{{idType}}" ></app-secondary-identities>
-    </mat-card-content>
-  </mat-card>
-
   <mat-card *appHasPermission="Permission.READ_CONSENT" id="consents"
     style="box-sizing: border-box; display: flex; flex-direction: column;">
     <mat-card-title style="margin: 0 1.25%; align-self: start;">{{'idcard.consent_title' | translate}}</mat-card-title>
@@ -103,7 +93,7 @@
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef> {{'idcard.consent_status' | translate}} </th>
           <td mat-cell *matCellDef="let element">
-            <mat-basic-chip disableRipple="true" id="{{element.status}}"
+            <mat-basic-chip id="{{element.status}}"
               class="mat-basic-chip-status">{{'consent_status.'
               + element.status | translate}}</mat-basic-chip>
           </td>
@@ -161,8 +151,8 @@
         <tr mat-header-row *matHeaderRowDef="displayedConsentColumns"></tr>
         <tr mat-row class="single-mat-row" *matRowDef="let row; columns: displayedConsentColumns;"></tr>
         <tr mat-header-row style="height: 0; border: 0;" *matHeaderRowDef="['progress']"></tr>
-        <tr class="mat-row" *matNoDataRow>
-          <td *ngIf="!loadingConsents" class="mat-cell" [attr.colspan]="6" style="text-align: center">
+        <tr class="mat-mdc-row" *matNoDataRow>
+          <td *ngIf="!loadingConsents" class="mat-mdc-cell" [attr.colspan]="6" style="text-align: center">
             {{'idcard.consent_no_consent' | translate}}
           </td>
         </tr>

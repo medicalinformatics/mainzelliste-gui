@@ -1,29 +1,40 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { MatDialog } from "@angular/material/dialog";
-import { Patient } from "../model/patient";
-import { SelectionModel } from "@angular/cdk/collections";
-import { MatTableDataSource } from "@angular/material/table";
-import { PatientListService } from "../services/patient-list.service";
-import { AppConfigService } from "../app-config.service";
-import { ConsentService } from "../consent/consent.service";
-import { Field } from '../model/field';
-import { Permission } from "../model/permission";
+import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {MatDialog} from "@angular/material/dialog";
+import {Patient} from "../model/patient";
+import {SelectionModel} from "@angular/cdk/collections";
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatNoDataRow, MatRowDef, MatRow } from "@angular/material/table";
+import {PatientListService} from "../services/patient-list.service";
+import {AppConfigService} from "../app-config.service";
+import {ConsentService} from "../consent/consent.service";
+import {Field} from '../model/field';
+import {Permission} from "../model/permission";
 import {AuthorizationService} from "../services/authorization.service";
-import {TranslateService} from "@ngx-translate/core";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import {LocalStorageService} from "../services/local-storage.service";
 import {
   ExportPatientsDialogComponent
 } from "./dialogs/export-patients-dialog/export-patients-dialog.component";
 import {FilterItem} from "../model/filter-item";
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatPrefix } from '@angular/material/form-field';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
+import { NgFor, NgStyle, NgClass, NgIf } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { MatTooltip } from '@angular/material/tooltip';
+import { HasPermissionDirective } from '../shared/directives/has-permission.directive';
+import { MatProgressBar } from '@angular/material/progress-bar';
 
 @Component({
-  selector: 'app-patientlist',
-  templateUrl: './patientlist.component.html',
-  styleUrls: ['./patientlist.component.css'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-patientlist',
+    templateUrl: './patientlist.component.html',
+    styleUrls: ['./patientlist.component.css'],
+    encapsulation: ViewEncapsulation.None,
+    imports: [MatButton, MatIcon, MatPrefix, MatSelect, FormsModule, NgFor, MatOption, NgStyle, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, NgClass, NgIf, MatIconButton, RouterLink, MatTooltip, HasPermissionDirective, MatProgressBar, MatHeaderRowDef, MatHeaderRow, MatNoDataRow, MatRowDef, MatRow, TranslatePipe]
 })
 
-export class PatientlistComponent implements OnInit {
+export class PatientlistComponent implements OnInit{
   public readonly Permission = Permission;
   @Input() patients: MatTableDataSource<Patient>;
   @Input() loading: boolean = false;

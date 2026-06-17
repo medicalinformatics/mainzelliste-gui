@@ -1,12 +1,17 @@
 import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {TranslateService} from "@ngx-translate/core";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogActions } from "@angular/material/dialog";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import {Observable} from "rxjs";
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-  selector: 'app-confirm-delete-dialog',
-  templateUrl: './confirm-delete-dialog.component.html',
-  styleUrls: ['./confirm-delete-dialog.component.css']
+    selector: 'app-confirm-delete-dialog',
+    templateUrl: './confirm-delete-dialog.component.html',
+    styleUrls: ['./confirm-delete-dialog.component.css'],
+    imports: [MatDialogTitle, MatDialogActions, MatButton, NgIf, MatIcon, MatProgressSpinner, TranslatePipe]
 })
 export class ConfirmDeleteDialogComponent {
 

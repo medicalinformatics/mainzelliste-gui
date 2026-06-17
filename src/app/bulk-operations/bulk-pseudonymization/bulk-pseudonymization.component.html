@@ -4,7 +4,7 @@
     <form [formGroup]="uploadFormGroup">
       <ng-template matStepLabel>{{'bulkPseudonymization.upload_label' | translate}}</ng-template>
       <app-message-card [type]="'error'"
-                        [message]="fileInput.ngControl.getError('csvError')?.value || ''">
+                        [message]="this.uploadFormGroup.get('uploadField')?.getError('csvError')?.value || ''">
       </app-message-card>
       <div style="margin: 1% auto 0 auto; width: 66%;">{{'bulkPseudonymization.upload_info_text1' | translate}}
         <br/>
@@ -14,17 +14,13 @@
         <br/>
         {{'bulkPseudonymization.upload_info_text3' | translate}}
       </div>
-      <div style="margin-top: 1%; display: flex; justify-content: center;">
-        <mat-form-field style="float: left;">
-          <ngx-mat-file-input
-            #fileInput
-            [multiple]="false"
-            [placeholder]="'file.csv'"
-            [accept]="'text/csv,.csv'"
-            [formControlName]="'uploadField'"
-          ></ngx-mat-file-input>
-        </mat-form-field>
-        <mat-spinner *ngIf="this.readingInProgress" style="margin-left: 10px; margin-top: 18px;" diameter="28"></mat-spinner>
+      <div style="margin-top: 3%; display: flex; justify-content: center;">
+        <input formControlName="uploadField" type="file" accept="text/csv,.csv"
+               style="display: none" (change)="onFileSelected($event)" #fileUploader>
+        <button mat-raised-button (click)="fileUploader.click()" [disabled]="this.readingInProgress" style="margin-top: 5px">
+          {{'button_upload_csv_file' | translate }}
+          <mat-icon *ngIf="this.readingInProgress"><mat-spinner diameter="19"></mat-spinner></mat-icon>
+        </button>
       </div>
     </form>
   </mat-step>
@@ -45,27 +41,26 @@
         </mat-card-content>
       </mat-card>
       <div class="float-content">
-        <mat-form-field color="primary" style="width: 100%">
+        <mat-form-field color="primary" style="width: 100%" class="idtype-field">
           <mat-label>{{'createPatient.pseudonym_types' | translate}}</mat-label>
-          <mat-chip-list [disabled]="this.addingInProgress" #chipList aria-label="Fruit selection"
+          <mat-chip-grid [disabled]="this.addingInProgress" #chipList aria-label="Fruit selection"
                          name="internalIdTypesChipList"
                          [ngModel]="this.selectedInternalIdTypes.join(',')"
                          required>
-            <mat-chip *ngFor="let idType of this.selectedInternalIdTypes"
-                      [selectable]="true"
+            <mat-chip-row *ngFor="let idType of this.selectedInternalIdTypes"
                       [removable]="true"
                       (removed)="removeInternalIdType(idType)">
               {{idType}}
               <button matChipRemove>
                 <mat-icon>cancel</mat-icon>
               </button>
-            </mat-chip>
+            </mat-chip-row>
             <input [formControl]="chipListInputCtrl"
                    [matChipInputFor]="chipList"
                    [matAutocomplete]="auto"
                    [matChipInputAddOnBlur]="true"
                    (matChipInputTokenEnd)="findAndAddInternalIdType($event)">
-          </mat-chip-list>
+          </mat-chip-grid>
           <mat-error>{{'createPatient.no_pseudonym_type_error' | translate}}</mat-error>
           <mat-autocomplete #auto="matAutocomplete"
                             (optionSelected)="selectedInternalIdType($event)">
@@ -76,16 +71,28 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-        <div style="display: flex; justify-content: center;">
-          <button id="back" mat-raised-button
-                  [disabled]="this.addingInProgress"
-                  (click)="backToFirst()">{{'button_stepper_back' | translate}}</button>
-          <button style="margin-left: 10px"mat-raised-button
-                  class="submit"
-                  (click)="addPatients()"
-                  [disabled]="this.addingInProgress || this.selectedInternalIdTypes.length == 0">
-            {{'bulkPseudonymization.button_stepper_pseudonymize' | translate}}
-          </button>
+        <div class="pseudonymize-action-group">
+          <mat-checkbox class="unsafe-matches-checkbox"
+                        color="primary"
+                        [(ngModel)]="allowUnsafeMatches"
+                        [disabled]="addingInProgress">
+            {{ 'bulkPseudonymization.tentative_matches' | translate }}
+          </mat-checkbox>
+          <div class="button-row">
+            <div class="button-row-left">
+              <button id="back" mat-raised-button
+                      [disabled]="this.addingInProgress"
+                      (click)="backToFirst()">
+                {{'button_stepper_back' | translate}}
+              </button>
+              <button mat-raised-button
+                      class="submit"
+                      (click)="addPatients()"
+                      [disabled]="this.addingInProgress || this.selectedInternalIdTypes.length == 0">
+                {{'bulkPseudonymization.button_stepper_pseudonymize' | translate}}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       <ng-container *ngIf="!this.addingInProgress && step == 1">
@@ -131,7 +138,7 @@
         </mat-card-content>
       </mat-card>
       <div class="float-content">
-        <button style="width: 230px; align-self: center;"
+        <button style="width: 250px; align-self: center;"
           id="downloadFile"
           class="submit"
           mat-raised-button

@@ -1,7 +1,6 @@
 mat-form-field.templateInputField {
   width: 60%;
-  padding-bottom: 0;
-  margin: 0 0 -1.25em 0;
+  padding-bottom: 10px;
   clear: both;
   float: left;
 }
@@ -9,15 +8,15 @@ mat-form-field.templateVersion
 {
   width: 14%;
   margin-left: 1%;
-  padding-bottom: 0;
   float: left;
   clear: none;
 }
-.mat-radio-button ~ .mat-radio-button {
+.mat-mdc-radio-button ~ .mat-radio-button {
   margin-left: 16px;
 }
 
-.mat-form-field.templateInputFieldDisabled .mat-form-field-outline
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+.mat-mdc-form-field.templateInputFieldDisabled .mat-form-field-outline
 {
   color: rgba(0,0,0,.12);
   cursor: pointer;

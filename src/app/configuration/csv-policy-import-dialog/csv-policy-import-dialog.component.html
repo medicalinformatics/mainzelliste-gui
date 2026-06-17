@@ -1,0 +1,46 @@
+<h2 mat-dialog-title class="dialog-title">{{ 'configuration.policy.csv.title' | translate }}</h2>
+<mat-dialog-content>
+  <app-error-card [(messages)]="errorMessages"></app-error-card>
+
+  <div *ngIf="selectedFiles.length == 0" class="upload-container" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+    <p>{{ 'configuration.policy.csv.add' | translate }}</p>
+    <input type="file" accept=".csv" (change)="onFileSelected($event)" hidden #fileInput multiple>
+    <button mat-raised-button (click)="fileInput.click()">{{ 'configuration.policy.csv.select' | translate }}</button>
+  </div>
+
+  <div *ngIf="importResult && selectedFiles.length > 0" class="message-container">
+    <p>{{ 'configuration.policy.csv.successSummary' | translate: { added: importResult.added, total: totalRows } }}</p>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <div *ngIf="!importResult && selectedFiles.length > 0" class="file-list">
+    <h3>{{ 'configuration.policy.csv.selectedFiles' | translate }}</h3>
+    <ul>
+      <li *ngFor="let file of selectedFiles">
+        <span class="file-name">{{ file.name }}</span>
+        <button mat-icon-button color="warn" (click)="removeFile(file.name)" [disabled]="importResult">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </li>
+    </ul>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-actions">
+  <ng-container>
+    <button mat-raised-button mat-dialog-close *ngIf="!importResult" class="submitBreak"
+            [disabled]="isLoading">
+      {{ 'button_cancel' | translate }}
+    </button>
+    <button mat-raised-button *ngIf="!importResult" class="submit" (click)="confirmImport()"
+            [disabled]="isLoading || !fileValid">
+      {{ 'configuration.policy.csv.button.import' | translate }}
+    </button>
+    <button *ngIf="importResult" mat-raised-button class="submit"
+            (click)="dialogRef.close()">{{ 'button_close' | translate }}
+    </button>
+  </ng-container>
+</mat-dialog-actions>

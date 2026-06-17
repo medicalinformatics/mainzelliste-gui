@@ -1,24 +1,39 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {MatSelect, MatSelectChange} from "@angular/material/select";
+import { MatSelect, MatSelectChange, MatOption as MatOption_1 } from "@angular/material/select";
 import {ConsentService} from "../consent.service";
-import {MAT_DATE_LOCALE, MatOption} from "@angular/material/core";
+import {MAT_DATE_LOCALE} from "@angular/material/core";
+import {MatOption} from "@angular/material/core";
 import {Consent, ConsentChoiceItem, ConsentDisplayItem, ConsentItem} from "../consent.model";
 import _moment from "moment";
-import {ControlContainer, NgForm, NgModel} from "@angular/forms";
+import { ControlContainer, NgForm, NgModel, FormsModule } from "@angular/forms";
 import {Permission} from "../../model/permission";
 import {Subscription} from "rxjs";
-import {HttpEventType} from "@angular/common/http";
+import { HttpEventType } from "@angular/common/http";
 import {map} from "rxjs/operators";
 import {AuthorizationService} from "../../services/authorization.service";
-import {TranslateService} from "@ngx-translate/core";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import {getErrorMessageFrom} from "../../error/error-utils";
-import {MatDatepickerInputEvent} from "@angular/material/datepicker";
+import { MatDatepickerInputEvent, MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from "@angular/material/datepicker";
+import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgSwitchDefault, UpperCasePipe, KeyValuePipe } from '@angular/common';
+import { MatFormField, MatLabel, MatSuffix, MatError } from '@angular/material/form-field';
+import { MatDivider } from '@angular/material/divider';
+import { MatCard } from '@angular/material/card';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { MatInput } from '@angular/material/input';
+import { InvalidConsentPeriodDirective } from '../../shared/directives/invalid-consent-period.directive';
+import { HasAnyPermissionsDirective } from '../../shared/directives/has-any-permissions.directive';
+import { HasPermissionDirective } from '../../shared/directives/has-permission.directive';
+import { MatChipListbox, MatChipOption, MatChipRemove } from '@angular/material/chips';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatIconButton, MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-consent-detail',
-  templateUrl: './consent-detail.component.html',
-  styleUrls: ['./consent-detail.component.css'],
-  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
+    selector: 'app-consent-detail',
+    templateUrl: './consent-detail.component.html',
+    styleUrls: ['./consent-detail.component.css'],
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+    imports: [NgIf, MatFormField, MatLabel, MatSelect, NgFor, MatOption_1, MatDivider, MatCard, NgSwitch, NgSwitchCase, MatRadioGroup, FormsModule, MatRadioButton, NgSwitchDefault, MatInput, MatDatepickerInput, InvalidConsentPeriodDirective, MatDatepickerToggle, MatSuffix, MatDatepicker, MatError, HasAnyPermissionsDirective, HasPermissionDirective, MatChipListbox, MatChipOption, MatIcon, MatChipRemove, MatProgressBar, MatIconButton, MatButton, UpperCasePipe, KeyValuePipe, TranslatePipe]
 })
 export class ConsentDetailComponent implements OnInit {
 

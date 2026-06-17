@@ -6,18 +6,29 @@ import {
   ControlContainer,
   FormControl,
   FormGroupDirective,
+  FormsModule,
   NgForm,
   NgModel,
   ValidationErrors
 } from "@angular/forms";
 import {ErrorStateMatcher} from "@angular/material/core";
-import {TranslateService} from '@ngx-translate/core';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
+import {NgFor, NgIf, NgStyle, NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
+import {MatIcon} from '@angular/material/icon';
+import {MatError, MatFormField, MatLabel, MatSuffix} from '@angular/material/form-field';
+import {MatInput} from '@angular/material/input';
+import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
+import {MatIconButton} from '@angular/material/button';
+import {CdkCopyToClipboard} from '@angular/cdk/clipboard';
+import {MatOption, MatSelect} from '@angular/material/select';
+import {InvalidBirthdayDirective} from "../../shared/directives/invalid-birthday-directive";
 
 @Component({
-  selector: 'app-patient-fields',
-  templateUrl: './patient-fields.component.html',
-  styleUrls: ['./patient-fields.component.css'],
-  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
+    selector: 'app-patient-fields',
+    templateUrl: './patient-fields.component.html',
+    styleUrls: ['./patient-fields.component.css'],
+    viewProviders: [{ provide: ControlContainer, useExisting: NgForm }],
+  imports: [FormsModule, NgFor, NgSwitch, NgIf, NgStyle, MatIcon, NgSwitchCase, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatIconButton, CdkCopyToClipboard, MatSelect, MatOption, NgSwitchDefault, MatError, TranslatePipe, InvalidBirthdayDirective]
 })
 
 export class PatientFieldsComponent implements OnInit {
@@ -56,8 +67,10 @@ export class PatientFieldsComponent implements OnInit {
       return this.translate.instant('patientFields.error_value_text1') + " \"" + fieldName + "\" " + this.translate.instant('patientFields.error_value_text2');
     else if (errors?.['required'])
       return this.translate.instant('patientFields.error_mandatory_text1') + " \"" + fieldName + "\" " +  this.translate.instant('patientFields.error_mandatory_text2');
+    else if (errors?.['invalidBirthday'])
+      return this.translate.instant('patientFields.invalid_birthday');
     else
-      return "fehler";
+      return "invalid";
   }
 
   enableDateFieldValidation(field: NgModel) {
@@ -76,12 +89,12 @@ export class PatientFieldsComponent implements OnInit {
       //let isFieldsEmpty = !Object.keys(this.fields).length || !Object.entries(this.fields).some( (e) => e[1].length > 0);
       return field.invalid &&
           (field.dirty || field.touched) &&
-          (field.errors?.['pattern'] || field.errors?.['required']);
+          (field.errors?.['pattern'] || field.errors?.['required'] || field.errors?.['invalidBirthday']);
     }
   }
 
-  public getFieldClass(className: string){
-    return className + (this.readOnly ? " inputFieldDisabled" : "");
+  public getFieldClass(){
+    return "inputField ml-field" + (this.readOnly ? " inputFieldDisabled" : "");
   }
 }
 

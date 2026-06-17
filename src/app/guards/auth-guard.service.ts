@@ -1,55 +1,55 @@
-import {Injectable} from '@angular/core';
+import {AuthGuardData, createAuthGuard} from 'keycloak-angular';
 import {
-  ActivatedRoute,
   ActivatedRouteSnapshot,
-  CanActivateChild,
+  CanActivateChildFn,
+  CanActivateFn,
   Router,
   RouterStateSnapshot,
   UrlSegment,
   UrlTree
 } from '@angular/router';
-import {KeycloakAuthGuard, KeycloakService} from 'keycloak-angular';
-import {Observable} from "rxjs";
-import {UserAuthService} from "../services/user-auth.service";
+import {inject} from '@angular/core';
 import {AuthorizationService} from "../services/authorization.service";
+import {UserAuthService} from "../services/user-auth.service";
+import {MlTokenAuthService} from "../services/ml-token-auth.service";
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthGuard extends KeycloakAuthGuard implements CanActivateChild {
-  constructor(
-    protected readonly router: Router,
-    protected readonly activatedRouter: ActivatedRoute,
-    protected readonly keycloak: KeycloakService,
-    private readonly authorizationService: AuthorizationService,
-    private readonly userAuthService: UserAuthService
-  ) {
-    super(router, keycloak);
-  }
+const isAccessAllowed = async (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+  authData: AuthGuardData
+): Promise<boolean | UrlTree> => {
+  const { authenticated, grantedRoles } = authData;
 
-  public async isAccessAllowed(
-    routeSnapshot: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ) {
-    return this.userAuthService.login(this.authenticated, state.url).then() || this.router.createUrlTree(['access-denied']);
-  }
+  const router = inject(Router);
+  const userAuthService = inject(UserAuthService);
+  const mlTokenAuthService = inject(MlTokenAuthService);
+  return mlTokenAuthService.isAuthenticated()
+    || await userAuthService.login(authenticated, state.url)
+    || router.createUrlTree(['access-denied']);
+};
 
-  canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot):
-    boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    let accessGranted = false;
-    if(childRoute.data.permission != undefined)
-      accessGranted =  this.authorizationService.hasPermission(childRoute.data.permission);
-    else if(childRoute.data.anyPermissions != undefined && childRoute.data.anyPermissions.length > 0)
-      accessGranted =  this.authorizationService.hasAnyPermissions(childRoute.data.anyPermissions);
-    if(!accessGranted)
-      return this.router.createUrlTree(['access-denied']);
+export const canActivateAuthRole = createAuthGuard<CanActivateFn>(isAccessAllowed);
 
-    return !childRoute.data.checkIdType || this.checkTenantIdType(childRoute.url);
-  }
-
-  checkTenantIdType(urlSegments: UrlSegment[]): boolean | UrlTree {
-    return urlSegments == undefined || urlSegments.length < 2
-      || this.authorizationService.getAllowedUniqueIdTypes('R', false).includes(urlSegments[1].path)
-      || this.router.createUrlTree(['access-denied']);
-  }
+const checkTenantIdType = (
+  authorizationService: AuthorizationService,
+  router: Router,
+  urlSegments: UrlSegment[]
+): boolean | UrlTree => {
+  return urlSegments == undefined || urlSegments.length < 2
+    || authorizationService.getAllowedUniqueIdTypes('R', false).includes(urlSegments[1].path)
+    || router.createUrlTree(['access-denied']);
 }
+
+export const canActivateChildAuthRole: CanActivateChildFn = (  childRoute: ActivatedRouteSnapshot,  state: RouterStateSnapshot,) => {
+  let accessGranted = false;
+  const router = inject(Router);
+  const authorizationService = inject(AuthorizationService);
+  if(childRoute.data.permission != undefined)
+    accessGranted =  authorizationService.hasPermission(childRoute.data.permission);
+  else if(childRoute.data.anyPermissions != undefined && childRoute.data.anyPermissions.length > 0)
+    accessGranted =  authorizationService.hasAnyPermissions(childRoute.data.anyPermissions);
+  if(!accessGranted)
+    return router.createUrlTree(['access-denied']);
+
+  return !childRoute.data.checkIdType || checkTenantIdType(authorizationService, router, childRoute.url);
+};

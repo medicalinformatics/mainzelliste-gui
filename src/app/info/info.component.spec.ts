@@ -9,8 +9,8 @@ describe('InfoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InfoComponent ]
-    })
+    imports: [InfoComponent]
+})
     .compileComponents();
   });
 

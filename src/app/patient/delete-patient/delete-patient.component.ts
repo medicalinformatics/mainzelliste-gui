@@ -2,19 +2,27 @@ import {Component, OnInit} from '@angular/core';
 import {Patient} from "../../model/patient";
 import {PatientService} from "../../services/patient.service";
 import {PatientListService} from "../../services/patient-list.service";
-import {ActivatedRoute, Router} from "@angular/router";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import {GlobalTitleService} from "../../services/global-title.service";
 import {MatDialog} from "@angular/material/dialog";
 import {Id} from "../../model/id";
-import {TranslateService} from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import {
   ConfirmDeleteDialogComponent
 } from "../../shared/components/confirm-delete-dialog/confirm-delete-dialog.component";
+import { FormsModule } from '@angular/forms';
+import { MatCard, MatCardTitle } from '@angular/material/card';
+import { PatientFieldsComponent } from '../patient-fields/patient-fields.component';
+import { PatientPseudonymsComponent } from '../patient-pseudonyms/patient-pseudonyms.component';
+import { MatFabButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'app-delete-patient',
-  templateUrl: './delete-patient.component.html',
-  styleUrls: ['./delete-patient.component.css']
+    selector: 'app-delete-patient',
+    templateUrl: './delete-patient.component.html',
+    styleUrls: ['./delete-patient.component.css'],
+    imports: [FormsModule, MatCard, MatCardTitle, PatientFieldsComponent, PatientPseudonymsComponent, MatFabButton, MatIcon, MatTooltip, RouterLink, TranslatePipe]
 })
 
 export class DeletePatientComponent implements OnInit {

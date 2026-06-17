@@ -8,8 +8,8 @@ describe('BulkPseudonymizationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BulkPseudonymizationComponent ]
-    })
+    imports: [BulkPseudonymizationComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(BulkPseudonymizationComponent);

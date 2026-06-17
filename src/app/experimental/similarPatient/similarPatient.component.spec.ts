@@ -8,8 +8,8 @@ describe('CloneComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SimilarPatientComponent ]
-    })
+    declarations: [SimilarPatientComponent]
+})
     .compileComponents();
   });
 
