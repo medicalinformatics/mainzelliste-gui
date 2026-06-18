@@ -1,12 +1,19 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Field, FieldType } from 'src/app/model/field';
 import {FieldService} from "../../services/field.service";
-import {TranslateService} from '@ngx-translate/core';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
+import {DatePipe, NgForOf, NgIf} from "@angular/common";
 
 @Component({
   selector: 'view-patient-fields',
   templateUrl: './view-patient.component.html',
   styleUrls: ['./view-patient.component.css'],
+  imports: [
+    TranslatePipe,
+    NgForOf,
+    NgIf,
+    DatePipe
+  ]
 })
 
 export class ViewPatientComponent implements OnInit {
@@ -19,14 +26,14 @@ export class ViewPatientComponent implements OnInit {
   constructor(
         fieldService: FieldService,
         private translate: TranslateService
-      ) { 
+      ) {
     this.fields = fieldService.getFields();
 
   }
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     console.log(this.patientFields)
-    
+
   }
 
   fieldChanged(){

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Patient} from "../../model/patient";
 import {GlobalTitleService} from "../../services/global-title.service";
-import {TranslateService} from "@ngx-translate/core";
+import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {PatientListService} from "../../services/patient-list.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from '@angular/material/dialog';
@@ -10,12 +10,29 @@ import {ErrorMessage, ErrorMessages} from "../../error/error-messages";
 import {HttpErrorResponse} from "@angular/common/http";
 import {MergeTentativeMatchDialogComponent} from "./dialog/merge-tentative-match-dialog.component";
 import {throwError} from "rxjs";
-import { Field } from 'src/app/model/field';
-import { IdentityDialogComponent } from './dialog/secondary-identities-dialog.component';
+import {Field} from 'src/app/model/field';
+import {IdentityDialogComponent} from './dialog/secondary-identities-dialog.component';
+import {MatCard, MatCardSubtitle, MatCardTitle} from "@angular/material/card";
+import {ViewPseudonymsComponent} from "../../patient/view-pseudonyms/view-pseudonyms.component";
+import {ViewPatientComponent} from "../../patient/view-patient/view-patient.component";
+import {MatButton} from "@angular/material/button";
+import {MatTooltip} from "@angular/material/tooltip";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-solve-tentative-match-patient',
   templateUrl: './solve-tentative-match.component.html',
+  imports: [
+    MatCard,
+    MatCardTitle,
+    MatCardSubtitle,
+    TranslatePipe,
+    ViewPseudonymsComponent,
+    ViewPatientComponent,
+    MatButton,
+    MatTooltip,
+    FormsModule
+  ],
   styleUrls: ['./solve-tentative-match.component.css']
 })
 export class SolveTentativeMatchComponent implements OnInit {
@@ -127,7 +144,7 @@ export class SolveTentativeMatchComponent implements OnInit {
     const dialogRef = this.identityDialog.open(IdentityDialogComponent, {
       data: { idString: idString, idType: idType}
     });
-  
+
     dialogRef.afterClosed().subscribe(result => {
       console.log('Dialog closed', result);
     });

@@ -1,6 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogContent,
+  MatDialogRef, MatDialogTitle
+} from '@angular/material/dialog';
 import { catchError, throwError } from 'rxjs';
 import { AppConfigService } from 'src/app/app-config.service';
 import { Id } from 'src/app/model/id';
@@ -9,15 +14,27 @@ import { Patient } from 'src/app/model/patient';
 import { Tenant } from 'src/app/model/tenant';
 import { AuthorizationService } from 'src/app/services/authorization.service';
 import { PatientListService } from 'src/app/services/patient-list.service';
-import { TranslateService } from '@ngx-translate/core';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import { IdType } from 'src/app/model/id-type';
 import { SemanticType } from 'src/app/model/field';
 import { PatientService } from 'src/app/services/patient.service';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
+import {MatButton} from "@angular/material/button";
+import {MatCard, MatCardTitle, MatCardTitleGroup} from "@angular/material/card";
 
 @Component({
   selector: 'app-id-card-dialog',
   templateUrl: './id-card-dialog.component.html',
+  imports: [
+    TranslatePipe,
+    MatButton,
+    MatDialogActions,
+    MatCardTitle,
+    MatCardTitleGroup,
+    MatCard,
+    MatDialogContent,
+    MatDialogTitle
+  ]
 })
 export class IdCardDialogComponent {
   secondaryIdentities: any;
