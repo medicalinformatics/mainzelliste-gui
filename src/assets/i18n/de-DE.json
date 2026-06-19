@@ -455,6 +455,10 @@
   "read_tentatives.title" : "Unsichere Matches",
   "read_tentatives.not_item" : "Kein unsicheres Match gefunden.",
   "read_tentatives.button_resolve" : "Unsicheres Match lösen",
+  "read_tentatives.id" : "#",
+  "read_tentatives.timestamp": "Eingetreten am",
+  "read_tentatives.openTentativeMatch": "Unsichere Patientenübereinstimmung öffnen",
+  "read_tentatives.openBestMatch": "Beste Übereinstimmung öffnen",
 
   "solve_tentatives.title": "Unsicheres Match lösen",
 

@@ -23,7 +23,7 @@ import {MatProgressBar} from "@angular/material/progress-bar";
 import {MatIcon} from "@angular/material/icon";
 import {NgClass, NgForOf, NgIf, NgSwitch, NgSwitchCase} from "@angular/common";
 import {RouterLink} from "@angular/router";
-import {MatIconButton} from "@angular/material/button";
+import {MatIconAnchor, MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
@@ -53,14 +53,15 @@ import {MatTooltip} from "@angular/material/tooltip";
     MatNoDataRow,
     NgIf,
     MatRow,
-    MatRowDef
+    MatRowDef,
+    MatIconAnchor
   ]
 })
 export class TentativeMatchesListComponent implements OnInit {
 
   matTableData: MatTableDataSource<{ [key: string]: string }> =
     new MatTableDataSource<{ [key: string]: string }>([]);
-  columns: { name: string, type: 'resolveButton' | 'text' | 'separator', i18n: string }[] = []
+  columns: { name: string, type: 'resolveButton' | 'idCardButton' | 'text' | 'separator', i18n: string }[] = []
   displayFieldTypes: SemanticType[] = [SemanticType.FIRSTNAME, SemanticType.LASTNAME, SemanticType.BIRTH_NAME, SemanticType.BIRTHDATE, SemanticType.CITY]
 
   totalNumber: number = 100000;
@@ -84,16 +85,21 @@ export class TentativeMatchesListComponent implements OnInit {
 
   ngOnInit(): void {
     // init columns
+    this.columns.push({name: "id", type: "text", i18n: "read_tentatives.id"})
+    this.columns.push({name: "timestamp", type: "text", i18n: "read_tentatives.timestamp"})
+
     const fields = this.configService.data[0].fields.filter(f => !f.hideFromList && this.displayFieldTypes.includes(f.semantic));
     // this.columns.push({name: "timestamp", type: "text", i18n:""})
     fields.forEach(f => this.columns.push(
       {name: "p." + f.name, type: "text", i18n: f.i18n}
     ))
-    this.columns.push({name: "id", type: "resolveButton", i18n: ""})
+    this.columns.push({name: "p.id", type: "idCardButton", i18n: "read_tentatives.openTentativeMatch"})
+    this.columns.push({name: "button", type: "resolveButton", i18n: ""})
     // this.columns.push({name: "separator", type: "separator", i18n:""})
     fields.forEach(f => this.columns.push(
       {name: "b." + f.name, type: "text", i18n: f.i18n}
     ))
+    this.columns.push({name: "b.id", type: "idCardButton", i18n: "read_tentatives.openBestMatch"})
 
     // fetch data
     this.loadData(0, this.defaultPageSize);

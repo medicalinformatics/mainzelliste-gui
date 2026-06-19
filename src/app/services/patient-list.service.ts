@@ -398,10 +398,16 @@ export class PatientListService {
 
                 const view: { [key: string]: string } = {};
                 view["id"] = t.requestId;
-                view["timestamp"] = t.timestamp;
+                view["timestamp"] = _moment(parseInt(t.timestamp)).format('L')
+                // DateTime.fromMillis(parseInt(t.timestamp)).toLocaleString(
+                  // {year: "numeric", month: "2-digit", day: "2-digit", hour: "numeric", minute: "numeric", second: "numeric"});
+                view["p.idType"] = assignedPatient?.ids[0].idType ?? ""
+                view["p.idString"] = assignedPatient?.ids[0].idString ?? ""
                 Object.entries(assignedPatient?.fields ?? {}).forEach(([key, value]) => {
                   view["p." + key] = value;
                 })
+                view["b.idType"] = bestMatchPatient?.ids[0].idType ?? ""
+                view["b.idString"] = assignedPatient?.ids[0].idString ?? ""
                 Object.entries(bestMatchPatient?.fields ?? {}).forEach(([key, value]) => {
                   view["b." + key] = value;
                 })

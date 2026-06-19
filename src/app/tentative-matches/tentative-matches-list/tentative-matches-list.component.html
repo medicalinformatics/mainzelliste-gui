@@ -7,9 +7,21 @@
           <th mat-header-cell *matHeaderCellDef style="width: 40px"></th>
           <td mat-cell *matCellDef="let element">
             <button mat-icon-button style="background: none;border:none;" [disabled]="loading"
-                    [routerLink]="['/resolve-unsure-match', element[column.name]]">
+                    color="primary" class="ml-icon-button"
+                    [routerLink]="['/resolve-unsure-match', element[column.name]]"
+            >
               <mat-icon matTooltip="{{'read_tentatives.button_resolve' | translate}}">alt_route</mat-icon>
             </button>
+          </td>
+        </ng-container>
+        <ng-container *ngSwitchCase="'idCardButton'">
+          <th mat-header-cell *matHeaderCellDef style="width: 40px"></th>
+          <td mat-cell *matCellDef="let element">
+            <a mat-icon-button style="background: none;border:none;" target="_blank"
+               [routerLink]="['/idcard', element[column.name+'Type'], element[column.name + 'String']]"
+               color="primary" class="ml-icon-button">
+                <mat-icon matTooltip="{{column.i18n | translate}}">fact_check</mat-icon>
+            </a>
           </td>
         </ng-container>
         <ng-container *ngSwitchCase="'text'">

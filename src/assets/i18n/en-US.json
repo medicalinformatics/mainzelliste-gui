@@ -432,6 +432,10 @@
   "read_tentatives.title" : "Tentative Matches",
   "read_tentatives.not_item" : "No tenatives found.",
   "read_tentatives.button_resolve" : "Resolve tentative Match",
+  "read_tentatives.id" : "#",
+  "read_tentatives.timestamp": "Occurred At",
+  "read_tentatives.openTentativeMatch": "Open unsure patient match",
+  "read_tentatives.openBestMatch": "Open best matching patient",
 
   "solve_tentatives.title": "Resolve tentative Match",
 
