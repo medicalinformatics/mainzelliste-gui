@@ -330,8 +330,12 @@ export class AuthorizationService {
   }
 
   findAllowedIdTypes(operation: Operation, isExternal: boolean): string[] {
+    return this.findAllowedIdTypesFor(this.currentTenantId, operation, isExternal);
+  }
+
+  findAllowedIdTypesFor(tenantId: string, operation: Operation, isExternal: boolean): string[] {
     let permittedIdTypes: string[] = this.configService.getMainzellisteClaims()
-      .filter(c => c.permissions.tenant.id == this.currentTenantId)
+      .filter(c => c.permissions.tenant.id == tenantId)
       .filter(c => this.mlTokenAuthService.isAuthenticated() || c.roles.some( r => this.userRoles.includes(r)))
       .map(c => c.permissions.resources.patient.resources )
       .map(r => isExternal? r.externalIds : r.ids )
