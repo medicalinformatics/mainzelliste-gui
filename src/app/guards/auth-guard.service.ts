@@ -1,4 +1,4 @@
-import {AuthGuardData, createAuthGuard} from 'keycloak-angular';
+import Keycloak from 'keycloak-js';
 import {
   ActivatedRouteSnapshot,
   CanActivateChildFn,
@@ -12,23 +12,25 @@ import {inject} from '@angular/core';
 import {AuthorizationService} from "../services/authorization.service";
 import {UserAuthService} from "../services/user-auth.service";
 import {MlTokenAuthService} from "../services/ml-token-auth.service";
+import {AppConfigService} from "../app-config.service";
 
-const isAccessAllowed = async (
-  route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot,
-  authData: AuthGuardData
-): Promise<boolean | UrlTree> => {
-  const { authenticated, grantedRoles } = authData;
 
-  const router = inject(Router);
-  const userAuthService = inject(UserAuthService);
-  const mlTokenAuthService = inject(MlTokenAuthService);
-  return mlTokenAuthService.isAuthenticated()
-    || await userAuthService.login(authenticated, state.url)
-    || router.createUrlTree(['access-denied']);
+const isAccessAllowed = async (state: RouterStateSnapshot) => {
+  const isAuthenticated: boolean = inject(Keycloak)?.authenticated ?? false;
+  return await inject(UserAuthService).login(isAuthenticated, state.url);
+}
+
+export const canActivateAuthRole : CanActivateFn = (route, state) => {
+    return inject(AppConfigService).isOAuthConfigured()
+      && !inject(MlTokenAuthService).isAuthenticated()
+      && isAccessAllowed(state)
+      || inject(Router).createUrlTree(['access-denied']);
 };
 
-export const canActivateAuthRole = createAuthGuard<CanActivateFn>(isAccessAllowed);
+export const canActivateMlToken: CanActivateFn = (route, state) => {
+  return inject(MlTokenAuthService).isAuthenticated()
+    || inject(Router).createUrlTree(['auth-failed']);
+};
 
 const checkTenantIdType = (
   authorizationService: AuthorizationService,

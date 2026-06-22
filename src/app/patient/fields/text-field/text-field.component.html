@@ -1,0 +1,13 @@
+<mat-form-field class="ml-field" style="width: 100%; padding-right: 10px" subscriptSizing="dynamic">
+  <mat-label style="height: 24px;">{{field.i18n | translate}}</mat-label>
+  <input matInput
+         [(ngModel)]="data"
+         [name]="field.name"
+         placeholder="{{field.hint}}"
+         [required]="field.required"
+         pattern="{{field.validator}}"
+         #currentField="ngModel">
+  <mat-error *ngIf="displayError(currentField)">
+    {{getFieldErrorMessage(currentField.errors, translate)}}
+  </mat-error>
+</mat-form-field>

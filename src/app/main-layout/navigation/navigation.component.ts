@@ -3,15 +3,13 @@ import {Permission} from "../../model/permission";
 import {AppConfigService} from "../../app-config.service";
 import {AuthorizationService} from "../../services/authorization.service";
 import {PatientListService} from "../../services/patient-list.service";
-import {Id} from "../../model/id";
-import {AddPatientRequest} from "../../model/add-patient-request";
-import { HasPermissionDirective } from '../../shared/directives/has-permission.directive';
-import { MatButton } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
-import { MatIcon } from '@angular/material/icon';
-import { NgIf } from '@angular/common';
-import { MatDivider } from '@angular/material/divider';
-import { TranslatePipe } from '@ngx-translate/core';
+import {HasPermissionDirective} from '../../shared/directives/has-permission.directive';
+import {MatButton} from '@angular/material/button';
+import {RouterLink} from '@angular/router';
+import {MatIcon} from '@angular/material/icon';
+import {NgIf} from '@angular/common';
+import {MatDivider} from '@angular/material/divider';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
     selector: 'app-navigation',
@@ -28,20 +26,6 @@ export class NavigationComponent {
       public authorizationService:AuthorizationService,
       public patientListService:PatientListService
   ) {
-  }
-
-  /**
-   * TODO example: run bulk pseudonymization.
-   */
-  public bulkPseudonymize(){
-    this.patientListService.addPatients([new AddPatientRequest({
-      "vorname": "klmana",
-      "nachname": "tiokma",
-      "geburtstag": "01",
-      "geburtsmonat": "01",
-      "geburtsjahr": "1980"
-    }, {"clinicExtId": "45878178718"})],["biobankId"], false)
-    .subscribe(console.log)
   }
 }
 

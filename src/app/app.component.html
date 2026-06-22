@@ -1,34 +1,41 @@
 <div class="wrapper" style="display: flex; overflow: auto">
-  <!--show loading bar-->
-  <div *ngIf="!this.mlTokenAuthService.isAuthenticated() && !isLoggedIn()" style="display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%;">
+  <!--LOADING PAGE-->
+  <div *ngIf="!bootState.ready && !this.mlTokenAuthService.isAuthenticated() && !isLoggedIn()"
+       style="display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%;">
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     <img src="assets/images/mainzelliste-logo-650.png" alt="Mainzelliste Logo" class="load-page-logo"/>
   </div>
 
-  <!--HEADER AND CONTENT AS COLUMN-->
-  <app-header style="flex: 0 0; height: 75px" *ngIf="this.mlTokenAuthService.isAuthenticated() || isLoggedIn()"></app-header>
-  <!-- NAVIGATION AND CONTENT NEXT TO EACH OTHER sessionService.isLoggedIn() -->
-  <mat-sidenav-container *ngIf="this.mlTokenAuthService.isAuthenticated() || isLoggedIn()" style="height: 100%" autosize>
+  <!--HEADER-->
+  <app-header style="flex: 0 0; height: 75px" *ngIf="!this.hideSideNav && (this.mlTokenAuthService.isAuthenticated() || isLoggedIn())"></app-header>
+
+  <!-- NAVIGATION AND CONTENT -->
+  <mat-sidenav-container style="height: 100%" autosize *ngIf="bootState.ready">
+    <!-- LEFT MENU-->
     <mat-sidenav mode="side" class="sidenav-menu" opened>
-      <app-navigation *ngIf="!this.mlTokenAuthService.isAuthenticated()" style=" padding-top:22px; color: white; display: flex; flex-flow: column"></app-navigation>
+      <app-navigation *ngIf="this.userAuthService.isLoggedIn() && !this.mlTokenAuthService.isAuthenticated() && !this.hideSideNav"
+                      style=" padding-top:22px; color: white; display: flex; flex-flow: column"></app-navigation>
     </mat-sidenav>
+    <!-- CONTENT & FOOTER -->
     <mat-sidenav-content style="height: 100%">
       <div style="display: flex; flex-direction: column; height: 100%; position: absolute; width: 100%;">
         <div [ngStyle]="{'display': 'flex', 'flex-flow': 'column', 'padding': '30px 2% 5% 2%',
         'flex-shrink': 1, 'flex-grow': 1,
         'align-items': this.mlTokenAuthService.isAuthenticated() ? 'center':'left'}">
           <div class="title" *ngIf="this.titleService.titleText.length > 0">
-            <h1>
+            <h1 style="display: flex;align-items: center;">
               <mat-icon *ngIf="titleService.titleIcon != undefined"
-                        style="transform: scale(1.5); margin-right: 0.5em;">{{this.titleService.titleIcon}}</mat-icon>
-              {{this.titleService.titleText}}</h1>
+                        style="transform: scale(1.5); margin-right: 0.5em;">
+                {{this.titleService.titleIcon}}</mat-icon>
+              <span>{{this.titleService.titleText}}</span>
+            </h1>
           </div>
           <app-error-card [(messages)]="errorNotificationService.messages"></app-error-card>
           <div style="flex: 1 1 auto; height: 100%">
             <router-outlet></router-outlet>
           </div>
         </div>
-        <app-footer></app-footer>
+        <app-footer *ngIf="!this.hideSideNav && (this.mlTokenAuthService.isAuthenticated() || isLoggedIn())"></app-footer>
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>

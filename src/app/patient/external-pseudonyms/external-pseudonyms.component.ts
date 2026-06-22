@@ -1,10 +1,19 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {Id} from "../../model/id";
 import {IdTypSelection} from "../create-patient/create-patient.component";
-import { MatSelect, MatOption } from "@angular/material/select";
+import {MatOption, MatSelect} from "@angular/material/select";
 import {addIfNotExist, removeFrom} from "../../utils/array-utils";
 import {PatientListService} from "../../services/patient-list.service";
-import { ControlContainer, NgForm, FormsModule } from "@angular/forms";
+import {ControlContainer, FormsModule, NgForm, NgModelGroup} from "@angular/forms";
 import {AppConfigService} from "../../app-config.service";
 import {Operation} from "../../model/tenant";
 import {MatDialog} from "@angular/material/dialog";
@@ -12,14 +21,15 @@ import {GenerateIdDialog} from "./dialogs/generate-id/generate-id-dialog.compone
 import {
   ShowRelatedIdDialog
 } from "../patient-pseudonyms/dialogs/show-related-id-dialog/show-related-id-dialog.component";
-import { NgFor, NgIf, NgStyle } from '@angular/common';
-import { MatIcon } from '@angular/material/icon';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatIconButton } from '@angular/material/button';
-import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
-import { MatTooltip } from '@angular/material/tooltip';
-import { TranslatePipe } from '@ngx-translate/core';
+import {NgFor, NgIf, NgStyle} from '@angular/common';
+import {MatIcon} from '@angular/material/icon';
+import {MatFormField, MatLabel, MatSuffix} from '@angular/material/form-field';
+import {MatInput} from '@angular/material/input';
+import {MatIconButton} from '@angular/material/button';
+import {CdkCopyToClipboard} from '@angular/cdk/clipboard';
+import {MatTooltip} from '@angular/material/tooltip';
+import {TranslatePipe} from '@ngx-translate/core';
+import {first} from "rxjs";
 
 @Component({
     selector: 'app-external-pseudonyms',
@@ -37,6 +47,7 @@ export class ExternalPseudonymsComponent implements OnChanges {
   @Input() permittedOperation?: Operation;
   @Output() generateId = new EventEmitter<{idType:string, idString:string, newIdType: string}>();
 
+  @ViewChild('externalIdsCtrl', { read: ElementRef }) extIdsList!: ElementRef;
   externalIdTypes: IdTypSelection[] = [];
 
   constructor(
@@ -56,11 +67,20 @@ export class ExternalPseudonymsComponent implements OnChanges {
 
   }
 
-  addExternalIdField(selectedExternalIdType: MatSelect) {
+  addExternalIdField(selectedExternalIdType: MatSelect, externalIdsGroup: NgModelGroup) {
+    const oldExternalIds = Object.entries(externalIdsGroup.control.controls).map(([key, value]) => key);
     //add external id to patient model
     addIfNotExist(new Id(selectedExternalIdType.value, ''), this.ids,
         e => !this.isAssociatedIdType(selectedExternalIdType.value) && e.idType == selectedExternalIdType.value
     );
+
+    // change focus
+    externalIdsGroup.control.valueChanges.pipe(first()).subscribe(v => {
+      const controlId = Object.entries(v)
+      .map(([k,o]) => k)
+      .find(k => !oldExternalIds.includes(k));
+      this.extIdsList.nativeElement.querySelector(`input[name="${controlId}"]`)?.focus();
+  });
 
     this.externalIdTypes.filter(t => t.idType == selectedExternalIdType.value)
     .forEach(t => t.added = true);
@@ -75,10 +95,6 @@ export class ExternalPseudonymsComponent implements OnChanges {
 
     this.externalIdTypes.filter(t => t.idType == idType)
     .forEach(t => t.added = false);
-  }
-
-  disableAddExternalIdField(selectedExternalIdType: MatSelect): boolean {
-    return selectedExternalIdType.value == undefined || selectedExternalIdType.value.length < 1;
   }
 
   getExternalIdTypes(): IdTypSelection[] {

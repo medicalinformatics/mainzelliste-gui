@@ -1,10 +1,10 @@
-<table style="width: 100%; max-width: 700px;" ngModelGroup="externalIds">
-  <tr *ngFor="let id of getExternalIds()">
-    <td style="width: 100%; flex-flow: row">
-      <div style="display: flex; flex-wrap: nowrap;">
+<div style="width: 100%; max-width: 700px;" ngModelGroup="externalIds" #externalIdsCtrl="ngModelGroup">
+  <div [ngStyle]="{'display': 'flex', 'flex-direction': 'column', 'gap': '0 60px'}">
+    @for (id of getExternalIds(); track $index){
+      <div style="width: 100%; display: flex; flex-wrap: nowrap;">
         <button *ngIf="side!='none'" style=" margin-top:4%; border:none; background:none;"
                 [ngStyle]="{float:side}">
-<!--                (click)="slideData(fields[externalId.idType], externalId.idString)">-->
+          <!--                (click)="slideData(fields[externalId.idType], externalId.idString)">-->
           <mat-icon>arrow_circle_{{side}}</mat-icon>
         </button>
         <mat-form-field [class]="getFieldClass()" subscriptSizing="dynamic">
@@ -14,18 +14,18 @@
                  matInput [readonly]="readOnly || this.permittedOperation != 'C' && this.isAssociatedIdType(id.idType)"
                  value="{{id.idString}}">
           <span matSuffix style="display:flex; flex-flow: row; justify-content:flex-end;">
-            <button mat-icon-button *ngIf="readOnly && this.config.isCopyIdEnabled()" [cdkCopyToClipboard]="id.idString"
+            <button type="button" mat-icon-button *ngIf="readOnly && this.config.isCopyIdEnabled()" [cdkCopyToClipboard]="id.idString"
                     class="mat-field-suffix-button"
                     [matTooltip]="id.idString" matSuffix>
               <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">file_copy</mat-icon>
             </button>
-            <button mat-icon-button *ngIf="readOnly && this.config.isCopyConcatenatedIdEnabled()"
+            <button type="button" mat-icon-button *ngIf="readOnly && this.config.isCopyConcatenatedIdEnabled()"
                     [cdkCopyToClipboard]="this.getConcatenated(id)"
                     class="mat-field-suffix-button"
                     [matTooltip]="this.getConcatenated(id)" matSuffix>
               <mat-icon [ngStyle]="{'color':'#888888', 'transform':'scale(0.8)'}">copy_all</mat-icon>
             </button>
-            <button mat-icon-button *ngIf="readOnly"
+            <button type="button" mat-icon-button *ngIf="readOnly"
                     class="mat-field-suffix-button"
                     matTooltip="{{'patientPseudonyms.related_id_button' | translate}}"
                     (click)="this.openRelatedDialog(id)">
@@ -33,36 +33,29 @@
             </button>
           </span>
         </mat-form-field>
-        <button *ngIf="!readOnly && (this.permittedOperation == 'C' || !this.isAssociatedIdType(id.idType))" mat-icon-button color="primary"
+        <button *ngIf="!readOnly && (this.permittedOperation == 'C' || !this.isAssociatedIdType(id.idType))"
+                type="button" mat-icon-button color="primary"
                 aria-label="Externes Pseudonym entfernen"
                 (click)="this.removeExternalIdField(id.idType)">
           <mat-icon>delete</mat-icon>
         </button>
-        <button *ngIf="readOnly && this.getAssociatedIdTypes(id.idType).length > 0 && this.generateId != undefined" mat-icon-button color="primary"
+        <button *ngIf="readOnly && this.getAssociatedIdTypes(id.idType).length > 0 && this.generateId != undefined"
+                type="button" mat-icon-button color="primary"
                 matTooltip="{{'button_generate_id' | translate}}"
                 (click)="this.openGenerateIdDialog(id)">
           <mat-icon>add_box</mat-icon>
         </button>
       </div>
-    </td>
-  </tr>
-  <!-- external id types dropdown menu-->
-  <tr *ngIf="!readOnly && this.getExternalIdMatSelectData().length > 0">
-    <td>
-      <div style="display: flex; flex-wrap: nowrap;">
-        <mat-form-field class="inputField ml-field">
-          <mat-label>{{'createPatient.pseudonym_type' | translate}}</mat-label>
-          <mat-select #selectedExternalIdType required="false">
-            <mat-option *ngFor="let idType of this.getExternalIdMatSelectData()"
-                        [value]="idType">{{idType}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <button mat-icon-button color="primary" aria-label="Externes Pseudonym hinzufügen"
-                [disabled]="this.disableAddExternalIdField(selectedExternalIdType)"
-                (click)="this.addExternalIdField(selectedExternalIdType)">
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
-    </td>
-  </tr>
-</table>
+    }
+  </div>
+  @if (!readOnly) {
+    <mat-form-field class="inputField ml-field">
+      <mat-label>{{'createPatient.select_external_id' | translate}}</mat-label>
+      <mat-select required="false" [disabled]="this.getExternalIdMatSelectData().length == 0"
+                  (selectionChange)="this.addExternalIdField($event.source, externalIdsCtrl)" >
+        <mat-option *ngFor="let idType of this.getExternalIdMatSelectData()"
+                    [value]="idType">{{idType}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  }
+</div>

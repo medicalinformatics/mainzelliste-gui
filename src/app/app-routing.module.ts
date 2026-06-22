@@ -4,7 +4,11 @@ import {IdcardComponent} from "./idcard/idcard.component";
 import {PatientlistViewComponent} from "./patientlist-view/patientlist-view.component";
 import {ErrorComponent} from "./error/error.component";
 import {LogoutComponent} from "./logout/logout.component";
-import {canActivateAuthRole, canActivateChildAuthRole} from "./guards/auth-guard.service";
+import {
+  canActivateAuthRole,
+  canActivateChildAuthRole,
+  canActivateMlToken
+} from "./guards/auth-guard.service";
 import {Permission} from "./model/permission";
 import {CreatePatientComponent} from "./patient/create-patient/create-patient.component";
 import {EditPatientComponent} from "./patient/edit-patient/edit-patient.component";
@@ -19,9 +23,12 @@ import {
 import {
   BulkPseudonymizationComponent
 } from "./bulk-operations/bulk-pseudonymization/bulk-pseudonymization.component";
+import {
+  FailedAuthenticationComponent
+} from "./failed-authentication/failed-authentication.component";
 
 export const routes: Routes = [
-  {
+  { // Note: access is only possible with OAuth authentication.
     path: '', canActivate: [canActivateAuthRole], canActivateChild: [canActivateChildAuthRole], children: [
       {path: '', pathMatch: 'full', redirectTo: 'patientlist'},
       {path: 'bulk-id-generation', component: BulkIdGenerationComponent, data : { permission: Permission.GENERATE_IDS, checkIdType:true}},
@@ -42,7 +49,13 @@ export const routes: Routes = [
       {path: 'consent-templates', component: ConsentTemplatesComponent, data: { permission: Permission.CREATE_CONSENT_TEMPLATE}}
     ]
   },
+  { // Access is only possible with a valid Mainzelliste token.
+    path: 'html', canActivate: [canActivateMlToken], canActivateChild: [canActivateChildAuthRole], children: [
+      {path: 'createPatient', component: CreatePatientComponent, data: { permission: Permission.CREATE_PATIENT }},
+    ]
+  },
   {path: 'access-denied', component: AccessDeniedComponent},
+  {path: 'auth-failed', component: FailedAuthenticationComponent},
   // Needs to be outside, because we want message why user couldn't authenticate
   {path: 'error', component: ErrorComponent},
   {path: 'logout', component: LogoutComponent},

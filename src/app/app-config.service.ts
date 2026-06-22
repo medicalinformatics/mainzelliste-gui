@@ -108,6 +108,10 @@ export class AppConfigService {
     return this.data[0]?.oAuthConfig;
   }
 
+  isOAuthConfigured(): boolean {
+    return this.data[0].oAuthConfig != undefined
+  }
+
   public getLayoutFooterLogos(): FooterLogo[] {
     return this.layoutFooterLogos;
   }

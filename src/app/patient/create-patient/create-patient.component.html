@@ -1,20 +1,139 @@
 <form #patientForm="ngForm">
-<div style="height:100%;width:100%;">
-  <div style=" width: 50%">
-    <h4>{{'createPatient.enter_patient_data' | translate}}</h4>
-    <app-patient-fields (fieldEvent)="fieldsChanged($event)"
-                        [fields]="patient.fields"></app-patient-fields>
-    <br>
-    <div *ngIf="this.getExternalIdTypes('C').length > 0" style="width: 90%; max-width: 700px;">
-      <h4>{{'createPatient.add_external_pseudonym' | translate}}</h4>
+  <div [ngStyle]="{'display': 'flex', 'flex-direction': this.split? 'row' : 'column', 'gap': '0 60px'}">
+  <div style=" width: 500px">
+    <!-- personal Info. -->
+    @if (this.hasAnyFields([SemanticType.FIRSTNAME, SemanticType.LASTNAME, SemanticType.BIRTH_NAME,
+      SemanticType.BIRTHDATE, SemanticType.SEX]) || nonSemanticFields.length > 0) {
+    <div>
+      <h4 style="color: #063d6c">{{ 'createPatient.patient_data' | translate }}</h4>
+      <div style="display: flex; width: 100%; column-gap: 15px;">
+        @if (this.hasField(SemanticType.FIRSTNAME)) {
+          <app-text-field *ngIf="this.hasField(SemanticType.FIRSTNAME)" style="flex-grow: 1;"
+                          [(data)]="this.patient.fields[getFieldName(SemanticType.FIRSTNAME)]"
+                          [field]="this.semanticFields[SemanticType.FIRSTNAME.valueOf()]">
+
+          </app-text-field>
+        }
+        @if (this.hasField(SemanticType.LASTNAME)) {
+          <app-text-field *ngIf="this.hasField(SemanticType.LASTNAME)" style="flex-grow: 1;"
+                          [(data)]="this.patient.fields[getFieldName(SemanticType.LASTNAME)]"
+                          [field]="this.semanticFields[SemanticType.LASTNAME.valueOf()]">
+
+          </app-text-field>
+        }
+      </div>
+      <div>
+        @if (this.hasField(SemanticType.BIRTH_NAME)) {
+          <app-text-field *ngIf="this.hasField(SemanticType.BIRTH_NAME)"
+                          [(data)]="this.patient.fields[getFieldName(SemanticType.BIRTH_NAME)]"
+                          [field]="this.semanticFields[SemanticType.BIRTH_NAME.valueOf()]">
+          </app-text-field>
+        }
+      </div>
+      <div>
+        @if (this.hasField(SemanticType.BIRTHDATE)) {
+          <app-date-field *ngIf="this.hasField(SemanticType.BIRTHDATE)"
+                          style="display: block; max-width: 242px;"
+                          [(data)]="this.patient.fields[getFieldName(SemanticType.BIRTHDATE)]"
+                          [field]="this.semanticFields[SemanticType.BIRTHDATE.valueOf()]">
+          </app-date-field>
+        }
+      </div>
+      <div>
+        @if (this.hasField(SemanticType.SEX)) {
+          <app-sex-field *ngIf="this.hasField(SemanticType.SEX)"
+                         style="display: block; max-width: 242px;"
+                         [(data)]="this.patient.fields[getFieldName(SemanticType.SEX)]"
+                         [field]="this.semanticFields[SemanticType.SEX.valueOf()]">
+          </app-sex-field>
+        }
+      </div>
+      <br>
+    </div>
+    }
+    <!-- contact Info. -->
+    @if (this.hasAnyFields([SemanticType.STREET, SemanticType.POSTAL_CODE, SemanticType.CITY,
+      SemanticType.EMAIL, SemanticType.PHONE])) {
+    <div>
+      <h4 style="color: #063d6c">{{ 'createPatient.contact_data' | translate }}</h4>
+      <div>
+        @if (this.hasField(SemanticType.STREET)) {
+          <app-text-field *ngIf="this.hasField(SemanticType.STREET)"
+                          [(data)]="this.patient.fields[getFieldName(SemanticType.STREET)]"
+                          [field]="this.semanticFields[SemanticType.STREET.valueOf()]">
+
+          </app-text-field>
+        }
+      </div>
+      <div style="display: flex; width: 100%; column-gap: 15px;">
+        @if (this.hasField(SemanticType.POSTAL_CODE)) {
+          <app-text-field style="display: block; width: 150px"
+                          [(data)]="this.patient.fields[getFieldName(SemanticType.POSTAL_CODE)]"
+                          [field]="this.semanticFields[SemanticType.POSTAL_CODE.valueOf()]">
+
+          </app-text-field>
+        }
+        @if (this.hasField(SemanticType.CITY)) {
+          <app-text-field *ngIf="this.hasField(SemanticType.CITY)" style="flex-grow: 3"
+                          [(data)]="this.patient.fields[getFieldName(SemanticType.CITY)]"
+                          [field]="this.semanticFields[SemanticType.CITY.valueOf()]">
+
+          </app-text-field>
+        }
+      </div>
+      <div>
+        @if (this.hasField(SemanticType.EMAIL)) {
+          <app-text-field *ngIf="this.hasField(SemanticType.EMAIL)"
+                          [(data)]="this.patient.fields[getFieldName(SemanticType.EMAIL)]"
+                          [field]="this.semanticFields[SemanticType.EMAIL.valueOf()]">
+
+          </app-text-field>
+        }
+      </div>
+      <div>
+        @if (this.hasField(SemanticType.PHONE)) {
+          <app-text-field *ngIf="this.hasField(SemanticType.PHONE)"
+                          [(data)]="this.patient.fields[getFieldName(SemanticType.PHONE)]"
+                          [field]="this.semanticFields[SemanticType.PHONE.valueOf()]">
+
+          </app-text-field>
+        }
+      </div>
+      <br>
+    </div>
+    }
+    <!-- Additional Information -->
+    @if (nonSemanticFields.length > 0){
+    <div>
+      <h4 style="color: #063d6c">{{ 'createPatient.additional_info' | translate }}</h4>
+      @for (field of nonSemanticFields; track field.name){
+      <div>
+        @switch (field.type){
+          @case (FieldType.DATE){
+            <app-date-field [(data)]="this.patient.fields[field.name]" [field]="field"></app-date-field>
+          }
+          @default {
+            <app-text-field [(data)]="this.patient.fields[field.name]" [field]="field"></app-text-field>
+          }
+        }
+      </div>
+      }
+      <br>
+    </div>
+    }
+  </div>
+  <div style="width: 556px">
+    <!-- external IDs -->
+    <div *ngIf="this.getExternalIdTypes('C').length > 0" style="max-width: 700px;">
+      <h4 style="color: #063d6c">{{'createPatient.external_pseudonyms' | translate}}</h4>
       <app-external-pseudonyms [readOnly]="false" [ids]="this.patient.ids"
                                [removeEmptyId]="true" [permittedOperation]="'C'"></app-external-pseudonyms>
     </div>
-    <div style="width: 90%; max-width: 700px;" ngModelGroup="internalIdTypes"
-         #internalIdTypesModelGroup="ngModelGroup">
-      <h4>{{'createPatient.add_pseudonym_type' | translate}}</h4>
-      <mat-form-field color="primary" class="idtype-field">
-        <mat-label>{{'createPatient.pseudonym_types' | translate}}</mat-label>
+    <!-- ID type to generate -->
+    <div style="max-width: 700px; margin-bottom: 12px;" ngModelGroup="internalIdTypes">
+      <h4 style="color: #063d6c">{{'createPatient.add_pseudonym_type' | translate}}</h4>
+      <mat-form-field color="primary" style="width: 500px; margin-top: 10px" class="idtype-field">
+        <mat-label>{{'createPatient.select_pseudonym' | translate}}</mat-label>
         <mat-chip-grid #chipList aria-label="Fruit selection"
                        name="internalIdTypesChipList"
                        [ngModel]="this.selectedInternalIdTypes.join(',')"
@@ -23,7 +142,7 @@
                     [removable]="true"
                     (removed)="removeInternalIdType(idType)">
             {{idType}}
-            <button matChipRemove>
+            <button type="button" matChipRemove>
               <mat-icon>cancel</mat-icon>
             </button>
           </mat-chip-row>
@@ -42,29 +161,35 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-      <br>
     </div>
-    <div *appHasPermission="Permission.CREATE_CONSENT" style="width: 90%; max-width: 700px;
-      display: flex; align-items: center; margin-bottom: 40px;">
-      <button style="float: left; margin-right: 0;" mat-raised-button
-              (click)="openConsentDialog()">
-        <mat-icon>{{!consent ? 'add' : 'edit'}}</mat-icon>
-        {{this.consent?.title || this.translate.instant('button_add_consent')}}
-      </button>
-      <button *ngIf="consent" mat-icon-button color="primary"
-              [matTooltip]="'button_delete_consent' | translate"
-              (click)="this.deleteConsent()" style="float:left;">
-        <mat-icon>delete</mat-icon>
-      </button>
+    <!-- consent -->
+    @if (this.showConsentFieldGroup) {
+    <div *appHasPermission="Permission.CREATE_CONSENT" >
+      <h4 style="color: #063d6c">{{'createPatient.consents' | translate}}</h4>
+      <div style="max-width: 700px;
+        display: flex; align-items: center; margin-bottom: 40px;">
+        <button type="button" style="float: left; margin-right: 0;" mat-raised-button
+                (click)="openConsentDialog()">
+          <mat-icon>{{!consent ? 'add' : 'edit'}}</mat-icon>
+          {{this.consent?.title || this.translate.instant('button_add_consent')}}
+        </button>
+        <button type="button" *ngIf="consent" mat-icon-button color="primary"
+                [matTooltip]="'button_delete_consent' | translate"
+                (click)="this.deleteConsent()" style="float:left;">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
     </div>
-    <br>
-    <div style="width: 90%; max-width: 700px;">
-      <button mat-raised-button class="submit" type="submit" style="clear: both; float: left;"
-              [disabled]="this.disable(patientForm) || creatingInProgress"
-              (click)="createNewPatient(false)">{{'button_request' | translate}}
-        <mat-icon *ngIf="creatingInProgress" style="margin-left: 10px"><mat-spinner diameter="20"></mat-spinner></mat-icon>
-      </button>
-    </div>
+    }
   </div>
-</div>
+  </div>
+  <br>
+  <!-- submit button -->
+  <div [ngStyle]="{'text-align':'left', 'margin-left': this.split? '325px' : '75px'}">
+    <button mat-raised-button class="submit" type="submit" style="width: 350px"
+            [disabled]="this.disable(patientForm) || creatingInProgress"
+            (click)="createNewPatient(false)">{{'createPatient.submit_button' | translate}}
+      <mat-icon *ngIf="creatingInProgress" style="margin-left: 10px"><mat-spinner diameter="20"></mat-spinner></mat-icon>
+    </button>
+  </div>
 </form>

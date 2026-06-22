@@ -482,22 +482,27 @@ export class ConsentService {
       );
   }
 
+  public getConsentTemplateCount(): Observable<number> {
+    return this.getConsentTemplatesResources({'_elements': 'id,identifier'})
+    .pipe(
+      map(entries => entries.size)
+    );
+  }
+
   /**
    * return a map of content templates
    */
-  private getConsentTemplatesResources(searchParam?:SearchParams): Observable<Map<string, fhir4.Questionnaire>> {
-    const consentTemplateIds = this.authorizationService.getTenantConsentTemplate();
+  private getConsentTemplatesResources(searchParam?: SearchParams): Observable<Map<string, fhir4.Questionnaire>> {
     return this.searchFhirResources<fhir4.Questionnaire>("searchConsentTemplates", {},
       'Questionnaire', [ErrorMessages.SEARCH_CONSENT_TEMPLATES_FAILED], searchParam)
-      .pipe(
-        map(resources => {
-          let result = new Map();
-          resources.filter(r => consentTemplateIds.length == 0 ||
-            consentTemplateIds.includes(this.getResourceIdentifier(r?.identifier)))
-            .forEach(r => result.set(r?.id, r!));
-          return result;
-        })
-      );
+    .pipe(
+      map(resources => {
+        let result = new Map();
+        resources.filter(r => this.authorizationService.checkTenantOfConsentTemplate(this.getResourceIdentifier(r?.identifier)))
+        .forEach(r => result.set(r?.id, r!));
+        return result;
+      })
+    );
   }
 
   public addConsentTemplate(consentTemplate: ConsentTemplate): Promise<fhir4.FhirResource | fhir4.Questionnaire> {
