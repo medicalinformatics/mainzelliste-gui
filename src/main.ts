@@ -139,7 +139,7 @@ const initTranslationService = async (
   const availableLangCodes = ['en-US', 'de-DE'];
 
   // override local storage language with language code given by the url parameter
-  const langCode = availableLangCodes.find( l => l.startsWith(langCodeParam)) ?? localStorageService.language;
+  const langCode = availableLangCodes.find( l => langCodeParam && l.startsWith(langCodeParam)) ?? localStorageService.language;
 
   // init translate service
   translate.addLangs(availableLangCodes);
