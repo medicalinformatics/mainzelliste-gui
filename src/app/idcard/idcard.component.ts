@@ -1,18 +1,30 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {PatientListService} from "../services/patient-list.service";
 import {Patient} from "../model/patient";
 import {GlobalTitleService} from "../services/global-title.service";
 import {Id} from "../model/id";
-import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow } from "@angular/material/table";
+import {
+  MatCell,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatHeaderRow,
+  MatHeaderRowDef,
+  MatNoDataRow,
+  MatRow,
+  MatRowDef,
+  MatTable
+} from "@angular/material/table";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {PatientService} from "../services/patient.service";
 import {NewIdDialog} from './dialogs/new-id-dialog';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import {ConsentDialogComponent} from "../consent/consent-dialog/consent-dialog.component";
 import {ConsentService} from "../consent/consent.service";
 import {Permission} from "../model/permission";
-import { HttpErrorResponse } from "@angular/common/http";
+import {HttpErrorResponse} from "@angular/common/http";
 import {Observable, of, throwError} from "rxjs";
 import {MainzellisteUnknownError} from "../model/mainzelliste-unknown-error";
 import {Consent, ConsentRow, ConsentsView} from "../consent/consent.model";
@@ -38,26 +50,29 @@ import {
 import {Tenant} from "../model/tenant";
 import {ComponentType} from "@angular/cdk/portal";
 import {BackendConfigService} from "../services/backend-config.service";
-import { FormsModule } from '@angular/forms';
-import { MatCard, MatCardTitleGroup, MatCardTitle, MatCardContent } from '@angular/material/card';
-import { MatIconButton, MatFabButton } from '@angular/material/button';
-import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
-import { MatTooltip } from '@angular/material/tooltip';
-import { MatIcon } from '@angular/material/icon';
-import { PatientFieldsComponent } from '../patient/patient-fields/patient-fields.component';
-import { PatientPseudonymsComponent } from '../patient/patient-pseudonyms/patient-pseudonyms.component';
-import { HasAnyPermissionsDirective } from '../shared/directives/has-any-permissions.directive';
-import { HasPermissionDirective } from '../shared/directives/has-permission.directive';
-import { NgClass, NgIf, NgFor } from '@angular/common';
-import { MatChipListbox, MatChipOption, MatChip } from '@angular/material/chips';
-import { MatProgressBar } from '@angular/material/progress-bar';
+import {FormsModule} from '@angular/forms';
+import {MatCard, MatCardContent, MatCardTitle, MatCardTitleGroup} from '@angular/material/card';
+import {MatFabButton, MatIconButton} from '@angular/material/button';
+import {CdkCopyToClipboard} from '@angular/cdk/clipboard';
+import {MatTooltip} from '@angular/material/tooltip';
+import {MatIcon} from '@angular/material/icon';
+import {PatientFieldsComponent} from '../patient/patient-fields/patient-fields.component';
+import {
+  PatientPseudonymsComponent
+} from '../patient/patient-pseudonyms/patient-pseudonyms.component';
+import {HasAnyPermissionsDirective} from '../shared/directives/has-any-permissions.directive';
+import {HasPermissionDirective} from '../shared/directives/has-permission.directive';
+import {NgClass, NgFor, NgIf} from '@angular/common';
+import {MatChip, MatChipListbox, MatChipOption} from '@angular/material/chips';
+import {MatProgressBar} from '@angular/material/progress-bar';
+import {LocalDateFormatPipe} from "../shared/pipes/local-date-format.pipe";
 
 
 @Component({
     selector: 'app-idcard',
     templateUrl: './idcard.component.html',
     styleUrls: ['./idcard.component.css'],
-    imports: [FormsModule, MatCard, MatCardTitleGroup, MatCardTitle, MatIconButton, CdkCopyToClipboard, MatTooltip, MatIcon, PatientFieldsComponent, PatientPseudonymsComponent, HasAnyPermissionsDirective, MatFabButton, RouterLink, HasPermissionDirective, NgClass, NgIf, MatCardContent, MatChipListbox, NgFor, MatChipOption, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatChip, MatProgressBar, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow, TranslatePipe]
+  imports: [FormsModule, MatCard, MatCardTitleGroup, MatCardTitle, MatIconButton, CdkCopyToClipboard, MatTooltip, MatIcon, PatientFieldsComponent, PatientPseudonymsComponent, HasAnyPermissionsDirective, MatFabButton, RouterLink, HasPermissionDirective, NgClass, NgIf, MatCardContent, MatChipListbox, NgFor, MatChipOption, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatChip, MatProgressBar, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow, TranslatePipe, LocalDateFormatPipe]
 })
 
 export class IdcardComponent implements OnInit {
@@ -132,7 +147,7 @@ export class IdcardComponent implements OnInit {
   private loadPatient() {
     this.patientListService.readPatient(new Id(this.idType, this.idString), "R", undefined, this.readIdTypes)
     .pipe(
-      map(patients => this.patientListService.convertToDisplayPatient(patients[0], false, true, this.authorizationService.getTenants())),
+      map(patients => this.patientListService.convertToDisplayPatient(patients[0], true, this.authorizationService.getTenants())),
       mergeMap(patient => this.loadRelatedAssociatedIds(patient, this.getIdTypes().filter( t => t.isAssociated ))),
       catchError(e => {
         if (e instanceof HttpErrorResponse && (e.status == 404)) {
@@ -436,7 +451,7 @@ export class IdcardComponent implements OnInit {
 
     this.patientService.getConfiguredFields("R").forEach(fieldConfig => {
       if (fieldMap.hasOwnProperty(fieldConfig.semantic)) {
-        fieldMap[fieldConfig.semantic] = contact[fieldConfig.name];
+        fieldMap[fieldConfig.semantic] = contact[fieldConfig.name] as string;
       }
     });
     return fieldMap;

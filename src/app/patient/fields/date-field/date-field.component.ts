@@ -7,9 +7,9 @@ import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/m
 import {MatInput} from "@angular/material/input";
 import {NgIf} from "@angular/common";
 import {displayError, getFieldErrorMessage} from "../fields-utils";
-import _moment from "moment";
 import {LocalStorageService} from "../../../services/local-storage.service";
 import {InvalidBirthdayDirective} from "../../../shared/directives/invalid-birthday-directive";
+import {DateTime} from "luxon";
 
 @Component({
   selector: 'app-date-field',
@@ -37,7 +37,7 @@ export class DateFieldComponent {
     ['de-DE', 'dd.MM.yyyy']
   ]);
 
-  data = model<string>();
+  data = model<string | DateTime>();
   @Input() field!: Field
 
 

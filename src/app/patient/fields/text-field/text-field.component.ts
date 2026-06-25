@@ -6,6 +6,7 @@ import {MatInput} from "@angular/material/input";
 import {ControlContainer, FormsModule, NgForm, NgModel, ValidationErrors} from "@angular/forms";
 import {NgIf} from "@angular/common";
 import {displayError, getFieldErrorMessage} from "../fields-utils";
+import {DateTime} from "luxon";
 
 @Component({
   selector: 'app-text-field',
@@ -23,7 +24,7 @@ import {displayError, getFieldErrorMessage} from "../fields-utils";
   viewProviders: [{ provide: ControlContainer, useExisting: NgForm }]
 })
 export class TextFieldComponent {
-  data = model<string>();
+  data = model<string | DateTime>();
   @Input() field!: Field
 
   constructor(
