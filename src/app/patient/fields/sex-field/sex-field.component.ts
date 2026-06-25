@@ -7,6 +7,7 @@ import {Field} from "../../../model/field";
 import {AppConfigService} from "../../../app-config.service";
 import {GenderValue} from "../../../model/patientlist";
 import {ControlContainer, FormsModule, NgForm} from "@angular/forms";
+import {DateTime} from "luxon";
 
 @Component({
   selector: 'app-sex-field',
@@ -26,7 +27,7 @@ import {ControlContainer, FormsModule, NgForm} from "@angular/forms";
   viewProviders: [{ provide: ControlContainer, useExisting: NgForm }]
 })
 export class SexFieldComponent {
-  data = model<string>();
+  data = model<string | DateTime>();
   @Input() field!: Field
 
   public readonly genderFieldValues: GenderValue[];

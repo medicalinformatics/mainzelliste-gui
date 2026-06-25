@@ -15,6 +15,7 @@ import { MatCard, MatCardTitleGroup, MatCardContent } from '@angular/material/ca
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton, MatButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import {DateTime} from "luxon";
 
 @Component({
     selector: 'app-export-patients-dialog',
@@ -65,7 +66,11 @@ export class ExportPatientsDialogComponent implements OnInit {
       response.patients.forEach((patient, r) => {
         this.csvRecords.push([]);
         this.csvRecords[0].forEach( (f, i) => {
-          this.csvRecords[r+1][i] = patient.fields[f] ?? patient.ids.find( id => id.idType == f)?.idString ?? ""
+          if(patient.fields[f] instanceof DateTime)
+            this.csvRecords[r+1][i] = (patient.fields[f] as DateTime).setLocale(this.translate.getCurrentLang())
+            .toLocaleString(DateTime.DATE_SHORT);
+          else
+            this.csvRecords[r+1][i] = patient.fields[f] as string ?? patient.ids.find( id => id.idType == f)?.idString ?? ""
         })
       })
       this.inProgress = false;
