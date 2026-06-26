@@ -53,6 +53,11 @@
   text-align: center;
 }
 
+.mat-column-matchScore {
+  width: 80px;
+  text-align: center;
+}
+
 .mat-column-b-firstname,
 .mat-column-b-lastname,
 .mat-column-p-firstname,

@@ -434,6 +434,7 @@
   "read_tentatives.button_resolve" : "Resolve tentative Match",
   "read_tentatives.id" : "#",
   "read_tentatives.timestamp": "Occurred At",
+  "read_tentatives.matchScore": "Matching score",
   "read_tentatives.openTentativeMatch": "Open unsure patient match",
   "read_tentatives.tentativeMatch": "Unsure patient match",
   "read_tentatives.openBestMatch": "Open best matching patient",

@@ -21,7 +21,7 @@ import {Component, OnInit,} from '@angular/core';
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatProgressBar} from "@angular/material/progress-bar";
 import {MatIcon} from "@angular/material/icon";
-import {NgClass, NgForOf, NgIf, NgSwitch, NgSwitchCase} from "@angular/common";
+import {NgClass, NgForOf, NgIf, NgStyle, NgSwitch, NgSwitchCase} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {MatIconAnchor, MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
@@ -54,7 +54,8 @@ import {MatTooltip} from "@angular/material/tooltip";
     NgIf,
     MatRow,
     MatRowDef,
-    MatIconAnchor
+    MatIconAnchor,
+    NgStyle
   ]
 })
 
@@ -90,6 +91,7 @@ export class TentativeMatchesListComponent implements OnInit {
     // init columns
     this.addColumn({id: "id", name: "id", type: "text", i18n: "read_tentatives.id", rowSpan: 2, colSpan: 1}, this.header1)
     this.addColumn({id: "timestamp", name: "timestamp", type: "text", i18n: "read_tentatives.timestamp", rowSpan: 2, colSpan: 1}, this.header1)
+    this.addColumn({id: "matchScore", name: "matchScore", type: "text", i18n: "read_tentatives.matchScore", rowSpan: 2, colSpan: 1}, this.header1)
     this.addColumn({id: "separator", name: "empty", type: "separator", i18n: "", rowSpan: 2, colSpan: 1}, this.header1)
 
     const fields = this.configService.data[0].fields.filter(f => !f.hideFromList && this.displayFieldTypes.includes(f.semantic));

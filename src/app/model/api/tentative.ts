@@ -3,6 +3,7 @@ import {Id} from "../id";
 export interface Tentative {
   requestId:string,
   timestamp:string,
+  matchingWeight: number,
   assignedPatient: TentativePatient,
   bestMatchPatient: TentativePatient
 }

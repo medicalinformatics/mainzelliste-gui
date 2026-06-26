@@ -399,6 +399,7 @@ export class PatientListService {
                 const view: { [key: string]: string } = {};
                 view["id"] = t.requestId;
                 view["timestamp"] = _moment(parseInt(t.timestamp)).format('L')
+                view["matchScore"] = t.matchingWeight ? "%" + t.matchingWeight.toString() : "";
                 // DateTime.fromMillis(parseInt(t.timestamp)).toLocaleString(
                   // {year: "numeric", month: "2-digit", day: "2-digit", hour: "numeric", minute: "numeric", second: "numeric"});
                 view["p.idType"] = assignedPatient?.ids[0].idType ?? ""
@@ -411,6 +412,7 @@ export class PatientListService {
                 Object.entries(bestMatchPatient?.fields ?? {}).forEach(([key, value]) => {
                   view["b." + key] = value;
                 })
+                view["b.isTentative"] = assignedPatient?.isTentative?.toString() ?? "false"
                 return view
               }),
               totalCount: response.totalCount
