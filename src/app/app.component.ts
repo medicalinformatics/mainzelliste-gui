@@ -1,7 +1,7 @@
-import {AfterContentChecked, ChangeDetectorRef, Component} from '@angular/core';
+import {AfterContentChecked, ChangeDetectorRef, Component, inject} from '@angular/core';
 import {GlobalTitleService} from "./services/global-title.service";
 import {ErrorNotificationService} from "./services/error-notification.service";
-import { NavigationStart, Router, RouterOutlet } from "@angular/router";
+import {NavigationEnd, NavigationStart, Router, RouterOutlet} from "@angular/router";
 import {Observable} from "rxjs";
 import {filter} from 'rxjs/operators';
 import {UserAuthService} from "./services/user-auth.service";
@@ -14,6 +14,7 @@ import { MatIcon } from '@angular/material/icon';
 import { ErrorCardComponent } from './shared/components/error-card/error-card.component';
 import { FooterComponent } from './main-layout/footer/footer.component';
 import {MlTokenAuthService} from "./services/ml-token-auth.service";
+import {APP_BOOT_STATUS_EVENT_SIGNAL} from "../main";
 
 
 @Component({
@@ -24,6 +25,8 @@ import {MlTokenAuthService} from "./services/ml-token-auth.service";
 })
 export class AppComponent implements AfterContentChecked {
   title = 'mainzelliste-gui';
+  bootState = inject(APP_BOOT_STATUS_EVENT_SIGNAL);
+  hideSideNav = false;
 
   constructor(
     public readonly titleService: GlobalTitleService,
@@ -33,10 +36,17 @@ export class AppComponent implements AfterContentChecked {
     public router: Router,
     private changeDetector: ChangeDetectorRef,
   ) {
-    (router.events.pipe(
+    router.events.pipe(
       filter(evt => evt instanceof NavigationStart)
-    ) as Observable<NavigationStart>).subscribe(() =>
+    )
+    .subscribe(() =>
       this.errorNotificationService.clearMessages()
+    );
+    router.events.pipe(
+      filter(evt => evt instanceof NavigationEnd)
+    )
+    .subscribe(() =>
+      this.hideSideNav = router.routerState.snapshot.url.split('?')[0]?.startsWith("/auth-failed")
     );
   }
 

@@ -2,7 +2,8 @@ import {effect, inject, Injectable, Signal} from '@angular/core';
 import {
   KEYCLOAK_EVENT_SIGNAL,
   KeycloakEvent,
-  KeycloakEventType, ReadyArgs,
+  KeycloakEventType,
+  ReadyArgs,
   typeEventArgs
 } from "keycloak-angular";
 import Keycloak from 'keycloak-js';
@@ -16,37 +17,44 @@ import {firstValueFrom, lastValueFrom} from "rxjs";
 export class UserAuthService {
 
   isLoggedInKeycloak: boolean = false;
-  private readonly keycloakSignal: Signal<KeycloakEvent>;
-  private readonly keycloak: Keycloak;
+  private readonly keycloakSignal: Signal<KeycloakEvent> | undefined;
+  private readonly keycloak: Keycloak | undefined;
 
   constructor(
-    protected readonly sessionService: SessionService) {
-    this.keycloakSignal = inject(KEYCLOAK_EVENT_SIGNAL);
-    this.keycloak = inject(Keycloak);
+    protected readonly sessionService: SessionService
+  ) {
+    this.keycloak = undefined;
+    this.keycloakSignal = undefined;
+    try {
+      this.keycloakSignal = inject(KEYCLOAK_EVENT_SIGNAL);
+      this.keycloak = inject(Keycloak);
 
-    // listen to keycloak event
-    effect(() => {
-      const event =  this.keycloakSignal();
-      if (event.type == KeycloakEventType.AuthLogout) {
-        this.isLoggedInKeycloak = false;
-      } else if (event.type == KeycloakEventType.AuthSuccess
-        || event.type == KeycloakEventType.Ready && typeEventArgs<ReadyArgs>(event.args)) {
-        this.isLoggedInKeycloak = true;
-      }
-    });
+      // listen to keycloak event
+      effect(() => {
+        const event =  !this.keycloakSignal ? { type: KeycloakEventType.AuthLogout} : this.keycloakSignal();
+        if (event.type == KeycloakEventType.AuthLogout) {
+          this.isLoggedInKeycloak = false;
+        } else if (event.type == KeycloakEventType.AuthSuccess
+          || event.type == KeycloakEventType.Ready && typeEventArgs<ReadyArgs>(event.args)) {
+          this.isLoggedInKeycloak = true;
+        }
+      });
+    } catch (err){
+      //do nothing
+    }
   }
 
   async retryLogin(redirectUrl: string){
-    return this.login(this.keycloak.authenticated, redirectUrl);
+    return this.login(this.keycloak?.authenticated ?? false, redirectUrl);
   }
 
   async login(authenticated: boolean, redirectUrl: string): Promise<boolean> {
-    if (!authenticated) {
+    if (this.keycloak != undefined && !authenticated) {
       // delete old session
       await lastValueFrom(this.sessionService.deleteSession()
       .pipe( // login in keycloak
         mergeMap(() =>
-          this.keycloak.login({redirectUri: window.location.origin + redirectUrl})
+          this.keycloak?.login({redirectUri: window.location.origin + redirectUrl}) ?? Promise.resolve()
         )
       ));
     }
@@ -55,14 +63,14 @@ export class UserAuthService {
   }
 
   async logout() {
-    return await this.keycloak.logout().then( () => {
+    return await this.keycloak?.logout().then( () => {
       firstValueFrom(this.sessionService.deleteSession());
-      this.keycloak.clearToken();
-    });
+      this.keycloak?.clearToken();
+    }) ?? await Promise.resolve();
   }
 
   getUserName() {
-    return this.keycloak.profile?.username ?? "";
+    return this.keycloak?.profile?.username ?? "";
   }
 
   public isLoggedIn(): boolean {
@@ -72,7 +80,7 @@ export class UserAuthService {
   getRoles() {
     let roles: string[] = [];
 
-    if (this.keycloak.resourceAccess) {
+    if (this.keycloak?.resourceAccess) {
       roles = Object.values(this.keycloak.resourceAccess)
       .map(roles => roles['roles'] || [])
       .flat();

@@ -31,7 +31,7 @@ export class BackendConfigService {
   ) {
   }
 
-  public init(tokenId?: string) {
+  public init(tokenId: string | null) {
     return this.fetchMainzellisteIdGenerators(tokenId)
     .then(idGenerators => this.fetchMainzellisteAssociatedIdGenerators(tokenId))
     .then(idGenerators => this.fetchMainzellisteFields(tokenId))
@@ -104,8 +104,8 @@ export class BackendConfigService {
     );
   }
 
-  public fetchMainzellisteFields(tokenId?: string): Promise<MainzellisteField[]> {
-    let fieldEndpointUrl = this.appConfigService.getMainzellisteUrl() + "/configuration/fields" + ( tokenId != undefined ? "?tokenId=" + tokenId: "" );
+  public fetchMainzellisteFields(tokenId?: string | null): Promise<MainzellisteField[]> {
+    let fieldEndpointUrl = this.appConfigService.getMainzellisteUrl() + "/configuration/fields" + ( !!tokenId ? "?tokenId=" + tokenId: "" );
     return lastValueFrom(this.httpClient.get<MainzellisteField[]>(fieldEndpointUrl, {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
     .pipe(
       catchError(e => throwError(() => new Error(this.translate.instant('error.app_config_service_fetch_fields') + fieldEndpointUrl))),
@@ -153,9 +153,9 @@ export class BackendConfigService {
     this.mainzellisteFields.push(fieldName);
   }
 
-  public fetchMainzellisteIdGenerators(tokenId?: string): Promise<IdGenerator[]> {
+  public fetchMainzellisteIdGenerators(tokenId?: string | null): Promise<IdGenerator[]> {
     return lastValueFrom(this.httpClient.get<IdGenerator[]>(
-        this.appConfigService.getMainzellisteUrl() + "/configuration/idGenerators" + ( tokenId != undefined ? "?tokenId=" + tokenId: "" ),
+        this.appConfigService.getMainzellisteUrl() + "/configuration/idGenerators" + ( !!tokenId ? "?tokenId=" + tokenId: "" ),
         {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
     .pipe(
       catchError((e) => throwError(() => new Error(this.translate.instant('error.app_config_service_fetch_id_generators')))),
@@ -170,9 +170,9 @@ export class BackendConfigService {
     ));
   }
 
-  public fetchMainzellisteAssociatedIdGenerators(tokenId?: string): Promise<IdGenerator[]> {
+  public fetchMainzellisteAssociatedIdGenerators(tokenId?: string | null): Promise<IdGenerator[]> {
     return lastValueFrom(this.httpClient.get<AssociatedIds>(
-        this.appConfigService.getMainzellisteUrl() + "/configuration/idGenerators/associatedIds" + ( tokenId != undefined ? "?tokenId=" + tokenId: "" ),
+        this.appConfigService.getMainzellisteUrl() + "/configuration/idGenerators/associatedIds" + ( !!tokenId ? "?tokenId=" + tokenId: "" ),
         {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
     .pipe(
       catchError((e) => throwError(() => new Error(this.translate.instant('error.app_config_service_fetch_id_generators')))),
@@ -187,11 +187,11 @@ export class BackendConfigService {
     ));
   }
 
-  public fetchClaims(tokenId?: string): Promise<ClaimsConfig[]> {
+  public fetchClaims(tokenId?: string | null): Promise<ClaimsConfig[]> {
     let httpParams = new HttpParams().set('filter', 'roles')
     .set('merge', true)
     .set('mergeSameTenant', true);
-    if(tokenId != undefined){
+    if(!!tokenId){
       httpParams = httpParams.set('tokenId', tokenId);
     }
     return firstValueFrom(this.httpClient.get<ClaimsConfig[]>(this.appConfigService.getMainzellisteUrl() + "/configuration/claims", {

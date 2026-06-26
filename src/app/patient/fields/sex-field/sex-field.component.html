@@ -1,0 +1,13 @@
+<mat-form-field class="ml-field" style="width: 242px;" subscriptSizing="dynamic">
+  <mat-label>{{ field.i18n | translate }}</mat-label>
+  <mat-select [(value)]="data"
+              [(ngModel)]="data"
+              [name]="field.name"
+              placeholder="{{field.hint}}"
+              [required]="field.required">
+    <mat-option *ngFor="let gf of this.genderFieldValues"
+                value="{{gf.value}}">
+      {{ gf.i18n | translate }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

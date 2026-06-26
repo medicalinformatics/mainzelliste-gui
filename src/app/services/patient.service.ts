@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Patient } from "../model/patient";
-import { PatientListService, ReadPatientsResponse } from "./patient-list.service";
+import {DateConvertor, PatientListService, ReadPatientsResponse} from "./patient-list.service";
 import { Field } from "../model/field";
 import { catchError, map, mergeMap } from "rxjs/operators";
 import { Observable, of, throwError } from "rxjs";
@@ -346,7 +346,7 @@ export class PatientService {
           } else {
             displayPatients = response.patients
             .filter(p => p.ids != undefined)
-            .map(patient => this.patientListService.convertToDisplayPatient(patient, true, true, tenants));
+            .map(patient => this.patientListService.convertToDisplayPatient(patient, true, tenants));
           }
           // override patients
           response.patients = displayPatients;

@@ -409,16 +409,14 @@ export class ConsentService {
                     r => consentTemplates.has(this.findConsentTemplateId(r?.policy ?? []))
                   ).map(r => {
                     let templateId: string = this.findConsentTemplateId(r?.policy ?? []);
-                    let validFrom = StringUtils.convertDateFromISOToLocale(r?.provision?.period?.start, this._locale, true);
-                    let validUntil = StringUtils.parseISODate( r?.provision?.period?.end);
-                    let period = !validUntil ? this.translate.instant("consent_list.unlimited_period"):
-                      validFrom + " - " + StringUtils.convertDateToLocale(validUntil, this._locale, true);
+                    let validUntil = DateTime.fromISO(r?.provision?.period?.end?.trim() ?? "");
                     return {
                       id: r?.id ?? "",
                       templateId: templateId,
                       title: consentTemplates.get(templateId) ?? "",
-                      createdAt: StringUtils.convertDateFromISOToLocale(r?.dateTime, this._locale, true) ?? "??",
-                      validityPeriod: period,
+                      createdAt: DateTime.fromISO(r?.dateTime ?? ""),
+                      validFrom: DateTime.fromISO(r?.provision?.period?.start ?? ""),
+                      validUntil: validUntil,
                       version: parseInt(r?.meta?.versionId ?? "1"),
                       status: this.consentStatusToString(r?.status ?? "active", validUntil)
                     };
@@ -435,8 +433,8 @@ export class ConsentService {
     )
   }
 
-  private consentStatusToString(status: ConsentStatus, validUntil?: Date): string {
-    return (validUntil != undefined && validUntil.getTime()  < new Date().getTime()) ? "inactive" : status;
+  private consentStatusToString(status: ConsentStatus, validUntil?: DateTime): string {
+    return (validUntil != undefined && validUntil.isValid && validUntil < DateTime.now()) ? "inactive" : status;
   }
 
   private findConsentTemplateId(fhirPolicies: fhir4.ConsentPolicy[]): string {
@@ -482,22 +480,27 @@ export class ConsentService {
       );
   }
 
+  public getConsentTemplateCount(): Observable<number> {
+    return this.getConsentTemplatesResources({'_elements': 'id,identifier'})
+    .pipe(
+      map(entries => entries.size)
+    );
+  }
+
   /**
    * return a map of content templates
    */
-  private getConsentTemplatesResources(searchParam?:SearchParams): Observable<Map<string, fhir4.Questionnaire>> {
-    const consentTemplateIds = this.authorizationService.getTenantConsentTemplate();
+  private getConsentTemplatesResources(searchParam?: SearchParams): Observable<Map<string, fhir4.Questionnaire>> {
     return this.searchFhirResources<fhir4.Questionnaire>("searchConsentTemplates", {},
       'Questionnaire', [ErrorMessages.SEARCH_CONSENT_TEMPLATES_FAILED], searchParam)
-      .pipe(
-        map(resources => {
-          let result = new Map();
-          resources.filter(r => consentTemplateIds.length == 0 ||
-            consentTemplateIds.includes(this.getResourceIdentifier(r?.identifier)))
-            .forEach(r => result.set(r?.id, r!));
-          return result;
-        })
-      );
+    .pipe(
+      map(resources => {
+        let result = new Map();
+        resources.filter(r => this.authorizationService.checkTenantOfConsentTemplate(this.getResourceIdentifier(r?.identifier)))
+        .forEach(r => result.set(r?.id, r!));
+        return result;
+      })
+    );
   }
 
   public addConsentTemplate(consentTemplate: ConsentTemplate): Promise<fhir4.FhirResource | fhir4.Questionnaire> {

@@ -179,13 +179,20 @@
 	"session.menu_language": "Sprache",
 	"session.menu_logout": "Ausloggen",
 
+  "createPatient.title": "Neuer Patient anmelden",
 	"createPatient.request_personal_identifier": "Personenidentifikator anfordern",
-	"createPatient.enter_patient_data": "Patientendaten eingeben:",
-	"createPatient.add_pseudonym_type": "Pseudonymtyp hinzufügen:",
+	"createPatient.patient_data": "Personendaten",
+  "createPatient.contact_data": "Kontaktdaten",
+  "createPatient.additional_info": "Zusätzliche Informationen",
+  "createPatient.external_pseudonyms": "Externe Identifikatoren",
+  "createPatient.select_external_id": "Externe Identifikator hinzufügen",
+  "createPatient.add_pseudonym_type": "Zu generierende Pseudonyme",
 	"createPatient.pseudonym_types": "Pseudonym-Typen",
+  "createPatient.select_pseudonym": "Pseudonymtyp auswählen",
 	"createPatient.no_pseudonym_type_error": "Die Eingabe des Pseudonymtyps ist erforderlich",
-	"createPatient.add_external_pseudonym": "Externes Pseudonym hinzufügen:",
 	"createPatient.pseudonym_type": "Pseudonymtyp",
+  "createPatient.consents": "Einwilligung",
+  "createPatient.submit_button": "Patient anmelden",
 
 	"consentDialog.title_consent": "Angaben zur Einwilligung",
 
@@ -293,9 +300,11 @@
 
 	"patientFields.error_value_text1": "Der Wert für das Feld",
 	"patientFields.error_value_text2": "ist ungültig",
+  "patientFields.error_invalid_short": "Der Wert ist ungültig",
 	"patientFields.error_mandatory_text1": "Die Eingabe des Feldes",
 	"patientFields.error_mandatory_text2": "ist erforderlich",
   "patientFields.invalid_birthday": "Das Geburtsdatum darf nicht in der Zukunft liegen",
+  "patientFields.error_mandatory_short": "Eingabe erforderlich",
 
 	"error.global_session_not_found": "Session ist ungültig",
 	"error.create_patient_missing_field": "Die Eingabe der Pflichtfelder sind erforderlich",
@@ -378,11 +387,11 @@
 	"appConfigService.backend_online": "Mainzelliste ist online",
 	"appConfigService.main_id_type_valid": "Haupt-ID-Typ ist gültig",
 
-  	"access_denied.title": "Zugriff verweigert",
-  	"access_denied.message": "Sie haben keine Berechtigung zum Anzeigen dieser Seite",
+  "access_denied.title": "Zugriff verweigert",
+  "access_denied.message": "Sie haben keine Berechtigung zum Anzeigen dieser Seite",
 
-  	"page_not_found.title": "Seite nicht gefunden",
-  	"page_not_found.message": "Die gesuchte Seite konnte nicht gefunden werden",
+  "auth_failed.title": "Authentifizierung fehlgeschlagen",
+  "auth_failed.message": "Bitte geben Sie eine gültige Mainzelliste-Token-ID und Session-ID über die URL-Parameter tokenId und sessionId an",
 
   "page_not_found.title": "Seite nicht gefunden",
   "page_not_found.message": "Die gesuchte Seite konnte nicht gefunden werden",

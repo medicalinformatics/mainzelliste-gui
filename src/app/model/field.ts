@@ -8,10 +8,13 @@ export enum SemanticType{
   FIRSTNAME = "firstname",
   LASTNAME = "lastname",
   BIRTH_NAME = "birthName",
+  BIRTHDATE = "birthday",
   SEX = "sex",
+  STREET = "street",
   POSTAL_CODE = "postalCode",
   CITY = "city",
-  BIRTHDATE = "birthday",
+  EMAIL = "email",
+  PHONE = "phone",
   UNDEFINED = "undefined"
 }
 export class Field {

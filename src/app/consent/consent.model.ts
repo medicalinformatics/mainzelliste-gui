@@ -1,4 +1,5 @@
 import {ConsentValidityPeriod} from "./consent-validity-period";
+import {DateTime} from "luxon";
 
 /**
  * model consent dialog
@@ -49,9 +50,10 @@ export interface ConsentsView {
 export interface ConsentRow {
   id: string,
   templateId: string,
-  createdAt: string,
+  createdAt: DateTime,
   title: string,
-  validityPeriod: string,
+  validFrom: DateTime,
+  validUntil: DateTime,
   version: number,
   status: string
 }

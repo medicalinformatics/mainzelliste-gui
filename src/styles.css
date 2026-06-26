@@ -71,8 +71,8 @@ mat-form-field.inputField {
 }
 
 mat-form-field.idtype-field .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 8px;
+  padding-bottom: 6px;
   width: 80%
 }
 
@@ -166,6 +166,7 @@ td.mat-mdc-cell {
 /*TODO from editComponent Header isnt working - margins are not reacting*/
 .title{
   font-family: Arial;
+  color: #063d6c;
   text-align: left;
   padding-bottom: 10px;
 }

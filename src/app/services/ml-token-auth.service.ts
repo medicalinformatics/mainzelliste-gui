@@ -25,8 +25,8 @@ export class MlTokenAuthService {
     private readonly appConfigService: AppConfigService
   ) { }
 
-  init(sessionId: string, tokenId: string){
-    return this.validateTokenAndSession(sessionId, tokenId);
+  init(sessionId: string | null, tokenId: string | null){
+    return !!tokenId && !!sessionId ? this.validateTokenAndSession(sessionId, tokenId) : Promise.resolve(false);
   }
 
   public isAuthenticated(): boolean {
@@ -38,11 +38,11 @@ export class MlTokenAuthService {
   }
 
   private validateTokenAndSession(sessionId: string, tokenId: string) {
-    return firstValueFrom(of(tokenId.length != 0 && sessionId.length != 0).pipe(
-      switchMap(v => v ? this.sessionService.isSessionIdValid(sessionId) : of(false)),
-      switchMap(v => v ? this.validateToken(sessionId, tokenId) : of(false)),
-      tap(v => this.isTokenAuthentification = v)
-    ));
+    return firstValueFrom(
+      this.sessionService.isSessionIdValid(sessionId).pipe(
+        switchMap(v => v ? this.validateToken(sessionId, tokenId) : of(false)),
+        tap(v => this.isTokenAuthentification = v)
+      ));
   }
 
   private validateToken(sessionId: string, tokenId: string): Observable<boolean> {

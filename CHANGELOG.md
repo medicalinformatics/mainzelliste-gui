@@ -18,6 +18,7 @@
 ### Bugfix
 - In the "Create Patient"-page the Submit button remained disabled after submitting the form with an invalid date of birth.
 - Added date of birth validation and error messaging on the Create Patient page.
+- Update birthday, consent period, and consent creation date formats when the application language changes
 ## [1.0.3] - 2025-10-30
 ### Fix
 - Upgrade keycloak client to v25.0.6

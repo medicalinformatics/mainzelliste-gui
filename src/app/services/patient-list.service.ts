@@ -30,6 +30,7 @@ import {TaskResponse} from "../model/task-response";
 import {AddPatientRequest} from "../model/add-patient-request";
 import {FilterItem} from "../model/filter-item";
 import {BackendConfigService} from "./backend-config.service";
+import {DateTime} from "luxon";
 import {Tentative} from "../model/api/tentative";
 import {SolveTentativeOperationType, SolveTentativePayload} from "../model/solve-tentative-payload";
 
@@ -37,6 +38,8 @@ export interface ReadPatientsResponse {
   patients: Patient[];
   totalCount: string;
 }
+
+export type DateConvertor = 'Timestamp' | 'LocalDate' | 'DefaultDate';
 
 @Injectable({
   providedIn: 'root'
@@ -762,7 +765,7 @@ export class PatientListService {
   // Utils
   //-------
 
-  convertToDisplayPatient(patient: Patient, convertDateToLocal?:boolean, convertDisplaySex?:boolean,
+  convertToDisplayPatient(patient: Patient, convertDisplaySex?:boolean,
                           tenants?: { id: string, name: string, idTypes: string[] }[]): Patient {
     let displayPatient = new Patient();
     //ids
@@ -806,7 +809,7 @@ export class PatientListService {
           let month = extractDate(fieldConfig.mainzellisteFields, patient.fields, 1, "00");
           let year = extractDate(fieldConfig.mainzellisteFields, patient.fields, 2, "0000");
           let date = `${year}-${month}-${day}`;
-          displayPatient.fields[fieldConfig.name] = convertDateToLocal ? _moment(date, "YYYY-MM-DD").format('L') : date;
+          displayPatient.fields[fieldConfig.name] = DateTime.fromFormat(date, 'yyyy-MM-dd', { zone: "utc" })
           break;
         }
       }
@@ -814,21 +817,21 @@ export class PatientListService {
     return displayPatient;
   }
 
-  private convertToPatientFields(fields: { [p: string]: string }, permittedFieldNames: Array<string>): { [p: string]: string } {
+  private convertToPatientFields(fields: { [p: string]: string | DateTime }, permittedFieldNames: Array<string>): { [p: string]: string } {
     let result: { [p: string]: string } = {};
     for(const fieldConfig of this.patientList.fields) {
       switch (fieldConfig.type+"") {
         case "SEX":
         case "TEXT":{
           if(fields[fieldConfig.name] != undefined && permittedFieldNames.some( p => p == fieldConfig.mainzellisteField)) {
-            result[fieldConfig.mainzellisteField] = fields[fieldConfig.name];
+            result[fieldConfig.mainzellisteField] = fields[fieldConfig.name] as string;
           }
           break;
         }
         case "DATE": {
-          if(fields[fieldConfig.name] != undefined && fieldConfig.mainzellisteFields.every( c =>
+          if(fields[fieldConfig.name] != undefined && fields[fieldConfig.name] instanceof DateTime && fieldConfig.mainzellisteFields.every( c =>
             permittedFieldNames.some( p => p == c))) {
-            let dateStr = new DatePipe('en-US').transform(fields[fieldConfig.name], 'dd.MM.yyyy') || "";
+            let dateStr = (fields[fieldConfig.name] as DateTime).toFormat('dd.MM.yyyy') || "";
             const dateFields = dateStr.split('.');
             fieldConfig.mainzellisteFields.forEach((n,i) => result[n] = dateFields[i]);
           }

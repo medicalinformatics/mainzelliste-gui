@@ -24,6 +24,7 @@ export class AuthorizationService {
   private readonly allowedAssociatedIdTypesMap: Map<string, IdType[]> = new Map<string, IdType[]>();
   private readonly allowedFieldNames: Map<Operation, string[]> = new Map<Operation, string[]>();
   public authorizationState :AuthorizationState = new AuthorizationState();
+  private isAnyTenantConsentTemplateConfigSet: boolean = false;
 
   constructor(
     private readonly translate: TranslateService,
@@ -34,7 +35,7 @@ export class AuthorizationService {
   ) {
   }
 
-  public init(){
+  public init(reset?: boolean){
     this.userRoles = this.authentication.getRoles();
     this.configuredTenants = this.configService.getMainzellisteClaims()
     .filter(c => this.mlTokenAuthService.isAuthenticated() || c.roles.some( r => this.userRoles.includes(r)))
@@ -45,7 +46,15 @@ export class AuthorizationService {
         this.convertClaimPermissions(e.permissions))
     })
 
-    if(this.currentTenantId.length == 0 || this.configuredTenants.every(t => t.id != this.currentTenantId)) {
+    this.isAnyTenantConsentTemplateConfigSet = this.configuredTenants.some(r => r.consentTemplateIds.length > 0)
+
+    // Reset the tenant ID in the local storage only:
+    // if multiple tenants are configured. (Note: Authentication with an ML token sets the tenant ID in local storage to 'default'.)
+    if(reset && this.currentTenantId == Tenant.DEFAULT_ID && this.configuredTenants.length > 1
+      // if stored tenantId is empty
+      || this.currentTenantId.length == 0
+      // if the stored tenantId not valid anymore
+      || this.configuredTenants.every(t => t.id != this.currentTenantId)) {
       let uiTenants = this.getUITenants();
       this.currentTenantId = uiTenants.length > 0 ? uiTenants[0].id : "";
     } else {
@@ -371,5 +380,14 @@ export class AuthorizationService {
     .filter(t => this.mlTokenAuthService.isAuthenticated() || this.userRoles.some(r => t.roles.includes(r)))
     .map(r => r.consentTemplateIds)
     .reduce((accumulator, currentValue) => accumulator.concat(currentValue.filter(e => !accumulator.includes(e))), []);
+  }
+
+  /*
+  TODO this have to be done in the backend
+   */
+  checkTenantOfConsentTemplate(templateId:string): boolean {
+    const consentTemplateIds = this.getTenantConsentTemplate();
+    return this.isAnyTenantConsentTemplateConfigSet && consentTemplateIds.includes(templateId) ||
+      !this.isAnyTenantConsentTemplateConfigSet && consentTemplateIds.length == 0
   }
 }
