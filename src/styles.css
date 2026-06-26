@@ -187,7 +187,9 @@ button.mini-icon-button {
 }
 
 button.mini-icon-button.mat-mdc-icon-button.mat-mdc-button-base,
-button.ml-icon-button.mat-mdc-icon-button.mat-mdc-button-base{
+a.mini-icon-button.mat-mdc-icon-button.mat-mdc-button-base,
+button.ml-icon-button.mat-mdc-icon-button.mat-mdc-button-base,
+a.ml-icon-button.mat-mdc-icon-button.mat-mdc-button-base{
   padding: 7px;
   width: 38px;
   height: 38px

@@ -435,7 +435,9 @@
   "read_tentatives.id" : "#",
   "read_tentatives.timestamp": "Occurred At",
   "read_tentatives.openTentativeMatch": "Open unsure patient match",
+  "read_tentatives.tentativeMatch": "Unsure patient match",
   "read_tentatives.openBestMatch": "Open best matching patient",
+  "read_tentatives.bestMatch": "Best matching patient",
 
   "solve_tentatives.title": "Resolve tentative Match",
 

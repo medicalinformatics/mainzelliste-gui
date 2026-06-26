@@ -458,7 +458,9 @@
   "read_tentatives.id" : "#",
   "read_tentatives.timestamp": "Eingetreten am",
   "read_tentatives.openTentativeMatch": "Unsichere Patientenübereinstimmung öffnen",
+  "read_tentatives.tentativeMatch": "Unsichere Patientenübereinstimmung",
   "read_tentatives.openBestMatch": "Beste Übereinstimmung öffnen",
+  "read_tentatives.bestMatch": "Beste Übereinstimmung",
 
   "solve_tentatives.title": "Unsicheres Match lösen",
 

@@ -1,11 +1,12 @@
 .table-container {
-  max-width: 100%;
+  /*max-width: 100%;*/
+  width: fit-content;
   overflow: auto;
 }
 
-#tentatives {
-  width: 100%;
-}
+/*#tentatives {*/
+/*  width: 100%;*/
+/*}*/
 
 #tentatives td, #tentatives th {
   border-right: 1px solid #ddd;
@@ -13,14 +14,14 @@
 }
 
 #tentatives tr.mat-row {
-  height: 38px;
+  height: 30px;
 }
 
 #tentatives tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-#tentatives tr:hover {
+#tentatives  tr.content-row:hover {
   background-color: #eff6ff;
 }
 
@@ -42,8 +43,49 @@
   border-color: #053E6A;
 }
 
+.mat-column-id {
+  width: 50px;
+  text-align: center;
+}
+
+.mat-column-timestamp {
+  width: 120px;
+  text-align: center;
+}
+
+.mat-column-b-firstname,
+.mat-column-b-lastname,
+.mat-column-p-firstname,
+.mat-column-p-lastname{
+  min-width: 120px;
+}
+
+.mat-column-p-birthday,
+.mat-column-b-birthday{
+  width: 120px;
+}
+
+th.mat-column-tentative,
+th.mat-column-bestMatch{
+  background-color: #f4f4f4;;
+}
+
+.mat-column-p-id,
+.mat-column-b-id {
+  width: 20px;
+  text-align: center;
+  padding: 0 0!important;
+}
+
+.mat-column-resolve {
+  width: 40px;
+  text-align: center;
+  border-bottom: 0;
+}
+
 .mat-column-separator {
-  width: 5px;
+  width: 50px;
+  border-bottom: 0;
 }
 
 mat-paginator {
