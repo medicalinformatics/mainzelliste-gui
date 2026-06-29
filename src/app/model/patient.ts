@@ -6,7 +6,8 @@ export class Patient {
   constructor(
     public fields: { [key: string]: string | DateTime} = {},
     public ids: Array<Id> = [],
-    public tenants?: string[]
+    public tenants?: string[],
+    public isTentative?: boolean
   ) {
   }
 

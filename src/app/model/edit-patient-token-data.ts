@@ -1,8 +1,9 @@
+import { Id } from "./id";
 import {TokenData} from "./token-data";
 
 export class EditPatientTokenData extends TokenData {
   constructor(
-    public patientId: {idType: string, idString: string},
+    public patientId: Id,
     public fields: string[],
     public ids: string[],
     public callback?: URL,

@@ -7,8 +7,6 @@ import {HistorieComponent} from "./historie/historie.component";
 import {DeleteMultiplePatientsComponent} from "./delete-multiple-patients/delete-multiple-patients.component";
 import {RouterModule} from "@angular/router";
 
-
-
 @NgModule({
     declarations: [AudittrailComponent, MergePatientsComponent, SimilarPatientComponent, HistorieComponent, DeleteMultiplePatientsComponent],
     imports: [

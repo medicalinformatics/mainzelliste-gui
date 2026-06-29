@@ -1,0 +1,85 @@
+<form #patientForm="ngForm">
+    <div style="height:100%; width:100%" class="cards">
+
+        <!--PATIENTENDATEN1-->
+        <mat-card class="patient1" style="width: 28%">
+            <span class="top">
+                <mat-card-title class="title">{{'tentative.title_patient_1'| translate}}</mat-card-title>
+                <mat-card-subtitle>
+                    <input type='radio' name='test' id="patient1" value='1' (click)="setMainPatient(1)" checked>
+                    <label for="patient1">{{'tentative.label_main_patient'|translate}}</label>
+                </mat-card-subtitle>
+                <div class="pseudonyme">
+                    <mat-card-title class="subtitle">{{'tentative.pseudonyms'|translate}}</mat-card-title>
+                    <div style="flex-flow: row">
+                        <app-view-pseudonyms [ids]="patient1?.ids ?? []"></app-view-pseudonyms>
+                    </div>
+                </div>
+            </span>
+            <div class="patientendaten">
+                <mat-card-title class="subtitle">{{'tentative.patient_data'|translate}}</mat-card-title>
+                <view-patient-fields [patientFields]="patient1?.fields ?? {}"></view-patient-fields>
+            </div>
+            <div>
+                <button mat-raised-button (click)="openIdentityDialog(getIdString(patient1), getIdType(patient1))">
+                    {{'tentative.identites'|translate}}
+                </button>
+            </div>    
+        </mat-card>
+
+        <div class="buttons">
+            <div class="iconbutton">
+                <button mat-raised-button class="submit" type="submit" style="clear: both;"
+                    (click)="mergePatients(false)">
+                    <mat-icon matTooltip="Merge these Patients">call_merge</mat-icon> {{'tentative.merge'|translate}}
+                </button>
+            </div>
+
+            <div class="iconbutton">
+                <button mat-raised-button class="submit" type="submit" style="clear: both;" (click)="splitPatients()">
+                    <mat-icon matTooltip="Split these Patients"><svg xmlns="http://www.w3.org/2000/svg"
+                            style="rotate: -90deg;" height="24px" viewBox="0 -960 960 960" width="24px" fill="#294E66">
+                            <path
+                                d="M160-440v-80h304l200-200H560v-80h240v240h-80v-104L496-440H160Zm400 280v-80h104L536-366l58-58 126 128v-104h80v240H560Z" />
+                        </svg>
+                    </mat-icon> {{'tentative.split'|translate}}
+                </button>
+            </div>
+        </div>
+
+
+
+        <!--PATIENTENDATEN2-->
+
+        <mat-card class="patient2" style="width: 28%">
+            <span class="top">
+                <mat-card-title class="title">{{'tentative.title_patient_2'| translate}}</mat-card-title>
+                <mat-card-subtitle>
+                    <input type='radio' name='test' id="patient2" value='2' (click)="setMainPatient(2)">
+                    <label for="patient2">{{'tentative.label_main_patient'|translate}}</label>
+                </mat-card-subtitle>
+                <div class="pseudonyme">
+                    <mat-card-title class="subtitle">Pseudonyme</mat-card-title>
+                    <!-- TODO: justify-content to flex-end-->
+                    <div
+                        style="flex: 1 1 100%; display: grid;justify-content: center; flow:right;">
+                        <app-view-pseudonyms [ids]="patient2?.ids ?? []"></app-view-pseudonyms>
+                        <!-- style="width:160%;"-->
+                    </div>
+                </div>
+            </span>
+            <div class="patientendaten">
+                <mat-card-title class="subtitle">{{'tentative.patient_data'|translate}}</mat-card-title>
+                <div style="flex: 1 1 100%; display: grid; justify-content: center; flow:right;">
+                    <view-patient-fields [patientFields]="patient2?.fields ?? {}"></view-patient-fields>
+                </div>
+            </div>
+            <div>
+                <button mat-raised-button (click)="openIdentityDialog(getIdString(patient2), getIdType(patient2))">
+                    {{'tentative.identites'|translate}}
+                </button>
+            </div>
+        </mat-card>
+
+    </div>
+</form>

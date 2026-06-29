@@ -26,6 +26,12 @@ import {
 import {
   FailedAuthenticationComponent
 } from "./failed-authentication/failed-authentication.component";
+import {
+  TentativeMatchesListComponent
+} from "./tentative-matches/tentative-matches-list/tentative-matches-list.component";
+import {
+  SolveTentativeMatchComponent
+} from "./tentative-matches/solve-tentative-match/solve-tentative-match.component";
 
 export const routes: Routes = [
   { // Note: access is only possible with OAuth authentication.
@@ -46,7 +52,9 @@ export const routes: Routes = [
       // {path: 'merge-patients', component: MergePatientsComponent},
       // {path: 'audittrail', component: AudittrailComponent},
       // {path: 'delete-patients', component: DeleteMultiplePatientsComponent, data : { permission: 'deletePatient' }},
-      {path: 'consent-templates', component: ConsentTemplatesComponent, data: { permission: Permission.CREATE_CONSENT_TEMPLATE}}
+      {path: 'consent-templates', component: ConsentTemplatesComponent, data: { permission: Permission.CREATE_CONSENT_TEMPLATE}},
+      { path: 'tentatives', component: TentativeMatchesListComponent, data: { permission: Permission.READ_TENTATIVES } },
+      //{ path: 'resolve-unsure-match/:id', component: SolveTentativeMatchComponent, data: { permission: Permission.READ_TENTATIVE }},
     ]
   },
   { // Access is only possible with a valid Mainzelliste token.

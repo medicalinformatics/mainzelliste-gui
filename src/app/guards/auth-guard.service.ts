@@ -39,7 +39,24 @@ const checkTenantIdType = (
 ): boolean | UrlTree => {
   return urlSegments == undefined || urlSegments.length < 2
     || authorizationService.getAllowedUniqueIdTypes('R', false).includes(urlSegments[1].path)
+    || tryToSwitchTenant(authorizationService, urlSegments[1].path)
     || router.createUrlTree(['access-denied']);
+}
+
+const tryToSwitchTenant = (
+  authorizationService: AuthorizationService,
+  idType: string
+): boolean => {
+  const newTenantId = authorizationService.getTenants()
+  .find(t =>
+    authorizationService.findAllowedIdTypesFor(t.id, 'R', false).includes(idType)
+  )?.id;
+
+  // switch tenant
+  if(newTenantId != undefined)
+    authorizationService.currentTenantId = newTenantId;
+
+  return newTenantId != undefined;
 }
 
 export const canActivateChildAuthRole: CanActivateChildFn = (  childRoute: ActivatedRouteSnapshot,  state: RouterStateSnapshot,) => {

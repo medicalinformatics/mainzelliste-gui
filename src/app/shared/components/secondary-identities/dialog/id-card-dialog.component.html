@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>Secondary Identities</h2>
+<mat-dialog-content>
+  <mat-card id="patientendaten"
+      style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; flex: 1">
+      <mat-card-title-group style="margin: 0 0 0 2.5%;">
+        <mat-card-title style="flex-grow: 2;">{{'idcard.title_patient_data' | translate}}</mat-card-title>
+      </mat-card-title-group>
+      <!-- <view-patient-fields [patientFields]="patient.fields"></view-patient-fields> -->
+    </mat-card>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="closeDialog()">{{'button_close' | translate}}</button>
+</mat-dialog-actions>
