@@ -12,7 +12,7 @@ export class LocalDateFormatPipe implements PipeTransform {
   }
 
   transform(dateTime: DateTime, extended?: boolean): string {
-    return dateTime.setLocale(this.translate.getCurrentLang())
-    .toLocaleString(extended ? DateTime.DATETIME_SHORT_WITH_SECONDS : DateTime.DATE_SHORT);
+    return dateTime?.setLocale(this.translate.getCurrentLang())
+    .toLocaleString(extended ? DateTime.DATETIME_SHORT_WITH_SECONDS : DateTime.DATE_SHORT) ?? "";
   }
 }

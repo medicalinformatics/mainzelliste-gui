@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Patient } from "../model/patient";
-import {DateConvertor, PatientListService, ReadPatientsResponse} from "./patient-list.service";
+import {PatientListService, ReadPatientsResponse} from "./patient-list.service";
 import { Field } from "../model/field";
 import { catchError, map, mergeMap } from "rxjs/operators";
 import { Observable, of, throwError } from "rxjs";

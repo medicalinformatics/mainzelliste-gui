@@ -9,7 +9,6 @@ import {AddPatientTokenData} from "../model/add-patient-token-data";
 import {EditPatientTokenData} from "../model/edit-patient-token-data";
 import {DeletePatientTokenData} from "../model/delete-patient-token-data";
 import {Field} from "../model/field";
-import {DatePipe} from "@angular/common";
 import {catchError, filter, map, mergeMap, repeat, switchMap, take} from "rxjs/operators";
 import {EMPTY, firstValueFrom, Observable, of, throwError} from "rxjs";
 import {MainzellisteError} from "../model/mainzelliste-error.model";
@@ -38,8 +37,6 @@ export interface ReadPatientsResponse {
   patients: Patient[];
   totalCount: string;
 }
-
-export type DateConvertor = 'Timestamp' | 'LocalDate' | 'DefaultDate';
 
 @Injectable({
   providedIn: 'root'
@@ -338,7 +335,7 @@ export class PatientListService {
           map(r => {
             const displayPatients = r.patients
             .filter(p => p.ids != undefined)
-            .map(patient => this.convertToDisplayPatient(patient, false, true,[]));
+            .map(patient => this.convertToDisplayPatient(patient, false, []));
             return {
               id: t.requestId,
               assignedPatient: displayPatients.find(p =>
@@ -387,7 +384,7 @@ export class PatientListService {
         ).pipe(
           map( r => r.patients
             .filter(p => p.ids != undefined)
-            .map(patient => this.convertToDisplayPatient(patient, true, true, []))
+            .map(patient => this.convertToDisplayPatient(patient, true, []))
           ),
           map(patients => {
             return {
@@ -399,9 +396,9 @@ export class PatientListService {
                   p.ids.some(id => id.idType == t.bestMatchPatient.id.idType
                     && id.idString == t.bestMatchPatient.id.idString))
 
-                const view: { [key: string]: string } = {};
+                const view: { [key: string]: string |  DateTime } = {};
                 view["id"] = t.requestId;
-                view["timestamp"] = _moment(parseInt(t.timestamp)).format('L')
+                view["timestamp"] =  DateTime.fromMillis(parseInt(t.timestamp));
                 view["matchScore"] = t.matchingWeight ? "%" + t.matchingWeight.toString() : "";
                 // DateTime.fromMillis(parseInt(t.timestamp)).toLocaleString(
                   // {year: "numeric", month: "2-digit", day: "2-digit", hour: "numeric", minute: "numeric", second: "numeric"});

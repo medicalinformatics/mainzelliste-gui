@@ -21,6 +21,7 @@ import { PatientService } from 'src/app/services/patient.service';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import {MatButton} from "@angular/material/button";
 import {MatCard, MatCardTitle, MatCardTitleGroup} from "@angular/material/card";
+import {DateTime} from "luxon";
 
 @Component({
   selector: 'app-id-card-dialog',
@@ -95,7 +96,7 @@ export class IdCardDialogComponent {
 
   getFieldMap() {
     const contact = this.patient.fields;
-    const fieldMap: { [key: string]: string } = {
+    const fieldMap: { [key: string]: string | DateTime} = {
       [SemanticType.FIRSTNAME]: "",
       [SemanticType.LASTNAME]: "",
       [SemanticType.POSTAL_CODE]: "",

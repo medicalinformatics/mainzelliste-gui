@@ -25,6 +25,8 @@ import {NgClass, NgForOf, NgIf, NgStyle, NgSwitch, NgSwitchCase} from "@angular/
 import {RouterLink} from "@angular/router";
 import {MatIconAnchor, MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
+import {DateTime} from "luxon";
+import {LocalDateFormatPipe} from "../../shared/pipes/local-date-format.pipe";
 
 @Component({
   selector: 'app-tentative-matches-list',
@@ -55,14 +57,15 @@ import {MatTooltip} from "@angular/material/tooltip";
     MatRow,
     MatRowDef,
     MatIconAnchor,
-    NgStyle
+    NgStyle,
+    LocalDateFormatPipe
   ]
 })
 
 export class TentativeMatchesListComponent implements OnInit {
 
-  matTableData: MatTableDataSource<{ [key: string]: string }> =
-    new MatTableDataSource<{ [key: string]: string }>([]);
+  matTableData: MatTableDataSource<{ [key: string]: string | DateTime}> =
+    new MatTableDataSource<{ [key: string]: string | DateTime}>([]);
   columns: ColumnDefinition[] = []
   header1: string[] = []
   header2: string[] = []
@@ -141,6 +144,10 @@ export class TentativeMatchesListComponent implements OnInit {
 
   getAllColumnsIds() {
     return this.columns.map(d => d.id);
+  }
+
+  isDateTime(text: string | DateTime){
+    return text instanceof DateTime;
   }
 }
 
