@@ -54,8 +54,7 @@ export const routes: Routes = [
       // {path: 'delete-patients', component: DeleteMultiplePatientsComponent, data : { permission: 'deletePatient' }},
       {path: 'consent-templates', component: ConsentTemplatesComponent, data: { permission: Permission.CREATE_CONSENT_TEMPLATE}},
       { path: 'tentatives', component: TentativeMatchesListComponent, data: { permission: Permission.READ_TENTATIVES } },
-      { path: 'resolve-unsure-match/:id', component: SolveTentativeMatchComponent, data: { permission: Permission.READ_TENTATIVE }},
-
+      //{ path: 'resolve-unsure-match/:id', component: SolveTentativeMatchComponent, data: { permission: Permission.READ_TENTATIVE }},
     ]
   },
   { // Access is only possible with a valid Mainzelliste token.
