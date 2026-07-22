@@ -10,6 +10,8 @@ export interface Tentative {
 
 export interface TentativePatient {
   fields: { [key: string]: string },
-  id: Id
+  id: Id,
+  tenants: string[],
+  isTentative: boolean
 }
 

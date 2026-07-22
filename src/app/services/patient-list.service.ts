@@ -30,7 +30,7 @@ import {AddPatientRequest} from "../model/add-patient-request";
 import {FilterItem} from "../model/filter-item";
 import {BackendConfigService} from "./backend-config.service";
 import {DateTime} from "luxon";
-import {Tentative} from "../model/api/tentative";
+import {Tentative, TentativePatient} from "../model/api/tentative";
 import {SolveTentativeOperationType, SolveTentativePayload} from "../model/solve-tentative-payload";
 
 export interface ReadPatientsResponse {
@@ -364,62 +364,49 @@ export class PatientListService {
     )
   }
 
-  resolveReadTentatives(tokenId: string|undefined, pageIndex: number, pageSize: number) {
+  resolveReadTentatives(tokenId: string | undefined, pageIndex: number, pageSize: number) {
     return this.httpClient.get<Tentative[]>(this.patientList.url + "/tentatives?"
-      +"tokenId=" + tokenId + "&page=" + (pageIndex + 1) + "&limit=" + pageSize,
+      + "tokenId=" + tokenId + "&page=" + (pageIndex + 1) + "&limit=" + pageSize
+      + (this.authorizationService.currentTenantId != Tenant.DEFAULT_ID ? "&tenantId=" + this.authorizationService.currentTenantId : ""),
       {observe: 'response'}
     )
     .pipe(
-      map( response => ({
+      map(response => ({
           tentatives: response.body ?? [],
           totalCount: parseInt(response.headers.get("X-Total-Count") ?? "0")
         })
       ),
-      mergeMap(response => this.getPatients(
-          response.tentatives.map(t => [this.convertIdToFilter(t.assignedPatient.id), this.convertIdToFilter(t.bestMatchPatient.id)])
-          .reduce((accumulator, currentValue) => accumulator.concat(currentValue), []),
-          0, 0, false,
-        [...new Set(response.tentatives.map(t => [t.assignedPatient.id.idType, t.bestMatchPatient.id.idType])
-          .reduce((accumulator, currentValue) => accumulator.concat(currentValue), []))]
-        ).pipe(
-          map( r => r.patients
-            .filter(p => p.ids != undefined)
-            .map(patient => this.convertToDisplayPatient(patient, true, []))
-          ),
-          map(patients => {
-            return {
-              data: response.tentatives.map(t => {
-                const assignedPatient = patients.find(p =>
-                  p.ids.some(id => id.idType == t.assignedPatient.id.idType
-                    && id.idString == t.assignedPatient.id.idString))
-                const bestMatchPatient = patients.find(p =>
-                  p.ids.some(id => id.idType == t.bestMatchPatient.id.idType
-                    && id.idString == t.bestMatchPatient.id.idString))
+      map(response => {
+        return {
+          data: response.tentatives.map(t => {
+            const assignedPatient = this.convertToDisplayPatient(this.convertTentativePatientToPatient(t.assignedPatient), true, [])
+            const bestMatchPatient = this.convertToDisplayPatient(this.convertTentativePatientToPatient(t.bestMatchPatient), true, [])
 
-                const view: { [key: string]: string |  DateTime } = {};
-                view["id"] = t.requestId;
-                view["timestamp"] =  DateTime.fromMillis(parseInt(t.timestamp));
-                view["matchScore"] = t.matchingWeight ? "%" + t.matchingWeight.toString() : "";
-                // DateTime.fromMillis(parseInt(t.timestamp)).toLocaleString(
-                  // {year: "numeric", month: "2-digit", day: "2-digit", hour: "numeric", minute: "numeric", second: "numeric"});
-                view["p.idType"] = assignedPatient?.ids[0].idType ?? ""
-                view["p.idString"] = assignedPatient?.ids[0].idString ?? ""
-                Object.entries(assignedPatient?.fields ?? {}).forEach(([key, value]) => {
-                  view["p." + key] = value;
-                })
-                view["b.idType"] = bestMatchPatient?.ids[0].idType ?? ""
-                view["b.idString"] = assignedPatient?.ids[0].idString ?? ""
-                Object.entries(bestMatchPatient?.fields ?? {}).forEach(([key, value]) => {
-                  view["b." + key] = value;
-                })
-                view["b.isTentative"] = assignedPatient?.isTentative?.toString() ?? "false"
-                return view
-              }),
-              totalCount: response.totalCount
-            }
-          })
-        )
-      )
+            const view: { [key: string]: string | DateTime } = {};
+            view["id"] = t.requestId;
+            view["timestamp"] = DateTime.fromMillis(parseInt(t.timestamp));
+            view["matchScore"] = t.matchingWeight ? "%" + t.matchingWeight.toString() : "";
+            // DateTime.fromMillis(parseInt(t.timestamp)).toLocaleString(
+            // {year: "numeric", month: "2-digit", day: "2-digit", hour: "numeric", minute: "numeric", second: "numeric"});
+            view["p.idType"] = assignedPatient?.ids[0].idType ?? ""
+            view["p.idString"] = assignedPatient?.ids[0].idString ?? ""
+            Object.entries(assignedPatient?.fields ?? {}).forEach(([key, value]) => {
+              view["p." + key] = value;
+            })
+            view["p.isTentative"] = assignedPatient?.isTentative?.toString() ?? "true";
+            view["p.tenants"] = assignedPatient?.tenants?.map( t => this.authorizationService.getUITenants().find( uit => uit.id == t)?.name).join() ?? "";
+            view["b.idType"] = bestMatchPatient?.ids[0].idType ?? ""
+            view["b.idString"] = bestMatchPatient?.ids[0].idString ?? ""
+            Object.entries(bestMatchPatient?.fields ?? {}).forEach(([key, value]) => {
+              view["b." + key] = value;
+            })
+            view["b.isTentative"] = bestMatchPatient?.isTentative?.toString() ?? "false"
+            view["b.tenants"] = bestMatchPatient?.tenants?.map( t => this.authorizationService.getUITenants().find( uit => uit.id == t)?.name).join() ?? "";
+            return view
+          }),
+          totalCount: response.totalCount
+        }
+      })
     )
   }
 
@@ -762,6 +749,10 @@ export class PatientListService {
   // Utils
   //-------
 
+  convertTentativePatientToPatient(patient: TentativePatient): Patient{
+    return new Patient(patient.fields, [patient.id], patient.tenants, patient.isTentative);
+  }
+
   convertToDisplayPatient(patient: Patient, convertDisplaySex?:boolean,
                           tenants?: { id: string, name: string, idTypes: string[] }[]): Patient {
     let displayPatient = new Patient();
@@ -774,6 +765,8 @@ export class PatientListService {
         t.id != Tenant.DEFAULT_ID
         && t.idTypes.some( t => displayPatient.ids.some( id => id.idType == t)))
       .map(t => t.name);
+    else
+      displayPatient.tenants = patient.tenants
 
     // fields
     if(patient.fields == undefined){
@@ -811,6 +804,7 @@ export class PatientListService {
         }
       }
     }
+    displayPatient.isTentative = patient.isTentative;
     return displayPatient;
   }
 
