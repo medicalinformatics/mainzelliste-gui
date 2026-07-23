@@ -414,21 +414,27 @@ export class PatientListService {
     return tenantIds?.map( t => this.configService.getMainzellisteTenants().find( uit => uit.id == t)?.name).filter(i => !!i).join(", ") ?? "";
   }
 
-  solveTentative(tentativeMatchId: number, operation: SolveTentativeOperationType, mainPatientId?: Id, force?:boolean){
-    let payload : SolveTentativePayload = {
-      operation : operation,
+  public resolveTentative(tentativeMatchId: number, operation: SolveTentativeOperationType, mainPatientId?: Id, force?: boolean) {
+    let payload: SolveTentativePayload = {
+      operation: operation,
       force: force ?? false
     }
 
-    if(mainPatientId != undefined)
+    if (mainPatientId != undefined)
       payload.main = mainPatientId;
 
-    return this.httpClient.put(this.patientList.url + "/tentatives/" + tentativeMatchId,
-      payload, {
-      headers: new HttpHeaders()
-      .set('Content-Type', 'application/json')
-      .set('mainzellisteApiVersion', '3.2')
-    });
+    return this.sessionService.createToken("resolveTentative", {}).pipe(
+      mergeMap(token => this.httpClient.put(this.patientList.url + "/tentatives/" + tentativeMatchId + "?tokenId=" + token.id,
+        payload, {
+          headers: new HttpHeaders()
+          .set('Content-Type', 'application/json')
+          .set('mainzellisteApiVersion', '3.2')
+        })
+      ),
+      catchError((error) =>
+        throwError(() => new Error("Failed to solve tentative " + `${getErrorMessageFrom(error, this.translate)}`))
+      )
+    )
   }
 
   private convertIdToFilter(id: Id): FilterItem {

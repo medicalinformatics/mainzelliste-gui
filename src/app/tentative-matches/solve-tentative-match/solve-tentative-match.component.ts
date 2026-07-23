@@ -94,7 +94,7 @@ export class SolveTentativeMatchComponent implements OnInit {
   }
 
   mergePatients(force: boolean) {
-    this.patientListService.solveTentative(this.tentativeMatchId, SolveTentativeOperationType.merge,
+    this.patientListService.resolveTentative(this.tentativeMatchId, SolveTentativeOperationType.merge,
       this.mainPatient == 1 ? this.patient1?.ids[0] : this.patient2?.ids[0], force)
     .subscribe({
       next: () => { this.router.navigate(["/tentatives"]).then()},
@@ -107,7 +107,7 @@ export class SolveTentativeMatchComponent implements OnInit {
   }
 
   splitPatients(){
-    this.patientListService.solveTentative(this.tentativeMatchId, SolveTentativeOperationType.split)
+    this.patientListService.resolveTentative(this.tentativeMatchId, SolveTentativeOperationType.split)
     .subscribe({
       next: () => { this.router.navigate(["/tentatives"]).then()},
       error: e => {
