@@ -6,6 +6,7 @@
           <ng-container *ngSwitchCase="'resolveButton'">
             <th mat-header-cell *matHeaderCellDef [rowSpan]="2"></th>
             <td mat-cell *matCellDef="let element">
+<!--              TODO disable only if element['b.isTentative'] == 'true'-->
               <button mat-icon-button style="background: none;border:none;" [disabled]="true"
                       color="primary" class="ml-icon-button"
                       [routerLink]="['/resolve-unsure-match', element[column.name]]"
@@ -21,6 +22,7 @@
                 [ngStyle]="{'background-color': element['b.isTentative'] == 'true' && column.name.startsWith('b.') ? '#ff94453d' : 'transparent'}">
               <a mat-icon-button style="background: none;border:none;" target="_blank"
                  [routerLink]="['/idcard', element[column.name+'Type'], element[column.name + 'String']]"
+                 [disabled]="!element[column.name + 'String']"
                  color="primary" class="ml-icon-button">
                 <mat-icon matTooltip="{{column.i18n | translate}}">open_in_new</mat-icon>
               </a>
