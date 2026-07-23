@@ -394,20 +394,24 @@ export class PatientListService {
               view["p." + key] = value;
             })
             view["p.isTentative"] = assignedPatient?.isTentative?.toString() ?? "true";
-            view["p.tenants"] = assignedPatient?.tenants?.map( t => this.authorizationService.getUITenants().find( uit => uit.id == t)?.name).join() ?? "";
+            view["p.tenants"] = this.convertToUITenantList(assignedPatient?.tenants);
             view["b.idType"] = bestMatchPatient?.ids[0].idType ?? ""
             view["b.idString"] = bestMatchPatient?.ids[0].idString ?? ""
             Object.entries(bestMatchPatient?.fields ?? {}).forEach(([key, value]) => {
               view["b." + key] = value;
             })
             view["b.isTentative"] = bestMatchPatient?.isTentative?.toString() ?? "false"
-            view["b.tenants"] = bestMatchPatient?.tenants?.map( t => this.authorizationService.getUITenants().find( uit => uit.id == t)?.name).join() ?? "";
+            view["b.tenants"] = this.convertToUITenantList(bestMatchPatient?.tenants);
             return view
           }),
           totalCount: response.totalCount
         }
       })
     )
+  }
+
+  private convertToUITenantList(tenantIds: string[] | undefined){
+    return tenantIds?.map( t => this.configService.getMainzellisteTenants().find( uit => uit.id == t)?.name).filter(i => !!i).join(", ") ?? "";
   }
 
   solveTentative(tentativeMatchId: number, operation: SolveTentativeOperationType, mainPatientId?: Id, force?:boolean){
@@ -794,11 +798,13 @@ export class PatientListService {
         }
         case "DATE": {
           let extractDate = (fieldNames: string[], fields: { [key: string]: any }, i: number, defaultValue: string): string =>
-            fieldNames.length > i && fieldNames[i] ? fields[fieldNames[i]] : defaultValue;
+            fieldNames.length > i && fieldNames[i] ? fields[fieldNames[i]] ?? defaultValue: defaultValue;
           let day = extractDate(fieldConfig.mainzellisteFields, patient.fields,  0, "00");
           let month = extractDate(fieldConfig.mainzellisteFields, patient.fields, 1, "00");
           let year = extractDate(fieldConfig.mainzellisteFields, patient.fields, 2, "0000");
           let date = `${year}-${month}-${day}`;
+          if(date == "0000-00-00")
+            break;
           displayPatient.fields[fieldConfig.name] = DateTime.fromFormat(date, 'yyyy-MM-dd', { zone: "utc" })
           break;
         }
