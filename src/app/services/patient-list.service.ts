@@ -62,7 +62,6 @@ export class PatientListService {
     ErrorMessages.CREATE_PATIENTS_UNAUTHORIZED
   ]
 
-
   private fetchPatientsJobErrorMessages: ErrorMessage[] = [
     ErrorMessages.FETCH_PATIENTS_JOB_NOTFOUND,
     ErrorMessages.FETCH_PATIENTS_JOB_UNAUTHORIZED
@@ -92,6 +91,12 @@ export class PatientListService {
     ErrorMessages.CREATE_IDS_ERROR
   ];
 
+  private readonly solveTentativeErrors: ErrorMessage[] = [
+    ErrorMessages.SOLVE_TENTATIVE_MERGE_FAILED_MAIN_IDENTITY_IS_SECONDARY,
+    ErrorMessages.SOLVE_TENTATIVE_MERGE_FAILED_SECONDARY_IDENTITY_ID_MAIN,
+    ErrorMessages.SOLVE_TENTATIVE_MERGE_FAILED_SECONDARY_IDENTITY_LINKED
+  ]
+
   constructor(
     private translate: TranslateService,
     private appConfigService: AppConfigService,
@@ -113,7 +118,6 @@ export class PatientListService {
       || f.mainzellisteFields != null && f.mainzellisteFields.length > 0
       && f.mainzellisteFields.every( c => allowedFieldNames.some( n => n == c)));
   }
-
 
   getIdTypes(operation?: Operation): Array<string> {
     if(operation != undefined)
@@ -224,14 +228,6 @@ export class PatientListService {
     return this.getAllExternalIdTypes(operation).some( t => t == idType);
   }
 
-  /**
-   * @deprecated replace with getIdTypes
-   */
-  getConfiguredIdTypes(): Observable<Array<string>> {
-    //TODO remove observable
-    return of(this.configService.getMainzellisteIdTypes());
-  }
-
   findDefaultIdType(configuredIdTypes: string[]): string {
     if (Tenant.DEFAULT_ID == this.authorizationService.currentTenantId &&
         this.patientList.mainIdType != undefined &&
@@ -247,6 +243,8 @@ export class PatientListService {
    * @param filters contain search fields and ids
    * @param pageIndex page number
    * @param pageSize page limit
+   * @param ignoreOrder ignore the order of the patients
+   * @param returnedIdTypes returned id types
    */
   getPatients(filters: Array<FilterItem>, pageIndex: number, pageSize: number, ignoreOrder:boolean, returnedIdTypes?: string []): Observable<ReadPatientsResponse> {
     // find current tenant id
@@ -325,6 +323,7 @@ export class PatientListService {
   resolveReadTentative(tokenId: string | undefined, tentativeMatchId: number) {
     return this.httpClient.get<Tentative>(this.patientList.url + "/tentatives/" + tentativeMatchId
       + "?tokenId=" + tokenId
+      + (this.authorizationService.currentTenantId != Tenant.DEFAULT_ID ? "&tenantId=" + this.authorizationService.currentTenantId : "")
     )
     .pipe(
       mergeMap(t => this.getPatients(
@@ -429,11 +428,17 @@ export class PatientListService {
           headers: new HttpHeaders()
           .set('Content-Type', 'application/json')
           .set('mainzellisteApiVersion', '3.2')
-        })
+        }).pipe(
+          catchError(e => {
+            if (e instanceof HttpErrorResponse && (e.status == 400 || e.status == 409)) {
+              const errorMessage = this.solveTentativeErrors.find(msg => msg.match(e))
+              return throwError( () => errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
+            }
+            return throwError( () => new MainzellisteUnknownError("Failed to solve tentative", e, this.translate))
+          })
+        )
       ),
-      catchError((error) =>
-        throwError(() => new Error("Failed to solve tentative " + `${getErrorMessageFrom(error, this.translate)}`))
-      )
+      catchError(e => this.handleCreateSessionError(e))
     )
   }
 
@@ -478,14 +483,7 @@ export class PatientListService {
       .pipe(mergeMap(
         token => this.resolveCreateIdsToken(token.id, newIdType, newIdValue)
         ),
-      catchError(e => {
-        // handle failed token creation
-        if (e instanceof HttpErrorResponse && (e.status == 404) && ErrorMessages.ML_SESSION_NOT_FOUND.match(e))
-          return throwError( () => new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND));
-        else if (!(e instanceof MainzellisteError) && !(e instanceof MainzellisteUnknownError))
-          return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_create_create_ids_token'), e, this.translate));
-        return throwError( () => e);
-      }));
+      catchError(e => this.handleCreateSessionError(e)));
   }
 
   resolveCreateIdsToken(tokenId: string | undefined, newIdType: string, newIdValue: string = ""): Observable<any> {
@@ -510,20 +508,10 @@ export class PatientListService {
   }
 
   addPatient(patient: Patient, idTypes: string[], sureness: boolean, tokenId?: string): Observable<Id> {
-    return (tokenId != undefined ? of(tokenId) :  this.sessionService.createToken(
-      "addPatient", new AddPatientTokenData(idTypes)
-    )
-    .pipe(map(t => t.id)))
-    .pipe(
+    const tokenId$ = tokenId ? of(tokenId) :  this.sessionService.createToken("addPatient", new AddPatientTokenData(idTypes)).pipe(map(t => t.id));
+    return tokenId$.pipe(
       mergeMap(tokenId => this.resolveAddPatientToken(tokenId, patient, sureness)),
-      catchError(e => {
-        // handle failed token creation
-        if (e instanceof HttpErrorResponse && (e.status == 404) && ErrorMessages.ML_SESSION_NOT_FOUND.match(e))
-          return throwError( () => new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND))
-        else if (!(e instanceof MainzellisteError) && !(e instanceof MainzellisteUnknownError))
-          return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_create_add_patient_token'), e, this.translate))
-        return throwError( () => e)
-      })
+      catchError(e => this.handleCreateSessionError(e))
     );
   }
 
@@ -615,14 +603,7 @@ export class PatientListService {
     )
     .pipe(
       mergeMap(token => this.resolveAddPatientsToken(token.id, patients, sureness)),
-      catchError(e => {
-        // handle failed token creation
-        if (e instanceof HttpErrorResponse && (e.status == 404) && ErrorMessages.ML_SESSION_NOT_FOUND.match(e))
-          return throwError( () => new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND))
-        else if (!(e instanceof MainzellisteError) && !(e instanceof MainzellisteUnknownError))
-          return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.create_patients_token_failed'), e, this.translate))
-        return throwError( () => e)
-      })
+      catchError(e => this.handleCreateSessionError(e))
     );
   }
 
@@ -754,6 +735,14 @@ export class PatientListService {
           return throwError( () => e);
         })
       );
+  }
+
+  handleCreateSessionError(e: any){
+    if (e instanceof HttpErrorResponse && e.status == 404 && ErrorMessages.ML_SESSION_NOT_FOUND.match(e))
+      return throwError( () => new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND))
+    else if (!(e instanceof MainzellisteError) && !(e instanceof MainzellisteUnknownError))
+      return throwError( () => new MainzellisteUnknownError('Failed to create Token', e, this.translate))
+    return throwError( () => e)
   }
 
   // Utils

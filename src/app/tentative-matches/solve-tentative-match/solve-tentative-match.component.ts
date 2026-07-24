@@ -6,7 +6,6 @@ import {PatientListService} from "../../services/patient-list.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MatDialog} from '@angular/material/dialog';
 import {SolveTentativeOperationType} from "../../model/solve-tentative-payload";
-import {ErrorMessage, ErrorMessages} from "../../error/error-messages";
 import {HttpErrorResponse} from "@angular/common/http";
 import {MergeTentativeMatchDialogComponent} from "./dialog/merge-tentative-match-dialog.component";
 import {throwError} from "rxjs";
@@ -18,6 +17,7 @@ import {ViewPatientComponent} from "../../patient/view-patient/view-patient.comp
 import {MatButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {FormsModule} from "@angular/forms";
+import {MainzellisteError} from "../../model/mainzelliste-error.model";
 
 @Component({
   selector: 'app-solve-tentative-match-patient',
@@ -36,12 +36,6 @@ import {FormsModule} from "@angular/forms";
   styleUrls: ['./solve-tentative-match.component.css']
 })
 export class SolveTentativeMatchComponent implements OnInit {
-  private readonly solveTentativeErrors: ErrorMessage[] = [
-    ErrorMessages.SOLVE_TENTATIVE_MERGE_FAILED_MAIN_IDENTITY_IS_SECONDARY,
-    ErrorMessages.SOLVE_TENTATIVE_MERGE_FAILED_SECONDARY_IDENTITY_ID_MAIN,
-    ErrorMessages.SOLVE_TENTATIVE_MERGE_FAILED_SECONDARY_IDENTITY_LINKED
-  ]
-
   tentativeMatchId: number = 0;
   patient1: Patient | undefined;
   patient2: Patient | undefined;
@@ -99,7 +93,7 @@ export class SolveTentativeMatchComponent implements OnInit {
     .subscribe({
       next: () => { this.router.navigate(["/tentatives"]).then()},
       error: e => {
-        if (e instanceof HttpErrorResponse && this.solveTentativeErrors.find(msg => msg.match(e))) {
+        if (e instanceof MainzellisteError) {
           this.openMergeTentativeDialog();
         }
       }
@@ -111,7 +105,7 @@ export class SolveTentativeMatchComponent implements OnInit {
     .subscribe({
       next: () => { this.router.navigate(["/tentatives"]).then()},
       error: e => {
-        if (e instanceof HttpErrorResponse && this.solveTentativeErrors.find(msg => msg.match(e))) {
+        if (e instanceof MainzellisteError) {
           this.openMergeTentativeDialog();
         }
       }
