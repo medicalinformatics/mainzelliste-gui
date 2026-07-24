@@ -7,10 +7,12 @@
             <th mat-header-cell *matHeaderCellDef [rowSpan]="2"></th>
             <td mat-cell *matCellDef="let element">
 <!--              TODO disable only if element['b.isTentative'] == 'true'-->
-              <button mat-icon-button style="background: none;border:none;" [disabled]="true"
+              <button mat-icon-button style="background: none;border:none;"
+                      [disabled]="element['b.isTentative'] == 'true'"
                       color="primary" class="ml-icon-button"
-                      [routerLink]="['/resolve-unsure-match', element[column.name]]"
+                      (click)="openResolveDialog(element[column.name])"
               >
+<!--                      [routerLink]="['/resolve-unsure-match', element[column.name]]"-->
                 <mat-icon matTooltip="{{'read_tentatives.button_resolve' | translate}}">alt_route
                 </mat-icon>
               </button>
