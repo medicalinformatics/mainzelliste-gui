@@ -1,30 +1,48 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {PatientService} from "../services/patient.service";
 import {Patient} from "../model/patient";
-import { MatChipInputEvent, MatChipGrid, MatChipRow, MatChipRemove, MatChipInput } from "@angular/material/chips";
+import {
+  MatChipGrid,
+  MatChipInput,
+  MatChipInputEvent,
+  MatChipRemove,
+  MatChipRow
+} from "@angular/material/chips";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
-import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger, MatAutocomplete } from "@angular/material/autocomplete";
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import {
+  MatAutocomplete,
+  MatAutocompleteSelectedEvent,
+  MatAutocompleteTrigger
+} from "@angular/material/autocomplete";
+import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {Observable, of} from "rxjs";
 import {map, startWith} from 'rxjs/operators';
 import {GlobalTitleService} from "../services/global-title.service";
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import {AuthorizationService} from "../services/authorization.service";
 import {CardError} from "../error/card-error";
 import {FilterItem} from "../model/filter-item";
 import * as papaparse from "papaparse"
 import {ParseResult} from "papaparse"
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
-import { NgFor, NgIf, NgStyle, AsyncPipe } from '@angular/common';
-import { MatBadge } from '@angular/material/badge';
-import { MatIcon } from '@angular/material/icon';
-import { MatOption } from '@angular/material/select';
-import { MatIconButton } from '@angular/material/button';
-import { MatTooltip } from '@angular/material/tooltip';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { PatientlistComponent } from '../patientlist/patientlist.component';
+import {MatFormField, MatLabel, MatSuffix} from '@angular/material/form-field';
+import {AsyncPipe, NgFor, NgIf, NgStyle} from '@angular/common';
+import {MatBadge} from '@angular/material/badge';
+import {MatIcon} from '@angular/material/icon';
+import {MatOption} from '@angular/material/select';
+import {MatIconButton} from '@angular/material/button';
+import {MatTooltip} from '@angular/material/tooltip';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {PatientlistComponent} from '../patientlist/patientlist.component';
+import {MatDialog} from "@angular/material/dialog";
+import {Permission} from "../model/permission";
+import {HasPermissionDirective} from "../shared/directives/has-permission.directive";
+import {
+  FindSimilarPatientsDialogComponent
+} from "../patientlist/dialogs/find-similar-patients-dialog/find-similar-patients-dialog.component";
+import {FieldService} from "../services/field.service";
+import {Field} from "../model/field";
 
 export interface FilterConfig {
   display: string,
@@ -38,10 +56,11 @@ export interface FilterConfig {
     selector: 'app-patientlist-view',
     templateUrl: './patientlist-view.component.html',
     styleUrls: ['./patientlist-view.component.css'],
-    imports: [MatFormField, MatLabel, MatChipGrid, NgFor, MatChipRow, MatBadge, MatIcon, MatChipRemove, MatChipInput, FormsModule, MatAutocompleteTrigger, ReactiveFormsModule, MatAutocomplete, MatOption, MatIconButton, MatSuffix, MatTooltip, NgIf, NgStyle, MatProgressSpinner, PatientlistComponent, MatPaginator, AsyncPipe, TranslatePipe]
+    imports: [MatFormField, MatLabel, MatChipGrid, NgFor, MatChipRow, MatBadge, MatIcon, MatChipRemove, MatChipInput, FormsModule, MatAutocompleteTrigger, ReactiveFormsModule, MatAutocomplete, MatOption, MatIconButton, MatSuffix, MatTooltip, NgIf, NgStyle, MatProgressSpinner, PatientlistComponent, MatPaginator, AsyncPipe, TranslatePipe, HasPermissionDirective]
 })
 export class PatientlistViewComponent implements OnInit {
 
+  public readonly Permission = Permission;
   patientService: PatientService;
   patient: Patient = new Patient();
   fields: Array<string> = [];
@@ -58,8 +77,18 @@ export class PatientlistViewComponent implements OnInit {
   filterInput!: ElementRef<HTMLInputElement>;
   @ViewChild(MatAutocompleteTrigger)
   filterAutoCompleteTrigger!: MatAutocompleteTrigger;
-  // configured searching keys : id type and fields
+  // configured searching keys: id type and fields
   configuredFilteringKeys: Array<FilterConfig> = [];
+  // metadata of find similar patient chip
+  public static readonly  SIMILAR_PATENT_SPECIAL_FIELD = "similarPatient"
+  similarPatientFilter: FilterConfig = {
+    display: "Similar Patient",
+    field: PatientlistViewComponent.SIMILAR_PATENT_SPECIAL_FIELD,
+    fields: [],
+    isIdType: false,
+    hidden: true
+  };
+  semanticFields: { [key: string]: Field };
   // available searching keys used in autocomplete options
   availableFilteringKeys: Observable<FilterConfig[]> = of([]);
   // chip items : entered searching keywords
@@ -70,11 +99,14 @@ export class PatientlistViewComponent implements OnInit {
     public translate: TranslateService,
     patientService: PatientService,
     public authorizationService: AuthorizationService,
-    private titleService: GlobalTitleService
+    private titleService: GlobalTitleService,
+    public findSimilarPatientsDialog: MatDialog,
+    private fieldService: FieldService
   ) {
     this.patientService = patientService;
     this.patientsMatTableData = new MatTableDataSource<Patient>([]);
     this.changeTitle();
+    this.semanticFields = this.fieldService.getSemanticFields();
   }
 
   changeTitle() {
@@ -103,10 +135,7 @@ export class PatientlistViewComponent implements OnInit {
             searchCriteria: searchCriteria,
             isIdType: filterConfig.isIdType
           });
-          this.filterInput.nativeElement.value = "";
-          this.filterCtrl.setValue("");
-          this.filterAutoCompleteTrigger.closePanel();
-          this.paginator.firstPage();
+          this.resetAfterFiltering();
           // load patients
           this.loadPatients(0, this.paginator.pageSize).then();
           // // Clear the input value
@@ -119,11 +148,15 @@ export class PatientlistViewComponent implements OnInit {
   remove(filter: any): void {
     // show deleted filter in dropdown menu (autocomplete)
     this.configuredFilteringKeys.filter(e => e.field == filter.field).forEach(e => e.hidden = false);
+    // show disabled filters if similarPatient filter is active
+    if(filter.field == PatientlistViewComponent.SIMILAR_PATENT_SPECIAL_FIELD)
+      this.configuredFilteringKeys.forEach(f => f.hidden = false);
 
     const index = this.filters.indexOf(filter);
     if (index >= 0) {
       // remove filter from mat-chip
       this.filters.splice(index, 1);
+      this.filters = [ ... this.filters];
       this.paginator.firstPage();
       // load patients
       this.loadPatients(0, this.paginator.pageSize).then();
@@ -232,7 +265,6 @@ export class PatientlistViewComponent implements OnInit {
       )
       .pipe(
         map(content=> {
-          console.log(content);
           let csvHeaders = (content.data[0] as string[])
           if(csvHeaders && csvHeaders.length == 1 && csvHeaders[0].trim().length == 0)
             csvHeaders.pop();
@@ -290,5 +322,41 @@ export class PatientlistViewComponent implements OnInit {
 
   public isString(searchValue: string | string []): boolean {
     return typeof (searchValue) === 'string';
+  }
+
+  public openFindSimilarPatientsDialog() {
+    if(this.filters.length > 0)
+      this.removeAllFilter();
+    this.findSimilarPatientsDialog.open(FindSimilarPatientsDialogComponent, {
+      width: '600px',
+      disableClose: true
+    })
+    .afterClosed().subscribe((result: any) => {
+      // undefined: dialog was cancelled without searching -> leave the list untouched
+      if (result === undefined) {
+        return;
+      }
+      // add chip
+      this.filters = [{
+        display: this.similarPatientFilter.display,
+        field: this.similarPatientFilter.field,
+        fields: [],
+        isIdType: false,
+        searchCriteria: result?.filterDisplay ?? ""
+      }]
+      // hide all the rest
+      this.configuredFilteringKeys.forEach(f => f.hidden = true);
+      this.resetAfterFiltering();
+
+      // null: search ran but found no match -> clear the list
+      this.patientsMatTableData.data = result?.matchResult ? [result.matchResult] : [];
+    });
+  }
+
+  resetAfterFiltering(){
+    this.filterInput.nativeElement.value = "";
+    this.filterCtrl.setValue("");
+    this.filterAutoCompleteTrigger.closePanel();
+    this.paginator.firstPage();
   }
 }

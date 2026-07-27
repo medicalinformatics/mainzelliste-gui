@@ -14,13 +14,13 @@ export class PatientList {
     public mainIdType?: string,
     public showAllIds?: boolean,
     public fields: Array<Field> = [
-      new Field("first_name_text", "Vorname", "vorname", [], SemanticType.FIRSTNAME, FieldType.TEXT, true, "", "Max"),
-      new Field("last_name_text", "Nachname", "nachname", [], SemanticType.LASTNAME, FieldType.TEXT, true, "", "Mustermann"),
-      new Field("birth_name_text", "Geburtsname", "geburtsname", [], SemanticType.BIRTH_NAME , FieldType.TEXT, true, "", "falls vorhanden"),
-      new Field("birth_date_text", "Geburtdatum", "", ["geburtstag", "geburtsmonat", "geburtsjahr"], SemanticType.BIRTHDATE , FieldType.DATE, true, "", "00.00.0000"),
-      new Field("sex_text", "Geschlecht", "sex", [], SemanticType.SEX, FieldType.SEX, false, "", "Geschlecht"),
-      new Field("residence_text", "Wohnort", "ort", [], SemanticType.CITY, FieldType.TEXT, true, "", "Musterstadt"),
-      new Field("zip_code_text", "PLZ", "plz", [], SemanticType.POSTAL_CODE, FieldType.TEXT, true, "", "mind. 5 Zeichen")
+      new Field("first_name_text", "Vorname", "vorname", [], SemanticType.FIRSTNAME, FieldType.TEXT, true, true, "", "Max"),
+      new Field("last_name_text", "Nachname", "nachname", [], SemanticType.LASTNAME, FieldType.TEXT, true, true, "", "Mustermann"),
+      new Field("birth_name_text", "Geburtsname", "geburtsname", [], SemanticType.BIRTH_NAME , FieldType.TEXT, true, true, "", "falls vorhanden"),
+      new Field("birth_date_text", "Geburtdatum", "", ["geburtstag", "geburtsmonat", "geburtsjahr"], SemanticType.BIRTHDATE , FieldType.DATE, true, true, "", "00.00.0000"),
+      new Field("sex_text", "Geschlecht", "sex", [], SemanticType.SEX, FieldType.SEX, false, false, "", "Geschlecht"),
+      new Field("residence_text", "Wohnort", "ort", [], SemanticType.CITY, FieldType.TEXT, true, true, "", "Musterstadt"),
+      new Field("zip_code_text", "PLZ", "plz", [], SemanticType.POSTAL_CODE, FieldType.TEXT, true, true, "", "mind. 5 Zeichen")
     ],
     public genderFieldValues: GenderValue[] = PatientList.defaultFenderFieldValues,
     public layout?: Layout,

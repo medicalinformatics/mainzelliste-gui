@@ -1,0 +1,21 @@
+<h1 mat-dialog-title class="dialog-title">{{'FindSimilarPatientsDialog.mat_title' | translate}}</h1>
+<div class="dialog">
+  <h4 style="font-weight: 100">
+    <p>{{'FindSimilarPatientsDialog.text' | translate}}</p>
+  </h4>
+  <form #f="ngForm">
+    <app-patient-input-fields [patient]="patient" [requiredForRL]="true"></app-patient-input-fields>
+  </form>
+</div>
+<div mat-dialog-actions style="justify-content: center">
+  <button mat-raised-button class="submitBreak" (click)="cancel()">
+    {{'button_cancel' | translate}}
+  </button>
+  <button mat-raised-button class="submit" [disabled]="inProgress || !hasAnyValue()"
+          (click)="findSimilarPatients()">
+    {{'FindSimilarPatientsDialog.button_run' | translate}}
+    <mat-icon *ngIf="inProgress" style="margin-left: 10px">
+      <mat-spinner diameter="20"></mat-spinner>
+    </mat-icon>
+  </button>
+</div>

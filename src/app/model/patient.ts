@@ -7,7 +7,8 @@ export class Patient {
     public fields: { [key: string]: string | DateTime} = {},
     public ids: Array<Id> = [],
     public tenants?: string[],
-    public isTentative?: boolean
+    public isTentative?: boolean,
+    public matchingScore?: string
   ) {
   }
 

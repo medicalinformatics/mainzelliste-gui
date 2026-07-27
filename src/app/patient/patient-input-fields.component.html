@@ -1,0 +1,115 @@
+<div style=" width: 500px">
+  <!-- personal Info. -->
+  @if (hasAnyFields([SemanticType.FIRSTNAME, SemanticType.LASTNAME, SemanticType.BIRTH_NAME,
+    SemanticType.BIRTHDATE, SemanticType.SEX]) || nonSemanticFields.length > 0) {
+  <div>
+    <h4 style="color: #063d6c">{{ 'createPatient.patient_data' | translate }}</h4>
+    <div style="display: flex; width: 100%; column-gap: 15px;">
+      @if (hasField(SemanticType.FIRSTNAME)) {
+        <app-text-field style="flex-grow: 1;"
+                        [(data)]="patient.fields[getFieldName(SemanticType.FIRSTNAME)]"
+                        [field]="semanticFields[SemanticType.FIRSTNAME.valueOf()]">
+        </app-text-field>
+      }
+      @if (hasField(SemanticType.LASTNAME)) {
+        <app-text-field style="flex-grow: 1;"
+                        [(data)]="patient.fields[getFieldName(SemanticType.LASTNAME)]"
+                        [field]="semanticFields[SemanticType.LASTNAME.valueOf()]">
+        </app-text-field>
+      }
+    </div>
+    <div>
+      @if (hasField(SemanticType.BIRTH_NAME)) {
+        <app-text-field
+                        [(data)]="patient.fields[getFieldName(SemanticType.BIRTH_NAME)]"
+                        [field]="semanticFields[SemanticType.BIRTH_NAME.valueOf()]">
+        </app-text-field>
+      }
+    </div>
+    <div>
+      @if (hasField(SemanticType.BIRTHDATE)) {
+        <app-date-field
+                        style="display: block; max-width: 242px;"
+                        [(data)]="patient.fields[getFieldName(SemanticType.BIRTHDATE)]"
+                        [field]="semanticFields[SemanticType.BIRTHDATE.valueOf()]">
+        </app-date-field>
+      }
+    </div>
+    <div>
+      @if (hasField(SemanticType.SEX)) {
+        <app-sex-field
+                       style="display: block; max-width: 242px;"
+                       [(data)]="patient.fields[getFieldName(SemanticType.SEX)]"
+                       [field]="semanticFields[SemanticType.SEX.valueOf()]">
+        </app-sex-field>
+      }
+    </div>
+    <br>
+  </div>
+  }
+  <!-- contact Info. -->
+  @if (hasAnyFields([SemanticType.STREET, SemanticType.POSTAL_CODE, SemanticType.CITY,
+    SemanticType.EMAIL, SemanticType.PHONE])) {
+  <div>
+    <h4 style="color: #063d6c">{{ 'createPatient.contact_data' | translate }}</h4>
+    <div>
+      @if (hasField(SemanticType.STREET)) {
+        <app-text-field
+                        [(data)]="patient.fields[getFieldName(SemanticType.STREET)]"
+                        [field]="semanticFields[SemanticType.STREET.valueOf()]">
+        </app-text-field>
+      }
+    </div>
+    <div style="display: flex; width: 100%; column-gap: 15px;">
+      @if (hasField(SemanticType.POSTAL_CODE)) {
+        <app-text-field style="display: block; width: 150px"
+                        [(data)]="patient.fields[getFieldName(SemanticType.POSTAL_CODE)]"
+                        [field]="semanticFields[SemanticType.POSTAL_CODE.valueOf()]">
+        </app-text-field>
+      }
+      @if (hasField(SemanticType.CITY)) {
+        <app-text-field style="flex-grow: 3"
+                        [(data)]="patient.fields[getFieldName(SemanticType.CITY)]"
+                        [field]="semanticFields[SemanticType.CITY.valueOf()]">
+        </app-text-field>
+      }
+    </div>
+    <div>
+      @if (hasField(SemanticType.EMAIL)) {
+        <app-text-field
+                        [(data)]="patient.fields[getFieldName(SemanticType.EMAIL)]"
+                        [field]="semanticFields[SemanticType.EMAIL.valueOf()]">
+        </app-text-field>
+      }
+    </div>
+    <div>
+      @if (hasField(SemanticType.PHONE)) {
+        <app-text-field
+                        [(data)]="patient.fields[getFieldName(SemanticType.PHONE)]"
+                        [field]="semanticFields[SemanticType.PHONE.valueOf()]">
+        </app-text-field>
+      }
+    </div>
+    <br>
+  </div>
+  }
+  <!-- Additional Information -->
+  @if (nonSemanticFields.length > 0){
+  <div>
+    <h4 style="color: #063d6c">{{ 'createPatient.additional_info' | translate }}</h4>
+    @for (field of nonSemanticFields; track field.name){
+    <div>
+      @switch (field.type){
+        @case (FieldType.DATE){
+          <app-date-field [(data)]="patient.fields[field.name]" [field]="field"></app-date-field>
+        }
+        @default {
+          <app-text-field [(data)]="patient.fields[field.name]" [field]="field"></app-text-field>
+        }
+      }
+    </div>
+    }
+    <br>
+  </div>
+  }
+</div>

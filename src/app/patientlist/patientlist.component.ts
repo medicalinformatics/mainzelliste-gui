@@ -1,4 +1,12 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output, SimpleChange,
+  ViewEncapsulation
+} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {Patient} from "../model/patient";
 import {SelectionModel} from "@angular/cdk/collections";
@@ -39,6 +47,7 @@ import {MatTooltip} from '@angular/material/tooltip';
 import {HasPermissionDirective} from '../shared/directives/has-permission.directive';
 import {MatProgressBar} from '@angular/material/progress-bar';
 import {LocalDateFormatPipe} from "../shared/pipes/local-date-format.pipe";
+import {PatientlistViewComponent} from "../patientlist-view/patientlist-view.component";
 
 @Component({
     selector: 'app-patientlist',
@@ -48,7 +57,7 @@ import {LocalDateFormatPipe} from "../shared/pipes/local-date-format.pipe";
   imports: [MatButton, MatIcon, MatPrefix, MatSelect, FormsModule, NgFor, MatOption, NgStyle, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, NgClass, NgIf, MatIconButton, RouterLink, MatTooltip, HasPermissionDirective, MatProgressBar, MatHeaderRowDef, MatHeaderRow, MatNoDataRow, MatRowDef, MatRow, TranslatePipe, LocalDateFormatPipe]
 })
 
-export class PatientlistComponent implements OnInit{
+export class PatientlistComponent implements OnInit, OnChanges{
   public readonly Permission = Permission;
   @Input() patients: MatTableDataSource<Patient>;
   @Input() loading: boolean = false;
@@ -62,6 +71,7 @@ export class PatientlistComponent implements OnInit{
   columns: string[] = [];
   allColumnNames: string[] = [];
   showAllIds: boolean;
+  showScoreColumn: boolean = false;
 
   configuredIdTypes: string[] = [];
   public defaultIdType:  string = "";
@@ -137,6 +147,8 @@ export class PatientlistComponent implements OnInit{
     this.allColumnNames = this.allColumnNames.concat(this.configuredIdTypes).concat(this.fieldNames);
     if(this.showTenantColumn())
       this.allColumnNames.push("tenants");
+    if(this.showScoreColumn)
+      this.allColumnNames.push("scores");
     this.allColumnNames.push("actions");
 
     // load columns from browser storage
@@ -153,6 +165,23 @@ export class PatientlistComponent implements OnInit{
     }
   }
 
+  ngOnChanges(changes: { [property: string]: SimpleChange }) {
+    let filterChanged: SimpleChange = changes['searchFilter'];
+    if( !filterChanged)
+      return;
+    const filterContainsSimilarPatients: boolean = filterChanged.currentValue && (filterChanged.currentValue as FilterItem[]).some(f => f.field = PatientlistViewComponent.SIMILAR_PATENT_SPECIAL_FIELD);
+    const scoreIndex = this.columns.indexOf("scores");
+    if(scoreIndex < 0 && filterContainsSimilarPatients){
+      this.columns.unshift("scores");
+      this.localStorageService.patientListColumns = this.columns
+      this.showScoreColumn = true;
+    } else if(scoreIndex >= 0 && !filterContainsSimilarPatients){
+      this.columns.splice(scoreIndex, 1);
+      this.localStorageService.patientListColumns = this.columns
+      this.showScoreColumn = false;
+    }
+  }
+
   showTenantColumn(){
     return this.configService.showDomainsInIDCard() && this.authorizationService.getTenants().length > 1;
   }
@@ -165,6 +194,8 @@ export class PatientlistComponent implements OnInit{
       return this.translate.instant('patientlist.headers_actions')
     } else if(columnName == "tenants"){
       return this.translate.instant('patientlist.headers_tenants')
+    } else if(columnName == "scores"){
+      return this.translate.instant('patientlist.headers_scores')
     } else {
       return columnName
     }
@@ -186,4 +217,5 @@ export class PatientlistComponent implements OnInit{
       }
     });
   }
+
 }

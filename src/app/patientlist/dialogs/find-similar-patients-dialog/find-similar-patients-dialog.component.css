@@ -1,0 +1,13 @@
+.dialog-title {
+  text-align: center;
+}
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog form {
+  display: flex;
+  justify-content: center;
+}

@@ -26,6 +26,7 @@ export class Field {
     public semantic: SemanticType,
     public type: FieldType,
     public required: boolean,
+    public requiredForRL: boolean,
     public validator: string,
     public hint: string = "",
     public hideFromList: boolean = false,
