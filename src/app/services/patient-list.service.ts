@@ -30,7 +30,7 @@ import {AddPatientRequest} from "../model/add-patient-request";
 import {FilterItem} from "../model/filter-item";
 import {BackendConfigService} from "./backend-config.service";
 import {DateTime} from "luxon";
-import {Tentative} from "../model/api/tentative";
+import {Tentative, TentativePatient} from "../model/api/tentative";
 import {SolveTentativeOperationType, SolveTentativePayload} from "../model/solve-tentative-payload";
 import {CheckMatchTokenData} from "../model/check-match-token-data";
 import {CheckMatchMatch, CheckMatchResult} from "../model/check-match-result";
@@ -64,7 +64,6 @@ export class PatientListService {
     ErrorMessages.CREATE_PATIENTS_UNAUTHORIZED
   ]
 
-
   private fetchPatientsJobErrorMessages: ErrorMessage[] = [
     ErrorMessages.FETCH_PATIENTS_JOB_NOTFOUND,
     ErrorMessages.FETCH_PATIENTS_JOB_UNAUTHORIZED
@@ -94,6 +93,12 @@ export class PatientListService {
     ErrorMessages.CREATE_IDS_ERROR
   ];
 
+  private readonly solveTentativeErrors: ErrorMessage[] = [
+    ErrorMessages.SOLVE_TENTATIVE_MERGE_FAILED_MAIN_IDENTITY_IS_SECONDARY,
+    ErrorMessages.SOLVE_TENTATIVE_MERGE_FAILED_SECONDARY_IDENTITY_ID_MAIN,
+    ErrorMessages.SOLVE_TENTATIVE_MERGE_FAILED_SECONDARY_IDENTITY_LINKED
+  ]
+
   constructor(
     private translate: TranslateService,
     private appConfigService: AppConfigService,
@@ -115,7 +120,6 @@ export class PatientListService {
       || f.mainzellisteFields != null && f.mainzellisteFields.length > 0
       && f.mainzellisteFields.every( c => allowedFieldNames.some( n => n == c)));
   }
-
 
   getIdTypes(operation?: Operation): Array<string> {
     if(operation != undefined)
@@ -226,14 +230,6 @@ export class PatientListService {
     return this.getAllExternalIdTypes(operation).some( t => t == idType);
   }
 
-  /**
-   * @deprecated replace with getIdTypes
-   */
-  getConfiguredIdTypes(): Observable<Array<string>> {
-    //TODO remove observable
-    return of(this.configService.getMainzellisteIdTypes());
-  }
-
   findDefaultIdType(configuredIdTypes: string[]): string {
     if (Tenant.DEFAULT_ID == this.authorizationService.currentTenantId &&
         this.patientList.mainIdType != undefined &&
@@ -249,6 +245,8 @@ export class PatientListService {
    * @param filters contain search fields and ids
    * @param pageIndex page number
    * @param pageSize page limit
+   * @param ignoreOrder ignore the order of the patients
+   * @param returnedIdTypes returned id types
    */
   getPatients(filters: Array<FilterItem>, pageIndex: number, pageSize: number, ignoreOrder:boolean, returnedIdTypes?: string []): Observable<ReadPatientsResponse> {
     // find current tenant id
@@ -327,6 +325,7 @@ export class PatientListService {
   resolveReadTentative(tokenId: string | undefined, tentativeMatchId: number) {
     return this.httpClient.get<Tentative>(this.patientList.url + "/tentatives/" + tentativeMatchId
       + "?tokenId=" + tokenId
+      + (this.authorizationService.currentTenantId != Tenant.DEFAULT_ID ? "&tenantId=" + this.authorizationService.currentTenantId : "")
     )
     .pipe(
       mergeMap(t => this.getPatients(
@@ -366,80 +365,83 @@ export class PatientListService {
     )
   }
 
-  resolveReadTentatives(tokenId: string|undefined, pageIndex: number, pageSize: number) {
+  resolveReadTentatives(tokenId: string | undefined, pageIndex: number, pageSize: number) {
     return this.httpClient.get<Tentative[]>(this.patientList.url + "/tentatives?"
-      +"tokenId=" + tokenId + "&page=" + (pageIndex + 1) + "&limit=" + pageSize,
+      + "tokenId=" + tokenId + "&page=" + (pageIndex + 1) + "&limit=" + pageSize
+      + (this.authorizationService.currentTenantId != Tenant.DEFAULT_ID ? "&tenantId=" + this.authorizationService.currentTenantId : ""),
       {observe: 'response'}
     )
     .pipe(
-      map( response => ({
+      map(response => ({
           tentatives: response.body ?? [],
           totalCount: parseInt(response.headers.get("X-Total-Count") ?? "0")
         })
       ),
-      mergeMap(response => this.getPatients(
-          response.tentatives.map(t => [this.convertIdToFilter(t.assignedPatient.id), this.convertIdToFilter(t.bestMatchPatient.id)])
-          .reduce((accumulator, currentValue) => accumulator.concat(currentValue), []),
-          0, 0, false,
-        [...new Set(response.tentatives.map(t => [t.assignedPatient.id.idType, t.bestMatchPatient.id.idType])
-          .reduce((accumulator, currentValue) => accumulator.concat(currentValue), []))]
-        ).pipe(
-          map( r => r.patients
-            .filter(p => p.ids != undefined)
-            .map(patient => this.convertToDisplayPatient(patient, true, []))
-          ),
-          map(patients => {
-            return {
-              data: response.tentatives.map(t => {
-                const assignedPatient = patients.find(p =>
-                  p.ids.some(id => id.idType == t.assignedPatient.id.idType
-                    && id.idString == t.assignedPatient.id.idString))
-                const bestMatchPatient = patients.find(p =>
-                  p.ids.some(id => id.idType == t.bestMatchPatient.id.idType
-                    && id.idString == t.bestMatchPatient.id.idString))
+      map(response => {
+        return {
+          data: response.tentatives.map(t => {
+            const assignedPatient = this.convertToDisplayPatient(this.convertTentativePatientToPatient(t.assignedPatient), true, [])
+            const bestMatchPatient = this.convertToDisplayPatient(this.convertTentativePatientToPatient(t.bestMatchPatient), true, [])
 
-                const view: { [key: string]: string |  DateTime } = {};
-                view["id"] = t.requestId;
-                view["timestamp"] =  DateTime.fromMillis(parseInt(t.timestamp));
-                view["matchScore"] = t.matchingWeight ? "%" + t.matchingWeight.toString() : "";
-                // DateTime.fromMillis(parseInt(t.timestamp)).toLocaleString(
-                  // {year: "numeric", month: "2-digit", day: "2-digit", hour: "numeric", minute: "numeric", second: "numeric"});
-                view["p.idType"] = assignedPatient?.ids[0].idType ?? ""
-                view["p.idString"] = assignedPatient?.ids[0].idString ?? ""
-                Object.entries(assignedPatient?.fields ?? {}).forEach(([key, value]) => {
-                  view["p." + key] = value;
-                })
-                view["b.idType"] = bestMatchPatient?.ids[0].idType ?? ""
-                view["b.idString"] = assignedPatient?.ids[0].idString ?? ""
-                Object.entries(bestMatchPatient?.fields ?? {}).forEach(([key, value]) => {
-                  view["b." + key] = value;
-                })
-                view["b.isTentative"] = assignedPatient?.isTentative?.toString() ?? "false"
-                return view
-              }),
-              totalCount: response.totalCount
-            }
-          })
-        )
-      )
+            const view: { [key: string]: string | DateTime } = {};
+            view["id"] = t.requestId;
+            view["timestamp"] = DateTime.fromMillis(parseInt(t.timestamp));
+            view["matchScore"] = t.matchingWeight ? "%" + t.matchingWeight.toString() : "";
+            // DateTime.fromMillis(parseInt(t.timestamp)).toLocaleString(
+            // {year: "numeric", month: "2-digit", day: "2-digit", hour: "numeric", minute: "numeric", second: "numeric"});
+            view["p.idType"] = assignedPatient?.ids[0].idType ?? ""
+            view["p.idString"] = assignedPatient?.ids[0].idString ?? ""
+            Object.entries(assignedPatient?.fields ?? {}).forEach(([key, value]) => {
+              view["p." + key] = value;
+            })
+            view["p.isTentative"] = assignedPatient?.isTentative?.toString() ?? "true";
+            view["p.tenants"] = this.convertToUITenantList(assignedPatient?.tenants);
+            view["b.idType"] = bestMatchPatient?.ids[0].idType ?? ""
+            view["b.idString"] = bestMatchPatient?.ids[0].idString ?? ""
+            Object.entries(bestMatchPatient?.fields ?? {}).forEach(([key, value]) => {
+              view["b." + key] = value;
+            })
+            view["b.isTentative"] = bestMatchPatient?.isTentative?.toString() ?? "false"
+            view["b.tenants"] = this.convertToUITenantList(bestMatchPatient?.tenants);
+            return view
+          }),
+          totalCount: response.totalCount
+        }
+      })
     )
   }
 
-  solveTentative(tentativeMatchId: number, operation: SolveTentativeOperationType, mainPatientId?: Id, force?:boolean){
-    let payload : SolveTentativePayload = {
-      operation : operation,
+  private convertToUITenantList(tenantIds: string[] | undefined){
+    return tenantIds?.map( t => this.configService.getMainzellisteTenants().find( uit => uit.id == t)?.name).filter(i => !!i).join(", ") ?? "";
+  }
+
+  public resolveTentative(tentativeMatchId: number, operation: SolveTentativeOperationType, mainPatientId?: Id, force?: boolean) {
+    let payload: SolveTentativePayload = {
+      operation: operation,
       force: force ?? false
     }
 
-    if(mainPatientId != undefined)
+    if (mainPatientId != undefined)
       payload.main = mainPatientId;
 
-    return this.httpClient.put(this.patientList.url + "/tentatives/" + tentativeMatchId,
-      payload, {
-      headers: new HttpHeaders()
-      .set('Content-Type', 'application/json')
-      .set('mainzellisteApiVersion', '3.2')
-    });
+    return this.sessionService.createToken("resolveTentative", {}).pipe(
+      mergeMap(token => this.httpClient.put(this.patientList.url + "/tentatives/" + tentativeMatchId + "?tokenId=" + token.id,
+        payload, {
+          headers: new HttpHeaders()
+          .set('Content-Type', 'application/json')
+          .set('mainzellisteApiVersion', '3.2')
+        }).pipe(
+          catchError(e => {
+            if (e instanceof HttpErrorResponse && (e.status == 400 || e.status == 409)) {
+              const errorMessage = this.solveTentativeErrors.find(msg => msg.match(e))
+              return throwError( () => errorMessage != undefined ? new MainzellisteError(errorMessage) : e);
+            }
+            return throwError( () => new MainzellisteUnknownError("Failed to solve tentative", e, this.translate))
+          })
+        )
+      ),
+      catchError(e => this.handleCreateSessionError(e))
+    )
   }
 
   private convertIdToFilter(id: Id): FilterItem {
@@ -483,14 +485,7 @@ export class PatientListService {
       .pipe(mergeMap(
         token => this.resolveCreateIdsToken(token.id, newIdType, newIdValue)
         ),
-      catchError(e => {
-        // handle failed token creation
-        if (e instanceof HttpErrorResponse && (e.status == 404) && ErrorMessages.ML_SESSION_NOT_FOUND.match(e))
-          return throwError( () => new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND));
-        else if (!(e instanceof MainzellisteError) && !(e instanceof MainzellisteUnknownError))
-          return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_create_create_ids_token'), e, this.translate));
-        return throwError( () => e);
-      }));
+      catchError(e => this.handleCreateSessionError(e)));
   }
 
   resolveCreateIdsToken(tokenId: string | undefined, newIdType: string, newIdValue: string = ""): Observable<any> {
@@ -515,20 +510,10 @@ export class PatientListService {
   }
 
   addPatient(patient: Patient, idTypes: string[], sureness: boolean, tokenId?: string): Observable<Id> {
-    return (tokenId != undefined ? of(tokenId) :  this.sessionService.createToken(
-      "addPatient", new AddPatientTokenData(idTypes)
-    )
-    .pipe(map(t => t.id)))
-    .pipe(
+    const tokenId$ = tokenId ? of(tokenId) :  this.sessionService.createToken("addPatient", new AddPatientTokenData(idTypes)).pipe(map(t => t.id));
+    return tokenId$.pipe(
       mergeMap(tokenId => this.resolveAddPatientToken(tokenId, patient, sureness)),
-      catchError(e => {
-        // handle failed token creation
-        if (e instanceof HttpErrorResponse && (e.status == 404) && ErrorMessages.ML_SESSION_NOT_FOUND.match(e))
-          return throwError( () => new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND))
-        else if (!(e instanceof MainzellisteError) && !(e instanceof MainzellisteUnknownError))
-          return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_create_add_patient_token'), e, this.translate))
-        return throwError( () => e)
-      })
+      catchError(e => this.handleCreateSessionError(e))
     );
   }
 
@@ -620,14 +605,7 @@ export class PatientListService {
     )
     .pipe(
       mergeMap(token => this.resolveAddPatientsToken(token.id, patients, sureness)),
-      catchError(e => {
-        // handle failed token creation
-        if (e instanceof HttpErrorResponse && (e.status == 404) && ErrorMessages.ML_SESSION_NOT_FOUND.match(e))
-          return throwError( () => new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND))
-        else if (!(e instanceof MainzellisteError) && !(e instanceof MainzellisteUnknownError))
-          return throwError( () => new MainzellisteUnknownError(this.translate.instant('error.create_patients_token_failed'), e, this.translate))
-        return throwError( () => e)
-      })
+      catchError(e => this.handleCreateSessionError(e))
     );
   }
 
@@ -811,8 +789,20 @@ export class PatientListService {
       );
   }
 
+  handleCreateSessionError(e: any){
+    if (e instanceof HttpErrorResponse && e.status == 404 && ErrorMessages.ML_SESSION_NOT_FOUND.match(e))
+      return throwError( () => new MainzellisteError(ErrorMessages.ML_SESSION_NOT_FOUND))
+    else if (!(e instanceof MainzellisteError) && !(e instanceof MainzellisteUnknownError))
+      return throwError( () => new MainzellisteUnknownError('Failed to create Token', e, this.translate))
+    return throwError( () => e)
+  }
+
   // Utils
   //-------
+
+  convertTentativePatientToPatient(patient: TentativePatient): Patient{
+    return new Patient(patient.fields, [patient.id], patient.tenants, patient.isTentative);
+  }
 
   convertToDisplayPatient(patient: Patient, convertDisplaySex?:boolean,
                           tenants?: { id: string, name: string, idTypes: string[] }[]): Patient {
@@ -826,6 +816,8 @@ export class PatientListService {
         t.id != Tenant.DEFAULT_ID
         && t.idTypes.some( t => displayPatient.ids.some( id => id.idType == t)))
       .map(t => t.name);
+    else
+      displayPatient.tenants = patient.tenants
 
     // fields
     if(patient.fields == undefined){
@@ -853,16 +845,19 @@ export class PatientListService {
         }
         case "DATE": {
           let extractDate = (fieldNames: string[], fields: { [key: string]: any }, i: number, defaultValue: string): string =>
-            fieldNames.length > i && fieldNames[i] ? fields[fieldNames[i]] : defaultValue;
+            fieldNames.length > i && fieldNames[i] ? fields[fieldNames[i]] ?? defaultValue: defaultValue;
           let day = extractDate(fieldConfig.mainzellisteFields, patient.fields,  0, "00");
           let month = extractDate(fieldConfig.mainzellisteFields, patient.fields, 1, "00");
           let year = extractDate(fieldConfig.mainzellisteFields, patient.fields, 2, "0000");
           let date = `${year}-${month}-${day}`;
+          if(date == "0000-00-00")
+            break;
           displayPatient.fields[fieldConfig.name] = DateTime.fromFormat(date, 'yyyy-MM-dd', { zone: "utc" })
           break;
         }
       }
     }
+    displayPatient.isTentative = patient.isTentative;
     return displayPatient;
   }
 

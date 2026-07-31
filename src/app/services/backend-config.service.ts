@@ -10,6 +10,7 @@ import {Field, FieldType} from "../model/field";
 import {IdGenerator} from "../model/idgenerator";
 import {ClaimsConfig} from "../model/api/configuration-claims-data";
 import {TranslateService} from "@ngx-translate/core";
+import {Tenant} from "../model/tenant";
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,7 @@ export class BackendConfigService {
   private mainzellisteIdTypes: string[] = [];
   private mainzellisteFields: string[] = [];
   private mainzellisteClaims: ClaimsConfig[] = [];
+  private mainzellisteTenants: Tenant[] = [];
   private consentTerminology!: ConsentTerminology;
   private version: string = "";
 
@@ -36,7 +38,8 @@ export class BackendConfigService {
     .then(idGenerators => this.fetchMainzellisteAssociatedIdGenerators(tokenId))
     .then(idGenerators => this.fetchMainzellisteFields(tokenId))
     .then(fields => this.fetchClaims(tokenId))
-    .then(claims => this.fetchVersion())
+    .then(claims => this.fetchTenants(tokenId))
+    .then(tenants => this.fetchVersion())
     .then(versions => this.readConsentTerminology());
   }
 
@@ -62,6 +65,11 @@ export class BackendConfigService {
 
   getMainzellisteClaims(): ClaimsConfig[] {
     return this.mainzellisteClaims;
+  }
+
+
+  getMainzellisteTenants(): Tenant[] {
+    return this.mainzellisteTenants;
   }
 
   getConsentTerminology() {
@@ -204,6 +212,19 @@ export class BackendConfigService {
       map(claims => {
         this.mainzellisteClaims = claims;
         return claims;
+      })
+    ));
+  }
+
+  public fetchTenants(tokenId?: string | null): Promise<Tenant[]> {
+    return lastValueFrom(this.httpClient.get<Tenant[]>(
+      this.appConfigService.getMainzellisteUrl() + "/configuration/tenants" + ( !!tokenId ? "?tokenId=" + tokenId: "" ),
+      {headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2')})
+    .pipe(
+      catchError((e) => throwError(() => new Error('Failed to fetch configured tenants from backend'))),
+      map(tenants => {
+        this.mainzellisteTenants = tenants;
+        return tenants;
       })
     ));
   }

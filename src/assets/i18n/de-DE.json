@@ -471,7 +471,7 @@
 
   "read_tentatives.title" : "Unsichere Matches",
   "read_tentatives.not_item" : "Kein unsicheres Match gefunden.",
-  "read_tentatives.button_resolve" : "Unsicheres Match lösen",
+  "read_tentatives.button_resolve" : "Unsicheres Match auflösen",
   "read_tentatives.id" : "#",
   "read_tentatives.timestamp": "Eingetreten am",
   "read_tentatives.matchScore": "Matching-Score",
@@ -492,5 +492,10 @@
 	"tentative.pseudonyms":"Pseudonyme",
 	"tentative.merge":"Mergen",
 	"tentative.split":"Spliten",
-	"tentative.identites": "Sekündäre Identitäten"
+	"tentative.identites": "Sekündäre Identitäten",
+
+  "split_unsure_match_dialog.title": "Unsicheres Match Auflösen",
+  "split_unsure_match_dialog.text1": "Mit dieser Aktion bestätigen Sie, dass die ausgewählten Patienten keine Duplikate sind.",
+  "split_unsure_match_dialog.text2": "Die unsichere Übereinstimmung wird aufgelöst und aus der Liste entfernt.",
+  "split_unsure_match_dialog.button_confirm": "Auflösen"
 }

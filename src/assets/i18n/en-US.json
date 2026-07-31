@@ -457,7 +457,7 @@
 
   "read_tentatives.title" : "Tentative Matches",
   "read_tentatives.not_item" : "No tenatives found.",
-  "read_tentatives.button_resolve" : "Resolve tentative Match",
+  "read_tentatives.button_resolve" : "Resolve unsure match",
   "read_tentatives.id" : "#",
   "read_tentatives.timestamp": "Occurred At",
   "read_tentatives.matchScore": "Matching score",
@@ -478,6 +478,10 @@
 	"tentative.pseudonyms":"Pseudonymes",
 	"tentative.merge":"Merge",
 	"tentative.split":"Split",
-	"tentative.identites": "Secondary Identities"
+	"tentative.identites": "Secondary Identities",
 
+  "split_unsure_match_dialog.title": "Resolve unsure match",
+  "split_unsure_match_dialog.text1": "This action confirms that the selected patients represent different individuals.",
+  "split_unsure_match_dialog.text2": "The potential duplicate will be resolved and will no longer appear in the unsure matches list.",
+  "split_unsure_match_dialog.button_confirm": "Resolve"
 }
