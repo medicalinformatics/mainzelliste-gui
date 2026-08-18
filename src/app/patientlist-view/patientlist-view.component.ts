@@ -331,7 +331,8 @@ export class PatientlistViewComponent implements OnInit {
       width: '600px',
       disableClose: true
     })
-    .afterClosed().subscribe((result: any) => {
+    .afterClosed().subscribe({
+    next: result => {
       // undefined: dialog was cancelled without searching -> leave the list untouched
       if (result === undefined) {
         return;
@@ -349,7 +350,14 @@ export class PatientlistViewComponent implements OnInit {
       this.resetAfterFiltering();
 
       // null: search ran but found no match -> clear the list
-      this.patientsMatTableData.data = result?.matchResult ? [result.matchResult] : [];
+      this.patientsMatTableData.data = result?.matchResults ? result.matchResults : [];
+      this.pageNumber = result?.totalCount ?? 0;
+    },
+    error: e => {
+      this.patientsMatTableData.data = [];
+      this.pageNumber = 0;
+      this.loading = false
+    }
     });
   }
 

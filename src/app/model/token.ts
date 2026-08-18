@@ -5,7 +5,7 @@ export type TokenType = 'readPatients' | 'addPatient' | 'editPatient' | 'deleteP
   | 'addConsentPolicySet' | 'readConsentPolicySet' | 'searchConsentPolicySets' | 'deleteConsentPolicySet'
   | 'addConsentPolicy' | 'deleteConsentPolicy' | 'searchConsentPolicies' | 'addConsentScan' | 'addConsentProvenance'
   | 'searchConsentProvenances' | 'readConsentScan' | 'editConfiguration' | 'addPatients' | 'readTentatives' | 'readTentative' | 'resolveTentative' | 'readIdentities'
-  | 'checkMatch';
+  | 'checkMatch' | 'patientMatches';
 export class Token {
   constructor(
     public id?: string,

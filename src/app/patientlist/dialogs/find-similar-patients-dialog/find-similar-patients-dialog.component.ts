@@ -56,29 +56,22 @@ export class FindSimilarPatientsDialogComponent {
 
   findSimilarPatients(): void {
     this.inProgress = true;
-    const idTypes = this.patientListService.getIdTypes("R");
     const patientSnapshot = this.buildDisplaySnapshot(this.patient);
-    this.patientListService.checkMatch(this.patient, idTypes).subscribe({
+    this.patientListService.patientMatches(this.patient, 0, 10).subscribe({
       next: match => {
+        this.inProgress = false;
         if (match == undefined) {
-          this.inProgress = false;
           this.dialogRef.close({ filterDisplay: patientSnapshot });
           return;
         }
-        this.patientListService.readPatient(match.id, "R").subscribe({
-          next: patients => {
-            this.inProgress = false;
-            let result = undefined;
-            if(patients[0]){
-              result = this.patientListService.convertToDisplayPatient(patients[0], true, this.authorizationService.getTenants());
-              result.matchingScore = `${parseFloat((Number(match.similarityScore) * 100).toFixed(2))}%`;
-            }
-            this.dialogRef.close( { matchResult: result , filterDisplay: patientSnapshot });
-          },
-          error: e => {
-            this.inProgress = false;
-            throw e;
-          }
+        this.dialogRef.close( {
+          matchResults: match.patients.map(m => {
+            let p = this.patientListService.convertToDisplayPatient(m.patient, true, this.authorizationService.getTenants());
+            p.matchingScore = `${parseFloat((Number(m.score) * 100).toFixed(2))}%`;
+            return p;
+          }),
+          filterDisplay: patientSnapshot,
+          totalCount: match.totalCount
         });
       },
       error: e => {

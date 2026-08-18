@@ -49,6 +49,7 @@ export class Permission {
   public static readonly RESOLVE_TENTATIVE = new Permission("miscellaneous", "R", "tt_resolveTentative");
   public static readonly READ_IDENTITIES = new Permission("miscellaneous", "R", "tt_readIdentities");
   public static readonly CHECK_MATCH = new Permission("miscellaneous", "R", "tt_checkMatch");
+  public static readonly PATIENT_MATCHES = new Permission("miscellaneous", "R", "tt_patientMatches");
 
   constructor(
     public type: PermissionType,
