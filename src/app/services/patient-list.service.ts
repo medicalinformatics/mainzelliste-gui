@@ -637,18 +637,18 @@ export class PatientListService {
     );
   }
 
-  patientMatches(patient: Patient, pageIndex: number, pageSize: number): Observable<PatientMatchesResult | undefined> {
+  patientMatches(patient: Patient, minThreshold: string, pageIndex: number, pageSize: number): Observable<PatientMatchesResult | undefined> {
     return this.sessionService.createToken(
       "patientMatches",
       new PatientMatchesTokenData(this.getFieldNames("R"), this.getIdTypes("R"))
     )
     .pipe(
-      mergeMap(token => this.resolvePatientMatchesToken(token.id, patient, pageIndex, pageSize)),
+      mergeMap(token => this.resolvePatientMatchesToken(token.id, patient, minThreshold, pageIndex, pageSize)),
       catchError(e => this.handleCreateSessionError(e))
     );
   }
 
-  resolvePatientMatchesToken(tokenId: string | undefined, patient: Patient, pageIndex: number, pageSize: number): Observable<PatientMatchesResult> {
+  resolvePatientMatchesToken(tokenId: string | undefined, patient: Patient, minThreshold: string, pageIndex: number, pageSize: number): Observable<PatientMatchesResult> {
     // find current tenant id
     let tenantId = this.authorizationService.currentTenantId;
     if(tenantId === undefined || tenantId == Tenant.DEFAULT_ID)
@@ -664,9 +664,10 @@ export class PatientListService {
     // for(let extId of patient.ids)
     //   body.append(extId.idType, extId.idString)
 
+    const thresholdParam = "&minThreshold" + (minThreshold.match("^\\d+$") ? "" : "Const") + "=" + minThreshold;
     //send request
     return this.httpClient.post<PatientMatchesResult>(this.patientList.url + "/patients/matches?tokenId="
-      + tokenId + "&minThreshold=0.1" + "&tenantId=" + tenantId + "&page=" + (pageIndex+1) + "&limit=" + pageSize
+      + tokenId + thresholdParam + "&tenantId=" + tenantId + "&page=" + (pageIndex+1) + "&limit=" + pageSize
       , body, {
       headers: new HttpHeaders()
       .set('Content-Type', 'application/x-www-form-urlencoded')

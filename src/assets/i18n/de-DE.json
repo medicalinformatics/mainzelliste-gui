@@ -177,6 +177,7 @@
 
   "FindSimilarPatientsDialog.mat_title": "Ähnliche Patienten finden",
   "FindSimilarPatientsDialog.text": "Geben Sie die Patientendaten ein, um einen Testabgleich mit den vorhandenen Patienten durchzuführen. Es wird kein Patient angelegt.",
+  "FindSimilarPatientsDialog.minThreshold": "Minimaler Matching-Score",
   "FindSimilarPatientsDialog.button_run": "Suchen",
 
   "session.tenancy": "Domäne",

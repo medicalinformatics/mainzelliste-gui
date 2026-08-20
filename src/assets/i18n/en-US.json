@@ -176,6 +176,7 @@
 
   "FindSimilarPatientsDialog.mat_title": "Find Similar Patients",
   "FindSimilarPatientsDialog.text": "Enter the patient data to run a record linkage check against the existing patients. No patient will be created.",
+  "FindSimilarPatientsDialog.minThreshold": "Minimal Matching-Score",
   "FindSimilarPatientsDialog.button_run": "Find",
 
 	"session.tenancy": "Domain",
