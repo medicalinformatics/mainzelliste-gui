@@ -51,6 +51,11 @@
   border-color: #053E6A;
 }
 
+.mat-column-scores {
+  width: 80px;
+  text-align: center;
+}
+
 .disabled {
   color: rgb(161, 159, 159);
 }

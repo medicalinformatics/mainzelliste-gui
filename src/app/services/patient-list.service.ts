@@ -32,6 +32,10 @@ import {BackendConfigService} from "./backend-config.service";
 import {DateTime} from "luxon";
 import {Tentative, TentativePatient} from "../model/api/tentative";
 import {SolveTentativeOperationType, SolveTentativePayload} from "../model/solve-tentative-payload";
+import {CheckMatchTokenData} from "../model/check-match-token-data";
+import {CheckMatchMatch, CheckMatchResult} from "../model/check-match-result";
+import {PatientMatchesTokenData} from "../model/patient-matches-token-data";
+import {PatientMatchesResult} from "../model/patient-matches-result";
 
 export interface ReadPatientsResponse {
   patients: Patient[];
@@ -632,6 +636,97 @@ export class PatientListService {
       })
     );
   }
+
+  patientMatches(patient: Patient, minThreshold: string, pageIndex: number, pageSize: number): Observable<PatientMatchesResult | undefined> {
+    return this.sessionService.createToken(
+      "patientMatches",
+      new PatientMatchesTokenData(this.getFieldNames("R"), this.getIdTypes("R"))
+    )
+    .pipe(
+      mergeMap(token => this.resolvePatientMatchesToken(token.id, patient, minThreshold, pageIndex, pageSize)),
+      catchError(e => this.handleCreateSessionError(e))
+    );
+  }
+
+  resolvePatientMatchesToken(tokenId: string | undefined, patient: Patient, minThreshold: string, pageIndex: number, pageSize: number): Observable<PatientMatchesResult> {
+    // find current tenant id
+    let tenantId = this.authorizationService.currentTenantId;
+    if(tenantId === undefined || tenantId == Tenant.DEFAULT_ID)
+      tenantId = "";
+
+    //prepare request body
+    let body = new URLSearchParams();
+    const convertedFields = this.convertToPatientFields(patient.fields, this.configService.getMainzellisteFields())
+    for (const name in convertedFields) {
+      body.set(name, convertedFields[name]);
+    }
+    //TODO add external Ids
+    // for(let extId of patient.ids)
+    //   body.append(extId.idType, extId.idString)
+
+    const thresholdParam = "&minThreshold" + (minThreshold.match("^\\d+$") ? "" : "Const") + "=" + minThreshold;
+    //send request
+    return this.httpClient.post<PatientMatchesResult>(this.patientList.url + "/patients/matches?tokenId="
+      + tokenId + thresholdParam + "&tenantId=" + tenantId + "&page=" + (pageIndex+1) + "&limit=" + pageSize
+      , body, {
+      headers: new HttpHeaders()
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+    })
+    .pipe(
+      catchError( (error) => {
+        if(error.status != 404)
+          throw new MainzellisteUnknownError("Failed to fetch patients. Cause: " + `${getErrorMessageFrom(error, this.translate)}`, error, this.translate)
+        return of({
+          totalCount: 0,
+          patients: []
+        });
+      })
+    );
+  }
+
+  /**
+   * Run a record linkage (dry run) against the given IDAT and return the id of the best matching
+   * patient, if any. EXPERIMENTAL Mainzelliste endpoint.
+   */
+  checkMatch(patient: Patient, resultIdTypes?: string[]): Observable<CheckMatchMatch | undefined> {
+    const idTypes = resultIdTypes && resultIdTypes.length > 0 ? resultIdTypes : this.getIdTypes("R");
+    return this.sessionService.createToken("checkMatch", new CheckMatchTokenData(idTypes))
+    .pipe(
+      mergeMap(token => this.resolveCheckMatchToken(token.id, patient, idTypes)),
+      catchError(e => this.handleCreateSessionError(e))
+    );
+  }
+
+  resolveCheckMatchToken(tokenId: string | undefined, patient: Patient, idTypes: string[]): Observable<CheckMatchMatch | undefined> {
+    //prepare request body
+    let body = new URLSearchParams();
+    const convertedFields = this.convertToPatientFields(patient.fields, this.configService.getMainzellisteFields())
+    for (const name in convertedFields) {
+      body.set(name, convertedFields[name]);
+    }
+    //add external Ids
+    for(let extId of patient.ids)
+      body.append(extId.idType, extId.idString)
+
+    //send request
+    return this.httpClient.post<CheckMatchResult[]>(this.patientList.url + "/patients/checkMatch?tokenId=" + tokenId, body, {
+      headers: new HttpHeaders()
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+    })
+    .pipe(
+      map((results: CheckMatchResult[]) => {
+        const best = (results ?? [])
+        .slice()
+        .sort((a, b) => parseFloat(b.similarityScore) - parseFloat(a.similarityScore))[0];
+        if (best == undefined)
+          return undefined;
+        const idType = Object.keys(best).find(k => k != 'similarityScore' && idTypes.some(t => t == k));
+        return idType != undefined ? {id: new Id(idType, best[idType]), similarityScore: best.similarityScore} : undefined;
+      }),
+      catchError(e => throwError( () => new MainzellisteUnknownError(this.translate.instant('error.patient_list_service_resolve_check_match_token'), e, this.translate)))
+    );
+  }
+
   readPatient(id: Id, operation: Operation, resultFields?: string[], resultIdTypes?: string[]): Observable<Patient[]> {
     return this.readPatients([id], operation, resultFields, resultIdTypes);
   }

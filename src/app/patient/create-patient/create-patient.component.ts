@@ -39,13 +39,9 @@ import {Permission} from "../../model/permission";
 import {Operation} from "../../model/tenant";
 import {AsyncPipe, NgFor, NgIf, NgStyle} from '@angular/common';
 import {MatButton, MatIconButton} from '@angular/material/button';
-import {FieldService} from "../../services/field.service";
 import _moment from "moment/moment";
-import {Field, FieldType, SemanticType} from "../../model/field";
-import {SexFieldComponent} from "../fields/sex-field/sex-field.component";
-import {TextFieldComponent} from "../fields/text-field/text-field.component";
-import {DateFieldComponent} from "../fields/date-field/date-field.component";
 import {ExternalPseudonymsComponent} from "../external-pseudonyms/external-pseudonyms.component";
+import {PatientInputFieldsComponent} from "../patient-input-fields.component";
 import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatIcon} from "@angular/material/icon";
 import {MatOption} from "@angular/material/select";
@@ -67,12 +63,10 @@ export interface IdTypSelection {
   imports: [FormsModule, NgIf, ExternalPseudonymsComponent, MatFormField,
     MatLabel, MatChipGrid, NgFor, MatChipRow, MatChipRemove, MatIcon, MatChipInput, MatAutocompleteTrigger,
     ReactiveFormsModule, MatError, MatAutocomplete, MatOption, HasPermissionDirective, MatButton,
-    MatIconButton, MatTooltip, MatProgressSpinner, AsyncPipe, TranslatePipe, TextFieldComponent, SexFieldComponent, DateFieldComponent, NgStyle]
+    MatIconButton, MatTooltip, MatProgressSpinner, AsyncPipe, TranslatePipe, PatientInputFieldsComponent, NgStyle]
 })
 export class CreatePatientComponent implements OnInit {
   protected readonly Permission = Permission;
-  protected readonly SemanticType = SemanticType;
-  protected readonly FieldType = FieldType;
 
   @Input() fields: Array<string> = [];
 
@@ -93,8 +87,6 @@ export class CreatePatientComponent implements OnInit {
   chipListInputCtrl = new FormControl();
   public creatingInProgress: boolean = false;
 
-  semanticFields: {[key: string]: Field};
-  nonSemanticFields: Field[];
   localDateFormat: string;
 
   showConsentFieldGroup: boolean = false;
@@ -111,14 +103,11 @@ export class CreatePatientComponent implements OnInit {
     private router: Router,
     private titleService: GlobalTitleService,
     public tentativeDialog: MatDialog,
-    public fieldService: FieldService,
     public consentService: ConsentService
   ) {
     this.patientService = patientService;
     this.patientListService = patientListService;
     this.userAuthService = userAuthService;
-    this.semanticFields = fieldService.getSemanticFields();
-    this.nonSemanticFields = this.fieldService.getFields().filter(f => !f.semantic || f.semantic == SemanticType.UNDEFINED)
     this.localDateFormat = _moment().localeData().longDateFormat('L');
     this.changeTitle();
   }
@@ -156,18 +145,6 @@ export class CreatePatientComponent implements OnInit {
 
     if(!this.mlTokenAuthService.isAuthenticated())
       this.consentService.getConsentTemplateCount().subscribe(c => this.showConsentFieldGroup = c > 0);
-  }
-
-  public hasField(semantic: SemanticType):boolean {
-    return this.semanticFields[semantic.valueOf()] != undefined;
-  }
-
-  public hasAnyFields(semantics: SemanticType[]):boolean {
-    return Object.entries(this.semanticFields).some(([k,v]) => semantics.some( s => s.valueOf() == k.valueOf()));
-  }
-
-  public getFieldName(semantic: SemanticType): string {
-    return this.semanticFields[semantic.valueOf()].name;
   }
 
   createNewPatient(sureness: boolean) {

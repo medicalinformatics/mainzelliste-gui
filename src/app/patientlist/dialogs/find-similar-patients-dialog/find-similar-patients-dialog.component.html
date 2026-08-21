@@ -1,0 +1,49 @@
+<h1 mat-dialog-title class="dialog-title">{{'FindSimilarPatientsDialog.mat_title' | translate}}</h1>
+<div class="dialog">
+  <h4 style="font-weight: 100">
+    <p>{{'FindSimilarPatientsDialog.text' | translate}}</p>
+  </h4>
+  <form #f="ngForm" style="flex-direction: column">
+    <app-patient-input-fields [patient]="patient" [requiredForRL]="true"></app-patient-input-fields>
+    <div>
+      <h4 style="color: #063d6c">{{'FindSimilarPatientsDialog.minThreshold' | translate }}</h4>
+      <mat-form-field style="width: 500px;">
+        <mat-label>{{'FindSimilarPatientsDialog.minThreshold' | translate }}</mat-label>
+        @if (this.minThreshold.match("^[1-9][0-9]?$|^100$")) {
+          <span matTextPrefix>%</span>
+        }
+        <input matInput
+               type="text"
+               [(ngModel)]="this.minThreshold"
+               [name]="'minThreshold'"
+               placeholder="{{'FindSimilarPatientsDialog.minThreshold' | translate }}"
+               #thresholdField="ngModel"
+               pattern="^(?:[1-9][0-9]?|100|MATCH|NON_MATCH)$"
+               (ngModelChange)="thresholdChanged($event)"
+               [required]="true"
+               [matAutocomplete]="auto"
+        >
+        <mat-autocomplete #auto="matAutocomplete">
+          @for (option of thresholdOptionsObservable | async; track option) {
+            <mat-option [value]="option">{{option}}</mat-option>
+          }
+        </mat-autocomplete>
+        <mat-error *ngIf="displayError(thresholdField)">
+          {{getFieldErrorMessage(thresholdField.errors, translate)}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions style="justify-content: center">
+  <button mat-raised-button class="submitBreak" (click)="cancel()">
+    {{'button_cancel' | translate}}
+  </button>
+  <button mat-raised-button class="submit" [disabled]="inProgress || !f.form.valid"
+          (click)="findSimilarPatients()">
+    {{'FindSimilarPatientsDialog.button_run' | translate}}
+    <mat-icon *ngIf="inProgress" style="margin-left: 10px">
+      <mat-spinner diameter="20"></mat-spinner>
+    </mat-icon>
+  </button>
+</div>
