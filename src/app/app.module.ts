@@ -92,9 +92,9 @@ function initializeAppFactory(
             realm: config[0].oAuthConfig?.realm ?? "",
             clientId: config[0].oAuthConfig?.clientId ?? ""
           },
-          loadUserProfileAtStartUp: true,
           initOptions: {
             onLoad: 'check-sso',
+            pkceMethod: 'S256',
             silentCheckSsoRedirectUri:
               window.location.origin + '/assets/silent-check-sso.html'
           },

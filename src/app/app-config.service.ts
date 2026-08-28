@@ -312,7 +312,7 @@ export class AppConfigService {
   public fetchClaims(): Promise<ClaimsConfig[]> {
       return firstValueFrom(this.httpClient.get<ClaimsConfig[]>(this.data[0].url + "/configuration/claims", {
               headers: new HttpHeaders().set('mainzellisteApiVersion', '3.2'),
-              params: new HttpParams().set('filter', 'roles')
+              params: new HttpParams().set('filter', 'groups')
               .set('merge', true)
               .set('mergeSameTenant', true)
           })

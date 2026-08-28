@@ -51,14 +51,14 @@ export class UserAuthService {
   }
 
   public getUserName(): string {
-    return this.keycloak.getUsername();
+    return this.keycloak.getKeycloakInstance().idTokenParsed?.['preferred_username'] ?? '';
   }
 
   public isLoggedIn(): boolean {
     return this.isLoggedInKeycloak && this.sessionService.isSessionCreated();
   }
 
-  getRoles() {
-    return this.keycloak.getUserRoles(true);
+  getRoles(): string[] {
+    return this.keycloak.getKeycloakInstance().tokenParsed?.['groups'] ?? [];
   }
 }
