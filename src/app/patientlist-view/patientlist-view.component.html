@@ -35,7 +35,7 @@
           <mat-spinner diameter="20"></mat-spinner>
         </mat-icon>
       </button>
-      <button mat-icon-button *appHasPermission="Permission.CHECK_MATCH"
+      <button mat-icon-button *appHasPermission="Permission.PATIENT_MATCHES"
               (click)="$event.stopPropagation(); this.filterAutoCompleteTrigger.closePanel(); this.openFindSimilarPatientsDialog();"
               matTooltip="{{'patientlist.button_find_similar_patients' | translate}}" matSuffix>
         <mat-icon color="primary">group_search</mat-icon>
