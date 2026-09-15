@@ -95,8 +95,12 @@ function initializeAppFactory(
           initOptions: {
             onLoad: 'check-sso',
             pkceMethod: 'S256',
-            silentCheckSsoRedirectUri:
-              window.location.origin + '/assets/silent-check-sso.html'
+            // Both the session-status and the silent-SSO mechanism embed Keycloak in a
+            // cross-origin iframe, which the reverse proxy forbids via
+            // `frame-ancestors 'self'`. Without them, check-sso falls back to a
+            // top-level prompt=none redirect. Disabling only one is not enough:
+            // keycloak-js probes 3rd-party cookies whenever either is active.
+            checkLoginIframe: false
           },
           shouldAddToken: (request) => {
             const paths = ['/sessions', '/configuration'];
