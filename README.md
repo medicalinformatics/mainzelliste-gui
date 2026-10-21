@@ -17,15 +17,16 @@ Most of the configuration can be set using docker environment variables
 #### Docker compose environment Variables
 the docker image of the ui uses several environment variables :
 
-| Environment Variable | Description                                                               | Required ? | Default Value                                                                                       |
-|----------------------|---------------------------------------------------------------------------|------------|-----------------------------------------------------------------------------------------------------|
-| MAINZELLISTE_URL     | the mainzelliste backend url                                              | Yes        | -                                                                                                   |
-| ML_UI_MAIN_ID_TYPE   | default selected ID in create new patient page                            | no         | the backend default id type (is the first id type in the mainzelliste `idgenerators` configutation) |
-| ML_UI_SHOW_ALL_IDS   | show all id in patient list view                                          | no         | false                                                                                               |
-| ML_UI_DEBUG_MODE     | activate debug mode will initialize the patient list view with dummy data | no         | false                                                                                               |
-| KEYCLOAK_URL         | Keycloak base url                                                         | Yes        | -                                                                                                   |
-| KEYCLOAK_REALM       | Realm ID                                                                  | Yes        | -                                                                                                   |
-| KEYCLOAK_CLIENT_ID   | Client ID                                                                 | Yes        | -                                                                                                   |
+| Environment Variable   | Description                                                               | Required ? | Default Value                                                                                       |
+|------------------------|---------------------------------------------------------------------------|------------|-----------------------------------------------------------------------------------------------------|
+| MAINZELLISTE_URL       | the mainzelliste backend url                                              | Yes        | -                                                                                                   |
+| ML_UI_DEFAULT_LANGUAGE | supported languages are: 'en-US' or 'de-DE'                               | no         | 'en-US'                                                                                             |
+| ML_UI_MAIN_ID_TYPE     | default selected ID in create new patient page                            | no         | the backend default id type (is the first id type in the mainzelliste `idgenerators` configutation) |
+| ML_UI_SHOW_ALL_IDS     | show all id in patient list view                                          | no         | false                                                                                               |
+| ML_UI_DEBUG_MODE       | activate debug mode will initialize the patient list view with dummy data | no         | false                                                                                               |
+| KEYCLOAK_URL           | Keycloak base url                                                         | Yes        | -                                                                                                   |
+| KEYCLOAK_REALM         | Realm ID                                                                  | Yes        | -                                                                                                   |
+| KEYCLOAK_CLIENT_ID     | Client ID                                                                 | Yes        | -                                                                                                   |
 
 ### Version Compatibility
 Choosing the right version of the [Mainzelliste](http://mainzelliste.de) backend.
@@ -138,6 +139,7 @@ secrets:
   "patientLists": [
     {
       "url": "http://localhost:8080",
+      "defaultLanguage": "de-DE",
       "oAuthConfig": {
         "url": "http://localhost:8082",
         "realm": "mainzelliste",
