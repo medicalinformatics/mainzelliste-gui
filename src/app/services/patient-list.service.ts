@@ -750,7 +750,7 @@ export class PatientListService {
     return firstValueFrom(this.sessionService.createToken(
       "editPatient",
       new EditPatientTokenData(
-        new Id(id.idType, id.idString),
+        {idType: id.idType, idString: id.idString},
         this.getFieldNames("U"),
         this.getIdGenerators(true,"U").map( g => g.idType)
       )
@@ -801,7 +801,7 @@ export class PatientListService {
     return this.sessionService.createToken(
       "deletePatient",
       new DeletePatientTokenData(
-        new Id(patient.ids[0].idType, patient.ids[0].idString)
+        {idType: patient.ids[0].idType, idString: patient.ids[0].idString}
       )
     )
     .pipe(

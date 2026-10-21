@@ -1,9 +1,8 @@
-import { Id } from "./id";
 import {TokenData} from "./token-data";
 
 export class DeletePatientTokenData extends TokenData{
   constructor(
-    public patientId: Id,
+    public patientId: {idType: string, idString: string},
     public callback?: URL,
     public redirect?: URL
 ) {
