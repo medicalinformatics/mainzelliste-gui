@@ -32,6 +32,7 @@ import {SolveTentativeOperationType} from "../../model/solve-tentative-payload";
 import {
   SplitUnsureMatchDialogComponent
 } from "./split-unsure-match-dialog-component/split-unsure-match-dialog.component";
+import {AuthorizationService} from "../../services/authorization.service";
 
 @Component({
   selector: 'app-tentative-matches-list',
@@ -85,6 +86,7 @@ export class TentativeMatchesListComponent implements OnInit {
     public translate: TranslateService,
     public patientListService: PatientListService,
     public configService: AppConfigService,
+    public authorizationService: AuthorizationService,
     private titleService: GlobalTitleService,
     public resolveDialog: MatDialog,
   ) {
@@ -170,6 +172,10 @@ export class TentativeMatchesListComponent implements OnInit {
         return;
       this.loadData(0, this.defaultPageSize);
     });
+  }
+
+  protected disableResolveButton(element:any) {
+    return this.authorizationService.authorizationState.RESOLVE_TENTATIVE || element['b.isTentative'] == 'true';;
   }
 }
 

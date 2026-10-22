@@ -3,12 +3,12 @@
     <table id="tentatives" mat-table [dataSource]="matTableData">
       <ng-container *ngFor="let column of columns" matColumnDef="{{column.id}}">
         <ng-container [ngSwitch]="column.type">
-          <ng-container *ngSwitchCase="'resolveButton'">
+          <ng-container *ngSwitchCase="'resolveButton'" >
             <th mat-header-cell *matHeaderCellDef [rowSpan]="2"></th>
             <td mat-cell *matCellDef="let element">
 <!--              TODO disable only if element['b.isTentative'] == 'true'-->
               <button mat-icon-button style="background: none;border:none;"
-                      [disabled]="element['b.isTentative'] == 'true'"
+                      [disabled]="!this.disableResolveButton(element)"
                       color="primary" class="ml-icon-button"
                       (click)="openResolveDialog(element[column.name])"
               >
