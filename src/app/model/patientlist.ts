@@ -2,10 +2,9 @@ import {Field, FieldType, SemanticType} from "./field";
 
 export class PatientList {
   public static defaultFenderFieldValues: GenderValue[] = [
-    {  id: "male", value: "m", i18n: "sex_male_text" },
-    {  id: "female", value: "f", i18n: "sex_female_text" },
-    {  id: "other", value: "o", i18n: "sex_other_text" },
-    {  id: "unknown", value: "u", i18n: "sex_unknown_text" },
+    {  id: "male", value: "M", i18n: "sex_male_text" },
+    {  id: "female", value: "W", i18n: "sex_female_text" },
+    {  id: "diverse", value: "D", i18n: "sex_diverse_text" },
   ]
   constructor(
     public url: URL,

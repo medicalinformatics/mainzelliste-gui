@@ -50,8 +50,7 @@
 
   "sex_male_text": "Männlich",
   "sex_female_text": "Weiblich",
-  "sex_other_text": "Divers",
-  "sex_unknown_text": "Unbekannt",
+  "sex_diverse_text": "Divers",
 
   "confirm_delete_dialog.title": "Löschvorgang bestätigen",
   "confirm_delete_dialog.text": "Möchten Sie ${0} wirklich löschen?",

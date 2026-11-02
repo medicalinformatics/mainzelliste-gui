@@ -16,7 +16,8 @@
         { "i18n": "birth_name_text", "name": "Geburtsname", "mainzellisteField": "geburtsname", "semantic": "birthName"},
         { "i18n": "birth_date_text", "name": "Geburtdatum", "mainzellisteFields": ["geburtstag", "geburtsmonat", "geburtsjahr"], "semantic": "birthday"},
         { "i18n": "residence_text", "name": "Wohnort", "mainzellisteField": "ort", "semantic": "city"},
-        { "i18n": "zip_code_text", "name": "PLZ", "mainzellisteField": "plz", "semantic": "postalCode"}
+        { "i18n": "zip_code_text", "name": "PLZ", "mainzellisteField": "plz", "semantic": "postalCode"},
+        { "i18n": "sex_text", "name": "Geschlecht", "mainzellisteField": "geschlecht", "semantic": "sex"}
       ],
       "debug": ${ML_UI_DEBUG_MODE},
       "betaFeatures": {

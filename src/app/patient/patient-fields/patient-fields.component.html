@@ -32,7 +32,7 @@
                    [ngModel]="fields[field.name]" [name]="field.name"
                    [required]="field.required" #currentField="ngModel">
             <ng-container *ngIf="!readOnly">
-              <mat-select [(value)]="fields[field.name]" (input)="fieldChanged()"
+              <mat-select [(value)]="fields[field.name]" (selectionChange)="fieldChanged()"
                           placeholder="{{field.hint}}" [(ngModel)]="fields[field.name]"
                           [name]="field.name" [required]="field.required">
                 <mat-option *ngFor="let gf of this.fieldService.getGenderFieldValues()" value="{{gf.value}}">{{gf.i18n | translate}}</mat-option>

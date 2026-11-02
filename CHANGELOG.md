@@ -1,3 +1,6 @@
+## [Unreleased]
+### Feature
+- gender field in the patient form with the values male (`M`), female (`W`) and diverse (`D`) (requires `field.geschlecht` with `validator.field.geschlecht.format = [MWD]` in the Mainzelliste backend config)
 ## [1.0.1] - 2025-08-07
 ### Fix
 - recalculation of consent period end date
